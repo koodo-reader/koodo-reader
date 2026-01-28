@@ -46,7 +46,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     if (
       ConfigService.getReaderConfig("isOpenBook") === "yes" &&
       ConfigService.getAllListConfig("recentBooks")[0] ===
-      this.props.book.key &&
+        this.props.book.key &&
       !this.props.currentBook.key &&
       !filePath
     ) {
@@ -98,8 +98,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       this.props.handleSelectedBooks(
         this.props.isSelected
           ? this.props.selectedBooks.filter(
-            (item) => item !== this.props.book.key
-          )
+              (item) => item !== this.props.book.key
+            )
           : [...this.props.selectedBooks, this.props.book.key]
       );
       return;
@@ -158,8 +158,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
           }}
         >
           {!this.state.isCoverExist ||
-            (this.props.book.format === "PDF" &&
-              ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
+          (this.props.book.format === "PDF" &&
+            ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
             <div
               className="book-item-list-cover"
               onClick={() => {
@@ -225,8 +225,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
                   this.props.handleSelectedBooks(
                     this.props.isSelected
                       ? this.props.selectedBooks.filter(
-                        (item) => item !== this.props.book.key
-                      )
+                          (item) => item !== this.props.book.key
+                        )
                       : [...this.props.selectedBooks, this.props.book.key]
                   );
                 } else {
@@ -277,7 +277,7 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
           </p>
         </div>
         {this.props.isOpenActionDialog &&
-          this.props.book.key === this.props.currentBook.key ? (
+        this.props.book.key === this.props.currentBook.key ? (
           <div className="action-dialog-parent">
             <ActionDialog {...actionProps} />
           </div>

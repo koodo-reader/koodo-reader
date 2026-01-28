@@ -236,78 +236,78 @@ class AccountSetting extends React.Component<
         {(this.state.settingLogin === "google" ||
           this.state.settingLogin === "microsoft" ||
           this.state.settingLogin === "github") && (
-            <div
-              className="voice-add-new-container"
-              style={{
-                marginLeft: "25px",
-                width: "calc(100% - 50px)",
-                fontWeight: 500,
+          <div
+            className="voice-add-new-container"
+            style={{
+              marginLeft: "25px",
+              width: "calc(100% - 50px)",
+              fontWeight: 500,
+            }}
+          >
+            <textarea
+              className="token-dialog-token-box"
+              id="token-dialog-token-box"
+              placeholder={this.props.t(
+                "Please click the authorize button below to authorize your account, enter the obtained credentials here, and then click the bind button below"
+              )}
+              onContextMenu={() => {
+                handleContextMenu("token-dialog-token-box");
               }}
-            >
-              <textarea
-                className="token-dialog-token-box"
-                id="token-dialog-token-box"
-                placeholder={this.props.t(
-                  "Please click the authorize button below to authorize your account, enter the obtained credentials here, and then click the bind button below"
-                )}
-                onContextMenu={() => {
-                  handleContextMenu("token-dialog-token-box");
-                }}
-                onChange={(e) => {
-                  if (e.target.value) {
-                    this.setState((prevState) => ({
-                      loginConfig: {
-                        ...prevState.loginConfig,
-                        token: e.target.value.trim(),
-                      },
-                    }));
+              onChange={(e) => {
+                if (e.target.value) {
+                  this.setState((prevState) => ({
+                    loginConfig: {
+                      ...prevState.loginConfig,
+                      token: e.target.value.trim(),
+                    },
+                  }));
+                }
+              }}
+            />
+            <div className="token-dialog-button-container">
+              <div
+                className="voice-add-confirm"
+                onClick={async () => {
+                  if (this.props.isAuthed) {
+                    this.handleConfirmLoginOption();
+                    return;
                   }
+                  this.handleLoginRegister();
                 }}
-              />
-              <div className="token-dialog-button-container">
+              >
+                <Trans>Bind</Trans>
+              </div>
+              <div className="voice-add-button-container">
                 <div
-                  className="voice-add-confirm"
-                  onClick={async () => {
-                    if (this.props.isAuthed) {
-                      this.handleConfirmLoginOption();
-                      return;
-                    }
-                    this.handleLoginRegister();
+                  className="voice-add-cancel"
+                  onClick={() => {
+                    this.handleCancelLoginOption();
                   }}
                 >
-                  <Trans>Bind</Trans>
+                  <Trans>Cancel</Trans>
                 </div>
-                <div className="voice-add-button-container">
-                  <div
-                    className="voice-add-cancel"
-                    onClick={() => {
-                      this.handleCancelLoginOption();
-                    }}
-                  >
-                    <Trans>Cancel</Trans>
-                  </div>
 
-                  <div
-                    className="voice-add-confirm"
-                    style={{ marginRight: "10px" }}
-                    onClick={() => {
-                      let url = LoginHelper.getAuthUrl(
-                        this.state.settingLogin,
-                        "manual",
-                        getServerRegion() === "china" &&
-                          this.state.settingLogin === "microsoft"
-                          ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
-                          : KookitConfig.ThirdpartyConfig.callbackUrl
-                      );
-                      this.handleJump(url);
-                    }}
-                  >
-                    <Trans>Authorize</Trans>
-                  </div>
+                <div
+                  className="voice-add-confirm"
+                  style={{ marginRight: "10px" }}
+                  onClick={() => {
+                    let url = LoginHelper.getAuthUrl(
+                      this.state.settingLogin,
+                      "manual",
+                      getServerRegion() === "china" &&
+                        this.state.settingLogin === "microsoft"
+                        ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                        : KookitConfig.ThirdpartyConfig.callbackUrl
+                    );
+                    this.handleJump(url);
+                  }}
+                >
+                  <Trans>Authorize</Trans>
                 </div>
               </div>
             </div>
-          )}
+          </div>
+        )}
         {this.state.settingLogin === "email" && (
           <div
             className="voice-add-new-container"
@@ -463,8 +463,8 @@ class AccountSetting extends React.Component<
                       this.setState({ isSendingCode: false });
                       toast.error(
                         this.props.t("Failed to send code, error code") +
-                        ": " +
-                        response.msg,
+                          ": " +
+                          response.msg,
                         { id: "send-email-code" }
                       );
                     }
@@ -559,8 +559,8 @@ class AccountSetting extends React.Component<
                   } else if (response.code === 401) {
                     toast.error(
                       this.props.t("Redeem failed, error code") +
-                      ": " +
-                      response.msg,
+                        ": " +
+                        response.msg,
                       {
                         id: "redeem-code",
                       }
@@ -580,8 +580,8 @@ class AccountSetting extends React.Component<
                   } else {
                     toast.error(
                       this.props.t("Redeem failed, error code") +
-                      ": " +
-                      response.msg,
+                        ": " +
+                        response.msg,
                       {
                         id: "redeem-code",
                       }
@@ -876,8 +876,8 @@ class AccountSetting extends React.Component<
                   ? this.props.t("Free quota")
                   : 0) +
                   (this.props.userInfo &&
-                    this.props.userInfo.tts_credits &&
-                    this.props.userInfo.tts_credits > 0
+                  this.props.userInfo.tts_credits &&
+                  this.props.userInfo.tts_credits > 0
                     ? " + " + this.props.userInfo.tts_credits
                     : "")}
               </span>
@@ -971,10 +971,10 @@ class AccountSetting extends React.Component<
               if (!this.props.isAuthed) {
                 openInBrowser(
                   getWebsiteUrl() +
-                  (ConfigService.getReaderConfig("lang").startsWith("zh")
-                    ? "/zh"
-                    : "/en") +
-                  "/pricing"
+                    (ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ? "/zh"
+                      : "/en") +
+                    "/pricing"
                 );
                 return;
               }
@@ -984,13 +984,13 @@ class AccountSetting extends React.Component<
                 let deviceUuid = await TokenService.getFingerprint();
                 openInBrowser(
                   getWebsiteUrl() +
-                  (ConfigService.getReaderConfig("lang").startsWith("zh")
-                    ? "/zh"
-                    : "/en") +
-                  "/pricing?temp_token=" +
-                  tempToken +
-                  "&device_uuid=" +
-                  deviceUuid
+                    (ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ? "/zh"
+                      : "/en") +
+                    "/pricing?temp_token=" +
+                    tempToken +
+                    "&device_uuid=" +
+                    deviceUuid
                 );
               } else if (response.code === 401) {
                 this.props.handleFetchAuthed();

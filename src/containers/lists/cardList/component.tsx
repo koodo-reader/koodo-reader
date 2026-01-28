@@ -196,10 +196,10 @@ class CardList extends React.Component<CardListProps, CardListStates> {
               this.props.mode === "note" && !this.props.isCollapsed
                 ? { height: "250px" }
                 : this.props.mode === "note" && this.props.isCollapsed
-                ? { height: "250px", width: "calc(50vw - 70px)" }
-                : this.props.isCollapsed
-                ? { width: "calc(50vw - 70px)" }
-                : {}
+                  ? { height: "250px", width: "calc(50vw - 70px)" }
+                  : this.props.isCollapsed
+                    ? { width: "calc(50vw - 70px)" }
+                    : {}
             }
           >
             <div className="card-list-item-card">

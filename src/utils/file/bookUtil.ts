@@ -254,14 +254,16 @@ class BookUtil {
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
         window.require("electron").ipcRenderer.invoke("new-tab", {
-          url: `${window.location.href.split("#")[0]}#/${ref}/${book.key
-            }?title=${book.name}&file=${book.key}`,
+          url: `${window.location.href.split("#")[0]}#/${ref}/${
+            book.key
+          }?title=${book.name}&file=${book.key}`,
         });
       } else {
         const { ipcRenderer } = window.require("electron");
         ipcRenderer.invoke("open-book", {
-          url: `${window.location.href.split("#")[0]}#/${ref}/${book.key
-            }?title=${book.name}&file=${book.key}`,
+          url: `${window.location.href.split("#")[0]}#/${ref}/${
+            book.key
+          }?title=${book.name}&file=${book.key}`,
           isMergeWord: ConfigService.getReaderConfig("isMergeWord"),
           isAutoFullscreen: ConfigService.getReaderConfig("isAutoFullscreen"),
           isPreventSleep: ConfigService.getReaderConfig("isPreventSleep"),
@@ -270,7 +272,8 @@ class BookUtil {
       }
     } else {
       window.open(
-        `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${book.name
+        `${window.location.href.split("#")[0]}#/${ref}/${book.key}?title=${
+          book.name
         }&file=${book.key}`
       );
     }
@@ -557,7 +560,11 @@ class BookUtil {
 
       if (sortField === "name" || sortField === "author") {
         results.sort((a: any, b: any) => {
-          const comparison = a[sortField].localeCompare(b[sortField], undefined, { numeric: true, sensitivity: "base" });
+          const comparison = a[sortField].localeCompare(
+            b[sortField],
+            undefined,
+            { numeric: true, sensitivity: "base" }
+          );
           return orderField === "ASC" ? comparison : -comparison;
         });
       } else if (sortField === "key") {
@@ -571,7 +578,10 @@ class BookUtil {
       let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
       if (sortField === "name") {
         books.sort((a, b) => {
-          const comparison = a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" });
+          const comparison = a.name.localeCompare(b.name, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          });
           return orderField === "ASC" ? comparison : -comparison;
         });
         return books.map((item) => {
@@ -579,7 +589,10 @@ class BookUtil {
         });
       } else if (sortField === "author") {
         books.sort((a, b) => {
-          const comparison = a.author.localeCompare(b.author, undefined, { numeric: true, sensitivity: "base" });
+          const comparison = a.author.localeCompare(b.author, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          });
           return orderField === "ASC" ? comparison : -comparison;
         });
         return books.map((item) => {

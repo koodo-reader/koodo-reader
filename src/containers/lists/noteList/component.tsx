@@ -77,8 +77,8 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       cards: this.props.isSearch
         ? this.props.searchResults
         : this.state.tag.length > 0
-        ? this.state.cardList
-        : this.state.cardList,
+          ? this.state.cardList
+          : this.state.cardList,
       mode: this.props.tabMode,
       bookNamesMap: this.state.bookNamesMap,
     };

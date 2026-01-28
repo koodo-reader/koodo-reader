@@ -234,7 +234,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           parserRegex: "",
           isDarkMode:
             ConfigService.getReaderConfig("backgroundColor") ===
-              "rgba(44,47,49,1)"
+            "rgba(44,47,49,1)"
               ? "yes"
               : "no",
           backgroundColor: ConfigService.getReaderConfig("backgroundColor"),
@@ -247,8 +247,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           ocrLang: ConfigService.getReaderConfig("ocrLang")
             ? ConfigService.getReaderConfig("ocrLang")
             : ocrLangList.find(
-              (item) => item.lang === ConfigService.getReaderConfig("lang")
-            )?.value || "chi_sim",
+                (item) => item.lang === ConfigService.getReaderConfig("lang")
+              )?.value || "chi_sim",
           ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "tesseract",
           serverRegion:
             ConfigService.getItem("serverRegion") === "china"
@@ -365,14 +365,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapterDocIndex =
           bookLocation.chapterTitle && this.props.htmlBook
             ? _.findLastIndex(
-              this.props.htmlBook.flattenChapters.map((item) => {
-                item.label = item.label.trim();
-                return item;
-              }),
-              {
-                label: bookLocation.chapterTitle.trim(),
-              }
-            )
+                this.props.htmlBook.flattenChapters.map((item) => {
+                  item.label = item.label.trim();
+                  return item;
+                }),
+                {
+                  label: bookLocation.chapterTitle.trim(),
+                }
+              )
             : 0;
       }
       this.props.handleCurrentChapter(chapter);
@@ -518,11 +518,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           />
         ) : null}
         {this.props.isOpenMenu &&
-          this.props.htmlBook &&
-          (this.props.menuMode === "dict" ||
-            this.props.menuMode === "trans" ||
-            this.props.menuMode === "assistant" ||
-            this.props.menuMode === "note") ? (
+        this.props.htmlBook &&
+        (this.props.menuMode === "dict" ||
+          this.props.menuMode === "trans" ||
+          this.props.menuMode === "assistant" ||
+          this.props.menuMode === "note") ? (
           <PopupBox
             {...{
               rendition: this.props.htmlBook.rendition,
@@ -551,19 +551,19 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           id="page-area"
           style={
             this.props.readerMode === "scroll" &&
-              document.body.clientWidth >= 570
+            document.body.clientWidth >= 570
               ? {
-                // marginLeft: this.state.pageOffset,
-                // marginRight: this.state.pageOffset,
-                paddingLeft: "0px",
-                paddingRight: "15px",
-                left: this.state.pageOffset,
-                width: this.state.pageWidth,
-              }
+                  // marginLeft: this.state.pageOffset,
+                  // marginRight: this.state.pageOffset,
+                  paddingLeft: "0px",
+                  paddingRight: "15px",
+                  left: this.state.pageOffset,
+                  width: this.state.pageWidth,
+                }
               : {
-                left: this.state.pageOffset,
-                width: this.state.pageWidth,
-              }
+                  left: this.state.pageOffset,
+                  width: this.state.pageWidth,
+                }
           }
         ></div>
         <PageWidget />

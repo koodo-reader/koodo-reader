@@ -254,12 +254,16 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               ConfigService.getReaderConfig("appSkin") === "night" ||
               (ConfigService.getReaderConfig("appSkin") === "system" &&
                 ConfigService.getReaderConfig("isOSNight") === "yes")
-                ? require(`../../assets/images/logo-dark${
-                    this.props.isAuthed ? "-pro" : ""
-                  }.png`)
-                : require(`../../assets/images/logo-light${
-                    this.props.isAuthed ? "-pro" : ""
-                  }.png`)
+                ? require(
+                    `../../assets/images/logo-dark${
+                      this.props.isAuthed ? "-pro" : ""
+                    }.png`
+                  )
+                : require(
+                    `../../assets/images/logo-light${
+                      this.props.isAuthed ? "-pro" : ""
+                    }.png`
+                  )
             }
             alt=""
             onClick={() => {
@@ -279,8 +283,8 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 this.state.isCollapsed
                   ? { display: "none" }
                   : this.state.isCollpaseShelf
-                  ? {}
-                  : { border: "none" }
+                    ? {}
+                    : { border: "none" }
               }
             >
               <div className="side-shelf-title">
