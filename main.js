@@ -8,12 +8,12 @@ const {
   powerSaveBlocker,
   nativeTheme,
   protocol,
-  screen
+  screen,
 } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
-const log = require('electron-log/main');
+const log = require("electron-log/main");
 const os = require("os");
 const store = new Store();
 const fs = require("fs");
@@ -22,7 +22,7 @@ const dirPath = path.join(configDir, "uploads");
 const packageJson = require("./package.json");
 let mainWin;
 let readerWindow;
-let readerWindowList = []
+let readerWindowList = [];
 let dictWindow;
 let transWindow;
 let linkWindow;
@@ -42,19 +42,15 @@ if (process.platform != "darwin" && process.argv.length >= 2) {
 log.transports.file.fileName = "debug.log";
 log.transports.file.maxSize = 1024 * 1024; // 1MB
 log.initialize();
-store.set(
-  "appVersion", packageJson.version,
-);
-store.set(
-  "appPlatform", os.platform() + " " + os.release(),
-);
-const mainWinDisplayScale = store.get("mainWinDisplayScale") || 1
+store.set("appVersion", packageJson.version);
+store.set("appPlatform", os.platform() + " " + os.release());
+const mainWinDisplayScale = store.get("mainWinDisplayScale") || 1;
 let options = {
   width: parseInt(store.get("mainWinWidth") || 1050) / mainWinDisplayScale,
   height: parseInt(store.get("mainWinHeight") || 660) / mainWinDisplayScale,
   x: parseInt(store.get("mainWinX")),
   y: parseInt(store.get("mainWinY")),
-  backgroundColor: '#fff',
+  backgroundColor: "#fff",
   webPreferences: {
     webSecurity: false,
     nodeIntegration: true,
@@ -67,7 +63,7 @@ let options = {
   },
 };
 const Database = require("better-sqlite3");
-if (os.platform() === 'linux') {
+if (os.platform() === "linux") {
   options = Object.assign({}, options, {
     icon: path.join(__dirname, "./build/assets/icon.png"),
   });
@@ -99,38 +95,53 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
     if (!fs.existsSync(path.join(storagePath, "config"))) {
       fs.mkdirSync(path.join(storagePath, "config"), { recursive: true });
     }
-    dbConnection[dbName] = new Database(path.join(storagePath, "config", `${dbName}.db`), {});
-    dbConnection[dbName].pragma('journal_mode = WAL');
+    dbConnection[dbName] = new Database(
+      path.join(storagePath, "config", `${dbName}.db`),
+      {}
+    );
+    dbConnection[dbName].pragma("journal_mode = WAL");
     dbConnection[dbName].exec(sqlStatement["createTableStatement"][dbName]);
   }
   return dbConnection[dbName];
-}
+};
 const getSyncUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !syncUtilCache[config.service]) {
-    const { SyncUtil, TokenService, ConfigService, ThirdpartyRequest } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { SyncUtil, TokenService, ConfigService, ThirdpartyRequest } =
+      await import("./src/assets/lib/kookit-extra.min.mjs");
     let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
 
-    syncUtilCache[config.service] = new SyncUtil(config.service, config, config.storagePath, thirdpartyRequest);
+    syncUtilCache[config.service] = new SyncUtil(
+      config.service,
+      config,
+      config.storagePath,
+      thirdpartyRequest
+    );
   }
   return syncUtilCache[config.service];
-}
+};
 const removeSyncUtil = (config) => {
   delete syncUtilCache[config.service];
-}
+};
 const getPickerUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !pickerUtilCache[config.service]) {
-    const { SyncUtil, TokenService, ThirdpartyRequest, ConfigService } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { SyncUtil, TokenService, ThirdpartyRequest, ConfigService } =
+      await import("./src/assets/lib/kookit-extra.min.mjs");
     let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
 
-    pickerUtilCache[config.service] = new SyncUtil(config.service, config, config.storagePath, thirdpartyRequest);
+    pickerUtilCache[config.service] = new SyncUtil(
+      config.service,
+      config,
+      config.storagePath,
+      thirdpartyRequest
+    );
   }
   return pickerUtilCache[config.service];
-}
+};
 const removePickerUtil = (config) => {
   if (pickerUtilCache[config.service]) {
     pickerUtilCache[config.service] = null;
   }
-}
+};
 // Simple encryption function
 const encrypt = (text, key) => {
   let result = "";
@@ -139,7 +150,7 @@ const encrypt = (text, key) => {
     result += String.fromCharCode(charCode);
   }
   return Buffer.from(result).toString("base64");
-}
+};
 
 // Simple decryption function
 const decrypt = (encryptedText, key) => {
@@ -150,7 +161,7 @@ const decrypt = (encryptedText, key) => {
     result += String.fromCharCode(charCode);
   }
   return result;
-}
+};
 // Helper to check if two rectangles intersect (for partial visibility)
 const rectanglesIntersect = (rect1, rect2) => {
   return !(
@@ -159,7 +170,7 @@ const rectanglesIntersect = (rect1, rect2) => {
     rect1.x >= rect2.x + rect2.width ||
     rect1.y >= rect2.y + rect2.height
   );
-}
+};
 
 // Check if the window is at least partially visible on any display
 const isWindowPartiallyVisible = (bounds) => {
@@ -170,7 +181,7 @@ const isWindowPartiallyVisible = (bounds) => {
     }
   }
   return false;
-}
+};
 const createMainWin = () => {
   const isMainWindVisible = isWindowPartiallyVisible({
     width: parseInt(store.get("mainWinWidth") || 1050) / mainWinDisplayScale,
@@ -179,8 +190,8 @@ const createMainWin = () => {
     y: parseInt(store.get("mainWinY")),
   });
   if (!isMainWindVisible) {
-    delete options.x
-    delete options.y
+    delete options.x;
+    delete options.y;
   }
   mainWin = new BrowserWindow(options);
   if (store.get("isAlwaysOnTop") === "yes") {
@@ -209,7 +220,8 @@ const createMainWin = () => {
           mainWinHeight: bounds.height,
           mainWinX: mainWin.isMaximized() ? 0 : bounds.x,
           mainWinY: mainWin.isMaximized() ? 0 : bounds.y,
-          mainWinDisplayScale: currentDisplay.scaleFactor / primaryDisplay.scaleFactor,
+          mainWinDisplayScale:
+            currentDisplay.scaleFactor / primaryDisplay.scaleFactor,
         });
       }
     }
@@ -217,25 +229,25 @@ const createMainWin = () => {
   });
   mainWin.on("resize", () => {
     if (mainView) {
-      if (!mainWin) return
-      let { width, height } = mainWin.getContentBounds()
-      mainView.setBounds({ x: 0, y: 0, width: width, height: height })
+      if (!mainWin) return;
+      let { width, height } = mainWin.getContentBounds();
+      mainView.setBounds({ x: 0, y: 0, width: width, height: height });
     }
   });
   mainWin.on("maximize", () => {
     if (mainView) {
-      let { width, height } = mainWin.getContentBounds()
-      mainView.setBounds({ x: 0, y: 0, width: width, height: height })
+      let { width, height } = mainWin.getContentBounds();
+      mainView.setBounds({ x: 0, y: 0, width: width, height: height });
     }
   });
   mainWin.on("unmaximize", () => {
     if (mainView) {
-      let { width, height } = mainWin.getContentBounds()
-      mainView.setBounds({ x: 0, y: 0, width: width, height: height })
+      let { width, height } = mainWin.getContentBounds();
+      mainView.setBounds({ x: 0, y: 0, width: width, height: height });
     }
   });
   //cancel-download-app
-  ipcMain.handle('cancel-download-app', (event, arg) => {
+  ipcMain.handle("cancel-download-app", (event, arg) => {
     // Implement cancellation logic here
     // Note: In this example, we are not keeping a reference to the request,
     // so we cannot actually abort it. This is a placeholder for demonstration.
@@ -243,11 +255,11 @@ const createMainWin = () => {
       downloadRequest.abort();
       downloadRequest = null;
     }
-    event.returnValue = 'cancelled';
+    event.returnValue = "cancelled";
   });
-  ipcMain.handle('update-win-app', (event, config) => {
+  ipcMain.handle("update-win-app", (event, config) => {
     let fileName = `koodo-reader-installer.exe`;
-    let supportedArchs = ['x64', 'ia32', 'arm64'];
+    let supportedArchs = ["x64", "ia32", "arm64"];
     //get system arch
     let arch = os.arch();
     if (!supportedArchs.includes(arch)) {
@@ -257,44 +269,47 @@ const createMainWin = () => {
     let url = `https://dl.koodoreader.com/v${config.version}/Koodo-Reader-${config.version}-${arch}.exe`;
     const https = require("https");
     const { spawn } = require("child_process");
-    const file = fs.createWriteStream(path.join(app.getPath('temp'), fileName));
+    const file = fs.createWriteStream(path.join(app.getPath("temp"), fileName));
     downloadRequest = https.get(url, (res) => {
-      const totalSize = parseInt(res.headers['content-length'], 10);
+      const totalSize = parseInt(res.headers["content-length"], 10);
       let downloadedSize = 0;
-      res.on('data', (chunk) => {
+      res.on("data", (chunk) => {
         downloadedSize += chunk.length;
         const progress = ((downloadedSize / totalSize) * 100).toFixed(2);
         const downloadedMB = (downloadedSize / 1024 / 1024).toFixed(2);
         const totalMB = (totalSize / 1024 / 1024).toFixed(2);
-        mainWin.webContents.send('download-app-progress', { progress, downloadedMB, totalMB });
+        mainWin.webContents.send("download-app-progress", {
+          progress,
+          downloadedMB,
+          totalMB,
+        });
       });
 
       res.pipe(file);
-      file.on('finish', () => {
-        console.log('\n下载完成！');
+      file.on("finish", () => {
+        console.log("\n下载完成！");
         file.close();
 
-
-        let updateExePath = path.join(app.getPath('temp'), fileName);
+        let updateExePath = path.join(app.getPath("temp"), fileName);
         if (!fs.existsSync(updateExePath)) {
-          console.error('更新包不存在:', updateExePath);
+          console.error("更新包不存在:", updateExePath);
           return;
         }
         // 验证文件可执行性
         try {
           fs.accessSync(updateExePath, fs.constants.X_OK);
-          console.info('更新包可执行性验证通过');
+          console.info("更新包可执行性验证通过");
         } catch (err) {
-          console.error('更新包不可执行:', err.message);
+          console.error("更新包不可执行:", err.message);
           return;
         }
         try {
           // 使用 spawn 执行非静默安装
           const child = spawn(updateExePath, [], {
-            stdio: ['ignore', 'pipe', 'pipe'], // 捕获 stdout 和 stderr 以便调试
-            detached: true,                    // 独立进程
-            shell: true,                      // 确保 UAC 提示
-            windowsHide: false                // 确保窗口可见
+            stdio: ["ignore", "pipe", "pipe"], // 捕获 stdout 和 stderr 以便调试
+            detached: true, // 独立进程
+            shell: true, // 确保 UAC 提示
+            windowsHide: false, // 确保窗口可见
           });
 
           setTimeout(() => {
@@ -311,7 +326,7 @@ const createMainWin = () => {
     let { url, isMergeWord, isAutoFullscreen, isPreventSleep } = config;
     options.webPreferences.nodeIntegrationInSubFrames = true;
     if (isMergeWord) {
-      delete options.backgroundColor
+      delete options.backgroundColor;
     }
     store.set({
       url,
@@ -325,10 +340,9 @@ const createMainWin = () => {
       console.log(powerSaveBlocker.isStarted(id));
     }
 
-
     if (isAutoFullscreen === "yes") {
       if (readerWindow) {
-        readerWindowList.push(readerWindow)
+        readerWindowList.push(readerWindow);
       }
       readerWindow = new BrowserWindow(options);
       if (store.get("isAlwaysOnTop") === "yes") {
@@ -338,9 +352,9 @@ const createMainWin = () => {
       readerWindow.maximize();
     } else {
       if (readerWindow) {
-        readerWindowList.push(readerWindow)
+        readerWindowList.push(readerWindow);
       }
-      const scaleRatio = store.get("windowDisplayScale") || 1
+      const scaleRatio = store.get("windowDisplayScale") || 1;
       const isWindowVisible = isWindowPartiallyVisible({
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
@@ -372,9 +386,20 @@ const createMainWin = () => {
           store.set({
             windowWidth: bounds.width,
             windowHeight: bounds.height,
-            windowX: readerWindow.isMaximized() && currentDisplay.id === primaryDisplay.id ? 0 : bounds.x,
-            windowY: readerWindow.isMaximized() && currentDisplay.id === primaryDisplay.id ? 0 : (bounds.y < 0 ? 0 : bounds.y),
-            windowDisplayScale: currentDisplay.scaleFactor / primaryDisplay.scaleFactor,
+            windowX:
+              readerWindow.isMaximized() &&
+              currentDisplay.id === primaryDisplay.id
+                ? 0
+                : bounds.x,
+            windowY:
+              readerWindow.isMaximized() &&
+              currentDisplay.id === primaryDisplay.id
+                ? 0
+                : bounds.y < 0
+                  ? 0
+                  : bounds.y,
+            windowDisplayScale:
+              currentDisplay.scaleFactor / primaryDisplay.scaleFactor,
           });
         }
       }
@@ -382,31 +407,36 @@ const createMainWin = () => {
         id && powerSaveBlocker.stop(id);
       }
       if (mainWin && !mainWin.isDestroyed()) {
-        mainWin.webContents.send('reading-finished', {});
+        mainWin.webContents.send("reading-finished", {});
       }
-
     });
-
 
     event.returnValue = "success";
   });
   ipcMain.handle("generate-tts", async (event, voiceConfig) => {
     let { text, speed, plugin, config } = voiceConfig;
-    let voiceFunc = plugin.script
+    let voiceFunc = plugin.script;
     // eslint-disable-next-line no-eval
     eval(voiceFunc);
     return global.getAudioPath(text, speed, dirPath, config);
-
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
     let syncUtil = await getSyncUtil(config, config.isUseCache);
-    let result = await syncUtil.uploadFile(config.fileName, config.fileName, config.type);
+    let result = await syncUtil.uploadFile(
+      config.fileName,
+      config.fileName,
+      config.type
+    );
     return result;
   });
 
   ipcMain.handle("cloud-download", async (event, config) => {
     let syncUtil = await getSyncUtil(config);
-    let result = await syncUtil.downloadFile(config.fileName, (config.isTemp ? "temp-" : "") + config.fileName, config.type);
+    let result = await syncUtil.downloadFile(
+      config.fileName,
+      (config.isTemp ? "temp-" : "") + config.fileName,
+      config.type
+    );
     return result;
   });
   ipcMain.handle("cloud-progress", async (event, config) => {
@@ -416,7 +446,10 @@ const createMainWin = () => {
   });
   ipcMain.handle("picker-download", async (event, config) => {
     let pickerUtil = await getPickerUtil(config);
-    let result = await pickerUtil.remote.downloadFile(config.sourcePath, config.destPath);
+    let result = await pickerUtil.remote.downloadFile(
+      config.sourcePath,
+      config.destPath
+    );
     return result;
   });
   ipcMain.handle("picker-progress", async (event, config) => {
@@ -443,7 +476,6 @@ const createMainWin = () => {
       console.error("Error deleting file:", error);
     }
     return false;
-
   });
 
   ipcMain.handle("cloud-list", async (event, config) => {
@@ -488,7 +520,8 @@ const createMainWin = () => {
     return path.filePaths[0];
   });
   ipcMain.handle("encrypt-data", async (event, config) => {
-    const { TokenService } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { TokenService } =
+      await import("./src/assets/lib/kookit-extra.min.mjs");
     let fingerprint = await TokenService.getFingerprint();
     let encrypted = encrypt(config.token, fingerprint);
     store.set("encryptedToken", encrypted);
@@ -497,22 +530,22 @@ const createMainWin = () => {
   ipcMain.handle("decrypt-data", async (event) => {
     let encrypted = store.get("encryptedToken");
     if (!encrypted) return "";
-    const { TokenService } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { TokenService } =
+      await import("./src/assets/lib/kookit-extra.min.mjs");
     let fingerprint = await TokenService.getFingerprint();
     let decrypted = decrypt(encrypted, fingerprint);
     if (decrypted.startsWith("{") && decrypted.endsWith("}")) {
-      return decrypted
+      return decrypted;
     } else {
-      const { safeStorage } = require("electron")
+      const { safeStorage } = require("electron");
       decrypted = safeStorage.decryptString(Buffer.from(encrypted, "base64"));
       let newEncrypted = encrypt(decrypted, fingerprint);
       store.set("encryptedToken", newEncrypted);
       return decrypted;
     }
-
   });
   ipcMain.handle("get-mac", async (event, config) => {
-    const { machineIdSync } = require('node-machine-id');
+    const { machineIdSync } = require("node-machine-id");
     return machineIdSync();
   });
   ipcMain.handle("get-store-value", async (event, config) => {
@@ -522,22 +555,20 @@ const createMainWin = () => {
   ipcMain.handle("reset-reader-position", async (event) => {
     store.delete("windowX");
     store.delete("windowY");
-    return "success"
-
+    return "success";
   });
   ipcMain.handle("reset-main-position", async (event) => {
     store.delete("mainWinX");
     store.delete("mainWinY");
-    app.relaunch()
-    app.exit()
-    return "success"
-
+    app.relaunch();
+    app.exit();
+    return "success";
   });
 
   ipcMain.handle("select-file", async (event, config) => {
     const result = await dialog.showOpenDialog({
-      properties: ['openFile'],
-      filters: [{ name: 'Zip Files', extensions: ['zip'] }]
+      properties: ["openFile"],
+      filters: [{ name: "Zip Files", extensions: ["zip"] }],
     });
 
     if (result.canceled) {
@@ -550,23 +581,46 @@ const createMainWin = () => {
 
   ipcMain.handle("select-book", async (event, config) => {
     const result = await dialog.showOpenDialog({
-      properties: ['openFile', 'multiSelections'],
-      filters: [{
-        name: 'Books', extensions: ["epub", "pdf", "txt", "mobi", "azw3", "azw", "htm", "html", "xml", "xhtml", "mhtml", "docx", "md", "fb2", "cbz", "cbt", "cbr", "cb7",]
-      }]
+      properties: ["openFile", "multiSelections"],
+      filters: [
+        {
+          name: "Books",
+          extensions: [
+            "epub",
+            "pdf",
+            "txt",
+            "mobi",
+            "azw3",
+            "azw",
+            "htm",
+            "html",
+            "xml",
+            "xhtml",
+            "mhtml",
+            "docx",
+            "md",
+            "fb2",
+            "cbz",
+            "cbt",
+            "cbr",
+            "cb7",
+          ],
+        },
+      ],
     });
 
     if (result.canceled) {
-      console.log('User canceled the file selection');
+      console.log("User canceled the file selection");
       return [];
     } else {
       const filePaths = result.filePaths;
-      console.log('Selected file path:', filePaths);
+      console.log("Selected file path:", filePaths);
       return filePaths;
     }
   });
   ipcMain.handle("custom-database-command", async (event, config) => {
-    const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { SqlStatement } =
+      await import("./src/assets/lib/kookit-extra.min.mjs");
     let { query, storagePath, data, dbName, executeType } = config;
     let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
     const row = db.prepare(query);
@@ -577,13 +631,14 @@ const createMainWin = () => {
       result = row[executeType]();
     }
     return result;
-
   });
   ipcMain.handle("database-command", async (event, config) => {
-    const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
-    let { statement, statementType, executeType, dbName, data, storagePath } = config;
+    const { SqlStatement } =
+      await import("./src/assets/lib/kookit-extra.min.mjs");
+    let { statement, statementType, executeType, dbName, data, storagePath } =
+      config;
     let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
-    let sql = ""
+    let sql = "";
     if (statementType === "string") {
       sql = SqlStatement.sqlStatement[statement][dbName];
     } else if (statementType === "function") {
@@ -593,22 +648,23 @@ const createMainWin = () => {
     let result;
     if (data) {
       if (statement.startsWith("save") || statement.startsWith("update")) {
-        data = SqlStatement.jsonToSqlite[dbName](data)
+        data = SqlStatement.jsonToSqlite[dbName](data);
       }
       result = row[executeType](data);
     } else {
       result = row[executeType]();
     }
-    if (executeType === 'all') {
-      return result.map(item => SqlStatement.sqliteToJson[dbName](item));
-    } else if (executeType === 'get') {
+    if (executeType === "all") {
+      return result.map((item) => SqlStatement.sqliteToJson[dbName](item));
+    } else if (executeType === "get") {
       return SqlStatement.sqliteToJson[dbName](result);
     } else {
       return result;
     }
   });
   ipcMain.handle("close-database", async (event, config) => {
-    const { SqlStatement } = await import('./src/assets/lib/kookit-extra.min.mjs');
+    const { SqlStatement } =
+      await import("./src/assets/lib/kookit-extra.min.mjs");
     let { dbName, storagePath } = config;
     let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
     delete dbConnection[dbName];
@@ -622,7 +678,6 @@ const createMainWin = () => {
       } else {
         mainWin.setAlwaysOnTop(false);
       }
-
     }
     if (readerWindow && !readerWindow.isDestroyed()) {
       if (config.isAlwaysOnTop === "yes") {
@@ -632,7 +687,7 @@ const createMainWin = () => {
       }
     }
     return "pong";
-  })
+  });
   ipcMain.handle("set-auto-maximize", async (event, config) => {
     store.set("isAutoMaximizeWin", config.isAutoMaximizeWin);
     if (mainWin && !mainWin.isDestroyed()) {
@@ -641,7 +696,6 @@ const createMainWin = () => {
       } else {
         mainWin.unmaximize();
       }
-
     }
     if (readerWindow && !readerWindow.isDestroyed()) {
       if (config.isAlwaysOnTop === "yes") {
@@ -651,13 +705,13 @@ const createMainWin = () => {
       }
     }
     return "pong";
-  })
+  });
   ipcMain.handle("toggle-auto-launch", async (event, config) => {
     app.setLoginItemSettings({
-      openAtLogin: config.isAutoLaunch === "yes"
-    })
+      openAtLogin: config.isAutoLaunch === "yes",
+    });
     return "pong";
-  })
+  });
   ipcMain.handle("open-explorer-folder", async (event, config) => {
     const { shell } = require("electron");
     if (config.isFolder) {
@@ -667,19 +721,23 @@ const createMainWin = () => {
     }
 
     return "pong";
-  })
+  });
   ipcMain.handle("get-debug-logs", async (event, config) => {
     const { shell } = require("electron");
     const file = log.transports.file.getFile();
     shell.showItemInFolder(file.path);
     return "pong";
-  })
+  });
 
   ipcMain.on("user-data", (event, arg) => {
     event.returnValue = dirPath;
   });
   ipcMain.handle("hide-reader", (event, arg) => {
-    if (!readerWindow.isDestroyed() && readerWindow && readerWindow.isFocused()) {
+    if (
+      readerWindow &&
+      !readerWindow.isDestroyed() &&
+      readerWindow.isFocused()
+    ) {
       readerWindow.minimize();
       event.returnvalue = true;
     } else if (mainWin && mainWin.isFocused()) {
@@ -695,13 +753,21 @@ const createMainWin = () => {
   });
   ipcMain.handle("reload-reader", (event, arg) => {
     if (readerWindowList.length > 0) {
-      readerWindowList.forEach(win => {
-        if (win && !win.isDestroyed() && win.webContents.getURL().indexOf(arg.bookKey) > -1) {
+      readerWindowList.forEach((win) => {
+        if (
+          win &&
+          !win.isDestroyed() &&
+          win.webContents.getURL().indexOf(arg.bookKey) > -1
+        ) {
           win.reload();
         }
-      })
+      });
     }
-    if (readerWindow && !readerWindow.isDestroyed() && readerWindow.webContents.getURL().indexOf(arg.bookKey) > -1) {
+    if (
+      readerWindow &&
+      !readerWindow.isDestroyed() &&
+      readerWindow.webContents.getURL().indexOf(arg.bookKey) > -1
+    ) {
       readerWindow.reload();
     }
   });
@@ -734,32 +800,32 @@ const createMainWin = () => {
       chatWindow.focus();
     }
   });
-  ipcMain.handle('clear-all-data', (event, config) => {
+  ipcMain.handle("clear-all-data", (event, config) => {
     store.clear();
   });
   ipcMain.handle("new-tab", (event, config) => {
     if (mainWin) {
-      mainView = new WebContentsView(options)
-      mainWin.contentView.addChildView(mainView)
-      let { width, height } = mainWin.getContentBounds()
-      mainView.setBounds({ x: 0, y: 0, width: width, height: height })
-      mainView.webContents.loadURL(config.url)
+      mainView = new WebContentsView(options);
+      mainWin.contentView.addChildView(mainView);
+      let { width, height } = mainWin.getContentBounds();
+      mainView.setBounds({ x: 0, y: 0, width: width, height: height });
+      mainView.webContents.loadURL(config.url);
     }
   });
   ipcMain.handle("reload-tab", (event, config) => {
     if (mainWin && mainView) {
-      mainView.webContents.reload()
+      mainView.webContents.reload();
     }
   });
   ipcMain.handle("adjust-tab-size", (event, config) => {
     if (mainWin && mainView) {
-      let { width, height } = mainWin.getContentBounds()
-      mainView.setBounds({ x: 0, y: 0, width: width, height: height })
+      let { width, height } = mainWin.getContentBounds();
+      mainView.setBounds({ x: 0, y: 0, width: width, height: height });
     }
   });
   ipcMain.handle("exit-tab", (event, message) => {
     if (mainWin && mainView) {
-      mainWin.contentView.removeChildView(mainView)
+      mainWin.contentView.removeChildView(mainView);
     }
   });
   ipcMain.handle("enter-tab-fullscreen", () => {
@@ -818,9 +884,9 @@ const createMainWin = () => {
     if (readerWindow) {
       readerWindow.close();
       if (store.get("isMergeWord") === "yes") {
-        delete options.backgroundColor
+        delete options.backgroundColor;
       }
-      const scaleRatio = store.get("windowDisplayScale") || 1
+      const scaleRatio = store.get("windowDisplayScale") || 1;
       Object.assign(options, {
         width: parseInt(store.get("windowWidth") || 1050) / scaleRatio,
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
@@ -837,7 +903,7 @@ const createMainWin = () => {
         store.get("isMergeWord") !== "yes" ? "yes" : "no"
       );
       if (readerWindow) {
-        readerWindowList.push(readerWindow)
+        readerWindowList.push(readerWindow);
       }
       readerWindow = new BrowserWindow(options);
       if (store.get("isAlwaysOnTop") === "yes") {
@@ -854,8 +920,18 @@ const createMainWin = () => {
             store.set({
               windowWidth: bounds.width,
               windowHeight: bounds.height,
-              windowX: readerWindow.isMaximized() && currentDisplay.id === primaryDisplay.id ? 0 : bounds.x,
-              windowY: readerWindow.isMaximized() && currentDisplay.id === primaryDisplay.id ? 0 : (bounds.y < 0 ? 0 : bounds.y),
+              windowX:
+                readerWindow.isMaximized() &&
+                currentDisplay.id === primaryDisplay.id
+                  ? 0
+                  : bounds.x,
+              windowY:
+                readerWindow.isMaximized() &&
+                currentDisplay.id === primaryDisplay.id
+                  ? 0
+                  : bounds.y < 0
+                    ? 0
+                    : bounds.y,
             });
           }
         }
@@ -863,7 +939,7 @@ const createMainWin = () => {
           id && powerSaveBlocker.stop(id);
         }
         if (mainWin && !mainWin.isDestroyed()) {
-          mainWin.webContents.send('reading-finished', {});
+          mainWin.webContents.send("reading-finished", {});
         }
       });
     }
@@ -874,13 +950,15 @@ const createMainWin = () => {
   });
   ipcMain.on("url-window-status", (event, config) => {
     if (config.type === "dict") {
-      event.returnValue = dictWindow && !dictWindow.isDestroyed() ? true : false;
+      event.returnValue =
+        dictWindow && !dictWindow.isDestroyed() ? true : false;
     } else if (config.type === "trans") {
-      event.returnValue = transWindow && !transWindow.isDestroyed() ? true : false;
+      event.returnValue =
+        transWindow && !transWindow.isDestroyed() ? true : false;
     } else {
-      event.returnValue = linkWindow && !linkWindow.isDestroyed() ? true : false;
+      event.returnValue =
+        linkWindow && !linkWindow.isDestroyed() ? true : false;
     }
-
   });
   ipcMain.on("get-dirname", (event, arg) => {
     event.returnValue = __dirname;
@@ -922,7 +1000,6 @@ const createMainWin = () => {
   });
 };
 
-
 app.on("ready", () => {
   createMainWin();
 });
@@ -933,9 +1010,9 @@ app.on("open-file", (e, pathToFile) => {
   filePath = pathToFile;
 });
 // Register protocol handler
-app.setAsDefaultProtocolClient('koodo-reader');
+app.setAsDefaultProtocolClient("koodo-reader");
 // Handle deep linking
-app.on('second-instance', (event, commandLine) => {
+app.on("second-instance", (event, commandLine) => {
   const url = commandLine.pop();
   if (url) {
     handleCallback(url);
@@ -944,52 +1021,51 @@ app.on('second-instance', (event, commandLine) => {
 const originalConsoleLog = console.log;
 console.log = function (...args) {
   originalConsoleLog(...args); // 保留原日志
-  log.info(args.join(' ')); // 写入日志文件
+  log.info(args.join(" ")); // 写入日志文件
 };
 const originalConsoleError = console.error;
 console.error = function (...args) {
   originalConsoleError(...args); // 保留原错误日志
-  log.error(args.join(' ')); // 写入错误日志文件
+  log.error(args.join(" ")); // 写入错误日志文件
 };
 const originalConsoleWarn = console.warn;
 console.warn = function (...args) {
   originalConsoleWarn(...args); // 保留原警告日志
-  log.warn(args.join(' ')); // 写入警告日志文件
+  log.warn(args.join(" ")); // 写入警告日志文件
 };
 const originalConsoleInfo = console.info;
 console.info = function (...args) {
   originalConsoleInfo(...args); // 保留原信息日志
-  log.info(args.join(' ')); // 写入信息日志文件
+  log.info(args.join(" ")); // 写入信息日志文件
 };
 // Handle MacOS deep linking
-app.on('open-url', (event, url) => {
+app.on("open-url", (event, url) => {
   event.preventDefault();
   handleCallback(url);
 });
 const handleCallback = (url) => {
   try {
     // 检查 URL 是否有效
-    if (!url.startsWith('koodo-reader://')) {
-      console.error('Invalid URL format:', url);
+    if (!url.startsWith("koodo-reader://")) {
+      console.error("Invalid URL format:", url);
       return;
     }
 
     // 解析 URL
     const parsedUrl = new URL(url);
-    const code = parsedUrl.searchParams.get('code');
-    const state = parsedUrl.searchParams.get('state');
-    const pickerData = parsedUrl.searchParams.get('pickerData');
-
+    const code = parsedUrl.searchParams.get("code");
+    const state = parsedUrl.searchParams.get("state");
+    const pickerData = parsedUrl.searchParams.get("pickerData");
 
     if (code && mainWin) {
-      mainWin.webContents.send('oauth-callback', { code, state });
+      mainWin.webContents.send("oauth-callback", { code, state });
     }
     if (pickerData && mainWin) {
       let config = JSON.parse(decodeURIComponent(pickerData));
-      mainWin.webContents.send('picker-finished', config);
+      mainWin.webContents.send("picker-finished", config);
     }
   } catch (error) {
-    console.error('Error handling callback URL:', error);
-    console.log('Problematic URL:', url);
+    console.error("Error handling callback URL:", error);
+    console.log("Problematic URL:", url);
   }
 };

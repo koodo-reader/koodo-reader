@@ -199,9 +199,9 @@ class ConvertDialog extends React.Component<
                             ? item.value ===
                               ConfigService.getReaderConfig("ocrLang")
                             : item.lang ===
-                              ConfigService.getReaderConfig("lang")
-                            ? true
-                            : false
+                                ConfigService.getReaderConfig("lang")
+                              ? true
+                              : false
                         }
                       >
                         {this.props.t(item.label)}

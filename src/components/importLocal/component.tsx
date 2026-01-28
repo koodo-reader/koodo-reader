@@ -385,9 +385,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         //select folder from local
                         if (isElectron) {
                           const { ipcRenderer } = window.require("electron");
-                          const newPath = await ipcRenderer.invoke(
-                            "select-path"
-                          );
+                          const newPath =
+                            await ipcRenderer.invoke("select-path");
                           if (!newPath) {
                             return;
                           }
@@ -438,9 +437,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                           // Process each file
                           for (const filePath of allFiles) {
                             try {
-                              const buffer = await fs.promises.readFile(
-                                filePath
-                              );
+                              const buffer =
+                                await fs.promises.readFile(filePath);
                               const arraybuffer = new Uint8Array(buffer).buffer;
                               const blob = new Blob([arraybuffer]);
                               const fileName = path.basename(filePath);
