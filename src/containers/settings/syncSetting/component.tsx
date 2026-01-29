@@ -10,6 +10,7 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   generateSyncRecord,
+  getICloudDrivePath,
   getServerRegion,
   getWebsiteUrl,
   handleContextMenu,
@@ -85,7 +86,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     );
     this.handleRest(this.state[stateName]);
   };
-  handleAddDataSource = (event: any) => {
+  handleAddDataSource = async (event: any) => {
     let targetDrive = event.target.value;
     if (!targetDrive) {
       return;
@@ -112,6 +113,30 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     this.props.handleSettingDrive(targetDrive);
     let settingDrive = targetDrive;
+    if (settingDrive === "icloud") {
+      let drivePath = await getICloudDrivePath();
+      if (!drivePath) {
+        toast.error(this.props.t("Setup failed"));
+        this.props.handleSettingDrive("");
+        return;
+      }
+      console.log(drivePath, "safasd");
+      ConfigService.setListConfig(this.props.settingDrive, "dataSourceList");
+      toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
+      if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
+        ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
+        if (
+          ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
+          this.props.userInfo.default_sync_option !== this.props.settingDrive
+        ) {
+          resetKoodoSync();
+        }
+        this.props.handleFetchDefaultSyncOption();
+      }
+      this.props.handleFetchDataSourceList();
+      this.props.handleSettingDrive("");
+      return;
+    }
     if (
       settingDrive === "dropbox" ||
       settingDrive === "yandex" ||
