@@ -188,8 +188,8 @@ export const getStorageLocation = () => {
     return ConfigService.getItem("storageLocation")
       ? ConfigService.getItem("storageLocation")
       : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
+        .require("electron")
+        .ipcRenderer.sendSync("storage-location", "ping");
   } else {
     return ConfigService.getItem("storageLocation");
   }
@@ -262,7 +262,7 @@ export const getPageWidth = (
   };
   if (
     document.body.clientWidth * Math.abs(parseFloat(scale)) -
-      document.body.clientWidth * 0.4 >
+    document.body.clientWidth * 0.4 >
     document.body.clientWidth
   ) {
     let pageWidth = document.body.clientWidth - 106;
@@ -282,21 +282,19 @@ export const getPageWidth = (
       (isNavLocked ? 300 : 0) -
       (isSettingLocked ? 300 : 0);
     let width = findValidMultiple(preWidth);
-    pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${
-      isSettingLocked ? 150 : 0
-    }px - ${width / 2}px)`;
+    pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${isSettingLocked ? 150 : 0
+      }px - ${width / 2}px)`;
     pageWidth = width;
   } else if (readerMode === "double") {
     let width = findValidMultiple(
       document.body.clientWidth -
-        2 * margin -
-        80 -
-        (isNavLocked ? 300 : 0) -
-        (isSettingLocked ? 300 : 0)
+      2 * margin -
+      80 -
+      (isNavLocked ? 300 : 0) -
+      (isSettingLocked ? 300 : 0)
     );
-    pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${
-      isSettingLocked ? 150 : 0
-    }px - ${width / 2}px)`;
+    pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${isSettingLocked ? 150 : 0
+      }px - ${width / 2}px)`;
     pageWidth = width;
   }
   if (pageWidth > document.body.clientWidth) {
@@ -529,8 +527,8 @@ function triggerReactChange(id: string, value: string) {
     currentTarget: {
       value: value,
     },
-    preventDefault: () => {},
-    stopPropagation: () => {},
+    preventDefault: () => { },
+    stopPropagation: () => { },
   };
 
   // 获取 React 实例
@@ -743,8 +741,8 @@ export const testCORS = async (url: string) => {
       i18n.t(
         "This data source cannot be accessed from browser due to CORS policy. Please switch to another data source or CORS-enabled service provider."
       ) +
-        " " +
-        i18n.t("You can also use the desktop app to avoid this issue.")
+      " " +
+      i18n.t("You can also use the desktop app to avoid this issue.")
     );
     console.error("CORS not supported:", error);
     return false;
@@ -870,19 +868,19 @@ export const showTaskProgress = async (
         } else {
           toast.loading(
             i18n.t("Start Transferring Data") +
-              " (" +
-              stats.completed +
-              "/" +
-              stats.total +
-              ")" +
-              " (" +
-              i18n.t(
-                driveList.find(
-                  (item) =>
-                    item.value === ConfigService.getItem("defaultSyncOption")
-                )?.label || ""
-              ) +
-              ")",
+            " (" +
+            stats.completed +
+            "/" +
+            stats.total +
+            ")" +
+            " (" +
+            i18n.t(
+              driveList.find(
+                (item) =>
+                  item.value === ConfigService.getItem("defaultSyncOption")
+              )?.label || ""
+            ) +
+            ")",
             {
               id: "syncing",
               position: "bottom-center",
@@ -910,19 +908,19 @@ export const showTaskProgress = async (
         } else {
           toast.loading(
             i18n.t("Start Transferring Data") +
-              " (" +
-              stats.completed +
-              "/" +
-              stats.total +
-              ")" +
-              " (" +
-              i18n.t(
-                driveList.find(
-                  (item) =>
-                    item.value === ConfigService.getItem("defaultSyncOption")
-                )?.label || ""
-              ) +
-              ")",
+            " (" +
+            stats.completed +
+            "/" +
+            stats.total +
+            ")" +
+            " (" +
+            i18n.t(
+              driveList.find(
+                (item) =>
+                  item.value === ConfigService.getItem("defaultSyncOption")
+              )?.label || ""
+            ) +
+            ")",
             {
               id: "syncing",
               position: "bottom-center",
@@ -1051,3 +1049,62 @@ export const splitSentences = (text: string) => {
     .map((sentence) => sentence.trim())
     .filter((sentence) => sentence.trim() !== "");
 };
+export const getICloudDrivePath = async () => {
+  if (!isElectron) {
+    return "";
+  }
+
+  const fs = window.require("fs");
+  const path = window.require("path");
+  const os = window.require("os");
+
+  // 检查是否已经设置过
+  let savedPath = ConfigService.getItem("iCloudDrivePath");
+  if (savedPath && fs.existsSync(savedPath)) {
+    return savedPath;
+  }
+
+  let iCloudPath = "";
+
+  // 自动检测iCloud Drive路径
+  if (process.platform === "darwin") {
+    // macOS
+    const possiblePath = path.join(os.homedir(), "Library", "Mobile Documents", "com~apple~CloudDocs");
+    if (fs.existsSync(possiblePath)) {
+      iCloudPath = possiblePath;
+    }
+  } else if (process.platform === "win32") {
+    // Windows
+    const possiblePaths = [
+      path.join(os.homedir(), "iCloudDrive"),
+      path.join(process.env.USERPROFILE || "", "iCloudDrive"),
+      path.join(process.env.HOMEDRIVE || "C:", process.env.HOMEPATH || "", "iCloudDrive"),
+    ];
+
+    for (const possiblePath of possiblePaths) {
+      if (fs.existsSync(possiblePath)) {
+        iCloudPath = possiblePath;
+        break;
+      }
+    }
+  }
+
+  // 如果自动检测失败，弹窗让用户手动选择
+  if (!iCloudPath || !fs.existsSync(iCloudPath)) {
+    const { ipcRenderer } = window.require("electron");
+    const selectedPath = await ipcRenderer.invoke("select-path");
+
+    if (!selectedPath) {
+      return "";
+    }
+
+    iCloudPath = selectedPath;
+  }
+
+  // 验证路径是否有效
+  if (iCloudPath && fs.existsSync(iCloudPath)) {
+    ConfigService.setItem("iCloudDrivePath", iCloudPath);
+    return iCloudPath;
+  }
+  return "";
+}

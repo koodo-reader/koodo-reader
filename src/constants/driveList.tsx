@@ -47,7 +47,14 @@ export const driveList = [
     support: ["desktop", "browser", "phone"],
     scoped: true,
   },
-
+  {
+    label: "iCloud",
+    value: "icloud",
+    icon: "icon-icloud",
+    isPro: true,
+    support: ["desktop", "phone"],
+    scoped: true,
+  },
   {
     label: "Dubox",
     value: "dubox",
