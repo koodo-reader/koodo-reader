@@ -115,7 +115,7 @@ export function getLoginParamsFromUrl() {
   return params;
 }
 export const upgradeStorage = async (
-  handleFinish: () => void = () => {}
+  handleFinish: () => void = () => { }
 ): Promise<Boolean> => {
   try {
     let dataPath = getStorageLocation() || "";
@@ -178,7 +178,7 @@ export const upgradeStorage = async (
     //upgrade plugin
     let plugins =
       ConfigService.getItem("pluginList") !== "{}" &&
-      ConfigService.getItem("pluginList")
+        ConfigService.getItem("pluginList")
         ? JSON.parse(ConfigService.getItem("pluginList") || "")
         : [];
     if (plugins.length > 0) {

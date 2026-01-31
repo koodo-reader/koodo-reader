@@ -1000,6 +1000,7 @@ export const handleAutoCloudSync = async () => {
   if (
     syncRes.code === 200 &&
     syncRes.data.default_sync_option &&
+    syncRes.data.default_sync_option !== "icloud" &&
     syncRes.data.default_sync_token
   ) {
     let supportedSources = driveList
@@ -1049,36 +1050,25 @@ export const splitSentences = (text: string) => {
     .map((sentence) => sentence.trim())
     .filter((sentence) => sentence.trim() !== "");
 };
-export const getICloudDrivePath = async () => {
-  if (!isElectron) {
-    return "";
-  }
+export const getICloudDrivePath = () => {
 
   const fs = window.require("fs");
   const path = window.require("path");
   const os = window.require("os");
-
-  // 检查是否已经设置过
-  let savedPath = ConfigService.getItem("iCloudDrivePath");
-  if (savedPath && fs.existsSync(savedPath)) {
-    return savedPath;
-  }
 
   let iCloudPath = "";
 
   // 自动检测iCloud Drive路径
   if (process.platform === "darwin") {
     // macOS
-    const possiblePath = path.join(os.homedir(), "Library", "Mobile Documents", "com~apple~CloudDocs");
+    const possiblePath = path.join(os.homedir(), "Library", "Mobile Documents", "iCloud~com~koodoreader~expo", "Documents");
     if (fs.existsSync(possiblePath)) {
       iCloudPath = possiblePath;
     }
   } else if (process.platform === "win32") {
     // Windows
     const possiblePaths = [
-      path.join(os.homedir(), "iCloudDrive"),
-      path.join(process.env.USERPROFILE || "", "iCloudDrive"),
-      path.join(process.env.HOMEDRIVE || "C:", process.env.HOMEPATH || "", "iCloudDrive"),
+      path.join(os.homedir(), "iCloudDrive", "iCloud~com~koodoreader~expo"),
     ];
 
     for (const possiblePath of possiblePaths) {
@@ -1091,19 +1081,11 @@ export const getICloudDrivePath = async () => {
 
   // 如果自动检测失败，弹窗让用户手动选择
   if (!iCloudPath || !fs.existsSync(iCloudPath)) {
-    const { ipcRenderer } = window.require("electron");
-    const selectedPath = await ipcRenderer.invoke("select-path");
-
-    if (!selectedPath) {
-      return "";
-    }
-
-    iCloudPath = selectedPath;
+    return ""
   }
 
   // 验证路径是否有效
   if (iCloudPath && fs.existsSync(iCloudPath)) {
-    ConfigService.setItem("iCloudDrivePath", iCloudPath);
     return iCloudPath;
   }
   return "";
