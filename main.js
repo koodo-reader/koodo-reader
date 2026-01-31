@@ -388,12 +388,12 @@ const createMainWin = () => {
             windowHeight: bounds.height,
             windowX:
               readerWindow.isMaximized() &&
-              currentDisplay.id === primaryDisplay.id
+                currentDisplay.id === primaryDisplay.id
                 ? 0
                 : bounds.x,
             windowY:
               readerWindow.isMaximized() &&
-              currentDisplay.id === primaryDisplay.id
+                currentDisplay.id === primaryDisplay.id
                 ? 0
                 : bounds.y < 0
                   ? 0
@@ -922,12 +922,12 @@ const createMainWin = () => {
               windowHeight: bounds.height,
               windowX:
                 readerWindow.isMaximized() &&
-                currentDisplay.id === primaryDisplay.id
+                  currentDisplay.id === primaryDisplay.id
                   ? 0
                   : bounds.x,
               windowY:
                 readerWindow.isMaximized() &&
-                currentDisplay.id === primaryDisplay.id
+                  currentDisplay.id === primaryDisplay.id
                   ? 0
                   : bounds.y < 0
                     ? 0

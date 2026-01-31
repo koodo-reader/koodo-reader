@@ -25,6 +25,7 @@ import {
 import { getStorageLocation } from "../../../utils/common";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
 import {
+  CommonTool,
   ConfigService,
   KookitConfig,
   SyncHelper,
@@ -114,13 +115,26 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     this.props.handleSettingDrive(targetDrive);
     let settingDrive = targetDrive;
     if (settingDrive === "icloud") {
-      let drivePath = await getICloudDrivePath();
+      let drivePath = getICloudDrivePath();
       if (!drivePath) {
-        toast.error(this.props.t("Setup failed"));
+        toast.error(
+          this.props.t("Can't find iCloud Drive folder in the default path")
+        );
         this.props.handleSettingDrive("");
         return;
       }
       console.log(drivePath, "safasd");
+      toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
+      let res = await encryptToken(this.props.settingDrive, {
+        iCloudDrivePath: drivePath,
+      });
+      if (res.code === 200) {
+        toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
+      } else {
+        toast.error(i18n.t("Binding failed"), { id: "adding-sync-id" });
+        this.props.handleSettingDrive("");
+        return;
+      }
       ConfigService.setListConfig(this.props.settingDrive, "dataSourceList");
       toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
       if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
