@@ -125,7 +125,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       }
       console.log(drivePath, "safasd");
       toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
-      let res = await encryptToken(this.props.settingDrive, {
+      let res = await encryptToken(settingDrive, {
         iCloudDrivePath: drivePath,
       });
       if (res.code === 200) {
