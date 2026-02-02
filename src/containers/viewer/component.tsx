@@ -25,7 +25,10 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
-import { ocrLangList } from "../../constants/dropdownList";
+import {
+  ocrPaddleLangList,
+  ocrTesseractLangList,
+} from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -246,9 +249,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isConvertPDF: ConfigService.getReaderConfig("isConvertPDF"),
           ocrLang: ConfigService.getReaderConfig("ocrLang")
             ? ConfigService.getReaderConfig("ocrLang")
-            : ocrLangList.find(
-                (item) => item.lang === ConfigService.getReaderConfig("lang")
-              )?.value || "chi_sim",
+            : ConfigService.getReaderConfig("ocrEngine") === "tesseract"
+              ? ocrTesseractLangList.find(
+                  (item) => item.lang === ConfigService.getReaderConfig("lang")
+                )?.value || "chi_sim"
+              : ConfigService.getReaderConfig("ocrEngine") === "paddle"
+                ? "standard_v5_mobile"
+                : "eng",
           ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "tesseract",
           serverRegion:
             ConfigService.getItem("serverRegion") === "china"
