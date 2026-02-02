@@ -139,7 +139,7 @@ export const speedList = {
     { label: "5", value: "5" },
   ],
 };
-export const ocrLangList = [
+export const ocrTesseractLangList = [
   { label: "Simplified Chinese", value: "chi_sim", lang: "zhCN" },
   { label: "Traditional Chinese", value: "chi_tra", lang: "zhTW" },
   { label: "English", value: "eng", lang: "en" },
@@ -151,6 +151,38 @@ export const ocrLangList = [
   { label: "Russian", value: "rus", lang: "ru" },
   { label: "Italian", value: "ita", lang: "it" },
   { label: "Portuguese", value: "por", lang: "pt" },
+];
+export const ocrPaddleLangList = [
+  {
+    label: "General (Supports Chinese, English and Japanese)",
+    value: "standard_v5_mobile",
+    lang: "standard_v5_mobile",
+  },
+  {
+    label: "Chinese (More accurate for Chinese)",
+    value: "fast_ch",
+    lang: "fast_ch",
+  },
+  {
+    label: "English (More accurate for English)",
+    value: "en",
+    lang: "en",
+  },
+  {
+    label: "Traditional Chinese (More accurate for Traditional Chinese)",
+    value: "chinese_cht",
+    lang: "chinese_cht",
+  },
+  {
+    label: "Japanese (More accurate for Japanese)",
+    value: "japan",
+    lang: "japan",
+  },
+  {
+    label: "Korean",
+    value: "korean",
+    lang: "korean",
+  },
 ];
 export const paraSpacingList = [
   { label: "1", value: "1" },
