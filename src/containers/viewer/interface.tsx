@@ -11,6 +11,7 @@ export interface ViewerProps {
   isShow: boolean;
   readerMode: string;
   isOpenMenu: boolean;
+  isAuthed: boolean;
   isNavLocked: boolean;
   isSettingLocked: boolean;
   isHideBackground: boolean;

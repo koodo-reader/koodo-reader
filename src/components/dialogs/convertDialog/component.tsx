@@ -6,11 +6,12 @@ import "./convertDialog.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import BookUtil from "../../../utils/file/bookUtil";
 import {
-  ocrPaddleLangList,
+  getOcrPaddleLangList,
   ocrTesseractLangList,
   paraSpacingList,
   titleSizeList,
 } from "../../../constants/dropdownList";
+import toast from "react-hot-toast";
 
 class ConvertDialog extends React.Component<
   ConvertDialogProps,
@@ -77,6 +78,7 @@ class ConvertDialog extends React.Component<
     });
   };
   render() {
+    console.log(getOcrPaddleLangList(), "ocrPaddleLangList");
     return (
       <>
         <div
@@ -116,6 +118,17 @@ class ConvertDialog extends React.Component<
                     name=""
                     className="lang-setting-dropdown"
                     onChange={(event) => {
+                      if (
+                        event.target.value === "official-ai-ocr" &&
+                        !this.props.isAuthed
+                      ) {
+                        toast(
+                          this.props.t(
+                            "This feature is not available in the free version"
+                          )
+                        );
+                        return;
+                      }
                       ConfigService.setReaderConfig(
                         "ocrEngine",
                         event.target.value
@@ -144,12 +157,20 @@ class ConvertDialog extends React.Component<
                   >
                     {[
                       { label: "Please select", value: "", lang: "" },
-                      { label: "Tesseract", value: "tesseract", lang: "" },
-                      { label: "Paddle OCR", value: "paddle", lang: "" },
                       {
-                        label: "Official AI OCR",
+                        label: this.props.t("Official AI OCR") + " (Pro)",
                         value: "official-ai-ocr",
                         lang: "",
+                      },
+                      {
+                        label: "Paddle OCR",
+                        value: "paddle",
+                        lang: "standard_v5_mobile",
+                      },
+                      {
+                        label: "Tesseract",
+                        value: "tesseract",
+                        lang: "chi_sim",
                       },
                     ].map((item) => (
                       <option
@@ -160,7 +181,7 @@ class ConvertDialog extends React.Component<
                           ConfigService.getReaderConfig("ocrEngine")
                             ? item.value ===
                               ConfigService.getReaderConfig("ocrEngine")
-                            : item.value === "tesseract"
+                            : item.value === "paddle"
                               ? true
                               : false
                         }
@@ -205,8 +226,8 @@ class ConvertDialog extends React.Component<
                         ? ocrTesseractLangList
                         : ConfigService.getReaderConfig("ocrEngine") ===
                             "paddle"
-                          ? ocrPaddleLangList
-                          : []),
+                          ? getOcrPaddleLangList()
+                          : [{ label: "General", value: "general", lang: "" }]),
                     ].map((item) => (
                       <option
                         value={item.value}

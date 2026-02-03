@@ -16,6 +16,7 @@ import PageWidget from "../pageWidget";
 import {
   getPageWidth,
   getPdfPassword,
+  getServerRegion,
   showDownloadProgress,
 } from "../../utils/common";
 import _ from "underscore";
@@ -25,11 +26,9 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
-import {
-  ocrPaddleLangList,
-  ocrTesseractLangList,
-} from "../../constants/dropdownList";
+import { ocrTesseractLangList } from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
+import { getOcrResult } from "../../utils/request/reader";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -70,7 +69,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleFetchNotes();
     this.props.handleFetchBooks();
     this.props.handleFetchPlugins();
-    this.props.handleFetchAuthed();
   }
   componentDidMount() {
     this.handleRenderBook();
@@ -223,6 +221,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           return;
         }
       }
+      console.log(getServerRegion(), this.props.isAuthed);
       let rendition = BookHelper.getRendition(
         result,
         {
@@ -256,9 +255,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               : ConfigService.getReaderConfig("ocrEngine") === "paddle"
                 ? "standard_v5_mobile"
                 : "eng",
+          externalWorker: {
+            recognize: getOcrResult,
+          },
           ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "tesseract",
           serverRegion:
-            ConfigService.getItem("serverRegion") === "china"
+            getServerRegion() === "china" && this.props.isAuthed
               ? "china"
               : "global",
           paraSpacingValue:

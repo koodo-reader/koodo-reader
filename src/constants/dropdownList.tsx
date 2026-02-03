@@ -1,3 +1,5 @@
+import i18n from "../i18n";
+
 export const dropdownList = [
   {
     id: 1,
@@ -152,34 +154,34 @@ export const ocrTesseractLangList = [
   { label: "Italian", value: "ita", lang: "it" },
   { label: "Portuguese", value: "por", lang: "pt" },
 ];
-export const ocrPaddleLangList = [
+export const getOcrPaddleLangList = () => [
   {
-    label: "General (Supports Chinese, English and Japanese)",
+    label: `${i18n.t("General")} (${i18n.t("Chinese")},${i18n.t("English")},${i18n.t("Japanese")})`,
     value: "standard_v5_mobile",
     lang: "standard_v5_mobile",
   },
   {
-    label: "Chinese (More accurate for Chinese)",
+    label: `${i18n.t("Chinese")} (${i18n.t("More accurate")})`,
     value: "fast_ch",
     lang: "fast_ch",
   },
   {
-    label: "English (More accurate for English)",
+    label: `${i18n.t("English")} (${i18n.t("More accurate")})`,
     value: "en",
     lang: "en",
   },
   {
-    label: "Traditional Chinese (More accurate for Traditional Chinese)",
+    label: `${i18n.t("Traditional Chinese")} (${i18n.t("More accurate")})`,
     value: "chinese_cht",
     lang: "chinese_cht",
   },
   {
-    label: "Japanese (More accurate for Japanese)",
+    label: `${i18n.t("Japanese")} (${i18n.t("More accurate")})`,
     value: "japan",
     lang: "japan",
   },
   {
-    label: "Korean",
+    label: i18n.t("Korean"),
     value: "korean",
     lang: "korean",
   },
