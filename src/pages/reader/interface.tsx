@@ -29,6 +29,7 @@ export interface ReaderProps {
   handleReadingBook: (book: BookModel) => void;
   handleScale: (scale: string) => void;
   renderBookFunc: () => void;
+  handleFetchAuthed: () => void;
 }
 
 export interface ReaderState {
