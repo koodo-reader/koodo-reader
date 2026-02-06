@@ -854,85 +854,76 @@ export const showTaskProgress = async (
         .require("electron")
         .ipcRenderer.invoke("cloud-stats", config);
       if (stats.total > 0) {
-        if (stats.hasFailedTasks) {
-          toast.error(
+        toast.loading(
+          i18n.t("Start Transferring Data") +
+            " (" +
+            stats.completed +
+            "/" +
+            stats.total +
+            ")" +
+            " (" +
             i18n.t(
-              "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
-            ),
-            {
-              id: "syncing",
-              duration: 6000,
-            }
-          );
-          clearInterval(timer);
-          handleSyncStateChange(false);
-          return;
-        } else {
-          toast.loading(
-            i18n.t("Start Transferring Data") +
-              " (" +
-              stats.completed +
-              "/" +
-              stats.total +
-              ")" +
-              " (" +
-              i18n.t(
-                driveList.find(
-                  (item) =>
-                    item.value === ConfigService.getItem("defaultSyncOption")
-                )?.label || ""
-              ) +
-              ")",
-            {
-              id: "syncing",
-              position: "bottom-center",
-            }
-          );
-        }
+              driveList.find(
+                (item) =>
+                  item.value === ConfigService.getItem("defaultSyncOption")
+              )?.label || ""
+            ) +
+            ")",
+          {
+            id: "syncing",
+            position: "bottom-center",
+          }
+        );
       }
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let stats = await syncUtil.getStats();
       if (stats.total > 0) {
-        if (stats.hasFailedTasks) {
-          toast.error(
+        toast.loading(
+          i18n.t("Start Transferring Data") +
+            " (" +
+            stats.completed +
+            "/" +
+            stats.total +
+            ")" +
+            " (" +
             i18n.t(
-              "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
-            ),
-            {
-              id: "syncing",
-              duration: 6000,
-            }
-          );
-          clearInterval(timer);
-          handleSyncStateChange(false);
-          return;
-        } else {
-          toast.loading(
-            i18n.t("Start Transferring Data") +
-              " (" +
-              stats.completed +
-              "/" +
-              stats.total +
-              ")" +
-              " (" +
-              i18n.t(
-                driveList.find(
-                  (item) =>
-                    item.value === ConfigService.getItem("defaultSyncOption")
-                )?.label || ""
-              ) +
-              ")",
-            {
-              id: "syncing",
-              position: "bottom-center",
-            }
-          );
-        }
+              driveList.find(
+                (item) =>
+                  item.value === ConfigService.getItem("defaultSyncOption")
+              )?.label || ""
+            ) +
+            ")",
+          {
+            id: "syncing",
+            position: "bottom-center",
+          }
+        );
       }
     }
   }, 1000);
   return timer;
+};
+export const getTaskStats = async () => {
+  let service = ConfigService.getItem("defaultSyncOption");
+  if (!service) {
+    toast(i18n.t("Please add data source in the setting"));
+    return {};
+  }
+  if (isElectron) {
+    let tokenConfig = await getCloudConfig(service);
+    let config = {
+      ...tokenConfig,
+      service: service,
+      storagePath: getStorageLocation(),
+    };
+    return await window
+      .require("electron")
+      .ipcRenderer.invoke("cloud-stats", config);
+  } else {
+    let syncUtil = await SyncService.getSyncUtil();
+    return await syncUtil.getStats();
+  }
 };
 export const compareVersions = (version1: string, version2: string) => {
   // Split strings by '.' and convert segments to numbers

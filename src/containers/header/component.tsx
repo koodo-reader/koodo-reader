@@ -32,6 +32,7 @@ import {
   checkMissingBook,
   generateSyncRecord,
   getChatLocale,
+  getTaskStats,
   getWebsiteUrl,
   removeChatBox,
   resetKoodoSync,
@@ -497,11 +498,65 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
       clearInterval(this.timer);
       this.setState({ isSync: false });
+      let stats = await getTaskStats();
+      if (stats.hasInvalidToken) {
+        toast.error(
+          this.props.t(
+            "The authentication token for your data source is no longer valid, please reauthorize in the settings"
+          ),
+          {
+            id: "syncing",
+            duration: 6000,
+          }
+        );
+        let targetDrive = ConfigService.getItem("defaultSyncOption") || "";
+        await TokenService.setToken(targetDrive + "_token", "");
+        SyncService.removeSyncUtil(targetDrive);
+        removeCloudConfig(targetDrive);
+        if (isElectron) {
+          const { ipcRenderer } = window.require("electron");
+          await ipcRenderer.invoke("cloud-close", {
+            service: targetDrive,
+          });
+        }
+        ConfigService.deleteListConfig(targetDrive, "dataSourceList");
+        this.props.handleFetchDataSourceList();
+        if (targetDrive === ConfigService.getItem("defaultSyncOption")) {
+          ConfigService.removeItem("defaultSyncOption");
+          this.props.handleFetchDefaultSyncOption();
+          if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
+            resetKoodoSync();
+          }
+        }
+        return;
+      }
+      if (stats.hasFailedTasks) {
+        toast.error(
+          this.props.t(
+            "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
+          ),
+          {
+            id: "syncing",
+            duration: 6000,
+          }
+        );
+        return;
+      }
       toast.loading(this.props.t("Almost finished"), {
         id: "syncing",
         position: "bottom-center",
       });
       await this.handleSuccess();
+      if (stats.hasUpdatedToken) {
+        let encryptToken = await TokenService.getToken(
+          ConfigService.getItem("defaultSyncOption") + "_token"
+        );
+        updateUserConfig({
+          is_enable_koodo_sync: "yes",
+          default_sync_option: ConfigService.getItem("defaultSyncOption"),
+          default_sync_token: encryptToken || "",
+        });
+      }
     } catch (error) {
       console.error(error);
       clearInterval(this.timer);
