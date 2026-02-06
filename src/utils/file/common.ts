@@ -1,4 +1,4 @@
-import { getStorageLocation } from "../common";
+import { getStorageLocation, prepareThirdConfig } from "../common";
 import CoverUtil from "./coverUtil";
 import {
   CommonTool,
@@ -115,7 +115,7 @@ export function getLoginParamsFromUrl() {
   return params;
 }
 export const upgradeStorage = async (
-  handleFinish: () => void = () => { }
+  handleFinish: () => void = () => {}
 ): Promise<Boolean> => {
   try {
     let dataPath = getStorageLocation() || "";
@@ -178,7 +178,7 @@ export const upgradeStorage = async (
     //upgrade plugin
     let plugins =
       ConfigService.getItem("pluginList") !== "{}" &&
-        ConfigService.getItem("pluginList")
+      ConfigService.getItem("pluginList")
         ? JSON.parse(ConfigService.getItem("pluginList") || "")
         : [];
     if (plugins.length > 0) {
@@ -261,12 +261,19 @@ export const upgradeConfig = (): Boolean => {
   }
 };
 export const getCloudConfig = async (service: string) => {
+  let config = await getCloudToken(service);
+  if (!config) {
+    return {};
+  }
+  return await prepareThirdConfig(service, config);
+};
+export const getCloudToken = async (service: string) => {
   if (configCache[service]) {
     return configCache[service];
   } else {
     let result = await decryptToken(service);
     if (result.code !== 200) {
-      return {};
+      return null;
     }
     let config = JSON.parse(result.data.token);
     configCache[service] = config;

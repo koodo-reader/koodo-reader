@@ -106,15 +106,11 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
 };
 const getSyncUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !syncUtilCache[config.service]) {
-    const { SyncUtil, TokenService, ConfigService, ThirdpartyRequest } =
+    const { SyncUtil } =
       await import("./src/assets/lib/kookit-extra.min.mjs");
-    let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
-
     syncUtilCache[config.service] = new SyncUtil(
       config.service,
-      config,
-      config.storagePath,
-      thirdpartyRequest
+      config
     );
   }
   return syncUtilCache[config.service];
@@ -124,15 +120,11 @@ const removeSyncUtil = (config) => {
 };
 const getPickerUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !pickerUtilCache[config.service]) {
-    const { SyncUtil, TokenService, ThirdpartyRequest, ConfigService } =
+    const { SyncUtil } =
       await import("./src/assets/lib/kookit-extra.min.mjs");
-    let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
-
     pickerUtilCache[config.service] = new SyncUtil(
       config.service,
-      config,
-      config.storagePath,
-      thirdpartyRequest
+      config
     );
   }
   return pickerUtilCache[config.service];
