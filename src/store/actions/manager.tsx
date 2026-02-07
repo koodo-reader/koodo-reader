@@ -229,7 +229,9 @@ export function handleFetchUserInfo() {
           let encryptedToken = await TokenService.getToken(
             userInfo.default_sync_option + "_token"
           );
+          console.log("sdafsgdfhgdffd");
           if (encryptedToken !== userInfo.default_sync_token) {
+            console.log("dghdfhdfhdf");
             await TokenService.setToken(
               userInfo.default_sync_option + "_token",
               userInfo.default_sync_token

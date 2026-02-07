@@ -844,29 +844,6 @@ class AccountSetting extends React.Component<
             </span>
           </div>
         )}
-        {this.props.isAuthed && (
-          <div className="setting-dialog-new-title">
-            <Trans>Get error log</Trans>
-
-            <span
-              className="change-location-button"
-              onClick={async () => {
-                let errorLog = ConfigService.getItem("errorLog") || "";
-                if (isElectron) {
-                  const { ipcRenderer } = window.require("electron");
-                  let log = await ipcRenderer.invoke("get-store-value", {
-                    key: "errorLog",
-                  });
-                  errorLog += log || "";
-                }
-                copyTextToClipboard(errorLog);
-                toast.success(this.props.t("Copied"));
-              }}
-            >
-              <Trans>Copy</Trans>
-            </span>
-          </div>
-        )}
         {this.props.isAuthed && this.props.userInfo && (
           <div className="setting-dialog-new-title">
             <Trans>AI voice character quota</Trans>
