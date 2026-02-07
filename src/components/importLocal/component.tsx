@@ -128,7 +128,11 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               "shelfList"
             );
           }
-          toast.success(this.props.t("Addition successful") + ": " + book.name);
+          toast.success(
+            this.props.t("Addition successful") +
+              ": " +
+              book.name.substring(0, 50)
+          );
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);
             if (
@@ -145,9 +149,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         })
         .catch((error) => {
           console.error(error, book.name);
-          toast.error(this.props.t("Import failed") + ": " + book.name, {
-            duration: 4000,
-          });
+          toast.error(
+            this.props.t("Import failed") + ": " + book.name.substring(0, 50),
+            {
+              duration: 4000,
+            }
+          );
           return resolve();
         });
     });

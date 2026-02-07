@@ -89,11 +89,25 @@ export function handleFetchNotes() {
   return async (
     dispatch: (arg0: { type: string; payload: NoteModel[] }) => void
   ) => {
-    let notes: Note[] = await ConfigUtil.getNotesByBookKeyAndType("", "note");
-    let highlights: Note[] = await ConfigUtil.getNotesByBookKeyAndType(
+    let noteSortCodeStr =
+      ConfigService.getReaderConfig("noteSortCode") || '{"sort":1,"order":2}';
+    let noteSortCode = JSON.parse(noteSortCodeStr);
+    let sortField = noteSortCode.sort === 1 ? "key" : "percentage";
+    let sortOrder = noteSortCode.order === 1 ? "ASC" : "DESC";
+
+    let notes: Note[] = await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
       "",
-      "highlight"
+      "note",
+      sortField,
+      sortOrder
     );
+    let highlights: Note[] = await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
+      "",
+      "highlight",
+      sortField,
+      sortOrder
+    );
+    console.log(sortField, sortOrder, highlights);
     let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
     notes = notes.filter((note) => !deletedBookKeys.includes(note.bookKey));
     highlights = highlights.filter(

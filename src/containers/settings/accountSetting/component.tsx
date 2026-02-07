@@ -718,6 +718,13 @@ class AccountSetting extends React.Component<
             </select>
           </div>
         )}
+        {!this.props.isAuthed && (
+          <div className="account-login-tips">
+            {this.props.t(
+              "7-day free trial upon registration, then billed annually"
+            )}
+          </div>
+        )}
         {this.props.isAuthed &&
           loginList.map((login) => (
             <div className="setting-dialog-new-title" key={login.value}>
