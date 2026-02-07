@@ -32,6 +32,7 @@ import {
   checkMissingBook,
   generateSyncRecord,
   getChatLocale,
+  getTaskStats,
   getWebsiteUrl,
   removeChatBox,
   resetKoodoSync,
@@ -497,6 +498,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
       clearInterval(this.timer);
       this.setState({ isSync: false });
+      let stats = await getTaskStats();
+      if (stats.hasFailedTasks) {
+        toast.error(
+          this.props.t(
+            "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
+          ),
+          {
+            id: "syncing",
+            duration: 6000,
+          }
+        );
+        return;
+      }
       toast.loading(this.props.t("Almost finished"), {
         id: "syncing",
         position: "bottom-center",

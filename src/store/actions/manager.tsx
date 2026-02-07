@@ -217,6 +217,26 @@ export function handleFetchUserInfo() {
         "isEnableKoodoSync",
         userInfo.is_enable_koodo_sync || "no"
       );
+      if (
+        userInfo.is_enable_koodo_sync === "yes" &&
+        userInfo.default_sync_option &&
+        userInfo.default_sync_token
+      ) {
+        if (
+          ConfigService.getItem("defaultSyncOption") ===
+          userInfo.default_sync_option
+        ) {
+          let encryptedToken = await TokenService.getToken(
+            userInfo.default_sync_option + "_token"
+          );
+          if (encryptedToken !== userInfo.default_sync_token) {
+            await TokenService.setToken(
+              userInfo.default_sync_option + "_token",
+              userInfo.default_sync_token
+            );
+          }
+        }
+      }
     }
     if (
       userInfo &&

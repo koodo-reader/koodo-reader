@@ -15,8 +15,12 @@ import DatabaseService from "./storage/databaseService";
 import packageJson from "../../package.json";
 import toast from "react-hot-toast";
 import i18n from "../i18n";
-import { getCloudSyncToken, getThirdpartyRequest } from "./request/thirdparty";
-import { getCloudConfig } from "./file/common";
+import {
+  encryptToken,
+  getCloudSyncToken,
+  refreshThirdToken,
+} from "./request/thirdparty";
+import { getCloudConfig, removeCloudConfig } from "./file/common";
 import SyncService from "./storage/syncService";
 import localforage from "localforage";
 import { driveList } from "../constants/driveList";
@@ -685,8 +689,7 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
 
     return result;
   } else {
-    let thirdpartyRequest = await getThirdpartyRequest();
-    let syncUtil = new SyncUtil(driveName, driveConfig, thirdpartyRequest);
+    let syncUtil = new SyncUtil(driveName, driveConfig);
     // 上传到云端
     let result = await syncUtil.uploadFile(
       "test.txt",
@@ -854,85 +857,76 @@ export const showTaskProgress = async (
         .require("electron")
         .ipcRenderer.invoke("cloud-stats", config);
       if (stats.total > 0) {
-        if (stats.hasFailedTasks) {
-          toast.error(
+        toast.loading(
+          i18n.t("Start Transferring Data") +
+            " (" +
+            stats.completed +
+            "/" +
+            stats.total +
+            ")" +
+            " (" +
             i18n.t(
-              "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
-            ),
-            {
-              id: "syncing",
-              duration: 6000,
-            }
-          );
-          clearInterval(timer);
-          handleSyncStateChange(false);
-          return;
-        } else {
-          toast.loading(
-            i18n.t("Start Transferring Data") +
-              " (" +
-              stats.completed +
-              "/" +
-              stats.total +
-              ")" +
-              " (" +
-              i18n.t(
-                driveList.find(
-                  (item) =>
-                    item.value === ConfigService.getItem("defaultSyncOption")
-                )?.label || ""
-              ) +
-              ")",
-            {
-              id: "syncing",
-              position: "bottom-center",
-            }
-          );
-        }
+              driveList.find(
+                (item) =>
+                  item.value === ConfigService.getItem("defaultSyncOption")
+              )?.label || ""
+            ) +
+            ")",
+          {
+            id: "syncing",
+            position: "bottom-center",
+          }
+        );
       }
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let stats = await syncUtil.getStats();
       if (stats.total > 0) {
-        if (stats.hasFailedTasks) {
-          toast.error(
+        toast.loading(
+          i18n.t("Start Transferring Data") +
+            " (" +
+            stats.completed +
+            "/" +
+            stats.total +
+            ")" +
+            " (" +
             i18n.t(
-              "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
-            ),
-            {
-              id: "syncing",
-              duration: 6000,
-            }
-          );
-          clearInterval(timer);
-          handleSyncStateChange(false);
-          return;
-        } else {
-          toast.loading(
-            i18n.t("Start Transferring Data") +
-              " (" +
-              stats.completed +
-              "/" +
-              stats.total +
-              ")" +
-              " (" +
-              i18n.t(
-                driveList.find(
-                  (item) =>
-                    item.value === ConfigService.getItem("defaultSyncOption")
-                )?.label || ""
-              ) +
-              ")",
-            {
-              id: "syncing",
-              position: "bottom-center",
-            }
-          );
-        }
+              driveList.find(
+                (item) =>
+                  item.value === ConfigService.getItem("defaultSyncOption")
+              )?.label || ""
+            ) +
+            ")",
+          {
+            id: "syncing",
+            position: "bottom-center",
+          }
+        );
       }
     }
   }, 1000);
   return timer;
+};
+export const getTaskStats = async () => {
+  let service = ConfigService.getItem("defaultSyncOption");
+  if (!service) {
+    toast(i18n.t("Please add data source in the setting"));
+    return {};
+  }
+  if (isElectron) {
+    let tokenConfig = await getCloudConfig(service);
+    let config = {
+      ...tokenConfig,
+      service: service,
+      storagePath: getStorageLocation(),
+    };
+    return await window
+      .require("electron")
+      .ipcRenderer.invoke("cloud-stats", config);
+  } else {
+    let syncUtil = await SyncService.getSyncUtil();
+    return await syncUtil.getStats();
+  }
 };
 export const compareVersions = (version1: string, version2: string) => {
   // Split strings by '.' and convert segments to numbers
@@ -1096,4 +1090,79 @@ export const getICloudDrivePath = () => {
     return iCloudPath;
   }
   return "";
+};
+export const prepareThirdConfig = async (service: string, config: any) => {
+  if (
+    service === "adrive" ||
+    service === "boxnet" ||
+    service === "dropbox" ||
+    service === "dubox" ||
+    service === "google" ||
+    service === "microsoft" ||
+    service === "yandex" ||
+    service === "yiyiwu"
+  ) {
+    if (
+      config.access_token &&
+      config.expires_at > new Date().getTime() + 15 * 60 * 1000
+    ) {
+      return config;
+    }
+
+    // Get access token
+    let refreshToken = config.refresh_token;
+    let res = await refreshThirdToken("adrive", refreshToken);
+    if (!res.data || !res.data.access_token) {
+      toast.error(
+        i18n.t(
+          "The authentication token for your data source is no longer valid, please reauthorize in the settings"
+        ),
+        {
+          id: "syncing",
+          duration: 6000,
+        }
+      );
+      let targetDrive = ConfigService.getItem("defaultSyncOption") || "";
+      await TokenService.setToken(targetDrive + "_token", "");
+      SyncService.removeSyncUtil(targetDrive);
+      removeCloudConfig(targetDrive);
+      if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        await ipcRenderer.invoke("cloud-close", {
+          service: targetDrive,
+        });
+      }
+      ConfigService.deleteListConfig(targetDrive, "dataSourceList");
+      if (targetDrive === ConfigService.getItem("defaultSyncOption")) {
+        ConfigService.removeItem("defaultSyncOption");
+      }
+      reloadManager();
+      return {};
+    }
+    config.access_token = res.data.access_token;
+    config.expires_at = new Date().getTime() + res.data.expires_in * 1000;
+    config.refresh_token = res.data.refresh_token;
+    let response: any = await encryptToken(service, {
+      refresh_token: res.data.refresh_token,
+      access_token: res.data.access_token,
+      expires_at: config.expires_at,
+    });
+    if (response.code === 200) {
+      if (
+        ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
+        ConfigService.getItem("defaultSyncOption") === service
+      ) {
+        let syncToken = await TokenService.getToken(service + "_token");
+        await updateUserConfig({
+          is_enable_koodo_sync: "yes",
+          default_sync_option: service,
+          default_sync_token: syncToken || "",
+        });
+      }
+    }
+
+    return config;
+  } else {
+    return config;
+  }
 };
