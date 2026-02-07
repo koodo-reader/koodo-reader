@@ -199,6 +199,7 @@
   "I'll think about it": "我再想想",
   "Convert PDF to Text": "将 PDF 转为文本",
   "Still refuse": "狠心拒绝",
+  "The authentication token for your data source is no longer valid, please reauthorize in the settings": "您的数据源认证凭证已失效，请在设置中重新授权",
   "Set OCR language": "设置 OCR 语言",
   "Unsupported file format": "不支持的文件格式",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "当两行文字之间的间距为常规间距的n倍时，将被分为两个段落",
