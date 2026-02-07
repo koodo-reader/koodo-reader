@@ -107,7 +107,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
                 onChange={async (event) => {
                   this.setState({
                     currentSelectedBook: event.target.value,
-                    cardList: await ConfigUtil.getNotesByBookKeyAndType(
+                    cardList: await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
                       event.target.value,
                       this.props.tabMode
                     ),

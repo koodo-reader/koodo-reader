@@ -307,7 +307,7 @@ class Login extends React.Component<LoginProps, LoginState> {
             <div className="login-content-container">
               <div
                 className="login-title"
-                style={{ marginTop: "80px", marginBottom: "30px" }}
+                style={{ marginTop: "50px", marginBottom: "30px" }}
               >
                 {this.props.t(
                   "Embark on your journey of exploration with Koodo Reader Pro"
@@ -389,6 +389,11 @@ class Login extends React.Component<LoginProps, LoginState> {
                       </div>
                     );
                   })}
+                  <div className="login-billing-info">
+                    {this.props.t(
+                      "7-day free trial upon registration, then billed annually"
+                    )}
+                  </div>
                   <div
                     className="login-manual-token"
                     onClick={() => {
