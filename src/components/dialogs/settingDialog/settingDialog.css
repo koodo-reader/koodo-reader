@@ -32,11 +32,10 @@
 }
 .account-login-tips {
   font-size: 15px;
-  color: rgb(231, 69, 69);
   opacity: 0.8;
   width: 100%;
   margin: 0 auto;
-  margin-top: 230px;
+  margin-top: 30px;
   font-weight: bold;
   text-align: center;
 }
