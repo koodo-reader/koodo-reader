@@ -85,6 +85,10 @@ class Login extends React.Component<LoginProps, LoginState> {
     }
   }
   handleLogin = async (code: string, service: string) => {
+    if (!service || !code) {
+      toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
+      return;
+    }
     this.props.handleLoadingDialog(true);
     let res = await loginRegister(service, code);
     if (res.code === 200) {
