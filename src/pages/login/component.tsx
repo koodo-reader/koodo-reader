@@ -8,6 +8,7 @@ import { loginList } from "../../constants/loginList";
 import {
   generateSyncRecord,
   getServerRegion,
+  getWebsiteUrl,
   handleAutoCloudSync,
   handleContextMenu,
   openInBrowser,
@@ -397,6 +398,28 @@ class Login extends React.Component<LoginProps, LoginState> {
                     {this.props.t(
                       "7-day free trial upon registration, then billed annually"
                     )}
+                  </div>
+                  <div
+                    className="login-billing-info"
+                    style={{
+                      marginTop: "-25px",
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    }}
+                    onClick={() => {
+                      openInBrowser(
+                        getWebsiteUrl() +
+                          (ConfigService.getReaderConfig("lang").startsWith(
+                            "zh"
+                          )
+                            ? "/zh"
+                            : "/en") +
+                          "/pricing"
+                      );
+                    }}
+                  >
+                    {this.props.t("Compare Free and Pro features")}
                   </div>
                   <div
                     className="login-manual-token"

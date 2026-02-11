@@ -91,7 +91,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       toast.loading(
         this.props.t("Importing") + ": " + book.name.substring(0, 50),
         {
-          id: "import-book",
+          id: "add-book",
         }
       );
       if (this.state.isOpenFile) {

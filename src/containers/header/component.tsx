@@ -34,6 +34,7 @@ import {
   getChatLocale,
   getTaskStats,
   getWebsiteUrl,
+  openInBrowser,
   removeChatBox,
   resetKoodoSync,
   showTaskProgress,
@@ -44,7 +45,7 @@ import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
-import { updateUserConfig } from "../../utils/request/user";
+import { getTempToken, updateUserConfig } from "../../utils/request/user";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -61,6 +62,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isDataChange: false,
       isHidePro: false,
       isSync: false,
+      isRenewPro: false,
     };
   }
   async componentDidMount() {
@@ -184,6 +186,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       if (isElectron) {
       } else {
         removeChatBox();
+      }
+    }
+    if (nextProps.userInfo && nextProps.userInfo !== this.props.userInfo) {
+      console.log(
+        nextProps.userInfo.valid_until,
+        new Date().getTime() / 1000 + 30 * 24 * 3600
+      );
+      if (
+        nextProps.userInfo.type === "pro" &&
+        nextProps.userInfo.valid_until <
+          new Date().getTime() / 1000 + 30 * 24 * 3600
+      ) {
+        this.setState({ isRenewPro: true });
       }
     }
   }
@@ -721,7 +736,34 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             ></span>
           </div>
         ) : null}
-
+        {this.props.isAuthed && this.state.isRenewPro ? (
+          <div className="header-report-container">
+            <span
+              style={{ textDecoration: "underline" }}
+              onClick={async () => {
+                let response = await getTempToken();
+                if (response.code === 200) {
+                  let tempToken = response.data.access_token;
+                  let deviceUuid = await TokenService.getFingerprint();
+                  openInBrowser(
+                    getWebsiteUrl() +
+                      (ConfigService.getReaderConfig("lang").startsWith("zh")
+                        ? "/zh"
+                        : "/en") +
+                      "/pricing?temp_token=" +
+                      tempToken +
+                      "&device_uuid=" +
+                      deviceUuid
+                  );
+                } else if (response.code === 401) {
+                  this.props.handleFetchAuthed();
+                }
+              }}
+            >
+              <Trans>Renew Pro</Trans>
+            </span>
+          </div>
+        ) : null}
         {KookitConfig.CloudMode !== "production" ? (
           <div className="header-report-container" style={{ right: "300px" }}>
             <span

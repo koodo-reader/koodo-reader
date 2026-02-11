@@ -184,9 +184,10 @@ class TextToSpeech extends React.Component<
       let rawNodeList = nodeTextList.map((text) => {
         return splitSentences(text);
       });
+
       this.nodeList = rawNodeList.flat();
     }
-
+    console.log(this.nodeList, "rawnode");
     if (this.nodeList.length === 0) {
       if (
         this.props.currentBook.format === "PDF" &&
