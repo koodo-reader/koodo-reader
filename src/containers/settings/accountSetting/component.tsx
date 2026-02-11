@@ -719,11 +719,34 @@ class AccountSetting extends React.Component<
           </div>
         )}
         {!this.props.isAuthed && (
-          <div className="account-login-tips">
-            {this.props.t(
-              "7-day free trial upon registration, then billed annually"
-            )}
-          </div>
+          <>
+            <div className="account-login-tips">
+              {this.props.t(
+                "7-day free trial upon registration, then billed annually"
+              )}
+            </div>
+            <div
+              className="account-login-tips"
+              style={{
+                marginTop: "10px",
+                opacity: 1,
+                fontWeight: "bold",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              onClick={() => {
+                openInBrowser(
+                  getWebsiteUrl() +
+                    (ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ? "/zh"
+                      : "/en") +
+                    "/pricing"
+                );
+              }}
+            >
+              {this.props.t("Compare Free and Pro features")}
+            </div>
+          </>
         )}
         {this.props.isAuthed &&
           loginList.map((login) => (
