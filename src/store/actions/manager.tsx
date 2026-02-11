@@ -324,23 +324,26 @@ export function handleFetchPlugins() {
               {},
               {},
               sortedVoiceList.map((item: any) => {
-                item.plugin = "official-ai-voice-plugin";
-                item.config = {};
-                item.displayName =
-                  i18n.t("Official AI Voice") +
-                  " - " +
-                  item.displayName +
-                  " - " +
-                  item.language +
-                  " - " +
-                  (item.gender === "female"
-                    ? i18n.t("Female voice")
-                    : i18n.t("Male voice"));
-                return item;
+                return {
+                  ...item, // 创建新对象
+                  plugin: "official-ai-voice-plugin",
+                  config: {},
+                  displayName:
+                    i18n.t("Official AI Voice") +
+                    " - " +
+                    item.displayName +
+                    " - " +
+                    item.language +
+                    " - " +
+                    (item.gender === "female"
+                      ? i18n.t("Female voice")
+                      : i18n.t("Male voice")),
+                };
               }),
               "",
               ""
             );
+            console.log(voicePlugin, "voiceplugin");
             pluginList.push(voicePlugin);
             dispatch(handlePlugins(pluginList));
           } else {

@@ -88,6 +88,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   handleAddBook = (book: BookModel, buffer: ArrayBuffer) => {
     return new Promise<void>(async (resolve) => {
+      toast.loading(
+        this.props.t("Importing") + ": " + book.name.substring(0, 50),
+        {
+          id: "import-book",
+        }
+      );
       if (this.state.isOpenFile) {
         if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           //ignore
@@ -131,7 +137,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           toast.success(
             this.props.t("Addition successful") +
               ": " +
-              book.name.substring(0, 50)
+              book.name.substring(0, 50),
+            {
+              id: "add-book",
+            }
           );
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);
