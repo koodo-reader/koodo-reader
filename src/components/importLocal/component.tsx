@@ -159,23 +159,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         });
     });
   };
-  uploadBookToCloud = async (book: BookModel) => {
-    let syncUtil = await SyncService.getSyncUtil();
-    let bookBuffer: any = await BookUtil.fetchBook(
-      book.key,
-      book.format,
-      true,
-      book.path
-    );
-    let bookBlob = new Blob([bookBuffer], {
-      type: CommonTool.getMimeType(book.format.toLowerCase()),
-    });
-    await syncUtil.uploadFile(
-      book.key + "." + book.format.toLowerCase(),
-      "book",
-      bookBlob
-    );
-  };
 
   getMd5WithBrowser = async (file: any) => {
     return new Promise<void>(async (resolve) => {
