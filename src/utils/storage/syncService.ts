@@ -2,7 +2,7 @@ import {
   ConfigService,
   SyncUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
-import { getThirdpartyRequest } from "../request/thirdparty";
+import { isTokenExpired } from "../common";
 import { getCloudConfig } from "../file/common";
 
 class SyncService {
@@ -13,7 +13,8 @@ class SyncService {
     if (!service) {
       return new SyncUtil("", {});
     }
-    if (!this.syncUtilCache[service]) {
+    console.log(await isTokenExpired(service), service);
+    if (!this.syncUtilCache[service] || (await isTokenExpired(service))) {
       let config = await getCloudConfig(service);
 
       this.syncUtilCache[service] = new SyncUtil(service, config);
@@ -24,7 +25,7 @@ class SyncService {
     delete this.syncUtilCache[service];
   }
   static async getPickerUtil(service: string) {
-    if (!this.pickerUtilCache[service]) {
+    if (!this.pickerUtilCache[service] || (await isTokenExpired(service))) {
       let config = await getCloudConfig(service);
       config.baseFolder = "";
 

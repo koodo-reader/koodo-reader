@@ -20,7 +20,11 @@ import {
   getCloudSyncToken,
   refreshThirdToken,
 } from "./request/thirdparty";
-import { getCloudConfig, removeCloudConfig } from "./file/common";
+import {
+  getCloudConfig,
+  getCloudToken,
+  removeCloudConfig,
+} from "./file/common";
 import SyncService from "./storage/syncService";
 import localforage from "localforage";
 import { driveList } from "../constants/driveList";
@@ -1106,12 +1110,14 @@ export const prepareThirdConfig = async (service: string, config: any) => {
       config.access_token &&
       config.expires_at > new Date().getTime() + 15 * 60 * 1000
     ) {
+      console.log("not refreshing");
       return config;
     }
+    console.log("refreshing");
 
     // Get access token
     let refreshToken = config.refresh_token;
-    let res = await refreshThirdToken("adrive", refreshToken);
+    let res = await refreshThirdToken(service, refreshToken);
     if (!res.data || !res.data.access_token) {
       toast.error(
         i18n.t(
@@ -1164,5 +1170,32 @@ export const prepareThirdConfig = async (service: string, config: any) => {
     return config;
   } else {
     return config;
+  }
+};
+export const isTokenExpired = async (service: string): Promise<boolean> => {
+  let config = await getCloudToken(service);
+  if (!config) {
+    return false;
+  }
+
+  if (
+    service === "adrive" ||
+    service === "boxnet" ||
+    service === "dropbox" ||
+    service === "dubox" ||
+    service === "google" ||
+    service === "microsoft" ||
+    service === "yandex" ||
+    service === "yiyiwu"
+  ) {
+    if (
+      config.access_token &&
+      config.expires_at > new Date().getTime() + 15 * 60 * 1000
+    ) {
+      return false;
+    }
+    return true;
+  } else {
+    return false;
   }
 };

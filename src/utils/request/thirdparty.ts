@@ -158,6 +158,8 @@ export const getCloudSyncToken = async () => {
   } else if (response.code === 401) {
     handleExitApp();
     return {};
+  } else if (response.code === 20004) {
+    return {};
   } else {
     toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
     return {};
