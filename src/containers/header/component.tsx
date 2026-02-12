@@ -200,6 +200,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ) {
         this.setState({ isRenewPro: true });
       }
+      if (
+        nextProps.userInfo.type === "trial" &&
+        nextProps.userInfo.valid_until <
+          new Date().getTime() / 1000 + 3 * 24 * 3600
+      ) {
+        this.setState({ isRenewPro: true });
+      }
     }
   }
   handleFinishReading = async () => {
