@@ -221,7 +221,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           return;
         }
       }
-      console.log(getServerRegion(), this.props.isAuthed);
       let rendition = BookHelper.getRendition(
         result,
         {

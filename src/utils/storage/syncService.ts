@@ -13,7 +13,6 @@ class SyncService {
     if (!service) {
       return new SyncUtil("", {});
     }
-    console.log(await isTokenExpired(service), service);
     if (!this.syncUtilCache[service] || (await isTokenExpired(service))) {
       let config = await getCloudConfig(service);
 

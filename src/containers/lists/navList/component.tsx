@@ -164,7 +164,6 @@ class NavList extends React.Component<NavListProps, NavListState> {
         };
   };
   render() {
-    console.log(this.state.currentData);
     const renderBookNavList = () => {
       return this.state.currentData.map((item: any, index: number) => {
         const bookmarkProps = {

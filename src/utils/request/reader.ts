@@ -170,7 +170,6 @@ export const getOcrResult = async (imageBase64: string, lang: string) => {
     image_base64: imageBase64,
     lang,
   });
-  console.log(response);
   if (response.code === 200) {
     return response;
   } else if (response.code === 401) {

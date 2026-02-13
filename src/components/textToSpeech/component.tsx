@@ -187,7 +187,6 @@ class TextToSpeech extends React.Component<
 
       this.nodeList = rawNodeList.flat();
     }
-    console.log(this.nodeList, "rawnode");
     if (this.nodeList.length === 0) {
       if (
         this.props.currentBook.format === "PDF" &&

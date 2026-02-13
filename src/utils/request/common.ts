@@ -1,7 +1,10 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
-import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  TokenService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import { getServerRegion, reloadManager } from "../common";
 const PUBLIC_URL = "https://api.koodoreader.com";
 const CN_PUBLIC_URL = "https://api.koodoreader.cn";
@@ -35,9 +38,19 @@ export const checkStableUpdate = async () => {
 };
 export const handleExitApp = async () => {
   toast.error(i18n.t("Authorization failed, please login again"));
+  await handleClearToken();
+  //路由到login页面
+  reloadManager();
+};
+export const handleClearToken = async () => {
   await TokenService.deleteToken("is_authed");
   await TokenService.deleteToken("access_token");
   await TokenService.deleteToken("refresh_token");
-  //路由到login页面
-  reloadManager();
+  let dataSourceList = ConfigService.getAllListConfig("dataSourceList") || [];
+  for (let i = 0; i < dataSourceList.length; i++) {
+    let targetDrive = dataSourceList[i];
+    await TokenService.setToken(targetDrive + "_token", "");
+  }
+  ConfigService.removeItem("defaultSyncOption");
+  ConfigService.removeItem("dataSourceList");
 };
