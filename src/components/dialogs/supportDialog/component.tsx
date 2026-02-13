@@ -16,7 +16,7 @@ import {
   TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
-import { handleExitApp } from "../../../utils/request/common";
+import { handleClearToken, handleExitApp } from "../../../utils/request/common";
 import {
   fetchUserInfo,
   getTempToken,
@@ -69,11 +69,7 @@ class SupportDialog extends React.Component<
                   <div className="support-us-out-button" style={{}}>
                     <div
                       onClick={async () => {
-                        await TokenService.deleteToken("is_authed");
-                        await TokenService.deleteToken("access_token");
-                        await TokenService.deleteToken("refresh_token");
-                        ConfigService.removeItem("defaultSyncOption");
-                        ConfigService.removeItem("dataSourceList");
+                        await handleClearToken();
                         this.props.handleFetchAuthed();
                         this.props.handleFetchDataSourceList();
                         this.props.handleFetchDefaultSyncOption();

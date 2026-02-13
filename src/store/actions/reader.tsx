@@ -107,7 +107,6 @@ export function handleFetchNotes() {
       sortField,
       sortOrder
     );
-    console.log(sortField, sortOrder, highlights);
     let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
     notes = notes.filter((note) => !deletedBookKeys.includes(note.bookKey));
     highlights = highlights.filter(

@@ -28,7 +28,7 @@ import {
   loginRegister,
   resetUserRequest,
 } from "../../../utils/request/user";
-import { handleExitApp } from "../../../utils/request/common";
+import { handleClearToken, handleExitApp } from "../../../utils/request/common";
 import copyTextToClipboard from "copy-text-to-clipboard";
 import { resetReaderRequest } from "../../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../../utils/request/thirdparty";
@@ -86,14 +86,10 @@ class AccountSetting extends React.Component<
     this.handleRest(this.state[stateName]);
   };
   handleLogout = async () => {
-    await TokenService.deleteToken("is_authed");
-    await TokenService.deleteToken("access_token");
-    await TokenService.deleteToken("refresh_token");
+    await handleClearToken();
 
     this.props.handleFetchAuthed();
     this.props.handleLoginOptionList([]);
-    ConfigService.removeItem("defaultSyncOption");
-    ConfigService.removeItem("dataSourceList");
     this.props.handleFetchDataSourceList();
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Log out successful"));

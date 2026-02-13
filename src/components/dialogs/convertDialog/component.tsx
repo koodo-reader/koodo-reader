@@ -78,7 +78,6 @@ class ConvertDialog extends React.Component<
     });
   };
   render() {
-    console.log(getOcrPaddleLangList(), "ocrPaddleLangList");
     return (
       <>
         <div

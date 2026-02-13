@@ -238,6 +238,9 @@ const createMainWin = () => {
       mainView.setBounds({ x: 0, y: 0, width: width, height: height });
     }
   });
+  mainWin.webContents.on('console-message', (event, level, message, line, sourceId) => {
+    console.log(`[Renderer Console] Message: ${message}`);
+  });
   //cancel-download-app
   ipcMain.handle("cancel-download-app", (event, arg) => {
     // Implement cancellation logic here

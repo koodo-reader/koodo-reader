@@ -1110,10 +1110,8 @@ export const prepareThirdConfig = async (service: string, config: any) => {
       config.access_token &&
       config.expires_at > new Date().getTime() + 15 * 60 * 1000
     ) {
-      console.log("not refreshing");
       return config;
     }
-    console.log("refreshing");
 
     // Get access token
     let refreshToken = config.refresh_token;

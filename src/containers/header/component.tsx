@@ -189,10 +189,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     }
     if (nextProps.userInfo && nextProps.userInfo !== this.props.userInfo) {
-      console.log(
-        nextProps.userInfo.valid_until,
-        new Date().getTime() / 1000 + 30 * 24 * 3600
-      );
       if (
         nextProps.userInfo.type === "pro" &&
         nextProps.userInfo.valid_until <
@@ -374,7 +370,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   getCompareResult = async () => {
     let localSyncRecords = ConfigService.getAllSyncRecord();
     let cloudSyncRecords = await ConfigUtil.getCloudConfig("sync");
-    console.log(cloudSyncRecords, "cloudsync");
     return await SyncHelper.compareAll(
       localSyncRecords,
       cloudSyncRecords,
@@ -407,7 +402,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         return;
       }
       let compareResult = await this.getCompareResult();
-      console.log(compareResult, "comoare");
       await this.handleSync(compareResult);
       clearInterval(this.timer);
       this.setState({ isSync: false });

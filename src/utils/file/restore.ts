@@ -148,7 +148,6 @@ export const restoreFromfilePath = async (filePath: string) => {
   }
   var zip = new AdmZip(filePath);
   var zipEntries = zip.getEntries(); // an array of ZipEntry records
-  console.log("tsrt", zipEntries);
   if (
     zipEntries
       .map((item: any) => item.entryName)
@@ -156,7 +155,6 @@ export const restoreFromfilePath = async (filePath: string) => {
   ) {
     return await restoreFromOldBackup(zipEntries);
   } else {
-    console.log("3453");
     return await restoreFromNewBackup(zipEntries);
   }
 };

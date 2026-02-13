@@ -26,7 +26,6 @@ class ConfigUtil {
         return;
       }
       let tokenConfig = await getCloudConfig(service);
-      console.log("dsgdf");
       let result = await ipcRenderer.invoke("cloud-download", {
         ...tokenConfig,
         fileName: type + ".json",
@@ -34,7 +33,6 @@ class ConfigUtil {
         type: "config",
         storagePath: getStorageLocation(),
       });
-      console.log(result, "result");
       if (!result) {
         console.error("no config file");
         return "{}";
