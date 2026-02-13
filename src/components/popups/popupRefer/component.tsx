@@ -211,9 +211,11 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
                         {}
                       ),
                     });
-                    await this.props.rendition.goToNode(
-                      doc.body.querySelector("#" + CSS.escape(id)) || doc.body
-                    );
+                    if (id) {
+                      await this.props.rendition.goToNode(
+                        doc.body.querySelector("#" + CSS.escape(id)) || doc.body
+                      );
+                    }
                   }}
                   style={{
                     color: this.state.isJump ? "rgba(231, 69, 69, 0.8)" : "",

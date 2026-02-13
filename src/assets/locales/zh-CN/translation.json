@@ -130,6 +130,7 @@
   "Audio loading failed, stopped playback": "音频加载失败，已停止播放",
   "Compare Free and Pro features": "免费版和专业版功能对比",
   "Recommended (use with Nutstore)": "推荐使用（配合坚果云）",
+  "Failed to export": "导出失败",
   "Export books with original name": "导出图书时使用原始文件名",
   "Pre-caching": "预缓存中",
   "Delete pre-cache": "删除预缓存",

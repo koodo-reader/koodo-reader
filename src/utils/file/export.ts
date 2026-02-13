@@ -53,6 +53,7 @@ export const exportBooks = async (books: Book[]) => {
         }
       } catch (error) {
         console.error(`Failed to export book ${books[i].name}:`, error);
+        toast.error(i18n.t("Failed to export") + `: ${books[i].name}`);
       }
     }
     toast.success(i18n.t("Export successful"), {

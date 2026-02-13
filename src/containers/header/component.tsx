@@ -62,7 +62,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isDataChange: false,
       isHidePro: false,
       isSync: false,
-      isRenewPro: false,
     };
   }
   async componentDidMount() {
@@ -186,22 +185,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       if (isElectron) {
       } else {
         removeChatBox();
-      }
-    }
-    if (nextProps.userInfo && nextProps.userInfo !== this.props.userInfo) {
-      if (
-        nextProps.userInfo.type === "pro" &&
-        nextProps.userInfo.valid_until <
-          new Date().getTime() / 1000 + 30 * 24 * 3600
-      ) {
-        this.setState({ isRenewPro: true });
-      }
-      if (
-        nextProps.userInfo.type === "trial" &&
-        nextProps.userInfo.valid_until <
-          new Date().getTime() / 1000 + 3 * 24 * 3600
-      ) {
-        this.setState({ isRenewPro: true });
       }
     }
   }
@@ -737,7 +720,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             ></span>
           </div>
         ) : null}
-        {this.props.isAuthed && this.state.isRenewPro ? (
+        {this.props.isAuthed &&
+        this.props.userInfo &&
+        ((this.props.userInfo.type === "pro" &&
+          this.props.userInfo.valid_until <
+            new Date().getTime() / 1000 + 30 * 24 * 3600) ||
+          (this.props.userInfo.type === "trial" &&
+            this.props.userInfo.valid_until <
+              new Date().getTime() / 1000 + 3 * 24 * 3600)) ? (
           <div className="header-report-container">
             <span
               style={{ textDecoration: "underline" }}

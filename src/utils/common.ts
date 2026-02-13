@@ -1051,6 +1051,7 @@ export const splitSentences = (text: string) => {
     .filter((sentence) => sentence.trim() !== "");
 };
 export const getICloudDrivePath = () => {
+  if (!isElectron) return "";
   const fs = window.require("fs");
   const path = window.require("path");
   const os = window.require("os");
@@ -1074,6 +1075,7 @@ export const getICloudDrivePath = () => {
     // Windows
     const possiblePaths = [
       path.join(os.homedir(), "iCloudDrive", "iCloud~com~koodoreader~expo"),
+      path.join(os.homedir(), "iCloud Drive", "iCloud~com~koodoreader~expo"),
     ];
 
     for (const possiblePath of possiblePaths) {
@@ -1126,7 +1128,7 @@ export const prepareThirdConfig = async (service: string, config: any) => {
           duration: 6000,
         }
       );
-      let targetDrive = ConfigService.getItem("defaultSyncOption") || "";
+      let targetDrive = service;
       await TokenService.setToken(targetDrive + "_token", "");
       SyncService.removeSyncUtil(targetDrive);
       removeCloudConfig(targetDrive);

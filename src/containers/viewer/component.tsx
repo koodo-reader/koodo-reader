@@ -253,7 +253,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 )?.value || "chi_sim"
               : ConfigService.getReaderConfig("ocrEngine") === "paddle"
                 ? "standard_v5_mobile"
-                : "eng",
+                : "general",
           externalWorker: {
             recognize: getOcrResult,
           },
