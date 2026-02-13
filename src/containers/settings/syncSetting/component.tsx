@@ -134,13 +134,13 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         this.props.handleSettingDrive("");
         return;
       }
-      ConfigService.setListConfig(this.props.settingDrive, "dataSourceList");
+      ConfigService.setListConfig(settingDrive, "dataSourceList");
       toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
       if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
-        ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
+        ConfigService.setItem("defaultSyncOption", settingDrive);
         if (
           ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
-          this.props.userInfo.default_sync_option !== this.props.settingDrive
+          this.props.userInfo.default_sync_option !== settingDrive
         ) {
           resetKoodoSync();
         }

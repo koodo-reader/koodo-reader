@@ -105,6 +105,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           this.handleJump(book);
           this.setState({ isOpenFile: false });
+          toast.dismiss("add-book");
           return resolve();
         }
       } else {
@@ -158,6 +159,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             this.props.t("Import failed") + ": " + book.name.substring(0, 50),
             {
               duration: 4000,
+              id: "add-book",
             }
           );
           return resolve();
