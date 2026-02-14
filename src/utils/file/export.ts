@@ -34,6 +34,9 @@ export const exportBooks = async (books: Book[]) => {
       id: "exporting",
     });
 
+    // 让 UI 有时间渲染 toast
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     // 逐个获取并写入图书文件
     for (let i = 0; i < books.length; i++) {
       try {
@@ -49,7 +52,17 @@ export const exportBooks = async (books: Book[]) => {
         if (bookBuffer) {
           const fileName = getBookName(book);
           const filePath = path.join(exportPath, fileName);
-          fs.writeFileSync(filePath, Buffer.from(bookBuffer as ArrayBuffer));
+          // 使用 Promise 包装 writeFile 避免阻塞 UI
+          await new Promise((resolve, reject) => {
+            fs.writeFile(
+              filePath,
+              Buffer.from(bookBuffer as ArrayBuffer),
+              (err) => {
+                if (err) reject(err);
+                else resolve(null);
+              }
+            );
+          });
         }
       } catch (error) {
         console.error(`Failed to export book ${books[i].name}:`, error);

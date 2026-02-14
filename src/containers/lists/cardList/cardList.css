@@ -92,14 +92,14 @@
 }
 .card-list-item-text-note {
   position: absolute;
-  top: 90px;
+  top: 110px;
   width: 100%;
   height: 104px;
   opacity: 0.6;
 }
 .card-list-item-text {
   width: calc(100% - 25px);
-  height: 53px;
+  height: 55px;
   overflow-y: scroll;
   overflow-x: hidden;
   margin: 14px 10px 0px 10px;
