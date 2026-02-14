@@ -187,6 +187,7 @@ class CardList extends React.Component<CardListProps, CardListStates> {
     }
 
     const renderCardListItem = (notes) => {
+      console.log(notes);
       return notes.map((item: NoteModel, index: number) => {
         return (
           <li

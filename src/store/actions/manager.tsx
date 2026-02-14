@@ -382,7 +382,7 @@ export function handleFetchBookSortCode() {
 export function handleFetchNoteSortCode() {
   return (dispatch: Dispatch) => {
     let noteSortCode = JSON.parse(
-      ConfigService.getReaderConfig("noteSortCode") || '{"sort": 2, "order": 2}'
+      ConfigService.getReaderConfig("noteSortCode") || '{"sort": 1, "order": 2}'
     );
     dispatch(handleNoteSortCode(noteSortCode));
   };
