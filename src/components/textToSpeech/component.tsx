@@ -113,6 +113,16 @@ class TextToSpeech extends React.Component<
       }
     }
   }
+  UNSAFE_componentWillReceiveProps(
+    nextProps: Readonly<TextToSpeechProps>,
+    nextContext: any
+  ): void {
+    //plugin更新后重新获取语音列表
+    if (nextProps.plugins !== this.props.plugins) {
+      this.customVoices = TTSUtil.getVoiceList(nextProps.plugins);
+      this.voices = [...this.nativeVoices, ...this.customVoices];
+    }
+  }
   handleChangeAudio = async () => {
     this.setState({ isAddNew: false });
     if (this.state.isAudioOn) {
