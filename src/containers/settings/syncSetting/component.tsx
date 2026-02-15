@@ -118,7 +118,9 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       let drivePath = getICloudDrivePath();
       if (!drivePath) {
         toast.error(
-          this.props.t("Can't find iCloud Drive folder in the default path")
+          this.props.t(
+            "Can't find iCloud Drive folder in the default path, please make sure iCloud Drive is installed and set up correctly"
+          )
         );
         this.props.handleSettingDrive("");
         return;
