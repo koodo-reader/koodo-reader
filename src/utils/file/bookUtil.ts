@@ -478,7 +478,7 @@ class BookUtil {
   }
   static async isBookOffline(key: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
-    return await this.isBookExist(key, book.format.toLowerCase(), "");
+    return await this.isBookExist(key, book.format.toLowerCase(), book.path);
   }
   static async getLocalBookList() {
     let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];

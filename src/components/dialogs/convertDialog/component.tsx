@@ -224,9 +224,9 @@ class ConvertDialog extends React.Component<
                       "tesseract"
                         ? ocrTesseractLangList
                         : ConfigService.getReaderConfig("ocrEngine") ===
-                            "paddle"
-                          ? getOcrPaddleLangList()
-                          : [{ label: "General", value: "general", lang: "" }]),
+                            "official-ai-ocr"
+                          ? [{ label: "General", value: "general", lang: "" }]
+                          : getOcrPaddleLangList()),
                     ].map((item) => (
                       <option
                         value={item.value}

@@ -253,11 +253,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 )?.value || "chi_sim"
               : ConfigService.getReaderConfig("ocrEngine") === "paddle"
                 ? "standard_v5_mobile"
-                : "general",
+                : "standard_v5_mobile",
           externalWorker: {
             recognize: getOcrResult,
           },
-          ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "tesseract",
+          ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "paddle",
           serverRegion:
             getServerRegion() === "china" && this.props.isAuthed
               ? "china"
