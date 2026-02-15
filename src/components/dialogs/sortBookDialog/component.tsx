@@ -59,7 +59,6 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
     let sortCode = this.state.isNote
       ? this.props.noteSortCode
       : this.props.bookSortCode;
-    console.log(sortCode);
     return (
       <div
         className="sort-dialog-container"

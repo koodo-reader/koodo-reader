@@ -265,7 +265,7 @@ export const getCloudConfig = async (service: string) => {
   if (!config) {
     return {};
   }
-  let newConfig = await prepareThirdConfig(service, config);
+  let newConfig = await prepareThirdConfig(service, { ...config });
   if (
     newConfig.access_token &&
     newConfig.access_token !== config.access_token
