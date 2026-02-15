@@ -267,6 +267,7 @@ export const getCloudConfig = async (service: string) => {
   }
   let oldAccessToken = config.access_token;
   let newConfig = await prepareThirdConfig(service, config);
+  console.log(oldAccessToken, newConfig);
   if (newConfig.access_token && newConfig.access_token !== oldAccessToken) {
     console.log("Token updated for service:", service);
     return { ...newConfig, isUseCache: false };
