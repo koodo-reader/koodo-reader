@@ -119,8 +119,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       if (!drivePath) {
         toast.error(
           this.props.t(
-            "Can't find iCloud Drive folder in the default path, please make sure iCloud Drive is installed and set up correctly"
-          )
+            "Can't find Koodo Reader's folder in the default iCloud path, please make sure iCloud Drive is installed and set up correctly, and you have already synced your library to iCloud Drive on the iOS version first."
+          ),
+          {
+            duration: 6000,
+          }
         );
         this.props.handleSettingDrive("");
         return;
