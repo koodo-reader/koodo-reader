@@ -23,6 +23,7 @@
   opacity: 1;
   margin-left: 5px;
   font-weight: 500;
+  min-width: 31px;
 }
 .tag-container {
   display: flex;
