@@ -1166,6 +1166,14 @@ export const prepareThirdConfig = async (service: string, config: any) => {
         });
       }
     }
+    SyncService.removeSyncUtil(service);
+    removeCloudConfig(service);
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      await ipcRenderer.invoke("cloud-close", {
+        service: service,
+      });
+    }
 
     return config;
   } else {
