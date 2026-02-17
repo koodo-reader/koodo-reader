@@ -583,7 +583,16 @@ class AccountSetting extends React.Component<
                       }
                     );
                     if (response.code === 10009) {
-                      if (getServerRegion() === "china") {
+                      if (this.state.redeemCode.startsWith("CD")) {
+                        toast(
+                          this.props.t(
+                            "This is the order number not the redemption code, please check your email again, the redemption code is below the order number"
+                          ),
+                          {
+                            duration: 8000,
+                          }
+                        );
+                      } else if (getServerRegion() === "china") {
                         toast(
                           this.props.t(
                             "If you have purchased the code directly from our website, please redeem with an account registered in global server region"
