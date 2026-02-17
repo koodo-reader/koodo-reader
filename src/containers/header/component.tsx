@@ -32,7 +32,9 @@ import {
   checkMissingBook,
   generateSyncRecord,
   getChatLocale,
+  getTaskStats,
   getWebsiteUrl,
+  openInBrowser,
   removeChatBox,
   resetKoodoSync,
   showTaskProgress,
@@ -43,7 +45,7 @@ import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
-import { updateUserConfig } from "../../utils/request/user";
+import { getTempToken, updateUserConfig } from "../../utils/request/user";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -444,6 +446,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           this.props.defaultSyncOption !== "sftp" &&
           this.props.defaultSyncOption !== "smb" &&
           this.props.defaultSyncOption !== "s3compatible" &&
+          this.props.defaultSyncOption !== "icloud" &&
           this.props.defaultSyncOption !== "docker"
         ) {
           ConfigService.setReaderConfig("isFirstSync", "no");
@@ -494,6 +497,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
       clearInterval(this.timer);
       this.setState({ isSync: false });
+      let stats = await getTaskStats();
+      if (stats.hasFailedTasks) {
+        toast.error(
+          this.props.t(
+            "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
+          ),
+          {
+            id: "syncing",
+            duration: 6000,
+          }
+        );
+        return;
+      }
       toast.loading(this.props.t("Almost finished"), {
         id: "syncing",
         position: "bottom-center",
@@ -704,7 +720,41 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             ></span>
           </div>
         ) : null}
-
+        {this.props.isAuthed &&
+        this.props.userInfo &&
+        ((this.props.userInfo.type === "pro" &&
+          this.props.userInfo.valid_until <
+            new Date().getTime() / 1000 + 30 * 24 * 3600) ||
+          (this.props.userInfo.type === "trial" &&
+            this.props.userInfo.valid_until <
+              new Date().getTime() / 1000 + 3 * 24 * 3600)) ? (
+          <div className="header-report-container">
+            <span
+              style={{ textDecoration: "underline" }}
+              onClick={async () => {
+                let response = await getTempToken();
+                if (response.code === 200) {
+                  let tempToken = response.data.access_token;
+                  let deviceUuid = await TokenService.getFingerprint();
+                  openInBrowser(
+                    getWebsiteUrl() +
+                      (ConfigService.getReaderConfig("lang").startsWith("zh")
+                        ? "/zh"
+                        : "/en") +
+                      "/pricing?temp_token=" +
+                      tempToken +
+                      "&device_uuid=" +
+                      deviceUuid
+                  );
+                } else if (response.code === 401) {
+                  this.props.handleFetchAuthed();
+                }
+              }}
+            >
+              <Trans>Renew Pro</Trans>
+            </span>
+          </div>
+        ) : null}
         {KookitConfig.CloudMode !== "production" ? (
           <div className="header-report-container" style={{ right: "300px" }}>
             <span

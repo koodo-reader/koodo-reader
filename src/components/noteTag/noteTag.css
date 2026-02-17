@@ -9,7 +9,7 @@
   cursor: pointer;
   margin-right: 10px;
   font-size: 13px;
-  margin-top: 5px;
+  margin-top: 2px;
   font-weight: 500;
   flex-shrink: 0;
   white-space: nowrap;
@@ -23,6 +23,7 @@
   opacity: 1;
   margin-left: 5px;
   font-weight: 500;
+  min-width: 31px;
 }
 .tag-container {
   display: flex;
@@ -103,7 +104,7 @@
   cursor: pointer;
   margin-right: 10px;
   font-size: 10px;
-  margin-top: 9px;
+  margin-top: 7px;
   position: relative;
   bottom: 1px;
   box-sizing: border-box;

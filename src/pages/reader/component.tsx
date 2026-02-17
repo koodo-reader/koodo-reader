@@ -86,6 +86,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     this.props.handleFetchBooks();
+    this.props.handleFetchAuthed();
     DatabaseService.getRecord(key, "books").then((book: Book | null) => {
       book = book || JSON.parse(ConfigService.getItem("tempBook") || "{}");
       if (!book) return;

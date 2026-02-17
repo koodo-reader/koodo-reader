@@ -106,15 +106,11 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
 };
 const getSyncUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !syncUtilCache[config.service]) {
-    const { SyncUtil, TokenService, ConfigService, ThirdpartyRequest } =
+    const { SyncUtil } =
       await import("./src/assets/lib/kookit-extra.min.mjs");
-    let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
-
     syncUtilCache[config.service] = new SyncUtil(
       config.service,
-      config,
-      config.storagePath,
-      thirdpartyRequest
+      config
     );
   }
   return syncUtilCache[config.service];
@@ -124,15 +120,11 @@ const removeSyncUtil = (config) => {
 };
 const getPickerUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !pickerUtilCache[config.service]) {
-    const { SyncUtil, TokenService, ThirdpartyRequest, ConfigService } =
+    const { SyncUtil } =
       await import("./src/assets/lib/kookit-extra.min.mjs");
-    let thirdpartyRequest = new ThirdpartyRequest(TokenService, ConfigService);
-
     pickerUtilCache[config.service] = new SyncUtil(
       config.service,
-      config,
-      config.storagePath,
-      thirdpartyRequest
+      config
     );
   }
   return pickerUtilCache[config.service];
@@ -245,6 +237,9 @@ const createMainWin = () => {
       let { width, height } = mainWin.getContentBounds();
       mainView.setBounds({ x: 0, y: 0, width: width, height: height });
     }
+  });
+  mainWin.webContents.on('console-message', (event, level, message, line, sourceId) => {
+    console.log(`[Renderer Console] Message: ${message}`);
   });
   //cancel-download-app
   ipcMain.handle("cancel-download-app", (event, arg) => {
@@ -388,12 +383,12 @@ const createMainWin = () => {
             windowHeight: bounds.height,
             windowX:
               readerWindow.isMaximized() &&
-              currentDisplay.id === primaryDisplay.id
+                currentDisplay.id === primaryDisplay.id
                 ? 0
                 : bounds.x,
             windowY:
               readerWindow.isMaximized() &&
-              currentDisplay.id === primaryDisplay.id
+                currentDisplay.id === primaryDisplay.id
                 ? 0
                 : bounds.y < 0
                   ? 0
@@ -922,12 +917,12 @@ const createMainWin = () => {
               windowHeight: bounds.height,
               windowX:
                 readerWindow.isMaximized() &&
-                currentDisplay.id === primaryDisplay.id
+                  currentDisplay.id === primaryDisplay.id
                   ? 0
                   : bounds.x,
               windowY:
                 readerWindow.isMaximized() &&
-                currentDisplay.id === primaryDisplay.id
+                  currentDisplay.id === primaryDisplay.id
                   ? 0
                   : bounds.y < 0
                     ? 0

@@ -13,6 +13,7 @@ import { getThirdpartyRequest } from "../request/thirdparty";
 import { handleExitApp } from "../request/common";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
+import Note from "../../models/Note";
 
 class ConfigUtil {
   public static syncData: any = {};
@@ -25,7 +26,6 @@ class ConfigUtil {
         return;
       }
       let tokenConfig = await getCloudConfig(service);
-
       let result = await ipcRenderer.invoke("cloud-download", {
         ...tokenConfig,
         fileName: type + ".json",
@@ -245,29 +245,30 @@ class ConfigUtil {
       await syncUtil.uploadFile(type + ".db", "config", dbBlob);
     }
   }
-  static async getNotesByBookKeyAndType(
+  static async getNotesByBookKeyAndTypeWithSort(
     bookKey: string,
     type: string,
+    sort: string = "key",
     order: string = "DESC"
   ) {
     if (isElectron) {
       let queryString = "";
       let data: any[] = [];
       if (type === "note" && bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes != '' ORDER BY key ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes != '' ORDER BY ${sort} ${order}`;
         data = [bookKey];
       } else if (type === "highlight" && bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes = '' ORDER BY key ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes = '' ORDER BY ${sort} ${order}`;
         data = [bookKey];
       } else if (type === "note" && !bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes != '' ORDER BY key ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes != '' ORDER BY ${sort} ${order}`;
       } else if (type === "highlight" && !bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes = '' ORDER BY key ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes = '' ORDER BY ${sort} ${order}`;
       } else if (!type && bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? ORDER BY key ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? ORDER BY ${sort} ${order}`;
         data = [bookKey];
       } else {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes ORDER BY key ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes ORDER BY ${sort} ${order}`;
       }
       const { ipcRenderer } = window.require("electron");
       return await ipcRenderer.invoke("custom-database-command", {
@@ -278,7 +279,7 @@ class ConfigUtil {
         executeType: "all",
       });
     } else {
-      let notes = await DatabaseService.getAllRecords("notes");
+      let notes: Note[] = await DatabaseService.getAllRecords("notes");
       let filteredNotes = notes.filter((note) => {
         let typeMatch =
           (type === "note" && note.notes !== "") ||
@@ -287,13 +288,23 @@ class ConfigUtil {
         let bookKeyMatch = bookKey ? note.bookKey === bookKey : true;
         return typeMatch && bookKeyMatch;
       });
-      filteredNotes.sort((a, b) => {
-        if (order === "ASC") {
-          return a.key - b.key;
-        } else {
-          return b.key - a.key;
-        }
-      });
+      if (sort === "key") {
+        filteredNotes.sort((a, b) => {
+          if (order === "ASC") {
+            return Number(a.key) - Number(b.key);
+          } else {
+            return Number(b.key) - Number(a.key);
+          }
+        });
+      } else if (sort === "percentage") {
+        filteredNotes.sort((a, b) => {
+          if (order === "ASC") {
+            return Number(a.percentage) - Number(b.percentage);
+          } else {
+            return Number(b.percentage) - Number(a.percentage);
+          }
+        });
+      }
       return filteredNotes;
     }
   }

@@ -199,7 +199,9 @@ class CoverUtil {
         path.join(directoryPath, `${book.key}.${result.extension}`),
         Buffer.from(result.arrayBuffer)
       );
-      this.uploadCover(book.key + "." + this.base64ToFileType(book.cover));
+      await this.uploadCover(
+        book.key + "." + this.base64ToFileType(book.cover)
+      );
       book.cover = "";
     } else {
       if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
@@ -210,7 +212,9 @@ class CoverUtil {
           "cover"
         );
       }
-      this.uploadCover(book.key + "." + this.base64ToFileType(coverBase64));
+      await this.uploadCover(
+        book.key + "." + this.base64ToFileType(coverBase64)
+      );
       // book.cover = "";
     }
   }

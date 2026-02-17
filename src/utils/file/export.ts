@@ -5,6 +5,9 @@ import BookUtil from "./bookUtil";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { isElectron } from "react-device-detect";
+import i18n from "../../i18n";
+import toast from "react-hot-toast";
 export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
   var zip = new JSZip();
   for (let index = 0; index < buffers.length; index++) {
@@ -13,12 +16,64 @@ export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
   return zip.generateAsync({ type: "blob" });
 };
 
-declare var window: any;
 let year = new Date().getFullYear(),
   month = new Date().getMonth() + 1,
   day = new Date().getDate();
 
 export const exportBooks = async (books: Book[]) => {
+  if (isElectron && books.length > 50) {
+    const { ipcRenderer } = window.require("electron");
+    const fs = window.require("fs");
+    const path = window.require("path");
+    const exportPath = await ipcRenderer.invoke("select-path");
+    if (!exportPath) {
+      toast.error(i18n.t("Please select a folder"));
+      return false;
+    }
+    toast.loading(i18n.t("Exporting..."), {
+      id: "exporting",
+    });
+
+    // 让 UI 有时间渲染 toast
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // 逐个获取并写入图书文件
+    for (let i = 0; i < books.length; i++) {
+      try {
+        const book = books[i];
+        const bookBuffer: boolean | ArrayBuffer | File =
+          await BookUtil.fetchBook(
+            book.key,
+            book.format.toLowerCase(),
+            true,
+            book.path
+          );
+
+        if (bookBuffer) {
+          const fileName = getBookName(book);
+          const filePath = path.join(exportPath, fileName);
+          // 使用 Promise 包装 writeFile 避免阻塞 UI
+          await new Promise((resolve, reject) => {
+            fs.writeFile(
+              filePath,
+              Buffer.from(bookBuffer as ArrayBuffer),
+              (err) => {
+                if (err) reject(err);
+                else resolve(null);
+              }
+            );
+          });
+        }
+      } catch (error) {
+        console.error(`Failed to export book ${books[i].name}:`, error);
+        toast.error(i18n.t("Failed to export") + `: ${books[i].name}`);
+      }
+    }
+    toast.success(i18n.t("Export successful"), {
+      id: "exporting",
+    });
+    return true;
+  }
   let fetchPromises = BookUtil.fetchAllBooks(books);
   let booksBuffers: any[] = [];
 

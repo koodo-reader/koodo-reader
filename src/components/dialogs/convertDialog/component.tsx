@@ -6,10 +6,12 @@ import "./convertDialog.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import BookUtil from "../../../utils/file/bookUtil";
 import {
-  ocrLangList,
+  getOcrPaddleLangList,
+  ocrTesseractLangList,
   paraSpacingList,
   titleSizeList,
 } from "../../../constants/dropdownList";
+import toast from "react-hot-toast";
 
 class ConvertDialog extends React.Component<
   ConvertDialogProps,
@@ -99,8 +101,7 @@ class ConvertDialog extends React.Component<
             ])}
             {this.props.currentBook.description.indexOf("scanned PDF") > -1 ? (
               <>
-                {/* TODO support more engine */}
-                {/* <div
+                <div
                   className="setting-dialog-new-title"
                   style={{
                     marginLeft: 10,
@@ -116,10 +117,36 @@ class ConvertDialog extends React.Component<
                     name=""
                     className="lang-setting-dropdown"
                     onChange={(event) => {
+                      if (
+                        event.target.value === "official-ai-ocr" &&
+                        !this.props.isAuthed
+                      ) {
+                        toast(
+                          this.props.t(
+                            "This feature is not available in the free version"
+                          )
+                        );
+                        return;
+                      }
                       ConfigService.setReaderConfig(
                         "ocrEngine",
                         event.target.value
                       );
+                      if (event.target.value === "tesseract") {
+                        ConfigService.setReaderConfig(
+                          "ocrLang",
+                          ocrTesseractLangList.find(
+                            (item) =>
+                              item.lang ===
+                              ConfigService.getReaderConfig("lang")
+                          )?.value || "chi_sim"
+                        );
+                      } else if (event.target.value === "paddle") {
+                        ConfigService.setReaderConfig(
+                          "ocrLang",
+                          "standard_v5_mobile"
+                        );
+                      }
                       if (
                         ConfigService.getReaderConfig("isConvertPDF") === "yes"
                       ) {
@@ -129,35 +156,40 @@ class ConvertDialog extends React.Component<
                   >
                     {[
                       { label: "Please select", value: "", lang: "" },
-                      { label: "Tesseract", value: "tesseract", lang: "" },
-                      { label: "System OCR", value: "system", lang: "" },
-                    ]
-                      .filter((item) => {
-                        if (!isElectron) {
-                          return item.value !== "system"; // Hide system OCR option in Electron
-                        } else {
-                          return true; // Show all options in web
-                        }
-                      })
-                      .map((item) => (
-                        <option
-                          value={item.value}
-                          key={item.value}
-                          className="lang-setting-option"
-                          selected={
-                            ConfigService.getReaderConfig("ocrEngine")
-                              ? item.value ===
-                                ConfigService.getReaderConfig("ocrEngine")
-                              : item.value === "tesseract"
+                      {
+                        label: this.props.t("Official AI OCR") + " (Pro)",
+                        value: "official-ai-ocr",
+                        lang: "",
+                      },
+                      {
+                        label: "Paddle OCR",
+                        value: "paddle",
+                        lang: "standard_v5_mobile",
+                      },
+                      {
+                        label: "Tesseract",
+                        value: "tesseract",
+                        lang: "chi_sim",
+                      },
+                    ].map((item) => (
+                      <option
+                        value={item.value}
+                        key={item.value}
+                        className="lang-setting-option"
+                        selected={
+                          ConfigService.getReaderConfig("ocrEngine")
+                            ? item.value ===
+                              ConfigService.getReaderConfig("ocrEngine")
+                            : item.value === "paddle"
                               ? true
                               : false
-                          }
-                        >
-                          {this.props.t(item.label)}
-                        </option>
-                      ))}
+                        }
+                      >
+                        {this.props.t(item.label)}
+                      </option>
+                    ))}
                   </select>
-                </div> */}
+                </div>
                 <div
                   className="setting-dialog-new-title"
                   style={{
@@ -188,7 +220,13 @@ class ConvertDialog extends React.Component<
                   >
                     {[
                       { label: "Please select", value: "", lang: "" },
-                      ...ocrLangList,
+                      ...(ConfigService.getReaderConfig("ocrEngine") ===
+                      "tesseract"
+                        ? ocrTesseractLangList
+                        : ConfigService.getReaderConfig("ocrEngine") ===
+                            "official-ai-ocr"
+                          ? [{ label: "General", value: "general", lang: "" }]
+                          : getOcrPaddleLangList()),
                     ].map((item) => (
                       <option
                         value={item.value}

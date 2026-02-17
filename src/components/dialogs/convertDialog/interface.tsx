@@ -6,7 +6,7 @@ export interface ConvertDialogProps {
   currentBook: BookModel;
   handleSetting: (isSettingOpen: boolean) => void;
   handleConvertDialog: (isAboutOpen: boolean) => void;
-
+  isAuthed: boolean;
   t: (title: string) => string;
 }
 export interface ConvertDialogState {

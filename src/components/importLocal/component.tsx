@@ -10,10 +10,7 @@ import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
-import {
-  CommonTool,
-  ConfigService,
-} from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../utils/file/coverUtil";
 import {
   calculateFileMD5,
@@ -22,7 +19,6 @@ import {
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
-import SyncService from "../../utils/storage/syncService";
 declare var window: any;
 let clickFilePath = "";
 
@@ -88,6 +84,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
   handleAddBook = (book: BookModel, buffer: ArrayBuffer) => {
     return new Promise<void>(async (resolve) => {
+      toast.loading(
+        this.props.t("Importing") + ": " + book.name.substring(0, 50),
+        {
+          id: "add-book",
+        }
+      );
       if (this.state.isOpenFile) {
         if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           //ignore
@@ -103,6 +105,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           this.handleJump(book);
           this.setState({ isOpenFile: false });
+          toast.dismiss("add-book");
           return resolve();
         }
       } else {
@@ -128,7 +131,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               "shelfList"
             );
           }
-          toast.success(this.props.t("Addition successful") + ": " + book.name);
+          toast.success(
+            this.props.t("Addition successful") +
+              ": " +
+              book.name.substring(0, 50),
+            {
+              id: "add-book",
+            }
+          );
           setTimeout(() => {
             this.state.isOpenFile && this.handleJump(book);
             if (
@@ -145,29 +155,16 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         })
         .catch((error) => {
           console.error(error, book.name);
-          toast.error(this.props.t("Import failed") + ": " + book.name, {
-            duration: 4000,
-          });
+          toast.error(
+            this.props.t("Import failed") + ": " + book.name.substring(0, 50),
+            {
+              duration: 4000,
+              id: "add-book",
+            }
+          );
           return resolve();
         });
     });
-  };
-  uploadBookToCloud = async (book: BookModel) => {
-    let syncUtil = await SyncService.getSyncUtil();
-    let bookBuffer: any = await BookUtil.fetchBook(
-      book.key,
-      book.format,
-      true,
-      book.path
-    );
-    let bookBlob = new Blob([bookBuffer], {
-      type: CommonTool.getMimeType(book.format.toLowerCase()),
-    });
-    await syncUtil.uploadFile(
-      book.key + "." + book.format.toLowerCase(),
-      "book",
-      bookBlob
-    );
   };
 
   getMd5WithBrowser = async (file: any) => {

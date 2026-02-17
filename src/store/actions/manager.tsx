@@ -217,6 +217,26 @@ export function handleFetchUserInfo() {
         "isEnableKoodoSync",
         userInfo.is_enable_koodo_sync || "no"
       );
+      if (
+        userInfo.is_enable_koodo_sync === "yes" &&
+        userInfo.default_sync_option &&
+        userInfo.default_sync_token
+      ) {
+        if (
+          ConfigService.getItem("defaultSyncOption") ===
+          userInfo.default_sync_option
+        ) {
+          let encryptedToken = await TokenService.getToken(
+            userInfo.default_sync_option + "_token"
+          );
+          if (encryptedToken !== userInfo.default_sync_token) {
+            await TokenService.setToken(
+              userInfo.default_sync_option + "_token",
+              userInfo.default_sync_token
+            );
+          }
+        }
+      }
     }
     if (
       userInfo &&
@@ -302,19 +322,21 @@ export function handleFetchPlugins() {
               {},
               {},
               sortedVoiceList.map((item: any) => {
-                item.plugin = "official-ai-voice-plugin";
-                item.config = {};
-                item.displayName =
-                  i18n.t("Official AI Voice") +
-                  " - " +
-                  item.displayName +
-                  " - " +
-                  item.language +
-                  " - " +
-                  (item.gender === "female"
-                    ? i18n.t("Female voice")
-                    : i18n.t("Male voice"));
-                return item;
+                return {
+                  ...item, // 创建新对象
+                  plugin: "official-ai-voice-plugin",
+                  config: {},
+                  displayName:
+                    i18n.t("Official AI Voice") +
+                    " - " +
+                    item.displayName +
+                    " - " +
+                    item.language +
+                    " - " +
+                    (item.gender === "female"
+                      ? i18n.t("Female voice")
+                      : i18n.t("Male voice")),
+                };
               }),
               "",
               ""
@@ -360,7 +382,7 @@ export function handleFetchBookSortCode() {
 export function handleFetchNoteSortCode() {
   return (dispatch: Dispatch) => {
     let noteSortCode = JSON.parse(
-      ConfigService.getReaderConfig("noteSortCode") || '{"sort": 2, "order": 2}'
+      ConfigService.getReaderConfig("noteSortCode") || '{"sort": 1, "order": 2}'
     );
     dispatch(handleNoteSortCode(noteSortCode));
   };

@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "2.2.6",
+  "version": "2.2.7",
   "description": "Koodo Reader is a cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -141,11 +141,6 @@
     },
     "buildDependenciesFromSource": false,
     "nodeGypRebuild": false,
-    "electronLanguages": [
-      "en-US",
-      "zh-CN",
-      "zh-TW"
-    ],
     "fileAssociations": [
       {
         "ext": "epub",

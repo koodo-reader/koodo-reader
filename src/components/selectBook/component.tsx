@@ -166,7 +166,6 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                     );
                     if (books.length > 0) {
                       await exportBooks(books);
-                      toast.success(this.props.t("Export successful"));
                     } else {
                       toast(this.props.t("Nothing to export"));
                     }

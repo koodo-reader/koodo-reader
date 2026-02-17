@@ -21,6 +21,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
         "noteSortCode",
         JSON.stringify({ sort: code, order: this.props.noteSortCode.order })
       );
+      this.props.handleFetchNotes();
     } else {
       let bookSortCode = this.props.bookSortCode;
       bookSortCode.sort = code;
@@ -41,6 +42,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
         JSON.stringify({ sort: this.props.noteSortCode.sort, order: code })
       );
       this.props.handleNoteSortCode(noteSortCode);
+      this.props.handleFetchNotes();
     } else {
       let bookSortCode = this.props.bookSortCode;
       bookSortCode.order = code;
@@ -66,17 +68,30 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
         onMouseEnter={() => {
           this.props.handleSortDisplay(true);
         }}
-        style={this.state.isNote ? { height: "102px" } : {}}
+        style={this.state.isNote ? { height: "132px" } : {}}
       >
         {this.state.isNote ? (
           <ul className="sort-by-category">
-            <li className="sort-by-category-list">
-              <Trans>{"Sort by Date"}</Trans>
-              <span
-                className="icon-check"
-                style={{ fontWeight: "bold" }}
-              ></span>
-            </li>
+            {["Sort by Date", "Reading progress"].map((item, index) => {
+              return (
+                <li
+                  className="sort-by-category-list"
+                  onClick={() => {
+                    this.handleSort(index + 1);
+                  }}
+                  style={sortCode.sort === index + 1 ? {} : { opacity: 0.34 }}
+                  key={index + 1}
+                >
+                  <Trans>{item}</Trans>
+                  {sortCode.sort === index + 1 && (
+                    <span
+                      className="icon-check"
+                      style={{ fontWeight: "bold" }}
+                    ></span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <ul className="sort-by-category">

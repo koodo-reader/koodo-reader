@@ -162,6 +162,13 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     return (
       <div className="note-tag-container">
         <ul className="tag-container" style={this.calculateContainerWidth()}>
+          <span
+            className="tag-title"
+            style={{ marginRight: "10px", marginLeft: "0px" }}
+          >
+            <Trans>Tags</Trans>
+          </span>
+
           <li
             className="tag-list-item-new"
             onClick={() => {
@@ -194,7 +201,6 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
               )}
             </div>
           </li>
-
           {renderTag()}
         </ul>
       </div>

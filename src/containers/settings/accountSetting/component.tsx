@@ -28,7 +28,7 @@ import {
   loginRegister,
   resetUserRequest,
 } from "../../../utils/request/user";
-import { handleExitApp } from "../../../utils/request/common";
+import { handleClearToken, handleExitApp } from "../../../utils/request/common";
 import copyTextToClipboard from "copy-text-to-clipboard";
 import { resetReaderRequest } from "../../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../../utils/request/thirdparty";
@@ -86,14 +86,10 @@ class AccountSetting extends React.Component<
     this.handleRest(this.state[stateName]);
   };
   handleLogout = async () => {
-    await TokenService.deleteToken("is_authed");
-    await TokenService.deleteToken("access_token");
-    await TokenService.deleteToken("refresh_token");
+    await handleClearToken();
 
     this.props.handleFetchAuthed();
     this.props.handleLoginOptionList([]);
-    ConfigService.removeItem("defaultSyncOption");
-    ConfigService.removeItem("dataSourceList");
     this.props.handleFetchDataSourceList();
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Log out successful"));
@@ -587,7 +583,16 @@ class AccountSetting extends React.Component<
                       }
                     );
                     if (response.code === 10009) {
-                      if (getServerRegion() === "china") {
+                      if (this.state.redeemCode.startsWith("CD")) {
+                        toast(
+                          this.props.t(
+                            "This is the order number not the redemption code, please check your email again, the redemption code is below the order number"
+                          ),
+                          {
+                            duration: 8000,
+                          }
+                        );
+                      } else if (getServerRegion() === "china") {
                         toast(
                           this.props.t(
                             "If you have purchased the code directly from our website, please redeem with an account registered in global server region"
@@ -718,6 +723,36 @@ class AccountSetting extends React.Component<
             </select>
           </div>
         )}
+        {!this.props.isAuthed && (
+          <>
+            <div className="account-login-tips">
+              {this.props.t(
+                "7-day free trial upon registration, then billed annually"
+              )}
+            </div>
+            <div
+              className="account-login-tips"
+              style={{
+                marginTop: "10px",
+                opacity: 1,
+                fontWeight: "bold",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              onClick={() => {
+                openInBrowser(
+                  getWebsiteUrl() +
+                    (ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ? "/zh"
+                      : "/en") +
+                    "/pricing"
+                );
+              }}
+            >
+              {this.props.t("Compare Free and Pro features")}
+            </div>
+          </>
+        )}
         {this.props.isAuthed &&
           loginList.map((login) => (
             <div className="setting-dialog-new-title" key={login.value}>
@@ -841,29 +876,6 @@ class AccountSetting extends React.Component<
               }}
             >
               <Trans>How to</Trans>
-            </span>
-          </div>
-        )}
-        {this.props.isAuthed && (
-          <div className="setting-dialog-new-title">
-            <Trans>Get error log</Trans>
-
-            <span
-              className="change-location-button"
-              onClick={async () => {
-                let errorLog = ConfigService.getItem("errorLog") || "";
-                if (isElectron) {
-                  const { ipcRenderer } = window.require("electron");
-                  let log = await ipcRenderer.invoke("get-store-value", {
-                    key: "errorLog",
-                  });
-                  errorLog += log || "";
-                }
-                copyTextToClipboard(errorLog);
-                toast.success(this.props.t("Copied"));
-              }}
-            >
-              <Trans>Copy</Trans>
             </span>
           </div>
         )}

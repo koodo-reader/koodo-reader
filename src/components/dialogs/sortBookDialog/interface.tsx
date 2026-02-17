@@ -7,6 +7,7 @@ export interface SortDialogProps {
   handleNoteSortCode: (bookSortCode: { sort: number; order: number }) => void;
   handleSortDisplay: (isSortDisplay: boolean) => void;
   handleFetchBooks: () => void;
+  handleFetchNotes: () => void;
 }
 export interface SortDialogState {
   isNote: boolean;

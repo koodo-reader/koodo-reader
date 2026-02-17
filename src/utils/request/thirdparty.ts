@@ -27,10 +27,8 @@ export const resetThirdpartyRequest = () => {
 export const onSyncCallback = async (service: string, authCode: string) => {
   toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
 
-  let thirdpartyRequest = await getThirdpartyRequest();
-
-  let syncUtil = new SyncUtil(service, {}, thirdpartyRequest);
-  let result = await syncUtil.authToken(
+  let response = await authThirdToken(
+    service,
     authCode,
     getServerRegion() === "china" &&
       (service === "microsoft" ||
@@ -41,7 +39,8 @@ export const onSyncCallback = async (service: string, authCode: string) => {
       ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
       : KookitConfig.ThirdpartyConfig.callbackUrl
   );
-  if (!result.refresh_token) {
+  let result = response.data;
+  if (!result || !result.refresh_token) {
     toast.error(i18n.t("Authorization failed"), { id: "adding-sync-id" });
     return;
   }
@@ -159,8 +158,54 @@ export const getCloudSyncToken = async () => {
   } else if (response.code === 401) {
     handleExitApp();
     return {};
+  } else if (response.code === 20004) {
+    return {};
   } else {
     toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
     return {};
+  }
+};
+export const authThirdToken = async (
+  provider: string,
+  code: string,
+  redirectUri: string
+) => {
+  let thirdpartyRequest = await getThirdpartyRequest();
+  let response = await thirdpartyRequest.authThirdToken({
+    provider: provider,
+    redirect_uri: redirectUri,
+    code,
+  });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return response;
+  } else {
+    toast.error(
+      i18n.t("Authorization failed, error code") + ": " + response.msg
+    );
+    return response;
+  }
+};
+export const refreshThirdToken = async (
+  provider: string,
+  refresh_token: string
+) => {
+  let thirdpartyRequest = await getThirdpartyRequest();
+  let response = await thirdpartyRequest.refreshThirdToken({
+    provider,
+    refresh_token,
+  });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return response;
+  } else {
+    toast.error(
+      i18n.t("Authorization failed, error code") + ": " + response.msg
+    );
+    return response;
   }
 };
