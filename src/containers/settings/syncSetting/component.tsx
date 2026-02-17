@@ -710,6 +710,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   return true;
                 }
               })
+              .filter((item) => {
+                if (process.platform !== "darwin") {
+                  return item.value !== "icloud";
+                }
+                return true;
+              })
               .map((item) => (
                 <option
                   value={item.value}

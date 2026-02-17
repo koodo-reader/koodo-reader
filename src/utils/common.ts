@@ -1071,19 +1071,6 @@ export const getICloudDrivePath = () => {
     if (fs.existsSync(possiblePath)) {
       iCloudPath = possiblePath;
     }
-  } else if (process.platform === "win32") {
-    // Windows
-    const possiblePaths = [
-      path.join(os.homedir(), "iCloudDrive", "iCloud~com~koodoreader~expo"),
-      path.join(os.homedir(), "iCloud Drive", "iCloud~com~koodoreader~expo"),
-    ];
-
-    for (const possiblePath of possiblePaths) {
-      if (fs.existsSync(possiblePath)) {
-        iCloudPath = possiblePath;
-        break;
-      }
-    }
   }
 
   // 如果自动检测失败，弹窗让用户手动选择
