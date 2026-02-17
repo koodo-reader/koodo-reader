@@ -141,11 +141,6 @@
     },
     "buildDependenciesFromSource": false,
     "nodeGypRebuild": false,
-    "electronLanguages": [
-      "en-US",
-      "zh-CN",
-      "zh-TW"
-    ],
     "fileAssociations": [
       {
         "ext": "epub",
