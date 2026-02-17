@@ -1136,6 +1136,7 @@ export const prepareThirdConfig = async (service: string, config: any) => {
     config.expires_at = new Date().getTime() + res.data.expires_in * 1000;
     config.refresh_token = res.data.refresh_token;
     let response: any = await encryptToken(service, {
+      ...config,
       refresh_token: res.data.refresh_token,
       access_token: res.data.access_token,
       expires_at: config.expires_at,
