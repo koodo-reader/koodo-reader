@@ -2,7 +2,7 @@ import {
   ConfigService,
   SyncUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
-import { getThirdpartyRequest } from "../request/thirdparty";
+import { isTokenExpired } from "../common";
 import { getCloudConfig } from "../file/common";
 
 class SyncService {
@@ -11,18 +11,12 @@ class SyncService {
   static async getSyncUtil() {
     let service = ConfigService.getItem("defaultSyncOption");
     if (!service) {
-      let thirdpartyRequest = await getThirdpartyRequest();
-      return new SyncUtil("", {}, thirdpartyRequest);
+      return new SyncUtil("", {});
     }
-    if (!this.syncUtilCache[service]) {
+    if (!this.syncUtilCache[service] || (await isTokenExpired(service))) {
       let config = await getCloudConfig(service);
-      let thirdpartyRequest = await getThirdpartyRequest();
 
-      this.syncUtilCache[service] = new SyncUtil(
-        service,
-        config,
-        thirdpartyRequest
-      );
+      this.syncUtilCache[service] = new SyncUtil(service, config);
     }
     return this.syncUtilCache[service];
   }
@@ -30,16 +24,11 @@ class SyncService {
     delete this.syncUtilCache[service];
   }
   static async getPickerUtil(service: string) {
-    if (!this.pickerUtilCache[service]) {
+    if (!this.pickerUtilCache[service] || (await isTokenExpired(service))) {
       let config = await getCloudConfig(service);
       config.baseFolder = "";
-      let thirdpartyRequest = await getThirdpartyRequest();
 
-      this.pickerUtilCache[service] = new SyncUtil(
-        service,
-        config,
-        thirdpartyRequest
-      );
+      this.pickerUtilCache[service] = new SyncUtil(service, config);
     }
     return this.pickerUtilCache[service];
   }

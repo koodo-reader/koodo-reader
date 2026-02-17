@@ -10,6 +10,7 @@ import {
   handleOpenMenu,
   handleConvertDialog,
   handleScale,
+  handleFetchAuthed,
 } from "../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
@@ -48,6 +49,7 @@ const actionCreator = {
   handleOpenMenu,
   handleConvertDialog,
   handleScale,
+  handleFetchAuthed,
 };
 export default connect(
   mapStateToProps,

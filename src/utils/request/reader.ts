@@ -164,6 +164,22 @@ export const getDictText = async (word: string, from: string, to: string) => {
     return "";
   }
 };
+export const getOcrResult = async (imageBase64: string, lang: string) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.getOcrResult({
+    image_base64: imageBase64,
+    lang,
+  });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return response;
+};
 export const getTTSAudio = async (
   text: string,
   language: string,

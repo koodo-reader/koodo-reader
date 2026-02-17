@@ -34,7 +34,7 @@ class BookUtil {
           path.join(dataPath, "book", key + "." + format),
           Buffer.from(buffer)
         );
-        this.uploadBook(key, format);
+        await this.uploadBook(key, format);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
@@ -47,8 +47,7 @@ class BookUtil {
       } else {
         await localforage.setItem(key, buffer);
       }
-
-      this.uploadBook(key, format);
+      await this.uploadBook(key, format);
     }
   }
   static deleteBook(key: string, format: string) {
@@ -479,7 +478,7 @@ class BookUtil {
   }
   static async isBookOffline(key: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
-    return await this.isBookExist(key, book.format.toLowerCase(), "");
+    return await this.isBookExist(key, book.format.toLowerCase(), book.path);
   }
   static async getLocalBookList() {
     let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];

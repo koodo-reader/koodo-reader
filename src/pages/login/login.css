@@ -87,7 +87,20 @@
   color: #585858;
   width: 300px;
   margin: 0 auto;
-  margin-top: 10px;
+  margin-top: 0px;
+  /* position: absolute;
+  bottom: 10px; */
+  text-align: center;
+  padding: 10px;
+  line-height: 14px;
+}
+.login-billing-info {
+  font-size: 14px;
+  color: #585858;
+  width: 360px;
+  margin: 0 auto;
+  margin-top: -10px;
+  margin-bottom: 10px;
   /* position: absolute;
   bottom: 10px; */
   text-align: center;
@@ -95,7 +108,7 @@
   line-height: 18px;
 }
 .login-option-container {
-  margin: 20px 0px;
+  margin: 15px 0px;
   width: 260px;
   margin-left: calc(50% - 130px);
   height: 40px;

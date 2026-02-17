@@ -21,7 +21,6 @@
 .setting-dialog-new-title {
   font-size: 15px;
   line-height: 20px;
-  opacity: 1;
   margin-top: 10px;
   margin-left: 25px;
   width: calc(100% - 50px);
@@ -30,6 +29,14 @@
   display: flex;
   justify-content: space-between;
   font-weight: 500;
+}
+.account-login-tips {
+  font-size: 15px;
+  opacity: 0.8;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 30px;
+  text-align: center;
 }
 .setting-dialog-list {
   font-size: 15px;

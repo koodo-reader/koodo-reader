@@ -8,6 +8,7 @@ import { loginList } from "../../constants/loginList";
 import {
   generateSyncRecord,
   getServerRegion,
+  getWebsiteUrl,
   handleAutoCloudSync,
   handleContextMenu,
   openInBrowser,
@@ -85,6 +86,10 @@ class Login extends React.Component<LoginProps, LoginState> {
     }
   }
   handleLogin = async (code: string, service: string) => {
+    if (!service || !code) {
+      toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
+      return;
+    }
     this.props.handleLoadingDialog(true);
     let res = await loginRegister(service, code);
     if (res.code === 200) {
@@ -307,7 +312,7 @@ class Login extends React.Component<LoginProps, LoginState> {
             <div className="login-content-container">
               <div
                 className="login-title"
-                style={{ marginTop: "80px", marginBottom: "30px" }}
+                style={{ marginTop: "50px", marginBottom: "30px" }}
               >
                 {this.props.t(
                   "Embark on your journey of exploration with Koodo Reader Pro"
@@ -389,6 +394,33 @@ class Login extends React.Component<LoginProps, LoginState> {
                       </div>
                     );
                   })}
+                  <div className="login-billing-info">
+                    {this.props.t(
+                      "7-day free trial upon registration, then billed annually"
+                    )}
+                  </div>
+                  <div
+                    className="login-billing-info"
+                    style={{
+                      marginTop: "-25px",
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    }}
+                    onClick={() => {
+                      openInBrowser(
+                        getWebsiteUrl() +
+                          (ConfigService.getReaderConfig("lang").startsWith(
+                            "zh"
+                          )
+                            ? "/zh"
+                            : "/en") +
+                          "/pricing"
+                      );
+                    }}
+                  >
+                    {this.props.t("Compare Free and Pro features")}
+                  </div>
                   <div
                     className="login-manual-token"
                     onClick={() => {
@@ -452,6 +484,12 @@ class Login extends React.Component<LoginProps, LoginState> {
                     } else {
                       return true;
                     }
+                  })
+                  .filter((item) => {
+                    if (process.platform !== "darwin") {
+                      return item.value !== "icloud";
+                    }
+                    return true;
                   })
                   .map((item) => {
                     return (

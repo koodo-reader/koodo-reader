@@ -19,7 +19,7 @@ const initState = {
   isShowNew: false,
   isShowSupport: false,
   bookSortCode: { sort: 1, order: 2 },
-  noteSortCode: { sort: 2, order: 2 },
+  noteSortCode: { sort: 1, order: 2 },
   isSelectBook: false,
   message: "Addition successful",
   settingMode: "general",

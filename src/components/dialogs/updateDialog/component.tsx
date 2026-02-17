@@ -15,6 +15,7 @@ import { sleep } from "../../../utils/common";
 import {
   checkDeveloperUpdate,
   checkStableUpdate,
+  handleClearToken,
 } from "../../../utils/request/common";
 import {
   ConfigService,
@@ -132,11 +133,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                 className="update-log-out-button"
                 style={{}}
                 onClick={async () => {
-                  await TokenService.deleteToken("is_authed");
-                  await TokenService.deleteToken("access_token");
-                  await TokenService.deleteToken("refresh_token");
-                  ConfigService.removeItem("defaultSyncOption");
-                  ConfigService.removeItem("dataSourceList");
+                  await handleClearToken();
                   this.props.handleFetchAuthed();
                   this.props.handleFetchDataSourceList();
                   this.props.handleFetchDefaultSyncOption();

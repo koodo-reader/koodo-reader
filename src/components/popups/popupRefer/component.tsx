@@ -177,46 +177,53 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
               >
                 {this.props.t("Copy")}
               </span>
-              <span
-                onClick={async () => {
-                  if (this.state.isJump && this.state.returnPosition) {
-                    await this.props.rendition.goToPosition(
-                      JSON.stringify(this.state.returnPosition)
-                    );
+              {this.state.href && (
+                <span
+                  onClick={async () => {
+                    if (this.state.isJump && this.state.returnPosition) {
+                      await this.props.rendition.goToPosition(
+                        JSON.stringify(this.state.returnPosition)
+                      );
+                      this.setState({
+                        isJump: false,
+                        returnPosition: null,
+                        isOpenMenu: false,
+                      });
+                      return;
+                    }
+                    let pageArea = document.getElementById("page-area");
+                    if (!pageArea) return false;
+                    let iframe = pageArea.getElementsByTagName("iframe")[0];
+                    if (!iframe) return false;
+                    let doc: any = iframe.contentDocument;
+                    if (!doc) {
+                      return false;
+                    }
+                    if (!this.state.href) {
+                      return false;
+                    }
+                    let id = this.state.href.split("#").reverse()[0];
                     this.setState({
-                      isJump: false,
-                      returnPosition: null,
-                      isOpenMenu: false,
+                      isJump: true,
+                      returnPosition: ConfigService.getObjectConfig(
+                        this.props.currentBook.key,
+                        "recordLocation",
+                        {}
+                      ),
                     });
-                    return;
-                  }
-                  let pageArea = document.getElementById("page-area");
-                  if (!pageArea) return false;
-                  let iframe = pageArea.getElementsByTagName("iframe")[0];
-                  if (!iframe) return false;
-                  let doc: any = iframe.contentDocument;
-                  if (!doc) {
-                    return false;
-                  }
-                  let id = this.state.href.split("#").reverse()[0];
-                  this.setState({
-                    isJump: true,
-                    returnPosition: ConfigService.getObjectConfig(
-                      this.props.currentBook.key,
-                      "recordLocation",
-                      {}
-                    ),
-                  });
-                  await this.props.rendition.goToNode(
-                    doc.body.querySelector("#" + CSS.escape(id)) || doc.body
-                  );
-                }}
-                style={{
-                  color: this.state.isJump ? "rgba(231, 69, 69, 0.8)" : "",
-                }}
-              >
-                {this.props.t(this.state.isJump ? "Return" : "Go to")}
-              </span>
+                    if (id) {
+                      await this.props.rendition.goToNode(
+                        doc.body.querySelector("#" + CSS.escape(id)) || doc.body
+                      );
+                    }
+                  }}
+                  style={{
+                    color: this.state.isJump ? "rgba(231, 69, 69, 0.8)" : "",
+                  }}
+                >
+                  {this.props.t(this.state.isJump ? "Return" : "Go to")}
+                </span>
+              )}
             </div>
           </div>
         </div>

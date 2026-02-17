@@ -10,6 +10,7 @@ import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
 import {
   generateSyncRecord,
+  getICloudDrivePath,
   getServerRegion,
   getWebsiteUrl,
   handleContextMenu,
@@ -24,6 +25,7 @@ import {
 import { getStorageLocation } from "../../../utils/common";
 import { driveInputConfig, driveList } from "../../../constants/driveList";
 import {
+  CommonTool,
   ConfigService,
   KookitConfig,
   SyncHelper,
@@ -85,7 +87,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     );
     this.handleRest(this.state[stateName]);
   };
-  handleAddDataSource = (event: any) => {
+  handleAddDataSource = async (event: any) => {
     let targetDrive = event.target.value;
     if (!targetDrive) {
       return;
@@ -112,6 +114,47 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     this.props.handleSettingDrive(targetDrive);
     let settingDrive = targetDrive;
+    if (settingDrive === "icloud") {
+      let drivePath = getICloudDrivePath();
+      if (!drivePath) {
+        toast.error(
+          this.props.t(
+            "Can't find Koodo Reader's folder in the default iCloud path, please make sure iCloud Drive is installed and set up correctly, and you have already synced your library to iCloud Drive on the iOS version first."
+          ),
+          {
+            duration: 6000,
+          }
+        );
+        this.props.handleSettingDrive("");
+        return;
+      }
+      toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
+      let res = await encryptToken(settingDrive, {
+        iCloudDrivePath: drivePath,
+      });
+      if (res.code === 200) {
+        toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
+      } else {
+        toast.error(i18n.t("Binding failed"), { id: "adding-sync-id" });
+        this.props.handleSettingDrive("");
+        return;
+      }
+      ConfigService.setListConfig(settingDrive, "dataSourceList");
+      toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
+      if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
+        ConfigService.setItem("defaultSyncOption", settingDrive);
+        if (
+          ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
+          this.props.userInfo.default_sync_option !== settingDrive
+        ) {
+          resetKoodoSync();
+        }
+        this.props.handleFetchDefaultSyncOption();
+      }
+      this.props.handleFetchDataSourceList();
+      this.props.handleSettingDrive("");
+      return;
+    }
     if (
       settingDrive === "dropbox" ||
       settingDrive === "yandex" ||
@@ -666,6 +709,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 } else {
                   return true;
                 }
+              })
+              .filter((item) => {
+                if (process.platform !== "darwin") {
+                  return item.value !== "icloud";
+                }
+                return true;
               })
               .map((item) => (
                 <option
