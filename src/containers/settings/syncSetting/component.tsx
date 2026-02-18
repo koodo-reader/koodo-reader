@@ -711,7 +711,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 }
               })
               .filter((item) => {
-                if (process.platform !== "darwin") {
+                if (isElectron && process.platform !== "darwin") {
                   return item.value !== "icloud";
                 }
                 return true;
