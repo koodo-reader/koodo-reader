@@ -1059,7 +1059,7 @@ export const getICloudDrivePath = () => {
   let iCloudPath = "";
 
   // 自动检测iCloud Drive路径
-  if (process.platform === "darwin") {
+  if (isElectron && process.platform === "darwin") {
     // macOS
     const possiblePath = path.join(
       os.homedir(),
