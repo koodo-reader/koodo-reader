@@ -486,7 +486,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                     }
                   })
                   .filter((item) => {
-                    if (process.platform !== "darwin") {
+                    if (isElectron && process.platform !== "darwin") {
                       return item.value !== "icloud";
                     }
                     return true;
