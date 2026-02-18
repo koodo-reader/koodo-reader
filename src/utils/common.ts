@@ -1132,14 +1132,23 @@ export const prepareThirdConfig = async (service: string, config: any) => {
       reloadManager();
       return {};
     }
-    config.access_token = res.data.access_token;
-    config.expires_at = new Date().getTime() + res.data.expires_in * 1000;
-    config.refresh_token = res.data.refresh_token;
-    let response: any = await encryptToken(service, {
-      refresh_token: res.data.refresh_token,
-      access_token: res.data.access_token,
-      expires_at: config.expires_at,
-    });
+    let newConfig = {
+      ...config,
+    };
+    if (
+      service === "adrive" ||
+      service === "boxnet" ||
+      service === "dubox" ||
+      service === "yiyiwu"
+    ) {
+      newConfig.refresh_token = res.data.refresh_token;
+      newConfig.access_token = res.data.access_token;
+      newConfig.expires_at = new Date().getTime() + res.data.expires_in * 1000;
+    } else {
+      newConfig.access_token = res.data.access_token;
+      newConfig.expires_at = new Date().getTime() + res.data.expires_in * 1000;
+    }
+    let response: any = await encryptToken(service, newConfig);
     if (response.code === 200) {
       if (
         ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
@@ -1162,7 +1171,7 @@ export const prepareThirdConfig = async (service: string, config: any) => {
       });
     }
 
-    return config;
+    return newConfig;
   } else {
     return config;
   }
