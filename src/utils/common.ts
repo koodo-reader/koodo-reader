@@ -1092,6 +1092,8 @@ export const prepareThirdConfig = async (service: string, config: any) => {
     service === "dubox" ||
     service === "google" ||
     service === "microsoft" ||
+    service === "microsoft_exp" ||
+    service === "google_exp" ||
     service === "yandex" ||
     service === "yiyiwu"
   ) {
@@ -1186,6 +1188,8 @@ export const isTokenExpired = async (service: string): Promise<boolean> => {
     service === "dubox" ||
     service === "google" ||
     service === "microsoft" ||
+    service === "microsoft_exp" ||
+    service === "google_exp" ||
     service === "yandex" ||
     service === "yiyiwu"
   ) {
