@@ -170,6 +170,9 @@ export const authThirdToken = async (
   code: string,
   redirectUri: string
 ) => {
+  if (provider === "microsoft_exp") {
+    provider = "microsoft";
+  }
   let thirdpartyRequest = await getThirdpartyRequest();
   let response = await thirdpartyRequest.authThirdToken({
     provider: provider,
@@ -192,6 +195,9 @@ export const refreshThirdToken = async (
   provider: string,
   refresh_token: string
 ) => {
+  if (provider === "microsoft_exp") {
+    provider = "microsoft";
+  }
   let thirdpartyRequest = await getThirdpartyRequest();
   let response = await thirdpartyRequest.refreshThirdToken({
     provider,
