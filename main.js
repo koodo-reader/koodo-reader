@@ -1013,25 +1013,37 @@ app.on("second-instance", (event, commandLine) => {
     handleCallback(url);
   }
 });
+const serializeArg = (arg) => {
+  if (arg === null) return "null";
+  if (arg === undefined) return "undefined";
+  if (typeof arg === "object") {
+    try {
+      return JSON.stringify(arg);
+    } catch {
+      return String(arg);
+    }
+  }
+  return String(arg);
+};
 const originalConsoleLog = console.log;
 console.log = function (...args) {
   originalConsoleLog(...args); // 保留原日志
-  log.info(args.join(" ")); // 写入日志文件
+  log.info(args.map(serializeArg).join(" ")); // 写入日志文件
 };
 const originalConsoleError = console.error;
 console.error = function (...args) {
   originalConsoleError(...args); // 保留原错误日志
-  log.error(args.join(" ")); // 写入错误日志文件
+  log.error(args.map(serializeArg).join(" ")); // 写入错误日志文件
 };
 const originalConsoleWarn = console.warn;
 console.warn = function (...args) {
   originalConsoleWarn(...args); // 保留原警告日志
-  log.warn(args.join(" ")); // 写入警告日志文件
+  log.warn(args.map(serializeArg).join(" ")); // 写入警告日志文件
 };
 const originalConsoleInfo = console.info;
 console.info = function (...args) {
   originalConsoleInfo(...args); // 保留原信息日志
-  log.info(args.join(" ")); // 写入信息日志文件
+  log.info(args.map(serializeArg).join(" ")); // 写入信息日志文件
 };
 // Handle MacOS deep linking
 app.on("open-url", (event, url) => {
