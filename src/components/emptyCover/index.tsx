@@ -7,7 +7,7 @@ const emptyCover = (props) => (
       className="cover-banner"
       style={{
         backgroundColor:
-          props.format === "PDF"
+          props.format === "PDF" || props.format === "DJVU"
             ? "rgba(55, 170, 81, 0.7)"
             : props.format === "TXT"
               ? "rgba(251, 191, 16,1)"
