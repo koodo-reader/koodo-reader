@@ -197,6 +197,12 @@
         "mimeType": "application/x-cb7"
       },
       {
+        "ext": "djvu",
+        "icon": "assets/icons/djvu",
+        "role": "Viewer",
+        "mimeType": "image/vnd.djvu"
+      },
+      {
         "ext": "fb2",
         "icon": "assets/icons/fb2",
         "role": "Viewer",
