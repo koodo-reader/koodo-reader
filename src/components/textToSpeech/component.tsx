@@ -139,20 +139,7 @@ class TextToSpeech extends React.Component<
         toast.loading(this.props.t("Loading audio, please wait..."), {
           id: "tts-load",
         });
-        let res = await fetchUserInfo();
-        if (res.code === 200) {
-          if (res.data && res.data.type !== "pro") {
-            toast.error(
-              this.props.t(
-                "AI voice is only available for Pro users, please upgrade to Pro to use this feature"
-              ),
-              {
-                id: "tts-load",
-              }
-            );
-            return;
-          }
-        }
+        await fetchUserInfo();
       }
       if (
         ConfigService.getReaderConfig("voiceEngine") ===
