@@ -158,7 +158,8 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
           }}
         >
           {!this.state.isCoverExist ||
-          (this.props.book.format === "PDF" &&
+          ((this.props.book.format === "PDF" ||
+            this.props.book.format === "DJVU") &&
             ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
             <div
               className="book-item-list-cover"

@@ -67,7 +67,8 @@ class SettingSwitch extends React.Component<
         {readerSettingList
           .filter((item) => {
             if (
-              this.props.currentBook.format === "PDF" &&
+              (this.props.currentBook.format === "PDF" ||
+                this.props.currentBook.format === "DJVU") &&
               ConfigService.getReaderConfig("isConvertPDF") !== "yes"
             ) {
               return item.isPDF;
