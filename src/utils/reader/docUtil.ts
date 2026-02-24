@@ -12,7 +12,7 @@ export const getIframeDoc = (format: string) => {
     return [];
   }
   if (
-    format === "PDF" &&
+    (format === "PDF" || format === "DJVU") &&
     ConfigService.getReaderConfig("isConvertPDF") !== "yes"
   ) {
     let subIframes = doc.querySelectorAll("iframe");
