@@ -30,7 +30,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   async handlePageNum(rendition) {
     let pageInfo = await rendition.getProgress();
     if (
-      this.props.currentBook.format === "PDF" &&
+      (this.props.currentBook.format === "PDF" ||
+        this.props.currentBook.format === "DJVU") &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
       this.setState({

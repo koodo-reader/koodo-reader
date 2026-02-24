@@ -93,7 +93,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
       this.props.handleFetchPercentage(book);
       let readerMode =
-        (book.format === "PDF" &&
+        ((book.format === "PDF" || book.format === "DJVU") &&
           ConfigService.getReaderConfig("isConvertPDF") !== "yes") ||
         book.format.startsWith("CB")
           ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
@@ -346,7 +346,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 </div>
               </div>
             )}
-          {this.props.currentBook.format === "PDF" &&
+          {(this.props.currentBook.format === "PDF" ||
+            this.props.currentBook.format === "DJVU") &&
             !this.props.isHidePDFConvertButton && (
               <div
                 className="reader-setting-icon-container"

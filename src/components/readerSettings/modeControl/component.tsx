@@ -12,7 +12,8 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
 
   handleChangeMode = (mode: string) => {
     if (
-      (this.props.currentBook.format === "PDF" &&
+      ((this.props.currentBook.format === "PDF" ||
+        this.props.currentBook.format === "DJVU") &&
         ConfigService.getReaderConfig("isConvertPDF") !== "yes") ||
       this.props.currentBook.format.startsWith("CB")
     ) {

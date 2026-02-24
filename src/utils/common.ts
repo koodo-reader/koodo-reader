@@ -383,7 +383,7 @@ export function removeChatBox() {
 export const preCacheAllBooks = async (bookList: Book[]) => {
   for (let index = 0; index < bookList.length; index++) {
     const selectedBook = bookList[index];
-    if (selectedBook.format === "PDF") {
+    if (selectedBook.format === "PDF" || selectedBook.format === "DJVU") {
       continue;
     }
     if (
