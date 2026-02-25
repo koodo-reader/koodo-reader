@@ -14,7 +14,7 @@ export const dropdownList = [
     isPDF: false,
   },
   {
-    title: "Sub Font family (for CJK fonts)",
+    title: "Sub font family (for CJK fonts in mixed-language books)",
     value: "subFontFamily",
     option: [
       { label: "Built-in font", value: "Built-in font" },
