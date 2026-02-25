@@ -253,7 +253,10 @@ export function handleFetchPlugins() {
       try {
         TokenService.getToken("is_authed").then((value) => {
           let isAuthed = value === "yes";
-          if (isAuthed) {
+          if (
+            isAuthed &&
+            ConfigService.getReaderConfig("isDisableAI") !== "yes"
+          ) {
             let dictPlugin = new PluginModel(
               "official-ai-dict-plugin",
               "dictionary",

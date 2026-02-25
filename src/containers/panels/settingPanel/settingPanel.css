@@ -30,7 +30,7 @@
 }
 .single-control-switch-container {
   margin: 15px 20px 10px;
-  height: 20px;
+  /* height: 20px; */
   display: flex;
   justify-content: space-between;
   cursor: pointer;

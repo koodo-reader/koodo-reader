@@ -41,6 +41,7 @@ export interface SettingInfoState {
   isOpenInMain: boolean;
   isDisableUpdate: boolean;
   isExportOriginalName: boolean;
+  isDisableAI: boolean;
   isUseOriginalName: boolean;
   isPrecacheBook: boolean;
   isUseBuiltIn: boolean;
