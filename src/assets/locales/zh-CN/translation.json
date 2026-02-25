@@ -412,7 +412,7 @@
   "I've paid": "我已支付",
   "Importing": "导入中",
   "Disable AI features": "关闭 AI 功能",
-  "Sub Font family (for CJK fonts)": "副字体（用于中日韩字体）",
+  "Sub font family (for CJK fonts in mixed-language books)": "副字体(多语言图书中用于中日韩字体)",
   "Fast reading mode (make the first half of the word bold)": "快速阅读模式（将单词的前半部分加粗）",
   "Can't find Koodo Reader's folder in the default iCloud path, please make sure iCloud Drive is installed and set up correctly, and you have already synced your library to iCloud Drive on the iOS version first.": "在默认的 iCloud 路径下未找到 Koodo Reader 的文件夹，请确保 iCloud Drive 已正确安装和设置，并且您已经在 iOS 版本上将您的图书库同步到 iCloud Drive。",
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "这是订单号不是兑换码，请再次检查您的邮件，兑换码位于订单号下方",
