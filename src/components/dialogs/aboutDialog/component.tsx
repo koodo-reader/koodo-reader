@@ -20,12 +20,68 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
     super(props);
     this.state = {
       isShowExportAll: false,
+      exportSubmenu: "",
     };
   }
   handleJump = (url: string) => {
     openExternalUrl(url);
     this.props.handleAbout(false);
   };
+
+  renderFormatSubmenu(
+    type: "notes" | "highlights",
+    top: { electron: string; web: string }
+  ) {
+    const isVisible = this.state.exportSubmenu === type;
+    const isNotes = type === "notes";
+    const filterFn = isNotes
+      ? (note: any) => note.notes && note.notes.length > 0
+      : (note: any) => note.notes === "";
+    const exportFn = isNotes ? exportNotes : exportHighlights;
+
+    const handleExport = async (format: "csv" | "md" | "txt") => {
+      let books = await DatabaseService.getAllRecords("books");
+      let notes = await DatabaseService.getAllRecords("notes");
+      notes = notes.filter(filterFn);
+      if (notes.length > 0) {
+        exportFn(notes, books, format);
+        toast.success(this.props.t("Export successful"));
+      } else {
+        toast(this.props.t("Nothing to export"));
+      }
+    };
+
+    return (
+      <div
+        className="sort-dialog-container export-format-submenu"
+        style={
+          isVisible
+            ? {
+                position: "absolute",
+                left: "850px",
+                top: isElectron ? top.electron : top.web,
+              }
+            : { display: "none" }
+        }
+        onMouseEnter={() => {
+          this.setState({ exportSubmenu: type, isShowExportAll: true });
+        }}
+        onMouseLeave={() => {
+          this.setState({ exportSubmenu: "" });
+        }}
+      >
+        {(["csv", "md", "txt"] as const).map((fmt) => (
+          <li
+            key={fmt}
+            className="sort-by-category-list"
+            onClick={() => handleExport(fmt)}
+          >
+            {fmt === "csv" ? "CSV" : fmt === "md" ? "Markdown" : "TXT"}
+          </li>
+        ))}
+      </div>
+    );
+  }
 
   render() {
     return (
@@ -170,8 +226,16 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             this.setState({ isShowExportAll: true });
             event?.stopPropagation();
           }}
-          onMouseLeave={() => {
-            this.setState({ isShowExportAll: false });
+          onMouseLeave={(event) => {
+            const related = event.relatedTarget as HTMLElement;
+            if (
+              related &&
+              related.closest &&
+              related.closest(".export-format-submenu")
+            ) {
+              return;
+            }
+            this.setState({ isShowExportAll: false, exportSubmenu: "" });
             this.props.handleAbout(false);
           }}
         >
@@ -190,37 +254,30 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           </li>
           <li
             className="sort-by-category-list"
-            onClick={async () => {
-              let books = await DatabaseService.getAllRecords("books");
-              let notes = await DatabaseService.getAllRecords("notes");
-              notes = notes.filter(
-                (note) => note.notes && note.notes.length > 0
-              );
-              if (notes.length > 0) {
-                exportNotes(notes, books);
-                toast.success(this.props.t("Export successful"));
-              } else {
-                toast(this.props.t("Nothing to export"));
-              }
+            onMouseEnter={() => {
+              this.setState({ exportSubmenu: "notes", isShowExportAll: true });
+            }}
+            onMouseLeave={() => {
+              this.setState({ exportSubmenu: "" });
             }}
           >
             <Trans>Export all notes</Trans>
+            <span className="icon-dropdown icon-export-all"></span>
           </li>
           <li
             className="sort-by-category-list"
-            onClick={async () => {
-              let books = await DatabaseService.getAllRecords("books");
-              let notes = await DatabaseService.getAllRecords("notes");
-              notes = notes.filter((note) => note.notes === "");
-              if (notes.length > 0) {
-                exportHighlights(notes, books);
-                toast.success(this.props.t("Export successful"));
-              } else {
-                toast(this.props.t("Nothing to export"));
-              }
+            onMouseEnter={() => {
+              this.setState({
+                exportSubmenu: "highlights",
+                isShowExportAll: true,
+              });
+            }}
+            onMouseLeave={() => {
+              this.setState({ exportSubmenu: "" });
             }}
           >
             <Trans>Export all highlights</Trans>
+            <span className="icon-dropdown icon-export-all"></span>
           </li>
           <li
             className="sort-by-category-list"
@@ -238,6 +295,14 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             <Trans>Export all dictionary history</Trans>
           </li>
         </div>
+        {this.renderFormatSubmenu("notes", {
+          electron: "265px",
+          web: "235px",
+        })}
+        {this.renderFormatSubmenu("highlights", {
+          electron: "295px",
+          web: "265px",
+        })}
       </>
     );
   }

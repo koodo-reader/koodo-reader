@@ -3,3 +3,8 @@
   display: inline-block;
   transform: rotate(-90deg) scale(0.7);
 }
+
+.export-format-submenu {
+  width: 120px;
+  z-index: 6;
+}
