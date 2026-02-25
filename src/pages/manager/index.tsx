@@ -33,6 +33,7 @@ const mapStateToProps = (state: stateType) => {
     books: state.manager.books,
     mode: state.sidebar.mode,
     dragItem: state.book.dragItem,
+    importBookFunc: state.book.importBookFunc,
     shelfTitle: state.sidebar.shelfTitle,
     isOpenEditDialog: state.book.isOpenEditDialog,
     isDetailDialog: state.manager.isDetailDialog,
