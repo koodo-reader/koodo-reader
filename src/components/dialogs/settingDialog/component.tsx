@@ -78,11 +78,22 @@ class SettingDialog extends React.Component<
     this.props.handleFetchDefaultSyncOption();
   }
   loadFont = () => {
-    if (dropdownList[0].option.length <= 2) {
-      loadFontData().then((result) => {
-        dropdownList[0].option = dropdownList[0].option.concat(result);
-      });
-    }
+    const fontFamilyItem = dropdownList.find(
+      (item) => item.value === "fontFamily"
+    );
+    const subFontFamilyItem = dropdownList.find(
+      (item) => item.value === "subFontFamily"
+    );
+
+    loadFontData().then((result) => {
+      if (fontFamilyItem && fontFamilyItem.option.length <= 2) {
+        fontFamilyItem.option = fontFamilyItem.option.concat(result);
+      }
+      console.log(subFontFamilyItem, "subFontFamilyItem");
+      if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
+        subFontFamilyItem.option = subFontFamilyItem.option.concat(result);
+      }
+    });
   };
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
