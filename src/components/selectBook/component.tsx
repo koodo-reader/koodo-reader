@@ -21,6 +21,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
     this.state = {
       isOpenDelete: false,
       isShowExport: false,
+      exportSubmenu: "",
       favoriteBooks: Object.keys(
         ConfigService.getAllListConfig("favoriteBooks")
       ).length,
@@ -173,54 +174,146 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 >
                   <Trans>Export books</Trans>
                 </span>
-                <span
-                  className="book-manage-title select-book-action"
-                  onClick={async () => {
-                    let selectedBooks =
-                      await DatabaseService.getRecordsByBookKeys(
-                        this.props.selectedBooks,
-                        "books"
-                      );
-                    let notes = (
-                      await DatabaseService.getRecordsByBookKeys(
-                        this.props.selectedBooks,
-                        "notes"
-                      )
-                    ).filter((note) => note.notes !== "");
-                    if (notes.length > 0) {
-                      exportNotes(notes, selectedBooks);
-                      toast.success(this.props.t("Export successful"));
-                    } else {
-                      toast(this.props.t("Nothing to export"));
+                <div style={{ position: "relative" }}>
+                  <span
+                    className="book-manage-title select-book-action"
+                    onMouseEnter={() => {
+                      this.setState({
+                        exportSubmenu: "notes",
+                        isShowExport: true,
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      this.setState({ exportSubmenu: "" });
+                    }}
+                  >
+                    <Trans>Export notes</Trans>
+                    <span className="icon-dropdown icon-export-all"></span>
+                  </span>
+                  <div
+                    className="select-more-actions select-export-format-submenu"
+                    style={
+                      this.state.exportSubmenu === "notes"
+                        ? { left: "160px", bottom: "auto", top: "0px" }
+                        : { display: "none" }
                     }
-                  }}
-                >
-                  <Trans>Export notes</Trans>
-                </span>
-                <span
-                  className="book-manage-title select-book-action"
-                  onClick={async () => {
-                    let selectedBooks =
-                      await DatabaseService.getRecordsByBookKeys(
-                        this.props.selectedBooks,
-                        "books"
-                      );
-                    let highlights = (
-                      await DatabaseService.getRecordsByBookKeys(
-                        this.props.selectedBooks,
-                        "notes"
-                      )
-                    ).filter((note) => note.notes === "");
-                    if (highlights.length > 0) {
-                      exportHighlights(highlights, selectedBooks);
-                      toast.success(this.props.t("Export successful"));
-                    } else {
-                      toast(this.props.t("Nothing to export"));
+                    onMouseEnter={() => {
+                      this.setState({
+                        exportSubmenu: "notes",
+                        isShowExport: true,
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      this.setState({ exportSubmenu: "", isShowExport: false });
+                    }}
+                  >
+                    {(["csv", "md", "txt"] as const).map((fmt) => (
+                      <span
+                        key={fmt}
+                        className="book-manage-title select-book-action"
+                        onClick={async () => {
+                          let selectedBooks =
+                            await DatabaseService.getRecordsByBookKeys(
+                              this.props.selectedBooks,
+                              "books"
+                            );
+                          let notes = (
+                            await DatabaseService.getRecordsByBookKeys(
+                              this.props.selectedBooks,
+                              "notes"
+                            )
+                          ).filter((note) => note.notes !== "");
+                          if (notes.length > 0) {
+                            exportNotes(notes, selectedBooks, fmt);
+                            toast.success(this.props.t("Export successful"));
+                          } else {
+                            toast(this.props.t("Nothing to export"));
+                          }
+                          this.setState({
+                            exportSubmenu: "",
+                            isShowExport: false,
+                          });
+                        }}
+                      >
+                        {fmt === "csv"
+                          ? "CSV"
+                          : fmt === "md"
+                            ? "Markdown"
+                            : "TXT"}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ position: "relative" }}>
+                  <span
+                    className="book-manage-title select-book-action"
+                    onMouseEnter={() => {
+                      this.setState({
+                        exportSubmenu: "highlights",
+                        isShowExport: true,
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      this.setState({ exportSubmenu: "" });
+                    }}
+                  >
+                    <Trans>Export highlights</Trans>
+                    <span className="icon-dropdown icon-export-all"></span>
+                  </span>
+                  <div
+                    className="select-more-actions select-export-format-submenu"
+                    style={
+                      this.state.exportSubmenu === "highlights"
+                        ? { left: "160px", bottom: "auto", top: "0px" }
+                        : { display: "none" }
                     }
-                  }}
-                >
-                  <Trans>Export highlights</Trans>
-                </span>
+                    onMouseEnter={() => {
+                      this.setState({
+                        exportSubmenu: "highlights",
+                        isShowExport: true,
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      this.setState({ exportSubmenu: "", isShowExport: false });
+                    }}
+                  >
+                    {(["csv", "md", "txt"] as const).map((fmt) => (
+                      <span
+                        key={fmt}
+                        className="book-manage-title select-book-action"
+                        onClick={async () => {
+                          let selectedBooks =
+                            await DatabaseService.getRecordsByBookKeys(
+                              this.props.selectedBooks,
+                              "books"
+                            );
+                          let highlights = (
+                            await DatabaseService.getRecordsByBookKeys(
+                              this.props.selectedBooks,
+                              "notes"
+                            )
+                          ).filter((note) => note.notes === "");
+                          if (highlights.length > 0) {
+                            exportHighlights(highlights, selectedBooks, fmt);
+                            toast.success(this.props.t("Export successful"));
+                          } else {
+                            toast(this.props.t("Nothing to export"));
+                          }
+                          this.setState({
+                            exportSubmenu: "",
+                            isShowExport: false,
+                          });
+                        }}
+                      >
+                        {fmt === "csv"
+                          ? "CSV"
+                          : fmt === "md"
+                            ? "Markdown"
+                            : "TXT"}
+                      </span>
+                    ))}
+                  </div>
+                </div>
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
@@ -290,7 +383,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             </div>
 
             <span
-              className="book-manage-title select-book-action"
+              className="book-manage-title"
               onClick={() => {
                 if (this.props.isSearch) {
                   this.props.handleSelectedBooks(
