@@ -157,7 +157,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 this.setState({ exportSubmenu: "" });
               }}
             >
-              <p className="action-name">
+              <p className="action-name export-action-name">
                 <Trans>Export notes</Trans>
                 <span className="icon-dropdown icon-export-all"></span>
               </p>
@@ -172,7 +172,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 this.setState({ exportSubmenu: "" });
               }}
             >
-              <p className="action-name">
+              <p className="action-name export-action-name">
                 <Trans>Export highlights</Trans>
                 <span className="icon-dropdown icon-export-all"></span>
               </p>
