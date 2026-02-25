@@ -66,6 +66,11 @@ export const generalSettingList = [
   },
   {
     isElectron: false,
+    title: "Disable AI features",
+    propName: "isDisableAI",
+  },
+  {
+    isElectron: false,
     title: "Use file name as book title",
     propName: "isUseOriginalName",
   },
@@ -257,6 +262,11 @@ export const readerSettingList = [
   {
     title: "Render PDF from even page",
     propName: "isStartFromEven",
+    isPDF: true,
+  },
+  {
+    title: "Fast reading mode (make the first half of the word bold)",
+    propName: "isBionic",
     isPDF: true,
   },
   {

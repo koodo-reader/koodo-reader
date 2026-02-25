@@ -45,11 +45,10 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       originalText = originalText;
     }
     if (
-      (!this.state.dictService ||
-        this.props.plugins.findIndex(
-          (item) => item.key === this.state.dictService
-        ) === -1) &&
-      !this.props.isAuthed
+      !this.state.dictService ||
+      this.props.plugins.findIndex(
+        (item) => item.key === this.state.dictService
+      ) === -1
     ) {
       this.setState({ isAddNew: true });
     }
@@ -89,7 +88,10 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           this.props.t,
           plugin.config
         );
-      } else if (this.props.isAuthed) {
+      } else if (
+        this.props.isAuthed &&
+        ConfigService.getReaderConfig("isDisableAI") !== "yes"
+      ) {
         this.setState({
           dictService: "official-ai-dict-plugin",
           isAddNew: false,
