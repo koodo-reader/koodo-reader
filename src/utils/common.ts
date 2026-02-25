@@ -416,7 +416,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         isMobile: "no",
         password: getPdfPassword(selectedBook),
         isScannedPDF:
-          selectedBook.description.indexOf("scanned PDF") > -1 ? "yes" : "no",
+          selectedBook.description.indexOf("scanned") > -1 ? "yes" : "no",
       },
       Kookit
     );
