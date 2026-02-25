@@ -22,6 +22,8 @@ import { Tooltip } from "react-tooltip";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import SortShelfDialog from "../../components/dialogs/sortShelfDialog";
 import PopupNote from "../../components/popups/popupNote";
+import toast from "react-hot-toast";
+import { supportedFormats } from "../../utils/common";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -92,9 +94,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         className="manager"
         onDragEnter={() => {
           !this.props.dragItem && this.handleDrag(true);
-          (
-            document.getElementsByClassName("import-from-local")[0] as any
-          ).style.zIndex = "50";
         }}
       >
         <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
@@ -112,7 +111,28 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
 
         {!this.props.dragItem && (
           <div
-            className="drag-background"
+            className={`drag-background${this.state.isDrag ? " drag-active" : ""}`}
+            onDragOver={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            onDrop={async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              this.handleDrag(false);
+              const files = e.dataTransfer.files;
+              if (files && files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                  const file = files[i];
+                  const ext = "." + file.name.split(".").pop()?.toLowerCase();
+                  if (!supportedFormats.includes(ext)) {
+                    toast.error("Unsupported file format: " + ext);
+                    continue;
+                  }
+                  await this.props.importBookFunc(file);
+                }
+              }
+            }}
             onClick={() => {
               this.props.handleEditDialog(false);
               this.props.handleDeleteDialog(false);
@@ -154,7 +174,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           >
             {this.state.isDrag && (
               <div className="drag-info">
-                <Arrow />
                 <p className="arrow-text">
                   <Trans>Drop your books here</Trans>
                 </p>

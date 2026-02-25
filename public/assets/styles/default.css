@@ -144,7 +144,7 @@ a {
   background-color: rgba(75, 75, 75, 0.035);
 }
 .drag-background {
-  background: hsla(0, 0%, 0%, 0.3);
+  background: hsla(0, 0%, 0%, 0.4);
 }
 
 .action-dialog-container,
