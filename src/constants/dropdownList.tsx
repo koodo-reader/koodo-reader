@@ -2,7 +2,6 @@ import i18n from "../i18n";
 
 export const dropdownList = [
   {
-    id: 1,
     title: "Font family",
     value: "fontFamily",
     option: [
@@ -15,7 +14,18 @@ export const dropdownList = [
     isPDF: false,
   },
   {
-    id: 2,
+    title: "Sub Font family (for CJK fonts)",
+    value: "subFontFamily",
+    option: [
+      { label: "Built-in font", value: "Built-in font" },
+      {
+        label: "Load local fonts",
+        value: "Load local fonts",
+      },
+    ],
+    isPDF: false,
+  },
+  {
     title: "Line height",
     value: "lineHeight",
     option: [
@@ -29,7 +39,6 @@ export const dropdownList = [
     isPDF: false,
   },
   {
-    id: 3,
     title: "Text alignment",
     value: "textAlign",
     option: [
@@ -41,7 +50,6 @@ export const dropdownList = [
     isPDF: false,
   },
   {
-    id: 4,
     title: "Conversion of Chinese",
     value: "convertChinese",
     option: [

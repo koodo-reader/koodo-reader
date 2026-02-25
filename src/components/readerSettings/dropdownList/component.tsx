@@ -19,6 +19,14 @@ class DropdownList extends React.Component<
           (ConfigService.getReaderConfig("fontFamily") || "Built-in font")
         );
       }),
+      currentSubFontFamilyIndex: dropdownList[0].option.findIndex(
+        (item: any) => {
+          return (
+            item.value ===
+            (ConfigService.getReaderConfig("subFontFamily") || "Built-in font")
+          );
+        }
+      ),
       currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
         return (
           item.value === (ConfigService.getReaderConfig("lineHeight") || "")
@@ -39,17 +47,38 @@ class DropdownList extends React.Component<
   componentDidMount() {
     loadFontData().then((result) => {
       if (!result || result.length === 0) return;
+      let fontFamilyItem = dropdownList.find(
+        (item) => item.value === "fontFamily"
+      );
+      let subFontFamilyItem = dropdownList.find(
+        (item) => item.value === "subFontFamily"
+      );
+      if (fontFamilyItem)
+        fontFamilyItem.option = fontFamilyItem.option.concat(result);
+      if (subFontFamilyItem)
+        subFontFamilyItem.option = subFontFamilyItem.option.concat(result);
       dropdownList[0].option = dropdownList[0].option.concat(result);
-      this.setState({
-        currentFontFamilyIndex: dropdownList[0].option.findIndex(
-          (item: any) => {
-            return (
-              item.value ===
-              (ConfigService.getReaderConfig("fontFamily") || "Built-in font")
-            );
-          }
-        ),
-      });
+      if (fontFamilyItem && subFontFamilyItem) {
+        this.setState({
+          currentFontFamilyIndex: fontFamilyItem.option.findIndex(
+            (item: any) => {
+              return (
+                item.value ===
+                (ConfigService.getReaderConfig("fontFamily") || "Built-in font")
+              );
+            }
+          ),
+          currentSubFontFamilyIndex: subFontFamilyItem.option.findIndex(
+            (item: any) => {
+              return (
+                item.value ===
+                (ConfigService.getReaderConfig("subFontFamily") ||
+                  "Built-in font")
+              );
+            }
+          ),
+        });
+      }
     });
   }
 
@@ -60,6 +89,18 @@ class DropdownList extends React.Component<
       case "fontFamily":
         this.setState({
           currentFontFamilyIndex: arr[1],
+        });
+        if (arr[0] === "Built-in font") {
+          ConfigService.setReaderConfig(option, "");
+        }
+        if (arr[0] === "Load local fonts") {
+          loadFontData();
+        }
+
+        break;
+      case "subFontFamily":
+        this.setState({
+          currentSubFontFamilyIndex: arr[1],
         });
         if (arr[0] === "Built-in font") {
           ConfigService.setReaderConfig(option, "");
@@ -96,7 +137,7 @@ class DropdownList extends React.Component<
   render() {
     const renderParagraphCharacter = () => {
       return dropdownList.map((item) => (
-        <li className="paragraph-character-container" key={item.id}>
+        <li className="paragraph-character-container" key={item.value}>
           <p className="general-setting-title">
             <Trans>{item.title}</Trans>
           </p>
@@ -127,7 +168,9 @@ class DropdownList extends React.Component<
                         ? this.state.currentTextAlignIndex
                         : item.value === "convertChinese"
                           ? this.state.chineseConversionIndex
-                          : this.state.currentFontFamilyIndex)
+                          : item.value === "fontFamily"
+                            ? this.state.currentFontFamilyIndex
+                            : this.state.currentSubFontFamilyIndex)
                   }
                 >
                   {this.props.t(subItem.label)}
