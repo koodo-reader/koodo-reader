@@ -274,7 +274,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           titleSizeValue:
             ConfigService.getReaderConfig("titleSizeValue") || "1.2",
           isScannedPDF:
-            this.props.currentBook.description.indexOf("scanned PDF") > -1
+            this.props.currentBook.description.indexOf("scanned") > -1
               ? "yes"
               : "no",
         },

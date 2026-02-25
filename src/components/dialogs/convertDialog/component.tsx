@@ -99,7 +99,7 @@ class ConvertDialog extends React.Component<
                 propName: "isConvertPDF",
               },
             ])}
-            {this.props.currentBook.description.indexOf("scanned PDF") > -1 ? (
+            {this.props.currentBook.description.indexOf("scanned") > -1 ? (
               <>
                 <div
                   className="setting-dialog-new-title"
