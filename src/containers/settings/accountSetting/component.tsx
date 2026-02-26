@@ -69,6 +69,8 @@ class AccountSetting extends React.Component<
           "Your Pro trial has expired, please renew it to continue using the Pro features"
         )
       );
+      this.props.handleSetting(false);
+      this.props.handleSettingMode("general");
     }
   }
   handleRest = (_bool: boolean) => {
@@ -952,6 +954,8 @@ class AccountSetting extends React.Component<
                     id: "refresh-user-info",
                   });
                   await this.props.handleFetchUserInfo();
+                  let userRequest = await getUserRequest();
+                  await userRequest.refreshUserToken();
                   toast.success(this.props.t("Refresh successful"), {
                     id: "refresh-user-info",
                   });
