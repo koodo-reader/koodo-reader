@@ -77,11 +77,6 @@ export const getDictionary = async (word: string, from: string, to: string) => {
     return;
   } else {
     toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
-    if (response.code === 20004) {
-      toast(
-        i18n.t("Please login again to update your membership on this device")
-      );
-    }
   }
   return response;
 };
