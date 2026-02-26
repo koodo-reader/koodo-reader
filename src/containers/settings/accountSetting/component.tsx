@@ -954,8 +954,6 @@ class AccountSetting extends React.Component<
                     id: "refresh-user-info",
                   });
                   await this.props.handleFetchUserInfo();
-                  let userRequest = await getUserRequest();
-                  await userRequest.refreshUserToken();
                   toast.success(this.props.t("Refresh successful"), {
                     id: "refresh-user-info",
                   });
