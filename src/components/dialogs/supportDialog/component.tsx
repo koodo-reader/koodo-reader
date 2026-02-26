@@ -74,6 +74,7 @@ class SupportDialog extends React.Component<
                         this.props.handleFetchDataSourceList();
                         this.props.handleFetchDefaultSyncOption();
                         this.props.handleLoginOptionList([]);
+                        this.props.handleShowSupport(false);
                         toast.success(this.props.t("Log out successful"));
                         this.handleClose();
                         this.setState({ isExitPro: false });
