@@ -46,6 +46,7 @@ class DropdownList extends React.Component<
   }
   componentDidMount() {
     loadFontData().then((result) => {
+      console.log(result);
       if (!result || result.length === 0) return;
       let fontFamilyItem = dropdownList.find(
         (item) => item.value === "fontFamily"
