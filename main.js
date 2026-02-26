@@ -51,6 +51,8 @@ let options = {
   x: parseInt(store.get("mainWinX")),
   y: parseInt(store.get("mainWinY")),
   backgroundColor: "#fff",
+  minWidth: 400,
+  minHeight: 300,
   webPreferences: {
     webSecurity: false,
     nodeIntegration: true,
