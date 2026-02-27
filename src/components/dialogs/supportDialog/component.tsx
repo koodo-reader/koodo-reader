@@ -255,19 +255,10 @@ class SupportDialog extends React.Component<
                                     duration: 8000,
                                   }
                                 );
-                              } else if (getServerRegion() === "china") {
-                                toast(
-                                  this.props.t(
-                                    "If you have purchased the code directly from our website, please redeem with an account registered in global server region"
-                                  ),
-                                  {
-                                    duration: 8000,
-                                  }
-                                );
                               } else {
                                 toast(
                                   this.props.t(
-                                    "If you have purchased the code from Tabao store, please redeem with an account registered in Chinese server region"
+                                    "Please make sure you entered the correct redemption code and the code matches your server region, if you have any questions, please contact our support team"
                                   ),
                                   {
                                     duration: 8000,
