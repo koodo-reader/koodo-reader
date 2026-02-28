@@ -105,7 +105,9 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                 });
               }
             }
-            this.scrollToBottom();
+            if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
+              this.scrollToBottom();
+            }
           }
         );
         if (res.data && res.done) {
@@ -144,7 +146,9 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         //     question: "",
         //   });
         // }
-        this.scrollToBottom();
+        if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
+          this.scrollToBottom();
+        }
       }
     } catch (error) {
       toast.error(
@@ -237,7 +241,9 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       );
     }
     setTimeout(() => {
-      this.scrollToBottom();
+      if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
+        this.scrollToBottom();
+      }
     }, 100);
   };
   render() {
