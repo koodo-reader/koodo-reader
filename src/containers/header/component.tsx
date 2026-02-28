@@ -28,7 +28,7 @@ import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import {
   addChatBox,
-  checkBrokenData,
+  checkBrokenDatabase,
   checkMissingBook,
   generateSyncRecord,
   getChatLocale,
@@ -324,7 +324,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       return false;
     }
     await checkMissingBook();
-    let checkResult = await checkBrokenData();
+    let checkResult = await checkBrokenDatabase();
     if (checkResult) {
       toast.error(
         this.props.t(

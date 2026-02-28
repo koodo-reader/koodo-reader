@@ -640,7 +640,35 @@ export const checkMissingBook = async () => {
     }
   }
 };
-export const checkBrokenData = async () => {
+export const deleteBrokenBooksAndCovers = async () => {
+  try {
+    if (!isElectron) return;
+    var fs = window.require("fs");
+    var path = window.require("path");
+    const storageLocation = getStorageLocation();
+    if (!storageLocation) return;
+    const dirs = ["book", "cover"];
+    for (const dir of dirs) {
+      const dirPath = path.join(storageLocation, dir);
+      if (!fs.existsSync(dirPath)) continue;
+      const files = fs.readdirSync(dirPath);
+      for (const file of files) {
+        const filePath = path.join(dirPath, file);
+        try {
+          const stat = fs.statSync(filePath);
+          if (stat.size === 0) {
+            fs.unlinkSync(filePath);
+          }
+        } catch (e) {
+          console.error("Failed to check/delete file:", filePath, e);
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error while deleting broken books and covers:", error);
+  }
+};
+export const checkBrokenDatabase = async () => {
   let localSyncRecords = ConfigService.getAllSyncRecord();
   let localBooks = Object.keys(localSyncRecords).filter(
     (item) =>
