@@ -151,6 +151,12 @@ export const readingSettingList = [
   },
   {
     isElectron: false,
+    title: "Disable automatically scroll to the bottom of the AI chat",
+    desc: "",
+    propName: "isManualScroll",
+  },
+  {
+    isElectron: false,
     title: "Auto open last-read book",
     desc: "The book that you read from last time will be open automatically when launching",
     propName: "isOpenBook",
