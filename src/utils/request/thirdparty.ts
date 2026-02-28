@@ -50,6 +50,7 @@ export const onSyncCallback = async (service: string, authCode: string) => {
     let parts = authCode.split("$");
     region = parts[1];
   }
+  console.log(result, "result");
   // FOR PCLOUD, THE REFRESH TOKEN IS THE ACCESS TOKEN, ACCESS TOKEN NEVER EXPIRES
   let res = await encryptToken(
     service,
