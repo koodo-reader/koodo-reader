@@ -161,11 +161,16 @@ export const readingSettingList = [
     desc: "The book that you read from last time will be open automatically when launching",
     propName: "isOpenBook",
   },
-
+  {
+    isElectron: true,
+    title: "Auto open book in maximized screen",
+    desc: "Reader window will be maximized to fit the screen when opening a book",
+    propName: "isAutoMaximize",
+  },
   {
     isElectron: true,
     title: "Auto open book in full screen",
-    desc: "Reader window will be maximized to fit the screen when opening a book",
+    desc: "Reader window will enter full screen when opening a book",
     propName: "isAutoFullscreen",
   },
   {

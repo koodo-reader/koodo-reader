@@ -206,7 +206,13 @@ export const getTTSAudio = async (
       let result = await vexComfirmAsync(
         i18n.t(
           "You have exhausted your daily free AI voice character quota. Please purchase more quota to continue using this feature or wait until the quota resets. You can also use other TTS voices instead."
-        ),
+        ) +
+          " " +
+          (response.data && response.data.ttl
+            ? i18n.t("Your quota will be reset in", {
+                ttl: response.data.ttl,
+              })
+            : ""),
         "Purchase more quota"
       );
       if (result) {

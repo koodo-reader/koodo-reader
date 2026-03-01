@@ -274,30 +274,37 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 className="action-dialog-edit"
                 style={{ paddingLeft: "0px" }}
                 onClick={async () => {
-                  if (!this.props.currentBook.path) {
+                  const fs = window.require("fs");
+                  const path = window.require("path");
+                  const localBookPath = this.props.currentBook.path;
+
+                  const libraryBookPath = path.join(
+                    getStorageLocation() || "",
+                    `book`,
+                    this.props.currentBook.key +
+                      "." +
+                      this.props.currentBook.format.toLowerCase()
+                  );
+                  if (
+                    !fs.existsSync(localBookPath) &&
+                    !fs.existsSync(libraryBookPath)
+                  ) {
                     toast.error(this.props.t("No path found for this book"));
                     return;
                   }
-                  const fs = window.require("fs");
-                  const path = window.require("path");
-                  const bookPath =
-                    this.props.currentBook.path ||
-                    path.join(
-                      getStorageLocation() || "",
-                      `book`,
-                      this.props.currentBook.key +
-                        "." +
-                        this.props.currentBook.format.toLowerCase()
-                    );
-                  if (!fs.existsSync(bookPath)) {
-                    toast.error(this.props.t("File not found"));
-                    return;
+                  if (fs.existsSync(localBookPath)) {
+                    const { ipcRenderer } = window.require("electron");
+                    ipcRenderer.invoke("open-explorer-folder", {
+                      path: localBookPath,
+                      isFolder: false,
+                    });
+                  } else {
+                    const { ipcRenderer } = window.require("electron");
+                    ipcRenderer.invoke("open-explorer-folder", {
+                      path: libraryBookPath,
+                      isFolder: false,
+                    });
                   }
-                  const { ipcRenderer } = window.require("electron");
-                  ipcRenderer.invoke("open-explorer-folder", {
-                    path: bookPath,
-                    isFolder: false,
-                  });
                 }}
               >
                 <p className="action-name">

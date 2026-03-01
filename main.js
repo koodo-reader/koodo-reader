@@ -315,7 +315,8 @@ const createMainWin = () => {
     });
   });
   ipcMain.handle("open-book", (event, config) => {
-    let { url, isMergeWord, isAutoFullscreen, isPreventSleep } = config;
+    let { url, isMergeWord, isAutoFullscreen, isAutoMaximize, isPreventSleep } =
+      config;
     options.webPreferences.nodeIntegrationInSubFrames = true;
     if (isMergeWord) {
       delete options.backgroundColor;
@@ -324,6 +325,7 @@ const createMainWin = () => {
       url,
       isMergeWord: isMergeWord || "no",
       isAutoFullscreen: isAutoFullscreen || "no",
+      isAutoMaximize: isAutoMaximize || "no",
       isPreventSleep: isPreventSleep || "no",
     });
     let id;
@@ -331,21 +333,18 @@ const createMainWin = () => {
       id = powerSaveBlocker.start("prevent-display-sleep");
       console.log(powerSaveBlocker.isStarted(id));
     }
-
-    if (isAutoFullscreen === "yes") {
-      if (readerWindow) {
-        readerWindowList.push(readerWindow);
-      }
+    if (readerWindow) {
+      readerWindowList.push(readerWindow);
+    }
+    if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
       readerWindow = new BrowserWindow(options);
-      if (store.get("isAlwaysOnTop") === "yes") {
-        readerWindow.setAlwaysOnTop(true);
-      }
       readerWindow.loadURL(url);
-      readerWindow.maximize();
-    } else {
-      if (readerWindow) {
-        readerWindowList.push(readerWindow);
+      if (isAutoFullscreen === "yes") {
+        readerWindow.setFullScreen(true);
+      } else if (isAutoMaximize === "yes") {
+        readerWindow.maximize();
       }
+    } else {
       const scaleRatio = store.get("windowDisplayScale") || 1;
       const isWindowVisible = isWindowPartiallyVisible({
         x: parseInt(store.get("windowX")),
