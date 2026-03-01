@@ -82,9 +82,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(path.join(dirPath, "data", "book"), { recursive: true });
-        console.info("folder created");
-      } else {
-        console.info("folder exist");
       }
 
       if (
