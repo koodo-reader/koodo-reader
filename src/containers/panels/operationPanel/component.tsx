@@ -99,6 +99,21 @@ class OperationPanel extends React.Component<
     let text = bookLocation.text;
     let chapter = bookLocation.chapterTitle;
     let percentage = bookLocation.percentage;
+    let isDuplicate = false;
+    let bookmarks = await DatabaseService.getRecordsByBookKey(
+      this.props.currentBook.key,
+      "bookmarks"
+    );
+    for (let i = 0; i < bookmarks.length; i++) {
+      if (bookmarks[i].percentage === bookLocation.percentage) {
+        isDuplicate = true;
+        break;
+      }
+    }
+    if (isDuplicate) {
+      toast.error(this.props.t("Bookmark already exists"));
+      return;
+    }
 
     let cfi = JSON.stringify(bookLocation);
     if (!text) {

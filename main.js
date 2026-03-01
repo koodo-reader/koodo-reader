@@ -963,14 +963,18 @@ const createMainWin = () => {
   });
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
-      const _data = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
-      );
-      if (_data && _data.filePath) {
-        filePath = _data.filePath;
-        setTimeout(() => {
-          fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf-8");
-        }, 1000);
+      try {
+        const _data = JSON.parse(
+          fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
+        );
+        if (_data && _data.filePath) {
+          filePath = _data.filePath;
+          setTimeout(() => {
+            fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf-8");
+          }, 1000);
+        }
+      } catch (error) {
+        console.error("Error reading log.json:", error);
       }
     }
 
@@ -979,11 +983,15 @@ const createMainWin = () => {
   });
   ipcMain.on("check-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
-      const _data = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
-      );
-      if (_data && _data.filePath) {
-        filePath = _data.filePath;
+      try {
+        const _data = JSON.parse(
+          fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
+        );
+        if (_data && _data.filePath) {
+          filePath = _data.filePath;
+        }
+      } catch (error) {
+        console.error("Error reading log.json:", error);
       }
     }
 
