@@ -640,28 +640,24 @@ export const checkMissingBook = async () => {
     }
   }
 };
-export const deleteBrokenBooksAndCovers = async () => {
+export const deleteBrokenCovers = () => {
   try {
     if (!isElectron) return;
     var fs = window.require("fs");
     var path = window.require("path");
     const storageLocation = getStorageLocation();
     if (!storageLocation) return;
-    const dirs = ["book", "cover"];
-    for (const dir of dirs) {
-      const dirPath = path.join(storageLocation, dir);
-      if (!fs.existsSync(dirPath)) continue;
-      const files = fs.readdirSync(dirPath);
-      for (const file of files) {
-        const filePath = path.join(dirPath, file);
-        try {
-          const stat = fs.statSync(filePath);
-          if (stat.size === 0) {
-            fs.unlinkSync(filePath);
-          }
-        } catch (e) {
-          console.error("Failed to check/delete file:", filePath, e);
+    const dirPath = path.join(storageLocation, "cover");
+    const files = fs.readdirSync(dirPath);
+    for (const file of files) {
+      const filePath = path.join(dirPath, file);
+      try {
+        const stat = fs.statSync(filePath);
+        if (stat.size === 0) {
+          fs.unlinkSync(filePath);
         }
+      } catch (e) {
+        console.error("Failed to check/delete file:", filePath, e);
       }
     }
   } catch (error) {
