@@ -28,6 +28,7 @@
   "Auto open book in full screen": "图书窗口自动全屏",
   "Your quota will be reset in": "您的额度将于 {{ttl}} 后重置",
   "System font": "系统字体",
+  "Delete forever": "永久删除",
   "Bookmark already exists": "书签已存在",
   "Access token expired, refetching token": "凭证过期，重新获取中",
   "Access token received, please continue": "获取凭证成功，请继续之前的操作",
