@@ -46,7 +46,6 @@ export interface SettingInfoState {
   isPrecacheBook: boolean;
   isUseBuiltIn: boolean;
   isDisablePDFCover: boolean;
-  isAutoFullscreen: boolean;
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
   isAddNew: boolean;

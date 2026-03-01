@@ -45,6 +45,7 @@ export interface SettingInfoState {
   isOverwriteText: boolean;
   isDisablePDFCover: boolean;
   isAutoFullscreen: boolean;
+  isAutoMaximize: boolean;
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
   isLemmatizeWord: boolean;
