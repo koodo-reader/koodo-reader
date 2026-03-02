@@ -192,7 +192,10 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         <div className="note-editor">
           <div className="note-original-text">{this.state.text}</div>
           <div className="editor-box-parent">
-            <textarea className="editor-box" />
+            <textarea
+              className="editor-box"
+              style={{ height: "calc(100% - 90px)" }}
+            />
           </div>
           <div
             className="note-tags"
