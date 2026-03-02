@@ -81,11 +81,12 @@ if (!singleInstance) {
     }
   });
 }
-if (filePath) {
+if (filePath && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
   // Make sure the directory exists
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
   }
+  console.log(filePath, "dgdfgdg");
   fs.writeFileSync(
     path.join(dirPath, "log.json"),
     JSON.stringify({ filePath }),
@@ -970,7 +971,7 @@ const createMainWin = () => {
         if (_data && _data.filePath) {
           filePath = _data.filePath;
           setTimeout(() => {
-            fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf-8");
+            fs.writeFileSync(path.join(dirPath, "log.json"), "{}", "utf-8");
           }, 1000);
         }
       } catch (error) {
@@ -987,6 +988,7 @@ const createMainWin = () => {
         const _data = JSON.parse(
           fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
         );
+        console.log(_data, "asdfsadf");
         if (_data && _data.filePath) {
           filePath = _data.filePath;
         }

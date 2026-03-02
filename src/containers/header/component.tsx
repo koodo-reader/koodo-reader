@@ -151,6 +151,33 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         // ConfigService.setReaderConfig("isFinishWebReading", "no");
       }
     });
+    let filePath = "";
+    //open book when app start
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      filePath = ipcRenderer.sendSync("check-file-data");
+    }
+    console.log(filePath, "1");
+    if (
+      ConfigService.getReaderConfig("isOpenBook") === "yes" &&
+      !this.props.currentBook.key &&
+      !filePath
+    ) {
+      console.log(2);
+      let lastReadBookKey = ConfigService.getAllListConfig("recentBooks")[0];
+      if (lastReadBookKey) {
+        console.log(3);
+        let fullBook = await DatabaseService.getRecord(
+          lastReadBookKey,
+          "books"
+        );
+        if (fullBook) {
+          console.log(4);
+          this.props.handleReadingBook(fullBook);
+          BookUtil.redirectBook(fullBook);
+        }
+      }
+    }
   }
   async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<HeaderProps>,
