@@ -45,7 +45,6 @@ export const supportedFormats = [
   ".docx",
   ".md",
   ".fb2",
-  ".djvu",
   ".cbz",
   ".cbt",
   ".cbr",
@@ -384,7 +383,7 @@ export function removeChatBox() {
 export const preCacheAllBooks = async (bookList: Book[]) => {
   for (let index = 0; index < bookList.length; index++) {
     const selectedBook = bookList[index];
-    if (selectedBook.format === "PDF" || selectedBook.format === "DJVU") {
+    if (selectedBook.format === "PDF") {
       continue;
     }
     if (

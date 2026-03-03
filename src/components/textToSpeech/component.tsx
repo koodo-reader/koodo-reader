@@ -174,8 +174,7 @@ class TextToSpeech extends React.Component<
     );
     this.nodeList = nodeTextList;
     if (
-      (this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU") &&
+      this.props.currentBook.format === "PDF" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
     } else {
@@ -187,8 +186,7 @@ class TextToSpeech extends React.Component<
     }
     if (this.nodeList.length === 0) {
       if (
-        (this.props.currentBook.format === "PDF" ||
-          this.props.currentBook.format === "DJVU") &&
+        this.props.currentBook.format === "PDF" &&
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
         let currentPosition = this.props.htmlBook.rendition.getPosition();
@@ -257,8 +255,7 @@ class TextToSpeech extends React.Component<
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
       let lastVisibleTextList = visibleTextList;
       if (
-        (this.props.currentBook.format === "PDF" ||
-          this.props.currentBook.format === "DJVU") &&
+        this.props.currentBook.format === "PDF" &&
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
@@ -272,8 +269,7 @@ class TextToSpeech extends React.Component<
         lastVisibleTextList[lastVisibleTextList.length - 1]
       ) {
         if (
-          (this.props.currentBook.format === "PDF" ||
-            this.props.currentBook.format === "DJVU") &&
+          this.props.currentBook.format === "PDF" &&
           ConfigService.getReaderConfig("isConvertPDF") !== "yes"
         ) {
           let currentPosition = this.props.htmlBook.rendition.getPosition();
@@ -321,8 +317,7 @@ class TextToSpeech extends React.Component<
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
       let lastVisibleTextList = visibleTextList;
       if (
-        (this.props.currentBook.format === "PDF" ||
-          this.props.currentBook.format === "DJVU") &&
+        this.props.currentBook.format === "PDF" &&
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
@@ -335,8 +330,7 @@ class TextToSpeech extends React.Component<
         lastVisibleTextList[lastVisibleTextList.length - 1]
       ) {
         if (
-          (this.props.currentBook.format === "PDF" ||
-            this.props.currentBook.format === "DJVU") &&
+          this.props.currentBook.format === "PDF" &&
           ConfigService.getReaderConfig("isConvertPDF") !== "yes"
         ) {
           let currentPosition = this.props.htmlBook.rendition.getPosition();

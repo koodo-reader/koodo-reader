@@ -24,8 +24,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     let text = getSelection(this.props.currentBook.format);
     if (!text) return;
     if (
-      (this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU") &&
+      this.props.currentBook.format === "PDF" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
       text = text.split("\n").join(" ").trim();
@@ -57,8 +56,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     );
     let cfi = JSON.stringify(bookLocation);
     if (
-      (this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU") &&
+      this.props.currentBook.format === "PDF" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
       let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(
