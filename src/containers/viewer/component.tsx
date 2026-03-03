@@ -131,10 +131,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         return item.chapterIndex === this.state.chapterDocIndex;
       }
     });
-    if (
-      this.props.currentBook.format === "PDF" ||
-      this.props.currentBook.format === "DJVU"
-    ) {
+    if (this.props.currentBook.format === "PDF") {
       highlightersByChapter = highlightersByChapter.map((item: Note) => {
         let cfi = JSON.parse(item.cfi);
         if (cfi.fingerprint) {
@@ -152,8 +149,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.handleNoteClick
     );
     if (
-      (this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU") &&
+      this.props.currentBook.format === "PDF" &&
       (this.props.readerMode === "double" ||
         this.props.readerMode === "scroll") &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
@@ -167,10 +163,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           return item.chapterIndex === this.state.chapterDocIndex + 1;
         }
       });
-      if (
-        this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU"
-      ) {
+      if (this.props.currentBook.format === "PDF") {
         highlightersByChapter = highlightersByChapter.map((item: Note) => {
           let cfi = JSON.parse(item.cfi);
           if (cfi.fingerprint) {
@@ -456,8 +449,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
       doc.addEventListener("mouseup", (event) => {
         if (
-          (this.props.currentBook.format === "PDF" ||
-            this.props.currentBook.format === "DJVU") &&
+          this.props.currentBook.format === "PDF" &&
           ConfigService.getReaderConfig("isConvertPDF") !== "yes"
         ) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
@@ -485,8 +477,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
       doc.addEventListener("contextmenu", (event) => {
         if (
-          (this.props.currentBook.format === "PDF" ||
-            this.props.currentBook.format === "DJVU") &&
+          this.props.currentBook.format === "PDF" &&
           ConfigService.getReaderConfig("isConvertPDF") !== "yes"
         ) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
@@ -550,18 +541,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             }}
           />
         ) : null}
-        {this.props.htmlBook &&
-          this.props.currentBook.format !== "PDF" &&
-          this.props.currentBook.format !== "DJVU" && (
-            <ImageViewer
-              {...{
-                isShow: this.props.isShow,
-                rendition: this.props.htmlBook.rendition,
-                handleEnterReader: this.props.handleEnterReader,
-                handleLeaveReader: this.props.handleLeaveReader,
-              }}
-            />
-          )}
+        {this.props.htmlBook && this.props.currentBook.format !== "PDF" && (
+          <ImageViewer
+            {...{
+              isShow: this.props.isShow,
+              rendition: this.props.htmlBook.rendition,
+              handleEnterReader: this.props.handleEnterReader,
+              handleLeaveReader: this.props.handleLeaveReader,
+            }}
+          />
+        )}
         <div
           className={
             this.props.readerMode === "scroll"

@@ -85,8 +85,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     }
     posX = posX - 80 + pageSize.left;
     if (
-      (this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU") &&
+      this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&
       this.props.chapterDocIndex % 2 === 1 &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
@@ -94,8 +93,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
-      (this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU") &&
+      this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "scroll" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes" &&
       posY < 0
@@ -110,8 +108,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     }
     if (
       this.props.readerMode === "scroll" &&
-      (this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU")
+      this.props.currentBook.format === "PDF"
     ) {
       posX = posX - pageSize.scrollLeft;
     }
@@ -126,8 +123,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       let doc = docs[i];
       if (!doc) continue;
       if (
-        (this.props.currentBook.format === "PDF" ||
-          this.props.currentBook.format === "DJVU") &&
+        this.props.currentBook.format === "PDF" &&
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
         let targetIframe = doc?.defaultView?.frameElement;

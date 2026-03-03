@@ -66,8 +66,7 @@ class SettingPanel extends React.Component<
           {sliderConfigs
             .filter((item) => {
               if (
-                (this.props.currentBook.format === "PDF" ||
-                  this.props.currentBook.format === "DJVU") &&
+                this.props.currentBook.format === "PDF" &&
                 ConfigService.getReaderConfig("isConvertPDF") !== "yes"
               ) {
                 return item.isPDF;

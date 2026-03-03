@@ -274,8 +274,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               }
               if (
                 ConfigService.getReaderConfig("isPrecacheBook") === "yes" &&
-                extension !== "pdf" &&
-                extension !== "djvu"
+                extension !== "pdf"
               ) {
                 let cache = await rendition.preCache(file_content);
                 if (cache !== "err" || cache) {

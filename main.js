@@ -592,7 +592,6 @@ const createMainWin = () => {
             "docx",
             "md",
             "fb2",
-            "djvu",
             "cbz",
             "cbt",
             "cbr",

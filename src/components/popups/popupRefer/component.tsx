@@ -115,8 +115,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     }
     posX = posX - 135 + pageSize.left;
     if (
-      (this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU") &&
+      this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&
       this.props.chapterDocIndex % 2 === 1 &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
@@ -124,8 +123,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
-      (this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU") &&
+      this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "scroll" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
@@ -145,8 +143,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     }
     if (
       this.props.readerMode === "scroll" &&
-      (this.props.currentBook.format === "PDF" ||
-        this.props.currentBook.format === "DJVU")
+      this.props.currentBook.format === "PDF"
     ) {
       posX = posX - pageSize.scrollLeft;
     }

@@ -100,8 +100,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         )
       );
       if (
-        (this.props.currentBook.format === "PDF" ||
-          this.props.currentBook.format === "DJVU") &&
+        this.props.currentBook.format === "PDF" &&
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
         let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(

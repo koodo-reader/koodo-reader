@@ -154,8 +154,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
             }
           >
             {!this.state.isCoverExist ||
-            ((this.props.book.format === "PDF" ||
-              this.props.book.format === "DJVU") &&
+            (this.props.book.format === "PDF" &&
               ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
               <div className="book-item-image">
                 <EmptyCover
