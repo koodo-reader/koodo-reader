@@ -529,11 +529,16 @@ const createMainWin = () => {
     if (decrypted.startsWith("{") && decrypted.endsWith("}")) {
       return decrypted;
     } else {
-      const { safeStorage } = require("electron");
-      decrypted = safeStorage.decryptString(Buffer.from(encrypted, "base64"));
-      let newEncrypted = encrypt(decrypted, fingerprint);
-      store.set("encryptedToken", newEncrypted);
-      return decrypted;
+      try {
+        const { safeStorage } = require("electron");
+        decrypted = safeStorage.decryptString(Buffer.from(encrypted, "base64"));
+        let newEncrypted = encrypt(decrypted, fingerprint);
+        store.set("encryptedToken", newEncrypted);
+        return decrypted;
+      } catch (error) {
+        console.error("Decryption failed:", error);
+        return "{}";
+      }
     }
   });
   ipcMain.handle("get-mac", async (event, config) => {
