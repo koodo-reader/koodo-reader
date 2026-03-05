@@ -1064,16 +1064,70 @@ export const handleAutoCloudSync = async () => {
   }
   return false;
 };
-export const splitSentences = (text: string) => {
+const isCJKText = (text: string): boolean => {
+  // Check if the majority of characters are CJK (Chinese, Japanese, Korean)
+  const cjkPattern = /[\u3000-\u9fff\uac00-\ud7af\uf900-\ufaff]/g;
+  const cjkCount = (text.match(cjkPattern) || []).length;
+  return cjkCount / text.length > 0.3;
+};
+
+export const splitSentences = (text: string, maxLength?: number) => {
+  const resolvedMaxLength = maxLength ?? (isCJKText(text) ? 50 : 150);
   const segmenter = new (Intl as any).Segmenter("zh", {
     granularity: "sentence",
   });
   const segments = segmenter.segment(text);
 
   const sentences = Array.from(segments).map((s: any) => s.segment);
-  return sentences
+  const trimmed = sentences
     .map((sentence) => sentence.trim())
     .filter((sentence) => sentence.trim() !== "");
+
+  const splitLongSentence = (sentence: string): string[] => {
+    if (sentence.length <= resolvedMaxLength) return [sentence];
+
+    // Try splitting by common punctuation marks (Chinese and Western)
+    const parts = sentence
+      .split(/(?<=[,，;；:：、。！？…\.!\?])/)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
+    if (parts.length > 1) {
+      // Greedily merge parts to minimize the number of resulting chunks
+      const result: string[] = [];
+      let current = "";
+      for (const part of parts) {
+        const candidate = current ? current + part : part;
+        if (candidate.length <= resolvedMaxLength) {
+          current = candidate;
+        } else {
+          if (current) result.push(current);
+          // If a single part already exceeds maxLength, hard-split it
+          if (part.length > resolvedMaxLength) {
+            for (let i = 0; i < part.length; i += resolvedMaxLength) {
+              result.push(part.slice(i, i + resolvedMaxLength));
+            }
+            current = "";
+          } else {
+            current = part;
+          }
+        }
+      }
+      if (current) result.push(current);
+      return result;
+    }
+
+    // No punctuation found, split by maxLength hard limit
+    const result: string[] = [];
+    for (let i = 0; i < sentence.length; i += resolvedMaxLength) {
+      result.push(sentence.slice(i, i + resolvedMaxLength));
+    }
+    return result;
+  };
+
+  return trimmed
+    .flatMap(splitLongSentence)
+    .filter((sentence) => /[\p{L}\p{N}]/u.test(sentence));
 };
 export const getICloudDrivePath = () => {
   if (!isElectron) return "";

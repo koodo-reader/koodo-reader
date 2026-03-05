@@ -89,6 +89,7 @@ class TextToSpeech extends React.Component<
       let voiceName = ConfigService.getReaderConfig("voiceName");
       let voiceEngine = ConfigService.getReaderConfig("voiceEngine");
       let voiceIndex = parseInt(ConfigService.getReaderConfig("voiceIndex"));
+
       if (
         !voiceName &&
         ConfigService.getReaderConfig("voiceIndex") &&
@@ -101,15 +102,20 @@ class TextToSpeech extends React.Component<
             : this.voices[0].name
         );
       }
-      if (!voiceEngine && ConfigService.getReaderConfig("voiceName")) {
-        let voice = this.voices.find(
-          (item) => item.name === ConfigService.getReaderConfig("voiceName")
-        );
+      if (!voiceEngine && voiceName) {
+        let voice = this.voices.find((item) => item.name === voiceName);
         if (voice && voice.plugin) {
           ConfigService.setReaderConfig("voiceEngine", voice.plugin);
         } else {
           ConfigService.setReaderConfig("voiceEngine", "system");
         }
+      }
+      if (!voiceName && !voiceEngine && this.voices.length > 0) {
+        ConfigService.setReaderConfig("voiceName", this.voices[0].name);
+        ConfigService.setReaderConfig(
+          "voiceEngine",
+          this.voices[0].plugin || "system"
+        );
       }
     }
   }
@@ -159,7 +165,11 @@ class TextToSpeech extends React.Component<
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
     let voiceName = ConfigService.getReaderConfig("voiceName");
-    if (this.customVoices.find((item) => item.name === voiceName)) {
+    console.log(voiceName, this.customVoices);
+    if (
+      voiceName &&
+      this.customVoices.find((item) => item.name === voiceName)
+    ) {
       await this.handleCustomRead(0);
     } else {
       await this.handleSystemRead(0);
