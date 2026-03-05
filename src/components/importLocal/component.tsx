@@ -98,6 +98,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           await BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
           await CoverUtil.addCover(book);
         } else if (ConfigService.getReaderConfig("isImportPath") === "yes") {
+          await CoverUtil.addCover(book);
           //ignore
         } else {
           await BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
