@@ -200,6 +200,7 @@ class TextToSpeech extends React.Component<
 
       this.nodeList = await this.handleGetText();
     }
+    console.log(this.nodeList);
     return this.nodeList;
   };
   async handleCustomRead(nodeIndex: number) {
