@@ -1101,27 +1101,16 @@ export const splitSentences = (text: string, maxLength?: number) => {
           current = candidate;
         } else {
           if (current) result.push(current);
-          // If a single part already exceeds maxLength, hard-split it
-          if (part.length > resolvedMaxLength) {
-            for (let i = 0; i < part.length; i += resolvedMaxLength) {
-              result.push(part.slice(i, i + resolvedMaxLength));
-            }
-            current = "";
-          } else {
-            current = part;
-          }
+          // If a single part already exceeds maxLength, keep it as-is
+          current = part;
         }
       }
       if (current) result.push(current);
       return result;
     }
 
-    // No punctuation found, split by maxLength hard limit
-    const result: string[] = [];
-    for (let i = 0; i < sentence.length; i += resolvedMaxLength) {
-      result.push(sentence.slice(i, i + resolvedMaxLength));
-    }
-    return result;
+    // No punctuation found, keep the sentence as-is
+    return [sentence];
   };
 
   return trimmed
