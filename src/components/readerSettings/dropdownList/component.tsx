@@ -53,11 +53,12 @@ class DropdownList extends React.Component<
       let subFontFamilyItem = dropdownList.find(
         (item) => item.value === "subFontFamily"
       );
-      if (fontFamilyItem)
+      if (fontFamilyItem && fontFamilyItem.option.length <= 2) {
         fontFamilyItem.option = fontFamilyItem.option.concat(result);
-      if (subFontFamilyItem)
+      }
+      if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
         subFontFamilyItem.option = subFontFamilyItem.option.concat(result);
-      dropdownList[0].option = dropdownList[0].option.concat(result);
+      }
       if (fontFamilyItem && subFontFamilyItem) {
         this.setState({
           currentFontFamilyIndex: fontFamilyItem.option.findIndex(
