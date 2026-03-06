@@ -126,7 +126,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
                   const file = files[i];
                   const ext = "." + file.name.split(".").pop()?.toLowerCase();
                   if (!supportedFormats.includes(ext)) {
-                    toast.error("Unsupported file format: " + ext);
+                    toast.error(
+                      this.props.t("Unsupported file format") + ": " + ext
+                    );
                     continue;
                   }
                   await this.props.importBookFunc(file);
