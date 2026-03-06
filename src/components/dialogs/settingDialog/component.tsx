@@ -91,7 +91,6 @@ class SettingDialog extends React.Component<
       if (fontFamilyItem && fontFamilyItem.option.length <= 2) {
         fontFamilyItem.option = fontFamilyItem.option.concat(result);
       }
-      console.log(subFontFamilyItem, "subFontFamilyItem");
       if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
         subFontFamilyItem.option = subFontFamilyItem.option.concat(result);
       }

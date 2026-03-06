@@ -165,7 +165,6 @@ class TextToSpeech extends React.Component<
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
     let voiceName = ConfigService.getReaderConfig("voiceName");
-    console.log(voiceName, this.customVoices);
     if (
       voiceName &&
       this.customVoices.find((item) => item.name === voiceName)
@@ -210,7 +209,6 @@ class TextToSpeech extends React.Component<
 
       this.nodeList = await this.handleGetText();
     }
-    console.log(this.nodeList);
     return this.nodeList;
   };
   async handleCustomRead(nodeIndex: number) {
