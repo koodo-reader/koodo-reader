@@ -502,7 +502,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
         if (!selection || selection.rangeCount === 0) return;
         var rect = selection.getRangeAt(0).getBoundingClientRect();
-        console.log(selection, rect);
         this.setState({ rect });
       });
     }
