@@ -207,8 +207,6 @@ class SupportDialog extends React.Component<
                           });
                           if (response.code === 200) {
                             this.props.handleFetchUserInfo();
-                            let userRequest = await getUserRequest();
-                            await userRequest.refreshUserToken();
                             toast.success(this.props.t("Redeem successful"), {
                               id: "redeem-code",
                             });
@@ -317,8 +315,6 @@ class SupportDialog extends React.Component<
                               );
                             } else {
                               this.props.handleFetchUserInfo();
-                              let userRequest = await getUserRequest();
-                              await userRequest.refreshUserToken();
                               toast.success(
                                 this.props.t("Thanks for your support"),
                                 {

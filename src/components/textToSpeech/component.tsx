@@ -268,9 +268,11 @@ class TextToSpeech extends React.Component<
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
-        lastVisibleTextList = splitSentences(
-          visibleTextList[visibleTextList.length - 1]
-        );
+        let rawNodeList = visibleTextList.map((text) => {
+          return splitSentences(text);
+        });
+
+        lastVisibleTextList = rawNodeList.flat();
       }
 
       if (
@@ -324,16 +326,23 @@ class TextToSpeech extends React.Component<
 
     if (res === "start") {
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
+      console.log(
+        await this.props.htmlBook.rendition.visibleText(),
+        "visibleTextList"
+      );
       let lastVisibleTextList = visibleTextList;
       if (
         this.props.currentBook.format === "PDF" &&
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
-        lastVisibleTextList = splitSentences(
-          visibleTextList[visibleTextList.length - 1]
-        );
+        let rawNodeList = visibleTextList.map((text) => {
+          return splitSentences(text);
+        });
+
+        lastVisibleTextList = rawNodeList.flat();
       }
+      console.log(this.nodeList, lastVisibleTextList);
       if (
         this.nodeList[index] ===
         lastVisibleTextList[lastVisibleTextList.length - 1]

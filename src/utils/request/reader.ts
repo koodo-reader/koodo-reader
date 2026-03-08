@@ -210,7 +210,7 @@ export const getTTSAudio = async (
           " " +
           (response.data && response.data.ttl
             ? i18n.t("Your quota will be reset in", {
-                ttl: response.data.ttl,
+                ttl: (response.data.ttl / 3600).toFixed(1),
               })
             : ""),
         "Purchase more quota"

@@ -547,8 +547,6 @@ class AccountSetting extends React.Component<
                   });
                   if (response.code === 200) {
                     this.props.handleFetchUserInfo();
-                    let userRequest = await getUserRequest();
-                    await userRequest.refreshUserToken();
                     toast.success(this.props.t("Redeem successful"), {
                       id: "redeem-code",
                     });
@@ -877,9 +875,7 @@ class AccountSetting extends React.Component<
             <Trans>AI voice character quota</Trans>
             <div style={{ display: "flex", alignItems: "center" }}>
               <span>
-                {(this.props.userInfo && this.props.userInfo.type === "pro"
-                  ? this.props.t("Free quota")
-                  : 0) +
+                {this.props.t("Free quota") +
                   (this.props.userInfo &&
                   this.props.userInfo.tts_credits &&
                   this.props.userInfo.tts_credits > 0
