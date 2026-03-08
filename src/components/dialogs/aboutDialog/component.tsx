@@ -58,7 +58,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           isVisible
             ? {
                 position: "absolute",
-                left: "850px",
+                left: "870px",
                 top: isElectron ? top.electron : top.web,
               }
             : { display: "none" }
@@ -219,6 +219,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
                   position: "absolute",
                   left: "665px",
                   top: isElectron ? "230px" : "200px",
+                  width: "200px",
                 }
               : { display: "none" }
           }

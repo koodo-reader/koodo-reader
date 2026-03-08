@@ -27,21 +27,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   }
   UNSAFE_componentWillReceiveProps(nextProps: PopupMenuProps) {
     if (nextProps.rect !== this.props.rect) {
-      if (
-        this.props.isOpenMenu &&
-        nextProps.rect &&
-        this.props.rect &&
-        nextProps.rect.top === this.props.rect.top &&
-        nextProps.rect.bottom === this.props.rect.bottom &&
-        nextProps.rect.left === this.props.rect.left &&
-        nextProps.rect.width === this.props.rect.width &&
-        nextProps.rect.height === this.props.rect.height
-      ) {
-        this.props.handleOpenMenu(false);
-        this.props.handleMenuMode("");
-        this.props.handleNoteKey("");
-        return;
-      }
       this.setState(
         {
           rect: nextProps.rect,
