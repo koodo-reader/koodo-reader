@@ -19,4 +19,6 @@ export interface MoreActionProps extends RouteComponentProps<any> {
   t: (title: string) => string;
   handleActionDialog: (isShow: boolean) => void;
 }
-export interface MoreActionState {}
+export interface MoreActionState {
+  exportSubmenu?: string;
+}

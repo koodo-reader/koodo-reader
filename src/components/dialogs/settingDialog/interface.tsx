@@ -33,6 +33,7 @@ export interface SettingInfoState {
   isOpenBook: boolean;
   isDisablePopup: boolean;
   isDisableAutoScroll: boolean;
+  isManualScroll: boolean;
   isDisableTrashBin: boolean;
   isDeleteShelfBook: boolean;
   isPreventSleep: boolean;
@@ -44,6 +45,7 @@ export interface SettingInfoState {
   isOverwriteText: boolean;
   isDisablePDFCover: boolean;
   isAutoFullscreen: boolean;
+  isAutoMaximize: boolean;
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
   isLemmatizeWord: boolean;

@@ -80,7 +80,10 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           );
           console.error(err);
         });
-    } else if (this.props.isAuthed) {
+    } else if (
+      this.props.isAuthed &&
+      ConfigService.getReaderConfig("isDisableAI") !== "yes"
+    ) {
       this.setState({
         transService: "official-ai-trans-plugin",
         isAddNew: false,

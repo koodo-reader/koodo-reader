@@ -66,6 +66,11 @@ export const generalSettingList = [
   },
   {
     isElectron: false,
+    title: "Disable AI features",
+    propName: "isDisableAI",
+  },
+  {
+    isElectron: false,
     title: "Use file name as book title",
     propName: "isUseOriginalName",
   },
@@ -146,15 +151,26 @@ export const readingSettingList = [
   },
   {
     isElectron: false,
+    title: "Disable automatically scroll to the bottom of the AI chat",
+    desc: "",
+    propName: "isManualScroll",
+  },
+  {
+    isElectron: false,
     title: "Auto open last-read book",
     desc: "The book that you read from last time will be open automatically when launching",
     propName: "isOpenBook",
   },
-
+  {
+    isElectron: true,
+    title: "Auto open book in maximized screen",
+    desc: "Reader window will be maximized to fit the screen when opening a book",
+    propName: "isAutoMaximize",
+  },
   {
     isElectron: true,
     title: "Auto open book in full screen",
-    desc: "Reader window will be maximized to fit the screen when opening a book",
+    desc: "Reader window will enter full screen when opening a book",
     propName: "isAutoFullscreen",
   },
   {
@@ -257,6 +273,11 @@ export const readerSettingList = [
   {
     title: "Render PDF from even page",
     propName: "isStartFromEven",
+    isPDF: true,
+  },
+  {
+    title: "Fast reading mode (make the first half of the word bold)",
+    propName: "isBionic",
     isPDF: true,
   },
   {

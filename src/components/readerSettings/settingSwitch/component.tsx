@@ -20,6 +20,7 @@ class SettingSwitch extends React.Component<
       isShadow: ConfigService.getReaderConfig("isShadow") === "yes",
       isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
       isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
+      isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
       isStartFromEven:
         ConfigService.getReaderConfig("isStartFromEven") === "yes",
       isHideBackground:
@@ -107,6 +108,9 @@ class SettingSwitch extends React.Component<
                       break;
                     case "isStartFromEven":
                       this._handleChange("isStartFromEven");
+                      break;
+                    case "isBionic":
+                      this._handleChange("isBionic");
                       break;
                     case "isHideFooter":
                       this.props.handleHideFooter(!this.state.isHideFooter);

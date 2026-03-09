@@ -1,4 +1,5 @@
 import { RouteComponentProps } from "react-router-dom";
+import Book from "../../models/Book";
 export interface HeaderProps extends RouteComponentProps<any> {
   isSearch: boolean;
   isSortDisplay: boolean;
@@ -7,7 +8,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   isNewWarning: boolean;
   isLoadMore: boolean;
   isAuthed: boolean;
-
+  currentBook: Book;
   defaultSyncOption: string;
   mode: string;
   userInfo: any;
@@ -30,6 +31,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   t: (title: string) => string;
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;
+  handleReadingBook: (book: Book) => void;
   handleCloudSyncFunc: (
     cloudSyncFunc: () => Promise<false | undefined>
   ) => void;

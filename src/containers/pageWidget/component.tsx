@@ -21,6 +21,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
       });
+      nextProps.htmlBook.rendition.on("rendered", async () => {
+        await this.handlePageNum(nextProps.htmlBook.rendition);
+      });
     }
     if (nextProps.readerMode !== this.props.readerMode) {
       this.setState({ isSingle: nextProps.readerMode !== "double" });

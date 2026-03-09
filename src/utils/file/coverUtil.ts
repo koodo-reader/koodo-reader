@@ -187,6 +187,8 @@ class CoverUtil {
   static async addCover(book: BookModel) {
     let coverBase64 = book.cover;
     if (!coverBase64) return;
+    let base64Data = coverBase64.split("base64,")[1];
+    if (!base64Data) return;
     if (isElectron) {
       var fs = window.require("fs");
       var path = window.require("path");

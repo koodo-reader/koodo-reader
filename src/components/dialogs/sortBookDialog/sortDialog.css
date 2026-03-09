@@ -17,7 +17,8 @@
   font-size: 15px;
   font-weight: 500;
   opacity: 1;
-  line-height: 30px;
+  min-height: 30px;
+  line-height: 1.5;
   width: calc(100% - 30px);
   display: flex;
   justify-content: space-between;

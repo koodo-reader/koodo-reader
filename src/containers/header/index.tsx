@@ -16,6 +16,7 @@ import {
   handleFetchDataSourceList,
   handleCloudSyncFunc,
   handleFetchUserInfo,
+  handleReadingBook,
 } from "../../store/actions";
 import { stateType } from "../../store";
 import Header from "./component";
@@ -28,7 +29,7 @@ const mapStateToProps = (state: stateType) => {
 
     isCollapsed: state.sidebar.isCollapsed,
     isNewWarning: state.manager.isNewWarning,
-
+    currentBook: state.book.currentBook,
     mode: state.sidebar.mode,
     isAuthed: state.manager.isAuthed,
     defaultSyncOption: state.backupPage.defaultSyncOption,
@@ -54,6 +55,7 @@ const actionCreator = {
   handleFetchDataSourceList,
   handleCloudSyncFunc,
   handleFetchUserInfo,
+  handleReadingBook,
 };
 export default connect(
   mapStateToProps,

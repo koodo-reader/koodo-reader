@@ -242,6 +242,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isMobile: "no",
           isIndent: ConfigService.getReaderConfig("isIndent"),
           isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
+          isBionic: ConfigService.getReaderConfig("isBionic"),
           password: getPdfPassword(this.props.currentBook),
           scale: parseFloat(this.props.scale),
           isConvertPDF: ConfigService.getReaderConfig("isConvertPDF"),
@@ -267,7 +268,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           titleSizeValue:
             ConfigService.getReaderConfig("titleSizeValue") || "1.2",
           isScannedPDF:
-            this.props.currentBook.description.indexOf("scanned PDF") > -1
+            this.props.currentBook.description.indexOf("scanned") > -1
               ? "yes"
               : "no",
         },
@@ -498,6 +499,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           return;
         }
         let selection = doc!.getSelection();
+
         if (!selection || selection.rangeCount === 0) return;
         var rect = selection.getRangeAt(0).getBoundingClientRect();
         this.setState({ rect });

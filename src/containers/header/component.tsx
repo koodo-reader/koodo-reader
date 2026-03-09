@@ -28,7 +28,7 @@ import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import {
   addChatBox,
-  checkBrokenData,
+  checkBrokenDatabase,
   checkMissingBook,
   generateSyncRecord,
   getChatLocale,
@@ -82,9 +82,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(path.join(dirPath, "data", "book"), { recursive: true });
-        console.info("folder created");
-      } else {
-        console.info("folder exist");
       }
 
       if (
@@ -154,6 +151,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         // ConfigService.setReaderConfig("isFinishWebReading", "no");
       }
     });
+    let willAutoSync =
+      ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
+      ConfigService.getItem("defaultSyncOption");
+    if (!willAutoSync) {
+      this.handleOpenLastReadBook();
+    }
   }
   async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<HeaderProps>,
@@ -179,6 +182,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ) {
         this.setState({ isSync: true });
         await this.handleCloudSync();
+        await this.handleOpenLastReadBook();
       }
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
@@ -188,6 +192,31 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     }
   }
+  handleOpenLastReadBook = async () => {
+    let filePath = "";
+    //open book when app start
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      filePath = ipcRenderer.sendSync("check-file-data");
+    }
+    if (
+      ConfigService.getReaderConfig("isOpenBook") === "yes" &&
+      !this.props.currentBook.key &&
+      !filePath
+    ) {
+      let lastReadBookKey = ConfigService.getAllListConfig("recentBooks")[0];
+      if (lastReadBookKey) {
+        let fullBook = await DatabaseService.getRecord(
+          lastReadBookKey,
+          "books"
+        );
+        if (fullBook) {
+          this.props.handleReadingBook(fullBook);
+          BookUtil.redirectBook(fullBook);
+        }
+      }
+    }
+  };
   handleFinishReading = async () => {
     if (
       ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
@@ -324,7 +353,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       return false;
     }
     await checkMissingBook();
-    let checkResult = await checkBrokenData();
+    let checkResult = await checkBrokenDatabase();
     if (checkResult) {
       toast.error(
         this.props.t(

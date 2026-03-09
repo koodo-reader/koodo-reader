@@ -3,6 +3,7 @@ import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
 import { handleExitFullScreen, handleFullScreen, sleep } from "../common";
 import Hammer from "hammerjs";
+import TTSUtil from "./ttsUtil";
 declare var window: any;
 
 let throttleTime =
@@ -71,7 +72,24 @@ const handleShortcut = (event: any) => {
     }
   }
   if (event.keyCode === 27) {
-    ConfigService.setReaderConfig("isFullscreen", "no");
+    if (ConfigService.getReaderConfig("isFullscreen") === "yes") {
+      ConfigService.setReaderConfig("isFullscreen", "no");
+      handleExitFullScreen();
+    } else {
+      ConfigService.setReaderConfig("isFullscreen", "no");
+      window.speechSynthesis && window.speechSynthesis.cancel();
+      TTSUtil.pauseAudio();
+      if (isElectron) {
+        if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
+          window.require("electron").ipcRenderer.invoke("exit-tab", "ping");
+        } else {
+          window.close();
+        }
+      } else {
+        ConfigService.setReaderConfig("isFinishWebReading", "yes");
+        window.close();
+      }
+    }
   }
   if (event.keyCode === 122) {
     if (isElectron) {

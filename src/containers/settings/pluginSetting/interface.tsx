@@ -26,7 +26,6 @@ export interface SettingInfoState {
   isPreventTrigger: boolean;
   appSkin: string;
   storageLocation: string;
-  isOpenBook: boolean;
   isDisablePopup: boolean;
   isDeleteShelfBook: boolean;
   isOpenInMain: boolean;

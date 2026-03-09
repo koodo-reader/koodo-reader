@@ -41,3 +41,15 @@
   margin-left: 15px;
   font-weight: 500;
 }
+
+.export-action-name {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.export-format-submenu-action {
+  width: 120px;
+  z-index: 10;
+}

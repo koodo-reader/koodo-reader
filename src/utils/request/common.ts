@@ -6,6 +6,9 @@ import {
   TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getServerRegion, reloadManager } from "../common";
+import { resetReaderRequest } from "./reader";
+import { resetUserRequest } from "./user";
+import { resetThirdpartyRequest } from "./thirdparty";
 const PUBLIC_URL = "https://api.koodoreader.com";
 const CN_PUBLIC_URL = "https://api.koodoreader.cn";
 export const getPublicUrl = () => {
@@ -53,4 +56,7 @@ export const handleClearToken = async () => {
   }
   ConfigService.removeItem("defaultSyncOption");
   ConfigService.removeItem("dataSourceList");
+  resetReaderRequest();
+  resetUserRequest();
+  resetThirdpartyRequest();
 };

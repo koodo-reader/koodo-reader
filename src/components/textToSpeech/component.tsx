@@ -89,6 +89,7 @@ class TextToSpeech extends React.Component<
       let voiceName = ConfigService.getReaderConfig("voiceName");
       let voiceEngine = ConfigService.getReaderConfig("voiceEngine");
       let voiceIndex = parseInt(ConfigService.getReaderConfig("voiceIndex"));
+
       if (
         !voiceName &&
         ConfigService.getReaderConfig("voiceIndex") &&
@@ -101,15 +102,20 @@ class TextToSpeech extends React.Component<
             : this.voices[0].name
         );
       }
-      if (!voiceEngine && ConfigService.getReaderConfig("voiceName")) {
-        let voice = this.voices.find(
-          (item) => item.name === ConfigService.getReaderConfig("voiceName")
-        );
+      if (!voiceEngine && voiceName) {
+        let voice = this.voices.find((item) => item.name === voiceName);
         if (voice && voice.plugin) {
           ConfigService.setReaderConfig("voiceEngine", voice.plugin);
         } else {
           ConfigService.setReaderConfig("voiceEngine", "system");
         }
+      }
+      if (!voiceName && !voiceEngine && this.voices.length > 0) {
+        ConfigService.setReaderConfig("voiceName", this.voices[0].name);
+        ConfigService.setReaderConfig(
+          "voiceEngine",
+          this.voices[0].plugin || "system"
+        );
       }
     }
   }
@@ -139,20 +145,7 @@ class TextToSpeech extends React.Component<
         toast.loading(this.props.t("Loading audio, please wait..."), {
           id: "tts-load",
         });
-        let res = await fetchUserInfo();
-        if (res.code === 200) {
-          if (res.data && res.data.type !== "pro") {
-            toast.error(
-              this.props.t(
-                "AI voice is only available for Pro users, please upgrade to Pro to use this feature"
-              ),
-              {
-                id: "tts-load",
-              }
-            );
-            return;
-          }
-        }
+        await fetchUserInfo();
       }
       if (
         ConfigService.getReaderConfig("voiceEngine") ===
@@ -172,7 +165,10 @@ class TextToSpeech extends React.Component<
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
     let voiceName = ConfigService.getReaderConfig("voiceName");
-    if (this.customVoices.find((item) => item.name === voiceName)) {
+    if (
+      voiceName &&
+      this.customVoices.find((item) => item.name === voiceName)
+    ) {
       await this.handleCustomRead(0);
     } else {
       await this.handleSystemRead(0);
@@ -272,9 +268,11 @@ class TextToSpeech extends React.Component<
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
-        lastVisibleTextList = splitSentences(
-          visibleTextList[visibleTextList.length - 1]
-        );
+        let rawNodeList = visibleTextList.map((text) => {
+          return splitSentences(text);
+        });
+
+        lastVisibleTextList = rawNodeList.flat();
       }
 
       if (
@@ -334,9 +332,11 @@ class TextToSpeech extends React.Component<
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
-        lastVisibleTextList = splitSentences(
-          visibleTextList[visibleTextList.length - 1]
-        );
+        let rawNodeList = visibleTextList.map((text) => {
+          return splitSentences(text);
+        });
+
+        lastVisibleTextList = rawNodeList.flat();
       }
       if (
         this.nodeList[index] ===

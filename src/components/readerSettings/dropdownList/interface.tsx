@@ -4,6 +4,7 @@ export interface DropdownListProps {
 }
 export interface DropdownListState {
   currentFontFamilyIndex: number;
+  currentSubFontFamilyIndex: number;
   currentLineHeightIndex: number;
   currentTextAlignIndex: number;
   chineseConversionIndex: number;

@@ -1,6 +1,6 @@
 import BookUtil from "./bookUtil";
 import { isElectron } from "react-device-detect";
-import { getStorageLocation } from "../common";
+import { checkMissingBook, getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
 import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
@@ -15,6 +15,7 @@ import i18n from "../../i18n";
 declare var window: any;
 
 export const backup = async (service: string): Promise<Boolean> => {
+  await checkMissingBook();
   let fileName = "data.zip";
   if (service === "local") {
     let year = new Date().getFullYear(),

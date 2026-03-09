@@ -3,7 +3,11 @@
   height: 100%;
 }
 .arrow-text {
-  font-size: 20px;
+  font-size: 26px;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.4;
 }
 
 .auth-page-close-icon {
@@ -24,21 +28,18 @@
   left: 0px;
   z-index: 9;
 }
-@keyframes fade-in-out {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
 .drag-info {
-  width: 200px;
-  height: 300px;
   position: absolute;
-  top: 80px;
-  right: 0px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 360px;
+  padding: 48px 36px;
   text-align: center;
+  border: 3px dashed rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
 }
 .waring-title {
   text-align: center;

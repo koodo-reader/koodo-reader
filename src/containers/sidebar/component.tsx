@@ -355,7 +355,12 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                   id="sidebar-new-shelf"
                   className="tag-list-item-new"
                   onChange={(event) => {
-                    this.setState({ newShelfName: event.target.value });
+                    // Remove special characters from the shelf name
+                    const sanitizedValue = event.target.value.replace(
+                      /[\[\]{}",:\/\\|<>*?]/g,
+                      ""
+                    );
+                    this.setState({ newShelfName: sanitizedValue });
                   }}
                   onKeyDown={(event) => {
                     if (event.key === "Enter") {

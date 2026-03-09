@@ -74,6 +74,7 @@ class SupportDialog extends React.Component<
                         this.props.handleFetchDataSourceList();
                         this.props.handleFetchDefaultSyncOption();
                         this.props.handleLoginOptionList([]);
+                        this.props.handleShowSupport(false);
                         toast.success(this.props.t("Log out successful"));
                         this.handleClose();
                         this.setState({ isExitPro: false });
@@ -206,8 +207,6 @@ class SupportDialog extends React.Component<
                           });
                           if (response.code === 200) {
                             this.props.handleFetchUserInfo();
-                            let userRequest = await getUserRequest();
-                            await userRequest.refreshUserToken();
                             toast.success(this.props.t("Redeem successful"), {
                               id: "redeem-code",
                             });
@@ -254,19 +253,10 @@ class SupportDialog extends React.Component<
                                     duration: 8000,
                                   }
                                 );
-                              } else if (getServerRegion() === "china") {
-                                toast(
-                                  this.props.t(
-                                    "If you have purchased the code directly from our website, please redeem with an account registered in global server region"
-                                  ),
-                                  {
-                                    duration: 8000,
-                                  }
-                                );
                               } else {
                                 toast(
                                   this.props.t(
-                                    "If you have purchased the code from Tabao store, please redeem with an account registered in Chinese server region"
+                                    "Please make sure you entered the correct redemption code and the code matches your server region, if you have any questions, please contact our support team"
                                   ),
                                   {
                                     duration: 8000,
@@ -325,8 +315,6 @@ class SupportDialog extends React.Component<
                               );
                             } else {
                               this.props.handleFetchUserInfo();
-                              let userRequest = await getUserRequest();
-                              await userRequest.refreshUserToken();
                               toast.success(
                                 this.props.t("Thanks for your support"),
                                 {

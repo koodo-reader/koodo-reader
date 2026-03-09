@@ -6,6 +6,7 @@
 }
 .trans-box {
   height: calc(100% - 40px);
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,6 +18,8 @@
   height: calc(100% - 40px);
   margin: 5px;
   margin-top: 35px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .original-text-box,
 .trans-text-box {
