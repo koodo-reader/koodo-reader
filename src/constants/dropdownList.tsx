@@ -2,7 +2,7 @@ import i18n from "../i18n";
 
 export const dropdownList = [
   {
-    title: "Font family",
+    title: "Default font family",
     value: "fontFamily",
     option: [
       { label: "Built-in font", value: "Built-in font" },
