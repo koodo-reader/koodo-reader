@@ -326,10 +326,6 @@ class TextToSpeech extends React.Component<
 
     if (res === "start") {
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
-      console.log(
-        await this.props.htmlBook.rendition.visibleText(),
-        "visibleTextList"
-      );
       let lastVisibleTextList = visibleTextList;
       if (
         this.props.currentBook.format === "PDF" &&
@@ -342,7 +338,6 @@ class TextToSpeech extends React.Component<
 
         lastVisibleTextList = rawNodeList.flat();
       }
-      console.log(this.nodeList, lastVisibleTextList);
       if (
         this.nodeList[index] ===
         lastVisibleTextList[lastVisibleTextList.length - 1]
