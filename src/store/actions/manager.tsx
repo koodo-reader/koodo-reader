@@ -6,7 +6,7 @@ import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
 import DatabaseService from "../../utils/storage/databaseService";
-import { fetchUserInfo } from "../../utils/request/user";
+import { fetchUserInfo, getUserRequest } from "../../utils/request/user";
 import {
   officialDictList,
   officialTranList,
@@ -244,6 +244,16 @@ export function handleFetchUserInfo() {
     ) {
       dispatch(handleShowSupport(true));
     }
+    if (userInfo && userInfo.valid_until && userInfo.token_valid_until) {
+      if (
+        userInfo.valid_until > 0 &&
+        userInfo.token_valid_until > 0 &&
+        userInfo.valid_until > userInfo.token_valid_until
+      ) {
+        let userRequest = await getUserRequest();
+        await userRequest.refreshUserToken();
+      }
+    }
     dispatch(handleUserInfo(userInfo));
   };
 }
@@ -253,7 +263,10 @@ export function handleFetchPlugins() {
       try {
         TokenService.getToken("is_authed").then((value) => {
           let isAuthed = value === "yes";
-          if (isAuthed) {
+          if (
+            isAuthed &&
+            ConfigService.getReaderConfig("isDisableAI") !== "yes"
+          ) {
             let dictPlugin = new PluginModel(
               "official-ai-dict-plugin",
               "dictionary",

@@ -69,6 +69,8 @@ class AccountSetting extends React.Component<
           "Your Pro trial has expired, please renew it to continue using the Pro features"
         )
       );
+      this.props.handleSetting(false);
+      this.props.handleSettingMode("general");
     }
   }
   handleRest = (_bool: boolean) => {
@@ -545,8 +547,6 @@ class AccountSetting extends React.Component<
                   });
                   if (response.code === 200) {
                     this.props.handleFetchUserInfo();
-                    let userRequest = await getUserRequest();
-                    await userRequest.refreshUserToken();
                     toast.success(this.props.t("Redeem successful"), {
                       id: "redeem-code",
                     });
@@ -592,19 +592,10 @@ class AccountSetting extends React.Component<
                             duration: 8000,
                           }
                         );
-                      } else if (getServerRegion() === "china") {
-                        toast(
-                          this.props.t(
-                            "If you have purchased the code directly from our website, please redeem with an account registered in global server region"
-                          ),
-                          {
-                            duration: 8000,
-                          }
-                        );
                       } else {
                         toast(
                           this.props.t(
-                            "If you have purchased the code from Tabao store, please redeem with an account registered in Chinese server region"
+                            "Please make sure you entered the correct redemption code and the code matches your server region, if you have any questions, please contact our support team"
                           ),
                           {
                             duration: 8000,
@@ -884,9 +875,7 @@ class AccountSetting extends React.Component<
             <Trans>AI voice character quota</Trans>
             <div style={{ display: "flex", alignItems: "center" }}>
               <span>
-                {(this.props.userInfo && this.props.userInfo.type === "pro"
-                  ? this.props.t("Free quota")
-                  : 0) +
+                {this.props.t("Free quota") +
                   (this.props.userInfo &&
                   this.props.userInfo.tts_credits &&
                   this.props.userInfo.tts_credits > 0

@@ -155,7 +155,11 @@ class SortShelfDialog extends React.Component<
                       className="tag-list-item-new"
                       defaultValue={item.name}
                       onChange={(event) => {
-                        this.setState({ newShelfName: event.target.value });
+                        const sanitizedValue = event.target.value.replace(
+                          /[\[\]{}",:\/\\|<>*?]/g,
+                          ""
+                        );
+                        this.setState({ newShelfName: sanitizedValue });
                       }}
                       onKeyDown={(event) => {
                         if (event.key === "Enter") {

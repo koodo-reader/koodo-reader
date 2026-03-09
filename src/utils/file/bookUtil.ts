@@ -265,6 +265,7 @@ class BookUtil {
           }?title=${book.name}&file=${book.key}`,
           isMergeWord: ConfigService.getReaderConfig("isMergeWord"),
           isAutoFullscreen: ConfigService.getReaderConfig("isAutoFullscreen"),
+          isAutoMaximize: ConfigService.getReaderConfig("isAutoMaximize"),
           isPreventSleep: ConfigService.getReaderConfig("isPreventSleep"),
           isAlwaysOnTop: ConfigService.getReaderConfig("isAlwaysOnTop"),
         });
@@ -656,7 +657,7 @@ class BookUtil {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       return await ipcRenderer.invoke("custom-database-command", {
-        query: `SELECT key, format, md5 FROM books`,
+        query: `SELECT key, format, md5, path FROM books`,
         dbName: "books",
         storagePath: getStorageLocation(),
         executeType: "all",

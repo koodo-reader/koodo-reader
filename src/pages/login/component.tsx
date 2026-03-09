@@ -83,6 +83,7 @@ class Login extends React.Component<LoginProps, LoginState> {
           "Your Pro trial has expired, please renew it to continue using the Pro features"
         )
       );
+      this.props.history.push("/manager/home");
     }
   }
   handleLogin = async (code: string, service: string) => {
@@ -825,7 +826,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                       );
                     }}
                     style={{
-                      marginTop: "10px",
+                      margin: "10px",
                     }}
                   >
                     {this.props.t("Continue")}

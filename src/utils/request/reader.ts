@@ -77,11 +77,6 @@ export const getDictionary = async (word: string, from: string, to: string) => {
     return;
   } else {
     toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
-    if (response.code === 20004) {
-      toast(
-        i18n.t("Please login again to update your membership on this device")
-      );
-    }
   }
   return response;
 };
@@ -211,7 +206,13 @@ export const getTTSAudio = async (
       let result = await vexComfirmAsync(
         i18n.t(
           "You have exhausted your daily free AI voice character quota. Please purchase more quota to continue using this feature or wait until the quota resets. You can also use other TTS voices instead."
-        ),
+        ) +
+          " " +
+          (response.data && response.data.ttl
+            ? i18n.t("Your quota will be reset in", {
+                ttl: (response.data.ttl / 3600).toFixed(1),
+              })
+            : ""),
         "Purchase more quota"
       );
       if (result) {

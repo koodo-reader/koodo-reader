@@ -35,8 +35,6 @@ class GeneralSetting extends React.Component<
       isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
-      isAutoFullscreen:
-        ConfigService.getReaderConfig("isAutoFullscreen") === "yes",
       isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
       isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
@@ -52,6 +50,7 @@ class GeneralSetting extends React.Component<
         ConfigService.getReaderConfig("isAutoMaximizeWin") === "yes",
       isAutoLaunch: ConfigService.getReaderConfig("isAutoLaunch") === "yes",
       isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
+      isDisableAI: ConfigService.getReaderConfig("isDisableAI") === "yes",
       isUseOriginalName:
         ConfigService.getReaderConfig("isUseOriginalName") === "yes",
       isExportOriginalName:
@@ -188,20 +187,6 @@ class GeneralSetting extends React.Component<
       }
     }
   };
-  handleMergeWord = () => {
-    if (this.state.isOpenInMain && !this.state.isMergeWord) {
-      toast(this.props.t("Please turn off open books in the main window"));
-      return;
-    }
-    if (this.state.isAutoFullscreen && !this.state.isMergeWord) {
-      toast(this.props.t("Please turn off auto open book in full screen"));
-      return;
-    }
-    this.handleSetting("isMergeWord");
-    if (ConfigService.getReaderConfig("isMergeWord") === "yes") {
-      ConfigService.setReaderConfig("isHideBackground", "yes");
-    }
-  };
   handleOpenInMain = () => {
     if (this.state.isMergeWord && !this.state.isOpenInMain) {
       toast(this.props.t("Please turn off merge with word first"));
@@ -246,9 +231,6 @@ class GeneralSetting extends React.Component<
               className="single-control-switch"
               onClick={() => {
                 switch (item.propName) {
-                  case "isMergeWord":
-                    this.handleMergeWord();
-                    break;
                   case "isOpenInMain":
                     this.handleOpenInMain();
                     break;

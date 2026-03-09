@@ -25,7 +25,6 @@ class SettingDialog extends React.Component<
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
       isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
-      isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isDeleteShelfBook:
         ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",

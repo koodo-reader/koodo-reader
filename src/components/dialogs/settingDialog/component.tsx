@@ -36,11 +36,13 @@ class SettingDialog extends React.Component<
       isAutoFullscreen:
         ConfigService.getReaderConfig("isAutoFullscreen") === "yes",
       isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
+      isAutoMaximize: ConfigService.getReaderConfig("isAutoMaximize") === "yes",
       isLemmatizeWord:
         ConfigService.getReaderConfig("isLemmatizeWord") === "yes",
       isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
 
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
+      isManualScroll: ConfigService.getReaderConfig("isManualScroll") === "yes",
       isDisableAutoScroll:
         ConfigService.getReaderConfig("isDisableAutoScroll") === "yes",
       isDisableTrashBin:
@@ -78,11 +80,21 @@ class SettingDialog extends React.Component<
     this.props.handleFetchDefaultSyncOption();
   }
   loadFont = () => {
-    if (dropdownList[0].option.length <= 2) {
-      loadFontData().then((result) => {
-        dropdownList[0].option = dropdownList[0].option.concat(result);
-      });
-    }
+    const fontFamilyItem = dropdownList.find(
+      (item) => item.value === "fontFamily"
+    );
+    const subFontFamilyItem = dropdownList.find(
+      (item) => item.value === "subFontFamily"
+    );
+
+    loadFontData().then((result) => {
+      if (fontFamilyItem && fontFamilyItem.option.length <= 2) {
+        fontFamilyItem.option = fontFamilyItem.option.concat(result);
+      }
+      if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
+        subFontFamilyItem.option = subFontFamilyItem.option.concat(result);
+      }
+    });
   };
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));

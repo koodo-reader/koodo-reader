@@ -105,7 +105,9 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                 });
               }
             }
-            this.scrollToBottom();
+            if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
+              this.scrollToBottom();
+            }
           }
         );
         if (res.data && res.done) {
@@ -144,7 +146,9 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         //     question: "",
         //   });
         // }
-        this.scrollToBottom();
+        if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
+          this.scrollToBottom();
+        }
       }
     } catch (error) {
       toast.error(
@@ -237,7 +241,9 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       );
     }
     setTimeout(() => {
-      this.scrollToBottom();
+      if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
+        this.scrollToBottom();
+      }
     }, 100);
   };
   render() {
@@ -407,7 +413,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
               style={{
                 marginTop: "60px",
                 width: "calc(100% + 20px)",
-                height: "210px",
+                height: "calc(100% - 120px)",
                 paddingBottom: "0px",
                 paddingLeft: "0px",
                 paddingRight: "20px",

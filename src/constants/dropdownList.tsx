@@ -2,8 +2,7 @@ import i18n from "../i18n";
 
 export const dropdownList = [
   {
-    id: 1,
-    title: "Font family",
+    title: "Default font family",
     value: "fontFamily",
     option: [
       { label: "Built-in font", value: "Built-in font" },
@@ -15,7 +14,18 @@ export const dropdownList = [
     isPDF: false,
   },
   {
-    id: 2,
+    title: "CJK font family",
+    value: "subFontFamily",
+    option: [
+      { label: "Built-in font", value: "Built-in font" },
+      {
+        label: "Load local fonts",
+        value: "Load local fonts",
+      },
+    ],
+    isPDF: false,
+  },
+  {
     title: "Line height",
     value: "lineHeight",
     option: [
@@ -29,7 +39,6 @@ export const dropdownList = [
     isPDF: false,
   },
   {
-    id: 3,
     title: "Text alignment",
     value: "textAlign",
     option: [
@@ -41,7 +50,6 @@ export const dropdownList = [
     isPDF: false,
   },
   {
-    id: 4,
     title: "Conversion of Chinese",
     value: "convertChinese",
     option: [
@@ -139,6 +147,9 @@ export const speedList = {
     { label: "3", value: "3" },
     { label: "4", value: "4" },
     { label: "5", value: "5" },
+    { label: "6", value: "6" },
+    { label: "7", value: "7" },
+    { label: "8", value: "8" },
   ],
 };
 export const ocrTesseractLangList = [

@@ -51,6 +51,8 @@ let options = {
   x: parseInt(store.get("mainWinX")),
   y: parseInt(store.get("mainWinY")),
   backgroundColor: "#fff",
+  minWidth: 400,
+  minHeight: 300,
   webPreferences: {
     webSecurity: false,
     nodeIntegration: true,
@@ -79,7 +81,7 @@ if (!singleInstance) {
     }
   });
 }
-if (filePath) {
+if (filePath && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
   // Make sure the directory exists
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
@@ -106,12 +108,8 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
 };
 const getSyncUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !syncUtilCache[config.service]) {
-    const { SyncUtil } =
-      await import("./src/assets/lib/kookit-extra.min.mjs");
-    syncUtilCache[config.service] = new SyncUtil(
-      config.service,
-      config
-    );
+    const { SyncUtil } = await import("./src/assets/lib/kookit-extra.min.mjs");
+    syncUtilCache[config.service] = new SyncUtil(config.service, config);
   }
   return syncUtilCache[config.service];
 };
@@ -120,12 +118,8 @@ const removeSyncUtil = (config) => {
 };
 const getPickerUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !pickerUtilCache[config.service]) {
-    const { SyncUtil } =
-      await import("./src/assets/lib/kookit-extra.min.mjs");
-    pickerUtilCache[config.service] = new SyncUtil(
-      config.service,
-      config
-    );
+    const { SyncUtil } = await import("./src/assets/lib/kookit-extra.min.mjs");
+    pickerUtilCache[config.service] = new SyncUtil(config.service, config);
   }
   return pickerUtilCache[config.service];
 };
@@ -238,9 +232,12 @@ const createMainWin = () => {
       mainView.setBounds({ x: 0, y: 0, width: width, height: height });
     }
   });
-  mainWin.webContents.on('console-message', (event, level, message, line, sourceId) => {
-    console.log(`[Renderer Console] Message: ${message}`);
-  });
+  mainWin.webContents.on(
+    "console-message",
+    (event, level, message, line, sourceId) => {
+      console.log(`[Renderer Console] Message: ${message}`);
+    }
+  );
   //cancel-download-app
   ipcMain.handle("cancel-download-app", (event, arg) => {
     // Implement cancellation logic here
@@ -318,7 +315,8 @@ const createMainWin = () => {
     });
   });
   ipcMain.handle("open-book", (event, config) => {
-    let { url, isMergeWord, isAutoFullscreen, isPreventSleep } = config;
+    let { url, isMergeWord, isAutoFullscreen, isAutoMaximize, isPreventSleep } =
+      config;
     options.webPreferences.nodeIntegrationInSubFrames = true;
     if (isMergeWord) {
       delete options.backgroundColor;
@@ -327,6 +325,7 @@ const createMainWin = () => {
       url,
       isMergeWord: isMergeWord || "no",
       isAutoFullscreen: isAutoFullscreen || "no",
+      isAutoMaximize: isAutoMaximize || "no",
       isPreventSleep: isPreventSleep || "no",
     });
     let id;
@@ -334,21 +333,18 @@ const createMainWin = () => {
       id = powerSaveBlocker.start("prevent-display-sleep");
       console.log(powerSaveBlocker.isStarted(id));
     }
-
-    if (isAutoFullscreen === "yes") {
-      if (readerWindow) {
-        readerWindowList.push(readerWindow);
-      }
+    if (readerWindow) {
+      readerWindowList.push(readerWindow);
+    }
+    if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
       readerWindow = new BrowserWindow(options);
-      if (store.get("isAlwaysOnTop") === "yes") {
-        readerWindow.setAlwaysOnTop(true);
-      }
       readerWindow.loadURL(url);
-      readerWindow.maximize();
-    } else {
-      if (readerWindow) {
-        readerWindowList.push(readerWindow);
+      if (isAutoFullscreen === "yes") {
+        readerWindow.setFullScreen(true);
+      } else if (isAutoMaximize === "yes") {
+        readerWindow.maximize();
       }
+    } else {
       const scaleRatio = store.get("windowDisplayScale") || 1;
       const isWindowVisible = isWindowPartiallyVisible({
         x: parseInt(store.get("windowX")),
@@ -383,12 +379,12 @@ const createMainWin = () => {
             windowHeight: bounds.height,
             windowX:
               readerWindow.isMaximized() &&
-                currentDisplay.id === primaryDisplay.id
+              currentDisplay.id === primaryDisplay.id
                 ? 0
                 : bounds.x,
             windowY:
               readerWindow.isMaximized() &&
-                currentDisplay.id === primaryDisplay.id
+              currentDisplay.id === primaryDisplay.id
                 ? 0
                 : bounds.y < 0
                   ? 0
@@ -532,11 +528,16 @@ const createMainWin = () => {
     if (decrypted.startsWith("{") && decrypted.endsWith("}")) {
       return decrypted;
     } else {
-      const { safeStorage } = require("electron");
-      decrypted = safeStorage.decryptString(Buffer.from(encrypted, "base64"));
-      let newEncrypted = encrypt(decrypted, fingerprint);
-      store.set("encryptedToken", newEncrypted);
-      return decrypted;
+      try {
+        const { safeStorage } = require("electron");
+        decrypted = safeStorage.decryptString(Buffer.from(encrypted, "base64"));
+        let newEncrypted = encrypt(decrypted, fingerprint);
+        store.set("encryptedToken", newEncrypted);
+        return decrypted;
+      } catch (error) {
+        console.error("Decryption failed:", error);
+        return "{}";
+      }
     }
   });
   ipcMain.handle("get-mac", async (event, config) => {
@@ -917,12 +918,12 @@ const createMainWin = () => {
               windowHeight: bounds.height,
               windowX:
                 readerWindow.isMaximized() &&
-                  currentDisplay.id === primaryDisplay.id
+                currentDisplay.id === primaryDisplay.id
                   ? 0
                   : bounds.x,
               windowY:
                 readerWindow.isMaximized() &&
-                  currentDisplay.id === primaryDisplay.id
+                currentDisplay.id === primaryDisplay.id
                   ? 0
                   : bounds.y < 0
                     ? 0
@@ -966,14 +967,18 @@ const createMainWin = () => {
   });
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
-      const _data = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
-      );
-      if (_data && _data.filePath) {
-        filePath = _data.filePath;
-        setTimeout(() => {
-          fs.writeFileSync(path.join(dirPath, "log.json"), "", "utf-8");
-        }, 1000);
+      try {
+        const _data = JSON.parse(
+          fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
+        );
+        if (_data && _data.filePath) {
+          filePath = _data.filePath;
+          setTimeout(() => {
+            fs.writeFileSync(path.join(dirPath, "log.json"), "{}", "utf-8");
+          }, 1000);
+        }
+      } catch (error) {
+        console.error("Error reading log.json:", error);
       }
     }
 
@@ -982,11 +987,15 @@ const createMainWin = () => {
   });
   ipcMain.on("check-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
-      const _data = JSON.parse(
-        fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
-      );
-      if (_data && _data.filePath) {
-        filePath = _data.filePath;
+      try {
+        const _data = JSON.parse(
+          fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
+        );
+        if (_data && _data.filePath) {
+          filePath = _data.filePath;
+        }
+      } catch (error) {
+        console.error("Error reading log.json:", error);
       }
     }
 
@@ -1013,25 +1022,37 @@ app.on("second-instance", (event, commandLine) => {
     handleCallback(url);
   }
 });
+const serializeArg = (arg) => {
+  if (arg === null) return "null";
+  if (arg === undefined) return "undefined";
+  if (typeof arg === "object") {
+    try {
+      return JSON.stringify(arg);
+    } catch {
+      return String(arg);
+    }
+  }
+  return String(arg);
+};
 const originalConsoleLog = console.log;
 console.log = function (...args) {
   originalConsoleLog(...args); // 保留原日志
-  log.info(args.join(" ")); // 写入日志文件
+  log.info(args.map(serializeArg).join(" ")); // 写入日志文件
 };
 const originalConsoleError = console.error;
 console.error = function (...args) {
   originalConsoleError(...args); // 保留原错误日志
-  log.error(args.join(" ")); // 写入错误日志文件
+  log.error(args.map(serializeArg).join(" ")); // 写入错误日志文件
 };
 const originalConsoleWarn = console.warn;
 console.warn = function (...args) {
   originalConsoleWarn(...args); // 保留原警告日志
-  log.warn(args.join(" ")); // 写入警告日志文件
+  log.warn(args.map(serializeArg).join(" ")); // 写入警告日志文件
 };
 const originalConsoleInfo = console.info;
 console.info = function (...args) {
   originalConsoleInfo(...args); // 保留原信息日志
-  log.info(args.join(" ")); // 写入信息日志文件
+  log.info(args.map(serializeArg).join(" ")); // 写入信息日志文件
 };
 // Handle MacOS deep linking
 app.on("open-url", (event, url) => {
