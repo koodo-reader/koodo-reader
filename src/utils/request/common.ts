@@ -20,6 +20,10 @@ export const checkDeveloperUpdate = async () => {
   );
   return res.data.log;
 };
+export const getPluginList = async () => {
+  let res = await axios.get(getPublicUrl() + "/api/get_plugins");
+  return res.data.plugins;
+};
 export const uploadFile = async (url: string, file: any) => {
   return new Promise<boolean>((resolve) => {
     axios

@@ -29,6 +29,7 @@ import SyncService from "./storage/syncService";
 import localforage from "localforage";
 import { driveList } from "../constants/driveList";
 import { updateUserConfig } from "./request/user";
+import { languageCNMap, languageENMap } from "../constants/ttsList";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -1269,5 +1270,27 @@ export const isTokenExpired = async (service: string): Promise<boolean> => {
     return true;
   } else {
     return false;
+  }
+};
+export const langToName = (lang: string) => {
+  let regionCode = lang.split("-").reverse()[0];
+  let langCode = lang.split("-")[0];
+  if (!languageENMap["languages"][langCode]) {
+    return lang;
+  }
+  if (ConfigService.getReaderConfig("lang").startsWith("zh")) {
+    return (
+      languageCNMap["languages"][langCode] +
+      (languageCNMap["territories"][regionCode]
+        ? " (" + languageCNMap["territories"][regionCode] + ")"
+        : "")
+    );
+  } else {
+    return (
+      languageENMap["languages"][langCode] +
+      (languageENMap["territories"][regionCode]
+        ? " (" + languageENMap["territories"][regionCode] + ")"
+        : "")
+    );
   }
 };
