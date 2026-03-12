@@ -10,11 +10,11 @@ import { fetchUserInfo, getUserRequest } from "../../utils/request/user";
 import {
   officialDictList,
   officialTranList,
-  officialVoiceList,
 } from "../../constants/settingList";
 import toast from "react-hot-toast";
 import BookUtil from "../../utils/file/bookUtil";
 import i18n from "../../i18n";
+import { azureTTSVoiceList, officialVoiceList } from "../../constants/ttsList";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -309,22 +309,38 @@ export function handleFetchPlugins() {
               ""
             );
             pluginList.push(sumPlugin);
-            let sortedVoiceList = [...officialVoiceList];
-            if (
-              ConfigService.getReaderConfig("lang") &&
-              ConfigService.getReaderConfig("lang").startsWith("zh")
-            ) {
-              //move zh-CN to first
-              sortedVoiceList.sort((a: any, b: any) => {
-                if (a.locale === "zh-CN") {
-                  return -1;
-                } else if (b.locale === "zh-CN") {
-                  return 1;
-                } else {
-                  return 0;
-                }
-              });
-            }
+            let sortedVoiceList = [
+              ...officialVoiceList.map((item) => {
+                return {
+                  ...item,
+                  label:
+                    i18n.t("Official AI Voice") +
+                    " - " +
+                    item.displayName +
+                    " - " +
+                    item.language +
+                    " - " +
+                    (item.gender === "female"
+                      ? i18n.t("Female voice")
+                      : i18n.t("Male voice")),
+                };
+              }),
+              ...azureTTSVoiceList.map((item) => {
+                return {
+                  ...item,
+                  label:
+                    "Azure TTS" +
+                    " - " +
+                    item.displayName +
+                    " - " +
+                    item.language +
+                    " - " +
+                    (item.gender === "female"
+                      ? i18n.t("Female voice")
+                      : i18n.t("Male voice")),
+                };
+              }),
+            ];
             let voicePlugin = new PluginModel(
               "official-ai-voice-plugin",
               "voice",
@@ -339,16 +355,7 @@ export function handleFetchPlugins() {
                   ...item, // 创建新对象
                   plugin: "official-ai-voice-plugin",
                   config: {},
-                  displayName:
-                    i18n.t("Official AI Voice") +
-                    " - " +
-                    item.displayName +
-                    " - " +
-                    item.language +
-                    " - " +
-                    (item.gender === "female"
-                      ? i18n.t("Female voice")
-                      : i18n.t("Male voice")),
+                  displayName: item.label,
                 };
               }),
               "",

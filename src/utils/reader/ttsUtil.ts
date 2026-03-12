@@ -232,11 +232,8 @@ class TTSUtil {
   }
   static getVoiceList(plugins: PluginModel[]) {
     let voices = getAllVoices(plugins);
-    if (isElectron) {
-      return [...voices, { name: "Add new voice", url: "", type: "" }];
-    } else {
-      return voices;
-    }
+
+    return voices;
   }
 }
 export default TTSUtil;
