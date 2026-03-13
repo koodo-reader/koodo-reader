@@ -17,6 +17,8 @@ export interface TextToSpeechProps {
 export interface TextToSpeechState {
   isSupported: boolean;
   isAudioOn: boolean;
+  isPaused: boolean;
+  currentIndex: number;
   voiceLocale: string;
   languageList: string[];
   voiceList: any;
