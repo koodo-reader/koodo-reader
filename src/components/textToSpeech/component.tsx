@@ -28,6 +28,8 @@ class TextToSpeech extends React.Component<
     this.state = {
       isSupported: false,
       isAudioOn: false,
+      isPaused: false,
+      currentIndex: 0,
       languageList: [],
       voiceList: {},
       voiceLocale:
@@ -135,10 +137,7 @@ class TextToSpeech extends React.Component<
   }
   handleChangeAudio = async () => {
     if (this.state.isAudioOn) {
-      window.speechSynthesis && window.speechSynthesis.cancel();
-      TTSUtil.pauseAudio();
-      this.setState({ isAudioOn: false });
-      this.nodeList = [];
+      this.handleStop();
     } else {
       if (
         ConfigService.getReaderConfig("voiceEngine") ===
@@ -160,8 +159,86 @@ class TextToSpeech extends React.Component<
       this.handleStartSpeech();
     }
   };
+  handleStop = () => {
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    TTSUtil.pauseAudio();
+    this.setState({ isAudioOn: false, isPaused: false, currentIndex: 0 });
+    this.nodeList = [];
+  };
+  handlePauseResume = () => {
+    if (!this.state.isAudioOn) return;
+    if (this.state.isPaused) {
+      // Resume from current index
+      this.setState({ isPaused: false }, () => {
+        let voiceName = ConfigService.getReaderConfig("voiceName");
+        if (
+          voiceName &&
+          this.customVoices.find((item) => item.name === voiceName)
+        ) {
+          this.handleCustomRead(this.state.currentIndex);
+        } else {
+          this.handleSystemRead(this.state.currentIndex);
+        }
+      });
+    } else {
+      // Pause
+      window.speechSynthesis && window.speechSynthesis.cancel();
+      if (TTSUtil.getPlayer() && TTSUtil.getPlayer().stop) {
+        TTSUtil.getPlayer().stop();
+      }
+      this.setState({ isPaused: true });
+    }
+  };
+  handlePrevSentence = () => {
+    if (!this.state.isAudioOn || this.nodeList.length === 0) return;
+    let prevIndex = Math.max(0, this.state.currentIndex - 1);
+    // Stop current playback
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    if (TTSUtil.getPlayer() && TTSUtil.getPlayer().stop) {
+      TTSUtil.getPlayer().stop();
+    }
+    this.setState({ currentIndex: prevIndex, isPaused: false }, () => {
+      let voiceName = ConfigService.getReaderConfig("voiceName");
+      if (
+        voiceName &&
+        this.customVoices.find((item) => item.name === voiceName)
+      ) {
+        this.handleCustomRead(prevIndex);
+      } else {
+        this.handleSystemRead(prevIndex);
+      }
+    });
+  };
+  handleNextSentence = () => {
+    if (!this.state.isAudioOn || this.nodeList.length === 0) return;
+    let nextIndex = this.state.currentIndex + 1;
+    // Stop current playback
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    if (TTSUtil.getPlayer() && TTSUtil.getPlayer().stop) {
+      TTSUtil.getPlayer().stop();
+    }
+    if (nextIndex >= this.nodeList.length) {
+      // Move to next page
+      this.setState({ currentIndex: 0, isPaused: false }, async () => {
+        this.nodeList = [];
+        await this.handleAudio();
+      });
+    } else {
+      this.setState({ currentIndex: nextIndex, isPaused: false }, () => {
+        let voiceName = ConfigService.getReaderConfig("voiceName");
+        if (
+          voiceName &&
+          this.customVoices.find((item) => item.name === voiceName)
+        ) {
+          this.handleCustomRead(nextIndex);
+        } else {
+          this.handleSystemRead(nextIndex);
+        }
+      });
+    }
+  };
   handleStartSpeech = () => {
-    this.setState({ isAudioOn: true }, () => {
+    this.setState({ isAudioOn: true, isPaused: false, currentIndex: 0 }, () => {
       this.handleAudio();
     });
   };
@@ -220,6 +297,8 @@ class TextToSpeech extends React.Component<
     let speed = parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1;
     TTSUtil.setAudioPaths();
     for (let index = nodeIndex; index < this.nodeList.length; index++) {
+      if (this.state.isPaused || !this.state.isAudioOn) return;
+      this.setState({ currentIndex: index });
       let currentText = this.nodeList[index];
       let style = "background: #f3a6a68c;";
       this.props.htmlBook.rendition.highlightAudioNode(currentText, style);
@@ -264,6 +343,7 @@ class TextToSpeech extends React.Component<
         this.nodeList = [];
         return;
       }
+      if (this.state.isPaused || !this.state.isAudioOn) return;
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
       let lastVisibleTextList = visibleTextList;
       if (
@@ -312,11 +392,13 @@ class TextToSpeech extends React.Component<
     }
   }
   async handleSystemRead(index) {
+    if (this.state.isPaused || !this.state.isAudioOn) return;
     if (index >= this.nodeList.length) {
       this.nodeList = [];
       await this.handleAudio();
       return;
     }
+    this.setState({ currentIndex: index });
     let currentText = this.nodeList[index];
     let style = "background: #f3a6a68c;";
     this.props.htmlBook.rendition.highlightAudioNode(currentText, style);
@@ -468,33 +550,127 @@ class TextToSpeech extends React.Component<
   render() {
     return (
       <>
-        <div className="single-control-switch-container">
-          <span className="single-control-switch-title">
-            <Trans>Turn on text-to-speech</Trans>
-          </span>
-
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              this.handleChangeAudio();
-            }}
-            style={this.state.isAudioOn ? {} : { opacity: 0.6 }}
-          >
+        <div className="tts-player-container">
+          <div className="tts-player-controls">
             <span
-              className="single-control-button"
+              className="tts-player-btn"
+              title={this.props.t("Stop")}
+              onClick={() => this.handleStop()}
               style={
-                this.state.isAudioOn
-                  ? {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
+                !this.state.isAudioOn
+                  ? { opacity: 0.3, cursor: "not-allowed" }
+                  : {}
               }
-            ></span>
-          </span>
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="currentColor"
+              >
+                <path d="M6 6h12v12H6z" />
+              </svg>
+            </span>
+            <span
+              className="tts-player-btn"
+              title={this.props.t("Previous")}
+              onClick={() => this.handlePrevSentence()}
+              style={
+                !this.state.isAudioOn
+                  ? { opacity: 0.3, cursor: "not-allowed" }
+                  : {}
+              }
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="currentColor"
+              >
+                <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+              </svg>
+            </span>
+            <span
+              className="tts-player-btn tts-player-btn-main"
+              title={
+                !this.state.isAudioOn
+                  ? this.props.t("Play")
+                  : this.state.isPaused
+                    ? this.props.t("Resume")
+                    : this.props.t("Pause")
+              }
+              onClick={() => {
+                if (!this.state.isAudioOn) {
+                  this.handleChangeAudio();
+                } else {
+                  this.handlePauseResume();
+                }
+              }}
+            >
+              {!this.state.isAudioOn || this.state.isPaused ? (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="28"
+                  height="28"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="28"
+                  height="28"
+                  fill="currentColor"
+                >
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                </svg>
+              )}
+            </span>
+            <span
+              className="tts-player-btn"
+              title={this.props.t("Next")}
+              onClick={() => this.handleNextSentence()}
+              style={
+                !this.state.isAudioOn
+                  ? { opacity: 0.3, cursor: "not-allowed" }
+                  : {}
+              }
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="currentColor"
+              >
+                <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+              </svg>
+            </span>
+            <span
+              className="tts-player-btn"
+              title={this.props.t("Stop")}
+              onClick={() => this.handleStop()}
+              style={
+                !this.state.isAudioOn
+                  ? { opacity: 0.3, cursor: "not-allowed" }
+                  : {}
+              }
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="currentColor"
+              >
+                <path d="M6 6h12v12H6z" />
+              </svg>
+            </span>
+          </div>
+          {this.state.isAudioOn && this.nodeList.length > 0 && (
+            <div className="tts-player-info">
+              {this.state.currentIndex + 1} / {this.nodeList.length}
+            </div>
+          )}
         </div>
         <div
           className="setting-dialog-new-title"

@@ -44,3 +44,50 @@
   justify-content: flex-start;
   margin-bottom: 10px;
 }
+.tts-player-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0 6px 0;
+  width: 100%;
+}
+.tts-player-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.tts-player-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
+  opacity: 0.75;
+  user-select: none;
+}
+.tts-player-btn:hover {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.15);
+}
+.tts-player-btn-main {
+  width: 46px;
+  height: 46px;
+  opacity: 1;
+  border-radius: 50%;
+  background: rgba(128, 128, 128, 0.12);
+}
+.tts-player-btn-main:hover {
+  background: rgba(128, 128, 128, 0.25);
+}
+.tts-player-info {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.6;
+  user-select: none;
+}
