@@ -9,6 +9,7 @@ import {
   getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
+  vexComfirmAsync,
   vexPromptAsync,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
@@ -95,9 +96,15 @@ class SettingDialog extends React.Component<
     );
     this.handleRest(this.state[stateName]);
   };
-  handleFillPluginConfig = async (plugin: any) => {
+  handleFillPluginConfig = async (plugin: any, configuration: string) => {
     if (!plugin || !plugin.config || typeof plugin.config !== "object") {
       return true;
+    }
+    if (configuration) {
+      let result = await vexComfirmAsync(configuration);
+      if (!result) {
+        return false;
+      }
     }
     let config = plugin.config as Record<string, any>;
     let keys = Object.keys(config).filter((key) => key && key.trim());
@@ -411,21 +418,37 @@ class SettingDialog extends React.Component<
                           plugin.type === "voice" &&
                           plugin.voiceList.length > 0
                         ) {
-                          const infoEl = document.querySelector(
-                            ".setting-dialog-info"
-                          );
-                          this.setState({ isAddNew: true }, () => {
-                            if (infoEl) infoEl.scrollTop = 0;
-                            let pluginBox = document.querySelector(
-                              "#voice-add-content-box"
-                            ) as HTMLTextAreaElement;
-                            if (pluginBox) {
-                              pluginBox.value = JSON.stringify(plugin, null, 2);
+                          toast.loading(
+                            this.props.t(
+                              "Please visit the documentation to learn how to install this plugin. Your browser will automatically open in 5 seconds"
+                            ),
+                            {
+                              duration: 5000,
+                              id: "plugin-installation",
                             }
-                          });
+                          );
+                          await new Promise((resolve) =>
+                            setTimeout(resolve, 5000)
+                          );
+                          toast.dismiss("plugin-installation");
+                          if (
+                            ConfigService.getReaderConfig("lang") &&
+                            ConfigService.getReaderConfig("lang").startsWith(
+                              "zh"
+                            )
+                          ) {
+                            openExternalUrl(getWebsiteUrl() + "/zh/plugin");
+                          } else {
+                            openExternalUrl(getWebsiteUrl() + "/en/plugin");
+                          }
                           return;
                         }
-                        if (!(await this.handleFillPluginConfig(plugin))) {
+                        if (
+                          !(await this.handleFillPluginConfig(
+                            plugin,
+                            item.configuration
+                          ))
+                        ) {
                           return;
                         }
                         if (
