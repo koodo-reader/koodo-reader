@@ -666,7 +666,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
         {this.props.currentBook.key && <Viewer {...renditionProps} />}
         {this.props.isConvertOpen && <ConvertDialog />}
-        {this.props.isSpeechOpen && <SpeechDialog />}
+        {
+          <div style={this.props.isSpeechOpen ? {} : { display: "none" }}>
+            <SpeechDialog />
+          </div>
+        }
       </div>
     );
   }

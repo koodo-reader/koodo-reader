@@ -135,68 +135,56 @@ class TextToSpeech extends React.Component<
       this.handleVoiceLocaleList();
     }
   }
-  handleChangeAudio = async () => {
-    if (this.state.isAudioOn) {
-      this.handleStop();
-    } else {
-      if (
-        ConfigService.getReaderConfig("voiceEngine") ===
-          "official-ai-voice-plugin" &&
-        this.props.isAuthed
-      ) {
-        toast.loading(this.props.t("Loading audio, please wait..."), {
-          id: "tts-load",
-        });
-        await fetchUserInfo();
-      }
-      if (
-        ConfigService.getReaderConfig("voiceEngine") ===
-          "official-ai-voice-plugin" &&
-        !this.props.isAuthed
-      ) {
-        ConfigService.setReaderConfig("voiceEngine", "system");
-      }
-      this.handleStartSpeech();
+  handleStartAudio = async () => {
+    if (
+      ConfigService.getReaderConfig("voiceEngine") ===
+        "official-ai-voice-plugin" &&
+      this.props.isAuthed
+    ) {
+      toast.loading(this.props.t("Loading audio, please wait..."), {
+        id: "tts-load",
+      });
+      await fetchUserInfo();
     }
+    if (
+      ConfigService.getReaderConfig("voiceEngine") ===
+        "official-ai-voice-plugin" &&
+      !this.props.isAuthed
+    ) {
+      ConfigService.setReaderConfig("voiceEngine", "system");
+    }
+    this.handleStartSpeech();
   };
-  handleStop = () => {
+  handlePauseAudio = async () => {
     window.speechSynthesis && window.speechSynthesis.cancel();
-    TTSUtil.pauseAudio();
+    await TTSUtil.pauseAudio();
+    this.setState({ isPaused: true });
+  };
+  handleStop = async () => {
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    await TTSUtil.stopAudio();
     this.setState({ isAudioOn: false, isPaused: false, currentIndex: 0 });
     this.nodeList = [];
   };
   handlePauseResume = () => {
-    if (!this.state.isAudioOn) return;
-    if (this.state.isPaused) {
-      // Resume from current index
-      this.setState({ isPaused: false }, () => {
-        let voiceName = ConfigService.getReaderConfig("voiceName");
-        if (
-          voiceName &&
-          this.customVoices.find((item) => item.name === voiceName)
-        ) {
-          this.handleCustomRead(this.state.currentIndex);
-        } else {
-          this.handleSystemRead(this.state.currentIndex);
-        }
-      });
-    } else {
-      // Pause
-      window.speechSynthesis && window.speechSynthesis.cancel();
-      if (TTSUtil.getPlayer() && TTSUtil.getPlayer().stop) {
-        TTSUtil.getPlayer().stop();
+    // Resume from current index
+    this.setState({ isPaused: false }, () => {
+      let voiceName = ConfigService.getReaderConfig("voiceName");
+      if (
+        voiceName &&
+        this.customVoices.find((item) => item.name === voiceName)
+      ) {
+        this.handleCustomRead(this.state.currentIndex);
+      } else {
+        this.handleSystemRead(this.state.currentIndex);
       }
-      this.setState({ isPaused: true });
-    }
+    });
   };
-  handlePrevSentence = () => {
+  handlePrevSentence = async () => {
     if (!this.state.isAudioOn || this.nodeList.length === 0) return;
     let prevIndex = Math.max(0, this.state.currentIndex - 1);
-    // Stop current playback
     window.speechSynthesis && window.speechSynthesis.cancel();
-    if (TTSUtil.getPlayer() && TTSUtil.getPlayer().stop) {
-      TTSUtil.getPlayer().stop();
-    }
+    await TTSUtil.pauseAudio();
     this.setState({ currentIndex: prevIndex, isPaused: false }, () => {
       let voiceName = ConfigService.getReaderConfig("voiceName");
       if (
@@ -209,14 +197,11 @@ class TextToSpeech extends React.Component<
       }
     });
   };
-  handleNextSentence = () => {
+  handleNextSentence = async () => {
     if (!this.state.isAudioOn || this.nodeList.length === 0) return;
     let nextIndex = this.state.currentIndex + 1;
-    // Stop current playback
     window.speechSynthesis && window.speechSynthesis.cancel();
-    if (TTSUtil.getPlayer() && TTSUtil.getPlayer().stop) {
-      TTSUtil.getPlayer().stop();
-    }
+    await TTSUtil.pauseAudio();
     if (nextIndex >= this.nodeList.length) {
       // Move to next page
       this.setState({ currentIndex: 0, isPaused: false }, async () => {
@@ -295,7 +280,10 @@ class TextToSpeech extends React.Component<
     let voiceName = ConfigService.getReaderConfig("voiceName");
     let voiceEngine = ConfigService.getReaderConfig("voiceEngine");
     let speed = parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1;
-    TTSUtil.setAudioPaths();
+    if (!this.state.isAudioOn) {
+      TTSUtil.setAudioPaths();
+    }
+
     for (let index = nodeIndex; index < this.nodeList.length; index++) {
       if (this.state.isPaused || !this.state.isAudioOn) return;
       this.setState({ currentIndex: index });
@@ -600,8 +588,10 @@ class TextToSpeech extends React.Component<
                     : this.props.t("Pause")
               }
               onClick={() => {
-                if (!this.state.isAudioOn) {
-                  this.handleChangeAudio();
+                if (!this.state.isAudioOn && !this.state.isPaused) {
+                  this.handleStartAudio();
+                } else if (!this.state.isPaused) {
+                  this.handlePauseAudio();
                 } else {
                   this.handlePauseResume();
                 }

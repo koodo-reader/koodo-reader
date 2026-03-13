@@ -173,6 +173,12 @@ class TTSUtil {
     if (this.player && this.player.stop) {
       this.player.stop();
       this.isPaused = true;
+    }
+  }
+  static async stopAudio() {
+    if (this.player && this.player.stop) {
+      this.player.stop();
+      this.isPaused = true;
       setTimeout(() => {
         this.clearAudioPaths();
         this.audioPaths = [];
