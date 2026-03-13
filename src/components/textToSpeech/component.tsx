@@ -23,13 +23,13 @@ class TextToSpeech extends React.Component<
   voices: any;
   customVoices: any;
   nativeVoices: any;
-  voiceList: any;
-  languageList: string[];
   constructor(props: TextToSpeechProps) {
     super(props);
     this.state = {
       isSupported: false,
       isAudioOn: false,
+      languageList: [],
+      voiceList: {},
       voiceLocale:
         ConfigService.getReaderConfig("voiceLocale") || navigator.language,
     };
@@ -37,8 +37,6 @@ class TextToSpeech extends React.Component<
     this.voices = [];
     this.customVoices = [];
     this.nativeVoices = [];
-    this.voiceList = {};
-    this.languageList = [];
   }
   async componentDidMount() {
     if ("speechSynthesis" in window) {
@@ -54,14 +52,12 @@ class TextToSpeech extends React.Component<
         if (synth) {
           id = setInterval(() => {
             if (synth.getVoices().length !== 0) {
+              let voices = synth.getVoices();
               resolve(
-                synth.getVoices().map((item) => {
-                  return {
-                    ...item,
-                    name: item.name,
-                    displayName: item.name,
-                    locale: item.lang,
-                  };
+                voices.map((item) => {
+                  item.displayName = item.name;
+                  item.locale = item.lang;
+                  return item;
                 })
               );
               clearInterval(id);
@@ -73,6 +69,7 @@ class TextToSpeech extends React.Component<
       });
     };
     this.nativeVoices = await setSpeech();
+    console.log(this.nativeVoices, "nativeVoices");
     if (isElectron) {
       this.customVoices = TTSUtil.getVoiceList(this.props.plugins);
       this.voices = [...this.nativeVoices, ...this.customVoices];
@@ -447,7 +444,6 @@ class TextToSpeech extends React.Component<
       }
       voiceList[voice.locale].push(voice);
     });
-    this.voiceList = voiceList;
     let languageList: string[] = [];
     for (let voice of totalVoiceList) {
       if (!languageList.includes(voice.locale)) {
@@ -467,8 +463,7 @@ class TextToSpeech extends React.Component<
         return a.lang.localeCompare(b.lang);
       })
       .map((item) => item.lang);
-    console.log(this.voiceList, this.languageList);
-    this.languageList = languageList;
+    this.setState({ languageList, voiceList });
   };
   render() {
     return (
@@ -520,7 +515,7 @@ class TextToSpeech extends React.Component<
               this.setState({ voiceLocale: event.target.value });
             }}
           >
-            {this.languageList.map((item) => {
+            {this.state.languageList.map((item) => {
               return (
                 <option
                   value={item}
@@ -568,7 +563,7 @@ class TextToSpeech extends React.Component<
               }
             }}
           >
-            {(this.voiceList[this.state.voiceLocale] || this.voices).map(
+            {(this.state.voiceList[this.state.voiceLocale] || this.voices).map(
               (item) => {
                 return (
                   <option

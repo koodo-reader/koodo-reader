@@ -18,4 +18,6 @@ export interface TextToSpeechState {
   isSupported: boolean;
   isAudioOn: boolean;
   voiceLocale: string;
+  languageList: string[];
+  voiceList: any;
 }
