@@ -31,6 +31,7 @@ const initState = {
   section: null,
   readerMode: "double",
   isConvertOpen: false,
+  isSpeechOpen: false,
   isNavLocked: ConfigService.getReaderConfig("isNavLocked") === "yes",
   isSettingLocked: ConfigService.getReaderConfig("isSettingLocked") === "yes",
   isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
@@ -74,6 +75,11 @@ export function reader(
       return {
         ...state,
         isConvertOpen: action.payload,
+      };
+    case "HANDLE_SPEECH_DIALOG":
+      return {
+        ...state,
+        isSpeechOpen: action.payload,
       };
     case "HANDLE_CURRENT_CHAPTER_INDEX":
       return {
