@@ -4,7 +4,6 @@ import { Trans } from "react-i18next";
 import _ from "underscore";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
-import { marked } from "marked";
 import {
   checkPlugin,
   getWebsiteUrl,
@@ -55,7 +54,10 @@ class SettingDialog extends React.Component<
       activePluginTab: "translation",
     };
   }
-  async componentDidMount() {
+  componentDidMount() {
+    this.handleGetPluginList();
+  }
+  handleGetPluginList = async () => {
     let plugins = await getPluginList();
     if (plugins) {
       let installedPluginKeys = this.props.plugins.map((item) => item.key);
@@ -80,8 +82,7 @@ class SettingDialog extends React.Component<
       });
       this.setState({ availablePlugins: pluginList });
     }
-  }
-
+  };
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
   };
@@ -240,6 +241,7 @@ class SettingDialog extends React.Component<
                       await DatabaseService.deleteRecord(item.key, "plugins");
                       this.props.handleFetchPlugins();
                       toast.success(this.props.t("Deletion successful"));
+                      this.handleGetPluginList();
                     }}
                   >
                     <Trans>Delete</Trans>
@@ -263,7 +265,7 @@ class SettingDialog extends React.Component<
               this.setState({ isAddNew: true });
             }}
           >
-            <Trans>Not installed</Trans>
+            <Trans>Plugin market</Trans>
           </span>
         </div>
         <div className="plugin-tab-bar">
@@ -399,7 +401,8 @@ class SettingDialog extends React.Component<
                         }
                         await DatabaseService.saveRecord(plugin, "plugins");
                         this.props.handleFetchPlugins();
-                        toast.success(this.props.t("Installation successful"));
+                        toast.success(this.props.t("Addition successful"));
+                        this.handleGetPluginList();
                       }}
                     >
                       <Trans>Install</Trans>
