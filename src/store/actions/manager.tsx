@@ -363,6 +363,46 @@ export function handleFetchPlugins() {
             );
             pluginList.push(voicePlugin);
             dispatch(handlePlugins(pluginList));
+          } else if (isAuthed) {
+            let sortedVoiceList = [
+              ...azureTTSVoiceList.map((item) => {
+                return {
+                  ...item,
+                  label:
+                    "Azure TTS" +
+                    " - " +
+                    item.displayName +
+                    " - " +
+                    item.language +
+                    " - " +
+                    (item.gender === "female"
+                      ? i18n.t("Female voice")
+                      : i18n.t("Male voice")),
+                };
+              }),
+            ];
+            let voicePlugin = new PluginModel(
+              "official-ai-voice-plugin",
+              "voice",
+              "Official AI Voice",
+              "speaker",
+              "1.0.0",
+              "",
+              {},
+              {},
+              sortedVoiceList.map((item: any) => {
+                return {
+                  ...item, // 创建新对象
+                  plugin: "official-ai-voice-plugin",
+                  config: {},
+                  displayName: item.label,
+                };
+              }),
+              "",
+              ""
+            );
+            pluginList.push(voicePlugin);
+            dispatch(handlePlugins(pluginList));
           } else {
             dispatch(handlePlugins(pluginList));
           }
