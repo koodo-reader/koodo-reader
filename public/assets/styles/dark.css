@@ -164,6 +164,12 @@ a {
   background: rgba(47, 52, 55, 1);
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
 }
+.plugin-tab-bar {
+  background: rgba(47, 52, 55, 1);
+}
+.plugin-tab-item-active {
+  background: rgba(255, 255, 255, 0.12);
+}
 .book-item-image,
 .book-item-cover,
 .book-cover,

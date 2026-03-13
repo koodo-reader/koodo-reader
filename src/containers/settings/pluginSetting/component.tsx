@@ -4,6 +4,7 @@ import { Trans } from "react-i18next";
 import _ from "underscore";
 import { themeList } from "../../../constants/themeList";
 import toast from "react-hot-toast";
+import { marked } from "marked";
 import {
   checkPlugin,
   getWebsiteUrl,
@@ -20,6 +21,10 @@ class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
 > {
+  private translationRef = React.createRef<HTMLDivElement>();
+  private dictionaryRef = React.createRef<HTMLDivElement>();
+  private voiceRef = React.createRef<HTMLDivElement>();
+
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
@@ -47,6 +52,7 @@ class SettingDialog extends React.Component<
       loginConfig: {},
       availablePlugins: [],
       expandedPluginKey: null,
+      activePluginTab: "translation",
     };
   }
   async componentDidMount() {
@@ -56,6 +62,22 @@ class SettingDialog extends React.Component<
       let pluginList = plugins.filter(
         (item: any) => !installedPluginKeys.includes(item.plugin.identifier)
       );
+      const typeOrder: Record<string, number> = {
+        translation: 0,
+        dictionary: 1,
+        voice: 2,
+      };
+      pluginList.sort((a: any, b: any) => {
+        const aOrder =
+          typeOrder[a.plugin.type] !== undefined
+            ? typeOrder[a.plugin.type]
+            : 99;
+        const bOrder =
+          typeOrder[b.plugin.type] !== undefined
+            ? typeOrder[b.plugin.type]
+            : 99;
+        return aOrder - bOrder;
+      });
       this.setState({ availablePlugins: pluginList });
     }
   }
@@ -244,12 +266,68 @@ class SettingDialog extends React.Component<
             <Trans>Not installed</Trans>
           </span>
         </div>
+        <div className="plugin-tab-bar">
+          {(["translation", "dictionary", "voice"] as const).map((type) => {
+            const labelMap: Record<string, string> = {
+              translation: this.props.t("Translation"),
+              dictionary: this.props.t("Dictionary"),
+              voice: this.props.t("Voice"),
+            };
+            const refMap: Record<string, React.RefObject<HTMLDivElement>> = {
+              translation: this.translationRef,
+              dictionary: this.dictionaryRef,
+              voice: this.voiceRef,
+            };
+            return (
+              <div
+                key={type}
+                className={`plugin-tab-item${this.state.activePluginTab === type ? " plugin-tab-item-active" : ""}`}
+                onClick={() => {
+                  this.setState({ activePluginTab: type });
+                  const ref = refMap[type].current;
+                  if (ref) {
+                    const scrollContainer = document.querySelector(
+                      ".setting-dialog-info"
+                    ) as HTMLElement;
+                    if (scrollContainer) {
+                      const containerRect =
+                        scrollContainer.getBoundingClientRect();
+                      const refRect = ref.getBoundingClientRect();
+                      const tabBarHeight = 40;
+                      scrollContainer.scrollTop +=
+                        refRect.top - containerRect.top - tabBarHeight;
+                    }
+                  }
+                }}
+              >
+                {labelMap[type]}
+              </div>
+            );
+          })}
+        </div>
         {this.state.availablePlugins &&
-          this.state.availablePlugins.map((item: any) => {
+          this.state.availablePlugins.map((item: any, index: number) => {
             const isExpanded =
               this.state.expandedPluginKey === item.plugin.identifier;
+            const type = item.plugin.type;
+            const prevType =
+              index > 0
+                ? this.state.availablePlugins[index - 1].plugin.type
+                : null;
+            const isFirstOfType = type !== prevType;
+            const sectionRef =
+              type === "translation"
+                ? this.translationRef
+                : type === "dictionary"
+                  ? this.dictionaryRef
+                  : type === "voice"
+                    ? this.voiceRef
+                    : null;
             return (
               <div key={item.plugin.key}>
+                {isFirstOfType && sectionRef && (
+                  <div ref={sectionRef} className="plugin-section-anchor" />
+                )}
                 <div className="setting-dialog-new-title">
                   <span>
                     <span
@@ -374,7 +452,10 @@ class SettingDialog extends React.Component<
                           style={{
                             whiteSpace: "pre-wrap",
                             wordBreak: "break-word",
+                            cursor: "text",
+                            userSelect: "text",
                           }}
+                          onClick={(e) => e.stopPropagation()}
                         >
                           {item.configuration}
                         </div>
@@ -409,7 +490,10 @@ class SettingDialog extends React.Component<
           <span
             style={{ marginLeft: "20px", fontWeight: "bold" }}
             onClick={async () => {
-              this.setState({ isAddNew: true });
+              const infoEl = document.querySelector(".setting-dialog-info");
+              this.setState({ isAddNew: true }, () => {
+                if (infoEl) infoEl.scrollTop = 0;
+              });
             }}
           >
             <Trans>Add custom plugin</Trans>
