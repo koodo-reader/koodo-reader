@@ -233,6 +233,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 style={{ position: "static", transform: "rotate(0deg)" }}
               >
                 <span
+                  style={this.props.isSpeechOpen ? { fontWeight: "bold" } : {}}
                   className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
                 ></span>
               </div>
