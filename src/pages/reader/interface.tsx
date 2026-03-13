@@ -8,6 +8,7 @@ export interface ReaderProps {
   isNavLocked: boolean;
   isSettingLocked: boolean;
   isConvertOpen: boolean;
+  isSpeechOpen: boolean;
   isSearch: boolean;
   isAuthed: boolean;
   isHidePageButton: boolean;
@@ -21,6 +22,7 @@ export interface ReaderProps {
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;
   handleConvertDialog: (isConvertOpen: boolean) => void;
+  handleSpeechDialog: (isSpeechOpen: boolean) => void;
   handleMenuMode: (menuMode: string) => void;
   handleOriginalText: (originalText: string) => void;
   handleFetchBooks: () => void;
