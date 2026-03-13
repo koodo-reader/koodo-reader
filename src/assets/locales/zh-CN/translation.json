@@ -36,7 +36,7 @@
   "Not installed": "未安装",
   "Install": "安装",
   "Add custom plugin": "添加自定义插件",
-  "How to custom plugin": "如何添加自定义插件",
+  "How to custom plugin": "如何自定义插件",
   "Bookmark already exists": "书签已存在",
   "Access token expired, refetching token": "凭证过期，重新获取中",
   "Access token received, please continue": "获取凭证成功，请继续之前的操作",
