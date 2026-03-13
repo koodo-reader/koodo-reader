@@ -1273,7 +1273,7 @@ export const isTokenExpired = async (service: string): Promise<boolean> => {
   }
 };
 export const langToName = (lang: string) => {
-  let regionCode = lang.split("-").reverse()[0];
+  let regionCode = lang.split("-")[1];
   let langCode = lang.split("-")[0];
   if (!languageENMap["languages"][langCode]) {
     return lang;
@@ -1281,14 +1281,14 @@ export const langToName = (lang: string) => {
   if (ConfigService.getReaderConfig("lang").startsWith("zh")) {
     return (
       languageCNMap["languages"][langCode] +
-      (languageCNMap["territories"][regionCode]
+      (regionCode && languageCNMap["territories"][regionCode]
         ? " (" + languageCNMap["territories"][regionCode] + ")"
         : "")
     );
   } else {
     return (
       languageENMap["languages"][langCode] +
-      (languageENMap["territories"][regionCode]
+      (regionCode && languageENMap["territories"][regionCode]
         ? " (" + languageENMap["territories"][regionCode] + ")"
         : "")
     );
