@@ -9,6 +9,7 @@ import {
   getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
+  vexPromptAsync,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
@@ -94,6 +95,29 @@ class SettingDialog extends React.Component<
     );
     this.handleRest(this.state[stateName]);
   };
+  handleFillPluginConfig = async (plugin: any) => {
+    if (!plugin || !plugin.config || typeof plugin.config !== "object") {
+      return true;
+    }
+    let config = plugin.config as Record<string, any>;
+    let keys = Object.keys(config).filter((key) => key && key.trim());
+    if (keys.length === 0) {
+      return true;
+    }
+    for (let key of keys) {
+      let placeholder =
+        config[key] && config[key].indexOf("[") > -1 ? config[key] : "";
+      let value =
+        config[key] && config[key].indexOf("[") === -1 ? config[key] : "";
+      let input = await vexPromptAsync(`${key}`, placeholder, value);
+      if (input === false || input === null || input === undefined) {
+        return false;
+      }
+      config[key] = input;
+    }
+    plugin.config = config;
+    return true;
+  };
   render() {
     return (
       <>
@@ -133,6 +157,7 @@ class SettingDialog extends React.Component<
                       toast.error(this.props.t("Plugin verification failed"));
                       return;
                     }
+
                     if (plugin.type === "voice" && !isElectron) {
                       toast.error(
                         this.props.t("Only desktop version supports TTS plugin")
@@ -372,6 +397,7 @@ class SettingDialog extends React.Component<
                       onClick={async () => {
                         let plugin = item.plugin;
                         plugin.key = plugin.identifier;
+
                         if (plugin.type === "voice" && !isElectron) {
                           toast.error(
                             this.props.t(
@@ -380,16 +406,49 @@ class SettingDialog extends React.Component<
                           );
                           return;
                         }
+
+                        if (
+                          plugin.type === "voice" &&
+                          plugin.voiceList.length > 0
+                        ) {
+                          const infoEl = document.querySelector(
+                            ".setting-dialog-info"
+                          );
+                          this.setState({ isAddNew: true }, () => {
+                            if (infoEl) infoEl.scrollTop = 0;
+                            let pluginBox = document.querySelector(
+                              "#voice-add-content-box"
+                            ) as HTMLTextAreaElement;
+                            if (pluginBox) {
+                              pluginBox.value = JSON.stringify(plugin, null, 2);
+                            }
+                          });
+                          return;
+                        }
+                        if (!(await this.handleFillPluginConfig(plugin))) {
+                          return;
+                        }
                         if (
                           plugin.type === "voice" &&
                           plugin.voiceList.length === 0
                         ) {
-                          let voiceFunc = plugin.script;
-                          // eslint-disable-next-line no-eval
-                          eval(voiceFunc);
-                          plugin.voiceList = await global.getTTSVoice(
-                            plugin.config
-                          );
+                          try {
+                            let voiceFunc = plugin.script;
+                            // eslint-disable-next-line no-eval
+                            eval(voiceFunc);
+                            plugin.voiceList = await global.getTTSVoice(
+                              plugin.config
+                            );
+                          } catch (error) {
+                            console.error(
+                              "Failed to get TTS voice list:",
+                              error
+                            );
+                            toast.error(
+                              this.props.t("Failed to get TTS voice list")
+                            );
+                            return;
+                          }
                         }
                         if (
                           this.props.plugins.find(
