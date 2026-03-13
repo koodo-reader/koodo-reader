@@ -586,6 +586,7 @@ class TextToSpeech extends React.Component<
             )}
           </select>
         </div>
+
         <div
           className="setting-dialog-new-title"
           style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
@@ -616,6 +617,21 @@ class TextToSpeech extends React.Component<
               </option>
             ))}
           </select>
+        </div>
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <span
+            style={{
+              textDecoration: "underline",
+              cursor: "pointer",
+              textAlign: "center",
+            }}
+            onClick={() => {
+              this.props.handleSetting(true);
+              this.props.handleSettingMode("plugins");
+            }}
+          >
+            <Trans>Add new voice</Trans>
+          </span>
         </div>
       </>
     );

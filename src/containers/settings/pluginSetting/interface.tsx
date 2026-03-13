@@ -39,4 +39,6 @@ export interface SettingInfoState {
   driveConfig: any;
   loginConfig: any;
   settingLogin: string;
+  availablePlugins: PluginModel[];
+  expandedPluginKey: string | null;
 }

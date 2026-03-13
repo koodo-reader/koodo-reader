@@ -2,7 +2,11 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import TextToSpeech from "./component";
 import { stateType } from "../../store";
-import { handleFetchPlugins } from "../../store/actions";
+import {
+  handleFetchPlugins,
+  handleSetting,
+  handleSettingMode,
+} from "../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
@@ -13,7 +17,7 @@ const mapStateToProps = (state: stateType) => {
     isAuthed: state.manager.isAuthed,
   };
 };
-const actionCreator = { handleFetchPlugins };
+const actionCreator = { handleFetchPlugins, handleSetting, handleSettingMode };
 export default connect(
   mapStateToProps,
   actionCreator

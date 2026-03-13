@@ -10,6 +10,8 @@ export interface TextToSpeechProps {
   isAuthed: boolean;
   readerMode: string;
   handleFetchPlugins: () => void;
+  handleSetting: (isShow: boolean) => void;
+  handleSettingMode: (settingMode: string) => void;
   t: (title: string) => string;
 }
 export interface TextToSpeechState {
