@@ -13,6 +13,7 @@ import Book from "../../models/Book";
 import DatabaseService from "../../utils/storage/databaseService";
 import ConvertDialog from "../../components/dialogs/convertDialog";
 import { isElectron } from "react-device-detect";
+import SettingDialog from "../../components/dialogs/settingDialog";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -348,6 +349,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 </div>
               </div>
             )}
+
           {this.props.currentBook.format === "PDF" &&
             !this.props.isHidePDFConvertButton && (
               <div
@@ -376,7 +378,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             </div>
           )}
         </div>
-
+        {this.props.isSettingOpen && <SettingDialog />}
         <Toaster />
 
         <div

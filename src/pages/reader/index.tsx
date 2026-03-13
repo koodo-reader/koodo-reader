@@ -28,6 +28,7 @@ const mapStateToProps = (state: stateType) => {
     isSettingLocked: state.reader.isSettingLocked,
     isAuthed: state.manager.isAuthed,
     isSearch: state.manager.isSearch,
+    isSettingOpen: state.manager.isSettingOpen,
     scale: state.reader.scale,
     renderBookFunc: state.book.renderBookFunc,
     isHidePageButton: state.reader.isHidePageButton,
