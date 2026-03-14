@@ -21,4 +21,6 @@ export interface PopupDictState {
   dictSource: string;
   isAddNew: boolean;
   isShowUrl: boolean;
+  aiAnswer: string;
+  isAiWaiting: boolean;
 }

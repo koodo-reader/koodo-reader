@@ -7,15 +7,14 @@ import DOMPurify from "dompurify";
 import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
-import {
-  getWebsiteUrl,
-  handleContextMenu,
-  openExternalUrl,
-} from "../../../utils/common";
+import { getWebsiteUrl, openExternalUrl } from "../../../utils/common";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
-import { checkPlugin } from "../../../utils/common";
-import { getDictText } from "../../../utils/request/reader";
+import {
+  getDictText,
+  getDictionaryStream,
+} from "../../../utils/request/reader";
+import { marked } from "marked";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
@@ -29,6 +28,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       dictSource: ConfigService.getReaderConfig("dictSource") || "en",
       isAddNew: false,
       isShowUrl: false,
+      aiAnswer: "",
+      isAiWaiting: false,
     };
   }
   componentDidMount() {
@@ -68,6 +69,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   };
   handleDict = async (text: string) => {
     let dictText = "";
+    let isFullAnalysis = true;
     try {
       if (
         this.state.dictService &&
@@ -104,6 +106,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             ? "chs"
             : "eng"
         );
+        if (dictText) {
+          isFullAnalysis = false;
+        }
       }
 
       if (dictText.startsWith("https://")) {
@@ -123,6 +128,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           }
         );
       }
+      if (
+        this.props.isAuthed &&
+        ConfigService.getReaderConfig("isDisableAI") !== "yes"
+      ) {
+        this.handleDictionaryStream(text, isFullAnalysis);
+      }
     } catch (error) {
       toast.error(
         this.props.t("Error happened") +
@@ -133,6 +144,39 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       this.setState({
         dictText: this.props.t("Error happened"),
       });
+    }
+  };
+  handleDictionaryStream = async (text: string, isFullAnalysis: boolean) => {
+    try {
+      this.setState({ aiAnswer: "", isAiWaiting: true });
+      let isFirst = true;
+      console.log(
+        text,
+        ConfigService.getReaderConfig("dictTarget") || "auto",
+        navigator.language
+      );
+      let res = await getDictionaryStream(
+        text,
+        "auto",
+        navigator.language,
+        isFullAnalysis,
+        (result) => {
+          if (result && result.text) {
+            if (isFirst) {
+              this.setState({ aiAnswer: result.text, isAiWaiting: false });
+              isFirst = false;
+            } else {
+              this.setState({ aiAnswer: this.state.aiAnswer + result.text });
+            }
+          }
+        }
+      );
+      if (res && res.done) {
+        this.setState({ isAiWaiting: false });
+      }
+    } catch (error) {
+      this.setState({ isAiWaiting: false });
+      console.error(error);
     }
   };
   handleChangeDictService = (dictService: string) => {
@@ -288,6 +332,32 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 {
                   replace: (_domNode) => {},
                 }
+              )}
+              {(this.state.isAiWaiting || this.state.aiAnswer) && (
+                <div className="dict-ai-answer-container">
+                  <div className="dict-ai-answer-title">
+                    <span className="icon-idea dict-ai-answer-icon"></span>
+                    <Trans>AI Analysis</Trans>
+                  </div>
+                  {this.state.isAiWaiting && !this.state.aiAnswer ? (
+                    <div className="dict-ai-answer-waiting">
+                      <span className="icon-loading popup-assistant-loading"></span>
+                      <span>{this.props.t("Thinking, please wait...")}</span>
+                    </div>
+                  ) : (
+                    <div className="dict-ai-answer-content">
+                      {Parser(
+                        DOMPurify.sanitize(
+                          (marked.parse(this.state.aiAnswer) as string) +
+                            "<address></address>"
+                        ) || " ",
+                        {
+                          replace: (_domNode) => {},
+                        }
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           )}
