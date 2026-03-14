@@ -120,7 +120,7 @@ export const vexOpenAsync = (config: Record<string, any>, message: string) => {
       })
       .join("");
     window.vex.dialog.open({
-      unsafeMessage: message ? i18n.t(message) : "",
+      unsafeMessage: message ? i18n.t(message).replace(/\n/g, "<br>") : "",
       input: inputHtml,
       callback: function (data) {
         if (!data) {
