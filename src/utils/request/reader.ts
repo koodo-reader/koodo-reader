@@ -67,6 +67,25 @@ export const getAnswerStream = async (
   );
   return result;
 };
+export const getDictionaryStream = async (
+  word: string,
+  from: string,
+  to: string,
+  isFullAnalysis: boolean,
+  onMessage: (result) => void
+) => {
+  let readerRequest = await getReaderRequest();
+  let result = await readerRequest.getDictionaryFetch(
+    {
+      word,
+      from,
+      to,
+      is_full_analysis: isFullAnalysis,
+    },
+    onMessage
+  );
+  return result;
+};
 export const getDictionary = async (word: string, from: string, to: string) => {
   let readerRequest = await getReaderRequest();
   let response = await readerRequest.getDictionary({ word, from, to });
@@ -137,25 +156,6 @@ export const getDictText = async (word: string, from: string, to: string) => {
       `<p class="dict-learn-more">${i18n.t("Generated with AI")}</p>`;
     return dictText;
   } else {
-    toast.error(
-      i18n.t("No result found") +
-        " " +
-        i18n.t(
-          officialDictList.find((item) => item.code === from)?.nativeLang ||
-            from
-        ) +
-        " -> " +
-        i18n.t(
-          officialDictList.find((item) => item.code === to)?.nativeLang || to
-        )
-    );
-    if (from === "auto") {
-      toast(
-        i18n.t(
-          "Language auto-detection may not be accurate. Please try selecting the source language manually"
-        )
-      );
-    }
     return "";
   }
 };
