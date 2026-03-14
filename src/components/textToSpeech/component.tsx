@@ -723,6 +723,20 @@ class TextToSpeech extends React.Component<
               } else {
                 ConfigService.setReaderConfig("voiceEngine", "system");
               }
+              if (
+                voice.plugin === "official-ai-voice-plugin" &&
+                event.target.value.indexOf("Neural") > -1
+              ) {
+                toast(
+                  this.props.t(
+                    "Due to the high cost of Azure TTS voices, this voice will consume 5 times of your daily quota than normal voice"
+                  ),
+                  {
+                    duration: 8000,
+                    id: "costWarning",
+                  }
+                );
+              }
 
               if (this.state.isAudioOn) {
                 toast(this.props.t("Take effect in a while"));
