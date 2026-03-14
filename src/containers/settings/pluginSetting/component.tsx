@@ -9,8 +9,7 @@ import {
   getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
-  vexComfirmAsync,
-  vexPromptAsync,
+  vexOpenAsync,
 } from "../../../utils/common";
 import { getStorageLocation } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
@@ -100,29 +99,16 @@ class SettingDialog extends React.Component<
     if (!plugin || !plugin.config || typeof plugin.config !== "object") {
       return true;
     }
-    if (configuration) {
-      let result = await vexComfirmAsync(configuration);
-      if (!result) {
-        return false;
-      }
-    }
     let config = plugin.config as Record<string, any>;
     let keys = Object.keys(config).filter((key) => key && key.trim());
     if (keys.length === 0) {
       return true;
     }
-    for (let key of keys) {
-      let placeholder =
-        config[key] && config[key].indexOf("[") > -1 ? config[key] : "";
-      let value =
-        config[key] && config[key].indexOf("[") === -1 ? config[key] : "";
-      let input = await vexPromptAsync(`${key}`, placeholder, value);
-      if (input === false || input === null || input === undefined) {
-        return false;
-      }
-      config[key] = input;
+    let result = await vexOpenAsync(config, configuration || "");
+    if (result === false) {
+      return false;
     }
-    plugin.config = config;
+    plugin.config = { ...config, ...(result as Record<string, any>) };
     return true;
   };
   render() {
@@ -553,6 +539,21 @@ class SettingDialog extends React.Component<
           })}
 
         <div className="setting-dialog-new-plugin">
+          <span
+            style={{ textDecoration: "underline", marginRight: "20px" }}
+            onClick={() => {
+              if (
+                ConfigService.getReaderConfig("lang") &&
+                ConfigService.getReaderConfig("lang").startsWith("zh")
+              ) {
+                openExternalUrl(getWebsiteUrl() + "/zh/plugin");
+              } else {
+                openExternalUrl(getWebsiteUrl() + "/en/plugin");
+              }
+            }}
+          >
+            <Trans>Visit online version</Trans>
+          </span>
           <span
             style={{ textDecoration: "underline" }}
             onClick={() => {
