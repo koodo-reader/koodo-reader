@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import BookUtil from "../../utils/file/bookUtil";
 import i18n from "../../i18n";
 import { azureTTSVoiceList, officialVoiceList } from "../../constants/ttsList";
+import { langToName } from "../../utils/common";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -333,7 +334,7 @@ export function handleFetchPlugins() {
                     " - " +
                     item.displayName +
                     " - " +
-                    item.language +
+                    langToName(item.locale) +
                     " - " +
                     (item.gender === "female"
                       ? i18n.t("Female voice")
@@ -373,7 +374,7 @@ export function handleFetchPlugins() {
                     " - " +
                     item.displayName +
                     " - " +
-                    item.language +
+                    langToName(item.locale) +
                     " - " +
                     (item.gender === "female"
                       ? i18n.t("Female voice")
