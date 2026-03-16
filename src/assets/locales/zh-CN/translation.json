@@ -13,6 +13,8 @@
   "Synchronisation successful": "同步成功",
   "Permanently Delete": "永久删除",
   "Default search engine": "默认搜索引擎",
+  "Auto switch to shelf on startup": "启动时自动切换书架",
+  "Disabled": "禁用",
   "Built-in font": "内置字体",
   "Default font family": "默认字体",
   "Cover": "封面模式",
