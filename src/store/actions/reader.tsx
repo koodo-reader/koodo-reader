@@ -76,6 +76,12 @@ export function handleHidePageButton(isHidePageButton: boolean) {
 export function handleHideMenuButton(isHideMenuButton: boolean) {
   return { type: "HANDLE_HIDE_MENU_BUTTON", payload: isHideMenuButton };
 }
+export function handleHideAudiobookButton(isHideAudiobookButton: boolean) {
+  return {
+    type: "HANDLE_HIDE_AUDIOBOOK_BUTTON",
+    payload: isHideAudiobookButton,
+  };
+}
 export function handleHideAIButton(isHideAIButton: boolean) {
   return { type: "HANDLE_HIDE_AI_BUTTON", payload: isHideAIButton };
 }

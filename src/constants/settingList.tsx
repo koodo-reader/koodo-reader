@@ -346,6 +346,11 @@ export const readerSettingList = [
     isPDF: true,
   },
   {
+    title: "Hide audiobook button",
+    propName: "isHideAudiobookButton",
+    isPDF: true,
+  },
+  {
     title: "Hide AI button",
     propName: "isHideAIButton",
     isPDF: true,

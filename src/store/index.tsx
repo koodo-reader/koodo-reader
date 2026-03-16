@@ -105,6 +105,7 @@ export type stateType = {
     isHideBackground: boolean;
     isHidePageButton: boolean;
     isHideMenuButton: boolean;
+    isHideAudiobookButton: boolean;
     isHideAIButton: boolean;
     isHideScaleButton: boolean;
     isHidePDFConvertButton: boolean;

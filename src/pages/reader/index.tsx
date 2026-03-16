@@ -35,6 +35,7 @@ const mapStateToProps = (state: stateType) => {
     renderBookFunc: state.book.renderBookFunc,
     isHidePageButton: state.reader.isHidePageButton,
     isHideMenuButton: state.reader.isHideMenuButton,
+    isHideAudiobookButton: state.reader.isHideAudiobookButton,
     isHideAIButton: state.reader.isHideAIButton,
     isHidePDFConvertButton: state.reader.isHidePDFConvertButton,
     isHideScaleButton: state.reader.isHideScaleButton,

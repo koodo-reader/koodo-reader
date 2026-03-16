@@ -39,6 +39,8 @@ const initState = {
   isHideBackground: ConfigService.getReaderConfig("isHideBackground") === "yes",
   isHidePageButton: ConfigService.getReaderConfig("isHidePageButton") === "yes",
   isHideMenuButton: ConfigService.getReaderConfig("isHideMenuButton") === "yes",
+  isHideAudiobookButton:
+    ConfigService.getReaderConfig("isHideAudiobookButton") === "yes",
   isHideAIButton: ConfigService.getReaderConfig("isHideAIButton") === "yes",
   isHideScaleButton:
     ConfigService.getReaderConfig("isHideScaleButton") === "yes",
@@ -125,6 +127,11 @@ export function reader(
       return {
         ...state,
         isHideMenuButton: action.payload,
+      };
+    case "HANDLE_HIDE_AUDIOBOOK_BUTTON":
+      return {
+        ...state,
+        isHideAudiobookButton: action.payload,
       };
     case "HANDLE_HIDE_AI_BUTTON":
       return {

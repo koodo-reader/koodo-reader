@@ -225,18 +225,22 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               >
                 <span className="icon-dropdown next-chapter-single"></span>
               </div>
-              <div
-                className="next-chapter-single-container"
-                onClick={async () => {
-                  this.props.handleSpeechDialog(!this.props.isSpeechOpen);
-                }}
-                style={{ position: "static", transform: "rotate(0deg)" }}
-              >
-                <span
-                  style={this.props.isSpeechOpen ? { fontWeight: "bold" } : {}}
-                  className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
-                ></span>
-              </div>
+              {!this.props.isHideAudiobookButton && (
+                <div
+                  className="next-chapter-single-container"
+                  onClick={async () => {
+                    this.props.handleSpeechDialog(!this.props.isSpeechOpen);
+                  }}
+                  style={{ position: "static", transform: "rotate(0deg)" }}
+                >
+                  <span
+                    style={
+                      this.props.isSpeechOpen ? { fontWeight: "bold" } : {}
+                    }
+                    className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
+                  ></span>
+                </div>
+              )}
               {this.props.isAuthed &&
                 !this.props.isHideAIButton &&
                 ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
