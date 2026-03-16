@@ -69,7 +69,8 @@ class SettingDialog extends React.Component<
           (ConfigService.getReaderConfig("themeColor") || "default")
       ),
       isShowCustomColorPicker: false,
-      customColor:
+      customColor: ConfigService.getReaderConfig("themeColor") || "#0179CA",
+      pendingCustomColor:
         ConfigService.getReaderConfig("themeColor") || "#0179CA",
       storageLocation: getStorageLocation() || "",
       isAddNew: false,
@@ -171,7 +172,15 @@ class SettingDialog extends React.Component<
   };
   handleCustomColor = (colorObj: any) => {
     const color = colorObj.color;
-    this.setState({ customColor: color, currentThemeIndex: -1 });
+    this.setState({ pendingCustomColor: color });
+  };
+  handleConfirmCustomColor = () => {
+    const color = this.state.pendingCustomColor;
+    this.setState({
+      customColor: color,
+      currentThemeIndex: -1,
+      isShowCustomColorPicker: false,
+    });
     ConfigService.setReaderConfig("themeColor", color);
     reloadManager();
   };
@@ -451,6 +460,7 @@ class SettingDialog extends React.Component<
                     this.setState({
                       isShowCustomColorPicker:
                         !this.state.isShowCustomColorPicker,
+                      pendingCustomColor: this.state.customColor,
                     });
                   }}
                   style={{ color: this.state.customColor }}
@@ -470,23 +480,45 @@ class SettingDialog extends React.Component<
                           ? "icon-check"
                           : "icon-more"
                       }
-                      style={{ fontSize: "12px" }}
+                      style={{
+                        fontSize: "12px",
+                        position: "relative",
+                        top: "2px",
+                        left: "2px",
+                      }}
                     ></span>
                   </span>
                   <Trans>Custom</Trans>
                 </li>
               </ul>
               {this.state.isShowCustomColorPicker && (
-                <ColorPickerPanel
-                  enableAlpha={false}
-                  color={this.state.customColor}
-                  onChange={this.handleCustomColor}
-                  mode="RGB"
-                  style={{
-                    margin: "10px 0",
-                    animation: "fade-in 0.2s ease-in-out 0s 1",
-                  }}
-                />
+                <div className="custom-color-picker-container">
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ColorPickerPanel
+                      enableAlpha={false}
+                      color={this.state.pendingCustomColor}
+                      onChange={this.handleCustomColor}
+                      mode="RGB"
+                      style={{
+                        margin: "10px 0",
+                        animation: "fade-in 0.2s ease-in-out 0s 1",
+                      }}
+                    />
+                    <span
+                      className="change-location-button"
+                      onClick={this.handleConfirmCustomColor}
+                      style={{ marginBottom: "10px" }}
+                    >
+                      <Trans>Confirm</Trans>
+                    </span>
+                  </div>
+                </div>
               )}
               <div className="setting-dialog-new-title">
                 <Trans>Appearance</Trans>

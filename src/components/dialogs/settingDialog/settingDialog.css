@@ -215,6 +215,11 @@
   margin-top: 6px;
   margin-bottom: 5px;
 }
+.custom-color-picker-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 .skin-setting-item {
   display: flex;
   align-items: center;
