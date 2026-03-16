@@ -39,6 +39,11 @@ export const backup = async (service: string): Promise<Boolean> => {
       const path = window.require("path");
       targetPath = path.join(getStorageLocation(), "backup");
     }
+    toast.loading(i18n.t("Backup..."), {
+      id: "backup",
+    });
+    // 让 UI 有时间渲染 toast
+    await new Promise((resolve) => setTimeout(resolve, 100));
     await backupFromPath(targetPath, fileName);
     if (service === "local") {
       return true;

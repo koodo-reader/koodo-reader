@@ -8,6 +8,7 @@ import {
   ConfigService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
+import i18n from "../../i18n";
 declare var window: any;
 let oldConfigArr = [
   "notes.json",
@@ -32,7 +33,11 @@ export const restore = async (service: string): Promise<Boolean> => {
   if (service === "local") {
     let filePath = await ipcRenderer.invoke("select-file", "ping");
     if (!filePath) return false;
-
+    toast.loading(i18n.t("Restoring..."), {
+      id: "backup",
+    });
+    // 让 UI 有时间渲染 toast
+    await new Promise((resolve) => setTimeout(resolve, 100));
     let restoreRes = await restoreFromfilePath(filePath);
     await generateSyncRecord();
     return restoreRes;
@@ -51,6 +56,11 @@ export const restore = async (service: string): Promise<Boolean> => {
     }
     const path = window.require("path");
     let filePath = path.join(getStorageLocation(), "backup", "data.zip");
+    toast.loading(i18n.t("Restoring..."), {
+      id: "backup",
+    });
+    // 让 UI 有时间渲染 toast
+    await new Promise((resolve) => setTimeout(resolve, 100));
     let restoreRes = await restoreFromfilePath(filePath);
     await generateSyncRecord();
     return restoreRes;
