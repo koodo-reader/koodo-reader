@@ -9,8 +9,10 @@ import store from "./store";
 import Router from "./router/index";
 import StyleUtil from "./utils/reader/styleUtil";
 import { initSystemFont, initTheme } from "./utils/reader/launchUtil";
+import { migrateThemeConfig } from "./utils/reader/themeUtil";
 initTheme();
 initSystemFont();
+migrateThemeConfig();
 ReactDOM.render(
   <Provider store={store}>
     <Router />

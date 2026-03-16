@@ -6,13 +6,14 @@ import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
-import _ from "underscore";
 import {
   appearanceSettingList,
   readingSettingList,
   skinList,
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
+import { Panel as ColorPickerPanel } from "rc-color-picker";
+import "rc-color-picker/assets/index.css";
 import toast from "react-hot-toast";
 import { loadFontData } from "../../../utils/common";
 import { getStorageLocation, reloadManager } from "../../../utils/common";
@@ -62,9 +63,14 @@ class SettingDialog extends React.Component<
         ConfigService.getReaderConfig("isOverwriteLink") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
-      currentThemeIndex: _.findLastIndex(themeList, {
-        name: ConfigService.getReaderConfig("themeColor") || "default",
-      }),
+      currentThemeIndex: themeList.findIndex(
+        (item) =>
+          item.color ===
+          (ConfigService.getReaderConfig("themeColor") || "default")
+      ),
+      isShowCustomColorPicker: false,
+      customColor:
+        ConfigService.getReaderConfig("themeColor") || "#0179CA",
       storageLocation: getStorageLocation() || "",
       isAddNew: false,
       settingLogin: "",
@@ -155,9 +161,18 @@ class SettingDialog extends React.Component<
       .ipcRenderer.invoke("reset-reader-position", "ping");
     toast.success(this.props.t("Reset successful"));
   };
-  handleTheme = (name: string, index: number) => {
-    this.setState({ currentThemeIndex: index });
-    ConfigService.setReaderConfig("themeColor", name);
+  handleTheme = (color: string, index: number) => {
+    this.setState({
+      currentThemeIndex: index,
+      isShowCustomColorPicker: false,
+    });
+    ConfigService.setReaderConfig("themeColor", color);
+    reloadManager();
+  };
+  handleCustomColor = (colorObj: any) => {
+    const color = colorObj.color;
+    this.setState({ customColor: color, currentThemeIndex: -1 });
+    ConfigService.setReaderConfig("themeColor", color);
     reloadManager();
   };
   handleMergeWord = () => {
@@ -403,20 +418,76 @@ class SettingDialog extends React.Component<
                         ? "theme-setting-item active-theme-item"
                         : "theme-setting-item"
                     }
-                    key={item.name}
+                    key={item.color}
                     onClick={() => {
-                      this.handleTheme(item.name, index);
+                      this.handleTheme(item.color, index);
                     }}
-                    style={{ color: item.color }}
+                    style={{
+                      color:
+                        item.color === "default"
+                          ? "rgba(75, 75, 75, 1)"
+                          : item.color,
+                    }}
                   >
                     <span
                       className="theme-setting-dot"
-                      style={{ backgroundColor: item.color }}
+                      style={{
+                        backgroundColor:
+                          item.color === "default"
+                            ? "rgba(75, 75, 75, 1)"
+                            : item.color,
+                      }}
                     ></span>
                     <Trans>{item.title}</Trans>
                   </li>
                 ))}
+                <li
+                  className={
+                    this.state.currentThemeIndex === -1
+                      ? "theme-setting-item active-theme-item"
+                      : "theme-setting-item"
+                  }
+                  onClick={() => {
+                    this.setState({
+                      isShowCustomColorPicker:
+                        !this.state.isShowCustomColorPicker,
+                    });
+                  }}
+                  style={{ color: this.state.customColor }}
+                >
+                  <span
+                    className="theme-setting-dot"
+                    style={{
+                      backgroundColor:
+                        this.state.currentThemeIndex === -1
+                          ? this.state.customColor
+                          : undefined,
+                    }}
+                  >
+                    <span
+                      className={
+                        this.state.isShowCustomColorPicker
+                          ? "icon-check"
+                          : "icon-more"
+                      }
+                      style={{ fontSize: "12px" }}
+                    ></span>
+                  </span>
+                  <Trans>Custom</Trans>
+                </li>
               </ul>
+              {this.state.isShowCustomColorPicker && (
+                <ColorPickerPanel
+                  enableAlpha={false}
+                  color={this.state.customColor}
+                  onChange={this.handleCustomColor}
+                  mode="RGB"
+                  style={{
+                    margin: "10px 0",
+                    animation: "fade-in 0.2s ease-in-out 0s 1",
+                  }}
+                />
+              )}
               <div className="setting-dialog-new-title">
                 <Trans>Appearance</Trans>
               </div>

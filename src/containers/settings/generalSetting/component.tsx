@@ -64,9 +64,11 @@ class GeneralSetting extends React.Component<
         ConfigService.getReaderConfig("isDeleteOriginal") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
-      currentThemeIndex: _.findLastIndex(themeList, {
-        name: ConfigService.getReaderConfig("themeColor"),
-      }),
+      currentThemeIndex: themeList.findIndex(
+        (item) =>
+          item.color ===
+          (ConfigService.getReaderConfig("themeColor") || "default")
+      ),
       storageLocation: getStorageLocation() || "",
       isAddNew: false,
       startupShelf: ConfigService.getReaderConfig("startupShelf") || "",
