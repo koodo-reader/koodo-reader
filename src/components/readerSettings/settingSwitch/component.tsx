@@ -1,7 +1,6 @@
 import React from "react";
 import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
-import TextToSpeech from "../../textToSpeech";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
@@ -21,6 +20,7 @@ class SettingSwitch extends React.Component<
       isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
       isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
       isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
+      isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
       isStartFromEven:
         ConfigService.getReaderConfig("isStartFromEven") === "yes",
       isHideBackground:
@@ -64,7 +64,20 @@ class SettingSwitch extends React.Component<
   render() {
     return (
       <>
-        {this.props.plugins && <TextToSpeech />}
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <span
+            style={{
+              textDecoration: "underline",
+              cursor: "pointer",
+              textAlign: "center",
+            }}
+          >
+            <Trans>
+              The audiobook feature has been moved to the bottom right of the
+              book page
+            </Trans>
+          </span>
+        </div>
         {readerSettingList
           .filter((item) => {
             if (
@@ -108,6 +121,9 @@ class SettingSwitch extends React.Component<
                       break;
                     case "isStartFromEven":
                       this._handleChange("isStartFromEven");
+                      break;
+                    case "isHyphenation":
+                      this._handleChange("isHyphenation");
                       break;
                     case "isBionic":
                       this._handleChange("isBionic");
