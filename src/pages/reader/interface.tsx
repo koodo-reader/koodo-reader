@@ -14,6 +14,7 @@ export interface ReaderProps {
   isHidePageButton: boolean;
   isSettingOpen: boolean;
   isHideMenuButton: boolean;
+  isHideAudiobookButton: boolean;
   isHideAIButton: boolean;
   isHidePDFConvertButton: boolean;
   isHideScaleButton: boolean;
