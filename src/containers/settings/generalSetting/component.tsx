@@ -60,6 +60,8 @@ class GeneralSetting extends React.Component<
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
+      isDeleteOriginal:
+        ConfigService.getReaderConfig("isDeleteOriginal") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {
@@ -481,18 +483,18 @@ class GeneralSetting extends React.Component<
             >
               {this.props.t("Disabled")}
             </option>
-            {Object.keys(
-              ConfigService.getAllMapConfig("shelfList") || {}
-            ).map((shelfName) => (
-              <option
-                value={shelfName}
-                key={shelfName}
-                className="lang-setting-option"
-                selected={shelfName === this.state.startupShelf}
-              >
-                {shelfName}
-              </option>
-            ))}
+            {Object.keys(ConfigService.getAllMapConfig("shelfList") || {}).map(
+              (shelfName) => (
+                <option
+                  value={shelfName}
+                  key={shelfName}
+                  className="lang-setting-option"
+                  selected={shelfName === this.state.startupShelf}
+                >
+                  {shelfName}
+                </option>
+              )
+            )}
           </select>
         </div>
         <div className="setting-dialog-new-title">

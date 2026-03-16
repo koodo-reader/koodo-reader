@@ -18,6 +18,7 @@
   "Built-in font": "内置字体",
   "Default font family": "默认字体",
   "Cover": "封面",
+  "Delete original file when permanently deleting books": "永久删除图书时删除图书原始文件",
   "Bold": "字体加粗",
   "Sort by": "排序",
   "Italic": "斜体",

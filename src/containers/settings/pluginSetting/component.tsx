@@ -39,7 +39,6 @@ class SettingDialog extends React.Component<
       isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
       appSkin: ConfigService.getReaderConfig("appSkin"),
-      isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {

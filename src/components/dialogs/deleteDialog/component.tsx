@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import CoverUtil from "../../../utils/file/coverUtil";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { isElectron } from "react-device-detect";
 
 class DeleteDialog extends React.Component<
   DeleteDialogProps,
@@ -122,7 +123,20 @@ class DeleteDialog extends React.Component<
     this.props.handleFetchBooks();
   };
   deleteBook = (key: string, format: string) => {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
+      if (
+        ConfigService.getReaderConfig("isDeleteOriginal") === "yes" &&
+        isElectron
+      ) {
+        let fullBook = await DatabaseService.getRecord(key, "books");
+        if (fullBook) {
+          const fs = window.require("fs");
+          let bookPath = fullBook.path;
+          if (fs.existsSync(bookPath)) {
+            fs.unlinkSync(bookPath);
+          }
+        }
+      }
       DatabaseService.deleteRecord(key, "books")
         .then(async () => {
           await BookUtil.deleteBook(key, format);
