@@ -12,4 +12,5 @@ export interface EditDialogProps {
 
 export interface EditDialogState {
   isCheck: boolean;
+  coverPreview: string;
 }

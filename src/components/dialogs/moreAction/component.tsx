@@ -169,7 +169,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   const buffer = fs.readFileSync(filePath);
                   saveAs(
                     new Blob([buffer], { type: `image/${ext}` }),
-                    `${getBookName(this.props.currentBook)}.${ext}`
+                    `${this.props.currentBook.name}.${ext}`
                   );
                 } else if (cover.startsWith("blob:")) {
                   const ext = "jpg";
