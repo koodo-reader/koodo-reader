@@ -66,6 +66,8 @@
   "Don't automatically pre-cache books for mobile version after import": "导入图书后不自动预缓存",
   "Upon importing, books will be automatically pre-cached, enabling seamless access in the mobile version. However, this process may consume additional storage space and extend the import duration. You can still do it manually": "导入图书后，图书会自动预缓存，以便在移动端访问。但是，这个过程可能会消耗额外的存储空间并延长导入时间。你仍然可以手动预缓存",
   "Backup": "备份",
+  "Backup...": "备份中...",
+  "Restoring...": "恢复中...",
   "Test": "测试",
   "Search my library": "搜索我的书库",
   "Search my notes": "搜索我的笔记",
