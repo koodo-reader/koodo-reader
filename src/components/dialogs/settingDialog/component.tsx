@@ -447,7 +447,9 @@ class SettingDialog extends React.Component<
                             : item.color,
                       }}
                     ></span>
-                    <Trans>{item.title}</Trans>
+                    <span className="theme-setting-title">
+                      <Trans>{item.title}</Trans>
+                    </span>
                   </li>
                 ))}
                 <li
@@ -488,7 +490,9 @@ class SettingDialog extends React.Component<
                       }}
                     ></span>
                   </span>
-                  <Trans>Custom</Trans>
+                  <span className="theme-setting-title">
+                    <Trans>Custom</Trans>
+                  </span>
                 </li>
               </ul>
               {this.state.isShowCustomColorPicker && (
