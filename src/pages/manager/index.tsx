@@ -21,6 +21,8 @@ import {
   handleReadingState,
   handleShowPopupNote,
   handleSortShelfDialog,
+  handleShelf,
+  handleMode,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 
@@ -75,6 +77,8 @@ const actionCreator = {
   handleImportDialog,
   handleReadingState,
   handleShowPopupNote,
+  handleShelf,
+  handleMode,
 };
 export default connect(
   mapStateToProps,

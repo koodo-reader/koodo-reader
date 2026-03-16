@@ -49,6 +49,7 @@ export interface SettingInfoState {
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
   isAddNew: boolean;
+  startupShelf: string;
   currentThemeIndex: number;
   driveConfig: any;
   loginConfig: any;
