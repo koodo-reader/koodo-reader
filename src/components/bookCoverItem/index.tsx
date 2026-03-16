@@ -20,6 +20,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     isSelectBook: state.manager.isSelectBook,
     selectedBooks: state.manager.selectedBooks,
+    refreshBookKey: state.manager.refreshBookKey,
   };
 };
 const actionCreator = {

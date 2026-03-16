@@ -1,6 +1,9 @@
 import { connect } from "react-redux";
 import "./editDialog.css";
-import { handleFetchBooks } from "../../../store/actions";
+import {
+  handleFetchBooks,
+  handleRefreshBookCover,
+} from "../../../store/actions";
 import { handleEditDialog, handleActionDialog } from "../../../store/actions";
 import { stateType } from "../../../store";
 import EditDialog from "./component";
@@ -16,6 +19,7 @@ const actionCreator = {
   handleFetchBooks,
   handleEditDialog,
   handleActionDialog,
+  handleRefreshBookCover,
 };
 export default connect(
   mapStateToProps,

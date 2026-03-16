@@ -32,6 +32,9 @@ export function handleSearchResults(searchResults: number[]) {
 export function handleSearch(isSearch: boolean) {
   return { type: "HANDLE_SEARCH", payload: isSearch };
 }
+export function handleRefreshBookCover(key: string) {
+  return { type: "HANDLE_REFRESH_BOOK_COVER", payload: key };
+}
 export function handleUserInfo(userInfo: any) {
   return { type: "HANDLE_USER_INFO", payload: userInfo };
 }

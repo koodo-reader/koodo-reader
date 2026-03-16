@@ -5,6 +5,7 @@ export interface EditDialogProps extends RouteComponentProps<any> {
   handleFetchBooks: () => void;
   handleEditDialog: (isShow: boolean) => void;
   handleActionDialog: (isShow: boolean) => void;
+  handleRefreshBookCover: (key: string) => void;
 
   isOpenDeleteDialog: boolean;
   currentBook: BookModel;

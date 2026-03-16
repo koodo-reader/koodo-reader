@@ -57,6 +57,7 @@ export type stateType = {
     isDetailDialog: boolean;
     bookSortCode: { sort: number; order: number };
     noteSortCode: { sort: number; order: number };
+    refreshBookKey: string;
   };
   book: {
     isOpenEditDialog: boolean;

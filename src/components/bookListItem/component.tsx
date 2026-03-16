@@ -39,7 +39,11 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
     });
   }
   async UNSAFE_componentWillReceiveProps(nextProps: BookItemProps) {
-    if (nextProps.book.key !== this.props.book.key) {
+    if (
+      nextProps.book.key !== this.props.book.key ||
+      (nextProps.refreshBookKey === this.props.book.key &&
+        nextProps.refreshBookKey !== this.props.refreshBookKey)
+    ) {
       let cover = await CoverUtil.getCover(nextProps.book);
       let isCoverExist = await CoverUtil.isCoverExist(nextProps.book);
       this.setState({
