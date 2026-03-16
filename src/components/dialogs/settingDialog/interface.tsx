@@ -50,6 +50,8 @@ export interface SettingInfoState {
   isLemmatizeWord: boolean;
   isAddNew: boolean;
   currentThemeIndex: number;
+  isShowCustomColorPicker: boolean;
+  customColor: string;
   driveConfig: any;
   loginConfig: any;
   settingLogin: string;
