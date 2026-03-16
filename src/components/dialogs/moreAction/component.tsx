@@ -5,6 +5,7 @@ import { MoreActionProps, MoreActionState } from "./interface";
 import { saveAs } from "file-saver";
 import toast from "react-hot-toast";
 import BookUtil from "../../../utils/file/bookUtil";
+import CoverUtil from "../../../utils/file/coverUtil";
 import {
   exportDictionaryHistory,
   exportHighlights,
@@ -145,6 +146,55 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             >
               <p className="action-name">
                 <Trans>Export books</Trans>
+              </p>
+            </div>
+            <div
+              className="action-dialog-edit"
+              style={{ paddingLeft: "0px" }}
+              onClick={async () => {
+                const isCoverExist = await CoverUtil.isCoverExist(
+                  this.props.currentBook
+                );
+                if (!isCoverExist) {
+                  toast(this.props.t("Nothing to export"));
+                  return;
+                }
+                const cover = await CoverUtil.getCover(this.props.currentBook);
+                if (isElectron && cover.startsWith("file://")) {
+                  const fs = window.require("fs");
+                  const filePath = decodeURIComponent(
+                    cover.replace("file://", "").replace(/\//g, "\\")
+                  );
+                  const ext = filePath.split(".").pop() || "jpg";
+                  const buffer = fs.readFileSync(filePath);
+                  saveAs(
+                    new Blob([buffer], { type: `image/${ext}` }),
+                    `${getBookName(this.props.currentBook)}.${ext}`
+                  );
+                } else if (cover.startsWith("blob:")) {
+                  const ext = "jpg";
+                  saveAs(
+                    cover,
+                    `${getBookName(this.props.currentBook)}.${ext}`
+                  );
+                } else if (cover.startsWith("data:")) {
+                  const mimeMatch = cover.match(/data:(image\/\w+);base64,/);
+                  const mime = mimeMatch ? mimeMatch[1] : "image/jpeg";
+                  const ext = mime.split("/")[1] || "jpg";
+                  const base64Data = cover.split("base64,")[1];
+                  const byteArray = Uint8Array.from(atob(base64Data), (c) =>
+                    c.charCodeAt(0)
+                  );
+                  saveAs(
+                    new Blob([byteArray], { type: mime }),
+                    `${getBookName(this.props.currentBook)}.${ext}`
+                  );
+                }
+                toast.success(this.props.t("Export successful"));
+              }}
+            >
+              <p className="action-name">
+                <Trans>Export cover</Trans>
               </p>
             </div>
             <div
