@@ -139,6 +139,21 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
             </li>
             <li
               className="sort-by-category-list"
+              onClick={async () => {
+                if (
+                  ConfigService.getReaderConfig("lang") &&
+                  ConfigService.getReaderConfig("lang").startsWith("zh")
+                ) {
+                  openExternalUrl(getWebsiteUrl() + "/zh/use-shortcut");
+                } else {
+                  openExternalUrl(getWebsiteUrl() + "/en/use-shortcut");
+                }
+              }}
+            >
+              <Trans>Shortcuts</Trans>
+            </li>
+            <li
+              className="sort-by-category-list"
               onClick={() => {
                 this.handleJump(getWebsiteUrl());
               }}
