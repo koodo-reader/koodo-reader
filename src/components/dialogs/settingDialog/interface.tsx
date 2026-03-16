@@ -52,6 +52,7 @@ export interface SettingInfoState {
   currentThemeIndex: number;
   isShowCustomColorPicker: boolean;
   customColor: string;
+  pendingCustomColor: string;
   driveConfig: any;
   loginConfig: any;
   settingLogin: string;
