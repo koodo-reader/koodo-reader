@@ -81,6 +81,11 @@ export const generalSettingList = [
   },
   {
     isElectron: true,
+    title: "Delete original file when permanently deleting books",
+    propName: "isDeleteOriginal",
+  },
+  {
+    isElectron: true,
     title: "Open url with built-in browser",
     propName: "isUseBuiltIn",
   },

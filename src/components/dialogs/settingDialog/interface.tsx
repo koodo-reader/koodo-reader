@@ -39,7 +39,6 @@ export interface SettingInfoState {
   isPreventSleep: boolean;
   isOpenInMain: boolean;
   isPrecacheBook: boolean;
-  isUseBuiltIn: boolean;
   isDisableCrop: boolean;
   isOverwriteLink: boolean;
   isOverwriteText: boolean;

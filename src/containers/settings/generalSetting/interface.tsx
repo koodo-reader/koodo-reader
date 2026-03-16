@@ -45,6 +45,7 @@ export interface SettingInfoState {
   isUseOriginalName: boolean;
   isPrecacheBook: boolean;
   isUseBuiltIn: boolean;
+  isDeleteOriginal: boolean;
   isDisablePDFCover: boolean;
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
