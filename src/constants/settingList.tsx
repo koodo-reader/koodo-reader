@@ -276,6 +276,11 @@ export const readerSettingList = [
     isPDF: true,
   },
   {
+    title: "Enable hyphenation",
+    propName: "isHyphenation",
+    isPDF: true,
+  },
+  {
     title: "Fast reading mode (make the first half of the word bold)",
     propName: "isBionic",
     isPDF: true,

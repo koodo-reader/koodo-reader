@@ -27,6 +27,7 @@ export interface SettingSwitchState {
   isItalic: boolean;
   isInvert: boolean;
   isStartFromEven: boolean;
+  isHyphenation: boolean;
   isBionic: boolean;
   isHideHeader: boolean;
   isHidePageButton: boolean;
