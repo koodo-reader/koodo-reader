@@ -41,7 +41,11 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     });
   }
   async UNSAFE_componentWillReceiveProps(nextProps: BookCoverProps) {
-    if (nextProps.book.key !== this.props.book.key) {
+    if (
+      nextProps.book.key !== this.props.book.key ||
+      (nextProps.refreshBookKey === this.props.book.key &&
+        nextProps.refreshBookKey !== this.props.refreshBookKey)
+    ) {
       let cover = await CoverUtil.getCover(nextProps.book);
       let isCoverExist = await CoverUtil.isCoverExist(nextProps.book);
       this.setState({

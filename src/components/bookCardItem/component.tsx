@@ -39,7 +39,11 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     });
   }
   async UNSAFE_componentWillReceiveProps(nextProps: BookCardProps) {
-    if (nextProps.book.key !== this.props.book.key) {
+    if (
+      nextProps.book.key !== this.props.book.key ||
+      (nextProps.refreshBookKey === this.props.book.key &&
+        nextProps.refreshBookKey !== this.props.refreshBookKey)
+    ) {
       let cover = await CoverUtil.getCover(nextProps.book);
       let isCoverExist = await CoverUtil.isCoverExist(nextProps.book);
       this.setState({

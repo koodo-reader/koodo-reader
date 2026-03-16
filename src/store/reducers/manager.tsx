@@ -22,6 +22,7 @@ const initState = {
   noteSortCode: { sort: 1, order: 2 },
   isSelectBook: false,
   message: "Addition successful",
+  refreshBookKey: "",
   settingMode: "general",
   settingDrive: "",
   selectedBooks: [],
@@ -100,6 +101,11 @@ export function manager(
       return {
         ...state,
         isSearch: action.payload,
+      };
+    case "HANDLE_REFRESH_BOOK_COVER":
+      return {
+        ...state,
+        refreshBookKey: action.payload,
       };
 
     case "HANDLE_SETTING":

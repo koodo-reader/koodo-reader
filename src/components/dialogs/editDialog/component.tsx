@@ -70,6 +70,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     if (coverPreview && coverPreview.startsWith("data:")) {
       this.props.currentBook.cover = coverPreview;
       await CoverUtil.addCover(this.props.currentBook);
+      this.props.handleRefreshBookCover(this.props.currentBook.key);
     }
 
     await DatabaseService.updateRecord(this.props.currentBook, "books");
