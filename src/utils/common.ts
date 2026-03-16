@@ -136,6 +136,7 @@ export const vexOpenAsync = (config: Record<string, any>, message: string) => {
     });
   });
 };
+
 export const getFormatFromAudioPath = (audioPath: string) => {
   let format = "mp3";
   if (audioPath.indexOf(".wav") > -1) {

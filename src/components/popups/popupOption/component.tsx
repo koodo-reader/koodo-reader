@@ -7,7 +7,10 @@ import ColorOption from "../../colorOption";
 import { popupList } from "../../../constants/popupList";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
-import { getSelection } from "../../../utils/reader/mouseEvent";
+import {
+  getSelection,
+  searchInTheBook,
+} from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { openExternalUrl } from "../../../utils/common";
@@ -193,30 +196,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     }
   };
   handleSearchBook = () => {
-    let leftPanel = document.querySelector(".left-panel");
-    const clickEvent = new MouseEvent("click", {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    if (!leftPanel) return;
-    leftPanel.dispatchEvent(clickEvent);
-    const focusEvent = new MouseEvent("focus", {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    let searchBox: any = document.querySelector(".header-search-box");
-    searchBox.dispatchEvent(focusEvent);
-    let searchIcon = document.querySelector(".header-search-icon");
-    searchIcon?.dispatchEvent(clickEvent);
-    searchBox.value = getSelection(this.props.currentBook.format);
-    const keyEvent: any = new KeyboardEvent("keydown", {
-      bubbles: true,
-      cancelable: true,
-      keyCode: 13,
-    } as any);
-    searchBox.dispatchEvent(keyEvent);
+    searchInTheBook("", this.props.currentBook.format, true);
     this.props.handleOpenMenu(false);
   };
 
