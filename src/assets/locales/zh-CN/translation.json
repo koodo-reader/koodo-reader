@@ -43,6 +43,7 @@
   "AI Analysis": "AI 分析",
   "Enable hyphenation": "启用连字符",
   "The audiobook feature has been moved to the bottom right of the book page": "听书功能已移至图书页面右下角",
+  "Allow orphan and widow lines": "允许孤行和寡行",
   "Please visit the documentation to learn how to install this plugin. Your browser will automatically open in 5 seconds": "请访问帮助文档了解如何安装此插件，您的浏览器将在5秒后自动打开",
   "Due to the high cost of Azure TTS voices, this voice will consume 5 times of your daily quota than normal voice": "由于 Azure TTS 的高昂成本，使用此语音的额度消耗速度是常规语音的5倍",
   "Plugin already installed": "插件已安装",

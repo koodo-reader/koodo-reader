@@ -21,6 +21,7 @@ class SettingSwitch extends React.Component<
       isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
       isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
       isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
+      isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
       isStartFromEven:
         ConfigService.getReaderConfig("isStartFromEven") === "yes",
       isHideBackground:
@@ -97,99 +98,42 @@ class SettingSwitch extends React.Component<
               <span
                 className="single-control-switch"
                 onClick={async () => {
-                  switch (item.propName) {
-                    case "isBold":
-                      this._handleChange("isBold");
-                      break;
-                    case "isIndent":
-                      this._handleChange("isIndent");
-                      break;
-                    case "isSliding":
-                      this._handleChange("isSliding");
-                      break;
-                    case "isItalic":
-                      this._handleChange("isItalic");
-                      break;
-                    case "isUnderline":
-                      this._handleChange("isUnderline");
-                      break;
-                    case "isShadow":
-                      this._handleChange("isShadow");
-                      break;
-                    case "isInvert":
-                      this._handleChange("isInvert");
-                      break;
-                    case "isStartFromEven":
-                      this._handleChange("isStartFromEven");
-                      break;
-                    case "isHyphenation":
-                      this._handleChange("isHyphenation");
-                      break;
-                    case "isBionic":
-                      this._handleChange("isBionic");
-                      break;
-                    case "isHideFooter":
-                      this.props.handleHideFooter(!this.state.isHideFooter);
-                      this.handleChange("isHideFooter");
-                      break;
-                    case "isHideHeader":
-                      this.props.handleHideHeader(!this.state.isHideHeader);
-                      this.handleChange("isHideHeader");
-                      break;
-                    case "isHideBackground":
-                      this.props.handleHideBackground(
-                        !this.state.isHideBackground
-                      );
-                      this.handleChange("isHideBackground");
-                      break;
-                    case "isHidePageButton":
-                      this.props.handleHidePageButton(
-                        !this.state.isHidePageButton
-                      );
-                      this.handleChange("isHidePageButton");
-                      break;
-                    case "isHideMenuButton":
-                      if (!this.state["isHideMenuButton"]) {
-                        let result = await vexComfirmAsync(
-                          "After hiding the menu button, you can move the mouse to the edge of the window to show it again."
-                        );
-                        if (result) {
-                          this.props.handleHideMenuButton(
-                            !this.state.isHideMenuButton
-                          );
-                          ConfigService.setReaderConfig(
-                            "isHideMenuButton",
-                            "yes"
-                          );
+                  const propName = item.propName as keyof SettingSwitchState;
+                  const renderProps: Partial<
+                    Record<keyof SettingSwitchState, (val: boolean) => void>
+                  > = {
+                    isHideFooter: this.props.handleHideFooter,
+                    isHideHeader: this.props.handleHideHeader,
+                    isHideBackground: this.props.handleHideBackground,
+                    isHidePageButton: this.props.handleHidePageButton,
+                    isHideAIButton: this.props.handleHideAIButton,
+                    isHideScaleButton: this.props.handleHideScaleButton,
+                    isHidePDFConvertButton:
+                      this.props.handleHidePDFConvertButton,
+                  };
 
-                          toast(this.props.t("Change successful"));
-                        }
-                      } else {
-                        this.props.handleHideMenuButton(
-                          !this.state.isHideMenuButton
+                  if (propName === "isHideMenuButton") {
+                    if (!this.state.isHideMenuButton) {
+                      const result = await vexComfirmAsync(
+                        "After hiding the menu button, you can move the mouse to the edge of the window to show it again."
+                      );
+                      if (result) {
+                        this.props.handleHideMenuButton(true);
+                        ConfigService.setReaderConfig(
+                          "isHideMenuButton",
+                          "yes"
                         );
-                        this.handleChange("isHideMenuButton");
+                        toast(this.props.t("Change successful"));
                       }
-
-                      break;
-                    case "isHideAIButton":
-                      this.props.handleHideAIButton(!this.state.isHideAIButton);
-                      this.handleChange("isHideAIButton");
-                      break;
-                    case "isHideScaleButton":
-                      this.props.handleHideScaleButton(
-                        !this.state.isHideScaleButton
-                      );
-                      this.handleChange("isHideScaleButton");
-                      break;
-                    case "isHidePDFConvertButton":
-                      this.props.handleHidePDFConvertButton(
-                        !this.state.isHidePDFConvertButton
-                      );
-                      this.handleChange("isHidePDFConvertButton");
-                      break;
-                    default:
-                      break;
+                    } else {
+                      this.props.handleHideMenuButton(false);
+                      this.handleChange("isHideMenuButton");
+                    }
+                  } else if (propName in renderProps) {
+                    renderProps[propName]!(!this.state[propName]);
+                    this.handleChange(propName);
+                  } else {
+                    this._handleChange(propName);
                   }
                 }}
                 style={this.state[item.propName] ? {} : { opacity: 0.6 }}

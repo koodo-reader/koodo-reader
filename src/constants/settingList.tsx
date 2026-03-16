@@ -278,12 +278,17 @@ export const readerSettingList = [
   {
     title: "Enable hyphenation",
     propName: "isHyphenation",
-    isPDF: true,
+    isPDF: false,
+  },
+  {
+    title: "Allow orphan and widow lines",
+    propName: "isOrphanWidow",
+    isPDF: false,
   },
   {
     title: "Fast reading mode (make the first half of the word bold)",
     propName: "isBionic",
-    isPDF: true,
+    isPDF: false,
   },
   {
     title: "Text indentation",
