@@ -63,7 +63,7 @@ class SettingDialog extends React.Component<
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       currentThemeIndex: _.findLastIndex(themeList, {
-        name: ConfigService.getReaderConfig("themeColor"),
+        name: ConfigService.getReaderConfig("themeColor") || "default",
       }),
       storageLocation: getStorageLocation() || "",
       isAddNew: false,
@@ -367,51 +367,6 @@ class SettingDialog extends React.Component<
             <>
               {this.renderSwitchOption(appearanceSettingList)}
               <div className="setting-dialog-new-title">
-                <Trans>Theme color</Trans>
-                <ul className="theme-setting-container">
-                  {themeList.map((item, index) => (
-                    <li
-                      className={
-                        index === this.state.currentThemeIndex
-                          ? "active-color theme-setting-item"
-                          : "theme-setting-item"
-                      }
-                      key={item.name}
-                      onClick={() => {
-                        this.handleTheme(item.name, index);
-                      }}
-                      style={{ backgroundColor: item.color }}
-                    ></li>
-                  ))}
-                </ul>
-              </div>
-              <div className="setting-dialog-new-title">
-                <Trans>Appearance</Trans>
-                <select
-                  name=""
-                  className="lang-setting-dropdown"
-                  onChange={(event) => {
-                    this.changeSkin(event.target.value);
-                  }}
-                >
-                  {skinList.map((item) => (
-                    <option
-                      value={item.value}
-                      key={item.value}
-                      className="lang-setting-option"
-                      selected={
-                        item.value ===
-                        (ConfigService.getReaderConfig("appSkin") || "system")
-                          ? true
-                          : false
-                      }
-                    >
-                      {this.props.t(item.label)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="setting-dialog-new-title">
                 <Trans>System font</Trans>
                 <select
                   name=""
@@ -437,6 +392,56 @@ class SettingDialog extends React.Component<
                   ))}
                 </select>
               </div>
+              <div className="setting-dialog-new-title">
+                <Trans>Theme color</Trans>
+              </div>
+              <ul className="theme-setting-container">
+                {themeList.map((item, index) => (
+                  <li
+                    className={
+                      index === this.state.currentThemeIndex
+                        ? "theme-setting-item active-theme-item"
+                        : "theme-setting-item"
+                    }
+                    key={item.name}
+                    onClick={() => {
+                      this.handleTheme(item.name, index);
+                    }}
+                    style={{ color: item.color }}
+                  >
+                    <span
+                      className="theme-setting-dot"
+                      style={{ backgroundColor: item.color }}
+                    ></span>
+                    <Trans>{item.title}</Trans>
+                  </li>
+                ))}
+              </ul>
+              <div className="setting-dialog-new-title">
+                <Trans>Appearance</Trans>
+              </div>
+              <ul className="skin-setting-container">
+                {skinList.map((item) => (
+                  <li
+                    key={item.value}
+                    className={
+                      item.value ===
+                      (ConfigService.getReaderConfig("appSkin") || "system")
+                        ? "skin-setting-item active-skin-item"
+                        : "skin-setting-item"
+                    }
+                    onClick={() => {
+                      this.changeSkin(item.value);
+                    }}
+                  >
+                    <span
+                      className="skin-setting-icon"
+                      dangerouslySetInnerHTML={{ __html: item.icon }}
+                    />
+                    <Trans>{item.label}</Trans>
+                  </li>
+                ))}
+              </ul>
             </>
           ) : this.props.settingMode === "sync" ? (
             <SyncSetting />

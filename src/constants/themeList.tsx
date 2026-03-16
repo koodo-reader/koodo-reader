@@ -29,7 +29,6 @@ export const themeList = [
     name: "green",
     title: "Green",
   },
-
   {
     id: 3,
     color: "rgba(241, 100, 100, 1)",
