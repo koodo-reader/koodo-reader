@@ -1,6 +1,6 @@
 import BookModel from "../../../models/Book";
-
-export interface EditDialogProps {
+import { RouteComponentProps } from "react-router-dom";
+export interface EditDialogProps extends RouteComponentProps<any> {
   t: (title: string) => string;
   handleFetchBooks: () => void;
   handleEditDialog: (isShow: boolean) => void;
