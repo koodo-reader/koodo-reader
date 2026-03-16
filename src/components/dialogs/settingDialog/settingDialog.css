@@ -185,6 +185,10 @@
   box-sizing: border-box;
   transition: border-color 0.15s;
 }
+.theme-setting-title {
+  max-width: 50px;
+  width: 50px;
+}
 .theme-setting-item.active-theme-item {
   border-color: currentColor;
 }

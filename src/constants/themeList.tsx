@@ -16,6 +16,12 @@ export const themeList = [
   { id: 2, color: "#008F91", title: "Green" },
   { id: 3, color: "#F16464", title: "Red" },
   { id: 4, color: "#6867D1", title: "Purple" },
+  { id: 5, color: "#F97316", title: "Orange" },
+  { id: 6, color: "#EC4899", title: "Pink" },
+  { id: 7, color: "#EAB308", title: "Yellow" },
+  { id: 8, color: "#8B5CF6", title: "Violet" },
+  { id: 9, color: "#0EA5E9", title: "Sky" },
+  { id: 10, color: "#64748B", title: "Slate" },
 ];
 export const classes = [
   "color-0",
