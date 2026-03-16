@@ -264,9 +264,21 @@ export const searchList = [
   { label: "Wikipedia", value: "wiki" },
 ];
 export const skinList = [
-  { label: "Follow OS", value: "system" },
-  { label: "Light mode", value: "light" },
-  { label: "Night mode", value: "night" },
+  {
+    label: "Follow OS",
+    value: "system",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3zm0 2v14A7 7 0 0 1 12 5zm0 0"/></svg>`,
+  },
+  {
+    label: "Light mode",
+    value: "light",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0-13a1 1 0 0 0 1-1V2a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1zm0 14a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1zm9-8h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2zm-17 1a1 1 0 0 0-1-1H2a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm13.66-6.07-.71.71a1 1 0 1 0 1.41 1.41l.71-.71a1 1 0 0 0-1.41-1.41zM6.34 17.66l-.71.71a1 1 0 1 0 1.41 1.41l.71-.71a1 1 0 0 0-1.41-1.41zm12.73.71-.71-.71a1 1 0 0 0-1.41 1.41l.71.71a1 1 0 0 0 1.41-1.41zM5.64 6.35l-.71-.71a1 1 0 0 0-1.41 1.41l.71.71A1 1 0 0 0 5.64 6.35z"/></svg>`,
+  },
+  {
+    label: "Night mode",
+    value: "night",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 13.75 13.75 1 1 0 0 0-.11-1.11z"/></svg>`,
+  },
 ];
 
 export const readerSettingList = [
