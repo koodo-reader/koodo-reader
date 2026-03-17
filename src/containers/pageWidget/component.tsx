@@ -154,7 +154,21 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             <div className="page-border-header-line"></div>
             <div className="page-border-footer-line"></div>
             {!this.state.isSingle && (
-              <div className="page-border-center-line"></div>
+              <div
+                className="page-border-center-line"
+                style={
+                  ConfigService.getReaderConfig("textOrientation") ===
+                  "vertical"
+                    ? {
+                        top: "50%",
+                        height: "1px",
+                        width: "calc(100% - 30px)",
+                        left: "15px",
+                        right: "15px",
+                      }
+                    : {}
+                }
+              ></div>
             )}
           </>
         )}
