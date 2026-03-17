@@ -97,6 +97,9 @@ export function handleHidePDFConvertButton(isHidePDFConvertButton: boolean) {
 export function handleShowBorder(isShowBorder: boolean) {
   return { type: "HANDLE_SHOW_BORDER", payload: isShowBorder };
 }
+export function handleTextOrientation(textOrientation: string) {
+  return { type: "HANDLE_TEXT_ORIENTATION", payload: textOrientation };
+}
 export function handleFetchNotes() {
   return async (
     dispatch: (arg0: { type: string; payload: NoteModel[] }) => void
