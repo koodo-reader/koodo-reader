@@ -147,6 +147,17 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         <>
           {this.props.isShowBookmark ? <div className="bookmark"></div> : null}
         </>
+        {this.props.isShowBorder && (
+          <>
+            <div className="page-border"></div>
+            <div className="inner-page-border"></div>
+            <div className="page-border-header-line"></div>
+            <div className="page-border-footer-line"></div>
+            {!this.state.isSingle && (
+              <div className="page-border-center-line"></div>
+            )}
+          </>
+        )}
       </div>
     );
   }

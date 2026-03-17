@@ -39,6 +39,7 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("isHideMenuButton") === "yes",
       isHideAudiobookButton:
         ConfigService.getReaderConfig("isHideAudiobookButton") === "yes",
+      isShowBorder: ConfigService.getReaderConfig("isShowBorder") === "yes",
     };
   }
 
@@ -112,6 +113,7 @@ class SettingSwitch extends React.Component<
                     isHideScaleButton: this.props.handleHideScaleButton,
                     isHidePDFConvertButton:
                       this.props.handleHidePDFConvertButton,
+                    isShowBorder: this.props.handleShowBorder,
                   };
 
                   if (propName === "isHideMenuButton") {
@@ -136,6 +138,11 @@ class SettingSwitch extends React.Component<
                       !this.state.isHideAudiobookButton
                     );
                     this.handleChange("isHideAudiobookButton");
+                  } else if (propName === "isShowBorder") {
+                    this.props.handleShowBorder(!this.state.isShowBorder);
+                    this.props.handleHideBackground(!this.state.isShowBorder);
+                    this.handleChange("isShowBorder");
+                    this.handleChange("isHideBackground");
                   } else if (propName in renderProps) {
                     renderProps[propName]!(!this.state[propName]);
                     this.handleChange(propName);

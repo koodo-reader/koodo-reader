@@ -12,6 +12,7 @@ import {
   handleHidePageButton,
   handleHidePDFConvertButton,
   handleHideScaleButton,
+  handleShowBorder,
 } from "../../../store/actions";
 
 const mapStateToProps = (state: stateType) => {
@@ -31,6 +32,7 @@ const actionCreator = {
   handleHideAIButton,
   handleHideScaleButton,
   handleHidePDFConvertButton,
+  handleShowBorder,
 };
 export default connect(
   mapStateToProps,

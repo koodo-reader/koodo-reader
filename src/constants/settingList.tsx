@@ -338,10 +338,16 @@ export const readerSettingList = [
     isPDF: true,
   },
   {
+    title: "Show page border",
+    propName: "isShowBorder",
+    isPDF: true,
+  },
+  {
     title: "Hide footer",
     propName: "isHideFooter",
     isPDF: true,
   },
+
   {
     title: "Hide header",
     propName: "isHideHeader",
