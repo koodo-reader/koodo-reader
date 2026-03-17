@@ -157,8 +157,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               <div
                 className="page-border-center-line"
                 style={
-                  ConfigService.getReaderConfig("textOrientation") ===
-                  "vertical"
+                  this.props.textOrientation === "vertical"
                     ? {
                         top: "50%",
                         height: "1px",

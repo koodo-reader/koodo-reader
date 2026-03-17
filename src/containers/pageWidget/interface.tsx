@@ -12,6 +12,7 @@ export interface BackgroundProps {
   isHideFooter: boolean;
   isHideHeader: boolean;
   isShowBorder: boolean;
+  textOrientation: string;
   backgroundColor: string;
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
