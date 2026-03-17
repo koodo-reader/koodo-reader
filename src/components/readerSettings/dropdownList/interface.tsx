@@ -3,9 +3,10 @@ export interface DropdownListProps {
   renderBookFunc: () => void;
 }
 export interface DropdownListState {
-  currentFontFamilyIndex: number;
-  currentSubFontFamilyIndex: number;
-  currentLineHeightIndex: number;
-  currentTextAlignIndex: number;
-  chineseConversionIndex: number;
+  currentFontFamilyValue: string;
+  currentSubFontFamilyValue: string;
+  currentLineHeightValue: string;
+  currentTextAlignValue: string;
+  chineseConversionValue: string;
+  currentTextOrientationValue: string;
 }

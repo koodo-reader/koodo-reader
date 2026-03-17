@@ -399,21 +399,23 @@ class SettingDialog extends React.Component<
                     this.changeFont(event.target.value);
                   }}
                 >
-                  {dropdownList[0].option.map((item) => (
-                    <option
-                      value={item.value}
-                      key={item.value}
-                      className="lang-setting-option"
-                      selected={
-                        item.value ===
-                        ConfigService.getReaderConfig("systemFont")
-                          ? true
-                          : false
-                      }
-                    >
-                      {this.props.t(item.label)}
-                    </option>
-                  ))}
+                  {dropdownList
+                    .find((item) => item.value === "fontFamily")
+                    ?.option.map((item) => (
+                      <option
+                        value={item.value}
+                        key={item.value}
+                        className="lang-setting-option"
+                        selected={
+                          item.value ===
+                          ConfigService.getReaderConfig("systemFont")
+                            ? true
+                            : false
+                        }
+                      >
+                        {this.props.t(item.label)}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div className="setting-dialog-new-title">
