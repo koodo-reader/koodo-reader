@@ -20,15 +20,13 @@ import {
   showDownloadProgress,
 } from "../../utils/common";
 import _ from "underscore";
-import {
-  BookHelper,
-  ConfigService,
-} from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
 import { ocrTesseractLangList } from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
 import { getOcrResult } from "../../utils/request/reader";
+import { BookHelper } from "../../assets/lib/kookit.min";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 

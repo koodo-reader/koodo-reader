@@ -18,7 +18,7 @@ import {
   supportedFormats,
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
-import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
+import { BookHelper } from "../../assets/lib/kookit.min";
 declare var window: any;
 let clickFilePath = "";
 

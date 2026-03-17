@@ -14,12 +14,10 @@ import {
 } from "../../../utils/file/export";
 import { isElectron } from "react-device-detect";
 import DatabaseService from "../../../utils/storage/databaseService";
-import {
-  BookHelper,
-  ConfigService,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../../assets/lib/kookit.min";
 import { getPdfPassword, getStorageLocation } from "../../../utils/common";
+import { BookHelper } from "../../../assets/lib/kookit.min";
 declare var window: any;
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
