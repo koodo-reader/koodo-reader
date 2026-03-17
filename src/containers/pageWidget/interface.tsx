@@ -11,6 +11,7 @@ export interface BackgroundProps {
   isShowBookmark: boolean;
   isHideFooter: boolean;
   isHideHeader: boolean;
+  isShowBorder: boolean;
   backgroundColor: string;
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
