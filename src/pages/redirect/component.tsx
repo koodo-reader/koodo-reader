@@ -12,8 +12,8 @@ import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
-import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
 import { removeSearchParams } from "../../utils/common";
+import { BookHelper } from "../../assets/lib/kookit.min";
 declare var window: any;
 const successOptions = {
   loop: false,

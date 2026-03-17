@@ -1,9 +1,7 @@
 import { getIframeDoc } from "./docUtil";
-import {
-  ConfigService,
-  StyleHelper,
-} from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { applyThemeColor, removeThemeColor } from "./themeUtil";
+import { StyleHelper } from "../../assets/lib/kookit.min";
 
 class styleUtil {
   // add default css for iframe

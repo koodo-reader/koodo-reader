@@ -2,7 +2,6 @@
 import { isElectron } from "react-device-detect";
 import SparkMD5 from "spark-md5";
 import {
-  BookHelper,
   CommonTool,
   ConfigService,
   SyncUtil,
@@ -30,6 +29,7 @@ import localforage from "localforage";
 import { driveList } from "../constants/driveList";
 import { updateUserConfig } from "./request/user";
 import { languageCNMap, languageENMap } from "../constants/ttsList";
+import { BookHelper } from "../assets/lib/kookit.min";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
