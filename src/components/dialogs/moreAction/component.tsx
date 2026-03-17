@@ -273,6 +273,8 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                           : "",
                       convertChinese:
                         ConfigService.getReaderConfig("convertChinese"),
+                      textOrientation:
+                        ConfigService.getReaderConfig("textOrientation"),
                       parserRegex: "",
                       isDarkMode: "no",
                       isMobile: "no",
