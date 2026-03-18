@@ -33,7 +33,9 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
       : (note: any) => note.notes === "";
     const exportFn = isNotes ? exportNotes : exportHighlights;
 
-    const handleExport = async (format: "csv" | "md" | "txt") => {
+    const handleExport = async (
+      format: "csv" | "md" | "txt" | "html" | "pdf"
+    ) => {
       let books = await DatabaseService.getAllRecords("books");
       let notes = (
         await DatabaseService.getRecordsByBookKey(
@@ -80,7 +82,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
         }}
       >
         <div className="action-dialog-actions-container">
-          {(["csv", "md", "txt"] as const).map((fmt) => (
+          {(["csv", "md", "txt", "html", "pdf"] as const).map((fmt) => (
             <div
               key={fmt}
               className="action-dialog-edit"
@@ -88,7 +90,15 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
               onClick={() => handleExport(fmt)}
             >
               <p className="action-name">
-                {fmt === "csv" ? "CSV" : fmt === "md" ? "Markdown" : "TXT"}
+                {fmt === "csv"
+                  ? "CSV"
+                  : fmt === "md"
+                    ? "Markdown"
+                    : fmt === "txt"
+                      ? "TXT"
+                      : fmt === "html"
+                        ? "HTML"
+                        : "PDF"}
               </p>
             </div>
           ))}
