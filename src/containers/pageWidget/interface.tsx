@@ -21,4 +21,6 @@ export interface BackgroundState {
   isSingle: boolean;
   prevPage: number;
   nextPage: number;
+  currentTime: string;
+  percentage: string;
 }
