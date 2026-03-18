@@ -18,7 +18,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 16px;
 }
 .header-container {
   position: absolute;
@@ -26,7 +26,7 @@
 }
 .footer-container {
   position: absolute;
-  bottom: 13px;
+  bottom: 14px;
 }
 
 .background-page-left,
@@ -39,6 +39,14 @@
   text-align: center;
   opacity: 0.3;
   float: left;
+}
+.footer-time {
+  letter-spacing: 0.5px;
+  position: absolute;
+  top: 6px;
+  left: 20px;
+  font-size: 13px;
+  opacity: 0.5;
 }
 .bookmark {
   height: 40px;
