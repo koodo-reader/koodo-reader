@@ -6,7 +6,11 @@ import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
 import DatabaseService from "../../utils/storage/databaseService";
-import { fetchUserInfo, getUserRequest } from "../../utils/request/user";
+import {
+  fetchUserInfo,
+  getUserRequest,
+  resetUserRequest,
+} from "../../utils/request/user";
 import {
   officialDictList,
   officialTranList,
@@ -16,6 +20,8 @@ import BookUtil from "../../utils/file/bookUtil";
 import i18n from "../../i18n";
 import { azureTTSVoiceList, officialVoiceList } from "../../constants/ttsList";
 import { langToName } from "../../utils/common";
+import { resetReaderRequest } from "../../utils/request/reader";
+import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -256,6 +262,9 @@ export function handleFetchUserInfo() {
       ) {
         let userRequest = await getUserRequest();
         await userRequest.refreshUserToken();
+        resetReaderRequest();
+        resetUserRequest();
+        resetThirdpartyRequest();
       }
     }
     dispatch(handleUserInfo(userInfo));
