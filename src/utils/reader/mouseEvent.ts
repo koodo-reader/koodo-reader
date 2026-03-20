@@ -58,6 +58,16 @@ export const searchInTheBook = (
   } as any);
   searchBox.dispatchEvent(keyEvent);
 };
+export const openTableOfContents = () => {
+  let leftPanel = document.querySelector(".left-panel");
+  const clickEvent = new MouseEvent("click", {
+    view: window,
+    bubbles: true,
+    cancelable: true,
+  });
+  if (!leftPanel) return;
+  leftPanel.dispatchEvent(clickEvent);
+};
 let lock = false; //prevent from clicking too fasts
 const arrowKeys = async (
   rendition: any,
@@ -150,6 +160,10 @@ const handleShortcut = (event: any) => {
   if (event.keyCode === 70 && event.ctrlKey) {
     event.preventDefault();
     searchInTheBook("", "", false);
+  }
+  if (event.keyCode === 66 && event.ctrlKey) {
+    event.preventDefault();
+    openTableOfContents();
   }
 };
 

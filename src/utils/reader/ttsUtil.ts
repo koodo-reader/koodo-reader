@@ -147,10 +147,15 @@ class TTSUtil {
         if (this.isPaused) {
           break;
         }
-        // 如果已经缓存过，跳过
-        if (this.audioPaths.find((item) => item.index === index)) {
+        // 如果已经缓存过或正在处理中，跳过
+        if (
+          this.audioPaths.find((item) => item.index === index) ||
+          this.processingIndexes.has(index)
+        ) {
           continue;
         }
+        // 标记为正在处理
+        this.processingIndexes.add(index);
         const text = audioNodeList[index];
         let audioPath = await this.getAudioPath(
           text,
@@ -160,6 +165,8 @@ class TTSUtil {
           voice,
           isFirst
         );
+        // 处理完成后，从处理集合中移除
+        this.processingIndexes.delete(index);
         if (audioPath) {
           this.audioPaths.push({ index: index, audioPath: audioPath });
         } else {
