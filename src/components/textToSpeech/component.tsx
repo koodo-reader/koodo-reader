@@ -369,6 +369,7 @@ class TextToSpeech extends React.Component<
     }
     if (this.state.isAudioOn && this.props.isReading) {
       await TTSUtil.clearAudioPaths();
+      TTSUtil.setAudioPaths();
       let position = this.props.htmlBook.rendition.getPosition();
       ConfigService.setObjectConfig(
         this.props.currentBook.key,
