@@ -296,18 +296,17 @@ const createMainWin = () => {
           return;
         }
         try {
-          // 使用 spawn 执行非静默安装
-          const child = spawn(updateExePath, [], {
-            stdio: ["ignore", "pipe", "pipe"], // 捕获 stdout 和 stderr 以便调试
-            detached: true, // 独立进程
-            shell: true, // 确保 UAC 提示
-            windowsHide: false, // 确保窗口可见
+          // 先退出应用，再启动安装程序，避免文件锁定导致覆盖安装失败
+          app.once("will-quit", () => {
+            const child = spawn(updateExePath, [], {
+              stdio: "ignore",
+              detached: true,
+              shell: true,
+              windowsHide: false,
+            });
+            child.unref();
           });
-
-          setTimeout(() => {
-            app.quit();
-          }, 1000);
-          child.unref();
+          app.quit();
         } catch (err) {
           console.error(`spawn 执行异常: ${err.message}`);
         }
