@@ -540,6 +540,77 @@ const createMainWin = () => {
       }
     }
   });
+  ipcMain.handle("check-cloud-url", async (event, config) => {
+    const https = require("https");
+    const http = require("http");
+    const { URL } = require("url");
+    const { url } = config;
+    return new Promise((resolve) => {
+      let parsedUrl;
+      try {
+        parsedUrl = new URL(url);
+      } catch (e) {
+        return resolve({ ok: false, reason: "invalid_url", detail: e.message });
+      }
+      const isHttps = parsedUrl.protocol === "https:";
+      const lib = isHttps ? https : http;
+      const port = parsedUrl.port
+        ? parseInt(parsedUrl.port)
+        : isHttps
+          ? 443
+          : 80;
+      const options = {
+        hostname: parsedUrl.hostname,
+        port,
+        path: parsedUrl.pathname || "/",
+        method: "HEAD",
+        timeout: 8000,
+        rejectUnauthorized: true,
+      };
+      const req = lib.request(options, (res) => {
+        resolve({
+          ok: true,
+          status: res.statusCode,
+          detail: `HTTP ${res.statusCode}`,
+        });
+      });
+      req.on("timeout", () => {
+        req.destroy();
+        resolve({
+          ok: false,
+          reason: "timeout",
+          detail: `Connection to ${parsedUrl.hostname}:${port} timed out after 8s`,
+        });
+      });
+      req.on("error", (err) => {
+        let reason = "unknown";
+        if (err.code === "ENOTFOUND") {
+          reason = "dns_failed";
+        } else if (err.code === "ECONNREFUSED") {
+          reason = "connection_refused";
+        } else if (err.code === "ECONNRESET") {
+          reason = "connection_reset";
+        } else if (err.code === "ETIMEDOUT") {
+          reason = "timeout";
+        } else if (
+          err.code === "CERT_HAS_EXPIRED" ||
+          err.code === "ERR_TLS_CERT_ALTNAME_INVALID" ||
+          err.code === "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+        ) {
+          reason = "ssl_error";
+        } else if (err.message && err.message.includes("SSL")) {
+          reason = "ssl_error";
+        }
+        resolve({
+          ok: false,
+          reason,
+          code: err.code || "",
+          detail: err.message,
+        });
+      });
+      req.end();
+    });
+  });
   ipcMain.handle("get-mac", async (event, config) => {
     const { machineIdSync } = require("node-machine-id");
     return machineIdSync();
