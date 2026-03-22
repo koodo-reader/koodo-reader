@@ -293,6 +293,11 @@ export const readerSettingList = [
     isPDF: true,
   },
   {
+    title: "Allow Javascript in the books",
+    propName: "isAllowScript",
+    isPDF: true,
+  },
+  {
     title: "Enable hyphenation",
     propName: "isHyphenation",
     isPDF: false,

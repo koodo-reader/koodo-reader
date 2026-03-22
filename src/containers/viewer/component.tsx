@@ -241,6 +241,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isMobile: "no",
           isIndent: ConfigService.getReaderConfig("isIndent"),
           isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
+          isAllowScript: ConfigService.getReaderConfig("isAllowScript"),
           isBionic: ConfigService.getReaderConfig("isBionic"),
           password: getPdfPassword(this.props.currentBook),
           scale: parseFloat(this.props.scale),
