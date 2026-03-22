@@ -33,6 +33,7 @@
   "New version": "下载新版本",
   "Customize": "自定义",
   "Auto open book in full screen": "图书窗口自动全屏",
+  "Allow Javascript in the books": "允许执行书中的 Javascript",
   "Your quota will be reset in": "您的额度将于 {{ttl}} 小时后重置",
   "Configuration": "配置",
   "Features": "功能",

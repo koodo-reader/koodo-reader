@@ -5,6 +5,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
 import { vexComfirmAsync } from "../../../utils/common";
+import BookUtil from "../../../utils/file/bookUtil";
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
   SettingSwitchState
@@ -22,6 +23,7 @@ class SettingSwitch extends React.Component<
       isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
       isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
       isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
+      isAllowScript: ConfigService.getReaderConfig("isAllowScript") === "yes",
       isStartFromEven:
         ConfigService.getReaderConfig("isStartFromEven") === "yes",
       isHideBackground:
@@ -143,6 +145,11 @@ class SettingSwitch extends React.Component<
                     this.props.handleHideBackground(!this.state.isShowBorder);
                     this.handleChange("isShowBorder");
                     this.handleChange("isHideBackground");
+                  } else if (propName === "isAllowScript") {
+                    this.handleChange(propName);
+                    setTimeout(() => {
+                      BookUtil.reloadBooks(this.props.currentBook);
+                    }, 500);
                   } else if (propName in renderProps) {
                     renderProps[propName]!(!this.state[propName]);
                     this.handleChange(propName);
