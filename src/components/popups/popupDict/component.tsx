@@ -337,7 +337,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 <div className="dict-ai-answer-container">
                   <div className="dict-ai-answer-title">
                     <span className="icon-idea dict-ai-answer-icon"></span>
-                    <Trans>AI Analysis</Trans>
+                    <Trans>AI Encyclopedia</Trans>
                   </div>
                   {this.state.isAiWaiting && !this.state.aiAnswer ? (
                     <div className="dict-ai-answer-waiting">
