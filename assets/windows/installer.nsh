@@ -1,7 +1,11 @@
 !macro customInit
+!macroend
+
+!macro customInstall
   ; Kill running Koodo Reader process before installation to prevent file locking
   nsExec::ExecToLog 'taskkill /f /im "Koodo Reader.exe"'
-  Sleep 2000
+  ; Wait for the OS to release file handles after process termination
+  Sleep 3000
 !macroend
 
 !macro customUnInstall
