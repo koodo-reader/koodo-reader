@@ -71,7 +71,6 @@ class TextToSpeech extends React.Component<
       });
     };
     this.nativeVoices = await setSpeech();
-    console.log(this.nativeVoices, "nativeVoices");
     if (isElectron) {
       this.customVoices = TTSUtil.getVoiceList(this.props.plugins);
       this.voices = [...this.nativeVoices, ...this.customVoices];

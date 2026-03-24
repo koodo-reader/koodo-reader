@@ -870,7 +870,7 @@ export const languageCNMap = {
     TR: "土耳其",
     TT: "特立尼达和多巴哥",
     TV: "图瓦卢",
-    TW: "台湾地区",
+    TW: "中国台湾",
     TZ: "坦桑尼亚",
     UA: "乌克兰",
     UG: "乌干达",

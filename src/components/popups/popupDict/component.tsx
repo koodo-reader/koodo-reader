@@ -150,11 +150,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     try {
       this.setState({ aiAnswer: "", isAiWaiting: true });
       let isFirst = true;
-      console.log(
-        text,
-        ConfigService.getReaderConfig("dictTarget") || "auto",
-        navigator.language
-      );
       let res = await getDictionaryStream(
         text,
         "auto",
