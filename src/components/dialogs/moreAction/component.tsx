@@ -168,23 +168,9 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   return;
                 }
                 const cover = await CoverUtil.getCover(this.props.currentBook);
-                if (isElectron && cover.startsWith("file://")) {
-                  const fs = window.require("fs");
-                  const filePath = decodeURIComponent(
-                    cover.replace("file://", "").replace(/\//g, "\\")
-                  );
-                  const ext = filePath.split(".").pop() || "jpg";
-                  const buffer = fs.readFileSync(filePath);
-                  saveAs(
-                    new Blob([buffer], { type: `image/${ext}` }),
-                    `${this.props.currentBook.name}.${ext}`
-                  );
-                } else if (cover.startsWith("blob:")) {
+                if (cover.startsWith("blob:")) {
                   const ext = "jpg";
-                  saveAs(
-                    cover,
-                    `${getBookName(this.props.currentBook)}.${ext}`
-                  );
+                  saveAs(cover, `${this.props.currentBook.name}.${ext}`);
                 } else if (cover.startsWith("data:")) {
                   const mimeMatch = cover.match(/data:(image\/\w+);base64,/);
                   const mime = mimeMatch ? mimeMatch[1] : "image/jpeg";
@@ -195,7 +181,15 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                   );
                   saveAs(
                     new Blob([byteArray], { type: mime }),
-                    `${getBookName(this.props.currentBook)}.${ext}`
+                    `${this.props.currentBook.name}.${ext}`
+                  );
+                } else if (isElectron) {
+                  const fs = window.require("fs");
+                  const ext = cover.split(".").pop() || "jpg";
+                  const buffer = fs.readFileSync(cover);
+                  saveAs(
+                    new Blob([buffer], { type: `image/${ext}` }),
+                    `${this.props.currentBook.name}.${ext}`
                   );
                 }
                 toast.success(this.props.t("Export successful"));
