@@ -240,6 +240,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           backgroundColor: ConfigService.getReaderConfig("backgroundColor"),
           isMobile: "no",
           isIndent: ConfigService.getReaderConfig("isIndent"),
+          isHyphenation: ConfigService.getReaderConfig("isHyphenation"),
           isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
           isAllowScript: ConfigService.getReaderConfig("isAllowScript"),
           isBionic: ConfigService.getReaderConfig("isBionic"),

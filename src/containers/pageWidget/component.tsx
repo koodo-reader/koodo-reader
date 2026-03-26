@@ -139,7 +139,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             <>
               <span className="footer-time">
                 {this.state.currentTime}
-                {this.state.percentage ? "  " + parseFloat(this.state.percentage).toFixed(2) + "%" : ""}
+                {this.state.percentage
+                  ? "  " + parseFloat(this.state.percentage).toFixed(2) + "%"
+                  : ""}
               </span>
             </>
           )}
@@ -181,7 +183,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         <>
           {this.props.isShowBookmark ? <div className="bookmark"></div> : null}
         </>
-        {this.props.isShowBorder && (
+        {this.props.isShowPageBorder && (
           <>
             <div className="page-border"></div>
             <div className="inner-page-border"></div>

@@ -344,7 +344,7 @@ export const readerSettingList = [
   },
   {
     title: "Show page border",
-    propName: "isShowBorder",
+    propName: "isShowPageBorder",
     isPDF: true,
   },
   {

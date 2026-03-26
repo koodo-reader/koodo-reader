@@ -16,7 +16,7 @@ export interface SettingSwitchProps {
   handleHideAIButton: (isHideAIButton: boolean) => void;
   handleHideScaleButton: (isHideScaleButton: boolean) => void;
   handleHidePDFConvertButton: (isHidePDFConvertButton: boolean) => void;
-  handleShowBorder: (isShowBorder: boolean) => void;
+  handleShowBorder: (isShowPageBorder: boolean) => void;
 }
 export interface SettingSwitchState {
   isHideBackground: boolean;
@@ -40,5 +40,5 @@ export interface SettingSwitchState {
   isHidePDFConvertButton: boolean;
   isHideMenuButton: boolean;
   isHideAudiobookButton: boolean;
-  isShowBorder: boolean;
+  isShowPageBorder: boolean;
 }
