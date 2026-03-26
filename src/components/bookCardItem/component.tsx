@@ -46,6 +46,14 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     ) {
       let cover = await CoverUtil.getCover(nextProps.book);
       let isCoverExist = await CoverUtil.isCoverExist(nextProps.book);
+      if (
+        cover &&
+        !cover.startsWith("data:") &&
+        !cover.startsWith("blob:") &&
+        !cover.startsWith("http")
+      ) {
+        cover = cover + "?t=" + Date.now();
+      }
       this.setState({
         isFavorite:
           ConfigService.getAllListConfig("favoriteBooks").indexOf(
@@ -57,6 +65,7 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       this.setState({
         isBookOffline: await BookUtil.isBookOffline(nextProps.book.key),
       });
+      this.props.handleRefreshBookCover("");
     }
   }
 
