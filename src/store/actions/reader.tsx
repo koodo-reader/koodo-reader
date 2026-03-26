@@ -94,8 +94,8 @@ export function handleHidePDFConvertButton(isHidePDFConvertButton: boolean) {
     payload: isHidePDFConvertButton,
   };
 }
-export function handleShowBorder(isShowBorder: boolean) {
-  return { type: "HANDLE_SHOW_BORDER", payload: isShowBorder };
+export function handleShowBorder(isShowPageBorder: boolean) {
+  return { type: "HANDLE_SHOW_BORDER", payload: isShowPageBorder };
 }
 export function handleTextOrientation(textOrientation: string) {
   return { type: "HANDLE_TEXT_ORIENTATION", payload: textOrientation };

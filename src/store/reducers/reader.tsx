@@ -46,7 +46,7 @@ const initState = {
     ConfigService.getReaderConfig("isHideScaleButton") === "yes",
   isHidePDFConvertButton:
     ConfigService.getReaderConfig("isHidePDFConvertButton") === "yes",
-  isShowBorder: ConfigService.getReaderConfig("isShowBorder") === "yes",
+  isShowPageBorder: ConfigService.getReaderConfig("isShowPageBorder") === "yes",
   textOrientation: ConfigService.getReaderConfig("textOrientation") || "",
 };
 export function reader(
@@ -153,7 +153,7 @@ export function reader(
     case "HANDLE_SHOW_BORDER":
       return {
         ...state,
-        isShowBorder: action.payload,
+        isShowPageBorder: action.payload,
       };
     case "HANDLE_TEXT_ORIENTATION":
       return {

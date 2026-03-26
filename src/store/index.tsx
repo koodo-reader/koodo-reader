@@ -110,7 +110,7 @@ export type stateType = {
     isHideAIButton: boolean;
     isHideScaleButton: boolean;
     isHidePDFConvertButton: boolean;
-    isShowBorder: boolean;
+    isShowPageBorder: boolean;
     textOrientation: string;
     noteKey: string;
     currentChapter: string;

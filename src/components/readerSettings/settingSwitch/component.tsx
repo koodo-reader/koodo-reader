@@ -41,7 +41,8 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("isHideMenuButton") === "yes",
       isHideAudiobookButton:
         ConfigService.getReaderConfig("isHideAudiobookButton") === "yes",
-      isShowBorder: ConfigService.getReaderConfig("isShowBorder") === "yes",
+      isShowPageBorder:
+        ConfigService.getReaderConfig("isShowPageBorder") === "yes",
     };
   }
 
@@ -115,7 +116,7 @@ class SettingSwitch extends React.Component<
                     isHideScaleButton: this.props.handleHideScaleButton,
                     isHidePDFConvertButton:
                       this.props.handleHidePDFConvertButton,
-                    isShowBorder: this.props.handleShowBorder,
+                    isShowPageBorder: this.props.handleShowBorder,
                   };
 
                   if (propName === "isHideMenuButton") {
@@ -140,11 +141,14 @@ class SettingSwitch extends React.Component<
                       !this.state.isHideAudiobookButton
                     );
                     this.handleChange("isHideAudiobookButton");
-                  } else if (propName === "isShowBorder") {
-                    this.props.handleShowBorder(!this.state.isShowBorder);
-                    this.props.handleHideBackground(!this.state.isShowBorder);
-                    this.handleChange("isShowBorder");
-                    this.handleChange("isHideBackground");
+                  } else if (propName === "isShowPageBorder") {
+                    this.props.handleShowBorder(!this.state.isShowPageBorder);
+                    if (!this.state.isShowPageBorder) {
+                      this.props.handleHideBackground(true);
+                      this.handleChange("isHideBackground");
+                    }
+
+                    this.handleChange("isShowPageBorder");
                   } else if (propName === "isAllowScript") {
                     this.handleChange(propName);
                     setTimeout(() => {
