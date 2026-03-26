@@ -17,6 +17,17 @@
 .import-dialog-folder-icon {
   font-size: 20px;
 }
+.backup-dialog-title {
+  width: 120px;
+  height: 20px;
+  font-size: 18px;
+  opacity: 1;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 22px;
+  font-weight: 500;
+}
 .cloud-drive-item {
   display: flex;
   justify-content: space-between;
