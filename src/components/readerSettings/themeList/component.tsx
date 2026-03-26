@@ -54,7 +54,13 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   handleChooseBgColor = (color) => {
     ConfigService.setReaderConfig("backgroundColor", color.color);
     this.props.handleBackgroundColor(color.color);
-    StyleUtil.addDefaultCss();
+    if (
+      this.props.currentBook.format === "PDF" &&
+      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+    ) {
+    } else {
+      StyleUtil.addDefaultCss();
+    }
   };
   handleColorTextPicker = (isShowTextPicker: boolean) => {
     if (
