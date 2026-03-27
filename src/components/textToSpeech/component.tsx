@@ -536,7 +536,6 @@ class TextToSpeech extends React.Component<
     this.setState({ languageList, voiceList });
   };
   render() {
-    console.log(this.state.voiceList);
     return (
       <>
         <div className="tts-player-container">
@@ -712,10 +711,8 @@ class TextToSpeech extends React.Component<
             className="lang-setting-dropdown"
             id="text-speech-voice"
             onChange={(event) => {
-              console.log("chagned", event.target.value);
               let selectedValue = event.target.value;
               let [voiceName, plugin] = selectedValue.split("#");
-              console.log(voiceName, plugin, this.voices);
               ConfigService.setReaderConfig("voiceName", voiceName);
               let voice = this.voices.find(
                 (item) => item.name === voiceName && item.plugin === plugin
@@ -728,7 +725,6 @@ class TextToSpeech extends React.Component<
               } else {
                 ConfigService.setReaderConfig("voiceEngine", "system");
               }
-              console.log(voice);
               if (
                 voice.plugin === "official-ai-voice-plugin" &&
                 event.target.value.indexOf("Neural") > -1
