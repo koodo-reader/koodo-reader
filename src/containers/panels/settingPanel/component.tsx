@@ -76,7 +76,10 @@ class SettingPanel extends React.Component<
             .map((item) => (
               <SliderList key={item.mode} {...{ item }} />
             ))}
-          <DropdownList />
+          {this.props.currentBook.format === "PDF" &&
+          ConfigService.getReaderConfig("isConvertPDF") !== "yes" ? null : (
+            <DropdownList />
+          )}
           <SettingSwitch />
         </div>
       </div>

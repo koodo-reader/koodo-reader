@@ -10,10 +10,16 @@ export interface TextToSpeechProps {
   isAuthed: boolean;
   readerMode: string;
   handleFetchPlugins: () => void;
+  handleSetting: (isShow: boolean) => void;
+  handleSettingMode: (settingMode: string) => void;
   t: (title: string) => string;
 }
 export interface TextToSpeechState {
   isSupported: boolean;
   isAudioOn: boolean;
-  isAddNew: boolean;
+  isPaused: boolean;
+  currentIndex: number;
+  voiceLocale: string;
+  languageList: string[];
+  voiceList: any;
 }

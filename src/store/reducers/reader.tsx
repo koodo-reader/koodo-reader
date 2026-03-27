@@ -31,6 +31,7 @@ const initState = {
   section: null,
   readerMode: "double",
   isConvertOpen: false,
+  isSpeechOpen: false,
   isNavLocked: ConfigService.getReaderConfig("isNavLocked") === "yes",
   isSettingLocked: ConfigService.getReaderConfig("isSettingLocked") === "yes",
   isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
@@ -38,11 +39,15 @@ const initState = {
   isHideBackground: ConfigService.getReaderConfig("isHideBackground") === "yes",
   isHidePageButton: ConfigService.getReaderConfig("isHidePageButton") === "yes",
   isHideMenuButton: ConfigService.getReaderConfig("isHideMenuButton") === "yes",
+  isHideAudiobookButton:
+    ConfigService.getReaderConfig("isHideAudiobookButton") === "yes",
   isHideAIButton: ConfigService.getReaderConfig("isHideAIButton") === "yes",
   isHideScaleButton:
     ConfigService.getReaderConfig("isHideScaleButton") === "yes",
   isHidePDFConvertButton:
     ConfigService.getReaderConfig("isHidePDFConvertButton") === "yes",
+  isShowPageBorder: ConfigService.getReaderConfig("isShowPageBorder") === "yes",
+  textOrientation: ConfigService.getReaderConfig("textOrientation") || "",
 };
 export function reader(
   state = initState,
@@ -74,6 +79,11 @@ export function reader(
       return {
         ...state,
         isConvertOpen: action.payload,
+      };
+    case "HANDLE_SPEECH_DIALOG":
+      return {
+        ...state,
+        isSpeechOpen: action.payload,
       };
     case "HANDLE_CURRENT_CHAPTER_INDEX":
       return {
@@ -120,6 +130,11 @@ export function reader(
         ...state,
         isHideMenuButton: action.payload,
       };
+    case "HANDLE_HIDE_AUDIOBOOK_BUTTON":
+      return {
+        ...state,
+        isHideAudiobookButton: action.payload,
+      };
     case "HANDLE_HIDE_AI_BUTTON":
       return {
         ...state,
@@ -134,6 +149,16 @@ export function reader(
       return {
         ...state,
         isHidePDFConvertButton: action.payload,
+      };
+    case "HANDLE_SHOW_BORDER":
+      return {
+        ...state,
+        isShowPageBorder: action.payload,
+      };
+    case "HANDLE_TEXT_ORIENTATION":
+      return {
+        ...state,
+        textOrientation: action.payload,
       };
     case "HANDLE_HTML_BOOK":
       return {

@@ -1,11 +1,14 @@
 export interface DropdownListProps {
   t: (title: string) => string;
   renderBookFunc: () => void;
+  handleHideBackground: (isHideBackground: boolean) => void;
+  handleTextOrientation: (textOrientation: string) => void;
 }
 export interface DropdownListState {
-  currentFontFamilyIndex: number;
-  currentSubFontFamilyIndex: number;
-  currentLineHeightIndex: number;
-  currentTextAlignIndex: number;
-  chineseConversionIndex: number;
+  currentFontFamilyValue: string;
+  currentSubFontFamilyValue: string;
+  currentLineHeightValue: string;
+  currentTextAlignValue: string;
+  chineseConversionValue: string;
+  currentTextOrientationValue: string;
 }

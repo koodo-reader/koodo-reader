@@ -191,16 +191,13 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  position: absolute;
-  bottom: 10px;
-  right: 15px;
   transform: rotate(-90deg);
   cursor: pointer;
   opacity: 0.2;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  flex-shrink: 0;
 }
 .next-chapter-single-container:hover {
   opacity: 0.7;
@@ -227,6 +224,10 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+.text-to-speech-icon {
+  font-size: 22px;
+  margin-right: 10px;
 }
 .reader-setting-icon-container,
 .reader-zoom-in-icon-container {

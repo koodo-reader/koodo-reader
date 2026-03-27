@@ -22,6 +22,9 @@ export function handleColor(color: number) {
 export function handleConvertDialog(isConvertOpen: boolean) {
   return { type: "HANDLE_CONVERT_DIALOG", payload: isConvertOpen };
 }
+export function handleSpeechDialog(isSpeechOpen: boolean) {
+  return { type: "HANDLE_SPEECH_DIALOG", payload: isSpeechOpen };
+}
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
 }
@@ -73,6 +76,12 @@ export function handleHidePageButton(isHidePageButton: boolean) {
 export function handleHideMenuButton(isHideMenuButton: boolean) {
   return { type: "HANDLE_HIDE_MENU_BUTTON", payload: isHideMenuButton };
 }
+export function handleHideAudiobookButton(isHideAudiobookButton: boolean) {
+  return {
+    type: "HANDLE_HIDE_AUDIOBOOK_BUTTON",
+    payload: isHideAudiobookButton,
+  };
+}
 export function handleHideAIButton(isHideAIButton: boolean) {
   return { type: "HANDLE_HIDE_AI_BUTTON", payload: isHideAIButton };
 }
@@ -84,6 +93,12 @@ export function handleHidePDFConvertButton(isHidePDFConvertButton: boolean) {
     type: "HANDLE_HIDE_PDF_CONVERT_BUTTON",
     payload: isHidePDFConvertButton,
   };
+}
+export function handleShowBorder(isShowPageBorder: boolean) {
+  return { type: "HANDLE_SHOW_BORDER", payload: isShowPageBorder };
+}
+export function handleTextOrientation(textOrientation: string) {
+  return { type: "HANDLE_TEXT_ORIENTATION", payload: textOrientation };
 }
 export function handleFetchNotes() {
   return async (

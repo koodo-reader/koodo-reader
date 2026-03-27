@@ -3,6 +3,8 @@ import {
   handleOpenMenu,
   handleMenuMode,
   handleFetchPlugins,
+  handleSetting,
+  handleSettingMode,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
@@ -19,6 +21,8 @@ const actionCreator = {
   handleOpenMenu,
   handleMenuMode,
   handleFetchPlugins,
+  handleSetting,
+  handleSettingMode,
 };
 export default connect(
   mapStateToProps,

@@ -6,6 +6,7 @@ import {
   handleDeleteDialog,
   handleSelectBook,
   handleSelectedBooks,
+  handleRefreshBookCover,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 import BookCardItem from "./component";
@@ -19,6 +20,7 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     isSelectBook: state.manager.isSelectBook,
     selectedBooks: state.manager.selectedBooks,
+    refreshBookKey: state.manager.refreshBookKey,
   };
 };
 const actionCreator = {
@@ -28,6 +30,7 @@ const actionCreator = {
   handleSelectBook,
   handleDeleteDialog,
   handleSelectedBooks,
+  handleRefreshBookCover,
 };
 export default connect(
   mapStateToProps,

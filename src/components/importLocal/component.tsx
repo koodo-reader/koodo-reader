@@ -18,7 +18,7 @@ import {
   supportedFormats,
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
-import { BookHelper } from "../../assets/lib/kookit-extra-browser.min";
+import { BookHelper } from "../../assets/lib/kookit.min";
 declare var window: any;
 let clickFilePath = "";
 
@@ -251,6 +251,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                       : "",
                   convertChinese:
                     ConfigService.getReaderConfig("convertChinese"),
+                  textOrientation:
+                    ConfigService.getReaderConfig("textOrientation"),
                   parserRegex: "",
                   isDarkMode: "no",
                   isMobile: "no",

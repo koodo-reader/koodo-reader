@@ -8,6 +8,8 @@ export interface PopupDictProps {
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleFetchPlugins: () => void;
+  handleSetting: (isShow: boolean) => void;
+  handleSettingMode: (settingMode: string) => void;
   t: (title: string) => string;
 }
 export interface PopupDictState {
@@ -19,4 +21,6 @@ export interface PopupDictState {
   dictSource: string;
   isAddNew: boolean;
   isShowUrl: boolean;
+  aiAnswer: string;
+  isAiWaiting: boolean;
 }

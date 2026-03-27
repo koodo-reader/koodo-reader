@@ -1,8 +1,7 @@
 import { getIframeDoc } from "./docUtil";
-import {
-  ConfigService,
-  StyleHelper,
-} from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { applyThemeColor, removeThemeColor } from "./themeUtil";
+import { StyleHelper } from "../../assets/lib/kookit.min";
 
 class styleUtil {
   // add default css for iframe
@@ -46,17 +45,11 @@ class styleUtil {
   }
 
   static applyTheme() {
-    if (
-      ConfigService.getReaderConfig("themeColor") &&
-      ConfigService.getReaderConfig("themeColor") !== "default"
-    ) {
-      const style = document.createElement("link");
-      style.href =
-        "./assets/styles/" +
-        ConfigService.getReaderConfig("themeColor") +
-        ".css";
-      style.rel = "stylesheet";
-      document.head.appendChild(style);
+    const themeColor = ConfigService.getReaderConfig("themeColor");
+    if (themeColor && themeColor !== "default") {
+      applyThemeColor(themeColor);
+    } else {
+      removeThemeColor();
     }
   }
 }

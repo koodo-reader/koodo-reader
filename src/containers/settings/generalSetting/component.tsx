@@ -60,13 +60,18 @@ class GeneralSetting extends React.Component<
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
       appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
+      isDeleteOriginal:
+        ConfigService.getReaderConfig("isDeleteOriginal") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
-      currentThemeIndex: _.findLastIndex(themeList, {
-        name: ConfigService.getReaderConfig("themeColor"),
-      }),
+      currentThemeIndex: themeList.findIndex(
+        (item) =>
+          item.color ===
+          (ConfigService.getReaderConfig("themeColor") || "default")
+      ),
       storageLocation: getStorageLocation() || "",
       isAddNew: false,
+      startupShelf: ConfigService.getReaderConfig("startupShelf") || "",
       settingLogin: "",
       driveConfig: {},
       loginConfig: {},
@@ -459,6 +464,39 @@ class GeneralSetting extends React.Component<
                 {this.props.t(item.label)}
               </option>
             ))}
+          </select>
+        </div>
+        <div className="setting-dialog-new-title">
+          <Trans>Auto switch to shelf on startup</Trans>
+          <select
+            name=""
+            className="lang-setting-dropdown"
+            onChange={(event) => {
+              const value = event.target.value;
+              ConfigService.setReaderConfig("startupShelf", value);
+              this.setState({ startupShelf: value });
+              toast.success(this.props.t("Change successful"));
+            }}
+          >
+            <option
+              value=""
+              className="lang-setting-option"
+              selected={!this.state.startupShelf}
+            >
+              {this.props.t("Disabled")}
+            </option>
+            {Object.keys(ConfigService.getAllMapConfig("shelfList") || {}).map(
+              (shelfName) => (
+                <option
+                  value={shelfName}
+                  key={shelfName}
+                  className="lang-setting-option"
+                  selected={shelfName === this.state.startupShelf}
+                >
+                  {shelfName}
+                </option>
+              )
+            )}
           </select>
         </div>
         <div className="setting-dialog-new-title">

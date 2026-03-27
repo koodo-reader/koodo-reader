@@ -1,99 +1,101 @@
 .edit-dialog-container {
-  width: 309px;
-  height: 189px;
+  width: 380px;
+  height: 440px;
   opacity: 1;
   position: absolute;
-  left: calc(50% - 155px);
-  top: calc(50% - 95px);
+  left: calc(50% - 190px);
+  top: calc(50% - 220px);
   z-index: 10;
   animation: popup 0.1s ease-in-out 0s 1;
   border-radius: 5px;
+  padding: 22px 20px 16px;
+  box-sizing: border-box;
 }
 .edit-dialog-title {
-  width: 120px;
-  height: 20px;
   font-size: 18px;
-  opacity: 1;
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  top: 22px;
   font-weight: 500;
-}
-.edit-dialog-book-name-container {
-  width: 100%;
-  font-size: 16px;
-  line-height: 14px;
-  opacity: 1;
-  position: absolute;
-  top: 55px;
-}
-.edit-dialog-book-name-text {
-  width: 50px;
-  float: left;
-  margin-left: 25px;
-  margin-top: 7px;
-}
-.edit-dialog-book-name-box {
-  float: left;
-  width: 210px;
-  height: 31px;
-  opacity: 1;
-  box-sizing: border-box;
-  padding-left: 5px;
-  font-size: 15px;
-  border-radius: 5px;
-}
-.edit-dialog-book-author-container {
-  width: 100%;
-  font-size: 15px;
-  line-height: 14px;
-  opacity: 1;
-  position: absolute;
-  top: 95px;
-}
-.edit-dialog-book-author-text {
-  width: 50px;
-  float: left;
-  margin-left: 25px;
-  margin-top: 7px;
-}
-.edit-dialog-book-author-box {
-  float: left;
-  width: 210px;
-  height: 31px;
-  opacity: 1;
-  box-sizing: border-box;
-  padding-left: 5px;
-  font-size: 15px;
-  border-radius: 5px;
-}
-.edit-dialog-cancel {
-  width: 60px;
-  height: 26px;
-  opacity: 1;
-  position: absolute;
-  left: 147px;
-  top: 144px;
-
-  font-size: 13px;
-  border-radius: 5px;
-  line-height: 26px;
-  opacity: 1;
   text-align: center;
-  cursor: pointer;
+  margin-bottom: 16px;
 }
-.edit-dialog-confirm {
-  width: 64px;
-  height: 30px;
-  opacity: 1;
-  position: absolute;
-  left: 220px;
-  top: 144px;
-  font-size: 13px;
+/* Generic row layout */
+.edit-dialog-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.edit-dialog-row-description {
+  align-items: flex-start;
+}
+.edit-dialog-label {
+  font-size: 14px;
+  width: 40px;
+  min-width: 50px;
+  flex-shrink: 0;
+  text-align: right;
+  margin-right: 10px;
+  line-height: 32px;
+}
+.edit-dialog-input {
+  flex: 1;
+  height: 32px;
+  box-sizing: border-box;
+  padding-left: 8px;
+  font-size: 14px;
   border-radius: 5px;
-  line-height: 30px;
-  opacity: 1;
-  text-align: center;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 2px solid rgba(75, 75, 75, 1);
+  outline: none;
+  background: transparent;
+}
+.edit-dialog-textarea {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  font-size: 14px;
+  border-radius: 5px;
+  resize: vertical;
+  min-height: 64px;
+  line-height: 1.4;
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 2px solid rgba(75, 75, 75, 1);
+  outline: none;
+  background: transparent;
+}
+/* Cover picker */
+.edit-dialog-cover-box {
+  flex: 1;
+  height: 100px;
+  border-radius: 5px;
+  border: 2px dashed rgba(75, 75, 75, 1);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.edit-dialog-cover-box:hover {
+  border-color: rgba(75, 75, 75, 1);
+}
+.edit-dialog-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.edit-dialog-cover-placeholder {
+  font-size: 13px;
+  color: #aaa;
+  padding: 8px;
+  text-align: center;
+}
+/* Button row */
+.edit-dialog-button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
 }

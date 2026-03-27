@@ -2,7 +2,6 @@
 import { isElectron } from "react-device-detect";
 import SparkMD5 from "spark-md5";
 import {
-  BookHelper,
   CommonTool,
   ConfigService,
   SyncUtil,
@@ -29,6 +28,8 @@ import SyncService from "./storage/syncService";
 import localforage from "localforage";
 import { driveList } from "../constants/driveList";
 import { updateUserConfig } from "./request/user";
+import { languageCNMap, languageENMap } from "../constants/ttsList";
+import { BookHelper } from "../assets/lib/kookit.min";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -98,6 +99,44 @@ export const vexComfirmAsync = (message, confirmText: string = "Confirm") => {
     });
   });
 };
+export const vexOpenAsync = (config: Record<string, any>, message: string) => {
+  return new Promise<Record<string, any> | false>((resolve) => {
+    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    const keys = Object.keys(config).filter((k) => k && k.trim());
+    const inputHtml = keys
+      .map((key) => {
+        const raw = config[key] ?? "";
+        const placeholder =
+          typeof raw === "string" && raw.indexOf("[") > -1 ? raw : "";
+        const value =
+          typeof raw === "string" && raw.indexOf("[") === -1 ? raw : "";
+        return [
+          `<div style="margin-bottom:10px">`,
+          `<label style="display:block;margin-bottom:4px;font-weight:500">${key}</label>`,
+          `<input name="${key}" type="text" placeholder="${placeholder}" value="${value}" style="width:100%" required />`,
+          `</div>`,
+        ].join("");
+      })
+      .join("");
+    window.vex.dialog.open({
+      unsafeMessage: message ? i18n.t(message).replace(/\n/g, "<br>") : "",
+      input: inputHtml,
+      callback: function (data) {
+        if (!data) {
+          resolve(false);
+        } else {
+          const result: Record<string, any> = {};
+          for (const key of keys) {
+            result[key] = data[key] ?? "";
+          }
+          resolve(result);
+        }
+      },
+    });
+  });
+};
+
 export const getFormatFromAudioPath = (audioPath: string) => {
   let format = "mp3";
   if (audioPath.indexOf(".wav") > -1) {
@@ -410,6 +449,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         animation:
           ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
         convertChinese: ConfigService.getReaderConfig("convertChinese"),
+        textOrientation: ConfigService.getReaderConfig("textOrientation"),
         parserRegex: "",
         isDarkMode: "no",
         isMobile: "no",
@@ -1269,5 +1309,27 @@ export const isTokenExpired = async (service: string): Promise<boolean> => {
     return true;
   } else {
     return false;
+  }
+};
+export const langToName = (lang: string) => {
+  let regionCode = lang.split("-")[1];
+  let langCode = lang.split("-")[0];
+  if (!languageENMap["languages"][langCode]) {
+    return lang;
+  }
+  if (ConfigService.getReaderConfig("lang").startsWith("zh")) {
+    return (
+      languageCNMap["languages"][langCode] +
+      (regionCode && languageCNMap["territories"][regionCode]
+        ? " (" + languageCNMap["territories"][regionCode] + ")"
+        : "")
+    );
+  } else {
+    return (
+      languageENMap["languages"][langCode] +
+      (regionCode && languageENMap["territories"][regionCode]
+        ? " (" + languageENMap["territories"][regionCode] + ")"
+        : "")
+    );
   }
 };

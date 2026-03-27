@@ -5,63 +5,157 @@ import { Trans } from "react-i18next";
 import { EditDialogProps, EditDialogState } from "./interface";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
+import CoverUtil from "../../../utils/file/coverUtil";
 
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
+  private nameRef = React.createRef<HTMLInputElement>();
+  private authorRef = React.createRef<HTMLInputElement>();
+  private publisherRef = React.createRef<HTMLInputElement>();
+  private descriptionRef = React.createRef<HTMLTextAreaElement>();
+  private coverInputRef = React.createRef<HTMLInputElement>();
+
   constructor(props: EditDialogProps) {
     super(props);
-    this.state = { isCheck: false };
+    this.state = { isCheck: false, coverPreview: "" };
   }
-  componentDidMount() {
-    const nameBox: HTMLInputElement = document.querySelector(
-      ".edit-dialog-book-name-box"
-    ) as HTMLInputElement;
-    const authorBox: HTMLInputElement = document.querySelector(
-      ".edit-dialog-book-author-box"
-    ) as HTMLInputElement;
-    nameBox.value = this.props.currentBook.name;
-    authorBox.value = this.props.currentBook.author;
+
+  async componentDidMount() {
+    if (this.nameRef.current) {
+      this.nameRef.current.value = this.props.currentBook.name || "";
+    }
+    if (this.authorRef.current) {
+      this.authorRef.current.value = this.props.currentBook.author || "";
+    }
+    if (this.publisherRef.current) {
+      this.publisherRef.current.value = this.props.currentBook.publisher || "";
+    }
+    if (this.descriptionRef.current) {
+      this.descriptionRef.current.value =
+        this.props.currentBook.description || "";
+    }
+    const cover = await CoverUtil.getCover(this.props.currentBook);
+    if (cover) {
+      this.setState({ coverPreview: cover });
+    }
   }
 
   handleCancel = () => {
     this.props.handleEditDialog(false);
   };
-  handleComfirm = () => {
-    const nameBox: HTMLInputElement = document.querySelector(
-      ".edit-dialog-book-name-box"
-    ) as HTMLInputElement;
-    let name = nameBox.value;
-    const authorBox: HTMLInputElement = document.querySelector(
-      ".edit-dialog-book-author-box"
-    ) as HTMLInputElement;
-    let author = authorBox.value;
+
+  handleCoverSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const base64 = ev.target?.result as string;
+      this.setState({ coverPreview: base64 });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  handleComfirm = async () => {
+    const name = this.nameRef.current?.value || "";
+    const author = this.authorRef.current?.value || "";
+    const publisher = this.publisherRef.current?.value || "";
+    const description = this.descriptionRef.current?.value || "";
+
     this.props.currentBook.name = name;
     this.props.currentBook.author = author;
-    DatabaseService.updateRecord(this.props.currentBook, "books").then(() => {
-      this.props.handleEditDialog(false);
-      this.props.handleFetchBooks();
-    });
+    this.props.currentBook.publisher = publisher;
+    this.props.currentBook.description = description;
+
+    // Handle cover update: if user picked a new image (base64 data URL)
+    const { coverPreview } = this.state;
+    if (coverPreview && coverPreview.startsWith("data:")) {
+      this.props.currentBook.cover = coverPreview;
+      await CoverUtil.addCover(this.props.currentBook);
+      this.props.handleRefreshBookCover(this.props.currentBook.key);
+    }
+
+    await DatabaseService.updateRecord(this.props.currentBook, "books");
+    this.props.handleEditDialog(false);
+    this.props.handleFetchBooks();
     toast.success(this.props.t("Edition successful"));
     this.props.handleActionDialog(false);
   };
+
   render() {
+    const { coverPreview } = this.state;
     return (
       <div className="edit-dialog-container">
         <div className="edit-dialog-title">
           <Trans>Edit Book</Trans>
         </div>
-        <div className="edit-dialog-book-name-container">
-          <div className="edit-dialog-book-name-text">
+
+        {/* Cover */}
+        <div className="edit-dialog-row">
+          <span className="edit-dialog-label">
+            <Trans>Cover</Trans>
+          </span>
+          <div
+            className="edit-dialog-cover-box"
+            onClick={() => this.coverInputRef.current?.click()}
+            title={this.props.t("Click to select image")}
+          >
+            {coverPreview ? (
+              <img
+                src={coverPreview}
+                alt="cover"
+                className="edit-dialog-cover-img"
+              />
+            ) : (
+              <span className="edit-dialog-cover-placeholder">
+                <Trans>Click to select image</Trans>
+              </span>
+            )}
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            ref={this.coverInputRef}
+            style={{ display: "none" }}
+            onChange={this.handleCoverSelect}
+          />
+        </div>
+
+        {/* Book name */}
+        <div className="edit-dialog-row">
+          <span className="edit-dialog-label">
             <Trans>Book name</Trans>
-          </div>
-          <input className="edit-dialog-book-name-box" />
+          </span>
+          <input className="edit-dialog-input" ref={this.nameRef} />
         </div>
-        <div className="edit-dialog-book-author-container">
-          <div className="edit-dialog-book-author-text">
+
+        {/* Author */}
+        <div className="edit-dialog-row">
+          <span className="edit-dialog-label">
             <Trans>Author</Trans>
-          </div>
-          <input className="edit-dialog-book-author-box" />
+          </span>
+          <input className="edit-dialog-input" ref={this.authorRef} />
         </div>
-        <div className="add-dialog-button-container">
+
+        {/* Publisher */}
+        <div className="edit-dialog-row">
+          <span className="edit-dialog-label">
+            <Trans>Publisher</Trans>
+          </span>
+          <input className="edit-dialog-input" ref={this.publisherRef} />
+        </div>
+
+        {/* Description */}
+        <div className="edit-dialog-row edit-dialog-row-description">
+          <span className="edit-dialog-label">
+            <Trans>Description</Trans>
+          </span>
+          <textarea
+            className="edit-dialog-textarea"
+            ref={this.descriptionRef}
+            rows={3}
+          />
+        </div>
+
+        <div className="edit-dialog-button-container">
           <div
             className="add-dialog-cancel"
             onClick={() => {
