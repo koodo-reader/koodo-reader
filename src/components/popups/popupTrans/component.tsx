@@ -164,7 +164,10 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
             <div
               className="trans-service-selector-inactive"
               onClick={() => {
-                this.setState({ isAddNew: true });
+                this.props.handleOpenMenu(false);
+                this.props.handleMenuMode("");
+                this.props.handleSetting(true);
+                this.props.handleSettingMode("plugins");
               }}
             >
               <span className="icon-add trans-add-icon"></span>
@@ -193,82 +196,28 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           </div>
           {this.state.isAddNew && (
             <div
-              className="trans-add-new-container"
-              style={{ fontWeight: 500 }}
+              style={{
+                marginTop: "50px",
+                textAlign: "center",
+                fontSize: "17px",
+                color: "#f16464",
+              }}
             >
-              <textarea
-                name="url"
-                placeholder={this.props.t(
-                  "Paste the code of the plugin here, check out document to learn how to get more plugins"
-                )}
-                id="trans-add-content-box"
-                className="trans-add-content-box"
-                onContextMenu={() => {
-                  handleContextMenu("trans-add-content-box");
+              <span
+                style={{
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  textAlign: "center",
                 }}
-                style={{ height: "180px" }}
-              />
-              <div className="trans-add-button-container">
-                <div
-                  className="trans-add-cancel"
-                  style={{ color: "#f16464" }}
-                  onClick={() => {
-                    if (
-                      ConfigService.getReaderConfig("lang") &&
-                      ConfigService.getReaderConfig("lang").startsWith("zh")
-                    ) {
-                      openExternalUrl(getWebsiteUrl() + "/zh/plugin");
-                    } else {
-                      openExternalUrl(getWebsiteUrl() + "/en/plugin");
-                    }
-                  }}
-                >
-                  <Trans>Document</Trans>
-                </div>
-                <div
-                  className="trans-add-cancel"
-                  onClick={() => {
-                    this.setState({ isAddNew: false });
-                  }}
-                >
-                  <Trans>Cancel</Trans>
-                </div>
-                <div
-                  className="trans-add-confirm"
-                  onClick={async () => {
-                    let value: string = (
-                      document.querySelector(
-                        "#trans-add-content-box"
-                      ) as HTMLTextAreaElement
-                    ).value;
-                    if (value) {
-                      let plugin: any = JSON.parse(value);
-                      plugin.key = plugin.identifier;
-                      if (!(await checkPlugin(plugin))) {
-                        toast.error(this.props.t("Plugin verification failed"));
-                        return;
-                      }
-                      if (
-                        this.props.plugins.find(
-                          (item) => item.key === plugin.key
-                        )
-                      ) {
-                        await DatabaseService.updateRecord(plugin, "plugins");
-                      } else {
-                        await DatabaseService.saveRecord(plugin, "plugins");
-                      }
-                      this.props.handleFetchPlugins();
-                      toast.success(this.props.t("Addition successful"));
-                    }
-                    this.setState({
-                      isAddNew: false,
-                      translatedText: "Please select the service",
-                    });
-                  }}
-                >
-                  <Trans>Confirm</Trans>
-                </div>
-              </div>
+                onClick={() => {
+                  this.props.handleOpenMenu(false);
+                  this.props.handleMenuMode("");
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("plugins");
+                }}
+              >
+                <Trans>Add new plugin</Trans>
+              </span>
             </div>
           )}
           {!this.state.isAddNew && (

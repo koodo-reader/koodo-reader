@@ -59,9 +59,7 @@ class CoverUtil {
       if (!fs.existsSync(imageFilePath)) {
         return book.cover;
       }
-      // let buffer = fs.readFileSync(imageFilePath);
-      // return `data:image/${format};base64,${buffer.toString("base64")}`;
-      return `file://${imageFilePath.replace(/\\/g, "/")}`;
+      return imageFilePath;
     } else {
       if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
         let coverList = await this.getLocalCoverList();

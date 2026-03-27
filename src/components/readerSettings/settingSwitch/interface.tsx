@@ -12,9 +12,11 @@ export interface SettingSwitchProps {
   handleHideBackground: (isHideBackground: boolean) => void;
   handleHidePageButton: (isHidePageButton: boolean) => void;
   handleHideMenuButton: (isHideMenuButton: boolean) => void;
+  handleHideAudiobookButton: (isHideAudiobookButton: boolean) => void;
   handleHideAIButton: (isHideAIButton: boolean) => void;
   handleHideScaleButton: (isHideScaleButton: boolean) => void;
   handleHidePDFConvertButton: (isHidePDFConvertButton: boolean) => void;
+  handleShowBorder: (isShowPageBorder: boolean) => void;
 }
 export interface SettingSwitchState {
   isHideBackground: boolean;
@@ -27,6 +29,9 @@ export interface SettingSwitchState {
   isItalic: boolean;
   isInvert: boolean;
   isStartFromEven: boolean;
+  isAllowScript: boolean;
+  isHyphenation: boolean;
+  isOrphanWidow: boolean;
   isBionic: boolean;
   isHideHeader: boolean;
   isHidePageButton: boolean;
@@ -34,4 +39,6 @@ export interface SettingSwitchState {
   isHideScaleButton: boolean;
   isHidePDFConvertButton: boolean;
   isHideMenuButton: boolean;
+  isHideAudiobookButton: boolean;
+  isShowPageBorder: boolean;
 }

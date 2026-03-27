@@ -13,35 +13,16 @@ class DropdownList extends React.Component<
   constructor(props: DropdownListProps) {
     super(props);
     this.state = {
-      currentFontFamilyIndex: dropdownList[0].option.findIndex((item: any) => {
-        return (
-          item.value ===
-          (ConfigService.getReaderConfig("fontFamily") || "Built-in font")
-        );
-      }),
-      currentSubFontFamilyIndex: dropdownList[0].option.findIndex(
-        (item: any) => {
-          return (
-            item.value ===
-            (ConfigService.getReaderConfig("subFontFamily") || "Built-in font")
-          );
-        }
-      ),
-      currentLineHeightIndex: dropdownList[1].option.findIndex((item: any) => {
-        return (
-          item.value === (ConfigService.getReaderConfig("lineHeight") || "")
-        );
-      }),
-      currentTextAlignIndex: dropdownList[2].option.findIndex((item: any) => {
-        return (
-          item.value === (ConfigService.getReaderConfig("textAlign") || "")
-        );
-      }),
-      chineseConversionIndex: dropdownList[3].option.findIndex((item: any) => {
-        return (
-          item.value === (ConfigService.getReaderConfig("convertChinese") || "")
-        );
-      }),
+      currentFontFamilyValue:
+        ConfigService.getReaderConfig("fontFamily") || "Built-in font",
+      currentSubFontFamilyValue:
+        ConfigService.getReaderConfig("subFontFamily") || "Built-in font",
+      currentLineHeightValue: ConfigService.getReaderConfig("lineHeight") || "",
+      currentTextAlignValue: ConfigService.getReaderConfig("textAlign") || "",
+      chineseConversionValue:
+        ConfigService.getReaderConfig("convertChinese") || "",
+      currentTextOrientationValue:
+        ConfigService.getReaderConfig("textOrientation") || "",
     };
   }
   componentDidMount() {
@@ -61,35 +42,23 @@ class DropdownList extends React.Component<
       }
       if (fontFamilyItem && subFontFamilyItem) {
         this.setState({
-          currentFontFamilyIndex: fontFamilyItem.option.findIndex(
-            (item: any) => {
-              return (
-                item.value ===
-                (ConfigService.getReaderConfig("fontFamily") || "Built-in font")
-              );
-            }
-          ),
-          currentSubFontFamilyIndex: subFontFamilyItem.option.findIndex(
-            (item: any) => {
-              return (
-                item.value ===
-                (ConfigService.getReaderConfig("subFontFamily") ||
-                  "Built-in font")
-              );
-            }
-          ),
+          currentFontFamilyValue:
+            ConfigService.getReaderConfig("fontFamily") || "Built-in font",
+          currentSubFontFamilyValue:
+            ConfigService.getReaderConfig("subFontFamily") || "Built-in font",
         });
       }
     });
   }
 
   handleView(event: any, option: string) {
-    let arr = event.target.value.split("#");
-    ConfigService.setReaderConfig(option, arr[0]);
+    const value = event.target.value;
+    ConfigService.setReaderConfig(option, value);
+    let arr = [value];
     switch (option) {
       case "fontFamily":
         this.setState({
-          currentFontFamilyIndex: arr[1],
+          currentFontFamilyValue: arr[0],
         });
         if (arr[0] === "Built-in font") {
           ConfigService.setReaderConfig(option, "");
@@ -101,7 +70,7 @@ class DropdownList extends React.Component<
         break;
       case "subFontFamily":
         this.setState({
-          currentSubFontFamilyIndex: arr[1],
+          currentSubFontFamilyValue: arr[0],
         });
         if (arr[0] === "Built-in font") {
           ConfigService.setReaderConfig(option, "");
@@ -114,20 +83,31 @@ class DropdownList extends React.Component<
 
       case "lineHeight":
         this.setState({
-          currentLineHeightIndex: arr[1],
+          currentLineHeightValue: arr[0],
         });
 
         break;
       case "textAlign":
         this.setState({
-          currentTextAlignIndex: arr[1],
+          currentTextAlignValue: arr[0],
         });
 
         break;
       case "convertChinese":
         this.setState({
-          chineseConversionIndex: arr[1],
+          chineseConversionValue: arr[0],
         });
+
+        break;
+      case "textOrientation":
+        this.setState({
+          currentTextOrientationValue: arr[0],
+        });
+        this.props.handleTextOrientation(arr[0]);
+        if (arr[0] === "vertical") {
+          this.props.handleHideBackground(true);
+          ConfigService.setReaderConfig("isHideBackground", "yes");
+        }
 
         break;
       default:
@@ -158,20 +138,22 @@ class DropdownList extends React.Component<
                 index: number
               ) => (
                 <option
-                  value={subItem.value + "#" + index.toString()}
+                  value={subItem.value}
                   key={index}
                   className="general-setting-option"
                   selected={
-                    index ===
+                    subItem.value ===
                     (item.value === "lineHeight"
-                      ? this.state.currentLineHeightIndex
+                      ? this.state.currentLineHeightValue
                       : item.value === "textAlign"
-                        ? this.state.currentTextAlignIndex
+                        ? this.state.currentTextAlignValue
                         : item.value === "convertChinese"
-                          ? this.state.chineseConversionIndex
-                          : item.value === "fontFamily"
-                            ? this.state.currentFontFamilyIndex
-                            : this.state.currentSubFontFamilyIndex)
+                          ? this.state.chineseConversionValue
+                          : item.value === "textOrientation"
+                            ? this.state.currentTextOrientationValue
+                            : item.value === "fontFamily"
+                              ? this.state.currentFontFamilyValue
+                              : this.state.currentSubFontFamilyValue)
                   }
                 >
                   {this.props.t(subItem.label)}

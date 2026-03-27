@@ -78,6 +78,16 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   }
   componentDidMount() {
     this.props.handleReadingState(false);
+    // Auto switch to configured startup shelf
+    const startupShelf = ConfigService.getReaderConfig("startupShelf");
+    if (startupShelf) {
+      const shelfList = ConfigService.getAllMapConfig("shelfList") || {};
+      if (shelfList.hasOwnProperty(startupShelf)) {
+        this.props.handleShelf(startupShelf);
+        this.props.handleMode("shelf");
+        this.props.history.push("/manager/shelf");
+      }
+    }
   }
 
   handleDrag = (isDrag: boolean) => {

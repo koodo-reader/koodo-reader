@@ -368,7 +368,7 @@ class ImportDialog extends React.Component<
         className="backup-page-container"
         style={{ height: "450px", top: "calc(50% - 225px)" }}
       >
-        <div className="edit-dialog-title">
+        <div className="backup-dialog-title">
           <Trans>From cloud storage</Trans>
         </div>
         <div className="import-dialog-option">

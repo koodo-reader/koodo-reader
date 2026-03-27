@@ -1,11 +1,11 @@
 import React from "react";
 import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
-import TextToSpeech from "../../textToSpeech";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
 import { vexComfirmAsync } from "../../../utils/common";
+import BookUtil from "../../../utils/file/bookUtil";
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
   SettingSwitchState
@@ -21,6 +21,9 @@ class SettingSwitch extends React.Component<
       isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
       isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
       isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
+      isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
+      isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
+      isAllowScript: ConfigService.getReaderConfig("isAllowScript") === "yes",
       isStartFromEven:
         ConfigService.getReaderConfig("isStartFromEven") === "yes",
       isHideBackground:
@@ -36,6 +39,10 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("isHidePageButton") === "yes",
       isHideMenuButton:
         ConfigService.getReaderConfig("isHideMenuButton") === "yes",
+      isHideAudiobookButton:
+        ConfigService.getReaderConfig("isHideAudiobookButton") === "yes",
+      isShowPageBorder:
+        ConfigService.getReaderConfig("isShowPageBorder") === "yes",
     };
   }
 
@@ -64,7 +71,20 @@ class SettingSwitch extends React.Component<
   render() {
     return (
       <>
-        {this.props.plugins && <TextToSpeech />}
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <span
+            style={{
+              textDecoration: "underline",
+              cursor: "pointer",
+              textAlign: "center",
+            }}
+          >
+            <Trans>
+              The audiobook feature has been moved to the bottom right of the
+              book page
+            </Trans>
+          </span>
+        </div>
         {readerSettingList
           .filter((item) => {
             if (
@@ -84,96 +104,61 @@ class SettingSwitch extends React.Component<
               <span
                 className="single-control-switch"
                 onClick={async () => {
-                  switch (item.propName) {
-                    case "isBold":
-                      this._handleChange("isBold");
-                      break;
-                    case "isIndent":
-                      this._handleChange("isIndent");
-                      break;
-                    case "isSliding":
-                      this._handleChange("isSliding");
-                      break;
-                    case "isItalic":
-                      this._handleChange("isItalic");
-                      break;
-                    case "isUnderline":
-                      this._handleChange("isUnderline");
-                      break;
-                    case "isShadow":
-                      this._handleChange("isShadow");
-                      break;
-                    case "isInvert":
-                      this._handleChange("isInvert");
-                      break;
-                    case "isStartFromEven":
-                      this._handleChange("isStartFromEven");
-                      break;
-                    case "isBionic":
-                      this._handleChange("isBionic");
-                      break;
-                    case "isHideFooter":
-                      this.props.handleHideFooter(!this.state.isHideFooter);
-                      this.handleChange("isHideFooter");
-                      break;
-                    case "isHideHeader":
-                      this.props.handleHideHeader(!this.state.isHideHeader);
-                      this.handleChange("isHideHeader");
-                      break;
-                    case "isHideBackground":
-                      this.props.handleHideBackground(
-                        !this.state.isHideBackground
-                      );
-                      this.handleChange("isHideBackground");
-                      break;
-                    case "isHidePageButton":
-                      this.props.handleHidePageButton(
-                        !this.state.isHidePageButton
-                      );
-                      this.handleChange("isHidePageButton");
-                      break;
-                    case "isHideMenuButton":
-                      if (!this.state["isHideMenuButton"]) {
-                        let result = await vexComfirmAsync(
-                          "After hiding the menu button, you can move the mouse to the edge of the window to show it again."
-                        );
-                        if (result) {
-                          this.props.handleHideMenuButton(
-                            !this.state.isHideMenuButton
-                          );
-                          ConfigService.setReaderConfig(
-                            "isHideMenuButton",
-                            "yes"
-                          );
+                  const propName = item.propName as keyof SettingSwitchState;
+                  const renderProps: Partial<
+                    Record<keyof SettingSwitchState, (val: boolean) => void>
+                  > = {
+                    isHideFooter: this.props.handleHideFooter,
+                    isHideHeader: this.props.handleHideHeader,
+                    isHideBackground: this.props.handleHideBackground,
+                    isHidePageButton: this.props.handleHidePageButton,
+                    isHideAIButton: this.props.handleHideAIButton,
+                    isHideScaleButton: this.props.handleHideScaleButton,
+                    isHidePDFConvertButton:
+                      this.props.handleHidePDFConvertButton,
+                    isShowPageBorder: this.props.handleShowBorder,
+                  };
 
-                          toast(this.props.t("Change successful"));
-                        }
-                      } else {
-                        this.props.handleHideMenuButton(
-                          !this.state.isHideMenuButton
+                  if (propName === "isHideMenuButton") {
+                    if (!this.state.isHideMenuButton) {
+                      const result = await vexComfirmAsync(
+                        "After hiding the menu button, you can move the mouse to the edge of the window to show it again."
+                      );
+                      if (result) {
+                        this.props.handleHideMenuButton(true);
+                        ConfigService.setReaderConfig(
+                          "isHideMenuButton",
+                          "yes"
                         );
-                        this.handleChange("isHideMenuButton");
+                        toast(this.props.t("Change successful"));
                       }
+                    } else {
+                      this.props.handleHideMenuButton(false);
+                      this.handleChange("isHideMenuButton");
+                    }
+                  } else if (propName === "isHideAudiobookButton") {
+                    this.props.handleHideAudiobookButton(
+                      !this.state.isHideAudiobookButton
+                    );
+                    this.handleChange("isHideAudiobookButton");
+                  } else if (propName === "isShowPageBorder") {
+                    this.props.handleShowBorder(!this.state.isShowPageBorder);
+                    if (!this.state.isShowPageBorder) {
+                      this.props.handleHideBackground(true);
+                      this.handleChange("isHideBackground");
+                    }
 
-                      break;
-                    case "isHideAIButton":
-                      this.props.handleHideAIButton(!this.state.isHideAIButton);
-                      this.handleChange("isHideAIButton");
-                      break;
-                    case "isHideScaleButton":
-                      this.props.handleHideScaleButton(
-                        !this.state.isHideScaleButton
-                      );
-                      this.handleChange("isHideScaleButton");
-                      break;
-                    case "isHidePDFConvertButton":
-                      this.props.handleHidePDFConvertButton(
-                        !this.state.isHidePDFConvertButton
-                      );
-                      this.handleChange("isHidePDFConvertButton");
-                      break;
-                    default:
-                      break;
+                    this.handleChange("isShowPageBorder");
+                  } else if (propName === "isAllowScript") {
+                    this.handleChange(propName);
+                    setTimeout(() => {
+                      BookUtil.reloadBooks(this.props.currentBook);
+                    }, 500);
+                  } else if (propName in renderProps) {
+                    renderProps[propName]!(!this.state[propName]);
+                    this.handleChange(propName);
+                  } else {
+                    this._handleChange(propName);
                   }
                 }}
                 style={this.state[item.propName] ? {} : { opacity: 0.6 }}

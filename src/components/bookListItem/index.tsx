@@ -9,6 +9,7 @@ import {
   handleSelectedBooks,
   handleSelectBook,
   handleActionDialog,
+  handleRefreshBookCover,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 
@@ -23,6 +24,7 @@ const mapStateToProps = (state: stateType) => {
     isSelectBook: state.manager.isSelectBook,
     selectedBooks: state.manager.selectedBooks,
     isOpenActionDialog: state.book.isOpenActionDialog,
+    refreshBookKey: state.manager.refreshBookKey,
   };
 };
 const actionCreator = {
@@ -35,6 +37,7 @@ const actionCreator = {
   handleSelectBook,
   handleFetchBooks,
   handleSelectedBooks,
+  handleRefreshBookCover,
 };
 export default connect(
   mapStateToProps,

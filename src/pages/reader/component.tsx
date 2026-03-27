@@ -13,6 +13,8 @@ import Book from "../../models/Book";
 import DatabaseService from "../../utils/storage/databaseService";
 import ConvertDialog from "../../components/dialogs/convertDialog";
 import { isElectron } from "react-device-detect";
+import SettingDialog from "../../components/dialogs/settingDialog";
+import SpeechDialog from "../../components/dialogs/speechDialog";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -199,43 +201,69 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               <span className="icon-dropdown previous-chapter-single"></span>
             </div>
             <div
-              className="next-chapter-single-container"
-              onClick={async () => {
-                if (lock) return;
-                lock = true;
-                await this.props.htmlBook.rendition.next();
-                this.handleLocation();
-                setTimeout(() => (lock = false), throttleTime);
-              }}
               style={{
+                position: "absolute",
+                bottom: 10,
                 right: this.props.isSettingLocked ? 315 : 15,
+                display: "flex",
+                flexDirection: "column-reverse",
+                alignItems: "center",
+                gap: "8px",
+                zIndex: 10,
               }}
             >
-              <span className="icon-dropdown next-chapter-single"></span>
-            </div>
-            {this.props.isAuthed &&
-              !this.props.isHideAIButton &&
-              ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
+              <div
+                className="next-chapter-single-container"
+                onClick={async () => {
+                  if (lock) return;
+                  lock = true;
+                  await this.props.htmlBook.rendition.next();
+                  this.handleLocation();
+                  setTimeout(() => (lock = false), throttleTime);
+                }}
+                style={{ position: "static" }}
+              >
+                <span className="icon-dropdown next-chapter-single"></span>
+              </div>
+              {!this.props.isHideAudiobookButton && (
                 <div
                   className="next-chapter-single-container"
                   onClick={async () => {
-                    this.props.handleMenuMode("assistant");
-                    this.props.handleOriginalText(
-                      await this.props.htmlBook.rendition.chapterText()
-                    );
-                    this.props.handleOpenMenu(true);
+                    this.props.handleSpeechDialog(!this.props.isSpeechOpen);
                   }}
-                  style={{
-                    bottom: "55px",
-                    transform: "rotate(0deg)",
-                    fontWeight: "bold",
-                    fontSize: "17px",
-                    right: this.props.isSettingLocked ? 315 : 15,
-                  }}
+                  style={{ position: "static", transform: "rotate(0deg)" }}
                 >
-                  AI
+                  <span
+                    style={
+                      this.props.isSpeechOpen ? { fontWeight: "bold" } : {}
+                    }
+                    className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
+                  ></span>
                 </div>
               )}
+              {this.props.isAuthed &&
+                !this.props.isHideAIButton &&
+                ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
+                  <div
+                    className="next-chapter-single-container"
+                    onClick={async () => {
+                      this.props.handleMenuMode("assistant");
+                      this.props.handleOriginalText(
+                        await this.props.htmlBook.rendition.chapterText()
+                      );
+                      this.props.handleOpenMenu(true);
+                    }}
+                    style={{
+                      position: "static",
+                      transform: "rotate(0deg)",
+                      fontWeight: "bold",
+                      fontSize: "17px",
+                    }}
+                  >
+                    AI
+                  </div>
+                )}
+            </div>
           </>
         )}
         <div
@@ -348,6 +376,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 </div>
               </div>
             )}
+
           {this.props.currentBook.format === "PDF" &&
             !this.props.isHidePDFConvertButton && (
               <div
@@ -376,7 +405,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             </div>
           )}
         </div>
-
+        {this.props.isSettingOpen && (
+          <>
+            <SettingDialog />
+            <div className="drag-background"></div>
+          </>
+        )}
         <Toaster />
 
         <div
@@ -636,6 +670,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
         {this.props.currentBook.key && <Viewer {...renditionProps} />}
         {this.props.isConvertOpen && <ConvertDialog />}
+        {
+          <div style={this.props.isSpeechOpen ? {} : { display: "none" }}>
+            <SpeechDialog />
+          </div>
+        }
       </div>
     );
   }

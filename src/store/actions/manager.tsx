@@ -6,15 +6,22 @@ import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
 import { Dispatch } from "redux";
 import DatabaseService from "../../utils/storage/databaseService";
-import { fetchUserInfo, getUserRequest } from "../../utils/request/user";
+import {
+  fetchUserInfo,
+  getUserRequest,
+  resetUserRequest,
+} from "../../utils/request/user";
 import {
   officialDictList,
   officialTranList,
-  officialVoiceList,
 } from "../../constants/settingList";
 import toast from "react-hot-toast";
 import BookUtil from "../../utils/file/bookUtil";
 import i18n from "../../i18n";
+import { azureTTSVoiceList, officialVoiceList } from "../../constants/ttsList";
+import { langToName } from "../../utils/common";
+import { resetReaderRequest } from "../../utils/request/reader";
+import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -30,6 +37,9 @@ export function handleSearchResults(searchResults: number[]) {
 }
 export function handleSearch(isSearch: boolean) {
   return { type: "HANDLE_SEARCH", payload: isSearch };
+}
+export function handleRefreshBookCover(key: string) {
+  return { type: "HANDLE_REFRESH_BOOK_COVER", payload: key };
 }
 export function handleUserInfo(userInfo: any) {
   return { type: "HANDLE_USER_INFO", payload: userInfo };
@@ -252,6 +262,9 @@ export function handleFetchUserInfo() {
       ) {
         let userRequest = await getUserRequest();
         await userRequest.refreshUserToken();
+        resetReaderRequest();
+        resetUserRequest();
+        resetThirdpartyRequest();
       }
     }
     dispatch(handleUserInfo(userInfo));
@@ -309,22 +322,38 @@ export function handleFetchPlugins() {
               ""
             );
             pluginList.push(sumPlugin);
-            let sortedVoiceList = [...officialVoiceList];
-            if (
-              ConfigService.getReaderConfig("lang") &&
-              ConfigService.getReaderConfig("lang").startsWith("zh")
-            ) {
-              //move zh-CN to first
-              sortedVoiceList.sort((a: any, b: any) => {
-                if (a.locale === "zh-CN") {
-                  return -1;
-                } else if (b.locale === "zh-CN") {
-                  return 1;
-                } else {
-                  return 0;
-                }
-              });
-            }
+            let sortedVoiceList = [
+              ...officialVoiceList.map((item) => {
+                return {
+                  ...item,
+                  label:
+                    i18n.t("Official AI Voice") +
+                    " - " +
+                    item.displayName +
+                    " - " +
+                    item.language +
+                    " - " +
+                    (item.gender === "female"
+                      ? i18n.t("Female voice")
+                      : i18n.t("Male voice")),
+                };
+              }),
+              ...azureTTSVoiceList.map((item) => {
+                return {
+                  ...item,
+                  label:
+                    "Azure TTS" +
+                    " - " +
+                    item.displayName +
+                    " - " +
+                    langToName(item.locale) +
+                    " - " +
+                    (item.gender === "female"
+                      ? i18n.t("Female voice")
+                      : i18n.t("Male voice")),
+                };
+              }),
+            ];
             let voicePlugin = new PluginModel(
               "official-ai-voice-plugin",
               "voice",
@@ -339,16 +368,47 @@ export function handleFetchPlugins() {
                   ...item, // 创建新对象
                   plugin: "official-ai-voice-plugin",
                   config: {},
-                  displayName:
-                    i18n.t("Official AI Voice") +
+                  displayName: item.label,
+                };
+              }),
+              "",
+              ""
+            );
+            pluginList.push(voicePlugin);
+            dispatch(handlePlugins(pluginList));
+          } else if (isAuthed) {
+            let sortedVoiceList = [
+              ...azureTTSVoiceList.map((item) => {
+                return {
+                  ...item,
+                  label:
+                    "Azure TTS" +
                     " - " +
                     item.displayName +
                     " - " +
-                    item.language +
+                    langToName(item.locale) +
                     " - " +
                     (item.gender === "female"
                       ? i18n.t("Female voice")
                       : i18n.t("Male voice")),
+                };
+              }),
+            ];
+            let voicePlugin = new PluginModel(
+              "official-ai-voice-plugin",
+              "voice",
+              "Official AI Voice",
+              "speaker",
+              "1.0.0",
+              "",
+              {},
+              {},
+              sortedVoiceList.map((item: any) => {
+                return {
+                  ...item, // 创建新对象
+                  plugin: "official-ai-voice-plugin",
+                  config: {},
+                  displayName: item.label,
                 };
               }),
               "",

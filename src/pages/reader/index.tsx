@@ -9,6 +9,7 @@ import {
   handleOriginalText,
   handleOpenMenu,
   handleConvertDialog,
+  handleSpeechDialog,
   handleScale,
   handleFetchAuthed,
 } from "../../store/actions";
@@ -25,13 +26,16 @@ const mapStateToProps = (state: stateType) => {
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
     isConvertOpen: state.reader.isConvertOpen,
+    isSpeechOpen: state.reader.isSpeechOpen,
     isSettingLocked: state.reader.isSettingLocked,
     isAuthed: state.manager.isAuthed,
     isSearch: state.manager.isSearch,
+    isSettingOpen: state.manager.isSettingOpen,
     scale: state.reader.scale,
     renderBookFunc: state.book.renderBookFunc,
     isHidePageButton: state.reader.isHidePageButton,
     isHideMenuButton: state.reader.isHideMenuButton,
+    isHideAudiobookButton: state.reader.isHideAudiobookButton,
     isHideAIButton: state.reader.isHideAIButton,
     isHidePDFConvertButton: state.reader.isHidePDFConvertButton,
     isHideScaleButton: state.reader.isHideScaleButton,
@@ -50,6 +54,7 @@ const actionCreator = {
   handleConvertDialog,
   handleScale,
   handleFetchAuthed,
+  handleSpeechDialog,
 };
 export default connect(
   mapStateToProps,

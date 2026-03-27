@@ -2,15 +2,10 @@ import React from "react";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import {
-  CommonTool,
-  ConfigService,
-} from "../../assets/lib/kookit-extra-browser.min";
-import {
-  checkPlugin,
   getAllVoices,
-  getWebsiteUrl,
-  handleContextMenu,
+  langToName,
   sleep,
   splitSentences,
 } from "../../utils/common";
@@ -18,11 +13,8 @@ import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import TTSUtil from "../../utils/reader/ttsUtil";
 import "./textToSpeech.css";
-import { openExternalUrl } from "../../utils/common";
-import DatabaseService from "../../utils/storage/databaseService";
 import { fetchUserInfo } from "../../utils/request/user";
 declare var window: any;
-declare var global: any;
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
   TextToSpeechState
@@ -36,7 +28,12 @@ class TextToSpeech extends React.Component<
     this.state = {
       isSupported: false,
       isAudioOn: false,
-      isAddNew: false,
+      isPaused: false,
+      currentIndex: 0,
+      languageList: [],
+      voiceList: {},
+      voiceLocale:
+        ConfigService.getReaderConfig("voiceLocale") || navigator.language,
     };
     this.nodeList = [];
     this.voices = [];
@@ -57,7 +54,14 @@ class TextToSpeech extends React.Component<
         if (synth) {
           id = setInterval(() => {
             if (synth.getVoices().length !== 0) {
-              resolve(synth.getVoices());
+              let voices = synth.getVoices();
+              resolve(
+                voices.map((item) => {
+                  item.displayName = item.name;
+                  item.locale = item.lang;
+                  return item;
+                })
+              );
               clearInterval(id);
             } else {
               this.setState({ isSupported: false });
@@ -78,11 +82,11 @@ class TextToSpeech extends React.Component<
       );
       this.voices = [...this.nativeVoices, ...this.customVoices];
     }
+    this.handleVoiceLocaleList();
     if (
       this.voices.length === 0 &&
       getAllVoices(this.props.plugins).length === 0
     ) {
-      this.setState({ isAddNew: true });
       return;
     }
     if (this.voices.length > 0) {
@@ -127,38 +131,98 @@ class TextToSpeech extends React.Component<
     if (nextProps.plugins !== this.props.plugins) {
       this.customVoices = TTSUtil.getVoiceList(nextProps.plugins);
       this.voices = [...this.nativeVoices, ...this.customVoices];
+      this.handleVoiceLocaleList();
     }
   }
-  handleChangeAudio = async () => {
-    this.setState({ isAddNew: false });
-    if (this.state.isAudioOn) {
-      window.speechSynthesis && window.speechSynthesis.cancel();
-      TTSUtil.pauseAudio();
-      this.setState({ isAudioOn: false });
-      this.nodeList = [];
+  handleStartAudio = async () => {
+    if (
+      ConfigService.getReaderConfig("voiceEngine") ===
+        "official-ai-voice-plugin" &&
+      this.props.isAuthed
+    ) {
+      toast.loading(this.props.t("Loading audio, please wait..."), {
+        id: "tts-load",
+      });
+      await fetchUserInfo();
+    }
+    if (
+      ConfigService.getReaderConfig("voiceEngine") ===
+        "official-ai-voice-plugin" &&
+      !this.props.isAuthed
+    ) {
+      ConfigService.setReaderConfig("voiceEngine", "system");
+    }
+    this.handleStartSpeech();
+  };
+  handlePauseAudio = async () => {
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    await TTSUtil.pauseAudio();
+    this.setState({ isPaused: true });
+  };
+  handleStop = async () => {
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    await TTSUtil.stopAudio();
+    this.setState({ isAudioOn: false, isPaused: false, currentIndex: 0 });
+    this.nodeList = [];
+  };
+  handlePauseResume = () => {
+    // Resume from current index
+    this.setState({ isPaused: false }, () => {
+      let voiceName = ConfigService.getReaderConfig("voiceName");
+      if (
+        voiceName &&
+        this.customVoices.find((item) => item.name === voiceName)
+      ) {
+        this.handleCustomRead(this.state.currentIndex);
+      } else {
+        this.handleSystemRead(this.state.currentIndex);
+      }
+    });
+  };
+  handlePrevSentence = async () => {
+    if (!this.state.isAudioOn || this.nodeList.length === 0) return;
+    let prevIndex = Math.max(0, this.state.currentIndex - 1);
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    await TTSUtil.pauseAudio();
+    this.setState({ currentIndex: prevIndex, isPaused: false }, () => {
+      let voiceName = ConfigService.getReaderConfig("voiceName");
+      if (
+        voiceName &&
+        this.customVoices.find((item) => item.name === voiceName)
+      ) {
+        this.handleCustomRead(prevIndex);
+      } else {
+        this.handleSystemRead(prevIndex);
+      }
+    });
+  };
+  handleNextSentence = async () => {
+    if (!this.state.isAudioOn || this.nodeList.length === 0) return;
+    let nextIndex = this.state.currentIndex + 1;
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    await TTSUtil.pauseAudio();
+    if (nextIndex >= this.nodeList.length) {
+      // Move to next page
+      this.setState({ currentIndex: 0, isPaused: false }, async () => {
+        this.nodeList = [];
+        await this.handleAudio();
+      });
     } else {
-      if (
-        ConfigService.getReaderConfig("voiceEngine") ===
-          "official-ai-voice-plugin" &&
-        this.props.isAuthed
-      ) {
-        toast.loading(this.props.t("Loading audio, please wait..."), {
-          id: "tts-load",
-        });
-        await fetchUserInfo();
-      }
-      if (
-        ConfigService.getReaderConfig("voiceEngine") ===
-          "official-ai-voice-plugin" &&
-        !this.props.isAuthed
-      ) {
-        ConfigService.setReaderConfig("voiceEngine", "system");
-      }
-      this.handleStartSpeech();
+      this.setState({ currentIndex: nextIndex, isPaused: false }, () => {
+        let voiceName = ConfigService.getReaderConfig("voiceName");
+        if (
+          voiceName &&
+          this.customVoices.find((item) => item.name === voiceName)
+        ) {
+          this.handleCustomRead(nextIndex);
+        } else {
+          this.handleSystemRead(nextIndex);
+        }
+      });
     }
   };
   handleStartSpeech = () => {
-    this.setState({ isAudioOn: true }, () => {
+    this.setState({ isAudioOn: true, isPaused: false, currentIndex: 0 }, () => {
       this.handleAudio();
     });
   };
@@ -215,8 +279,13 @@ class TextToSpeech extends React.Component<
     let voiceName = ConfigService.getReaderConfig("voiceName");
     let voiceEngine = ConfigService.getReaderConfig("voiceEngine");
     let speed = parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1;
-    TTSUtil.setAudioPaths();
+    if (!this.state.isAudioOn) {
+      TTSUtil.setAudioPaths();
+    }
+
     for (let index = nodeIndex; index < this.nodeList.length; index++) {
+      if (this.state.isPaused || !this.state.isAudioOn) return;
+      this.setState({ currentIndex: index });
       let currentText = this.nodeList[index];
       let style = "background: #f3a6a68c;";
       this.props.htmlBook.rendition.highlightAudioNode(currentText, style);
@@ -261,6 +330,7 @@ class TextToSpeech extends React.Component<
         this.nodeList = [];
         return;
       }
+      if (this.state.isPaused || !this.state.isAudioOn) return;
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
       let lastVisibleTextList = visibleTextList;
       if (
@@ -298,6 +368,7 @@ class TextToSpeech extends React.Component<
     }
     if (this.state.isAudioOn && this.props.isReading) {
       await TTSUtil.clearAudioPaths();
+      TTSUtil.setAudioPaths();
       let position = this.props.htmlBook.rendition.getPosition();
       ConfigService.setObjectConfig(
         this.props.currentBook.key,
@@ -309,11 +380,13 @@ class TextToSpeech extends React.Component<
     }
   }
   async handleSystemRead(index) {
+    if (this.state.isPaused || !this.state.isAudioOn) return;
     if (index >= this.nodeList.length) {
       this.nodeList = [];
       await this.handleAudio();
       return;
     }
+    this.setState({ currentIndex: index });
     let currentText = this.nodeList[index];
     let style = "background: #f3a6a68c;";
     this.props.htmlBook.rendition.highlightAudioNode(currentText, style);
@@ -432,230 +505,314 @@ class TextToSpeech extends React.Component<
       };
     });
   };
+  handleVoiceLocaleList = () => {
+    let voiceList = {};
+    let totalVoiceList = this.voices;
+    totalVoiceList.forEach((voice) => {
+      if (!voiceList[voice.locale]) {
+        voiceList[voice.locale] = [];
+      }
+      voiceList[voice.locale].push(voice);
+    });
+    let languageList: string[] = [];
+    for (let voice of totalVoiceList) {
+      if (!languageList.includes(voice.locale)) {
+        languageList.push(voice.locale);
+      }
+    }
+    languageList = languageList
+      .map((lang, index) => ({ lang, index }))
+      .sort((a, b) => {
+        let lang = navigator.language || "en-US";
+        let langCode = lang.split("-")[0];
+        const aMatch = a.lang.startsWith(langCode);
+        const bMatch = b.lang.startsWith(langCode);
+        if (aMatch && bMatch) return a.index - b.index;
+        if (aMatch) return -1;
+        if (bMatch) return 1;
+        return a.lang.localeCompare(b.lang);
+      })
+      .map((item) => item.lang);
+    this.setState({ languageList, voiceList });
+  };
   render() {
     return (
       <>
-        {
-          <>
-            <div className="single-control-switch-container">
-              <span className="single-control-switch-title">
-                <Trans>Turn on text-to-speech</Trans>
-              </span>
-
-              <span
-                className="single-control-switch"
-                onClick={() => {
-                  this.handleChangeAudio();
-                }}
-                style={this.state.isAudioOn ? {} : { opacity: 0.6 }}
+        <div className="tts-player-container">
+          <div className="tts-player-controls">
+            <span
+              className="tts-player-btn"
+              title={this.props.t("Stop")}
+              onClick={() => this.handleStop()}
+              style={
+                !this.state.isAudioOn
+                  ? { opacity: 0.3, cursor: "not-allowed" }
+                  : {}
+              }
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="currentColor"
               >
-                <span
-                  className="single-control-button"
-                  style={
-                    this.state.isAudioOn
-                      ? {
-                          transform: "translateX(20px)",
-                          transition: "transform 0.5s ease",
-                        }
-                      : {
-                          transform: "translateX(0px)",
-                          transition: "transform 0.5s ease",
-                        }
-                  }
-                ></span>
-              </span>
+                <path d="M6 6h12v12H6z" />
+              </svg>
+            </span>
+            <span
+              className="tts-player-btn"
+              title={this.props.t("Previous")}
+              onClick={() => this.handlePrevSentence()}
+              style={
+                !this.state.isAudioOn
+                  ? { opacity: 0.3, cursor: "not-allowed" }
+                  : {}
+              }
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="currentColor"
+              >
+                <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+              </svg>
+            </span>
+            <span
+              className="tts-player-btn tts-player-btn-main"
+              title={
+                !this.state.isAudioOn
+                  ? this.props.t("Play")
+                  : this.state.isPaused
+                    ? this.props.t("Resume")
+                    : this.props.t("Pause")
+              }
+              onClick={() => {
+                if (!this.state.isAudioOn && !this.state.isPaused) {
+                  this.handleStartAudio();
+                } else if (!this.state.isPaused) {
+                  this.handlePauseAudio();
+                } else {
+                  this.handlePauseResume();
+                }
+              }}
+            >
+              {!this.state.isAudioOn || this.state.isPaused ? (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="28"
+                  height="28"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="28"
+                  height="28"
+                  fill="currentColor"
+                >
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                </svg>
+              )}
+            </span>
+            <span
+              className="tts-player-btn"
+              title={this.props.t("Next")}
+              onClick={() => this.handleNextSentence()}
+              style={
+                !this.state.isAudioOn
+                  ? { opacity: 0.3, cursor: "not-allowed" }
+                  : {}
+              }
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="currentColor"
+              >
+                <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+              </svg>
+            </span>
+            <span
+              className="tts-player-btn"
+              title={this.props.t("Stop")}
+              onClick={() => this.handleStop()}
+              style={
+                !this.state.isAudioOn
+                  ? { opacity: 0.3, cursor: "not-allowed" }
+                  : {}
+              }
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="currentColor"
+              >
+                <path d="M6 6h12v12H6z" />
+              </svg>
+            </span>
+          </div>
+          {this.state.isAudioOn && this.nodeList.length > 0 && (
+            <div className="tts-player-info">
+              {this.state.currentIndex + 1} / {this.nodeList.length}
             </div>
-            {!this.state.isAddNew && (
-              <div
-                className="setting-dialog-new-title"
-                style={{
-                  marginLeft: "20px",
-                  width: "88%",
-                  marginTop: "20px",
-                  fontWeight: 500,
-                }}
-              >
-                <Trans>Voice</Trans>
-                <select
-                  name=""
-                  className="lang-setting-dropdown"
-                  id="text-speech-voice"
-                  onChange={(event) => {
-                    if (event.target.value === "Add new voice") {
-                      window.speechSynthesis && window.speechSynthesis.cancel();
-                      TTSUtil.pauseAudio();
-                      this.setState({ isAddNew: true, isAudioOn: false });
-                    } else {
-                      ConfigService.setReaderConfig(
-                        "voiceName",
-                        event.target.value
-                      );
-                      let voice = this.voices.find(
-                        (item) => item.name === event.target.value
-                      );
-                      if (!voice) {
-                        return;
-                      }
-                      if (voice.plugin) {
-                        ConfigService.setReaderConfig(
-                          "voiceEngine",
-                          voice.plugin
-                        );
-                      } else {
-                        ConfigService.setReaderConfig("voiceEngine", "system");
-                      }
+          )}
+        </div>
+        <div
+          className="setting-dialog-new-title"
+          style={{
+            marginLeft: "20px",
+            width: "88%",
+            marginTop: "20px",
+            fontWeight: 500,
+          }}
+        >
+          <Trans>Language</Trans>
+          <select
+            name=""
+            className="lang-setting-dropdown"
+            id="text-speech-locale"
+            onChange={(event) => {
+              ConfigService.setReaderConfig("voiceLocale", event.target.value);
+              this.setState({ voiceLocale: event.target.value });
+            }}
+          >
+            {this.state.languageList.map((item) => {
+              return (
+                <option
+                  value={item}
+                  key={item}
+                  className="lang-setting-option"
+                  selected={
+                    item === ConfigService.getReaderConfig("voiceLocale")
+                  }
+                >
+                  {langToName(item)}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div
+          className="setting-dialog-new-title"
+          style={{
+            marginLeft: "20px",
+            width: "88%",
+            fontWeight: 500,
+          }}
+        >
+          <Trans>Voice</Trans>
+          <select
+            name=""
+            className="lang-setting-dropdown"
+            id="text-speech-voice"
+            onChange={(event) => {
+              let selectedValue = event.target.value;
+              let [voiceName, plugin] = selectedValue.split("#");
+              ConfigService.setReaderConfig("voiceName", voiceName);
+              let voice = this.voices.find(
+                (item) => item.name === voiceName && item.plugin === plugin
+              );
+              if (!voice) {
+                return;
+              }
+              if (voice.plugin) {
+                ConfigService.setReaderConfig("voiceEngine", voice.plugin);
+              } else {
+                ConfigService.setReaderConfig("voiceEngine", "system");
+              }
+              if (
+                voice.plugin === "official-ai-voice-plugin" &&
+                event.target.value.indexOf("Neural") > -1
+              ) {
+                toast(
+                  this.props.t(
+                    "Due to the high cost of Azure TTS voices, this voice will consume 5 times of your daily quota than normal voice"
+                  ),
+                  {
+                    duration: 8000,
+                    id: "costWarning",
+                  }
+                );
+              }
 
-                      if (this.state.isAudioOn) {
-                        toast(this.props.t("Take effect in a while"));
-                      }
+              if (this.state.isAudioOn) {
+                toast(this.props.t("Take effect in a while"));
+              }
+            }}
+          >
+            {(this.state.voiceList[this.state.voiceLocale] || this.voices).map(
+              (item) => {
+                return (
+                  <option
+                    value={[item.name, item.plugin].join("#")}
+                    key={[item.name, item.plugin].join("#")}
+                    className="lang-setting-option"
+                    selected={
+                      item.name ===
+                        ConfigService.getReaderConfig("voiceName") &&
+                      item.plugin ===
+                        ConfigService.getReaderConfig("voiceEngine")
                     }
-                  }}
-                >
-                  {this.voices.map((item) => {
-                    return (
-                      <option
-                        value={item.name}
-                        key={item.name}
-                        className="lang-setting-option"
-                        selected={
-                          item.name ===
-                          ConfigService.getReaderConfig("voiceName")
-                        }
-                      >
-                        {this.props.t(item.displayName || item.name)}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
+                  >
+                    {this.props.t(item.displayName || item.name)}
+                  </option>
+                );
+              }
             )}
-            {!this.state.isAddNew && (
-              <div
-                className="setting-dialog-new-title"
-                style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
-              >
-                <Trans>Speed</Trans>
-                <select
-                  name=""
-                  id="text-speech-speed"
-                  className="lang-setting-dropdown"
-                  onChange={(event) => {
-                    ConfigService.setReaderConfig(
-                      "voiceSpeed",
-                      event.target.value
-                    );
-                    if (this.state.isAudioOn) {
-                      toast(this.props.t("Take effect in a while"));
-                    }
-                  }}
-                >
-                  {speedList.option.map((item) => (
-                    <option
-                      value={item.value}
-                      className="lang-setting-option"
-                      key={item.value}
-                      selected={
-                        item.value ===
-                        (ConfigService.getReaderConfig("voiceSpeed") || "1")
-                      }
-                    >
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-            {this.state.isAddNew && (
-              <div
-                className="voice-add-new-container"
-                style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
-              >
-                <textarea
-                  name="url"
-                  placeholder={this.props.t(
-                    "Paste the code of the plugin here, check out document to learn how to get more plugins"
-                  )}
-                  id="voice-add-content-box"
-                  className="voice-add-content-box"
-                  onContextMenu={() => {
-                    handleContextMenu("voice-add-content-box");
-                  }}
-                  style={{ marginBottom: "10px" }}
-                />
+          </select>
+        </div>
 
-                <div
-                  className="voice-add-confirm"
-                  onClick={async () => {
-                    let value: string = (
-                      document.querySelector(
-                        "#voice-add-content-box"
-                      ) as HTMLTextAreaElement
-                    ).value;
-                    if (value) {
-                      let plugin = JSON.parse(value);
-                      plugin.key = plugin.identifier;
-                      if (!(await checkPlugin(plugin))) {
-                        toast.error(this.props.t("Plugin verification failed"));
-                        return;
-                      }
-                      if (
-                        plugin.type === "voice" &&
-                        plugin.voiceList.length === 0
-                      ) {
-                        let voiceFunc = plugin.script;
-                        // eslint-disable-next-line no-eval
-                        eval(voiceFunc);
-                        plugin.voiceList = await global.getTTSVoice(
-                          plugin.config
-                        );
-                      }
-                      if (
-                        this.props.plugins.find(
-                          (item) => item.key === plugin.key
-                        )
-                      ) {
-                        await DatabaseService.updateRecord(plugin, "plugins");
-                      } else {
-                        await DatabaseService.saveRecord(plugin, "plugins");
-                      }
-                      this.props.handleFetchPlugins();
-                      toast.success(this.props.t("Addition successful"));
-                    }
-                    this.setState({ isAddNew: false });
-                  }}
-                >
-                  <Trans>Confirm</Trans>
-                </div>
-                <div className="voice-add-button-container">
-                  <div
-                    className="voice-add-cancel"
-                    onClick={() => {
-                      this.setState({ isAddNew: false });
-                    }}
-                  >
-                    <Trans>Cancel</Trans>
-                  </div>
-                  <div
-                    className="voice-add-cancel"
-                    style={{ marginRight: "10px" }}
-                    onClick={() => {
-                      if (
-                        ConfigService.getReaderConfig("lang") &&
-                        ConfigService.getReaderConfig("lang").startsWith("zh")
-                      ) {
-                        openExternalUrl(getWebsiteUrl() + "/zh/plugin");
-                      } else {
-                        openExternalUrl(getWebsiteUrl() + "/en/plugin");
-                      }
-                    }}
-                  >
-                    <Trans>Document</Trans>
-                  </div>
-                </div>
-              </div>
-            )}
-          </>
-        }
+        <div
+          className="setting-dialog-new-title"
+          style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
+        >
+          <Trans>Speed</Trans>
+          <select
+            name=""
+            id="text-speech-speed"
+            className="lang-setting-dropdown"
+            onChange={(event) => {
+              ConfigService.setReaderConfig("voiceSpeed", event.target.value);
+              if (this.state.isAudioOn) {
+                toast(this.props.t("Take effect in a while"));
+              }
+            }}
+          >
+            {speedList.option.map((item) => (
+              <option
+                value={item.value}
+                className="lang-setting-option"
+                key={item.value}
+                selected={
+                  item.value ===
+                  (ConfigService.getReaderConfig("voiceSpeed") || "1")
+                }
+              >
+                {item.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <span
+            style={{
+              textDecoration: "underline",
+              cursor: "pointer",
+              textAlign: "center",
+            }}
+            onClick={() => {
+              this.props.handleSetting(true);
+              this.props.handleSettingMode("plugins");
+            }}
+          >
+            <Trans>Add new voice</Trans>
+          </span>
+        </div>
       </>
     );
   }

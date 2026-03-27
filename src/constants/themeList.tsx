@@ -11,37 +11,17 @@ export const textList = [
   "rgba(54, 80, 62,1)",
 ];
 export const themeList = [
-  {
-    id: 0,
-    color: "rgba(75, 75, 75, 1)",
-    name: "default",
-    title: "Default",
-  },
-  {
-    id: 1,
-    color: "rgba(1, 121, 202, 1)",
-    name: "blue",
-    title: "Blue",
-  },
-  {
-    id: 2,
-    color: "rgba(0, 143, 145, 1)",
-    name: "green",
-    title: "Green",
-  },
-
-  {
-    id: 3,
-    color: "rgba(241, 100, 100, 1)",
-    name: "red",
-    title: "Red",
-  },
-  {
-    id: 4,
-    color: "rgba(104, 103, 209, 1)",
-    name: "purple",
-    title: "Purple",
-  },
+  { id: 0, color: "default", title: "Default" },
+  { id: 1, color: "#0179CA", title: "Blue" },
+  { id: 2, color: "#008F91", title: "Green" },
+  { id: 3, color: "#F16464", title: "Red" },
+  { id: 4, color: "#6867D1", title: "Purple" },
+  { id: 5, color: "#F97316", title: "Orange" },
+  { id: 6, color: "#EC4899", title: "Pink" },
+  { id: 7, color: "#EAB308", title: "Yellow" },
+  { id: 8, color: "#8B5CF6", title: "Violet" },
+  { id: 9, color: "#0EA5E9", title: "Sky" },
+  { id: 10, color: "#64748B", title: "Slate" },
 ];
 export const classes = [
   "color-0",

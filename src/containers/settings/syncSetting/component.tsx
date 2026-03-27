@@ -55,9 +55,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         ConfigService.getReaderConfig("isDisableAutoSync") === "yes",
       isEnableKoodoSync:
         ConfigService.getReaderConfig("isEnableKoodoSync") === "yes",
-      currentThemeIndex: _.findLastIndex(themeList, {
-        name: ConfigService.getReaderConfig("themeColor"),
-      }),
+      currentThemeIndex: themeList.findIndex(
+        (item) =>
+          item.color ===
+          (ConfigService.getReaderConfig("themeColor") || "default")
+      ),
       storageLocation: getStorageLocation() || "",
       isAddNew: false,
       settingLogin: "",

@@ -50,6 +50,16 @@ export const dropdownList = [
     isPDF: false,
   },
   {
+    title: "Text orientation",
+    value: "textOrientation",
+    option: [
+      { label: "Default", value: "" },
+      { label: "Horizontal", value: "horizontal" },
+      { label: "Vertical", value: "vertical" },
+    ],
+    isPDF: false,
+  },
+  {
     title: "Conversion of Chinese",
     value: "convertChinese",
     option: [

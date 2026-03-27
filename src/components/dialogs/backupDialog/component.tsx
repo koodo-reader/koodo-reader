@@ -49,6 +49,7 @@ class BackupDialog extends React.Component<
     }, 2000);
   };
   showMessage = (message: string) => {
+    toast.dismiss("backup");
     toast(this.props.t(message));
   };
   handleBackup = async () => {

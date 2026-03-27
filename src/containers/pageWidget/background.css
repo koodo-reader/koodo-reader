@@ -1,8 +1,8 @@
 .header-chapter-name,
 .header-book-name {
   width: 50%;
-  padding-left: 5%;
-  padding-right: 5%;
+  padding-left: 10%;
+  padding-right: 10%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -14,18 +14,19 @@
 .header-container,
 .footer-container {
   width: 100%;
-  height: 30px;
+  height: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 16px;
 }
 .header-container {
   position: absolute;
-  top: 3px;
+  top: 13px;
 }
 .footer-container {
   position: absolute;
-  bottom: 5px;
+  bottom: 14px;
 }
 
 .background-page-left,
@@ -38,6 +39,14 @@
   text-align: center;
   opacity: 0.3;
   float: left;
+}
+.footer-time {
+  letter-spacing: 0.5px;
+  position: absolute;
+  top: 6px;
+  left: 20px;
+  font-size: 13px;
+  opacity: 0.5;
 }
 .bookmark {
   height: 40px;
@@ -71,4 +80,62 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.page-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 4px solid #e74c3c;
+  pointer-events: none;
+  box-sizing: border-box;
+  z-index: 1;
+  margin: 5px;
+}
+.inner-page-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #e74c3c;
+  pointer-events: none;
+  box-sizing: border-box;
+  z-index: 1;
+  margin: 15px;
+}
+.page-border-header-line {
+  position: absolute;
+  top: 37px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #e74c3c;
+  pointer-events: none;
+  z-index: 1;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.page-border-footer-line {
+  position: absolute;
+  bottom: 37px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #e74c3c;
+  pointer-events: none;
+  z-index: 1;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.page-border-center-line {
+  position: absolute;
+  top: 37px;
+  bottom: 37px;
+  left: 50%;
+  width: 1px;
+  background-color: #e74c3c;
+  pointer-events: none;
+  z-index: 1;
 }

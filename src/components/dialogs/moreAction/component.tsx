@@ -5,6 +5,7 @@ import { MoreActionProps, MoreActionState } from "./interface";
 import { saveAs } from "file-saver";
 import toast from "react-hot-toast";
 import BookUtil from "../../../utils/file/bookUtil";
+import CoverUtil from "../../../utils/file/coverUtil";
 import {
   exportDictionaryHistory,
   exportHighlights,
@@ -13,12 +14,10 @@ import {
 } from "../../../utils/file/export";
 import { isElectron } from "react-device-detect";
 import DatabaseService from "../../../utils/storage/databaseService";
-import {
-  BookHelper,
-  ConfigService,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../../assets/lib/kookit.min";
 import { getPdfPassword, getStorageLocation } from "../../../utils/common";
+import { BookHelper } from "../../../assets/lib/kookit.min";
 declare var window: any;
 class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
@@ -34,7 +33,9 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
       : (note: any) => note.notes === "";
     const exportFn = isNotes ? exportNotes : exportHighlights;
 
-    const handleExport = async (format: "csv" | "md" | "txt") => {
+    const handleExport = async (
+      format: "csv" | "md" | "txt" | "html" | "pdf"
+    ) => {
       let books = await DatabaseService.getAllRecords("books");
       let notes = (
         await DatabaseService.getRecordsByBookKey(
@@ -81,7 +82,7 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
         }}
       >
         <div className="action-dialog-actions-container">
-          {(["csv", "md", "txt"] as const).map((fmt) => (
+          {(["csv", "md", "txt", "html", "pdf"] as const).map((fmt) => (
             <div
               key={fmt}
               className="action-dialog-edit"
@@ -89,7 +90,15 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
               onClick={() => handleExport(fmt)}
             >
               <p className="action-name">
-                {fmt === "csv" ? "CSV" : fmt === "md" ? "Markdown" : "TXT"}
+                {fmt === "csv"
+                  ? "CSV"
+                  : fmt === "md"
+                    ? "Markdown"
+                    : fmt === "txt"
+                      ? "TXT"
+                      : fmt === "html"
+                        ? "HTML"
+                        : "PDF"}
               </p>
             </div>
           ))}
@@ -145,6 +154,49 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
             >
               <p className="action-name">
                 <Trans>Export books</Trans>
+              </p>
+            </div>
+            <div
+              className="action-dialog-edit"
+              style={{ paddingLeft: "0px" }}
+              onClick={async () => {
+                const isCoverExist = await CoverUtil.isCoverExist(
+                  this.props.currentBook
+                );
+                if (!isCoverExist) {
+                  toast(this.props.t("Nothing to export"));
+                  return;
+                }
+                const cover = await CoverUtil.getCover(this.props.currentBook);
+                if (cover.startsWith("blob:")) {
+                  const ext = "jpg";
+                  saveAs(cover, `${this.props.currentBook.name}.${ext}`);
+                } else if (cover.startsWith("data:")) {
+                  const mimeMatch = cover.match(/data:(image\/\w+);base64,/);
+                  const mime = mimeMatch ? mimeMatch[1] : "image/jpeg";
+                  const ext = mime.split("/")[1] || "jpg";
+                  const base64Data = cover.split("base64,")[1];
+                  const byteArray = Uint8Array.from(atob(base64Data), (c) =>
+                    c.charCodeAt(0)
+                  );
+                  saveAs(
+                    new Blob([byteArray], { type: mime }),
+                    `${this.props.currentBook.name}.${ext}`
+                  );
+                } else if (isElectron) {
+                  const fs = window.require("fs");
+                  const ext = cover.split(".").pop() || "jpg";
+                  const buffer = fs.readFileSync(cover);
+                  saveAs(
+                    new Blob([buffer], { type: `image/${ext}` }),
+                    `${this.props.currentBook.name}.${ext}`
+                  );
+                }
+                toast.success(this.props.t("Export successful"));
+              }}
+            >
+              <p className="action-name">
+                <Trans>Export cover</Trans>
               </p>
             </div>
             <div
@@ -225,6 +277,8 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                           : "",
                       convertChinese:
                         ConfigService.getReaderConfig("convertChinese"),
+                      textOrientation:
+                        ConfigService.getReaderConfig("textOrientation"),
                       parserRegex: "",
                       isDarkMode: "no",
                       isMobile: "no",

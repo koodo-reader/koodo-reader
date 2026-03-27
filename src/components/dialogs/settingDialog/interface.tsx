@@ -39,7 +39,6 @@ export interface SettingInfoState {
   isPreventSleep: boolean;
   isOpenInMain: boolean;
   isPrecacheBook: boolean;
-  isUseBuiltIn: boolean;
   isDisableCrop: boolean;
   isOverwriteLink: boolean;
   isOverwriteText: boolean;
@@ -51,6 +50,9 @@ export interface SettingInfoState {
   isLemmatizeWord: boolean;
   isAddNew: boolean;
   currentThemeIndex: number;
+  isShowCustomColorPicker: boolean;
+  customColor: string;
+  pendingCustomColor: string;
   driveConfig: any;
   loginConfig: any;
   settingLogin: string;

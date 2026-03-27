@@ -11,6 +11,8 @@ export interface BackgroundProps {
   isShowBookmark: boolean;
   isHideFooter: boolean;
   isHideHeader: boolean;
+  isShowPageBorder: boolean;
+  textOrientation: string;
   backgroundColor: string;
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
@@ -19,4 +21,6 @@ export interface BackgroundState {
   isSingle: boolean;
   prevPage: number;
   nextPage: number;
+  currentTime: string;
+  percentage: string;
 }

@@ -6,13 +6,14 @@ import i18n from "../../../i18n";
 import packageInfo from "../../../../package.json";
 import { isElectron } from "react-device-detect";
 import { dropdownList } from "../../../constants/dropdownList";
-import _ from "underscore";
 import {
   appearanceSettingList,
   readingSettingList,
   skinList,
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
+import { Panel as ColorPickerPanel } from "rc-color-picker";
+import "rc-color-picker/assets/index.css";
 import toast from "react-hot-toast";
 import { loadFontData } from "../../../utils/common";
 import { getStorageLocation, reloadManager } from "../../../utils/common";
@@ -55,7 +56,6 @@ class SettingDialog extends React.Component<
       isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
       appSkin: ConfigService.getReaderConfig("appSkin"),
-      isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isOverwriteText:
         ConfigService.getReaderConfig("isOverwriteText") === "yes",
@@ -63,9 +63,15 @@ class SettingDialog extends React.Component<
         ConfigService.getReaderConfig("isOverwriteLink") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
-      currentThemeIndex: _.findLastIndex(themeList, {
-        name: ConfigService.getReaderConfig("themeColor"),
-      }),
+      currentThemeIndex: themeList.findIndex(
+        (item) =>
+          item.color ===
+          (ConfigService.getReaderConfig("themeColor") || "default")
+      ),
+      isShowCustomColorPicker: false,
+      customColor: ConfigService.getReaderConfig("themeColor") || "#0179CA",
+      pendingCustomColor:
+        ConfigService.getReaderConfig("themeColor") || "#0179CA",
       storageLocation: getStorageLocation() || "",
       isAddNew: false,
       settingLogin: "",
@@ -156,9 +162,26 @@ class SettingDialog extends React.Component<
       .ipcRenderer.invoke("reset-reader-position", "ping");
     toast.success(this.props.t("Reset successful"));
   };
-  handleTheme = (name: string, index: number) => {
-    this.setState({ currentThemeIndex: index });
-    ConfigService.setReaderConfig("themeColor", name);
+  handleTheme = (color: string, index: number) => {
+    this.setState({
+      currentThemeIndex: index,
+      isShowCustomColorPicker: false,
+    });
+    ConfigService.setReaderConfig("themeColor", color);
+    reloadManager();
+  };
+  handleCustomColor = (colorObj: any) => {
+    const color = colorObj.color;
+    this.setState({ pendingCustomColor: color });
+  };
+  handleConfirmCustomColor = () => {
+    const color = this.state.pendingCustomColor;
+    this.setState({
+      customColor: color,
+      currentThemeIndex: -1,
+      isShowCustomColorPicker: false,
+    });
+    ConfigService.setReaderConfig("themeColor", color);
     reloadManager();
   };
   handleMergeWord = () => {
@@ -368,51 +391,6 @@ class SettingDialog extends React.Component<
             <>
               {this.renderSwitchOption(appearanceSettingList)}
               <div className="setting-dialog-new-title">
-                <Trans>Theme color</Trans>
-                <ul className="theme-setting-container">
-                  {themeList.map((item, index) => (
-                    <li
-                      className={
-                        index === this.state.currentThemeIndex
-                          ? "active-color theme-setting-item"
-                          : "theme-setting-item"
-                      }
-                      key={item.name}
-                      onClick={() => {
-                        this.handleTheme(item.name, index);
-                      }}
-                      style={{ backgroundColor: item.color }}
-                    ></li>
-                  ))}
-                </ul>
-              </div>
-              <div className="setting-dialog-new-title">
-                <Trans>Appearance</Trans>
-                <select
-                  name=""
-                  className="lang-setting-dropdown"
-                  onChange={(event) => {
-                    this.changeSkin(event.target.value);
-                  }}
-                >
-                  {skinList.map((item) => (
-                    <option
-                      value={item.value}
-                      key={item.value}
-                      className="lang-setting-option"
-                      selected={
-                        item.value ===
-                        (ConfigService.getReaderConfig("appSkin") || "system")
-                          ? true
-                          : false
-                      }
-                    >
-                      {this.props.t(item.label)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="setting-dialog-new-title">
                 <Trans>System font</Trans>
                 <select
                   name=""
@@ -421,23 +399,158 @@ class SettingDialog extends React.Component<
                     this.changeFont(event.target.value);
                   }}
                 >
-                  {dropdownList[0].option.map((item) => (
-                    <option
-                      value={item.value}
-                      key={item.value}
-                      className="lang-setting-option"
-                      selected={
-                        item.value ===
-                        ConfigService.getReaderConfig("systemFont")
-                          ? true
-                          : false
-                      }
-                    >
-                      {this.props.t(item.label)}
-                    </option>
-                  ))}
+                  {dropdownList
+                    .find((item) => item.value === "fontFamily")
+                    ?.option.map((item) => (
+                      <option
+                        value={item.value}
+                        key={item.value}
+                        className="lang-setting-option"
+                        selected={
+                          item.value ===
+                          ConfigService.getReaderConfig("systemFont")
+                            ? true
+                            : false
+                        }
+                      >
+                        {this.props.t(item.label)}
+                      </option>
+                    ))}
                 </select>
               </div>
+              <div className="setting-dialog-new-title">
+                <Trans>Theme color</Trans>
+              </div>
+              <ul className="theme-setting-container">
+                {themeList.map((item, index) => (
+                  <li
+                    className={
+                      index === this.state.currentThemeIndex
+                        ? "theme-setting-item active-theme-item"
+                        : "theme-setting-item"
+                    }
+                    key={item.color}
+                    onClick={() => {
+                      this.handleTheme(item.color, index);
+                    }}
+                    style={{
+                      color:
+                        item.color === "default"
+                          ? "rgba(75, 75, 75, 1)"
+                          : item.color,
+                    }}
+                  >
+                    <span
+                      className="theme-setting-dot"
+                      style={{
+                        backgroundColor:
+                          item.color === "default"
+                            ? "rgba(75, 75, 75, 1)"
+                            : item.color,
+                      }}
+                    ></span>
+                    <span className="theme-setting-title">
+                      <Trans>{item.title}</Trans>
+                    </span>
+                  </li>
+                ))}
+                <li
+                  className={
+                    this.state.currentThemeIndex === -1
+                      ? "theme-setting-item active-theme-item"
+                      : "theme-setting-item"
+                  }
+                  onClick={() => {
+                    this.setState({
+                      isShowCustomColorPicker:
+                        !this.state.isShowCustomColorPicker,
+                      pendingCustomColor: this.state.customColor,
+                    });
+                  }}
+                  style={{ color: this.state.customColor }}
+                >
+                  <span
+                    className="theme-setting-dot"
+                    style={{
+                      backgroundColor:
+                        this.state.currentThemeIndex === -1
+                          ? this.state.customColor
+                          : undefined,
+                    }}
+                  >
+                    <span
+                      className={
+                        this.state.isShowCustomColorPicker
+                          ? "icon-check"
+                          : "icon-more"
+                      }
+                      style={{
+                        fontSize: "12px",
+                        position: "relative",
+                        top: "2px",
+                        left: "2px",
+                      }}
+                    ></span>
+                  </span>
+                  <span className="theme-setting-title">
+                    <Trans>Custom</Trans>
+                  </span>
+                </li>
+              </ul>
+              {this.state.isShowCustomColorPicker && (
+                <div className="custom-color-picker-container">
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ColorPickerPanel
+                      enableAlpha={false}
+                      color={this.state.pendingCustomColor}
+                      onChange={this.handleCustomColor}
+                      mode="RGB"
+                      style={{
+                        margin: "10px 0",
+                        animation: "fade-in 0.2s ease-in-out 0s 1",
+                      }}
+                    />
+                    <span
+                      className="change-location-button"
+                      onClick={this.handleConfirmCustomColor}
+                      style={{ marginBottom: "10px" }}
+                    >
+                      <Trans>Confirm</Trans>
+                    </span>
+                  </div>
+                </div>
+              )}
+              <div className="setting-dialog-new-title">
+                <Trans>Appearance</Trans>
+              </div>
+              <ul className="skin-setting-container">
+                {skinList.map((item) => (
+                  <li
+                    key={item.value}
+                    className={
+                      item.value ===
+                      (ConfigService.getReaderConfig("appSkin") || "system")
+                        ? "skin-setting-item active-skin-item"
+                        : "skin-setting-item"
+                    }
+                    onClick={() => {
+                      this.changeSkin(item.value);
+                    }}
+                  >
+                    <span
+                      className="skin-setting-icon"
+                      dangerouslySetInnerHTML={{ __html: item.icon }}
+                    />
+                    <Trans>{item.label}</Trans>
+                  </li>
+                ))}
+              </ul>
             </>
           ) : this.props.settingMode === "sync" ? (
             <SyncSetting />

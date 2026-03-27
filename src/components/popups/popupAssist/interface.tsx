@@ -6,6 +6,8 @@ export interface PopupAssistProps {
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleFetchPlugins: () => void;
+  handleSetting: (isShow: boolean) => void;
+  handleSettingMode: (settingMode: string) => void;
   t: (title: string) => string;
 }
 export interface PopupAssistState {

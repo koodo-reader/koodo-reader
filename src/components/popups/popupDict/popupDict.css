@@ -7,10 +7,14 @@
 .dict-word {
   font-size: 30px;
   font-weight: bold;
-  line-height: 30px;
+  line-height: 1.5;
   display: inline-block;
-  margin-top: 20px;
+  margin-top: 10px;
   margin-left: 5px;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .wiki-image {
   float: right;
@@ -62,7 +66,7 @@
   right: 25px;
 }
 .dict-service-selector {
-  width: 120px;
+  width: 100px;
   height: 30px;
   opacity: 1;
   font-size: 15px;
@@ -201,4 +205,36 @@
   margin-top: -10px;
   position: relative;
   top: 10px;
+}
+
+.dict-ai-answer-container {
+  margin-top: 10px;
+}
+
+.dict-ai-answer-title {
+  color: #2084e8;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.dict-ai-answer-icon {
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+.dict-ai-answer-waiting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+.dict-ai-answer-content {
+  font-size: 14px;
+  line-height: 22px;
+  user-select: text;
 }

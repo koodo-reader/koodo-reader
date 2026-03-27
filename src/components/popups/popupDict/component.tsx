@@ -7,15 +7,14 @@ import DOMPurify from "dompurify";
 import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
-import {
-  getWebsiteUrl,
-  handleContextMenu,
-  openExternalUrl,
-} from "../../../utils/common";
+import { getWebsiteUrl, openExternalUrl } from "../../../utils/common";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
-import { checkPlugin } from "../../../utils/common";
-import { getDictText } from "../../../utils/request/reader";
+import {
+  getDictText,
+  getDictionaryStream,
+} from "../../../utils/request/reader";
+import { marked } from "marked";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
@@ -29,6 +28,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       dictSource: ConfigService.getReaderConfig("dictSource") || "en",
       isAddNew: false,
       isShowUrl: false,
+      aiAnswer: "",
+      isAiWaiting: false,
     };
   }
   componentDidMount() {
@@ -68,6 +69,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   };
   handleDict = async (text: string) => {
     let dictText = "";
+    let isFullAnalysis = true;
     try {
       if (
         this.state.dictService &&
@@ -104,6 +106,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             ? "chs"
             : "eng"
         );
+        if (dictText) {
+          isFullAnalysis = false;
+        }
       }
 
       if (dictText.startsWith("https://")) {
@@ -123,6 +128,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           }
         );
       }
+      if (
+        this.props.isAuthed &&
+        ConfigService.getReaderConfig("isDisableAI") !== "yes"
+      ) {
+        this.handleDictionaryStream(text, isFullAnalysis);
+      }
     } catch (error) {
       toast.error(
         this.props.t("Error happened") +
@@ -133,6 +144,34 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       this.setState({
         dictText: this.props.t("Error happened"),
       });
+    }
+  };
+  handleDictionaryStream = async (text: string, isFullAnalysis: boolean) => {
+    try {
+      this.setState({ aiAnswer: "", isAiWaiting: true });
+      let isFirst = true;
+      let res = await getDictionaryStream(
+        text,
+        "auto",
+        navigator.language,
+        isFullAnalysis,
+        (result) => {
+          if (result && result.text) {
+            if (isFirst) {
+              this.setState({ aiAnswer: result.text, isAiWaiting: false });
+              isFirst = false;
+            } else {
+              this.setState({ aiAnswer: this.state.aiAnswer + result.text });
+            }
+          }
+        }
+      );
+      if (res && res.done) {
+        this.setState({ isAiWaiting: false });
+      }
+    } catch (error) {
+      this.setState({ isAiWaiting: false });
+      console.error(error);
     }
   };
   handleChangeDictService = (dictService: string) => {
@@ -166,7 +205,10 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
               style={{ margin: 0 }}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 if (event.target.value === "add-new") {
-                  this.setState({ isAddNew: true });
+                  this.props.handleOpenMenu(false);
+                  this.props.handleMenuMode("");
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("plugins");
                   return;
                 }
                 this.handleChangeDictService(event.target.value);
@@ -252,83 +294,28 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           </div>
           {this.state.isAddNew && (
             <div
-              className="trans-add-new-container"
-              style={{ fontWeight: 500 }}
+              style={{
+                marginTop: "50px",
+                textAlign: "center",
+                fontSize: "17px",
+                color: "#2084e8",
+              }}
             >
-              <textarea
-                name="url"
-                placeholder={this.props.t(
-                  "Paste the code of the plugin here, check out document to learn how to get more plugins"
-                )}
-                id="trans-add-content-box"
-                className="trans-add-content-box"
-                onContextMenu={() => {
-                  handleContextMenu("trans-add-content-box");
+              <span
+                style={{
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  textAlign: "center",
                 }}
-                style={{ height: "170px" }}
-              />
-              <div className="trans-add-button-container">
-                <div
-                  className="trans-add-cancel"
-                  style={{ color: "#2084e8" }}
-                  onClick={() => {
-                    if (
-                      ConfigService.getReaderConfig("lang") &&
-                      ConfigService.getReaderConfig("lang").startsWith("zh")
-                    ) {
-                      openExternalUrl(getWebsiteUrl() + "/zh/plugin");
-                    } else {
-                      openExternalUrl(getWebsiteUrl() + "/en/plugin");
-                    }
-                  }}
-                >
-                  <Trans>Document</Trans>
-                </div>
-                <div
-                  className="trans-add-cancel"
-                  onClick={() => {
-                    this.setState({ isAddNew: false });
-                  }}
-                >
-                  <Trans>Cancel</Trans>
-                </div>
-                <div
-                  className="trans-add-confirm"
-                  style={{ backgroundColor: "#2084e8" }}
-                  onClick={async () => {
-                    let value: string = (
-                      document.querySelector(
-                        "#trans-add-content-box"
-                      ) as HTMLTextAreaElement
-                    ).value;
-                    if (value) {
-                      let plugin: any = JSON.parse(value);
-                      plugin.key = plugin.identifier;
-                      if (!(await checkPlugin(plugin))) {
-                        toast.error(this.props.t("Plugin verification failed"));
-                        return;
-                      }
-                      if (
-                        this.props.plugins.find(
-                          (item) => item.key === plugin.key
-                        )
-                      ) {
-                        await DatabaseService.updateRecord(plugin, "plugins");
-                      } else {
-                        await DatabaseService.saveRecord(plugin, "plugins");
-                      }
-                      this.props.handleFetchPlugins();
-                      toast.success(this.props.t("Addition successful"));
-                    }
-                    this.setState({
-                      isAddNew: false,
-                      dictText: this.props.t("Please select the service"),
-                    });
-                  }}
-                >
-                  <Trans>Confirm</Trans>
-                </div>
-              </div>
+                onClick={() => {
+                  this.props.handleOpenMenu(false);
+                  this.props.handleMenuMode("");
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("plugins");
+                }}
+              >
+                <Trans>Add new plugin</Trans>
+              </span>
             </div>
           )}
           {!this.state.isAddNew && (
@@ -340,6 +327,32 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 {
                   replace: (_domNode) => {},
                 }
+              )}
+              {(this.state.isAiWaiting || this.state.aiAnswer) && (
+                <div className="dict-ai-answer-container">
+                  <div className="dict-ai-answer-title">
+                    <span className="icon-idea dict-ai-answer-icon"></span>
+                    <Trans>AI Encyclopedia</Trans>
+                  </div>
+                  {this.state.isAiWaiting && !this.state.aiAnswer ? (
+                    <div className="dict-ai-answer-waiting">
+                      <span className="icon-loading popup-assistant-loading"></span>
+                      <span>{this.props.t("Thinking, please wait...")}</span>
+                    </div>
+                  ) : (
+                    <div className="dict-ai-answer-content">
+                      {Parser(
+                        DOMPurify.sanitize(
+                          (marked.parse(this.state.aiAnswer) as string) +
+                            "<address></address>"
+                        ) || " ",
+                        {
+                          replace: (_domNode) => {},
+                        }
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           )}

@@ -57,6 +57,7 @@ export type stateType = {
     isDetailDialog: boolean;
     bookSortCode: { sort: number; order: number };
     noteSortCode: { sort: number; order: number };
+    refreshBookKey: string;
   };
   book: {
     isOpenEditDialog: boolean;
@@ -99,14 +100,18 @@ export type stateType = {
     isNavLocked: boolean;
     isSettingLocked: boolean;
     isConvertOpen: boolean;
+    isSpeechOpen: boolean;
     isHideFooter: boolean;
     isHideHeader: boolean;
     isHideBackground: boolean;
     isHidePageButton: boolean;
     isHideMenuButton: boolean;
+    isHideAudiobookButton: boolean;
     isHideAIButton: boolean;
     isHideScaleButton: boolean;
     isHidePDFConvertButton: boolean;
+    isShowPageBorder: boolean;
+    textOrientation: string;
     noteKey: string;
     currentChapter: string;
     currentChapterIndex: number;

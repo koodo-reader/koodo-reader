@@ -172,18 +172,83 @@
   line-height: 1;
 }
 .theme-setting-item {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 20px;
+  border: 2px solid transparent;
   cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
   box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+.theme-setting-title {
+  max-width: 50px;
+  width: 50px;
+}
+.theme-setting-item.active-theme-item {
+  border-color: currentColor;
+}
+.theme-setting-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 .theme-setting-container {
-  width: 150px;
-  height: 25px;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
   align-items: center;
+  width: auto;
+  height: auto;
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-top: 6px;
+}
+.skin-setting-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-top: 6px;
+  margin-bottom: 5px;
+}
+.custom-color-picker-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.skin-setting-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 20px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-sizing: border-box;
+  opacity: 0.6;
+  transition:
+    border-color 0.15s,
+    opacity 0.15s;
+}
+.skin-setting-item.active-skin-item {
+  border-color: currentColor;
+  opacity: 1;
+}
+.skin-setting-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 .setting-option-subtitle {
   font-size: 12px;
@@ -197,6 +262,37 @@
   bottom: 20px;
   right: 20px;
   cursor: pointer;
+}
+.plugin-tab-bar {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 6px 25px;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.plugin-tab-item {
+  padding: 4px 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  opacity: 0.6;
+  transition:
+    opacity 0.15s,
+    background 0.15s;
+  user-select: none;
+}
+.plugin-tab-item:hover {
+  opacity: 0.9;
+}
+.plugin-tab-item-active {
+  opacity: 1;
+}
+.plugin-section-anchor {
+  height: 0;
+  overflow: hidden;
 }
 .token-dialog-button-container {
   margin-top: 20px;

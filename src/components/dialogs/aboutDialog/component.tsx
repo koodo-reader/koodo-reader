@@ -39,7 +39,9 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
       : (note: any) => note.notes === "";
     const exportFn = isNotes ? exportNotes : exportHighlights;
 
-    const handleExport = async (format: "csv" | "md" | "txt") => {
+    const handleExport = async (
+      format: "csv" | "md" | "txt" | "html" | "pdf"
+    ) => {
       let books = await DatabaseService.getAllRecords("books");
       let notes = await DatabaseService.getAllRecords("notes");
       notes = notes.filter(filterFn);
@@ -70,13 +72,21 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
           this.setState({ exportSubmenu: "" });
         }}
       >
-        {(["csv", "md", "txt"] as const).map((fmt) => (
+        {(["csv", "md", "txt", "html", "pdf"] as const).map((fmt) => (
           <li
             key={fmt}
             className="sort-by-category-list"
             onClick={() => handleExport(fmt)}
           >
-            {fmt === "csv" ? "CSV" : fmt === "md" ? "Markdown" : "TXT"}
+            {fmt === "csv"
+              ? "CSV"
+              : fmt === "md"
+                ? "Markdown"
+                : fmt === "txt"
+                  ? "TXT"
+                  : fmt === "html"
+                    ? "HTML"
+                    : "PDF"}
           </li>
         ))}
       </div>
@@ -136,6 +146,21 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               }}
             >
               <Trans>Support</Trans>
+            </li>
+            <li
+              className="sort-by-category-list"
+              onClick={async () => {
+                if (
+                  ConfigService.getReaderConfig("lang") &&
+                  ConfigService.getReaderConfig("lang").startsWith("zh")
+                ) {
+                  openExternalUrl(getWebsiteUrl() + "/zh/use-shortcut");
+                } else {
+                  openExternalUrl(getWebsiteUrl() + "/en/use-shortcut");
+                }
+              }}
+            >
+              <Trans>Shortcuts</Trans>
             </li>
             <li
               className="sort-by-category-list"
@@ -218,7 +243,7 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               ? {
                   position: "absolute",
                   left: "665px",
-                  top: isElectron ? "230px" : "200px",
+                  top: isElectron ? "245px" : "215px",
                   width: "200px",
                 }
               : { display: "none" }
