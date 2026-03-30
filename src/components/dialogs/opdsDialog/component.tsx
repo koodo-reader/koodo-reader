@@ -61,6 +61,19 @@ function resolveUrl(href: string, baseUrl: string): string {
   }
 }
 
+// Query Dublin Core elements across dc: and dcterms: namespaces
+function getDC(entry: Element, localName: string): string {
+  return (
+    entry.getElementsByTagNameNS(
+      "http://purl.org/dc/elements/1.1/",
+      localName
+    )[0]?.textContent ||
+    entry.getElementsByTagNameNS("http://purl.org/dc/terms/", localName)[0]
+      ?.textContent ||
+    ""
+  );
+}
+
 function parseOPDSFeed(xmlText: string, feedUrl: string): OPDSFeed {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xmlText, "application/xml");
@@ -131,6 +144,10 @@ function parseOPDSFeed(xmlText: string, feedUrl: string): OPDSFeed {
         .map((a) => a.querySelector("name")?.textContent || "")
         .filter(Boolean);
 
+      const categories = Array.from(entry.querySelectorAll("category"))
+        .map((c) => c.getAttribute("label") || c.getAttribute("term") || "")
+        .filter(Boolean);
+
       return {
         id: entry.querySelector("id")?.textContent || "",
         title: entry.querySelector("title")?.textContent || "",
@@ -144,6 +161,11 @@ function parseOPDSFeed(xmlText: string, feedUrl: string): OPDSFeed {
         links: entryLinks,
         updated: entry.querySelector("updated")?.textContent || "",
         isNavigation,
+        publisher: getDC(entry, "publisher"),
+        language: getDC(entry, "language"),
+        pubDate: getDC(entry, "date") || getDC(entry, "issued"),
+        rights: getDC(entry, "rights"),
+        categories,
       };
     }
   );
@@ -164,7 +186,6 @@ async function fetchOPDSFeed(url: string): Promise<OPDSFeed> {
   if (!response.ok)
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   const text = await response.text();
-  console.log(text);
   return parseOPDSFeed(text, url);
 }
 
@@ -629,80 +650,134 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   renderDetailView() {
     const { selectedBook } = this.state;
     if (!selectedBook) return null;
-    const downloadLinks = this.getDownloadLinks(selectedBook);
+    console.log(selectedBook);
+    const formatUpdated = (iso: string) => {
+      if (!iso) return "";
+      try {
+        return new Date(iso).toLocaleDateString();
+      } catch {
+        return iso;
+      }
+    };
+
+    // Metadata cells: [label, value] — only show non-empty ones
+    const metaCells: [string, string][] = [
+      ["Publisher", selectedBook.publisher],
+      ["Language", selectedBook.language],
+      [
+        "Published",
+        selectedBook.pubDate ? formatUpdated(selectedBook.pubDate) : "",
+      ],
+      [
+        "Updated",
+        selectedBook.updated ? formatUpdated(selectedBook.updated) : "",
+      ],
+    ].filter(([, v]) => v) as [string, string][];
 
     return (
-      <div className="opds-detail">
-        <div className="opds-detail-header">
-          {selectedBook.coverUrl && (
+      <div className="detail-dialog-book-info" style={{ height: "100%" }}>
+        {/* Cover */}
+        <div
+          className="detail-cover-container"
+          style={{
+            width: "100%",
+            height: "auto",
+            margin: 0,
+            padding: "16px 0 8px",
+          }}
+        >
+          {selectedBook.coverUrl ? (
             <img
-              className="opds-detail-cover"
               src={selectedBook.coverUrl}
               alt={selectedBook.title}
+              className="detail-cover"
               onError={(e) =>
                 ((e.target as HTMLImageElement).style.display = "none")
               }
             />
+          ) : (
+            <span
+              className="icon-book"
+              style={{ fontSize: "60px", opacity: 0.15 }}
+            ></span>
           )}
-          <div className="opds-detail-meta">
-            <div className="opds-detail-title">{selectedBook.title}</div>
-            {selectedBook.authors.length > 0 && (
-              <div className="opds-entry-author">
-                {selectedBook.authors.join(", ")}
-              </div>
-            )}
-            <div
-              className="opds-detail-download-label"
-              style={{ marginTop: "15px" }}
-            >
-              <Trans>Download as</Trans>:
-            </div>
-            {downloadLinks.length === 0 && (
-              <div style={{ opacity: 0.5, fontSize: "13px", padding: "8px 0" }}>
-                <Trans>No supported formats available</Trans>
-              </div>
-            )}
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-              {downloadLinks.map((link, i) => (
-                <span
-                  key={i}
-                  className="import-dialog-back-button"
-                  style={{
-                    position: "static",
-                    fontSize: "13px",
-                    fontWeight: 700,
-                  }}
-                  onClick={() => this.handleDownloadBook(selectedBook, link)}
-                >
-                  {(
-                    DOWNLOAD_TYPES[link.type] ||
-                    link.href.split(".").pop() ||
-                    "file"
-                  ).toUpperCase()}
-                </span>
-              ))}
-            </div>
-          </div>
         </div>
 
+        {/* Title */}
+        <p className="detail-dialog-book-title">{selectedBook.title}</p>
+
+        {/* Author */}
+        {selectedBook.authors.length > 0 && (
+          <p className="detail-dialog-book-author">
+            {selectedBook.authors.join(", ")}
+          </p>
+        )}
+
+        {/* Categories */}
+        {selectedBook.categories.length > 0 && (
+          <p
+            className="detail-dialog-book-author"
+            style={{ opacity: 0.5, fontSize: "12px" }}
+          >
+            {selectedBook.categories.join(" · ")}
+          </p>
+        )}
+
+        {/* Metadata row */}
+        {metaCells.length > 0 && (
+          <div className="detail-sub-info">
+            {metaCells.map(([label, value], i) => (
+              <React.Fragment key={label}>
+                {i > 0 && <p className="detail-dialog-book-divider"></p>}
+                <p className="detail-dialog-book-publisher">
+                  <p className="detail-sub-title">
+                    <Trans>{label}</Trans>
+                  </p>
+                  <p className="detail-sub-content-container">
+                    <p className="detail-sub-content">{value}</p>
+                  </p>
+                </p>
+              </React.Fragment>
+            ))}
+          </div>
+        )}
+
+        {/* Rights */}
+        {selectedBook.rights && (
+          <p className="detail-dialog-book-desc" style={{ fontSize: "11px" }}>
+            {selectedBook.rights}
+          </p>
+        )}
+
+        {/* Description */}
         {selectedBook.summary && (
-          <div className="opds-detail-summary">{selectedBook.summary}</div>
+          <>
+            <p className="detail-dialog-book-desc">
+              <Trans>Description</Trans>:
+            </p>
+            <div className="detail-dialog-book-detail">
+              {selectedBook.summary}
+            </div>
+          </>
         )}
       </div>
     );
   }
 
   renderTitle() {
-    const { view, feedStack, selectedBook } = this.state;
+    const { view, feedStack } = this.state;
     if (view === "catalog") return <Trans>From OPDS</Trans>;
-    if (view === "detail")
-      return selectedBook?.title || <Trans>Book Detail</Trans>;
+    if (view === "detail") return <Trans>Book Detail</Trans>;
     if (feedStack.length > 0) return feedStack[feedStack.length - 1].title;
     return <Trans>From OPDS</Trans>;
   }
 
   render() {
-    const { view } = this.state;
+    const { view, selectedBook } = this.state;
+    const downloadLinks =
+      view === "detail" && selectedBook
+        ? this.getDownloadLinks(selectedBook)
+        : [];
 
     return (
       <div
@@ -721,6 +796,40 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
           {view === "feed" && this.renderFeedView()}
           {view === "detail" && this.renderDetailView()}
         </div>
+
+        {/* Bottom bar */}
+        {view === "detail" && downloadLinks.length > 0 && (
+          <div
+            className="opds-bottom-bar"
+            style={{
+              padding: "10px",
+            }}
+          >
+            {downloadLinks.map((link, i) => (
+              <div
+                key={i}
+                className="new-version-open"
+                onClick={() => this.handleDownloadBook(selectedBook!, link)}
+                style={{
+                  padding: "0px 0px",
+                  fontSize: "12px",
+                  bottom: "10px",
+                  height: "30px",
+                  lineHeight: "30px",
+                }}
+              >
+                <span>
+                  <Trans>Download</Trans>
+                </span>{" "}
+                {(
+                  DOWNLOAD_TYPES[link.type] ||
+                  link.href.split(".").pop() ||
+                  "file"
+                ).toUpperCase()}
+              </div>
+            ))}
+          </div>
+        )}
 
         {view !== "catalog" && (
           <div className="import-dialog-back-button" onClick={this.handleBack}>

@@ -110,52 +110,13 @@
   background-color: rgba(241, 100, 100, 0.28);
 }
 
-/* Book detail view */
-.opds-detail {
-  padding: 15px 15px 10px;
+/* Download buttons bar (detail view, bottom-left) */
+.opds-bottom-bar {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.opds-detail-header {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-
-.opds-detail-cover {
-  width: 72px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 4px;
-  flex-shrink: 0;
-  background: rgba(128, 128, 128, 0.1);
-}
-
-.opds-detail-meta {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.opds-detail-title {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-.opds-detail-summary {
-  font-size: 12px;
-  line-height: 1.6;
-  opacity: 0.65;
-  max-height: 160px;
-  overflow-y: auto;
-}
-
-.opds-detail-download-label {
-  font-size: 13px;
-  font-weight: 500;
-  opacity: 0.75;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-width: calc(100% - 120px);
 }
