@@ -24,6 +24,7 @@ const dirPath = path.join(configDir, "uploads");
 const packageJson = require("./package.json");
 let mainWin;
 let tray = null;
+let isQuitting = false;
 let readerWindow;
 let readerWindowList = [];
 let dictWindow;
@@ -189,11 +190,7 @@ const createTray = () => {
     {
       label: "Quit",
       click: () => {
-        if (tray) {
-          tray.destroy();
-          tray = null;
-        }
-        store.set("isMinimizeToTray", "no");
+        isQuitting = true;
         app.quit();
       },
     },
@@ -235,7 +232,7 @@ const createMainWin = () => {
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
   mainWin.on("close", (event) => {
-    if (store.get("isMinimizeToTray") === "yes") {
+    if (!isQuitting && store.get("isMinimizeToTray") === "yes") {
       event.preventDefault();
       mainWin.hide();
       if (!tray) {
@@ -1136,6 +1133,9 @@ const createMainWin = () => {
 
 app.on("ready", () => {
   createMainWin();
+});
+app.on("before-quit", () => {
+  isQuitting = true;
 });
 app.on("window-all-closed", () => {
   app.quit();
