@@ -5,6 +5,7 @@ export interface OPDSCatalog {
   title: string;
   url: string;
   isBuiltIn?: boolean;
+  isElectronicOnly?: boolean;
 }
 
 export interface OPDSLink {
