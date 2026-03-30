@@ -4,6 +4,8 @@ export interface OPDSCatalog {
   id: string;
   title: string;
   url: string;
+  username?: string;
+  password?: string;
   isBuiltIn?: boolean;
   isElectronicOnly?: boolean;
 }
@@ -52,6 +54,10 @@ export interface OPDSDialogState {
   userCatalogs: OPDSCatalog[];
   currentFeed: OPDSFeed | null;
   feedStack: { url: string; title: string }[];
+  currentCatalogAuth: {
+    username: string;
+    password: string;
+  } | null;
   selectedBook: OPDSEntry | null;
   isLoading: boolean;
   error: string;
@@ -59,4 +65,6 @@ export interface OPDSDialogState {
   isAddingCatalog: boolean;
   newCatalogUrl: string;
   newCatalogTitle: string;
+  newCatalogUsername: string;
+  newCatalogPassword: string;
 }
