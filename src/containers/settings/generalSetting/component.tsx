@@ -49,6 +49,8 @@ class GeneralSetting extends React.Component<
       isAutoMaximizeWin:
         ConfigService.getReaderConfig("isAutoMaximizeWin") === "yes",
       isAutoLaunch: ConfigService.getReaderConfig("isAutoLaunch") === "yes",
+      isMinimizeToTray:
+        ConfigService.getReaderConfig("isMinimizeToTray") === "yes",
       isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
       isDisableAI: ConfigService.getReaderConfig("isDisableAI") === "yes",
       isUseOriginalName:
@@ -220,6 +222,13 @@ class GeneralSetting extends React.Component<
     });
     this.handleSetting("isAutoLaunch");
   };
+  handleMinimizeToTray = () => {
+    const { ipcRenderer } = window.require("electron");
+    ipcRenderer.invoke("toggle-minimize-to-tray", {
+      isMinimizeToTray: this.state.isMinimizeToTray ? "no" : "yes",
+    });
+    this.handleSetting("isMinimizeToTray");
+  };
   renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
@@ -247,6 +256,9 @@ class GeneralSetting extends React.Component<
                     break;
                   case "isAutoLaunch":
                     this.handleAutoLaunch();
+                    break;
+                  case "isMinimizeToTray":
+                    this.handleMinimizeToTray();
                     break;
                   default:
                     this.handleSetting(item.propName);
