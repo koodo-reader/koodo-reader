@@ -493,7 +493,7 @@
   "My OPDS Catalogs": "我的 OPDS 目录",
   "Add OPDS Catalog": "添加 OPDS 目录",
   "OPDS Catalog URL": "OPDS 目录链接",
-  "Catalog Name (optional)": "目录名称（可选）",
+  "Catalog Name": "目录名称",
   "Added successfully": "添加成功",
   "Failed to load catalog": "加载目录失败",
   "Search in catalog...": "在目录中搜索...",

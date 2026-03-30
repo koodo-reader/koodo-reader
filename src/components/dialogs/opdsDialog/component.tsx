@@ -52,6 +52,28 @@ const ACQUISITION_RELS = [
   "http://opds-spec.org/acquisition/sample",
 ];
 
+function encodeBasicAuth(username: string, password: string): string {
+  console.log(
+    username,
+    password,
+    btoa(unescape(encodeURIComponent(`${username}:${password}`))),
+    "Encoding auth"
+  );
+  return btoa(unescape(encodeURIComponent(`${username}:${password}`)));
+}
+
+function getAuthHeaders(
+  catalog?: Pick<OPDSCatalog, "username" | "password"> | null
+): Record<string, string> {
+  if (!catalog?.username && !catalog?.password) return {};
+  return {
+    Authorization: `Basic ${encodeBasicAuth(
+      catalog?.username || "",
+      catalog?.password || ""
+    )}`,
+  };
+}
+
 function resolveUrl(href: string, baseUrl: string): string {
   if (!href) return "";
   try {
@@ -184,10 +206,14 @@ function parseOPDSFeed(xmlText: string, feedUrl: string): OPDSFeed {
   };
 }
 
-async function fetchOPDSFeed(url: string): Promise<OPDSFeed> {
+async function fetchOPDSFeed(
+  url: string,
+  catalog?: Pick<OPDSCatalog, "username" | "password"> | null
+): Promise<OPDSFeed> {
   const response = await fetch(url, {
     headers: {
       Accept: "application/atom+xml, application/xml, text/html, text/xml, */*",
+      ...getAuthHeaders(catalog),
     },
   });
   if (!response.ok)
@@ -204,6 +230,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       userCatalogs: this.loadUserCatalogs(),
       currentFeed: null,
       feedStack: [],
+      currentCatalogAuth: null,
       selectedBook: null,
       isLoading: false,
       error: "",
@@ -211,6 +238,8 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       isAddingCatalog: false,
       newCatalogUrl: "",
       newCatalogTitle: "",
+      newCatalogUsername: "",
+      newCatalogPassword: "",
     };
   }
 
@@ -234,11 +263,15 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       isLoading: true,
       error: "",
       feedStack: [{ url: catalog.url, title: catalog.title }],
+      currentCatalogAuth: {
+        username: catalog.username || "",
+        password: catalog.password || "",
+      },
       currentFeed: null,
       searchQuery: "",
     });
     try {
-      const feed = await fetchOPDSFeed(catalog.url);
+      const feed = await fetchOPDSFeed(catalog.url, catalog);
       this.setState({ currentFeed: feed, isLoading: false });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -248,6 +281,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   };
 
   navigateToEntry = async (entry: OPDSEntry) => {
+    const { currentCatalogAuth } = this.state;
     const navLink = entry.links.find(
       (l) =>
         l.type?.includes("application/atom+xml") ||
@@ -264,7 +298,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       searchQuery: "",
     }));
     try {
-      const feed = await fetchOPDSFeed(navLink.href);
+      const feed = await fetchOPDSFeed(navLink.href, currentCatalogAuth);
       this.setState({ currentFeed: feed, isLoading: false });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -278,7 +312,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   };
 
   handleBack = () => {
-    const { view, feedStack } = this.state;
+    const { view, feedStack, currentCatalogAuth } = this.state;
     if (view === "detail") {
       this.setState({ view: "feed", selectedBook: null });
       return;
@@ -296,7 +330,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         feedStack: newStack,
         searchQuery: "",
       });
-      fetchOPDSFeed(parentUrl)
+      fetchOPDSFeed(parentUrl, currentCatalogAuth)
         .then((feed) => this.setState({ currentFeed: feed, isLoading: false }))
         .catch((err) => {
           const msg = err instanceof Error ? err.message : String(err);
@@ -306,13 +340,15 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   };
 
   handleSearch = async () => {
-    const { currentFeed, searchQuery } = this.state;
+    const { currentFeed, searchQuery, currentCatalogAuth } = this.state;
     if (!currentFeed?.searchTemplate || !searchQuery.trim()) return;
     console.log(searchQuery, currentFeed);
     let searchUrl = currentFeed.searchTemplate;
     if (!searchUrl.includes("searchTerms")) {
       try {
-        const resp = await fetch(searchUrl);
+        const resp = await fetch(searchUrl, {
+          headers: getAuthHeaders(currentCatalogAuth),
+        });
         const text = await resp.text();
         const parser = new DOMParser();
         const osDoc = parser.parseFromString(text, "application/xml");
@@ -331,7 +367,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     console.log(finalUrl, "finalUrl");
     this.setState({ isLoading: true, error: "" });
     try {
-      const feed = await fetchOPDSFeed(finalUrl);
+      const feed = await fetchOPDSFeed(finalUrl, currentCatalogAuth);
       console.log(feed);
       this.setState((prev) => ({
         currentFeed: {
@@ -353,6 +389,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   };
 
   handleDownloadBook = async (entry: OPDSEntry, link: OPDSLink) => {
+    const { currentCatalogAuth } = this.state;
     const ext = DOWNLOAD_TYPES[link.type] || link.href.split(".").pop() || "";
     if (!supportedFormats.includes("." + ext)) {
       toast.error(this.props.t("Unsupported file format") + ": " + link.type);
@@ -362,7 +399,9 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       id: "opds-download",
     });
     try {
-      const response = await fetch(link.href);
+      const response = await fetch(link.href, {
+        headers: getAuthHeaders(currentCatalogAuth),
+      });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const arrayBuffer = await response.arrayBuffer();
       const fileName = entry.title.replace(/[/\\?%*:|"<>]/g, "-") + "." + ext;
@@ -378,7 +417,13 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   };
 
   handleAddCatalog = () => {
-    const { newCatalogUrl, newCatalogTitle, userCatalogs } = this.state;
+    const {
+      newCatalogUrl,
+      newCatalogTitle,
+      newCatalogUsername,
+      newCatalogPassword,
+      userCatalogs,
+    } = this.state;
     if (!newCatalogUrl.trim()) {
       toast.error(this.props.t("Please enter a valid URL"));
       return;
@@ -387,6 +432,8 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       id: "user-" + Date.now(),
       title: newCatalogTitle.trim() || newCatalogUrl.trim(),
       url: newCatalogUrl.trim(),
+      username: newCatalogUsername.trim(),
+      password: newCatalogPassword,
     };
     const updated = [...userCatalogs, newCatalog];
     this.saveUserCatalogs(updated);
@@ -395,6 +442,8 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       isAddingCatalog: false,
       newCatalogUrl: "",
       newCatalogTitle: "",
+      newCatalogUsername: "",
+      newCatalogPassword: "",
     });
     toast.success(this.props.t("Added successfully"));
   };
@@ -417,8 +466,14 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   }
 
   renderCatalogView() {
-    const { userCatalogs, isAddingCatalog, newCatalogUrl, newCatalogTitle } =
-      this.state;
+    const {
+      userCatalogs,
+      isAddingCatalog,
+      newCatalogUrl,
+      newCatalogTitle,
+      newCatalogUsername,
+      newCatalogPassword,
+    } = this.state;
 
     return (
       <>
@@ -437,10 +492,39 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
             <input
               className="token-dialog-username-box"
               type="text"
-              placeholder={this.props.t("Catalog Name (optional)")}
+              placeholder={
+                this.props.t("Catalog Name") +
+                " (" +
+                this.props.t("Optional") +
+                ")"
+              }
               value={newCatalogTitle}
               onChange={(e) =>
                 this.setState({ newCatalogTitle: e.target.value })
+              }
+              onKeyDown={(e) => e.key === "Enter" && this.handleAddCatalog()}
+            />
+            <input
+              className="token-dialog-username-box"
+              type="text"
+              placeholder={
+                this.props.t("Username") + " (" + this.props.t("Optional") + ")"
+              }
+              value={newCatalogUsername}
+              onChange={(e) =>
+                this.setState({ newCatalogUsername: e.target.value })
+              }
+              onKeyDown={(e) => e.key === "Enter" && this.handleAddCatalog()}
+            />
+            <input
+              className="token-dialog-username-box"
+              type="password"
+              placeholder={
+                this.props.t("Password") + " (" + this.props.t("Optional") + ")"
+              }
+              value={newCatalogPassword}
+              onChange={(e) =>
+                this.setState({ newCatalogPassword: e.target.value })
               }
               onKeyDown={(e) => e.key === "Enter" && this.handleAddCatalog()}
             />
@@ -461,6 +545,8 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
                     isAddingCatalog: false,
                     newCatalogUrl: "",
                     newCatalogTitle: "",
+                    newCatalogUsername: "",
+                    newCatalogPassword: "",
                   })
                 }
               >
