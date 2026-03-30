@@ -328,6 +328,91 @@ async function fetchOPDSFeed(
   return parseOPDSFeed(text, url);
 }
 
+interface AuthenticatedImageProps {
+  src: string;
+  alt: string;
+  className: string;
+  catalogAuth?: Pick<OPDSCatalog, "username" | "password"> | null;
+  onError?: () => void;
+}
+
+interface AuthenticatedImageState {
+  blobUrl: string;
+  isFailed: boolean;
+}
+
+class AuthenticatedImage extends React.PureComponent<
+  AuthenticatedImageProps,
+  AuthenticatedImageState
+> {
+  private currentBlobUrl = "";
+
+  constructor(props: AuthenticatedImageProps) {
+    super(props);
+    this.state = {
+      blobUrl: "",
+      isFailed: false,
+    };
+  }
+
+  componentDidMount() {
+    this.loadImage();
+  }
+
+  componentDidUpdate(prevProps: AuthenticatedImageProps) {
+    if (
+      prevProps.src !== this.props.src ||
+      prevProps.catalogAuth?.username !== this.props.catalogAuth?.username ||
+      prevProps.catalogAuth?.password !== this.props.catalogAuth?.password
+    ) {
+      this.loadImage();
+    }
+  }
+
+  componentWillUnmount() {
+    this.revokeBlobUrl();
+  }
+
+  revokeBlobUrl() {
+    if (this.currentBlobUrl) {
+      URL.revokeObjectURL(this.currentBlobUrl);
+      this.currentBlobUrl = "";
+    }
+  }
+
+  async loadImage() {
+    const { src, catalogAuth, onError } = this.props;
+    if (!src) {
+      this.revokeBlobUrl();
+      this.setState({ blobUrl: "", isFailed: true });
+      return;
+    }
+
+    try {
+      const response = await fetchWithCatalogAuth(src, {}, catalogAuth);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const blob = await response.blob();
+      this.revokeBlobUrl();
+      const blobUrl = URL.createObjectURL(blob);
+      this.currentBlobUrl = blobUrl;
+      this.setState({ blobUrl, isFailed: false });
+    } catch {
+      this.revokeBlobUrl();
+      this.setState({ blobUrl: "", isFailed: true });
+      onError?.();
+    }
+  }
+
+  render() {
+    const { alt, className } = this.props;
+    const { blobUrl, isFailed } = this.state;
+    if (!blobUrl || isFailed) return null;
+    return <img src={blobUrl} alt={alt} className={className} />;
+  }
+}
+
 class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   constructor(props: OPDSDialogProps) {
     super(props);
@@ -727,7 +812,8 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   }
 
   renderFeedView() {
-    const { currentFeed, isLoading, error, searchQuery } = this.state;
+    const { currentFeed, isLoading, error, searchQuery, currentCatalogAuth } =
+      this.state;
 
     return (
       <>
@@ -808,13 +894,11 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
               {!entry.isNavigation && (
                 <div className="opds-thumb">
                   {entry.thumbnailUrl ? (
-                    <img
+                    <AuthenticatedImage
                       src={entry.thumbnailUrl}
                       alt=""
                       className="opds-thumb-img"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
-                      }}
+                      catalogAuth={currentCatalogAuth}
                     />
                   ) : (
                     <span
@@ -854,7 +938,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   }
 
   renderDetailView() {
-    const { selectedBook } = this.state;
+    const { selectedBook, currentCatalogAuth } = this.state;
     if (!selectedBook) return null;
     console.log(selectedBook);
     const formatUpdated = (iso: string) => {
@@ -893,13 +977,11 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
           }}
         >
           {selectedBook.coverUrl ? (
-            <img
+            <AuthenticatedImage
               src={selectedBook.coverUrl}
               alt={selectedBook.title}
               className="detail-cover"
-              onError={(e) =>
-                ((e.target as HTMLImageElement).style.display = "none")
-              }
+              catalogAuth={currentCatalogAuth}
             />
           ) : (
             <span
