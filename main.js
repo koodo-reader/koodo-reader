@@ -3,6 +3,8 @@ const {
   BrowserWindow,
   WebContentsView,
   Menu,
+  Tray,
+  nativeImage,
   ipcMain,
   dialog,
   powerSaveBlocker,
@@ -21,6 +23,7 @@ const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 const packageJson = require("./package.json");
 let mainWin;
+let tray = null;
 let readerWindow;
 let readerWindowList = [];
 let dictWindow;
@@ -168,6 +171,42 @@ const isWindowPartiallyVisible = (bounds) => {
   }
   return false;
 };
+const createTray = () => {
+  const iconPath = isDev
+    ? path.join(__dirname, "./public/assets/icon.png")
+    : path.join(__dirname, "./build/assets/icon.png");
+  tray = new Tray(nativeImage.createFromPath(iconPath));
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "Open Koodo Reader",
+      click: () => {
+        if (mainWin) {
+          mainWin.show();
+          mainWin.focus();
+        }
+      },
+    },
+    {
+      label: "Quit",
+      click: () => {
+        if (tray) {
+          tray.destroy();
+          tray = null;
+        }
+        store.set("isMinimizeToTray", "no");
+        app.quit();
+      },
+    },
+  ]);
+  tray.setToolTip("Koodo Reader");
+  tray.setContextMenu(contextMenu);
+  tray.on("click", () => {
+    if (mainWin) {
+      mainWin.show();
+      mainWin.focus();
+    }
+  });
+};
 const createMainWin = () => {
   const isMainWindVisible = isWindowPartiallyVisible({
     width: parseInt(store.get("mainWinWidth") || 1050) / mainWinDisplayScale,
@@ -195,7 +234,15 @@ const createMainWin = () => {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
-  mainWin.on("close", () => {
+  mainWin.on("close", (event) => {
+    if (store.get("isMinimizeToTray") === "yes") {
+      event.preventDefault();
+      mainWin.hide();
+      if (!tray) {
+        createTray();
+      }
+      return;
+    }
     if (mainWin && !mainWin.isDestroyed()) {
       let bounds = mainWin.getBounds();
       const currentDisplay = screen.getDisplayMatching(bounds);
@@ -781,6 +828,14 @@ const createMainWin = () => {
     app.setLoginItemSettings({
       openAtLogin: config.isAutoLaunch === "yes",
     });
+    return "pong";
+  });
+  ipcMain.handle("toggle-minimize-to-tray", async (event, config) => {
+    store.set("isMinimizeToTray", config.isMinimizeToTray);
+    if (config.isMinimizeToTray === "no" && tray) {
+      tray.destroy();
+      tray = null;
+    }
     return "pong";
   });
   ipcMain.handle("open-explorer-folder", async (event, config) => {

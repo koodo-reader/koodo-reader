@@ -38,6 +38,7 @@ export interface SettingInfoState {
   isAlwaysOnTop: boolean;
   isAutoMaximizeWin: boolean;
   isAutoLaunch: boolean;
+  isMinimizeToTray: boolean;
   isOpenInMain: boolean;
   isDisableUpdate: boolean;
   isExportOriginalName: boolean;
