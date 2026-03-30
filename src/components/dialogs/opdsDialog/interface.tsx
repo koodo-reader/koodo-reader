@@ -25,6 +25,12 @@ export interface OPDSEntry {
   links: OPDSLink[];
   updated: string;
   isNavigation: boolean;
+  // Dublin Core metadata
+  publisher: string;
+  language: string;
+  pubDate: string;
+  rights: string;
+  categories: string[];
 }
 
 export interface OPDSFeed {
