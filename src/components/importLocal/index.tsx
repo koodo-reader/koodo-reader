@@ -4,6 +4,7 @@ import {
   handleFetchBooks,
   handleLoadingDialog,
   handleImportDialog,
+  handleOPDSDialog,
   handleImportBookFunc,
 } from "../../store/actions";
 import { handleReadingBook } from "../../store/actions";
@@ -28,6 +29,7 @@ const actionCreator = {
   handleReadingBook,
   handleLoadingDialog,
   handleImportDialog,
+  handleOPDSDialog,
   handleImportBookFunc,
 };
 export default connect(

@@ -12,6 +12,9 @@ export function handleLocalFileDialog(isOpen: boolean) {
 export function handleImportDialog(mode: boolean) {
   return { type: "HANDLE_IMPORT_DIALOG", payload: mode };
 }
+export function handleOPDSDialog(mode: boolean) {
+  return { type: "HANDLE_OPDS_DIALOG", payload: mode };
+}
 export function handleSortShelfDialog(isOpen: boolean) {
   return { type: "HANDLE_SORT_SHELF_DIALOG", payload: isOpen };
 }

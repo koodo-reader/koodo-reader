@@ -77,6 +77,7 @@ export type stateType = {
     isBackup: boolean;
     isOpenLocalFileDialog: boolean;
     isOpenImportDialog: boolean;
+    isOpenOPDSDialog: boolean;
     isOpenSortShelfDialog: boolean;
     isOpenTokenDialog: boolean;
     dataSourceList: string[];
