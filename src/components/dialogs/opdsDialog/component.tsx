@@ -2,6 +2,7 @@ import React from "react";
 import "./opdsDialog.css";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
+import SparkMD5 from "spark-md5";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   OPDSCatalog,
@@ -53,25 +54,135 @@ const ACQUISITION_RELS = [
 ];
 
 function encodeBasicAuth(username: string, password: string): string {
-  console.log(
-    username,
-    password,
-    btoa(unescape(encodeURIComponent(`${username}:${password}`))),
-    "Encoding auth"
-  );
   return btoa(unescape(encodeURIComponent(`${username}:${password}`)));
 }
 
-function getAuthHeaders(
-  catalog?: Pick<OPDSCatalog, "username" | "password"> | null
+function getBaseRequestHeaders(
+  extraHeaders: Record<string, string> = {}
 ): Record<string, string> {
-  if (!catalog?.username && !catalog?.password) return {};
   return {
-    Authorization: `Basic ${encodeBasicAuth(
-      catalog?.username || "",
-      catalog?.password || ""
-    )}`,
+    Accept: "application/atom+xml, application/xml, text/html, text/xml, */*",
+    ...extraHeaders,
   };
+}
+
+function getBasicAuthHeader(
+  catalog?: Pick<OPDSCatalog, "username" | "password"> | null
+): string {
+  if (!catalog?.username && !catalog?.password) return "";
+  return `Basic ${encodeBasicAuth(catalog?.username || "", catalog?.password || "")}`;
+}
+
+function randomString(): string {
+  return Math.random().toString(36).slice(2, 12);
+}
+
+function parseDigestChallenge(header: string): Record<string, string> {
+  const digestPart = header.replace(/^Digest\s+/i, "");
+  const result: Record<string, string> = {};
+  const pattern = /([a-z0-9_-]+)=("([^"]*)"|([^,\s]+))/gi;
+  let match: RegExpExecArray | null = null;
+  while ((match = pattern.exec(digestPart))) {
+    result[match[1]] = match[3] || match[4] || "";
+  }
+  return result;
+}
+
+function buildDigestAuthHeader(
+  url: string,
+  method: string,
+  catalog: Pick<OPDSCatalog, "username" | "password">,
+  challengeHeader: string
+): string {
+  const challenge = parseDigestChallenge(challengeHeader);
+  const username = catalog.username || "";
+  const password = catalog.password || "";
+  const parsedUrl = new URL(url);
+  const uri = `${parsedUrl.pathname}${parsedUrl.search}`;
+  const realm = challenge.realm || "";
+  const nonce = challenge.nonce || "";
+  const algorithm = (challenge.algorithm || "MD5").toUpperCase();
+  const qopList = (challenge.qop || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  const qop = qopList.includes("auth") ? "auth" : qopList[0] || "";
+  const nc = "00000001";
+  const cnonce = randomString();
+  const hash = (value: string) => SparkMD5.hash(value);
+
+  let ha1 = hash(`${username}:${realm}:${password}`);
+  if (algorithm === "MD5-SESS") {
+    ha1 = hash(`${ha1}:${nonce}:${cnonce}`);
+  }
+  const ha2 = hash(`${method.toUpperCase()}:${uri}`);
+  const response = qop
+    ? hash(`${ha1}:${nonce}:${nc}:${cnonce}:${qop}:${ha2}`)
+    : hash(`${ha1}:${nonce}:${ha2}`);
+
+  const parts = [
+    `Digest username="${username}"`,
+    `realm="${realm}"`,
+    `nonce="${nonce}"`,
+    `uri="${uri}"`,
+    `response="${response}"`,
+  ];
+  if (challenge.opaque) {
+    parts.push(`opaque="${challenge.opaque}"`);
+  }
+  if (algorithm) {
+    parts.push(`algorithm="${challenge.algorithm || "MD5"}"`);
+  }
+  if (qop) {
+    parts.push(`qop="${qop}"`);
+    parts.push(`nc=${nc}`);
+    parts.push(`cnonce="${cnonce}"`);
+  }
+  return parts.join(", ");
+}
+
+async function fetchWithCatalogAuth(
+  url: string,
+  init: RequestInit = {},
+  catalog?: Pick<OPDSCatalog, "username" | "password"> | null
+): Promise<Response> {
+  const method = init.method || "GET";
+  const baseHeaders = {
+    ...getBaseRequestHeaders(init.headers as Record<string, string>),
+  };
+  const firstResponse = await fetch(url, {
+    ...init,
+    method,
+    headers: baseHeaders,
+  });
+  if (
+    firstResponse.status !== 401 ||
+    !catalog ||
+    (!catalog.username && !catalog.password)
+  ) {
+    return firstResponse;
+  }
+
+  const challengeHeader = firstResponse.headers.get("www-authenticate") || "";
+  let authorization = "";
+  if (/^Digest\s+/i.test(challengeHeader)) {
+    authorization = buildDigestAuthHeader(url, method, catalog, challengeHeader);
+  } else if (/^Basic\s+/i.test(challengeHeader)) {
+    authorization = getBasicAuthHeader(catalog);
+  } else if (challengeHeader.toLowerCase().includes("digest")) {
+    authorization = buildDigestAuthHeader(url, method, catalog, challengeHeader);
+  } else {
+    authorization = getBasicAuthHeader(catalog);
+  }
+
+  return fetch(url, {
+    ...init,
+    method,
+    headers: {
+      ...baseHeaders,
+      Authorization: authorization,
+    },
+  });
 }
 
 function resolveUrl(href: string, baseUrl: string): string {
@@ -210,12 +321,7 @@ async function fetchOPDSFeed(
   url: string,
   catalog?: Pick<OPDSCatalog, "username" | "password"> | null
 ): Promise<OPDSFeed> {
-  const response = await fetch(url, {
-    headers: {
-      Accept: "application/atom+xml, application/xml, text/html, text/xml, */*",
-      ...getAuthHeaders(catalog),
-    },
-  });
+  const response = await fetchWithCatalogAuth(url, {}, catalog);
   if (!response.ok)
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   const text = await response.text();
@@ -346,9 +452,11 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     let searchUrl = currentFeed.searchTemplate;
     if (!searchUrl.includes("searchTerms")) {
       try {
-        const resp = await fetch(searchUrl, {
-          headers: getAuthHeaders(currentCatalogAuth),
-        });
+        const resp = await fetchWithCatalogAuth(
+          searchUrl,
+          {},
+          currentCatalogAuth
+        );
         const text = await resp.text();
         const parser = new DOMParser();
         const osDoc = parser.parseFromString(text, "application/xml");
@@ -399,9 +507,11 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       id: "opds-download",
     });
     try {
-      const response = await fetch(link.href, {
-        headers: getAuthHeaders(currentCatalogAuth),
-      });
+      const response = await fetchWithCatalogAuth(
+        link.href,
+        {},
+        currentCatalogAuth
+      );
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const arrayBuffer = await response.arrayBuffer();
       const fileName = entry.title.replace(/[/\\?%*:|"<>]/g, "-") + "." + ext;
