@@ -126,6 +126,7 @@ function parseOPDSFeed(xmlText: string, feedUrl: string): OPDSFeed {
       const hasNavigationLink = entryLinks.some(
         (l) =>
           l.type?.includes("application/atom+xml") ||
+          l.type?.includes("text/html") ||
           l.rel === "subsection" ||
           l.rel === "related"
       );
@@ -185,7 +186,9 @@ function parseOPDSFeed(xmlText: string, feedUrl: string): OPDSFeed {
 
 async function fetchOPDSFeed(url: string): Promise<OPDSFeed> {
   const response = await fetch(url, {
-    headers: { Accept: "application/atom+xml, application/xml, text/xml, */*" },
+    headers: {
+      Accept: "application/atom+xml, application/xml, text/html, text/xml, */*",
+    },
   });
   if (!response.ok)
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -248,9 +251,11 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     const navLink = entry.links.find(
       (l) =>
         l.type?.includes("application/atom+xml") ||
+        l.type?.includes("text/html") ||
         l.rel === "subsection" ||
         l.rel === "related"
     );
+    console.log(navLink, "navLink");
     if (!navLink) return;
     this.setState((prev) => ({
       isLoading: true,
@@ -303,9 +308,9 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   handleSearch = async () => {
     const { currentFeed, searchQuery } = this.state;
     if (!currentFeed?.searchTemplate || !searchQuery.trim()) return;
-
+    console.log(searchQuery, currentFeed);
     let searchUrl = currentFeed.searchTemplate;
-    if (!searchUrl.includes("{searchTerms}")) {
+    if (!searchUrl.includes("searchTerms")) {
       try {
         const resp = await fetch(searchUrl);
         const text = await resp.text();
@@ -319,11 +324,11 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         // fallback to original
       }
     }
-
-    const finalUrl = searchUrl.replace(
-      "{searchTerms}",
-      encodeURIComponent(searchQuery.trim())
-    );
+    console.log(searchUrl, "searchUrl");
+    let finalUrl = searchUrl
+      .replace("{searchTerms}", encodeURIComponent(searchQuery.trim()))
+      .replace("%7BsearchTerms%7D", encodeURIComponent(searchQuery.trim()));
+    console.log(finalUrl, "finalUrl");
     this.setState({ isLoading: true, error: "" });
     try {
       const feed = await fetchOPDSFeed(finalUrl);
