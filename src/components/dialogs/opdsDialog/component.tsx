@@ -327,6 +327,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     this.setState({ isLoading: true, error: "" });
     try {
       const feed = await fetchOPDSFeed(finalUrl);
+      console.log(feed);
       this.setState((prev) => ({
         currentFeed: {
           ...feed,
@@ -542,7 +543,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
             />
             <span
               className="header-search-text"
-              style={{ marginRight: "15px", height: "50px" }}
+              style={{ marginRight: "15px", height: "40px", marginTop: "5px" }}
             >
               <span
                 className="icon-search header-search-icon"
