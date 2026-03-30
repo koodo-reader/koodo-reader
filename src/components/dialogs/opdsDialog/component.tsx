@@ -133,11 +133,15 @@ function parseOPDSFeed(xmlText: string, feedUrl: string): OPDSFeed {
         hasNavigationLink && !hasAcquisitionLink && !hasSupportedDownload;
 
       const coverLink = entryLinks.find(
-        (l) => l.rel === "http://opds-spec.org/image"
+        (l) =>
+          l.rel === "http://opds-spec.org/image" ||
+          l.rel === "http://opds-spec.org/cover"
       );
       const thumbnailLink =
         entryLinks.find(
-          (l) => l.rel === "http://opds-spec.org/image/thumbnail"
+          (l) =>
+            l.rel === "http://opds-spec.org/image/thumbnail" ||
+            l.rel === "http://opds-spec.org/thumbnail"
         ) || coverLink;
 
       const authors = Array.from(entry.querySelectorAll("author"))
@@ -501,7 +505,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
                   {catalog.title}
                 </span>
                 <span
-                  className="icon-close import-dialog-folder-button"
+                  className="icon-trash import-dialog-folder-button"
                   style={{ fontSize: "13px", marginRight: "8px" }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -802,7 +806,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
           <div
             className="opds-bottom-bar"
             style={{
-              padding: "10px",
+              padding: "2px",
             }}
           >
             {downloadLinks.map((link, i) => (
@@ -813,7 +817,6 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
                 style={{
                   padding: "0px 0px",
                   fontSize: "12px",
-                  bottom: "10px",
                   height: "30px",
                   lineHeight: "30px",
                 }}
