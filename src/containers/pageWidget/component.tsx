@@ -3,9 +3,11 @@ import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
+import { getBatchTrans } from "../../utils/request/reader";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   timeInterval: any;
+  lastBatchTranslationTriggerAt: number;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -16,6 +18,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       percentage: "",
     };
     this.isFirst = true;
+    this.lastBatchTranslationTriggerAt = 0;
   }
 
   getFormattedTime() {
@@ -44,6 +47,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
+        await this.handleBatchTranslation(nextProps.htmlBook.rendition);
       });
       nextProps.htmlBook.rendition.on("rendered", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
@@ -51,6 +55,27 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     }
     if (nextProps.readerMode !== this.props.readerMode) {
       this.setState({ isSingle: nextProps.readerMode !== "double" });
+    }
+  }
+  async handleBatchTranslation(rendition) {
+    if (ConfigService.getReaderConfig("fullTranslationMode") === "no") {
+      return;
+    }
+
+    const now = Date.now();
+    if (now - this.lastBatchTranslationTriggerAt < 10000) {
+      return;
+    }
+    this.lastBatchTranslationTriggerAt = now;
+
+    let batchTransTexts = await rendition.getBatchTransTexts();
+    console.log(batchTransTexts);
+    if (batchTransTexts && batchTransTexts.length > 0) {
+      let res = await getBatchTrans(batchTransTexts, "Automatic", "English");
+      console.log(res, "res");
+      if (res && res.data && res.data.texts) {
+        rendition.handleBatchTransResult(batchTransTexts, res.data.texts);
+      }
     }
   }
 
