@@ -10,5 +10,6 @@ export interface DropdownListState {
   currentLineHeightValue: string;
   currentTextAlignValue: string;
   chineseConversionValue: string;
+  fullTranslationModeValue: string;
   currentTextOrientationValue: string;
 }

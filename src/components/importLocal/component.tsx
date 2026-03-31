@@ -251,6 +251,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                       : "",
                   convertChinese:
                     ConfigService.getReaderConfig("convertChinese"),
+                  fullTranslationMode: ConfigService.getReaderConfig(
+                    "fullTranslationMode"
+                  ),
                   textOrientation:
                     ConfigService.getReaderConfig("textOrientation"),
                   parserRegex: "",

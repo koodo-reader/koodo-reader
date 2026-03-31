@@ -21,6 +21,8 @@ class DropdownList extends React.Component<
       currentTextAlignValue: ConfigService.getReaderConfig("textAlign") || "",
       chineseConversionValue:
         ConfigService.getReaderConfig("convertChinese") || "",
+      fullTranslationModeValue:
+        ConfigService.getReaderConfig("fullTranslationMode") || "",
       currentTextOrientationValue:
         ConfigService.getReaderConfig("textOrientation") || "",
     };
@@ -99,6 +101,11 @@ class DropdownList extends React.Component<
         });
 
         break;
+      case "fullTranslationMode":
+        this.setState({
+          fullTranslationModeValue: arr[0],
+        });
+        break;
       case "textOrientation":
         this.setState({
           currentTextOrientationValue: arr[0],
@@ -149,11 +156,13 @@ class DropdownList extends React.Component<
                         ? this.state.currentTextAlignValue
                         : item.value === "convertChinese"
                           ? this.state.chineseConversionValue
-                          : item.value === "textOrientation"
-                            ? this.state.currentTextOrientationValue
-                            : item.value === "fontFamily"
-                              ? this.state.currentFontFamilyValue
-                              : this.state.currentSubFontFamilyValue)
+                          : item.value === "fullTranslationMode"
+                            ? this.state.fullTranslationModeValue
+                            : item.value === "textOrientation"
+                              ? this.state.currentTextOrientationValue
+                              : item.value === "fontFamily"
+                                ? this.state.currentFontFamilyValue
+                                : this.state.currentSubFontFamilyValue)
                   }
                 >
                   {this.props.t(subItem.label)}
