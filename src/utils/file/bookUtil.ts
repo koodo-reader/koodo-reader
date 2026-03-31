@@ -571,6 +571,11 @@ class BookUtil {
         if (orderField === "DESC") {
           results = results.reverse();
         }
+      } else {
+        results.sort((a: any, b: any) => {
+          const comparison = (a[sortField] || 0) - (b[sortField] || 0);
+          return orderField === "ASC" ? comparison : -comparison;
+        });
       }
 
       return results.map((item: any) => ({ key: item.key }));
@@ -602,6 +607,15 @@ class BookUtil {
         if (orderField === "DESC") {
           books = books.reverse();
         }
+        return books.map((item) => {
+          return { key: item.key };
+        });
+      } else {
+        books.sort((a, b) => {
+          const comparison =
+            ((a as any)[sortField] || 0) - ((b as any)[sortField] || 0);
+          return orderField === "ASC" ? comparison : -comparison;
+        });
         return books.map((item) => {
           return { key: item.key };
         });

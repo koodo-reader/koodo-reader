@@ -133,6 +133,9 @@ export function handleFetchBooks() {
       case 6:
         sortField = "percentage";
         break;
+      case 7:
+        sortField = "size";
+        break;
     }
     let orderField = "ASC";
     if (bookSortCode.order === 2) {
