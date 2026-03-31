@@ -75,6 +75,22 @@ export const dropdownList = [
     ],
     isPDF: false,
   },
+  {
+    title: "Full text translation",
+    value: "fullTranslationMode",
+    option: [
+      { label: "Disable", value: "no" },
+      {
+        label: "Side by side translation",
+        value: "both",
+      },
+      {
+        label: "Only translation",
+        value: "target",
+      },
+    ],
+    isPDF: false,
+  },
 ];
 export const sliderConfigs = [
   {
