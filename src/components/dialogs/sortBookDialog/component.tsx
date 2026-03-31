@@ -102,6 +102,7 @@ class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
               "Reading duration",
               "Author name",
               "Reading progress",
+              "File size",
             ].map((item, index) => {
               return (
                 <li
