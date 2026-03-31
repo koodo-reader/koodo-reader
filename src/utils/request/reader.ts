@@ -274,3 +274,21 @@ export const getTTSAudio = async (
   }
   return null;
 };
+export const getBatchTrans = async (
+  texts: string[],
+  from: string,
+  to: string
+) => {
+  let readerRequest = await getReaderRequest();
+  console.log("before ");
+  let response = await readerRequest.getBatchTrans({ texts, from, to });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return response;
+};
