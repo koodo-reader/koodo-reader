@@ -4,6 +4,7 @@ import { BackgroundProps, BackgroundState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
 import { getBatchTrans } from "../../utils/request/reader";
+import { convertLangMap } from "../../utils/common";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   timeInterval: any;
@@ -51,6 +52,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       });
       nextProps.htmlBook.rendition.on("rendered", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
+        await this.handleBatchTranslation(nextProps.htmlBook.rendition);
       });
     }
     if (nextProps.readerMode !== this.props.readerMode) {
@@ -71,7 +73,11 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     let batchTransTexts = await rendition.getBatchTransTexts();
     console.log(batchTransTexts);
     if (batchTransTexts && batchTransTexts.length > 0) {
-      let res = await getBatchTrans(batchTransTexts, "Automatic", "English");
+      let res = await getBatchTrans(
+        batchTransTexts,
+        "Automatic",
+        convertLangMap[ConfigService.getReaderConfig("lang") || "zhCN"]
+      );
       console.log(res, "res");
       if (res && res.data && res.data.texts) {
         rendition.handleBatchTransResult(batchTransTexts, res.data.texts);
