@@ -292,3 +292,16 @@ export const getBatchTrans = async (
   }
   return response;
 };
+export const detectLanguage = async (text: string) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.detectLanguage({ text });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return null;
+};
