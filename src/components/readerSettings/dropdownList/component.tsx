@@ -21,11 +21,25 @@ class DropdownList extends React.Component<
       currentTextAlignValue: ConfigService.getReaderConfig("textAlign") || "",
       chineseConversionValue:
         ConfigService.getReaderConfig("convertChinese") || "",
-      fullTranslationModeValue:
-        ConfigService.getReaderConfig("fullTranslationMode") || "",
+      fullTranslationModeValue: ConfigService.getAllListConfig(
+        "fullTranslationBooks"
+      ).includes(props.currentBook?.key)
+        ? ConfigService.getReaderConfig("fullTranslationMode") || ""
+        : "",
       currentTextOrientationValue:
         ConfigService.getReaderConfig("textOrientation") || "",
     };
+  }
+  UNSAFE_componentWillReceiveProps(nextProps: DropdownListProps) {
+    if (nextProps.currentBook?.key !== this.props.currentBook?.key) {
+      this.setState({
+        fullTranslationModeValue: ConfigService.getAllListConfig(
+          "fullTranslationBooks"
+        ).includes(nextProps.currentBook?.key)
+          ? ConfigService.getReaderConfig("fullTranslationMode") || ""
+          : "",
+      });
+    }
   }
   componentDidMount() {
     loadFontData().then((result) => {
@@ -105,6 +119,17 @@ class DropdownList extends React.Component<
         this.setState({
           fullTranslationModeValue: arr[0],
         });
+        if (arr[0] === "no" || arr[0] === "") {
+          ConfigService.deleteListConfig(
+            this.props.currentBook.key,
+            "fullTranslationBooks"
+          );
+        } else {
+          ConfigService.setListConfig(
+            this.props.currentBook.key,
+            "fullTranslationBooks"
+          );
+        }
         break;
       case "textOrientation":
         this.setState({

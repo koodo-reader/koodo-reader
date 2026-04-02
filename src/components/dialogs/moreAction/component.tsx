@@ -277,9 +277,11 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                           : "",
                       convertChinese:
                         ConfigService.getReaderConfig("convertChinese"),
-                      fullTranslationMode: ConfigService.getReaderConfig(
-                        "fullTranslationMode"
-                      ),
+                      fullTranslationMode: ConfigService.getAllListConfig(
+                        "fullTranslationBooks"
+                      ).includes(this.props.currentBook.key)
+                        ? ConfigService.getReaderConfig("fullTranslationMode")
+                        : "no",
                       textOrientation:
                         ConfigService.getReaderConfig("textOrientation"),
                       parserRegex: "",

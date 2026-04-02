@@ -1,5 +1,8 @@
+import BookModel from "../../../models/Book";
+
 export interface DropdownListProps {
   t: (title: string) => string;
+  currentBook: BookModel;
   renderBookFunc: () => void;
   handleHideBackground: (isHideBackground: boolean) => void;
   handleTextOrientation: (textOrientation: string) => void;
