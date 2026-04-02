@@ -280,13 +280,25 @@ export const getBatchTrans = async (
   to: string
 ) => {
   let readerRequest = await getReaderRequest();
-  console.log("before ");
   let response = await readerRequest.getBatchTrans({ texts, from, to });
   if (response.code === 200) {
     return response;
   } else if (response.code === 401) {
     handleExitApp();
     return;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return response;
+};
+export const getSplitSentence = async (texts: string) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.getSplitSentence({ texts });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return response;
   } else {
     toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
   }

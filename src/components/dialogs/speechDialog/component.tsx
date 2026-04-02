@@ -32,7 +32,8 @@ class SpeechDialog extends React.Component<
             top: "auto",
             bottom: "60px",
             width: "300px",
-            height: "270px",
+            height: "320px",
+            overflowY: "scroll",
           }}
         >
           {this.props.plugins && <TextToSpeech />}
