@@ -875,7 +875,9 @@ class AccountSetting extends React.Component<
             <Trans>AI voice character quota</Trans>
             <div style={{ display: "flex", alignItems: "center" }}>
               <span>
-                {this.props.t("Free quota") +
+                {(this.props.userInfo && this.props.userInfo.free_credits
+                  ? this.props.userInfo.free_credits
+                  : this.props.t("Free quota")) +
                   (this.props.userInfo &&
                   this.props.userInfo.tts_credits &&
                   this.props.userInfo.tts_credits > 0
