@@ -67,6 +67,7 @@ class TextToSpeech extends React.Component<
                 voices.map((item) => {
                   item.displayName = item.name;
                   item.locale = item.lang;
+                  item.plugin = "system";
                   return item;
                 })
               );
@@ -258,7 +259,6 @@ class TextToSpeech extends React.Component<
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
     console.log(this.nodeList, "nodelist");
-    return;
     let voiceName = ConfigService.getReaderConfig("voiceName");
     if (
       voiceName &&
@@ -355,8 +355,6 @@ class TextToSpeech extends React.Component<
     return nodeList;
   };
   async handleCustomRead(nodeIndex: number) {
-    let voiceName = ConfigService.getReaderConfig("voiceName");
-    let voiceEngine = ConfigService.getReaderConfig("voiceEngine");
     let speed = parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1;
     if (!this.state.isAudioOn) {
       TTSUtil.setAudioPaths();
@@ -375,7 +373,8 @@ class TextToSpeech extends React.Component<
           this.props.plugins,
           this.nodeList,
           5,
-          true
+          true,
+          node.voiceEngine === "official-ai-voice-plugin"
         );
         toast.dismiss("tts-load");
         if (result === "error") {
@@ -396,7 +395,8 @@ class TextToSpeech extends React.Component<
         this.props.plugins,
         this.nodeList,
         10,
-        false
+        false,
+        node.voiceEngine === "official-ai-voice-plugin"
       );
       let res = await this.handleSpeech(index);
       if (res === "error") {
@@ -795,6 +795,7 @@ class TextToSpeech extends React.Component<
               if (!voice) {
                 return;
               }
+              console.log(voice, "voice");
               if (voice.plugin) {
                 ConfigService.setReaderConfig("voiceEngine", voice.plugin);
               } else {
