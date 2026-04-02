@@ -877,7 +877,7 @@ class AccountSetting extends React.Component<
               <span>
                 {(this.props.userInfo && this.props.userInfo.free_credits
                   ? this.props.userInfo.free_credits
-                  : this.props.t("Free quota")) +
+                  : 0) +
                   (this.props.userInfo &&
                   this.props.userInfo.tts_credits &&
                   this.props.userInfo.tts_credits > 0

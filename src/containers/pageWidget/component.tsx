@@ -60,18 +60,23 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     }
   }
   async handleBatchTranslation(rendition) {
-    if (ConfigService.getReaderConfig("fullTranslationMode") === "no") {
+    if (
+      !ConfigService.getAllListConfig("fullTranslationBooks").includes(
+        this.props.currentBook.key
+      ) ||
+      ConfigService.getReaderConfig("fullTranslationMode") === "no"
+    ) {
       return;
     }
 
     const now = Date.now();
-    if (now - this.lastBatchTranslationTriggerAt < 10000) {
+    if (now - this.lastBatchTranslationTriggerAt < 3000) {
       return;
     }
     this.lastBatchTranslationTriggerAt = now;
 
     let batchTransTexts = await rendition.getBatchTransTexts();
-    console.log(batchTransTexts);
+    console.log(batchTransTexts, batchTransTexts);
     if (batchTransTexts && batchTransTexts.length > 0) {
       let res = await getBatchTrans(
         batchTransTexts,
