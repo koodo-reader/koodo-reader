@@ -307,7 +307,6 @@ class TextToSpeech extends React.Component<
         id: "tts-load",
       });
       let res = await getSplitSentence(nodeTextList);
-      toast.dismiss("tts-load");
       console.log(res, "res");
       let narratorVoice =
         ConfigService.getReaderConfig("multiRoleNarratorVoice") ||
@@ -427,11 +426,21 @@ class TextToSpeech extends React.Component<
 
         lastVisibleTextList = rawNodeList.flat();
       }
-
-      if (
+      console.log(lastVisibleTextList, this.nodeList, "dfghfgjdfjjhgj");
+      let isReachPageEnd =
         this.nodeList[index].text ===
-        lastVisibleTextList[lastVisibleTextList.length - 1]
-      ) {
+        lastVisibleTextList[lastVisibleTextList.length - 1];
+      if (this.state.multiRoleEnabled) {
+        isReachPageEnd =
+          this.nodeList[index].text.includes(
+            lastVisibleTextList[lastVisibleTextList.length - 1]
+          ) ||
+          lastVisibleTextList[lastVisibleTextList.length - 1].includes(
+            this.nodeList[index].text
+          );
+      }
+
+      if (isReachPageEnd) {
         if (
           this.props.currentBook.format === "PDF" &&
           ConfigService.getReaderConfig("isConvertPDF") !== "yes"
@@ -494,10 +503,19 @@ class TextToSpeech extends React.Component<
 
         lastVisibleTextList = rawNodeList.flat();
       }
-      if (
+      let isReachPageEnd =
         this.nodeList[index].text ===
-        lastVisibleTextList[lastVisibleTextList.length - 1]
-      ) {
+        lastVisibleTextList[lastVisibleTextList.length - 1];
+      if (this.state.multiRoleEnabled) {
+        isReachPageEnd =
+          this.nodeList[index].text.includes(
+            lastVisibleTextList[lastVisibleTextList.length - 1]
+          ) ||
+          lastVisibleTextList[lastVisibleTextList.length - 1].includes(
+            this.nodeList[index].text
+          );
+      }
+      if (isReachPageEnd) {
         if (
           this.props.currentBook.format === "PDF" &&
           ConfigService.getReaderConfig("isConvertPDF") !== "yes"
