@@ -449,9 +449,11 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         animation:
           ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
         convertChinese: ConfigService.getReaderConfig("convertChinese"),
-        fullTranslationMode: ConfigService.getReaderConfig(
-          "fullTranslationMode"
-        ),
+        fullTranslationMode: ConfigService.getAllListConfig(
+          "fullTranslationBooks"
+        ).includes(selectedBook.key)
+          ? ConfigService.getReaderConfig("fullTranslationMode")
+          : "no",
         textOrientation: ConfigService.getReaderConfig("textOrientation"),
         parserRegex: "",
         isDarkMode: "no",

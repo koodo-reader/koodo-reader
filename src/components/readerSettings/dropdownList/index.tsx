@@ -10,6 +10,7 @@ import {
 const mapStateToProps = (state: stateType) => {
   return {
     renderBookFunc: state.book.renderBookFunc,
+    currentBook: state.book.currentBook,
   };
 };
 const actionCreator = { handleHideBackground, handleTextOrientation };
