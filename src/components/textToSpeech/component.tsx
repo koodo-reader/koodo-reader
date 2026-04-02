@@ -14,14 +14,19 @@ import toast from "react-hot-toast";
 import TTSUtil from "../../utils/reader/ttsUtil";
 import "./textToSpeech.css";
 import { fetchUserInfo } from "../../utils/request/user";
+import { getSplitSentence } from "../../utils/request/reader";
 declare var window: any;
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
   TextToSpeechState
 > {
-  nodeList: string[];
-  voices: any;
+  nodeList: {
+    text: string;
+    voiceName: string;
+    voiceEngine: string;
+  }[];
   customVoices: any;
+  voices: any;
   nativeVoices: any;
   constructor(props: TextToSpeechProps) {
     super(props);
@@ -34,6 +39,9 @@ class TextToSpeech extends React.Component<
       voiceList: {},
       voiceLocale:
         ConfigService.getReaderConfig("voiceLocale") || navigator.language,
+      multiRoleEnabled: ConfigService.getAllListConfig(
+        "multiRoleVoiceBooks"
+      ).includes(props.currentBook?.key),
     };
     this.nodeList = [];
     this.voices = [];
@@ -133,7 +141,28 @@ class TextToSpeech extends React.Component<
       this.voices = [...this.nativeVoices, ...this.customVoices];
       this.handleVoiceLocaleList();
     }
+    if (nextProps.currentBook?.key !== this.props.currentBook?.key) {
+      this.setState({
+        multiRoleEnabled: ConfigService.getAllListConfig(
+          "multiRoleVoiceBooks"
+        ).includes(nextProps.currentBook?.key),
+      });
+    }
   }
+  handleMultiRoleToggle = (enabled: boolean) => {
+    if (enabled) {
+      ConfigService.setListConfig(
+        this.props.currentBook.key,
+        "multiRoleVoiceBooks"
+      );
+    } else {
+      ConfigService.deleteListConfig(
+        this.props.currentBook.key,
+        "multiRoleVoiceBooks"
+      );
+    }
+    this.setState({ multiRoleEnabled: enabled });
+  };
   handleStartAudio = async () => {
     if (
       ConfigService.getReaderConfig("voiceEngine") ===
@@ -228,6 +257,8 @@ class TextToSpeech extends React.Component<
   };
   handleAudio = async () => {
     this.nodeList = await this.handleGetText();
+    console.log(this.nodeList, "nodelist");
+    return;
     let voiceName = ConfigService.getReaderConfig("voiceName");
     if (
       voiceName &&
@@ -242,22 +273,70 @@ class TextToSpeech extends React.Component<
     if (ConfigService.getReaderConfig("isSliding") === "yes") {
       await sleep(1000);
     }
+    let nodeList = [];
     let nodeTextList = (await this.props.htmlBook.rendition.audioText()).filter(
       (item: string) => item && item.trim()
     );
-    this.nodeList = nodeTextList;
-    if (
-      this.props.currentBook.format === "PDF" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
-    ) {
-    } else {
-      let rawNodeList = nodeTextList.map((text) => {
-        return splitSentences(text);
-      });
+    if (!this.state.multiRoleEnabled) {
+      if (
+        this.props.currentBook.format === "PDF" &&
+        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      ) {
+      } else {
+        let rawNodeList = nodeTextList.map((text) => {
+          return splitSentences(text);
+        });
 
-      this.nodeList = rawNodeList.flat();
+        nodeTextList = rawNodeList.flat();
+      }
+      nodeList = nodeTextList.map((text: string) => {
+        return {
+          text,
+          voiceName: ConfigService.getReaderConfig("voiceName"),
+          voiceEngine: ConfigService.getReaderConfig("voiceEngine"),
+        };
+      });
+    } else {
+      toast.loading(this.props.t("Analyzing roles, please wait..."), {
+        id: "tts-load",
+      });
+      let res = await getSplitSentence(nodeTextList);
+      toast.dismiss("tts-load");
+      console.log(res, "res");
+      let narratorVoice =
+        ConfigService.getReaderConfig("multiRoleNarratorVoice") ||
+        ConfigService.getReaderConfig("voiceName");
+      let narratorEngine =
+        ConfigService.getReaderConfig("multiRoleNarratorEngine") ||
+        ConfigService.getReaderConfig("voiceEngine");
+      let maleVoice = ConfigService.getReaderConfig("multiRoleMaleVoice");
+      let maleEngine = ConfigService.getReaderConfig("multiRoleMaleEngine");
+      let femaleVoice = ConfigService.getReaderConfig("multiRoleFemaleVoice");
+      let femaleEngine = ConfigService.getReaderConfig("multiRoleFemaleEngine");
+      if (res && res.data && res.data.sentences) {
+        nodeList = res.data.sentences.map((item: any) => {
+          let voiceName = narratorVoice;
+          let voiceEngine = narratorEngine;
+          if (item.role === "male") {
+            voiceName = maleVoice || narratorVoice;
+            voiceEngine = maleEngine || narratorEngine;
+          } else if (item.role === "female") {
+            voiceName = femaleVoice || narratorVoice;
+            voiceEngine = femaleEngine || narratorEngine;
+          }
+          return {
+            text: item.text,
+            voiceName,
+            voiceEngine,
+          };
+        });
+        console.log(nodeList, "nodeList");
+      } else {
+        toast.error(this.props.t("Analysis failed"));
+      }
     }
-    if (this.nodeList.length === 0) {
+
+    if (nodeList.length === 0) {
       if (
         this.props.currentBook.format === "PDF" &&
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
@@ -271,9 +350,9 @@ class TextToSpeech extends React.Component<
         await this.props.htmlBook.rendition.next();
       }
 
-      this.nodeList = await this.handleGetText();
+      nodeList = await this.handleGetText();
     }
-    return this.nodeList;
+    return nodeList;
   };
   async handleCustomRead(nodeIndex: number) {
     let voiceName = ConfigService.getReaderConfig("voiceName");
@@ -286,15 +365,13 @@ class TextToSpeech extends React.Component<
     for (let index = nodeIndex; index < this.nodeList.length; index++) {
       if (this.state.isPaused || !this.state.isAudioOn) return;
       this.setState({ currentIndex: index });
-      let currentText = this.nodeList[index];
+      let node = this.nodeList[index];
       let style = "background: #f3a6a68c;";
-      this.props.htmlBook.rendition.highlightAudioNode(currentText, style);
+      this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
       if (index === nodeIndex) {
         let result = await TTSUtil.cacheAudio(
           index,
-          voiceName,
           speed * 100 - 100,
-          voiceEngine,
           this.props.plugins,
           this.nodeList,
           5,
@@ -315,9 +392,7 @@ class TextToSpeech extends React.Component<
 
       TTSUtil.cacheAudio(
         index + 1,
-        voiceName,
         speed * 100 - 100,
-        voiceEngine,
         this.props.plugins,
         this.nodeList,
         10,
@@ -346,7 +421,7 @@ class TextToSpeech extends React.Component<
       }
 
       if (
-        this.nodeList[index] ===
+        this.nodeList[index].text ===
         lastVisibleTextList[lastVisibleTextList.length - 1]
       ) {
         if (
@@ -387,13 +462,13 @@ class TextToSpeech extends React.Component<
       return;
     }
     this.setState({ currentIndex: index });
-    let currentText = this.nodeList[index];
+    let node = this.nodeList[index];
     let style = "background: #f3a6a68c;";
-    this.props.htmlBook.rendition.highlightAudioNode(currentText, style);
+    this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
 
     let res = await this.handleSystemSpeech(
       index,
-      ConfigService.getReaderConfig("voiceName"),
+      node.voiceName || ConfigService.getReaderConfig("voiceName"),
       parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1
     );
 
@@ -412,7 +487,7 @@ class TextToSpeech extends React.Component<
         lastVisibleTextList = rawNodeList.flat();
       }
       if (
-        this.nodeList[index] ===
+        this.nodeList[index].text ===
         lastVisibleTextList[lastVisibleTextList.length - 1]
       ) {
         if (
@@ -476,7 +551,7 @@ class TextToSpeech extends React.Component<
   ) => {
     return new Promise<string>(async (resolve) => {
       var msg = new SpeechSynthesisUtterance();
-      msg.text = this.nodeList[index]
+      msg.text = this.nodeList[index].text
         .replace(/\s\s/g, "")
         .replace(/\r/g, "")
         .replace(/\n/g, "")
@@ -813,6 +888,177 @@ class TextToSpeech extends React.Component<
             <Trans>Add new voice</Trans>
           </span>
         </div>
+        {/* Multi-role reading section */}
+        <div
+          className="setting-dialog-new-title"
+          style={{
+            marginLeft: "20px",
+            width: "88%",
+            marginTop: "20px",
+            fontWeight: 500,
+          }}
+        >
+          <span style={{ width: "calc(100% - 50px)" }}>
+            <Trans>AI multi-role speech</Trans>
+          </span>
+
+          <span
+            className="single-control-switch"
+            onClick={() => {
+              this.handleMultiRoleToggle(!this.state.multiRoleEnabled);
+            }}
+            style={this.state.multiRoleEnabled ? {} : { opacity: 0.6 }}
+          >
+            <span
+              className="single-control-button"
+              style={
+                this.state.multiRoleEnabled
+                  ? {
+                      transform: "translateX(20px)",
+                      transition: "transform 0.5s ease",
+                    }
+                  : {
+                      transform: "translateX(0px)",
+                      transition: "transform 0.5s ease",
+                    }
+              }
+            ></span>
+          </span>
+        </div>
+        <p
+          className="setting-option-subtitle"
+          style={{ marginLeft: "20px", marginRight: "20px" }}
+        >
+          <Trans>
+            {
+              "Use AI to analyze books, with different characters reading aloud in different voices"
+            }
+          </Trans>
+        </p>
+        {this.state.multiRoleEnabled && (
+          <>
+            {/* Narrator voice */}
+            <div
+              className="setting-dialog-new-title"
+              style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
+            >
+              <Trans>Narrator voice</Trans>
+              <select
+                name=""
+                className="lang-setting-dropdown"
+                id="multi-role-narrator-voice"
+                onChange={(event) => {
+                  let selectedValue = event.target.value;
+                  let [voiceName, plugin] = selectedValue.split("#");
+                  ConfigService.setReaderConfig(
+                    "multiRoleNarratorVoice",
+                    voiceName
+                  );
+                  ConfigService.setReaderConfig(
+                    "multiRoleNarratorEngine",
+                    plugin || "system"
+                  );
+                }}
+              >
+                {(
+                  this.state.voiceList[this.state.voiceLocale] || this.voices
+                ).map((item) => (
+                  <option
+                    value={[item.name, item.plugin].join("#")}
+                    key={[item.name, item.plugin].join("#")}
+                    className="lang-setting-option"
+                    selected={
+                      item.name ===
+                      ConfigService.getReaderConfig("multiRoleNarratorVoice")
+                    }
+                  >
+                    {this.props.t(item.displayName || item.name)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Male voice */}
+            <div
+              className="setting-dialog-new-title"
+              style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
+            >
+              <Trans>Male voice</Trans>
+              <select
+                name=""
+                className="lang-setting-dropdown"
+                id="multi-role-male-voice"
+                onChange={(event) => {
+                  let selectedValue = event.target.value;
+                  let [voiceName, plugin] = selectedValue.split("#");
+                  ConfigService.setReaderConfig(
+                    "multiRoleMaleVoice",
+                    voiceName
+                  );
+                  ConfigService.setReaderConfig(
+                    "multiRoleMaleEngine",
+                    plugin || "system"
+                  );
+                }}
+              >
+                {(this.state.voiceList[this.state.voiceLocale] || this.voices)
+                  .filter((item) => !item.gender || item.gender === "male")
+                  .map((item) => (
+                    <option
+                      value={[item.name, item.plugin].join("#")}
+                      key={[item.name, item.plugin].join("#")}
+                      className="lang-setting-option"
+                      selected={
+                        item.name ===
+                        ConfigService.getReaderConfig("multiRoleMaleVoice")
+                      }
+                    >
+                      {this.props.t(item.displayName || item.name)}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            {/* Female voice */}
+            <div
+              className="setting-dialog-new-title"
+              style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
+            >
+              <Trans>Female voice</Trans>
+              <select
+                name=""
+                className="lang-setting-dropdown"
+                id="multi-role-female-voice"
+                onChange={(event) => {
+                  let selectedValue = event.target.value;
+                  let [voiceName, plugin] = selectedValue.split("#");
+                  ConfigService.setReaderConfig(
+                    "multiRoleFemaleVoice",
+                    voiceName
+                  );
+                  ConfigService.setReaderConfig(
+                    "multiRoleFemaleEngine",
+                    plugin || "system"
+                  );
+                }}
+              >
+                {(this.state.voiceList[this.state.voiceLocale] || this.voices)
+                  .filter((item) => !item.gender || item.gender === "female")
+                  .map((item) => (
+                    <option
+                      value={[item.name, item.plugin].join("#")}
+                      key={[item.name, item.plugin].join("#")}
+                      className="lang-setting-option"
+                      selected={
+                        item.name ===
+                        ConfigService.getReaderConfig("multiRoleFemaleVoice")
+                      }
+                    >
+                      {this.props.t(item.displayName || item.name)}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          </>
+        )}
       </>
     );
   }

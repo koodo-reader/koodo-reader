@@ -22,4 +22,5 @@ export interface TextToSpeechState {
   voiceLocale: string;
   languageList: string[];
   voiceList: any;
+  multiRoleEnabled: boolean;
 }
