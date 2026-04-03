@@ -24,4 +24,10 @@ export interface TextToSpeechState {
   voiceList: any;
   multiRoleEnabled: boolean;
   multiRoleVoiceType: string;
+  multiRoleNarratorVoice: string;
+  multiRoleMaleVoice: string;
+  multiRoleFemaleVoice: string;
+  multiRoleNarratorEngine: string;
+  multiRoleMaleEngine: string;
+  multiRoleFemaleEngine: string;
 }

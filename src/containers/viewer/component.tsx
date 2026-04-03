@@ -230,11 +230,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? "sliding"
               : "",
           convertChinese: ConfigService.getReaderConfig("convertChinese"),
-          fullTranslationMode: ConfigService.getAllListConfig(
-            "fullTranslationBooks"
-          ).includes(this.props.currentBook.key)
-            ? ConfigService.getReaderConfig("fullTranslationMode")
-            : "no",
+          fullTranslationMode:
+            ConfigService.getAllListConfig("fullTranslationBooks").includes(
+              this.props.currentBook.key
+            ) && this.props.isAuthed
+              ? ConfigService.getReaderConfig("fullTranslationMode")
+              : "no",
           textOrientation: ConfigService.getReaderConfig("textOrientation"),
           parserRegex: "",
           isDarkMode:

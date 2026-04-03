@@ -11,6 +11,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     renderBookFunc: state.book.renderBookFunc,
     currentBook: state.book.currentBook,
+    isAuthed: state.manager.isAuthed,
   };
 };
 const actionCreator = { handleHideBackground, handleTextOrientation };

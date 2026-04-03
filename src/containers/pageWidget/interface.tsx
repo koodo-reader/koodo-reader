@@ -7,6 +7,7 @@ export interface BackgroundProps {
   currentChapterIndex: number;
   isNavLocked: boolean;
   isSettingLocked: boolean;
+  isAuthed: boolean;
   htmlBook: HtmlBookModel;
   isShowBookmark: boolean;
   isHideFooter: boolean;

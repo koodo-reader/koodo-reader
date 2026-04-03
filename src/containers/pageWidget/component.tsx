@@ -64,7 +64,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       !ConfigService.getAllListConfig("fullTranslationBooks").includes(
         this.props.currentBook.key
       ) ||
-      ConfigService.getReaderConfig("fullTranslationMode") === "no"
+      ConfigService.getReaderConfig("fullTranslationMode") === "no" ||
+      !this.props.isAuthed
     ) {
       return;
     }

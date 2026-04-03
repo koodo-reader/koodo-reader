@@ -5,6 +5,7 @@ import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { loadFontData } from "../../../utils/common";
+import toast from "react-hot-toast";
 declare var window: any;
 class DropdownList extends React.Component<
   DropdownListProps,
@@ -116,6 +117,13 @@ class DropdownList extends React.Component<
 
         break;
       case "fullTranslationMode":
+        if (!this.props.isAuthed) {
+          toast(
+            this.props.t("This feature is not available in the free version")
+          );
+          ConfigService.setReaderConfig("fullTranslationMode", "no");
+          return;
+        }
         this.setState({
           fullTranslationModeValue: arr[0],
         });
