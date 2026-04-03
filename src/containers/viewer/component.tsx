@@ -328,7 +328,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
     } else {
-      StyleUtil.addDefaultCss();
+      StyleUtil.addDefaultCss(this.props.currentBook.key);
     }
     let bookLocation: {
       text: string;
@@ -409,7 +409,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ConfigService.getReaderConfig("isConvertPDF") !== "yes"
       ) {
       } else {
-        StyleUtil.addDefaultCss();
+        StyleUtil.addDefaultCss(this.props.currentBook.key);
       }
       // rendition.tranformText();
       this.handleBindGesture();
