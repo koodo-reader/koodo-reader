@@ -5,7 +5,7 @@ import { StyleHelper } from "../../assets/lib/kookit.min";
 
 class styleUtil {
   // add default css for iframe
-  static addDefaultCss() {
+  static addDefaultCss(bookKey: string) {
     let doc = getIframeDoc("ANY")[0];
     if (!doc) return;
     let background = document.querySelector(".viewer");
@@ -29,10 +29,10 @@ class styleUtil {
     //get style with id of default-style
     let styleElement = doc.getElementById("default-style");
     if (styleElement) {
-      styleElement.textContent = this.getDefaultCss();
+      styleElement.textContent = this.getDefaultCss(bookKey);
       return;
     } else {
-      let css = this.getDefaultCss();
+      let css = this.getDefaultCss(bookKey);
       let style = doc.createElement("style");
       style.id = "default-style";
       style.textContent = css;
@@ -40,8 +40,8 @@ class styleUtil {
     }
   }
   // get default css for iframe
-  static getDefaultCss() {
-    return StyleHelper.getDefaultCss(ConfigService);
+  static getDefaultCss(bookKey: string) {
+    return StyleHelper.getDefaultCss(ConfigService, bookKey);
   }
 
   static applyTheme() {
