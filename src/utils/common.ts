@@ -1159,6 +1159,9 @@ export const splitSentences = (text: string, maxLength?: number) => {
     .flatMap(splitLongSentence)
     .filter((sentence) => /[\p{L}\p{N}]/u.test(sentence));
 };
+export const trimSpecialCharacters = (text: string) => {
+  return text.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
+};
 export const getICloudDrivePath = () => {
   if (!isElectron) return "";
   const fs = window.require("fs");

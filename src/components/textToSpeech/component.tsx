@@ -8,6 +8,7 @@ import {
   langToName,
   sleep,
   splitSentences,
+  trimSpecialCharacters,
 } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
@@ -206,7 +207,10 @@ class TextToSpeech extends React.Component<
     return voiceList;
   };
   handleStartAudio = async () => {
-    if (this.props.isAuthed) {
+    if (
+      this.props.isAuthed &&
+      ConfigService.getReaderConfig("voiceEngine") !== "system"
+    ) {
       toast.loading(this.props.t("Loading audio, please wait..."), {
         id: "tts-load",
       });
@@ -322,7 +326,7 @@ class TextToSpeech extends React.Component<
       });
     } else {
       toast.loading(this.props.t("Analyzing roles, please wait..."), {
-        id: "tts-load",
+        id: "tts-analysis",
       });
       if (nodeTextList.join("").length > 50000) {
         toast.error(this.props.t("The text is too long to analyze"));
@@ -331,6 +335,7 @@ class TextToSpeech extends React.Component<
       }
       let res = await getSplitSentence(nodeTextList);
       console.log(res, "res");
+      toast.dismiss("tts-analysis");
       let narratorVoice = this.state.multiRoleNarratorVoice;
       let narratorEngine = this.state.multiRoleNarratorEngine;
       let maleVoice = this.state.multiRoleMaleVoice;
@@ -451,12 +456,17 @@ class TextToSpeech extends React.Component<
         lastVisibleTextList[lastVisibleTextList.length - 1];
       if (this.state.multiRoleEnabled) {
         isReachPageEnd =
-          this.nodeList[index].text.includes(
-            lastVisibleTextList[lastVisibleTextList.length - 1]
+          trimSpecialCharacters(this.nodeList[index].text).includes(
+            trimSpecialCharacters(
+              lastVisibleTextList[lastVisibleTextList.length - 1]
+            )
           ) ||
-          lastVisibleTextList[lastVisibleTextList.length - 1].includes(
-            this.nodeList[index].text
-          );
+          trimSpecialCharacters(
+            lastVisibleTextList[lastVisibleTextList.length - 1]
+          ).includes(trimSpecialCharacters(this.nodeList[index].text));
+      }
+      if (index === this.nodeList.length - 1) {
+        isReachPageEnd = true;
       }
 
       if (isReachPageEnd) {
@@ -470,7 +480,11 @@ class TextToSpeech extends React.Component<
               (this.props.readerMode === "double" ? 2 : 1)
           );
         } else {
-          await this.props.htmlBook.rendition.next();
+          if (index === this.nodeList.length - 1) {
+            await this.props.htmlBook.rendition.nextChapter();
+          } else {
+            await this.props.htmlBook.rendition.next();
+          }
         }
       }
       if (res === "end") {
@@ -501,7 +515,7 @@ class TextToSpeech extends React.Component<
     let node = this.nodeList[index];
     let style = "background: #f3a6a68c;";
     this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
-
+    toast.dismiss("tts-load");
     let res = await this.handleSystemSpeech(
       index,
       node.voiceName || ConfigService.getReaderConfig("voiceName"),
@@ -527,12 +541,17 @@ class TextToSpeech extends React.Component<
         lastVisibleTextList[lastVisibleTextList.length - 1];
       if (this.state.multiRoleEnabled) {
         isReachPageEnd =
-          this.nodeList[index].text.includes(
-            lastVisibleTextList[lastVisibleTextList.length - 1]
+          trimSpecialCharacters(this.nodeList[index].text).includes(
+            trimSpecialCharacters(
+              lastVisibleTextList[lastVisibleTextList.length - 1]
+            )
           ) ||
-          lastVisibleTextList[lastVisibleTextList.length - 1].includes(
-            this.nodeList[index].text
-          );
+          trimSpecialCharacters(
+            lastVisibleTextList[lastVisibleTextList.length - 1]
+          ).includes(trimSpecialCharacters(this.nodeList[index].text));
+      }
+      if (index === this.nodeList.length - 1) {
+        isReachPageEnd = true;
       }
       if (isReachPageEnd) {
         if (
@@ -545,7 +564,11 @@ class TextToSpeech extends React.Component<
               (this.props.readerMode === "double" ? 2 : 1)
           );
         } else {
-          await this.props.htmlBook.rendition.next();
+          if (index === this.nodeList.length - 1) {
+            await this.props.htmlBook.rendition.nextChapter();
+          } else {
+            await this.props.htmlBook.rendition.next();
+          }
         }
       }
       if (
