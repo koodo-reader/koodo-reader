@@ -324,6 +324,11 @@ class TextToSpeech extends React.Component<
       toast.loading(this.props.t("Analyzing roles, please wait..."), {
         id: "tts-load",
       });
+      if (nodeTextList.join("").length > 50000) {
+        toast.error(this.props.t("The text is too long to analyze"));
+        this.setState({ isAudioOn: false });
+        return [];
+      }
       let res = await getSplitSentence(nodeTextList);
       console.log(res, "res");
       let narratorVoice = this.state.multiRoleNarratorVoice;
