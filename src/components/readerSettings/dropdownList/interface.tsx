@@ -2,6 +2,7 @@ import BookModel from "../../../models/Book";
 
 export interface DropdownListProps {
   t: (title: string) => string;
+  isAuthed: boolean;
   currentBook: BookModel;
   renderBookFunc: () => void;
   handleHideBackground: (isHideBackground: boolean) => void;
