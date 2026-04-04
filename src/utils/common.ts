@@ -4,6 +4,7 @@ import SparkMD5 from "spark-md5";
 import {
   CommonTool,
   ConfigService,
+  KookitConfig,
   SyncUtil,
   TokenService,
 } from "../assets/lib/kookit-extra-browser.min";
@@ -593,35 +594,6 @@ function triggerReactChange(id: string, value: string) {
     reactInstance.onChange(syntheticEvent);
   }
 }
-export const convertLangMap = {
-  zhCN: "Chinese",
-  zhTW: "Chinese",
-  zhMO: "Chinese",
-  ja: "Japanese",
-  uk: "Ukrainian",
-  ko: "Korean",
-  vi: "Vietnamese",
-  th: "Thai",
-  ru: "Russian",
-  ar: "Arabic",
-  fr: "French",
-  de: "German",
-  es: "Spanish",
-  it: "Italian",
-  pt: "Portuguese",
-  ptBR: "Portuguese",
-  nl: "Dutch",
-  id: "Indonesian",
-  tr: "Turkish",
-  pl: "Polish",
-  cs: "Czech",
-  sv: "Swedish",
-  bn: "Bengali",
-  tl: "Tagalog",
-  ga: "Irish",
-  bg: "Bulgarian",
-  fa: "Persian",
-};
 export const getDefaultTransTarget = (langList) => {
   //reverse key and value
   let langMap = {};
@@ -631,7 +603,9 @@ export const getDefaultTransTarget = (langList) => {
 
   const lang = ConfigService.getReaderConfig("lang");
   const langKeys = Object.keys(langMap);
-  let langTarget = langKeys.find((key) => key.includes(convertLangMap[lang]));
+  let langTarget = langKeys.find((key) =>
+    key.includes(KookitConfig.ConvertLangMap[lang])
+  );
   return langMap[langTarget || "English"];
 };
 export const WEBSITE_URL = "https://koodoreader.com";
