@@ -1,10 +1,12 @@
 import React from "react";
 import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
 import { getBatchTrans } from "../../utils/request/reader";
-import { convertLangMap } from "../../utils/common";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   timeInterval: any;
@@ -48,18 +50,18 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
-        await this.handleBatchTranslation(nextProps.htmlBook.rendition);
+        await this.handleBatchTranslation(nextProps.htmlBook.rendition, 10000);
       });
       nextProps.htmlBook.rendition.on("rendered", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
-        await this.handleBatchTranslation(nextProps.htmlBook.rendition);
+        await this.handleBatchTranslation(nextProps.htmlBook.rendition, 0);
       });
     }
     if (nextProps.readerMode !== this.props.readerMode) {
       this.setState({ isSingle: nextProps.readerMode !== "double" });
     }
   }
-  async handleBatchTranslation(rendition) {
+  async handleBatchTranslation(rendition, interval: number) {
     if (
       !ConfigService.getAllListConfig("fullTranslationBooks").includes(
         this.props.currentBook.key
@@ -71,18 +73,20 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     }
 
     const now = Date.now();
-    if (now - this.lastBatchTranslationTriggerAt < 3000) {
+    if (now - this.lastBatchTranslationTriggerAt < interval) {
       return;
     }
     this.lastBatchTranslationTriggerAt = now;
 
     let batchTransTexts = await rendition.getBatchTransTexts();
-    console.log(batchTransTexts, batchTransTexts);
+    console.log(batchTransTexts, "batchTransTexts");
     if (batchTransTexts && batchTransTexts.length > 0) {
       let res = await getBatchTrans(
         batchTransTexts,
         "Automatic",
-        convertLangMap[ConfigService.getReaderConfig("lang") || "zhCN"]
+        KookitConfig.ConvertLangMap[
+          ConfigService.getReaderConfig("lang") || "zhCN"
+        ]
       );
       console.log(res, "res");
       if (res && res.data && res.data.texts) {

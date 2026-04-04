@@ -81,7 +81,7 @@ export const dropdownList = [
     option: [
       { label: "Disable", value: "no" },
       {
-        label: "Side by side translation",
+        label: "Bilingual translation",
         value: "both",
       },
       {
