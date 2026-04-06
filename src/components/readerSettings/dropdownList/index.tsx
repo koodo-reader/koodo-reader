@@ -5,6 +5,8 @@ import { stateType } from "../../../store";
 import {
   handleHideBackground,
   handleTextOrientation,
+  handleSetting,
+  handleSettingMode,
 } from "../../../store/actions";
 
 const mapStateToProps = (state: stateType) => {
@@ -14,7 +16,12 @@ const mapStateToProps = (state: stateType) => {
     isAuthed: state.manager.isAuthed,
   };
 };
-const actionCreator = { handleHideBackground, handleTextOrientation };
+const actionCreator = {
+  handleHideBackground,
+  handleTextOrientation,
+  handleSetting,
+  handleSettingMode,
+};
 export default connect(
   mapStateToProps,
   actionCreator

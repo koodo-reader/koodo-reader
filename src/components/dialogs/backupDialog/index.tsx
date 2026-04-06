@@ -3,6 +3,8 @@ import {
   handleTokenDialog,
   handleLoadingDialog,
   handleFetchBooks,
+  handleSetting,
+  handleSettingMode,
 } from "../../../store/actions";
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
@@ -20,6 +22,8 @@ const actionCreator = {
   handleTokenDialog,
   handleLoadingDialog,
   handleFetchBooks,
+  handleSetting,
+  handleSettingMode,
 };
 export default connect(
   mapStateToProps,

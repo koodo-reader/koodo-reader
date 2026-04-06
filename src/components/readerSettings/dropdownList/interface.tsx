@@ -7,6 +7,8 @@ export interface DropdownListProps {
   renderBookFunc: () => void;
   handleHideBackground: (isHideBackground: boolean) => void;
   handleTextOrientation: (textOrientation: string) => void;
+  handleSetting: (isOpenSetting: boolean) => void;
+  handleSettingMode: (mode: string) => void;
 }
 export interface DropdownListState {
   currentFontFamilyValue: string;
