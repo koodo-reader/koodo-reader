@@ -257,308 +257,301 @@ class SettingDialog extends React.Component<
       );
     });
   };
+  renderSidebarItem = (
+    mode: string,
+    iconClass: string,
+    labelKey: string,
+    fontSize: string
+  ) => {
+    const isActive = this.props.settingMode === mode;
+    return (
+      <div
+        className={"setting-dialog-sidebar-item" + (isActive ? " active" : "")}
+        onClick={() => {
+          this.props.handleSettingMode(mode);
+        }}
+      >
+        <span
+          className={"setting-dialog-sidebar-icon " + iconClass}
+          style={fontSize ? { fontSize } : {}}
+        ></span>
+        <Trans>{labelKey}</Trans>
+      </div>
+    );
+  };
+
+  getCurrentPageTitle = () => {
+    switch (this.props.settingMode) {
+      case "general":
+        return "General";
+      case "reading":
+        return "Reading";
+      case "appearance":
+        return "Appearance";
+      case "plugins":
+        return "Plugins";
+      case "sync":
+        return "Sync and backup";
+      case "account":
+        return "Account";
+      default:
+        return "Setting";
+    }
+  };
+
   render() {
     return (
       <div className="setting-dialog-container">
-        <div className="setting-dialog-title">
-          <Trans>Setting</Trans>
-        </div>
-        <div className="setting-subtitle">
-          <Trans>Version</Trans>
-          {packageInfo.version}
-          <div
-            className="navigation-navigation"
-            style={{ position: "unset", marginTop: "5px" }}
-          >
-            <span
-              className="book-bookmark-title setting-tab"
-              onClick={() => {
-                this.props.handleSettingMode("general");
-              }}
-              style={
-                this.props.settingMode === "general"
-                  ? { fontWeight: "bold", borderBottom: "2px solid" }
-                  : { opacity: 0.5 }
-              }
-            >
-              <Trans>General</Trans>
-            </span>
-            <span
-              className="book-bookmark-title setting-tab"
-              style={
-                this.props.settingMode === "reading"
-                  ? { fontWeight: "bold", borderBottom: "2px solid" }
-                  : { opacity: 0.5 }
-              }
-              onClick={() => {
-                this.props.handleSettingMode("reading");
-              }}
-            >
-              <Trans>Reading</Trans>
-            </span>
-            <span
-              className="book-bookmark-title setting-tab"
-              style={
-                this.props.settingMode === "appearance"
-                  ? { fontWeight: "bold", borderBottom: "2px solid" }
-                  : { opacity: 0.5 }
-              }
-              onClick={() => {
-                this.props.handleSettingMode("appearance");
-              }}
-            >
-              <Trans>Appearance</Trans>
-            </span>
-            <span
-              className="book-bookmark-title setting-tab"
-              style={
-                this.props.settingMode === "plugins"
-                  ? { fontWeight: "bold", borderBottom: "2px solid" }
-                  : { opacity: 0.5 }
-              }
-              onClick={() => {
-                this.props.handleSettingMode("plugins");
-              }}
-            >
-              <Trans>Plugins</Trans>
-            </span>
-            <span
-              className="book-bookmark-title setting-tab"
-              style={
-                this.props.settingMode === "sync"
-                  ? {
-                      fontWeight: "bold",
-                      borderBottom: "2px solid",
-                      lineHeight: "20px",
-                    }
-                  : { opacity: 0.5, lineHeight: "20px" }
-              }
-              onClick={() => {
-                this.props.handleSettingMode("sync");
-              }}
-            >
-              <Trans>Sync and backup</Trans>
-            </span>
-            <span
-              className="book-bookmark-title setting-tab"
-              style={
-                this.props.settingMode === "account"
-                  ? { fontWeight: "bold", borderBottom: "2px solid" }
-                  : { opacity: 0.5 }
-              }
-              onClick={() => {
-                this.props.handleSettingMode("account");
-              }}
-            >
-              <Trans>Account</Trans>
-            </span>
+        {/* 左侧导航栏 */}
+        <div className="setting-dialog-sidebar">
+          <div className="setting-dialog-sidebar-title">
+            <Trans>Setting</Trans>
+          </div>
+
+          {/* 第一组 */}
+          <div className="setting-dialog-sidebar-group">
+            {this.renderSidebarItem("general", "icon-setting", "General", "")}
+            {this.renderSidebarItem(
+              "appearance",
+              "icon-highlight-line",
+              "Appearance",
+              "18px"
+            )}
+            {this.renderSidebarItem("sync", "icon-sync", "Sync and backup", "")}
+            {this.renderSidebarItem(
+              "reading",
+              "icon-bookshelf-line",
+              "Reading",
+              ""
+            )}
+            {this.renderSidebarItem(
+              "account",
+              "icon-detail",
+              "Account",
+              "18px"
+            )}
+          </div>
+
+          <hr className="setting-dialog-sidebar-divider" />
+
+          {/* 第二组 */}
+          <div className="setting-dialog-sidebar-group">
+            {this.renderSidebarItem("plugins", "icon-internet", "Plugins", "")}
           </div>
         </div>
-        <div
-          className="setting-close-container"
-          onClick={() => {
-            this.props.handleSetting(false);
-            this.props.handleSettingMode("general");
-          }}
-        >
-          <span className="icon-close setting-close"></span>
-        </div>
 
-        <div className="setting-dialog-info">
-          {this.props.settingMode === "general" ? (
-            <GeneralSetting />
-          ) : this.props.settingMode === "reading" ? (
-            <>
-              {this.renderSwitchOption(readingSettingList)}
-              {isElectron && (
-                <>
-                  <div className="setting-dialog-new-title">
-                    <Trans>Reset reader window's position</Trans>
+        {/* 右侧主内容区 */}
+        <div className="setting-dialog-main">
+          <div className="setting-dialog-main-header">
+            <Trans>{this.getCurrentPageTitle()}</Trans>
+          </div>
 
-                    <span
-                      className="change-location-button"
+          <div
+            className="setting-close-container"
+            onClick={() => {
+              this.props.handleSetting(false);
+              this.props.handleSettingMode("general");
+            }}
+          >
+            <span className="icon-close setting-close"></span>
+          </div>
+
+          <div className="setting-dialog-info">
+            {this.props.settingMode === "general" ? (
+              <GeneralSetting />
+            ) : this.props.settingMode === "reading" ? (
+              <>
+                {this.renderSwitchOption(readingSettingList)}
+                {isElectron && (
+                  <>
+                    <div className="setting-dialog-new-title">
+                      <Trans>Reset reader window's position</Trans>
+
+                      <span
+                        className="change-location-button"
+                        onClick={() => {
+                          this.handleResetReaderPosition();
+                        }}
+                      >
+                        <Trans>Reset</Trans>
+                      </span>
+                    </div>
+                  </>
+                )}
+              </>
+            ) : this.props.settingMode === "appearance" ? (
+              <>
+                {this.renderSwitchOption(appearanceSettingList)}
+                <div className="setting-dialog-new-title">
+                  <Trans>System font</Trans>
+                  <select
+                    name=""
+                    className="lang-setting-dropdown"
+                    onChange={(event) => {
+                      this.changeFont(event.target.value);
+                    }}
+                  >
+                    {dropdownList
+                      .find((item) => item.value === "fontFamily")
+                      ?.option.map((item) => (
+                        <option
+                          value={item.value}
+                          key={item.value}
+                          className="lang-setting-option"
+                          selected={
+                            item.value ===
+                            ConfigService.getReaderConfig("systemFont")
+                              ? true
+                              : false
+                          }
+                        >
+                          {this.props.t(item.label)}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                <div className="setting-dialog-new-title">
+                  <Trans>Theme color</Trans>
+                </div>
+                <ul className="theme-setting-container">
+                  {themeList.map((item, index) => (
+                    <li
+                      className={
+                        index === this.state.currentThemeIndex
+                          ? "theme-setting-item active-theme-item"
+                          : "theme-setting-item"
+                      }
+                      key={item.color}
                       onClick={() => {
-                        this.handleResetReaderPosition();
+                        this.handleTheme(item.color, index);
+                      }}
+                      style={{
+                        color:
+                          item.color === "default"
+                            ? "rgba(75, 75, 75, 1)"
+                            : item.color,
                       }}
                     >
-                      <Trans>Reset</Trans>
-                    </span>
-                  </div>
-                </>
-              )}
-            </>
-          ) : this.props.settingMode === "appearance" ? (
-            <>
-              {this.renderSwitchOption(appearanceSettingList)}
-              <div className="setting-dialog-new-title">
-                <Trans>System font</Trans>
-                <select
-                  name=""
-                  className="lang-setting-dropdown"
-                  onChange={(event) => {
-                    this.changeFont(event.target.value);
-                  }}
-                >
-                  {dropdownList
-                    .find((item) => item.value === "fontFamily")
-                    ?.option.map((item) => (
-                      <option
-                        value={item.value}
-                        key={item.value}
-                        className="lang-setting-option"
-                        selected={
-                          item.value ===
-                          ConfigService.getReaderConfig("systemFont")
-                            ? true
-                            : false
-                        }
-                      >
-                        {this.props.t(item.label)}
-                      </option>
-                    ))}
-                </select>
-              </div>
-              <div className="setting-dialog-new-title">
-                <Trans>Theme color</Trans>
-              </div>
-              <ul className="theme-setting-container">
-                {themeList.map((item, index) => (
+                      <span
+                        className="theme-setting-dot"
+                        style={{
+                          backgroundColor:
+                            item.color === "default"
+                              ? "rgba(75, 75, 75, 1)"
+                              : item.color,
+                        }}
+                      ></span>
+                      <span className="theme-setting-title">
+                        <Trans>{item.title}</Trans>
+                      </span>
+                    </li>
+                  ))}
                   <li
                     className={
-                      index === this.state.currentThemeIndex
+                      this.state.currentThemeIndex === -1
                         ? "theme-setting-item active-theme-item"
                         : "theme-setting-item"
                     }
-                    key={item.color}
                     onClick={() => {
-                      this.handleTheme(item.color, index);
+                      this.setState({
+                        isShowCustomColorPicker:
+                          !this.state.isShowCustomColorPicker,
+                        pendingCustomColor: this.state.customColor,
+                      });
                     }}
-                    style={{
-                      color:
-                        item.color === "default"
-                          ? "rgba(75, 75, 75, 1)"
-                          : item.color,
-                    }}
+                    style={{ color: this.state.customColor }}
                   >
                     <span
                       className="theme-setting-dot"
                       style={{
                         backgroundColor:
-                          item.color === "default"
-                            ? "rgba(75, 75, 75, 1)"
-                            : item.color,
+                          this.state.currentThemeIndex === -1
+                            ? this.state.customColor
+                            : undefined,
                       }}
-                    ></span>
-                    <span className="theme-setting-title">
-                      <Trans>{item.title}</Trans>
-                    </span>
-                  </li>
-                ))}
-                <li
-                  className={
-                    this.state.currentThemeIndex === -1
-                      ? "theme-setting-item active-theme-item"
-                      : "theme-setting-item"
-                  }
-                  onClick={() => {
-                    this.setState({
-                      isShowCustomColorPicker:
-                        !this.state.isShowCustomColorPicker,
-                      pendingCustomColor: this.state.customColor,
-                    });
-                  }}
-                  style={{ color: this.state.customColor }}
-                >
-                  <span
-                    className="theme-setting-dot"
-                    style={{
-                      backgroundColor:
-                        this.state.currentThemeIndex === -1
-                          ? this.state.customColor
-                          : undefined,
-                    }}
-                  >
-                    <span
-                      className={
-                        this.state.isShowCustomColorPicker
-                          ? "icon-check"
-                          : "icon-more"
-                      }
-                      style={{
-                        fontSize: "12px",
-                        position: "relative",
-                        top: "2px",
-                        left: "2px",
-                      }}
-                    ></span>
-                  </span>
-                  <span className="theme-setting-title">
-                    <Trans>Custom</Trans>
-                  </span>
-                </li>
-              </ul>
-              {this.state.isShowCustomColorPicker && (
-                <div className="custom-color-picker-container">
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <ColorPickerPanel
-                      enableAlpha={false}
-                      color={this.state.pendingCustomColor}
-                      onChange={this.handleCustomColor}
-                      mode="RGB"
-                      style={{
-                        margin: "10px 0",
-                        animation: "fade-in 0.2s ease-in-out 0s 1",
-                      }}
-                    />
-                    <span
-                      className="change-location-button"
-                      onClick={this.handleConfirmCustomColor}
-                      style={{ marginBottom: "10px" }}
                     >
-                      <Trans>Confirm</Trans>
+                      <span
+                        className={
+                          this.state.isShowCustomColorPicker
+                            ? "icon-check"
+                            : "icon-more"
+                        }
+                        style={{
+                          fontSize: "12px",
+                          position: "relative",
+                          top: "2px",
+                          left: "2px",
+                        }}
+                      ></span>
                     </span>
-                  </div>
-                </div>
-              )}
-              <div className="setting-dialog-new-title">
-                <Trans>Appearance</Trans>
-              </div>
-              <ul className="skin-setting-container">
-                {skinList.map((item) => (
-                  <li
-                    key={item.value}
-                    className={
-                      item.value ===
-                      (ConfigService.getReaderConfig("appSkin") || "system")
-                        ? "skin-setting-item active-skin-item"
-                        : "skin-setting-item"
-                    }
-                    onClick={() => {
-                      this.changeSkin(item.value);
-                    }}
-                  >
-                    <span
-                      className="skin-setting-icon"
-                      dangerouslySetInnerHTML={{ __html: item.icon }}
-                    />
-                    <Trans>{item.label}</Trans>
+                    <span className="theme-setting-title">
+                      <Trans>Custom</Trans>
+                    </span>
                   </li>
-                ))}
-              </ul>
-            </>
-          ) : this.props.settingMode === "sync" ? (
-            <SyncSetting />
-          ) : this.props.settingMode === "account" ? (
-            <AccountSetting />
-          ) : (
-            <PluginSetting />
-          )}
+                </ul>
+                {this.state.isShowCustomColorPicker && (
+                  <div className="custom-color-picker-container">
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <ColorPickerPanel
+                        enableAlpha={false}
+                        color={this.state.pendingCustomColor}
+                        onChange={this.handleCustomColor}
+                        mode="RGB"
+                        style={{
+                          margin: "10px 0",
+                          animation: "fade-in 0.2s ease-in-out 0s 1",
+                        }}
+                      />
+                      <span
+                        className="change-location-button"
+                        onClick={this.handleConfirmCustomColor}
+                        style={{ marginBottom: "10px" }}
+                      >
+                        <Trans>Confirm</Trans>
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <div className="setting-dialog-new-title">
+                  <Trans>Appearance</Trans>
+                </div>
+                <ul className="skin-setting-container">
+                  {skinList.map((item) => (
+                    <li
+                      key={item.value}
+                      className={
+                        item.value ===
+                        (ConfigService.getReaderConfig("appSkin") || "system")
+                          ? "skin-setting-item active-skin-item"
+                          : "skin-setting-item"
+                      }
+                      onClick={() => {
+                        this.changeSkin(item.value);
+                      }}
+                    >
+                      <span
+                        className="skin-setting-icon"
+                        dangerouslySetInnerHTML={{ __html: item.icon }}
+                      />
+                      <Trans>{item.label}</Trans>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : this.props.settingMode === "sync" ? (
+              <SyncSetting />
+            ) : this.props.settingMode === "account" ? (
+              <AccountSetting />
+            ) : (
+              <PluginSetting />
+            )}
+          </div>
         </div>
       </div>
     );
