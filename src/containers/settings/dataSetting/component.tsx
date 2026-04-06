@@ -17,6 +17,13 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { changeLibrary, changePath } from "../../../utils/file/common";
 import { getSnapshots } from "../../../utils/file/backup";
 import { restoreFromSnapshot } from "../../../utils/file/restore";
+import {
+  exportBooks,
+  exportDictionaryHistory,
+  exportHighlights,
+  exportNotes,
+} from "../../../utils/file/export";
+import DatabaseService from "../../../utils/storage/databaseService";
 
 declare var window: any;
 class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
@@ -25,6 +32,8 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     this.state = {
       storageLocation: getStorageLocation() || "",
       snapshotList: [],
+      exportNotesFormat: "",
+      exportHighlightsFormat: "",
     };
   }
   async componentDidMount() {
@@ -275,6 +284,135 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             </p>
           </>
         )}
+        <div className="setting-dialog-new-title">
+          <Trans>Export all books</Trans>
+          <span
+            className="change-location-button"
+            onClick={async () => {
+              let books = await DatabaseService.getAllRecords("books");
+              if (books.length > 0) {
+                await exportBooks(books);
+                toast.success(this.props.t("Export successful"));
+              } else {
+                toast(this.props.t("Nothing to export"));
+              }
+            }}
+          >
+            <Trans>Export</Trans>
+          </span>
+        </div>
+        <div className="setting-dialog-new-title">
+          <Trans>Export all notes</Trans>
+          <select
+            className="lang-setting-dropdown"
+            value={this.state.exportNotesFormat}
+            onChange={async (event) => {
+              const fmt = event.target.value as
+                | "csv"
+                | "md"
+                | "txt"
+                | "html"
+                | "pdf"
+                | "";
+              if (!fmt) return;
+              this.setState({ exportNotesFormat: "" });
+              let books = await DatabaseService.getAllRecords("books");
+              let notes = await DatabaseService.getAllRecords("notes");
+              notes = notes.filter(
+                (note: any) => note.notes && note.notes.length > 0
+              );
+              if (notes.length > 0) {
+                exportNotes(notes, books, fmt);
+                toast.success(this.props.t("Export successful"));
+              } else {
+                toast(this.props.t("Nothing to export"));
+              }
+            }}
+          >
+            <option value="" className="lang-setting-option">
+              {this.props.t("Select format")}
+            </option>
+            <option value="csv" className="lang-setting-option">
+              CSV
+            </option>
+            <option value="md" className="lang-setting-option">
+              Markdown
+            </option>
+            <option value="txt" className="lang-setting-option">
+              TXT
+            </option>
+            <option value="html" className="lang-setting-option">
+              HTML
+            </option>
+            <option value="pdf" className="lang-setting-option">
+              PDF
+            </option>
+          </select>
+        </div>
+        <div className="setting-dialog-new-title">
+          <Trans>Export all highlights</Trans>
+          <select
+            className="lang-setting-dropdown"
+            value={this.state.exportHighlightsFormat}
+            onChange={async (event) => {
+              const fmt = event.target.value as
+                | "csv"
+                | "md"
+                | "txt"
+                | "html"
+                | "pdf"
+                | "";
+              if (!fmt) return;
+              this.setState({ exportHighlightsFormat: "" });
+              let books = await DatabaseService.getAllRecords("books");
+              let notes = await DatabaseService.getAllRecords("notes");
+              notes = notes.filter((note: any) => note.notes === "");
+              if (notes.length > 0) {
+                exportHighlights(notes, books, fmt);
+                toast.success(this.props.t("Export successful"));
+              } else {
+                toast(this.props.t("Nothing to export"));
+              }
+            }}
+          >
+            <option value="" className="lang-setting-option">
+              {this.props.t("Select format")}
+            </option>
+            <option value="csv" className="lang-setting-option">
+              CSV
+            </option>
+            <option value="md" className="lang-setting-option">
+              Markdown
+            </option>
+            <option value="txt" className="lang-setting-option">
+              TXT
+            </option>
+            <option value="html" className="lang-setting-option">
+              HTML
+            </option>
+            <option value="pdf" className="lang-setting-option">
+              PDF
+            </option>
+          </select>
+        </div>
+        <div className="setting-dialog-new-title">
+          <Trans>Export all dictionary history</Trans>
+          <span
+            className="change-location-button"
+            onClick={async () => {
+              let dictHistory = await DatabaseService.getAllRecords("words");
+              let books = await DatabaseService.getAllRecords("books");
+              if (dictHistory.length > 0) {
+                exportDictionaryHistory(dictHistory, books);
+                toast.success(this.props.t("Export successful"));
+              } else {
+                toast(this.props.t("Nothing to export"));
+              }
+            }}
+          >
+            <Trans>Export</Trans>
+          </span>
+        </div>
         <div className="setting-dialog-new-title">
           <Trans>Clear all data</Trans>
           <span

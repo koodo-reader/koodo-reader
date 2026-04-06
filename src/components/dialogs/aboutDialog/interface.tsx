@@ -13,5 +13,4 @@ export interface AboutDialogProps {
 }
 export interface AboutDialogState {
   isShowExportAll: boolean;
-  exportSubmenu: "notes" | "highlights" | "";
 }
