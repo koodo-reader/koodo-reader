@@ -111,7 +111,9 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       driveList.find((item) => item.value === targetDrive)?.isPro &&
       !this.props.isAuthed
     ) {
-      toast(this.props.t("This feature is not available in the free version"));
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
       return;
     }
     this.props.handleSettingDrive(targetDrive);

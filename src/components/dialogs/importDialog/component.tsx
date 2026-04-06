@@ -65,11 +65,14 @@ class ImportDialog extends React.Component<
       driveList.find((item) => item.value === event.target.value)?.isPro &&
       !this.props.isAuthed
     ) {
-      toast(this.props.t("This feature is not available in the free version"));
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
       return;
     }
     if (event.target.value === "add") {
       toast(this.props.t("Please add data source in the setting"));
+
       return;
     }
     this.setState({ currentDrive: event.target.value });
@@ -388,9 +391,11 @@ class ImportDialog extends React.Component<
                       if (!this.props.isAuthed) {
                         toast(
                           this.props.t(
-                            "This feature is not available in the free version"
+                            "Please upgrade to Pro to use this feature"
                           )
                         );
+                        this.props.handleSetting(true);
+                        this.props.handleSettingMode("account");
                         return;
                       }
 

@@ -118,9 +118,9 @@ class DropdownList extends React.Component<
         break;
       case "fullTranslationMode":
         if (!this.props.isAuthed) {
-          toast(
-            this.props.t("This feature is not available in the free version")
-          );
+          toast(this.props.t("Please upgrade to Pro to use this feature"));
+          this.props.handleSetting(true);
+          this.props.handleSettingMode("account");
           ConfigService.setReaderConfig("fullTranslationMode", "no");
           return;
         }
