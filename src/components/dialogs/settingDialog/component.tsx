@@ -8,6 +8,7 @@ import AccountSetting from "../../../containers/settings/accountSetting";
 import PluginSetting from "../../../containers/settings/pluginSetting";
 import ReadingSetting from "../../../containers/settings/readingSetting";
 import AppearanceSetting from "../../../containers/settings/appearanceSetting";
+import AboutSetting from "../../../containers/settings/aboutSetting";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -137,6 +138,8 @@ class SettingDialog extends React.Component<
               <SyncSetting />
             ) : this.props.settingMode === "account" ? (
               <AccountSetting />
+            ) : this.props.settingMode === "about" ? (
+              <AboutSetting />
             ) : (
               <PluginSetting />
             )}

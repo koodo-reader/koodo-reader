@@ -381,36 +381,7 @@ class GeneralSetting extends React.Component<
             <Trans>Reset</Trans>
           </span>
         </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Select update channel</Trans>
-          <select
-            name=""
-            className="lang-setting-dropdown"
-            onChange={(event) => {
-              ConfigService.setReaderConfig(
-                "updateChannel",
-                event.target.value
-              );
-              toast.success(this.props.t("Change successful"));
-            }}
-          >
-            {[
-              { value: "dev", label: "Developer version" },
-              { value: "stable", label: "Stable version" },
-            ].map((item) => (
-              <option
-                value={item.value}
-                key={item.value}
-                className="lang-setting-option"
-                selected={
-                  item.value === ConfigService.getReaderConfig("updateChannel")
-                }
-              >
-                {this.props.t(item.label)}
-              </option>
-            ))}
-          </select>
-        </div>
+
         <div className="setting-dialog-new-title">
           <Trans>Language</Trans>
           <select
@@ -495,43 +466,6 @@ class GeneralSetting extends React.Component<
               )
             )}
           </select>
-        </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Clear all data</Trans>
-          <span
-            className="change-location-button"
-            onClick={async () => {
-              let answer = await vexPromptAsync(
-                this.props.t("Please type 'CLEAR' to confirm"),
-                "",
-                ""
-              );
-              window.vex.closeAll(); // 关闭对话框
-              if (answer === "CLEAR") {
-                await clearAllData();
-                toast.success(this.props.t("Clear successful"));
-                setTimeout(() => {
-                  reloadManager();
-                }, 300);
-              } else if (answer) {
-                toast.error(this.props.t("Please type 'CLEAR' to confirm"));
-              }
-            }}
-          >
-            <Trans>Clear</Trans>
-          </span>
-        </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Get debug logs</Trans>
-          <span
-            className="change-location-button"
-            onClick={async () => {
-              const { ipcRenderer } = window.require("electron");
-              ipcRenderer.invoke("get-debug-logs", "ping");
-            }}
-          >
-            <Trans>Locate</Trans>
-          </span>
         </div>
       </>
     );
