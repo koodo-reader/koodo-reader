@@ -18,10 +18,8 @@ export interface SettingInfoState {
   isPreventSleep: boolean;
   isOpenInMain: boolean;
   isPrecacheBook: boolean;
-  isDisableCrop: boolean;
   isOverwriteLink: boolean;
   isOverwriteText: boolean;
-  isDisablePDFCover: boolean;
   isAutoFullscreen: boolean;
   isAutoMaximize: boolean;
   isHideShelfBook: boolean;

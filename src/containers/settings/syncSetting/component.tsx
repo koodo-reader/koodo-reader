@@ -6,7 +6,7 @@ import { removeCloudConfig } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import _ from "underscore";
 import { syncSettingList } from "../../../constants/settingList";
-import { themeList } from "../../../constants/themeList";
+
 import toast from "react-hot-toast";
 import {
   generateSyncRecord,
@@ -22,7 +22,7 @@ import {
   testCORS,
   vexComfirmAsync,
 } from "../../../utils/common";
-import { getStorageLocation } from "../../../utils/common";
+
 import { driveInputConfig, driveList } from "../../../constants/driveList";
 import {
   CommonTool,
@@ -48,23 +48,13 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
-      appSkin: ConfigService.getReaderConfig("appSkin"),
       isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
       autoOffline: ConfigService.getReaderConfig("autoOffline") === "yes",
       isDisableAutoSync:
         ConfigService.getReaderConfig("isDisableAutoSync") === "yes",
       isEnableKoodoSync:
         ConfigService.getReaderConfig("isEnableKoodoSync") === "yes",
-      currentThemeIndex: themeList.findIndex(
-        (item) =>
-          item.color ===
-          (ConfigService.getReaderConfig("themeColor") || "default")
-      ),
-      storageLocation: getStorageLocation() || "",
-      isAddNew: false,
-      settingLogin: "",
       driveConfig: {},
-      loginConfig: {},
       snapshotList: [],
     };
   }
