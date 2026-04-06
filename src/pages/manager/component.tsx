@@ -5,7 +5,6 @@ import DeleteDialog from "../../components/dialogs/deleteDialog";
 import EditDialog from "../../components/dialogs/editDialog";
 import AddDialog from "../../components/dialogs/addDialog";
 import SortDialog from "../../components/dialogs/sortBookDialog";
-import AboutDialog from "../../components/dialogs/aboutDialog";
 import BackupDialog from "../../components/dialogs/backupDialog";
 import LocalFileDialog from "../../components/dialogs/localFileDialog";
 import ImportDialog from "../../components/dialogs/importDialog";
@@ -203,7 +202,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isOpenAddDialog && <AddDialog />}
         {this.props.isShowLoading && <LoadingDialog />}
         {this.props.isSortDisplay && <SortDialog />}
-        {this.props.isAboutOpen && <AboutDialog />}
         {this.props.isBackup && <BackupDialog />}
         {this.props.isOpenLocalFileDialog && <LocalFileDialog />}
         {this.props.isOpenImportDialog && <ImportDialog />}

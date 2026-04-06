@@ -93,8 +93,8 @@
 }
 .setting-dialog-new-title {
   font-size: 15px;
-  line-height: 20px;
-  margin-top: 10px;
+  line-height: 30px;
+  margin-top: 5px;
   margin-left: 25px;
   width: calc(100% - 50px);
   margin-bottom: 5px;
@@ -244,6 +244,7 @@
   justify-content: center;
   align-items: center;
   line-height: 1;
+  margin-top: 5px;
 }
 .theme-setting-item {
   display: flex;
@@ -330,6 +331,7 @@
   margin-left: 25px;
   margin-right: 25px;
   line-height: 15px;
+  margin-top: -5px;
 }
 .setting-dialog-new-plugin {
   position: absolute;
