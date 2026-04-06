@@ -294,6 +294,8 @@ class SettingDialog extends React.Component<
         return "Sync and backup";
       case "account":
         return "Account";
+      case "about":
+        return "About";
       default:
         return "Setting";
     }
@@ -318,18 +320,15 @@ class SettingDialog extends React.Component<
               "18px"
             )}
             {this.renderSidebarItem("sync", "icon-sync", "Sync and backup", "")}
+
             {this.renderSidebarItem(
               "reading",
               "icon-bookshelf-line",
               "Reading",
               ""
             )}
-            {this.renderSidebarItem(
-              "account",
-              "icon-detail",
-              "Account",
-              "18px"
-            )}
+            {this.renderSidebarItem("account", "icon-user", "Account", "18px")}
+            {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>
 
           <hr className="setting-dialog-sidebar-divider" />
@@ -337,6 +336,12 @@ class SettingDialog extends React.Component<
           {/* 第二组 */}
           <div className="setting-dialog-sidebar-group">
             {this.renderSidebarItem("plugins", "icon-internet", "Plugins", "")}
+            {this.renderSidebarItem(
+              "sync",
+              "icon-idea-line",
+              "AI service",
+              "18px"
+            )}
           </div>
         </div>
 
