@@ -7,4 +7,6 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
 export interface SettingInfoState {
   storageLocation: string;
   snapshotList: { file: string; time: number }[];
+  exportNotesFormat: string;
+  exportHighlightsFormat: string;
 }
