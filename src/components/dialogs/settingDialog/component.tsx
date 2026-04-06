@@ -9,6 +9,7 @@ import PluginSetting from "../../../containers/settings/pluginSetting";
 import ReadingSetting from "../../../containers/settings/readingSetting";
 import AppearanceSetting from "../../../containers/settings/appearanceSetting";
 import AboutSetting from "../../../containers/settings/aboutSetting";
+import DataSetting from "../../../containers/settings/dataSetting";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -79,6 +80,7 @@ class SettingDialog extends React.Component<
           {/* 第一组 */}
           <div className="setting-dialog-sidebar-group">
             {this.renderSidebarItem("general", "icon-setting", "General", "")}
+            {this.renderSidebarItem("data", "icon-archive", "Data", "15px")}
             {this.renderSidebarItem(
               "appearance",
               "icon-highlight-line",
@@ -138,6 +140,8 @@ class SettingDialog extends React.Component<
               <SyncSetting />
             ) : this.props.settingMode === "account" ? (
               <AccountSetting />
+            ) : this.props.settingMode === "data" ? (
+              <DataSetting />
             ) : this.props.settingMode === "about" ? (
               <AboutSetting />
             ) : (

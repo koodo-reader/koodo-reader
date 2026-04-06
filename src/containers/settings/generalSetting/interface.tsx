@@ -27,7 +27,7 @@ export interface SettingInfoState {
   isTouch: boolean;
   isPreventTrigger: boolean;
   isMergeWord: boolean;
-  storageLocation: string;
+
   isImportPath: boolean;
   isOpenBook: boolean;
   isDisablePopup: boolean;

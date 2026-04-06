@@ -2,7 +2,6 @@ import React from "react";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
-import { changeLibrary, changePath } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import _ from "underscore";
 import {
@@ -12,15 +11,7 @@ import {
 } from "../../../constants/settingList";
 
 import toast from "react-hot-toast";
-import {
-  clearAllData,
-  generateSyncRecord,
-  getStorageLocation,
-  reloadManager,
-  vexPromptAsync,
-} from "../../../utils/common";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { LocalFileManager } from "../../../utils/file/localFile";
 
 declare var window: any;
 class GeneralSetting extends React.Component<
@@ -65,18 +56,10 @@ class GeneralSetting extends React.Component<
         ConfigService.getReaderConfig("isDeleteOriginal") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
-      storageLocation: getStorageLocation() || "",
       startupShelf: ConfigService.getReaderConfig("startupShelf") || "",
     };
   }
-  async componentDidMount() {
-    if (!isElectron) {
-      const status = await LocalFileManager.getPermissionStatus();
-      this.setState({
-        storageLocation: status.directoryName || "",
-      });
-    }
-  }
+
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
   };
@@ -95,90 +78,7 @@ class GeneralSetting extends React.Component<
     );
     this.handleRest(this.state[stateName]);
   };
-  handleChangeLocation = async () => {
-    const { ipcRenderer } = window.require("electron");
-    const newPath = await ipcRenderer.invoke("select-path");
-    if (!newPath) {
-      return;
-    }
-    let isSuccess = await changePath(newPath);
-    if (!isSuccess) {
-      toast.error(this.props.t("Change failed"));
-      return;
-    }
-    ConfigService.setItem("storageLocation", newPath);
-    this.setState({ storageLocation: newPath });
-    toast.success(this.props.t("Change successful"));
-    this.props.handleFetchBooks();
-  };
-  handleSwitchLibrary = async () => {
-    if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
-      const newPath = await ipcRenderer.invoke("select-path");
-      if (!newPath) {
-        return;
-      }
-      let isSuccess = await changeLibrary(newPath);
-      if (!isSuccess) {
-        toast.error(this.props.t("Switch failed"));
-        return;
-      }
-      ConfigService.setItem("storageLocation", newPath);
-      this.setState({ storageLocation: newPath });
-      try {
-        let fs = window.require("fs");
-        let text = fs.readFileSync(
-          window.require("path").join(newPath, "config", "config.json"),
-          "utf-8"
-        );
-        let config = JSON.parse(text);
-        for (let key in config) {
-          ConfigService.setItem(key, config[key]);
-        }
-      } catch (error) {
-        console.error("Error reading config.json:", error);
-      }
 
-      toast.success(this.props.t("Switch successful"));
-      this.props.handleFetchBooks();
-      await generateSyncRecord();
-      setTimeout(() => {
-        this.props.history.push("/manager/home");
-      }, 2000);
-    } else {
-      try {
-        const directoryHandle = await LocalFileManager.requestDirectoryAccess();
-
-        if (directoryHandle) {
-          // 成功获取权限
-          ConfigService.setReaderConfig("isUseLocal", "yes");
-          ConfigService.setReaderConfig(
-            "localDirectoryName",
-            directoryHandle.name
-          );
-          this.setState({
-            storageLocation: directoryHandle.name,
-          });
-          toast.success(
-            this.props.t("Local folder access granted successfully")
-          );
-          this.props.handleFetchBooks();
-          setTimeout(() => {
-            this.props.history.push("/manager/home");
-          }, 2000);
-        } else {
-          toast.success(this.props.t("Failed to get folder access permission"));
-        }
-      } catch (error) {
-        toast.error(
-          "Error selecting folder:" +
-            (error instanceof Error ? error.message : String(error))
-        );
-        console.error("Error selecting folder:", error);
-        toast.success(this.props.t("Error occurred while selecting folder"));
-      }
-    }
-  };
   handleOpenInMain = () => {
     if (this.state.isMergeWord && !this.state.isOpenInMain) {
       toast(this.props.t("Please turn off merge with word first"));
@@ -286,89 +186,6 @@ class GeneralSetting extends React.Component<
       <>
         {this.renderSwitchOption(generalSettingList)}
 
-        {isElectron && (
-          <>
-            <div className="setting-dialog-new-title">
-              <Trans>Change storage location</Trans>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                {" "}
-                <span
-                  className="change-location-button"
-                  onClick={() => {
-                    const { ipcRenderer } = window.require("electron");
-                    ipcRenderer.invoke("open-explorer-folder", {
-                      path: this.state.storageLocation,
-                      isFolder: true,
-                    });
-                  }}
-                  style={{ marginRight: "10px" }}
-                >
-                  <Trans>Locate</Trans>
-                </span>
-                <span
-                  className="change-location-button"
-                  onClick={() => {
-                    this.handleChangeLocation();
-                  }}
-                >
-                  <Trans>Select</Trans>
-                </span>
-              </div>
-            </div>
-            <p className="setting-option-subtitle">
-              <Trans>
-                {
-                  "Modify the storage location of the library, and the library will be moved to the new location. Please ensure that the new folder is empty"
-                }
-              </Trans>
-            </p>
-            <div className="setting-dialog-location-title">
-              {this.state.storageLocation}
-            </div>
-          </>
-        )}
-        {this.state.storageLocation && (
-          <>
-            <div className="setting-dialog-new-title">
-              <Trans>Switch Library</Trans>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                {isElectron && (
-                  <span
-                    className="change-location-button"
-                    onClick={() => {
-                      const { ipcRenderer } = window.require("electron");
-                      ipcRenderer.invoke("open-explorer-folder", {
-                        path: this.state.storageLocation,
-                        isFolder: true,
-                      });
-                    }}
-                    style={{ marginRight: "10px" }}
-                  >
-                    <Trans>Locate</Trans>
-                  </span>
-                )}
-                <span
-                  className="change-location-button"
-                  onClick={() => {
-                    this.handleSwitchLibrary();
-                  }}
-                >
-                  <Trans>Select</Trans>
-                </span>
-              </div>
-            </div>
-            <p className="setting-option-subtitle">
-              <Trans>
-                {
-                  "Switch between multiple libraries without affecting the original library. For multi-device synchronization in the free version, please refer to the documentation"
-                }
-              </Trans>
-            </p>
-            <div className="setting-dialog-location-title">
-              {this.state.storageLocation}
-            </div>
-          </>
-        )}
         <div className="setting-dialog-new-title">
           <Trans>Reset main window's position</Trans>
 
