@@ -23,6 +23,17 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <Trans>Current version</Trans>
           <div style={{ display: "flex", alignItems: "center" }}>
             <span>{packageJson.version}</span>
+            {this.props.isNewWarning && (
+              <span
+                className="change-location-button"
+                style={{ marginLeft: "10px", cursor: "pointer" }}
+                onClick={async () => {
+                  openExternalUrl(getWebsiteUrl());
+                }}
+              >
+                <Trans>New version</Trans>
+              </span>
+            )}
           </div>
         </div>
         <div className="setting-dialog-new-title">

@@ -642,7 +642,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <div
             className="setting-icon-container"
             onClick={() => {
-              this.props.handleAbout(!this.props.isAboutOpen);
+              this.props.handleSetting(true);
+              this.props.handleAbout(false);
             }}
             onMouseLeave={() => {
               this.props.handleAbout(false);

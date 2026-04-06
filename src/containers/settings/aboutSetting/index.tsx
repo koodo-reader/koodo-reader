@@ -7,6 +7,7 @@ import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     isAuthed: state.manager.isAuthed,
+    isNewWarning: state.manager.isNewWarning,
   };
 };
 const actionCreator = {};
