@@ -7,6 +7,7 @@ import packageJson from "../../../../package.json";
 
 import { getWebsiteUrl, openExternalUrl } from "../../../utils/common";
 import copyTextToClipboard from "copy-text-to-clipboard";
+import { isElectron } from "react-device-detect";
 declare var window: any;
 
 class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
@@ -67,6 +68,21 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           </span>
         </div>
 
+        {isElectron && (
+          <div className="setting-dialog-new-title">
+            <Trans>Open console</Trans>
+            <span
+              className="change-location-button"
+              onClick={async () => {
+                window
+                  .require("electron")
+                  .ipcRenderer.invoke("open-console", "ping");
+              }}
+            >
+              <Trans>View</Trans>
+            </span>
+          </div>
+        )}
         <div className="setting-dialog-new-title">
           <Trans>Document</Trans>
 

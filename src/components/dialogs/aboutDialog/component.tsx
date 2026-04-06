@@ -117,18 +117,6 @@ class AboutDialog extends React.Component<AboutDialogProps, AboutDialogState> {
               <Trans>Setting</Trans>
             </li>
 
-            {isElectron && (
-              <li
-                className="sort-by-category-list"
-                onClick={() => {
-                  window
-                    .require("electron")
-                    .ipcRenderer.invoke("open-console", "ping");
-                }}
-              >
-                <Trans>Open console</Trans>
-              </li>
-            )}
             {this.props.isNewWarning && (
               <li
                 className="sort-by-category-list"

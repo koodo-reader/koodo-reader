@@ -34,5 +34,4 @@ export interface SettingInfoState {
   isDisableAutoSync: boolean;
   autoOffline: boolean;
   driveConfig: any;
-  snapshotList: { file: string; time: number }[];
 }
