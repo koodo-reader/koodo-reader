@@ -172,6 +172,12 @@ a {
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
 }
+.setting-dialog-sidebar {
+  border-right: 1px solid rgba(0, 0, 0, 0.07);
+}
+.setting-dialog-sidebar-item.active {
+  background: rgba(75, 75, 75, 1);
+}
 .plugin-tab-bar {
   background: rgba(255, 255, 255, 1);
 }

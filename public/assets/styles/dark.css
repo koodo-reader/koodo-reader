@@ -165,6 +165,12 @@ a {
   background: rgba(47, 52, 55, 1);
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
 }
+.setting-dialog-sidebar {
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+}
+.setting-dialog-sidebar-item.active {
+  background: rgba(255, 255, 255, 0.1);
+}
 .plugin-tab-bar {
   background: rgba(47, 52, 55, 1);
 }
