@@ -2,7 +2,7 @@ import React from "react";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import _ from "underscore";
-import { themeList } from "../../../constants/themeList";
+
 import toast from "react-hot-toast";
 import {
   checkPlugin,
@@ -11,7 +11,7 @@ import {
   openExternalUrl,
   vexOpenAsync,
 } from "../../../utils/common";
-import { getStorageLocation } from "../../../utils/common";
+
 import DatabaseService from "../../../utils/storage/databaseService";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
@@ -28,29 +28,7 @@ class SettingDialog extends React.Component<
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
-      isPreventTrigger:
-        ConfigService.getReaderConfig("isPreventTrigger") === "yes",
-      isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
-      isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
-      isDeleteShelfBook:
-        ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",
-      isHideShelfBook:
-        ConfigService.getReaderConfig("isHideShelfBook") === "yes",
-      isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
-      isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
-      appSkin: ConfigService.getReaderConfig("appSkin"),
-      isDisablePDFCover:
-        ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
-      currentThemeIndex: themeList.findIndex(
-        (item) =>
-          item.color ===
-          (ConfigService.getReaderConfig("themeColor") || "default")
-      ),
-      storageLocation: getStorageLocation() || "",
       isAddNew: false,
-      settingLogin: "",
-      driveConfig: {},
-      loginConfig: {},
       availablePlugins: [],
       expandedPluginKey: null,
       activePluginTab: "translation",
@@ -84,17 +62,6 @@ class SettingDialog extends React.Component<
       });
       this.setState({ availablePlugins: pluginList });
     }
-  };
-  handleRest = (_bool: boolean) => {
-    toast.success(this.props.t("Change successful"));
-  };
-  handleSetting = (stateName: string) => {
-    this.setState({ [stateName]: !this.state[stateName] } as any);
-    ConfigService.setReaderConfig(
-      stateName,
-      this.state[stateName] ? "no" : "yes"
-    );
-    this.handleRest(this.state[stateName]);
   };
   handleFillPluginConfig = async (plugin: any, configuration: string) => {
     if (!plugin || !plugin.config || typeof plugin.config !== "object") {

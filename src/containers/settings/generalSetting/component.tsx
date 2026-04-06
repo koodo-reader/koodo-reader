@@ -10,7 +10,7 @@ import {
   langList,
   searchList,
 } from "../../../constants/settingList";
-import { themeList } from "../../../constants/themeList";
+
 import toast from "react-hot-toast";
 import {
   clearAllData,
@@ -60,28 +60,13 @@ class GeneralSetting extends React.Component<
       isDisableUpdate:
         ConfigService.getReaderConfig("isDisableUpdate") === "yes",
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
-      appSkin: ConfigService.getReaderConfig("appSkin"),
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isDeleteOriginal:
         ConfigService.getReaderConfig("isDeleteOriginal") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
-      currentThemeIndex: themeList.findIndex(
-        (item) =>
-          item.color ===
-          (ConfigService.getReaderConfig("themeColor") || "default")
-      ),
       storageLocation: getStorageLocation() || "",
-      isAddNew: false,
       startupShelf: ConfigService.getReaderConfig("startupShelf") || "",
-      settingLogin: "",
-      driveConfig: {},
-      loginConfig: {},
-      status: {
-        hasAccess: false,
-        needsReauthorization: false,
-        directoryName: "",
-      },
     };
   }
   async componentDidMount() {

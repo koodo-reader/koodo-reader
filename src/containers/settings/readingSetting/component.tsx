@@ -38,13 +38,10 @@ class ReadingSetting extends React.Component<
       isPreventSleep: ConfigService.getReaderConfig("isPreventSleep") === "yes",
       isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
       isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
-      isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isOverwriteText:
         ConfigService.getReaderConfig("isOverwriteText") === "yes",
       isOverwriteLink:
         ConfigService.getReaderConfig("isOverwriteLink") === "yes",
-      isDisablePDFCover:
-        ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
     };
   }
 
