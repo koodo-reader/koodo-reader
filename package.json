@@ -26,6 +26,7 @@
     "buffer": "^6.0.3",
     "chardet": "^2.0.0",
     "copy-text-to-clipboard": "^2.2.0",
+    "discord-rpc": "^4.0.1",
     "dompurify": "^3.2.4",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^5.4.3",
