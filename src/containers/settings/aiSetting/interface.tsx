@@ -29,4 +29,7 @@ export interface SettingInfoState {
   testResult: string;
   fetchedModels: { id: string; name: string }[];
   isFetchingModels: boolean;
+  aiTranslateModel: string;
+  aiDictModel: string;
+  aiAssistanceModel: string;
 }

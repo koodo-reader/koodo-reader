@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { aiProviderList } from "../../../constants/aiModelList";
 import { handleContextMenu } from "../../../utils/common";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
 class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -23,6 +24,10 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
       testResult: "",
       fetchedModels: [],
       isFetchingModels: false,
+      aiTranslateModel: ConfigService.getReaderConfig("aiTranslateModel") || "",
+      aiDictModel: ConfigService.getReaderConfig("aiDictModel") || "",
+      aiAssistanceModel:
+        ConfigService.getReaderConfig("aiAssistanceModel") || "",
     };
   }
 
@@ -245,6 +250,19 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
     try {
       await DatabaseService.deleteRecord(key, "plugins");
       this.props.handleFetchPlugins();
+      // 如果被删除的模型正被某个功能使用，则清空对应配置
+      if (this.state.aiTranslateModel === key) {
+        this.setState({ aiTranslateModel: "" });
+        ConfigService.setReaderConfig("aiTranslateModel", "");
+      }
+      if (this.state.aiDictModel === key) {
+        this.setState({ aiDictModel: "" });
+        ConfigService.setReaderConfig("aiDictModel", "");
+      }
+      if (this.state.aiAssistanceModel === key) {
+        this.setState({ aiAssistanceModel: "" });
+        ConfigService.setReaderConfig("aiAssistanceModel", "");
+      }
       toast.success(this.props.t("Deletion successful"));
     } catch (e: any) {
       toast.error(this.props.t("Deletion failed") + ": " + e.message);
@@ -468,6 +486,10 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
   render() {
     const aiPlugins = this.getAIPlugins();
+    console.log(
+      this.state.aiAssistanceModel,
+      ConfigService.getReaderConfig("aiAssistanceModel")
+    );
 
     return (
       <>
@@ -478,7 +500,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
             fontWeight: "bold",
             textAlign: "left",
             marginBottom: "20px",
-            marginLeft: "30px",
+            marginLeft: "20px",
             marginTop: "20px",
           }}
         >
@@ -543,6 +565,99 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
             </div>
           );
         })}
+
+        <div
+          style={{
+            fontWeight: "bold",
+            textAlign: "left",
+            marginBottom: "20px",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
+          <Trans>Model assignment</Trans>
+        </div>
+
+        <div className="setting-dialog-new-title">
+          <Trans>AI translation model</Trans>
+          <select
+            className="lang-setting-dropdown"
+            value={this.state.aiTranslateModel}
+            onChange={(e) => {
+              const val = e.target.value;
+              this.setState({ aiTranslateModel: val });
+              ConfigService.setReaderConfig("aiTranslateModel", val);
+              toast.success(this.props.t("Change successful"));
+            }}
+          >
+            <option value="" className="lang-setting-option">
+              {this.props.t("Please select")}
+            </option>
+            {aiPlugins.map((item) => (
+              <option
+                key={item.key}
+                value={item.key}
+                className="lang-setting-option"
+              >
+                {item.displayName}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="setting-dialog-new-title">
+          <Trans>AI dictionary model</Trans>
+          <select
+            className="lang-setting-dropdown"
+            value={this.state.aiDictModel}
+            onChange={(e) => {
+              const val = e.target.value;
+              this.setState({ aiDictModel: val });
+              ConfigService.setReaderConfig("aiDictModel", val);
+              toast.success(this.props.t("Change successful"));
+            }}
+          >
+            <option value="" className="lang-setting-option">
+              {this.props.t("Please select")}
+            </option>
+            {aiPlugins.map((item) => (
+              <option
+                key={item.key}
+                value={item.key}
+                className="lang-setting-option"
+              >
+                {item.displayName}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="setting-dialog-new-title">
+          <Trans>AI assistance model</Trans>
+          <select
+            className="lang-setting-dropdown"
+            value={this.state.aiAssistanceModel}
+            onChange={(e) => {
+              const val = e.target.value;
+              this.setState({ aiAssistanceModel: val });
+              ConfigService.setReaderConfig("aiAssistanceModel", val);
+              toast.success(this.props.t("Change successful"));
+            }}
+          >
+            <option value="" className="lang-setting-option">
+              {this.props.t("Please select")}
+            </option>
+            {aiPlugins.map((item) => (
+              <option
+                key={item.key}
+                value={item.key}
+                className="lang-setting-option"
+              >
+                {item.displayName}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <div className="setting-dialog-new-plugin">
           <span
