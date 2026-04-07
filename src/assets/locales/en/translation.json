@@ -796,5 +796,13 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "This is the order number not the redemption code, please check your email again, the redemption code is below the order number",
   "More accurate": "More accurate",
   "Chinese": "Chinese",
-  "Official AI OCR": "Official AI OCR"
+  "Official AI OCR": "Official AI OCR",
+  "Edit prompt": "Edit prompt",
+  "AI translation model": "AI translation model",
+  "AI dictionary model": "AI dictionary model",
+  "AI assistance model": "AI assistance model",
+  "Model assignment": "Model assignment",
+  "Added AI models": "Added AI models",
+  "No AI models added yet": "No AI models added yet",
+  "Add new model": "Add new model"
 }
