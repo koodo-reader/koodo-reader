@@ -255,8 +255,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   ></span>
                 </div>
               )}
-              {this.props.isAuthed &&
-                !this.props.isHideAIButton &&
+              {!this.props.isHideAIButton &&
                 ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
                   <div
                     className="next-chapter-single-container"

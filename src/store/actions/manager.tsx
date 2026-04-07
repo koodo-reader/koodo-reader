@@ -301,6 +301,52 @@ export function handleFetchPlugins() {
             pluginList.push(transPlugin);
           }
         }
+        if (ConfigService.getReaderConfig("aiDictModel")) {
+          let plugin: Plugin = pluginList.find(
+            (p: PluginModel) =>
+              p.key === ConfigService.getReaderConfig("aiDictModel")
+          );
+          let aiDictModel = plugin;
+          if (aiDictModel && aiDictModel.key) {
+            let dictPlugin = new PluginModel(
+              "custom-ai-dict-plugin",
+              "dictionary",
+              "Custom AI Dictionary",
+              "dict",
+              "1.0.0",
+              "",
+              aiDictModel.config || {},
+              officialDictList,
+              [],
+              "",
+              ""
+            );
+            pluginList.push(dictPlugin);
+          }
+        }
+        if (ConfigService.getReaderConfig("aiAssistanceModel")) {
+          let plugin: Plugin = pluginList.find(
+            (p: PluginModel) =>
+              p.key === ConfigService.getReaderConfig("aiAssistanceModel")
+          );
+          let aiAssistanceModel = plugin;
+          if (aiAssistanceModel && aiAssistanceModel.key) {
+            let assistPlugin = new PluginModel(
+              "custom-ai-assistant-plugin",
+              "assistant",
+              "Custom AI Assistance",
+              "assistant",
+              "1.0.0",
+              "",
+              aiAssistanceModel.config || {},
+              officialTranList,
+              [],
+              "",
+              ""
+            );
+            pluginList.push(assistPlugin);
+          }
+        }
         TokenService.getToken("is_authed").then((value) => {
           let isAuthed = value === "yes";
           if (
