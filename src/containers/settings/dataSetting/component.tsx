@@ -110,8 +110,9 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         label: string;
         placeholder: string;
       }>) {
-        defaultValues[field.key] = savedValues[field.key] ?? field.placeholder;
-        labelsMap[field.key] = field.label;
+        defaultValues[field.key] =
+          savedValues[field.key] ?? "[" + this.props.t(field.placeholder) + "]";
+        labelsMap[field.key] = this.props.t(field.label);
       }
 
       const result = await vexOpenAsync(
