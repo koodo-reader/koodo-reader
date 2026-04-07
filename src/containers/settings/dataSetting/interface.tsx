@@ -9,4 +9,5 @@ export interface SettingInfoState {
   snapshotList: { file: string; time: number }[];
   exportNotesFormat: string;
   exportHighlightsFormat: string;
+  isEnableDiscordRPC: boolean;
 }

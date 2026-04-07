@@ -24,6 +24,7 @@ import {
   exportNotes,
 } from "../../../utils/file/export";
 import DatabaseService from "../../../utils/storage/databaseService";
+import { dataSettingList } from "../../../constants/settingList";
 
 declare var window: any;
 class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
@@ -34,6 +35,8 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       snapshotList: [],
       exportNotesFormat: "",
       exportHighlightsFormat: "",
+      isEnableDiscordRPC:
+        ConfigService.getReaderConfig("isEnableDiscordRPC") === "yes",
     };
   }
   async componentDidMount() {
@@ -50,6 +53,57 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       });
     }
   }
+  handleSetting = (stateName: string) => {
+    this.setState({ [stateName]: !this.state[stateName] } as any);
+    ConfigService.setReaderConfig(
+      stateName,
+      this.state[stateName] ? "no" : "yes"
+    );
+    toast.success(this.props.t("Change successful"));
+  };
+
+  renderSwitchOption = (optionList: any[]) => {
+    return optionList.map((item) => {
+      return (
+        <div
+          style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
+          key={item.propName}
+        >
+          <div className="setting-dialog-new-title" key={item.title}>
+            <span style={{ width: "calc(100% - 100px)" }}>
+              <Trans>{item.title}</Trans>
+            </span>
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                this.handleSetting(item.propName);
+              }}
+              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
+            >
+              <span
+                className="single-control-button"
+                style={
+                  this.state[item.propName]
+                    ? {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
+              ></span>
+            </span>
+          </div>
+          <p className="setting-option-subtitle">
+            <Trans>{item.desc}</Trans>
+          </p>
+        </div>
+      );
+    });
+  };
+
   handleChangeLocation = async () => {
     const { ipcRenderer } = window.require("electron");
     const newPath = await ipcRenderer.invoke("select-path");
@@ -162,6 +216,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   render() {
     return (
       <>
+        {this.renderSwitchOption(dataSettingList)}
         {isElectron && (
           <>
             <div className="setting-dialog-new-title">

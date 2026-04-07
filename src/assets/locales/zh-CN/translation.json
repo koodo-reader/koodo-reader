@@ -792,6 +792,8 @@
   "Data": "数据",
   "View": "查看",
   "Select format": "选择格式",
+  "Enable Discord Rich Presence": "启用 Discord Rich Presence",
+  "Show your reading status and the book your're reading on your Discord profile. Discord needs to be running on your computer": "启用后会在您的 Discord 个人资料上显示您的阅读状态和正在阅读的图书。需要您在电脑上运行 Discord 客户端",
   "Visit": "访问",
   "Current version": "当前版本",
   "Upgrade failed": "升级失败",

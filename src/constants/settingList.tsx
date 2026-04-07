@@ -109,6 +109,14 @@ export const appearanceSettingList = [
     propName: "isDisableCrop",
   },
 ];
+export const dataSettingList = [
+  {
+    isElectron: false,
+    title: "Enable Discord Rich Presence",
+    desc: "Show your reading status and the book your're reading on your Discord profile. Discord needs to be running on your computer",
+    propName: "isEnableDiscordRPC",
+  },
+];
 export const syncSettingList = [
   {
     isElectron: false,
