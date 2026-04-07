@@ -181,7 +181,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               <span className="footer-time">
                 {this.state.currentTime}
                 {this.state.percentage
-                  ? "  " + parseFloat(this.state.percentage).toFixed(2) + "%"
+                  ? "  " +
+                    (parseFloat(this.state.percentage) * 100).toFixed(2) +
+                    "%"
                   : ""}
               </span>
             </>

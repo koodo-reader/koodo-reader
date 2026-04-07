@@ -15,6 +15,10 @@ import ConvertDialog from "../../components/dialogs/convertDialog";
 import { isElectron } from "react-device-detect";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import SpeechDialog from "../../components/dialogs/speechDialog";
+import {
+  updateDiscordPresence,
+  clearDiscordPresence,
+} from "../../utils/reader/discordRPC";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -102,7 +106,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           : ConfigService.getReaderConfig("readerMode") || "double";
       this.props.handleReaderMode(readerMode);
       this.props.handleReadingBook(book);
+      if (isElectron) {
+        updateDiscordPresence(book);
+      }
     });
+  }
+
+  componentWillUnmount() {
+    if (isElectron) {
+      clearDiscordPresence();
+    }
+    clearInterval(this.tickTimer);
   }
 
   handleEnterReader = (position: string) => {

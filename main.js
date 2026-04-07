@@ -38,6 +38,60 @@ let dbConnection = {};
 let syncUtilCache = {};
 let pickerUtilCache = {};
 let downloadRequest = null;
+
+// Discord Rich Presence setup
+let discordRPCClient = null;
+let discordRPCReady = false;
+let discordRPCConnecting = false;
+const DISCORD_CLIENT_ID = "1490863275074781305"; // Koodo Reader Discord App ID
+
+function initDiscordRPC() {
+  if (discordRPCConnecting || discordRPCReady) return Promise.resolve();
+  discordRPCConnecting = true;
+  return new Promise((resolve) => {
+    try {
+      const DiscordRPC = require("discord-rpc");
+      DiscordRPC.register(DISCORD_CLIENT_ID);
+      const client = new DiscordRPC.Client({ transport: "ipc" });
+      client.on("ready", () => {
+        console.log("Discord RPC connected");
+        discordRPCClient = client;
+        discordRPCReady = true;
+        discordRPCConnecting = false;
+        resolve();
+      });
+      client.login({ clientId: DISCORD_CLIENT_ID }).catch((err) => {
+        console.warn("Discord RPC login failed:", err.message);
+        discordRPCClient = null;
+        discordRPCReady = false;
+        discordRPCConnecting = false;
+        resolve();
+      });
+    } catch (e) {
+      console.warn("Discord RPC init failed:", e.message);
+      discordRPCClient = null;
+      discordRPCReady = false;
+      discordRPCConnecting = false;
+      resolve();
+    }
+  });
+}
+function destroyDiscordRPC() {
+  if (discordRPCClient) {
+    try {
+      discordRPCClient.destroy();
+    } catch (_) {}
+    discordRPCClient = null;
+  }
+  discordRPCReady = false;
+  discordRPCConnecting = false;
+}
+function buildProgressBar(percentage) {
+  const total = 10;
+  const filled = Math.round((percentage / 100) * total);
+  const empty = total - filled;
+  return "▓".repeat(filled) + "░".repeat(empty);
+}
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
@@ -297,6 +351,42 @@ const createMainWin = () => {
       downloadRequest = null;
     }
     event.returnValue = "cancelled";
+  });
+  // Discord RPC handlers
+  ipcMain.handle("discord-rpc-update", async (event, config) => {
+    const { bookTitle, author, percentage } = config;
+    if (!discordRPCReady) {
+      await initDiscordRPC();
+    }
+    if (!discordRPCClient || !discordRPCReady) return;
+    try {
+      const progressBar = buildProgressBar(percentage);
+      await discordRPCClient.setActivity({
+        details: bookTitle,
+        state: `${progressBar} ${percentage}%  |  by ${author}`,
+        largeImageKey: "koodo_reader_logo",
+        largeImageText: "Koodo Reader",
+        startTimestamp: Date.now(),
+        instance: false,
+        buttons: [
+          {
+            label: "Get Koodo Reader",
+            url: "https://koodoreader.com",
+          },
+        ],
+      });
+    } catch (e) {
+      console.warn("Failed to set Discord activity:", e.message);
+    }
+  });
+  ipcMain.handle("discord-rpc-clear", async (event) => {
+    if (discordRPCClient) {
+      try {
+        await discordRPCClient.clearActivity();
+      } catch (e) {
+        console.warn("Failed to clear Discord activity:", e.message);
+      }
+    }
   });
   ipcMain.handle("update-win-app", (event, config) => {
     let fileName = `koodo-reader-installer.exe`;
@@ -1136,6 +1226,7 @@ app.on("ready", () => {
 });
 app.on("before-quit", () => {
   isQuitting = true;
+  destroyDiscordRPC();
 });
 app.on("window-all-closed", () => {
   app.quit();
