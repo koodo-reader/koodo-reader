@@ -105,6 +105,14 @@ export const vexTextareaAsync = (message, value = "") => {
     });
   });
 };
+export const defaultPrompts: Record<string, string> = {
+  aiTranslate:
+    "You are a professional translator. Translate the following text from {from} to {to}. Only return the translated text, no explanations.\n\nText: {text}",
+  aiDict:
+    "You are a professional dictionary assistant. Analyze the word or phrase: {word}\nSource language: {from}, Target language: {to}\nProvide a comprehensive explanation including pronunciation, definitions, example sentences, and usage notes.",
+  aiAssistance:
+    "You are a helpful reading assistant. The user is reading a book. Here is the context:\n{text}\n\nAnswer the user's question concisely and helpfully.",
+};
 export const vexComfirmAsync = (message, confirmText: string = "Confirm") => {
   return new Promise((resolve) => {
     window.vex.dialog.buttons.YES.text = i18n.t(confirmText);

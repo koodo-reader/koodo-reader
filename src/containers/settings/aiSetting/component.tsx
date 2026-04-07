@@ -4,7 +4,11 @@ import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { aiProviderList } from "../../../constants/aiModelList";
-import { handleContextMenu, vexTextareaAsync } from "../../../utils/common";
+import {
+  defaultPrompts,
+  handleContextMenu,
+  vexTextareaAsync,
+} from "../../../utils/common";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
 class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
@@ -297,21 +301,11 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
     if (infoEl) infoEl.scrollTop = 0;
   };
 
-  defaultPrompts: Record<string, string> = {
-    aiTranslate:
-      "You are a professional translator. Translate the following text to {to}. Only return the translated text, no explanations.\n\nText: {text}",
-    aiDict:
-      "You are a professional dictionary assistant. Analyze the word or phrase: {word}\nSource language: {from}, Target language: {to}\nProvide a comprehensive explanation including pronunciation, definitions, example sentences, and usage notes.",
-    aiAssistance:
-      "You are a helpful reading assistant. The user is reading a book. Here is the context:\n{text}\n\nAnswer the user's question concisely and helpfully.",
-  };
-
   handleEditPrompt = async (
     type: "aiTranslate" | "aiDict" | "aiAssistance"
   ) => {
     const configKey = type + "Prompt";
-    const currentValue =
-      (this.state as any)[configKey] || this.defaultPrompts[type];
+    const currentValue = (this.state as any)[configKey] || defaultPrompts[type];
     const result = await vexTextareaAsync(
       this.props.t("Edit prompt"),
       currentValue
@@ -411,13 +405,15 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
             </label>
             <select
               className="lang-setting-dropdown"
-              style={{ width: "100%" }}
+              style={{ width: "100px" }}
               value={this.state.selectedModel}
               onChange={(e) => this.handleModelSelect(e.target.value)}
             >
-              <option value="">{this.props.t("Please select a model")}</option>
+              <option value="" className="lang-setting-option">
+                {this.props.t("Please select a model")}
+              </option>
               {this.state.fetchedModels.map((m) => (
-                <option key={m.id} value={m.id}>
+                <option key={m.id} value={m.id} className="lang-setting-option">
                   {m.name || m.id}
                 </option>
               ))}

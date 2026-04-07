@@ -6,6 +6,7 @@ import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import {
+  defaultPrompts,
   getDefaultTransTarget,
   getWebsiteUrl,
   handleContextMenu,
@@ -14,6 +15,7 @@ import {
 import DatabaseService from "../../../utils/storage/databaseService";
 import { checkPlugin } from "../../../utils/common";
 import { getTransStream } from "../../../utils/request/reader";
+import { chatStream } from "../../../utils/request/common";
 declare var window: any;
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
@@ -41,9 +43,11 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   }
 
   handleTrans = async (text: string) => {
+    console.log(this.state.transService);
     if (
       this.state.transService &&
-      this.state.transService !== "official-ai-trans-plugin"
+      this.state.transService !== "official-ai-trans-plugin" &&
+      this.state.transService !== "custom-ai-trans-plugin"
     ) {
       let plugin = this.props.plugins.find(
         (item) => item.key === this.state.transService
@@ -80,6 +84,60 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           );
           console.error(err);
         });
+    } else if (this.state.transService === "custom-ai-trans-plugin") {
+      this.setState({
+        transService: "custom-ai-trans-plugin",
+        isAddNew: false,
+      });
+      let plugin = this.props.plugins.find(
+        (item) => item.key === "custom-ai-trans-plugin"
+      );
+      if (!plugin) {
+        return;
+      }
+      let isFirst = true;
+      let targetLang =
+        ConfigService.getReaderConfig("transTarget") ||
+        getDefaultTransTarget(plugin.langList);
+      if (targetLang === "Traditional Chinese") {
+        targetLang = "繁体中文";
+      }
+      let systemPrompt =
+        ConfigService.getReaderConfig("aiTranslatePrompt") ||
+        defaultPrompts.aiTranslate;
+      systemPrompt = systemPrompt.replace(
+        "{from}",
+        ConfigService.getReaderConfig("transSource") || "Automatic"
+      );
+      systemPrompt = systemPrompt.replace("{to}", targetLang);
+      systemPrompt = systemPrompt.replace("{text}", text);
+      let config: any = plugin.config || {};
+      await chatStream(
+        config.endpoint,
+        config.apiKey,
+        config.modelId,
+        systemPrompt,
+        [],
+        (result) => {
+          if (result && result.done) {
+            this.setState({ isFinishOutput: true });
+            return;
+          }
+          if (result && result.text) {
+            if (isFirst) {
+              this.setState({
+                translatedText: result.text,
+              });
+              isFirst = false;
+            } else {
+              this.setState({
+                translatedText: this.state.translatedText + result.text,
+              });
+            }
+          }
+        }
+      );
+      this.setState({ isFinishOutput: true });
     } else if (
       this.props.isAuthed &&
       ConfigService.getReaderConfig("isDisableAI") !== "yes"

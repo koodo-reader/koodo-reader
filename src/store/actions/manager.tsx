@@ -22,6 +22,7 @@ import { azureTTSVoiceList, officialVoiceList } from "../../constants/ttsList";
 import { langToName } from "../../utils/common";
 import { resetReaderRequest } from "../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
+import Plugin from "../../models/Plugin";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -277,6 +278,29 @@ export function handleFetchPlugins() {
   return async (dispatch: Dispatch) => {
     DatabaseService.getAllRecords("plugins").then((pluginList) => {
       try {
+        if (ConfigService.getReaderConfig("aiTranslateModel")) {
+          let plugin: Plugin = pluginList.find(
+            (p: PluginModel) =>
+              p.key === ConfigService.getReaderConfig("aiTranslateModel")
+          );
+          let aiTranslateModel = plugin;
+          if (aiTranslateModel && aiTranslateModel.key) {
+            let transPlugin = new PluginModel(
+              "custom-ai-trans-plugin",
+              "translation",
+              "Custom AI Translation",
+              "translation",
+              "1.0.0",
+              "",
+              aiTranslateModel.config || {},
+              officialTranList,
+              [],
+              "",
+              ""
+            );
+            pluginList.push(transPlugin);
+          }
+        }
         TokenService.getToken("is_authed").then((value) => {
           let isAuthed = value === "yes";
           if (

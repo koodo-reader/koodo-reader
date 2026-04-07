@@ -918,5 +918,8 @@
   "AI translation model": "AI 翻译模型",
   "AI dictionary model": "AI 词典模型",
   "AI assistance model": "AI 辅助模型",
+  "Custom AI Translation": "自定义 AI 翻译",
+  "Custom AI Dictionary": "自定义 AI 词典",
+  "Custom AI Assistance": "自定义 AI 辅助",
   "Model assignment": "模型分配"
 }
