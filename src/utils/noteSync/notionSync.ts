@@ -3,8 +3,8 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 
 interface NotionSyncConfig {
-  "Notion Integration Token": string;
-  "Notion Database ID": string;
+  token: string;
+  databaseId: string;
 }
 
 /**
@@ -261,17 +261,12 @@ export class NotionSyncService {
 
     try {
       const pageId = await this.findOrCreatePage(
-        config["Notion Integration Token"],
-        config["Notion Database ID"],
+        config.token,
+        config.databaseId,
         bookName
       );
 
-      await this.appendBlocks(
-        config["Notion Integration Token"],
-        pageId,
-        note,
-        note.chapter || ""
-      );
+      await this.appendBlocks(config.token, pageId, note, note.chapter || "");
 
       return true;
     } catch (error) {

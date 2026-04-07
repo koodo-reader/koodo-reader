@@ -3,8 +3,8 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 
 interface YuqueSyncConfig {
-  "Yuque Token": string;
-  "Yuque Namespace": string;
+  token: string;
+  namespace: string;
 }
 
 /**
@@ -167,20 +167,15 @@ export class YuqueSyncService {
 
     try {
       const doc = await this.findOrCreateDoc(
-        config["Yuque Token"],
-        config["Yuque Namespace"],
+        config.token,
+        config.namespace,
         bookName
       );
 
       const newContent = this.formatNoteMarkdown(note);
       const updatedBody = doc.body + newContent;
 
-      await this.updateDoc(
-        config["Yuque Token"],
-        config["Yuque Namespace"],
-        doc.id,
-        updatedBody
-      );
+      await this.updateDoc(config.token, config.namespace, doc.id, updatedBody);
 
       return true;
     } catch (error) {

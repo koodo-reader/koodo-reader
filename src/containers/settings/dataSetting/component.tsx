@@ -86,7 +86,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
         ConfigService.setReaderConfig(
           item.authConfigKey,
-          JSON.stringify({ "Markdown Sync Folder": folder })
+          JSON.stringify({ folder: folder })
         );
         this.setState({ [item.propName]: true } as any);
         ConfigService.setReaderConfig(item.propName, "yes");
@@ -96,17 +96,28 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
       // Enabling: prompt for auth credentials
       const existingConfig = ConfigService.getReaderConfig(item.authConfigKey);
-      let defaultValues = { ...item.authFields };
+      let savedValues: Record<string, any> = {};
       if (existingConfig) {
         try {
-          const parsed = JSON.parse(existingConfig);
-          defaultValues = { ...defaultValues, ...parsed };
+          savedValues = JSON.parse(existingConfig);
         } catch {}
+      }
+      // Build defaultValues record: key -> saved value or placeholder
+      const defaultValues: Record<string, any> = {};
+      const labelsMap: Record<string, string> = {};
+      for (const field of item.authFields as Array<{
+        key: string;
+        label: string;
+        placeholder: string;
+      }>) {
+        defaultValues[field.key] = savedValues[field.key] ?? field.placeholder;
+        labelsMap[field.key] = field.label;
       }
 
       const result = await vexOpenAsync(
         defaultValues,
-        item.title + "\nPlease enter your credentials to enable sync:"
+        item.title + "\nPlease enter your credentials to enable sync:",
+        labelsMap
       );
 
       if (!result) {
@@ -184,7 +195,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 const raw = ConfigService.getReaderConfig(item.authConfigKey);
                 if (raw) {
                   const parsed = JSON.parse(raw);
-                  folder = parsed["Markdown Sync Folder"] || "";
+                  folder = parsed["folder"] || "";
                 }
               } catch {}
               return folder ? (

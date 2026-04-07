@@ -124,10 +124,18 @@ export const noteSyncSettingList = [
     desc: "",
     propName: "isEnableNotionSync",
     requiresAuth: true,
-    authFields: {
-      "Notion Integration Token": "[Enter your Notion integration token]",
-      "Notion Database ID": "[Enter the ID of the Notion database to sync to]",
-    },
+    authFields: [
+      {
+        key: "token",
+        label: "Notion Integration Token",
+        placeholder: "[Enter your Notion integration token]",
+      },
+      {
+        key: "databaseId",
+        label: "Notion Database ID",
+        placeholder: "[Enter the ID of the Notion database to sync to]",
+      },
+    ],
     authConfigKey: "notionSyncConfig",
   },
   {
@@ -136,10 +144,18 @@ export const noteSyncSettingList = [
     desc: "",
     propName: "isEnableYuqueSync",
     requiresAuth: true,
-    authFields: {
-      "Yuque Token": "[Enter your Yuque personal access token]",
-      "Yuque Namespace": "[Enter namespace, e.g. username/repo-slug]",
-    },
+    authFields: [
+      {
+        key: "token",
+        label: "Yuque Token",
+        placeholder: "[Enter your Yuque personal access token]",
+      },
+      {
+        key: "namespace",
+        label: "Yuque Namespace",
+        placeholder: "[Enter namespace, e.g. username/repo-slug]",
+      },
+    ],
     authConfigKey: "yuqueSyncConfig",
   },
   {
@@ -148,9 +164,13 @@ export const noteSyncSettingList = [
     desc: "",
     propName: "isEnableReadwiseSync",
     requiresAuth: true,
-    authFields: {
-      "Readwise Access Token": "[Enter your Readwise access token]",
-    },
+    authFields: [
+      {
+        key: "accessToken",
+        label: "Readwise Access Token",
+        placeholder: "[Enter your Readwise access token]",
+      },
+    ],
     authConfigKey: "readwiseSyncConfig",
   },
   {
@@ -159,9 +179,13 @@ export const noteSyncSettingList = [
     desc: "Suitable for Obsidian, Siyuan, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ",
     propName: "isEnableMarkdownSync",
     requiresAuth: true,
-    authFields: {
-      "Markdown Sync Folder": "[Enter the folder path to save markdown files]",
-    },
+    authFields: [
+      {
+        key: "folder",
+        label: "Markdown Sync Folder",
+        placeholder: "[Enter the folder path to save markdown files]",
+      },
+    ],
     authConfigKey: "markdownSyncConfig",
   },
 ];

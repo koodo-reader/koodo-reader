@@ -3,12 +3,12 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 
 interface MarkdownSyncConfig {
-  "Markdown Sync Folder": string;
+  folder: string;
 }
 
 /**
  * Sync a note/highlight to a local Markdown file.
- * Each book gets its own file: "{Markdown Sync Folder}/{BookName}.md"
+ * Each book gets its own file: "{folder}/{BookName}.md"
  * Notes/highlights are appended to the file.
  * Only available in Electron.
  */
@@ -71,7 +71,7 @@ export class MarkdownSyncService {
     const config = this.getConfig();
     if (!config) return false;
 
-    const folder = config["Markdown Sync Folder"];
+    const folder = config.folder;
     if (!folder) return false;
 
     try {
