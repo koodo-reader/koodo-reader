@@ -913,5 +913,10 @@
   "Update successful": "更新成功",
   "Operation failed": "操作失败",
   "Deletion failed": "删除失败",
-  "Failed to parse model configuration": "解析模型配置失败"
+  "Failed to parse model configuration": "解析模型配置失败",
+  "Edit prompt": "编辑提示词",
+  "AI translation model": "AI 翻译模型",
+  "AI dictionary model": "AI 词典模型",
+  "AI assistance model": "AI 辅助模型",
+  "Model assignment": "模型分配"
 }

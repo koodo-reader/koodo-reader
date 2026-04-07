@@ -83,6 +83,28 @@ export const vexPromptAsync = (message, placeholder = "", value = "") => {
     });
   });
 };
+export const vexTextareaAsync = (message, value = "") => {
+  return new Promise<string | false>((resolve) => {
+    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    const textareaHtml = [
+      `<div style="margin-bottom:10px">`,
+      `<textarea name="vex-textarea" style="width:100%;height:200px;">${value}</textarea>`,
+      `</div>`,
+    ].join("");
+    window.vex.dialog.open({
+      unsafeMessage: message ? i18n.t(message).replace(/\n/g, "<br>") : "",
+      input: textareaHtml,
+      callback: function (data) {
+        if (!data) {
+          resolve(false);
+        } else {
+          resolve(data["vex-textarea"] ?? "");
+        }
+      },
+    });
+  });
+};
 export const vexComfirmAsync = (message, confirmText: string = "Confirm") => {
   return new Promise((resolve) => {
     window.vex.dialog.buttons.YES.text = i18n.t(confirmText);

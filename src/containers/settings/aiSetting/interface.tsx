@@ -32,4 +32,7 @@ export interface SettingInfoState {
   aiTranslateModel: string;
   aiDictModel: string;
   aiAssistanceModel: string;
+  aiTranslatePrompt: string;
+  aiDictPrompt: string;
+  aiAssistancePrompt: string;
 }

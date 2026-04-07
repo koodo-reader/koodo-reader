@@ -4,7 +4,7 @@ import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { aiProviderList } from "../../../constants/aiModelList";
-import { handleContextMenu } from "../../../utils/common";
+import { handleContextMenu, vexTextareaAsync } from "../../../utils/common";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
 class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
@@ -28,6 +28,11 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
       aiDictModel: ConfigService.getReaderConfig("aiDictModel") || "",
       aiAssistanceModel:
         ConfigService.getReaderConfig("aiAssistanceModel") || "",
+      aiTranslatePrompt:
+        ConfigService.getReaderConfig("aiTranslatePrompt") || "",
+      aiDictPrompt: ConfigService.getReaderConfig("aiDictPrompt") || "",
+      aiAssistancePrompt:
+        ConfigService.getReaderConfig("aiAssistancePrompt") || "",
     };
   }
 
@@ -290,6 +295,31 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
     });
     const infoEl = document.querySelector(".setting-dialog-info");
     if (infoEl) infoEl.scrollTop = 0;
+  };
+
+  defaultPrompts: Record<string, string> = {
+    aiTranslate:
+      "You are a professional translator. Translate the following text to {to}. Only return the translated text, no explanations.\n\nText: {text}",
+    aiDict:
+      "You are a professional dictionary assistant. Analyze the word or phrase: {word}\nSource language: {from}, Target language: {to}\nProvide a comprehensive explanation including pronunciation, definitions, example sentences, and usage notes.",
+    aiAssistance:
+      "You are a helpful reading assistant. The user is reading a book. Here is the context:\n{text}\n\nAnswer the user's question concisely and helpfully.",
+  };
+
+  handleEditPrompt = async (
+    type: "aiTranslate" | "aiDict" | "aiAssistance"
+  ) => {
+    const configKey = type + "Prompt";
+    const currentValue =
+      (this.state as any)[configKey] || this.defaultPrompts[type];
+    const result = await vexTextareaAsync(
+      this.props.t("Edit prompt"),
+      currentValue
+    );
+    if (result === false) return;
+    (this.setState as any)({ [configKey]: result });
+    ConfigService.setReaderConfig(configKey, result);
+    toast.success(this.props.t("Change successful"));
   };
 
   renderAddForm = () => {
@@ -579,7 +609,16 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
         </div>
 
         <div className="setting-dialog-new-title">
-          <Trans>AI translation model</Trans>
+          <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Trans>AI translation model</Trans>
+            <span
+              className="change-location-button"
+              style={{ fontSize: "12px" }}
+              onClick={() => this.handleEditPrompt("aiTranslate")}
+            >
+              <Trans>Edit prompt</Trans>
+            </span>
+          </span>
           <select
             className="lang-setting-dropdown"
             value={this.state.aiTranslateModel}
@@ -606,7 +645,16 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
         </div>
 
         <div className="setting-dialog-new-title">
-          <Trans>AI dictionary model</Trans>
+          <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Trans>AI dictionary model</Trans>
+            <span
+              className="change-location-button"
+              style={{ fontSize: "12px" }}
+              onClick={() => this.handleEditPrompt("aiDict")}
+            >
+              <Trans>Edit prompt</Trans>
+            </span>
+          </span>
           <select
             className="lang-setting-dropdown"
             value={this.state.aiDictModel}
@@ -633,7 +681,16 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
         </div>
 
         <div className="setting-dialog-new-title">
-          <Trans>AI assistance model</Trans>
+          <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Trans>AI assistance model</Trans>
+            <span
+              className="change-location-button"
+              style={{ fontSize: "12px" }}
+              onClick={() => this.handleEditPrompt("aiAssistance")}
+            >
+              <Trans>Edit prompt</Trans>
+            </span>
+          </span>
           <select
             className="lang-setting-dropdown"
             value={this.state.aiAssistanceModel}
