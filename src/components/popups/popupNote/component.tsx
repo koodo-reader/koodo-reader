@@ -11,6 +11,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
+import { NoteSyncManager } from "../../../utils/noteSync/noteSyncManager";
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
     super(props);
@@ -90,6 +91,8 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
             this.handleNoteClick
           );
         }
+        // Auto-sync updated note to enabled destinations
+        NoteSyncManager.syncNote(newNote, newNote.bookKey);
       });
     } else {
       let cfi = JSON.stringify(
@@ -151,6 +154,8 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           note,
           this.handleNoteClick
         );
+        // Auto-sync note to enabled destinations
+        NoteSyncManager.syncNote(note, bookKey);
       });
     }
   }

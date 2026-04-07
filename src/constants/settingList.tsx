@@ -117,6 +117,43 @@ export const dataSettingList = [
     propName: "isEnableDiscordRPC",
   },
 ];
+export const noteSyncSettingList = [
+  {
+    isElectron: false,
+    title: "Auto sync notes and highlights to Notion",
+    desc: "Automatically sync your notes and highlights to Notion when created. Each book will be a separate page titled 'Koodo Reader - Book Name'",
+    propName: "isEnableNotionSync",
+    requiresAuth: true,
+    authFields: {
+      "Notion Integration Token": "[Enter your Notion integration token]",
+      "Notion Database ID": "[Enter the ID of the Notion database to sync to]",
+    },
+    authConfigKey: "notionSyncConfig",
+  },
+  {
+    isElectron: false,
+    title: "Auto sync notes and highlights to Yuque",
+    desc: "Automatically sync your notes and highlights to Yuque when created. Each book will be a separate document titled 'Koodo Reader - Book Name'",
+    propName: "isEnableYuqueSync",
+    requiresAuth: true,
+    authFields: {
+      "Yuque Token": "[Enter your Yuque personal access token]",
+      "Yuque Namespace": "[Enter namespace, e.g. username/repo-slug]",
+    },
+    authConfigKey: "yuqueSyncConfig",
+  },
+  {
+    isElectron: false,
+    title: "Auto sync notes and highlights to Readwise",
+    desc: "Automatically sync your notes and highlights to Readwise when created. Each book will be grouped under 'Koodo Reader - Book Name'",
+    propName: "isEnableReadwiseSync",
+    requiresAuth: true,
+    authFields: {
+      "Readwise Access Token": "[Enter your Readwise access token]",
+    },
+    authConfigKey: "readwiseSyncConfig",
+  },
+];
 export const syncSettingList = [
   {
     isElectron: false,
