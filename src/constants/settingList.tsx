@@ -156,7 +156,7 @@ export const noteSyncSettingList = [
   {
     isElectron: true,
     title: "Auto sync notes and highlights to local markdown files",
-    desc: "Automatically sync your notes and highlights to local markdown files when created. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. Suitable for Obsidian, Siyuan, Joplin and other markdown-based note-taking apps",
+    desc: "Suitable for Obsidian, Siyuan, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ",
     propName: "isEnableMarkdownSync",
     requiresAuth: true,
     authFields: {
