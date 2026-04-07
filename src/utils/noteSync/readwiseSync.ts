@@ -3,7 +3,7 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 
 interface ReadwiseSyncConfig {
-  "Readwise Access Token": string;
+  accessToken: string;
 }
 
 /**
@@ -71,7 +71,7 @@ export class ReadwiseSyncService {
       const response = await fetch(`${this.API_BASE}/highlights/`, {
         method: "POST",
         headers: {
-          Authorization: `Token ${config["Readwise Access Token"]}`,
+          Authorization: `Token ${config.accessToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
