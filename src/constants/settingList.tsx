@@ -128,12 +128,12 @@ export const noteSyncSettingList = [
       {
         key: "token",
         label: "Notion Integration Token",
-        placeholder: "[Enter your Notion integration token]",
+        placeholder: "Enter your Notion integration token",
       },
       {
         key: "databaseId",
         label: "Notion Database ID",
-        placeholder: "[Enter the ID of the Notion database to sync to]",
+        placeholder: "Enter the ID of the Notion database to sync to",
       },
     ],
     authConfigKey: "notionSyncConfig",
@@ -148,12 +148,12 @@ export const noteSyncSettingList = [
       {
         key: "token",
         label: "Yuque Token",
-        placeholder: "[Enter your Yuque personal access token]",
+        placeholder: "Enter your Yuque personal access token",
       },
       {
         key: "namespace",
         label: "Yuque Namespace",
-        placeholder: "[Enter namespace, e.g. username/repo-slug]",
+        placeholder: "Enter namespace, e.g. username/repo-slug",
       },
     ],
     authConfigKey: "yuqueSyncConfig",
@@ -168,7 +168,7 @@ export const noteSyncSettingList = [
       {
         key: "accessToken",
         label: "Readwise Access Token",
-        placeholder: "[Enter your Readwise access token]",
+        placeholder: "Enter your Readwise access token",
       },
     ],
     authConfigKey: "readwiseSyncConfig",
@@ -183,7 +183,7 @@ export const noteSyncSettingList = [
       {
         key: "folder",
         label: "Markdown Sync Folder",
-        placeholder: "[Enter the folder path to save markdown files]",
+        placeholder: "Enter the folder path to save markdown files",
       },
     ],
     authConfigKey: "markdownSyncConfig",
