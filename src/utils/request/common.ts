@@ -92,6 +92,7 @@ export const chatStream = async (
         messages,
         stream: true,
         enable_thinking: false,
+        thinking: false,
       }),
       method: "POST",
     });
