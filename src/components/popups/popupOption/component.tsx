@@ -15,6 +15,7 @@ import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { openExternalUrl } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
+import { NoteSyncManager } from "../../../utils/noteSync/noteSyncManager";
 
 declare var window: any;
 
@@ -117,6 +118,8 @@ class PopupOption extends React.Component<PopupOptionProps> {
         highlight,
         this.handleNoteClick
       );
+      // Auto-sync highlight to enabled destinations
+      NoteSyncManager.syncNote(highlight, bookKey);
     });
   };
 

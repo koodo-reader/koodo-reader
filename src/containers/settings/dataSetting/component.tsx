@@ -7,6 +7,7 @@ import {
   getStorageLocation,
   reloadManager,
   vexComfirmAsync,
+  vexOpenAsync,
   vexPromptAsync,
 } from "../../../utils/common";
 
@@ -24,7 +25,10 @@ import {
   exportNotes,
 } from "../../../utils/file/export";
 import DatabaseService from "../../../utils/storage/databaseService";
-import { dataSettingList } from "../../../constants/settingList";
+import {
+  dataSettingList,
+  noteSyncSettingList,
+} from "../../../constants/settingList";
 
 declare var window: any;
 class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
@@ -37,6 +41,12 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       exportHighlightsFormat: "",
       isEnableDiscordRPC:
         ConfigService.getReaderConfig("isEnableDiscordRPC") === "yes",
+      isEnableNotionSync:
+        ConfigService.getReaderConfig("isEnableNotionSync") === "yes",
+      isEnableYuqueSync:
+        ConfigService.getReaderConfig("isEnableYuqueSync") === "yes",
+      isEnableReadwiseSync:
+        ConfigService.getReaderConfig("isEnableReadwiseSync") === "yes",
     };
   }
   async componentDidMount() {
@@ -60,6 +70,96 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       this.state[stateName] ? "no" : "yes"
     );
     toast.success(this.props.t("Change successful"));
+  };
+
+  handleNoteSyncSetting = async (item: any) => {
+    const currentlyEnabled = this.state[item.propName];
+
+    if (!currentlyEnabled && item.requiresAuth) {
+      // Enabling: prompt for auth credentials
+      const existingConfig = ConfigService.getReaderConfig(item.authConfigKey);
+      let defaultValues = { ...item.authFields };
+      if (existingConfig) {
+        try {
+          const parsed = JSON.parse(existingConfig);
+          defaultValues = { ...defaultValues, ...parsed };
+        } catch {}
+      }
+
+      const result = await vexOpenAsync(
+        defaultValues,
+        item.title + "\nPlease enter your credentials to enable sync:"
+      );
+
+      if (!result) {
+        // User cancelled
+        return;
+      }
+
+      // Validate that all fields are filled
+      const allFilled = Object.values(result).every(
+        (v) => v && String(v).trim().length > 0
+      );
+      if (!allFilled) {
+        toast.error(this.props.t("Please fill in all fields"));
+        return;
+      }
+
+      // Save auth config
+      ConfigService.setReaderConfig(item.authConfigKey, JSON.stringify(result));
+
+      // Enable the setting
+      this.setState({ [item.propName]: true } as any);
+      ConfigService.setReaderConfig(item.propName, "yes");
+      toast.success(this.props.t("Change successful"));
+    } else {
+      // Disabling: just toggle off
+      this.setState({ [item.propName]: false } as any);
+      ConfigService.setReaderConfig(item.propName, "no");
+      toast.success(this.props.t("Change successful"));
+    }
+  };
+
+  renderNoteSyncOptions = () => {
+    return noteSyncSettingList.map((item) => {
+      return (
+        <div
+          style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
+          key={item.propName}
+        >
+          <div className="setting-dialog-new-title" key={item.title}>
+            <span style={{ width: "calc(100% - 100px)" }}>
+              <Trans>{item.title}</Trans>
+            </span>
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                this.handleNoteSyncSetting(item);
+              }}
+              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
+            >
+              <span
+                className="single-control-button"
+                style={
+                  this.state[item.propName]
+                    ? {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
+              ></span>
+            </span>
+          </div>
+          <p className="setting-option-subtitle">
+            <Trans>{item.desc}</Trans>
+          </p>
+        </div>
+      );
+    });
   };
 
   renderSwitchOption = (optionList: any[]) => {
@@ -217,6 +317,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     return (
       <>
         {this.renderSwitchOption(dataSettingList)}
+        {this.renderNoteSyncOptions()}
         {isElectron && (
           <>
             <div className="setting-dialog-new-title">
