@@ -1,6 +1,7 @@
 import { NotionSyncService } from "./notionSync";
 import { YuqueSyncService } from "./yuqueSync";
 import { ReadwiseSyncService } from "./readwiseSync";
+import { MarkdownSyncService } from "./markdownSync";
 import DatabaseService from "../storage/databaseService";
 import toast from "react-hot-toast";
 
@@ -39,6 +40,13 @@ export class NoteSyncManager {
       enabledServices.push({
         name: "Readwise",
         sync: ReadwiseSyncService.syncNote.bind(ReadwiseSyncService),
+      });
+    }
+
+    if (MarkdownSyncService.isEnabled()) {
+      enabledServices.push({
+        name: "Markdown",
+        sync: MarkdownSyncService.syncNote.bind(MarkdownSyncService),
       });
     }
 
