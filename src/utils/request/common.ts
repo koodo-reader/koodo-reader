@@ -1,6 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
+import { SSE } from "sse.js";
 import {
   ConfigService,
   TokenService,
@@ -70,4 +71,58 @@ export const handleClearToken = async () => {
   resetReaderRequest();
   resetUserRequest();
   resetThirdpartyRequest();
+};
+export const chatStream = async (
+  url: string,
+  apiKey: string,
+  model: string,
+  prompt: string,
+  chat: any[],
+  onMessage: (result) => void
+) => {
+  return new Promise<{ done: boolean }>((resolve, reject) => {
+    const messages = [...chat, { role: "user", content: prompt }];
+    const source = new SSE(url + "/chat/completions", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + apiKey,
+      },
+      payload: JSON.stringify({
+        model,
+        messages,
+        stream: true,
+        enable_thinking: false,
+      }),
+      method: "POST",
+    });
+
+    source.addEventListener("open", () => {
+      console.info("ChatStream connection established.");
+    });
+
+    source.addEventListener("message", (e: any) => {
+      console.log(e);
+      if (!e.data) return;
+      if (e.data === "[DONE]") {
+        source.close();
+        resolve({ done: true });
+        return;
+      }
+      try {
+        const json = JSON.parse(e.data);
+        const text = json?.choices?.[0]?.delta?.content;
+        if (text) {
+          onMessage({ text });
+        }
+      } catch (err) {
+        console.error("ChatStream parse error:", err);
+      }
+    });
+
+    source.addEventListener("error", (e: any) => {
+      console.error("ChatStream error:", e);
+      source.close();
+      reject(e);
+    });
+  });
 };
