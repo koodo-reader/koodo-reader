@@ -121,7 +121,7 @@ export const noteSyncSettingList = [
   {
     isElectron: false,
     title: "Auto sync notes and highlights to Notion",
-    desc: "Automatically sync your notes and highlights to Notion when created. Each book will be a separate page titled 'Koodo Reader - Book Name'",
+    desc: "",
     propName: "isEnableNotionSync",
     requiresAuth: true,
     authFields: {
@@ -133,7 +133,7 @@ export const noteSyncSettingList = [
   {
     isElectron: false,
     title: "Auto sync notes and highlights to Yuque",
-    desc: "Automatically sync your notes and highlights to Yuque when created. Each book will be a separate document titled 'Koodo Reader - Book Name'",
+    desc: "",
     propName: "isEnableYuqueSync",
     requiresAuth: true,
     authFields: {
@@ -145,13 +145,24 @@ export const noteSyncSettingList = [
   {
     isElectron: false,
     title: "Auto sync notes and highlights to Readwise",
-    desc: "Automatically sync your notes and highlights to Readwise when created. Each book will be grouped under 'Koodo Reader - Book Name'",
+    desc: "",
     propName: "isEnableReadwiseSync",
     requiresAuth: true,
     authFields: {
       "Readwise Access Token": "[Enter your Readwise access token]",
     },
     authConfigKey: "readwiseSyncConfig",
+  },
+  {
+    isElectron: true,
+    title: "Auto sync notes and highlights to local markdown files",
+    desc: "Automatically sync your notes and highlights to local markdown files when created. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. Suitable for Obsidian, Siyuan, Joplin and other markdown-based note-taking apps",
+    propName: "isEnableMarkdownSync",
+    requiresAuth: true,
+    authFields: {
+      "Markdown Sync Folder": "[Enter the folder path to save markdown files]",
+    },
+    authConfigKey: "markdownSyncConfig",
   },
 ];
 export const syncSettingList = [

@@ -13,5 +13,6 @@ export interface SettingInfoState {
   isEnableNotionSync: boolean;
   isEnableYuqueSync: boolean;
   isEnableReadwiseSync: boolean;
+  isEnableMarkdownSync: boolean;
   [key: string]: any;
 }

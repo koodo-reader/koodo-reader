@@ -47,6 +47,8 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         ConfigService.getReaderConfig("isEnableYuqueSync") === "yes",
       isEnableReadwiseSync:
         ConfigService.getReaderConfig("isEnableReadwiseSync") === "yes",
+      isEnableMarkdownSync:
+        ConfigService.getReaderConfig("isEnableMarkdownSync") === "yes",
     };
   }
   async componentDidMount() {
@@ -76,6 +78,22 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     const currentlyEnabled = this.state[item.propName];
 
     if (!currentlyEnabled && item.requiresAuth) {
+      // Special case: Markdown sync uses a folder picker in Electron
+      if (item.propName === "isEnableMarkdownSync" && isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        const folder = await ipcRenderer.invoke("select-path");
+        if (!folder) return;
+
+        ConfigService.setReaderConfig(
+          item.authConfigKey,
+          JSON.stringify({ "Markdown Sync Folder": folder })
+        );
+        this.setState({ [item.propName]: true } as any);
+        ConfigService.setReaderConfig(item.propName, "yes");
+        toast.success(this.props.t("Change successful"));
+        return;
+      }
+
       // Enabling: prompt for auth credentials
       const existingConfig = ConfigService.getReaderConfig(item.authConfigKey);
       let defaultValues = { ...item.authFields };
@@ -157,6 +175,22 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <p className="setting-option-subtitle">
             <Trans>{item.desc}</Trans>
           </p>
+          {item.propName === "isEnableMarkdownSync" &&
+            this.state[item.propName] &&
+            isElectron &&
+            (() => {
+              let folder = "";
+              try {
+                const raw = ConfigService.getReaderConfig(item.authConfigKey);
+                if (raw) {
+                  const parsed = JSON.parse(raw);
+                  folder = parsed["Markdown Sync Folder"] || "";
+                }
+              } catch {}
+              return folder ? (
+                <div className="setting-dialog-location-title">{folder}</div>
+              ) : null;
+            })()}
         </div>
       );
     });
