@@ -200,42 +200,44 @@ class SettingDialog extends React.Component<
         </div>
 
         {this.props.plugins &&
-          this.props.plugins.map((item) => {
-            return (
-              <div className="setting-dialog-new-title" key={item.key}>
-                <span>
-                  <span
-                    className={`icon-${
-                      item.type === "dictionary"
-                        ? "dict"
-                        : item.type === "voice"
-                          ? "speaker"
-                          : item.type === "translation"
-                            ? "translation"
-                            : "ai-assist"
-                    } setting-plugin-icon`}
-                  ></span>
-                  <span className="setting-plugin-name">
-                    {this.props.t(item.displayName)}
+          this.props.plugins
+            .filter((item) => item.type !== "ai")
+            .map((item) => {
+              return (
+                <div className="setting-dialog-new-title" key={item.key}>
+                  <span>
+                    <span
+                      className={`icon-${
+                        item.type === "dictionary"
+                          ? "dict"
+                          : item.type === "voice"
+                            ? "speaker"
+                            : item.type === "translation"
+                              ? "translation"
+                              : "ai-assist"
+                      } setting-plugin-icon`}
+                    ></span>
+                    <span className="setting-plugin-name">
+                      {this.props.t(item.displayName)}
+                    </span>
                   </span>
-                </span>
 
-                {!item.key.startsWith("official") && (
-                  <span
-                    className="change-location-button"
-                    onClick={async () => {
-                      await DatabaseService.deleteRecord(item.key, "plugins");
-                      this.props.handleFetchPlugins();
-                      toast.success(this.props.t("Deletion successful"));
-                      this.handleGetPluginList();
-                    }}
-                  >
-                    <Trans>Delete</Trans>
-                  </span>
-                )}
-              </div>
-            );
-          })}
+                  {!item.key.startsWith("official") && (
+                    <span
+                      className="change-location-button"
+                      onClick={async () => {
+                        await DatabaseService.deleteRecord(item.key, "plugins");
+                        this.props.handleFetchPlugins();
+                        toast.success(this.props.t("Deletion successful"));
+                        this.handleGetPluginList();
+                      }}
+                    >
+                      <Trans>Delete</Trans>
+                    </span>
+                  )}
+                </div>
+              );
+            })}
         <div
           style={{
             fontWeight: "bold",

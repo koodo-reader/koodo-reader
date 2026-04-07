@@ -193,10 +193,10 @@
   font-size: 18px;
   display: inline-block;
   width: 20px;
+  position: relative;
+  top: 4px;
 }
 .setting-plugin-name {
-  position: relative;
-  bottom: 3px;
 }
 .lang-setting-dropdown {
   width: 100px;
@@ -399,4 +399,19 @@
   padding-left: 5px;
   border-radius: 5px;
   box-sizing: border-box;
+}
+
+/* AI Setting styles */
+.ai-setting-form-row {
+  margin-bottom: 12px;
+}
+.ai-setting-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  margin-top: 8px;
+}
+.ai-setting-form-row .token-dialog-username-box {
+  margin-top: 0;
 }

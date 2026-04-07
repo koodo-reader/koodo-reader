@@ -10,6 +10,7 @@ import ReadingSetting from "../../../containers/settings/readingSetting";
 import AppearanceSetting from "../../../containers/settings/appearanceSetting";
 import AboutSetting from "../../../containers/settings/aboutSetting";
 import DataSetting from "../../../containers/settings/dataSetting";
+import AISetting from "../../../containers/settings/aiSetting";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -63,6 +64,8 @@ class SettingDialog extends React.Component<
         return "Account";
       case "about":
         return "About";
+      case "ai":
+        return "AI service";
       default:
         return "Setting";
     }
@@ -103,12 +106,12 @@ class SettingDialog extends React.Component<
           {/* 第二组 */}
           <div className="setting-dialog-sidebar-group">
             {this.renderSidebarItem("plugins", "icon-internet", "Plugins", "")}
-            {/* {this.renderSidebarItem(
-              "sync",
+            {this.renderSidebarItem(
+              "ai",
               "icon-idea-line",
               "AI service",
               "18px"
-            )} */}
+            )}
             {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>
         </div>
@@ -144,6 +147,8 @@ class SettingDialog extends React.Component<
               <DataSetting />
             ) : this.props.settingMode === "about" ? (
               <AboutSetting />
+            ) : this.props.settingMode === "ai" ? (
+              <AISetting />
             ) : (
               <PluginSetting />
             )}
