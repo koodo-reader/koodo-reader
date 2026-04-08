@@ -9,6 +9,7 @@ import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { sliderConfigs } from "../../../constants/dropdownList";
+import toast from "react-hot-toast";
 
 class SettingPanel extends React.Component<
   SettingPanelProps,
@@ -21,6 +22,7 @@ class SettingPanel extends React.Component<
         ConfigService.getReaderConfig("isSettingLocked") === "yes"
           ? true
           : false,
+      isShowMenu: false,
     };
   }
 
@@ -30,6 +32,58 @@ class SettingPanel extends React.Component<
       "isSettingLocked",
       !this.props.isSettingLocked ? "yes" : "no"
     );
+    this.props.renderBookFunc();
+  };
+
+  handleClearAllStyle = () => {
+    const styleKeys = [
+      "backgroundColor",
+      "textColor",
+      "fontSize",
+      "margin",
+      "letterSpacing",
+      "paraSpacing",
+      "scale",
+      "brightness",
+      "fontFamily",
+      "subFontFamily",
+      "lineHeight",
+      "textAlign",
+      "textOrientation",
+      "convertChinese",
+      "selectAction",
+      "fullTranslationMode",
+      "readerMode",
+      "pdfReaderMode",
+      "isBold",
+      "isIndent",
+      "isSliding",
+      "isUnderline",
+      "isShadow",
+      "isItalic",
+      "isInvert",
+      "isBionic",
+      "isHyphenation",
+      "isOrphanWidow",
+      "isAllowScript",
+      "isStartFromEven",
+      "isHideBackground",
+      "isHideFooter",
+      "isHideHeader",
+      "isHideAIButton",
+      "isHideScaleButton",
+      "isHidePDFConvertButton",
+      "isHidePageButton",
+      "isHideMenuButton",
+      "isHideAudiobookButton",
+      "isShowPageBorder",
+    ];
+    const readerConfig = JSON.parse(
+      localStorage.getItem("readerConfig") || "{}"
+    );
+    styleKeys.forEach((key) => delete readerConfig[key]);
+    localStorage.setItem("readerConfig", JSON.stringify(readerConfig));
+    toast.success(this.props.t("Clear successful"));
     this.props.renderBookFunc();
   };
 
@@ -81,6 +135,40 @@ class SettingPanel extends React.Component<
             <DropdownList />
           )}
           <SettingSwitch />
+          <div className="setting-panel-menu" style={{ marginTop: "5px" }}>
+            <span
+              className="icon-more menu-icon"
+              onClick={() => {
+                this.setState({ isShowMenu: !this.state.isShowMenu });
+              }}
+              style={{ fontSize: "15px" }}
+            ></span>
+          </div>
+          <div
+            className="action-dialog-container"
+            style={{
+              right: 5,
+              top: 5,
+              width: 150,
+              display: this.state.isShowMenu ? "block" : "none",
+            }}
+            onMouseLeave={() => {
+              this.setState({ isShowMenu: false });
+            }}
+          >
+            <div className="action-dialog-actions-container" style={{}}>
+              <div
+                className="action-dialog-add"
+                onClick={() => {
+                  this.handleClearAllStyle();
+                }}
+              >
+                <p className="action-name">
+                  <Trans>Clear all style</Trans>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
