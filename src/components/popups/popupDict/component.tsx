@@ -91,7 +91,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           ConfigService.getReaderConfig("aiDictPrompt") ||
           defaultPrompts.aiDict;
         systemPrompt = systemPrompt.replace("{word}", text);
-        systemPrompt = systemPrompt.replace("{from}", "Automatic");
         systemPrompt = systemPrompt.replace("{to}", targetLang);
         let config: any = plugin.config || {};
         this.setState({ aiAnswer: "", isAiWaiting: true });
