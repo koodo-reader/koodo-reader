@@ -29,6 +29,8 @@ class DropdownList extends React.Component<
         : "",
       currentTextOrientationValue:
         ConfigService.getReaderConfig("textOrientation") || "",
+      currentSelectActionValue:
+        ConfigService.getReaderConfig("selectAction") || "",
     };
   }
   UNSAFE_componentWillReceiveProps(nextProps: DropdownListProps) {
@@ -150,6 +152,11 @@ class DropdownList extends React.Component<
         }
 
         break;
+      case "selectAction":
+        this.setState({
+          currentSelectActionValue: arr[0],
+        });
+        return;
       default:
         break;
     }
@@ -195,7 +202,9 @@ class DropdownList extends React.Component<
                               ? this.state.currentTextOrientationValue
                               : item.value === "fontFamily"
                                 ? this.state.currentFontFamilyValue
-                                : this.state.currentSubFontFamilyValue)
+                                : item.value === "selectAction"
+                                  ? this.state.currentSelectActionValue
+                                  : this.state.currentSubFontFamilyValue)
                   }
                 >
                   {this.props.t(subItem.label)}
