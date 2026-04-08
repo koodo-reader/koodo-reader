@@ -800,6 +800,8 @@
   "Enter your Notion integration token": "请输入您的 Notion 集成令牌",
   "Enter custom CSS here": "在此处输入自定义 CSS",
   "Notion Database ID": "Notion 数据库 ID",
+  "Custom app style": "自定义应用样式",
+  "Customize the appearance of the entire application with CSS": "使用 CSS 自定义整个应用的外观",
   "Enter the ID of the Notion database to sync to": "请输入要同步的 Notion 数据库 ID",
   "Auto sync notes and highlights to Yuque": "自动将笔记和高亮同步到语雀",
   "Yuque Token": "语雀令牌",
