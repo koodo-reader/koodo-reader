@@ -10,6 +10,7 @@ export interface BookCardProps extends RouteComponentProps<any> {
   dragItem: string;
   selectedBooks: string[];
   refreshBookKey: string;
+  cardScale?: number;
   handleSelectBook: (isSelectBook: boolean) => void;
   handleReadingBook: (book: BookModel) => void;
   handleActionDialog: (isShowActionDialog: boolean) => void;

@@ -46,6 +46,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
       displayedBooksCount: 24,
       isLoadingMore: false,
       fullBooksData: [], // 存储从数据库加载的完整书籍数据
+      cardScale: parseFloat(ConfigService.getReaderConfig("cardScale") || "1"),
     };
   }
   UNSAFE_componentWillMount() {
@@ -268,6 +269,12 @@ class BookList extends React.Component<BookListProps, BookListState> {
       );
     });
   };
+  handleCardScaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const scale = parseFloat(e.target.value);
+    this.setState({ cardScale: scale });
+    ConfigService.setReaderConfig("cardScale", String(scale));
+  };
+
   renderBookList = (books: Book[], bookMode: string) => {
     if (books.length === 0 && !this.props.isSearch) {
       return <Redirect to="/manager/empty" />;
@@ -295,6 +302,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           {...{
             key: index,
             book: item,
+            cardScale: this.state.cardScale,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
           }}
         />
@@ -363,6 +371,18 @@ class BookList extends React.Component<BookListProps, BookListState> {
             style={this.props.isSelectBook ? { display: "none" } : {}}
             className="book-list-header-right"
           >
+            {this.props.viewMode === "card" && (
+              <input
+                type="range"
+                min="0.6"
+                max="2"
+                step="0.05"
+                value={this.state.cardScale}
+                onChange={this.handleCardScaleChange}
+                className="book-card-scale-slider"
+                title="Adjust cover size"
+              />
+            )}
             <div className="book-list-total-page">
               <Trans i18nKey="Total books" count={books.length}>
                 {"Total " + books.length + " books"}
@@ -380,7 +400,13 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <div className="book-list-container">
-            <ul className="book-list-item-box" ref={this.scrollContainer}>
+            <ul
+              className="book-list-item-box"
+              ref={this.scrollContainer}
+              style={
+                { "--card-scale": this.state.cardScale } as React.CSSProperties
+              }
+            >
               {this.renderBookList(books, bookMode)}
             </ul>
           </div>
