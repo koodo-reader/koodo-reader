@@ -8,12 +8,8 @@ import toast from "react-hot-toast";
 import {
   defaultPrompts,
   getDefaultTransTarget,
-  getWebsiteUrl,
-  handleContextMenu,
   openExternalUrl,
 } from "../../../utils/common";
-import DatabaseService from "../../../utils/storage/databaseService";
-import { checkPlugin } from "../../../utils/common";
 import { getTransStream } from "../../../utils/request/reader";
 import { chatStream } from "../../../utils/request/common";
 declare var window: any;
@@ -34,9 +30,19 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     let originalText = this.props.originalText.replace(/(\r\n|\n|\r)/gm, "");
     this.setState({ originalText: originalText });
     if (!this.state.transService) {
-      this.setState({
-        isAddNew: true,
-      });
+      let pluginList = this.props.plugins.filter(
+        (item) => item.type === "translation"
+      );
+      if (pluginList.length > 0) {
+        this.setState({
+          transService: pluginList[0].key,
+        });
+        ConfigService.setReaderConfig("transService", pluginList[0].key);
+      } else {
+        this.setState({
+          isAddNew: true,
+        });
+      }
     }
 
     this.handleTrans(originalText);

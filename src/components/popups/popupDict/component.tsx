@@ -1,7 +1,10 @@
 import React from "react";
 import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
 import axios from "axios";
@@ -29,8 +32,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       word: "",
       prototype: "",
       dictService: ConfigService.getReaderConfig("dictService"),
-      dictTarget: ConfigService.getReaderConfig("dictTarget") || "en",
-      dictSource: ConfigService.getReaderConfig("dictSource") || "en",
+      dictTarget: ConfigService.getReaderConfig("dictTarget") || "",
+      dictSource: ConfigService.getReaderConfig("dictSource") || "",
       isAddNew: false,
       isShowUrl: false,
       aiAnswer: "",
@@ -50,13 +53,19 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     if (ConfigService.getReaderConfig("isLemmatizeWord") === "yes") {
       originalText = originalText;
     }
-    if (
-      !this.state.dictService ||
-      this.props.plugins.findIndex(
-        (item) => item.key === this.state.dictService
-      ) === -1
-    ) {
-      this.setState({ isAddNew: true });
+    if (!this.state.dictService) {
+      let pluginList = this.props.plugins.filter(
+        (item) => item.type === "dictionary"
+      );
+      if (pluginList.length > 0) {
+        this.setState({
+          dictService: pluginList[0].key,
+        });
+        ConfigService.setReaderConfig("dictService", pluginList[0].key);
+      } else {
+        this.setState({ isAddNew: true });
+        return;
+      }
     }
     this.handleDict(originalText);
     this.handleRecordHistory(originalText);
@@ -86,7 +95,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         let targetLang =
           this.state.dictTarget ||
           ConfigService.getReaderConfig("dictTarget") ||
-          "en";
+          KookitConfig.ConvertLangMap[
+            ConfigService.getReaderConfig("lang") || "zhCN"
+          ];
         let systemPrompt =
           ConfigService.getReaderConfig("aiDictPrompt") ||
           defaultPrompts.aiDict;
@@ -136,7 +147,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         dictText = await window.getDictText(
           text,
           "auto",
-          this.state.dictTarget,
+          this.state.dictTarget || "en",
           axios,
           this.props.t,
           plugin.config

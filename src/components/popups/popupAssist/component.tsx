@@ -18,9 +18,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     super(props);
     this.state = {
       answer: "",
-      aiService:
-        ConfigService.getReaderConfig("aiService") ||
-        "official-ai-assistant-plugin",
+      aiService: ConfigService.getReaderConfig("aiService") || "",
       isAddNew: false,
       isWaiting: false,
       question: "",
@@ -30,6 +28,23 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       inputQuestion: "",
     };
     this.chatBoxRef = React.createRef();
+  }
+  componentDidMount(): void {
+    if (!this.state.aiService) {
+      let pluginList = this.props.plugins.filter(
+        (item) => item.type === "assistant"
+      );
+      if (pluginList.length > 0) {
+        this.setState({
+          aiService: pluginList[0].key,
+        });
+        ConfigService.setReaderConfig("aiService", pluginList[0].key);
+      } else {
+        this.setState({
+          isAddNew: true,
+        });
+      }
+    }
   }
   scrollToBottom = () => {
     if (this.chatBoxRef.current) {
@@ -423,7 +438,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                 this.props.handleOpenMenu(false);
                 this.props.handleMenuMode("");
                 this.props.handleSetting(true);
-                this.props.handleSettingMode("plugins");
+                this.props.handleSettingMode("ai");
               }}
             >
               <Trans>Add new plugin</Trans>
