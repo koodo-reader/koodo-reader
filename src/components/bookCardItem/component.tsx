@@ -154,13 +154,13 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
             style={
               ConfigService.getReaderConfig("isDisableCrop") === "yes"
                 ? {
-                    height: "168px",
+                    height: `${168 * (this.props.cardScale ?? parseFloat(ConfigService.getReaderConfig("cardScale") || "1"))}px`,
                     alignItems: "flex-end",
                     background: "rgba(255, 255,255, 0)",
                     boxShadow: "0px 0px 5px rgba(0, 0, 0, 0)",
                   }
                 : {
-                    height: "137px",
+                    height: `${137 * (this.props.cardScale ?? parseFloat(ConfigService.getReaderConfig("cardScale") || "1"))}px`,
                     alignItems: "center",
                     overflow: "hidden",
                   }
