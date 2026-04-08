@@ -98,19 +98,55 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
     this.props.handleActionDialog(false);
   };
 
-  handleJump = () => {
+  handleShiftSelect = () => {
+    const {
+      allBooks,
+      bookIndex,
+      selectedBooks,
+      handleSelectedBooks,
+      handleSelectBook,
+    } = this.props;
+    if (!allBooks || bookIndex === undefined) return;
+    // 找到最后一个选中书的索引作为锚点
+    let anchorIndex = -1;
+    for (let i = allBooks.length - 1; i >= 0; i--) {
+      if (selectedBooks.indexOf(allBooks[i].key) > -1) {
+        anchorIndex = i;
+        break;
+      }
+    }
+    if (anchorIndex === -1) {
+      // 没有已选中的书，直接选中当前书
+      if (!this.props.isSelectBook) {
+        handleSelectBook(true);
+      }
+      handleSelectedBooks([this.props.book.key]);
+      return;
+    }
+    const start = Math.min(anchorIndex, bookIndex);
+    const end = Math.max(anchorIndex, bookIndex);
+    const rangeKeys = allBooks.slice(start, end + 1).map((b) => b.key);
+    // 合并现有选中和范围选中（去重）
+    const merged = Array.from(new Set([...selectedBooks, ...rangeKeys]));
+    handleSelectedBooks(merged);
+  };
+
+  handleJump = (event?: React.MouseEvent) => {
     if (this.props.isSelectBook) {
-      this.props.handleSelectedBooks(
-        this.props.isSelected
-          ? this.props.selectedBooks.filter(
-              (item) => item !== this.props.book.key
-            )
-          : [...this.props.selectedBooks, this.props.book.key]
-      );
+      if (event?.shiftKey) {
+        this.handleShiftSelect();
+      } else {
+        this.props.handleSelectedBooks(
+          this.props.isSelected
+            ? this.props.selectedBooks.filter(
+                (item) => item !== this.props.book.key
+              )
+            : [...this.props.selectedBooks, this.props.book.key]
+        );
+      }
       return;
     }
     this.props.handleReadingBook(this.props.book);
-
     BookUtil.redirectBook(this.props.book);
   };
   render() {
@@ -142,8 +178,8 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
         >
           <div
             className="book-item-cover"
-            onClick={() => {
-              this.handleJump();
+            onClick={(event) => {
+              this.handleJump(event);
             }}
             onMouseEnter={() => {
               this.setState({ isHover: true });
@@ -210,13 +246,17 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
               }}
               onClick={(event) => {
                 if (this.props.isSelectBook) {
-                  this.props.handleSelectedBooks(
-                    this.props.isSelected
-                      ? this.props.selectedBooks.filter(
-                          (item) => item !== this.props.book.key
-                        )
-                      : [...this.props.selectedBooks, this.props.book.key]
-                  );
+                  if (event.shiftKey) {
+                    this.handleShiftSelect();
+                  } else {
+                    this.props.handleSelectedBooks(
+                      this.props.isSelected
+                        ? this.props.selectedBooks.filter(
+                            (item) => item !== this.props.book.key
+                          )
+                        : [...this.props.selectedBooks, this.props.book.key]
+                    );
+                  }
                 } else {
                   this.props.handleSelectBook(true);
                   this.props.handleSelectedBooks([this.props.book.key]);

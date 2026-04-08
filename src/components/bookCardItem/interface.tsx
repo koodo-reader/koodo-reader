@@ -11,6 +11,8 @@ export interface BookCardProps extends RouteComponentProps<any> {
   selectedBooks: string[];
   refreshBookKey: string;
   cardScale?: number;
+  allBooks?: BookModel[];
+  bookIndex?: number;
   handleSelectBook: (isSelectBook: boolean) => void;
   handleReadingBook: (book: BookModel) => void;
   handleActionDialog: (isShowActionDialog: boolean) => void;

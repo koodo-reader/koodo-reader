@@ -101,15 +101,49 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
     this.setState({ isFavorite: true });
     toast.success(this.props.t("Addition successful"));
   };
-  handleJump = () => {
+  handleShiftSelect = () => {
+    const {
+      allBooks,
+      bookIndex,
+      selectedBooks,
+      handleSelectedBooks,
+      handleSelectBook,
+    } = this.props;
+    if (!allBooks || bookIndex === undefined) return;
+    let anchorIndex = -1;
+    for (let i = allBooks.length - 1; i >= 0; i--) {
+      if (selectedBooks.indexOf(allBooks[i].key) > -1) {
+        anchorIndex = i;
+        break;
+      }
+    }
+    if (anchorIndex === -1) {
+      if (!this.props.isSelectBook) {
+        handleSelectBook(true);
+      }
+      handleSelectedBooks([this.props.book.key]);
+      return;
+    }
+    const start = Math.min(anchorIndex, bookIndex);
+    const end = Math.max(anchorIndex, bookIndex);
+    const rangeKeys = allBooks.slice(start, end + 1).map((b) => b.key);
+    const merged = Array.from(new Set([...selectedBooks, ...rangeKeys]));
+    handleSelectedBooks(merged);
+  };
+
+  handleJump = (event?: React.MouseEvent) => {
     if (this.props.isSelectBook) {
-      this.props.handleSelectedBooks(
-        this.props.isSelected
-          ? this.props.selectedBooks.filter(
-              (item) => item !== this.props.book.key
-            )
-          : [...this.props.selectedBooks, this.props.book.key]
-      );
+      if (event?.shiftKey) {
+        this.handleShiftSelect();
+      } else {
+        this.props.handleSelectedBooks(
+          this.props.isSelected
+            ? this.props.selectedBooks.filter(
+                (item) => item !== this.props.book.key
+              )
+            : [...this.props.selectedBooks, this.props.book.key]
+        );
+      }
       return;
     }
     this.props.handleReadingBook(this.props.book);
@@ -176,8 +210,8 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
 
           <div
             className="book-cover-item-cover"
-            onClick={() => {
-              this.handleJump();
+            onClick={(event) => {
+              this.handleJump(event);
             }}
             onMouseEnter={() => {
               this.setState({ isHover: true });
@@ -246,13 +280,17 @@ class BookCoverItem extends React.Component<BookCoverProps, BookCoverState> {
                 }}
                 onClick={(event) => {
                   if (this.props.isSelectBook) {
-                    this.props.handleSelectedBooks(
-                      this.props.isSelected
-                        ? this.props.selectedBooks.filter(
-                            (item) => item !== this.props.book.key
-                          )
-                        : [...this.props.selectedBooks, this.props.book.key]
-                    );
+                    if (event.shiftKey) {
+                      this.handleShiftSelect();
+                    } else {
+                      this.props.handleSelectedBooks(
+                        this.props.isSelected
+                          ? this.props.selectedBooks.filter(
+                              (item) => item !== this.props.book.key
+                            )
+                          : [...this.props.selectedBooks, this.props.book.key]
+                      );
+                    }
                   } else {
                     this.props.handleSelectBook(true);
                     this.props.handleSelectedBooks([this.props.book.key]);
