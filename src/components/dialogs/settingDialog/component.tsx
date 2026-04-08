@@ -11,6 +11,7 @@ import AppearanceSetting from "../../../containers/settings/appearanceSetting";
 import AboutSetting from "../../../containers/settings/aboutSetting";
 import DataSetting from "../../../containers/settings/dataSetting";
 import AISetting from "../../../containers/settings/aiSetting";
+import BackgroundSetting from "../../../containers/settings/backgroundSetting";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -66,6 +67,8 @@ class SettingDialog extends React.Component<
         return "About";
       case "ai":
         return "AI service";
+      case "background":
+        return "Background";
       default:
         return "Setting";
     }
@@ -89,6 +92,12 @@ class SettingDialog extends React.Component<
               "icon-highlight-line",
               "Appearance",
               "18px"
+            )}
+            {this.renderSidebarItem(
+              "background",
+              "icon-image",
+              "Background",
+              "16px"
             )}
             {this.renderSidebarItem("sync", "icon-sync", "Sync and backup", "")}
 
@@ -149,6 +158,8 @@ class SettingDialog extends React.Component<
               <AboutSetting />
             ) : this.props.settingMode === "ai" ? (
               <AISetting />
+            ) : this.props.settingMode === "background" ? (
+              <BackgroundSetting />
             ) : (
               <PluginSetting />
             )}

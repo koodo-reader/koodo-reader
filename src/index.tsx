@@ -12,12 +12,14 @@ import {
   initSystemFont,
   initTheme,
   applyCustomSystemCSS,
+  applyAppBackgroundImage,
 } from "./utils/reader/launchUtil";
 import { migrateThemeConfig } from "./utils/reader/themeUtil";
 initTheme();
 initSystemFont();
 migrateThemeConfig();
 applyCustomSystemCSS();
+applyAppBackgroundImage();
 ReactDOM.render(
   <Provider store={store}>
     <Router />

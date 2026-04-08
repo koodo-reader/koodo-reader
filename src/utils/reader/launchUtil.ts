@@ -76,3 +76,21 @@ export const applyCustomSystemCSS = () => {
     styleElement.textContent = "";
   }
 };
+
+export const applyAppBackgroundImage = () => {
+  const imageUrl =
+    ConfigService.getReaderConfig("appBackgroundImage_url") || "";
+  const root = document.getElementById("root");
+  if (!root) return;
+  if (imageUrl) {
+    root.style.backgroundImage = `url("${imageUrl}")`;
+    root.style.backgroundSize = "cover";
+    root.style.backgroundPosition = "center";
+    root.style.backgroundAttachment = "fixed";
+  } else {
+    root.style.backgroundImage = "";
+    root.style.backgroundSize = "";
+    root.style.backgroundPosition = "";
+    root.style.backgroundAttachment = "";
+  }
+};

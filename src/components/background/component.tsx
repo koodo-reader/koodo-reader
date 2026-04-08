@@ -130,10 +130,24 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   left: this.state.pageOffset,
                   width: `calc(${this.state.pageWidth} + 102px)`,
                   boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
+                  ...(ConfigService.getReaderConfig("readerBackgroundImage_url")
+                    ? {
+                        backgroundImage: `url("${ConfigService.getReaderConfig("readerBackgroundImage_url")}")`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }
+                    : {}),
                 }
               : {
                   left: this.props.isNavLocked ? 309 : 9,
                   right: this.props.isSettingLocked ? 309 : 9,
+                  ...(ConfigService.getReaderConfig("readerBackgroundImage_url")
+                    ? {
+                        backgroundImage: `url("${ConfigService.getReaderConfig("readerBackgroundImage_url")}")`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }
+                    : {}),
                 }
           }
         ></div>
