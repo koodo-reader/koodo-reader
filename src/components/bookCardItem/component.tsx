@@ -107,15 +107,16 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       handleSelectBook,
     } = this.props;
     if (!allBooks || bookIndex === undefined) return;
-    // 找到最后一个选中书的索引作为锚点
-    let anchorIndex = -1;
-    for (let i = allBooks.length - 1; i >= 0; i--) {
+    // 找第一个和最后一个已选中书的索引
+    let firstSelectedIndex = -1;
+    let lastSelectedIndex = -1;
+    for (let i = 0; i < allBooks.length; i++) {
       if (selectedBooks.indexOf(allBooks[i].key) > -1) {
-        anchorIndex = i;
-        break;
+        if (firstSelectedIndex === -1) firstSelectedIndex = i;
+        lastSelectedIndex = i;
       }
     }
-    if (anchorIndex === -1) {
+    if (firstSelectedIndex === -1) {
       // 没有已选中的书，直接选中当前书
       if (!this.props.isSelectBook) {
         handleSelectBook(true);
@@ -123,12 +124,23 @@ class BookCardItem extends React.Component<BookCardProps, BookCardState> {
       handleSelectedBooks([this.props.book.key]);
       return;
     }
-    const start = Math.min(anchorIndex, bookIndex);
-    const end = Math.max(anchorIndex, bookIndex);
-    const rangeKeys = allBooks.slice(start, end + 1).map((b) => b.key);
-    // 合并现有选中和范围选中（去重）
-    const merged = Array.from(new Set([...selectedBooks, ...rangeKeys]));
-    handleSelectedBooks(merged);
+    // 判断点击的书是否在已选范围之内
+    if (bookIndex >= firstSelectedIndex && bookIndex <= lastSelectedIndex) {
+      // 在已选范围内：以第一个已选书为锁定隆点，重新计算从头到当前书的范围（替换）
+      const rangeKeys = allBooks
+        .slice(firstSelectedIndex, bookIndex + 1)
+        .map((b) => b.key);
+      handleSelectedBooks(rangeKeys);
+    } else {
+      // 在已选范围外：以最后一个已选书为锡点向外扩展（合并去重）
+      const anchorIndex =
+        bookIndex < firstSelectedIndex ? firstSelectedIndex : lastSelectedIndex;
+      const start = Math.min(anchorIndex, bookIndex);
+      const end = Math.max(anchorIndex, bookIndex);
+      const rangeKeys = allBooks.slice(start, end + 1).map((b) => b.key);
+      const merged = Array.from(new Set([...selectedBooks, ...rangeKeys]));
+      handleSelectedBooks(merged);
+    }
   };
 
   handleJump = (event?: React.MouseEvent) => {
