@@ -18,4 +18,5 @@ export interface DropdownListState {
   chineseConversionValue: string;
   fullTranslationModeValue: string;
   currentTextOrientationValue: string;
+  currentSelectActionValue: string;
 }

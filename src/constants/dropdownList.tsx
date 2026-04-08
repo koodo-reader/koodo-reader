@@ -100,10 +100,6 @@ export const dropdownList = [
         label: "Speak the text",
         value: "speaker",
       },
-      {
-        label: "Nothing",
-        value: "none",
-      },
     ],
     isPDF: true,
   },
