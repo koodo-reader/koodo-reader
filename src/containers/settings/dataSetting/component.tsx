@@ -101,7 +101,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         {}
       );
       let savedValues: Record<string, any> = {};
-      if (existingConfig) {
+      if (existingConfig && Object.keys(existingConfig).length > 0) {
         savedValues = existingConfig;
       }
       // Build defaultValues record: key -> saved value or placeholder
@@ -199,13 +199,13 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             (() => {
               let folder = "";
 
-              const raw = ConfigService.getObjectConfig(
+              const config = ConfigService.getObjectConfig(
                 item.authConfigKey,
                 "thirdpartyToken",
                 {}
               );
-              if (raw) {
-                const parsed = raw;
+              if (config && Object.keys(config).length > 0) {
+                const parsed = config;
                 folder = parsed["folder"] || "";
               }
 
