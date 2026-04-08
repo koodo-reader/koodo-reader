@@ -10,4 +10,6 @@ export interface SettingInfoState {
   pendingCustomColor: string;
   isDisablePDFCover: boolean;
   isDisableCrop: boolean;
+  isCustomSystemCSS: boolean;
+  customSystemCSS: string;
 }

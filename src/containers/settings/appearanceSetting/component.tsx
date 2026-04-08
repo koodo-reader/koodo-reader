@@ -13,6 +13,7 @@ import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import { dropdownList } from "../../../constants/dropdownList";
 import { loadFontData, reloadManager } from "../../../utils/common";
+import { applyCustomSystemCSS } from "../../../utils/reader/launchUtil";
 
 class AppearanceSetting extends React.Component<
   SettingInfoProps,
@@ -34,6 +35,9 @@ class AppearanceSetting extends React.Component<
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
+      isCustomSystemCSS:
+        ConfigService.getReaderConfig("isCustomSystemCSS") === "yes",
+      customSystemCSS: ConfigService.getReaderConfig("customSystemCSS") || "",
     };
   }
 
@@ -333,6 +337,66 @@ class AppearanceSetting extends React.Component<
             </li>
           ))}
         </ul>
+        <div className="setting-dialog-new-title">
+          <Trans>Custom app style</Trans>
+          <span
+            className="single-control-switch"
+            onClick={() => {
+              const next = !this.state.isCustomSystemCSS;
+              this.setState({ isCustomSystemCSS: next }, () => {
+                ConfigService.setReaderConfig(
+                  "isCustomSystemCSS",
+                  next ? "yes" : "no"
+                );
+                applyCustomSystemCSS();
+                this.handleRest(next);
+              });
+            }}
+            style={this.state.isCustomSystemCSS ? {} : { opacity: 0.6 }}
+          >
+            <span
+              className="single-control-button"
+              style={
+                this.state.isCustomSystemCSS
+                  ? {
+                      transform: "translateX(20px)",
+                      transition: "transform 0.5s ease",
+                    }
+                  : {
+                      transform: "translateX(0px)",
+                      transition: "transform 0.5s ease",
+                    }
+              }
+            ></span>
+          </span>
+        </div>
+        <p className="setting-option-subtitle">
+          <Trans>
+            Customize the appearance of the entire application with CSS
+          </Trans>
+        </p>
+        {this.state.isCustomSystemCSS && (
+          <div style={{ margin: "10px 25px" }}>
+            <textarea
+              className="token-dialog-token-box"
+              placeholder={
+                "/* " + this.props.t("Enter custom CSS here") + " */"
+              }
+              value={this.state.customSystemCSS}
+              onChange={(e) => {
+                this.setState({ customSystemCSS: e.target.value });
+              }}
+              onBlur={() => {
+                ConfigService.setReaderConfig(
+                  "customSystemCSS",
+                  this.state.customSystemCSS
+                );
+                applyCustomSystemCSS();
+                this.handleRest(true);
+              }}
+            />
+          </div>
+        )}
       </>
     );
   }

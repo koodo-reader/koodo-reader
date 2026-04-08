@@ -56,3 +56,23 @@ export const initSystemFont = () => {
     );
   }
 };
+
+export const applyCustomSystemCSS = () => {
+  const isCustomSystemCSS =
+    ConfigService.getReaderConfig("isCustomSystemCSS") === "yes";
+  const customSystemCSS =
+    ConfigService.getReaderConfig("customSystemCSS") || "";
+  let styleElement = document.getElementById("custom-system-style");
+  if (isCustomSystemCSS && customSystemCSS) {
+    if (styleElement) {
+      styleElement.textContent = customSystemCSS;
+    } else {
+      const style = document.createElement("style");
+      style.id = "custom-system-style";
+      style.textContent = customSystemCSS;
+      document.head.appendChild(style);
+    }
+  } else if (styleElement) {
+    styleElement.textContent = "";
+  }
+};
