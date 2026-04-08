@@ -1,15 +1,14 @@
 import React from "react";
 import "./popupTrans.css";
 import { PopupTransProps, PopupTransState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import {
-  defaultPrompts,
-  getDefaultTransTarget,
-  openExternalUrl,
-} from "../../../utils/common";
+import { getDefaultTransTarget, openExternalUrl } from "../../../utils/common";
 import { getTransStream } from "../../../utils/request/reader";
 import { chatStream } from "../../../utils/request/common";
 declare var window: any;
@@ -110,7 +109,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       }
       let systemPrompt =
         ConfigService.getReaderConfig("aiTranslatePrompt") ||
-        defaultPrompts.aiTranslate;
+        KookitConfig.DefaultPrompts.aiTranslate;
       systemPrompt = systemPrompt.replace(
         "{from}",
         ConfigService.getReaderConfig("transSource") || "Automatic"

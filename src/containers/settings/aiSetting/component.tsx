@@ -4,12 +4,11 @@ import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { aiProviderList } from "../../../constants/aiModelList";
+import { handleContextMenu, vexTextareaAsync } from "../../../utils/common";
 import {
-  defaultPrompts,
-  handleContextMenu,
-  vexTextareaAsync,
-} from "../../../utils/common";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 
 class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -304,7 +303,8 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
     type: "aiTranslate" | "aiDict" | "aiAssistance"
   ) => {
     const configKey = type + "Prompt";
-    const currentValue = (this.state as any)[configKey] || defaultPrompts[type];
+    const currentValue =
+      (this.state as any)[configKey] || KookitConfig.DefaultPrompts[type];
     const result = await vexTextareaAsync(
       this.props.t("Edit prompt"),
       currentValue

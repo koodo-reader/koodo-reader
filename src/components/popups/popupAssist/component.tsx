@@ -1,11 +1,14 @@
 import React from "react";
 import "./popupAssist.css";
 import { PopupAssistProps, PopupAssistState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
 import { Trans } from "react-i18next";
-import { defaultPrompts, handleContextMenu } from "../../../utils/common";
+import { handleContextMenu } from "../../../utils/common";
 import toast from "react-hot-toast";
 import { getAnswerStream } from "../../../utils/request/reader";
 import { chatStream } from "../../../utils/request/common";
@@ -95,7 +98,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         let isFirst = true;
         let systemPrompt =
           ConfigService.getReaderConfig("aiAssistancePrompt") ||
-          defaultPrompts.aiAssistance;
+          KookitConfig.DefaultPrompts.aiAssistance;
         if (this.state.mode === "ask") {
           systemPrompt = systemPrompt.replace("{text}", text);
         } else {
