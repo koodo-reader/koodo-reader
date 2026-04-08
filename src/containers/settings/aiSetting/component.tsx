@@ -274,6 +274,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
     } catch (e: any) {
       toast.error(this.props.t("Deletion failed") + ": " + e.message);
     }
+    this.props.handleFetchPlugins();
   };
 
   handleEdit = (plugin: any) => {
@@ -625,6 +626,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
               this.setState({ aiTranslateModel: val });
               ConfigService.setReaderConfig("aiTranslateModel", val);
               toast.success(this.props.t("Change successful"));
+              this.props.handleFetchPlugins();
             }}
           >
             <option value="" className="lang-setting-option">
@@ -661,6 +663,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
               this.setState({ aiDictModel: val });
               ConfigService.setReaderConfig("aiDictModel", val);
               toast.success(this.props.t("Change successful"));
+              this.props.handleFetchPlugins();
             }}
           >
             <option value="" className="lang-setting-option">
@@ -697,6 +700,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
               this.setState({ aiAssistanceModel: val });
               ConfigService.setReaderConfig("aiAssistanceModel", val);
               toast.success(this.props.t("Change successful"));
+              this.props.handleFetchPlugins();
             }}
           >
             <option value="" className="lang-setting-option">

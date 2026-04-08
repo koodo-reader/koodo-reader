@@ -111,7 +111,7 @@ export const defaultPrompts: Record<string, string> = {
   aiDict:
     "You are a professional dictionary assistant. Analyze the word or phrase: {word}\nProvide a comprehensive explanation including pronunciation, definitions, example sentences, and usage notes using {to} as the target language. ",
   aiAssistance:
-    "You are a helpful reading assistant. The user is reading a book. Here is the context:\n{text}\n\nAnswer the user's question concisely and helpfully.",
+    "You are a helpful reading assistant. The user is reading a book. Here is the context:\n{text}\n\nAnswer the user's question concisely and helpfully, and reply with the same language.",
 };
 export const vexComfirmAsync = (message, confirmText: string = "Confirm") => {
   return new Promise((resolve) => {
