@@ -99,25 +99,35 @@ class BookListItem extends React.Component<BookItemProps, BookItemState> {
       handleSelectBook,
     } = this.props;
     if (!allBooks || bookIndex === undefined) return;
-    let anchorIndex = -1;
-    for (let i = allBooks.length - 1; i >= 0; i--) {
+    let firstSelectedIndex = -1;
+    let lastSelectedIndex = -1;
+    for (let i = 0; i < allBooks.length; i++) {
       if (selectedBooks.indexOf(allBooks[i].key) > -1) {
-        anchorIndex = i;
-        break;
+        if (firstSelectedIndex === -1) firstSelectedIndex = i;
+        lastSelectedIndex = i;
       }
     }
-    if (anchorIndex === -1) {
+    if (firstSelectedIndex === -1) {
       if (!this.props.isSelectBook) {
         handleSelectBook(true);
       }
       handleSelectedBooks([this.props.book.key]);
       return;
     }
-    const start = Math.min(anchorIndex, bookIndex);
-    const end = Math.max(anchorIndex, bookIndex);
-    const rangeKeys = allBooks.slice(start, end + 1).map((b) => b.key);
-    const merged = Array.from(new Set([...selectedBooks, ...rangeKeys]));
-    handleSelectedBooks(merged);
+    if (bookIndex >= firstSelectedIndex && bookIndex <= lastSelectedIndex) {
+      const rangeKeys = allBooks
+        .slice(firstSelectedIndex, bookIndex + 1)
+        .map((b) => b.key);
+      handleSelectedBooks(rangeKeys);
+    } else {
+      const anchorIndex =
+        bookIndex < firstSelectedIndex ? firstSelectedIndex : lastSelectedIndex;
+      const start = Math.min(anchorIndex, bookIndex);
+      const end = Math.max(anchorIndex, bookIndex);
+      const rangeKeys = allBooks.slice(start, end + 1).map((b) => b.key);
+      const merged = Array.from(new Set([...selectedBooks, ...rangeKeys]));
+      handleSelectedBooks(merged);
+    }
   };
 
   handleJump = (event?: React.MouseEvent) => {
