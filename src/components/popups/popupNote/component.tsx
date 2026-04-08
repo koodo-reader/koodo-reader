@@ -93,12 +93,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
             this.handleNoteClick
           );
         }
-        // Auto-sync updated note to enabled destinations
-        let noteSyncManager = new NoteSyncManager(
-          DatabaseService,
-          ConfigService
-        );
-        noteSyncManager.syncNote(newNote, newNote.bookKey);
       });
     } else {
       let cfi = JSON.stringify(
