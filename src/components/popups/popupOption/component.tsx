@@ -5,7 +5,10 @@ import Note from "../../../models/Note";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
 import { popupList } from "../../../constants/popupList";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  NoteSyncManager,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import {
   getSelection,
@@ -15,7 +18,6 @@ import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { openExternalUrl } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
-import { NoteSyncManager } from "../../../utils/noteSync/noteSyncManager";
 
 declare var window: any;
 
@@ -119,7 +121,8 @@ class PopupOption extends React.Component<PopupOptionProps> {
         this.handleNoteClick
       );
       // Auto-sync highlight to enabled destinations
-      NoteSyncManager.syncNote(highlight, bookKey);
+      let noteSyncManager = new NoteSyncManager(DatabaseService, ConfigService);
+      noteSyncManager.syncNote(highlight, bookKey);
     });
   };
 

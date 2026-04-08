@@ -7,11 +7,13 @@ import NoteTag from "../../noteTag";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  NoteSyncManager,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
-import { NoteSyncManager } from "../../../utils/noteSync/noteSyncManager";
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
     super(props);
@@ -92,7 +94,11 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           );
         }
         // Auto-sync updated note to enabled destinations
-        NoteSyncManager.syncNote(newNote, newNote.bookKey);
+        let noteSyncManager = new NoteSyncManager(
+          DatabaseService,
+          ConfigService
+        );
+        noteSyncManager.syncNote(newNote, newNote.bookKey);
       });
     } else {
       let cfi = JSON.stringify(
@@ -155,7 +161,11 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           this.handleNoteClick
         );
         // Auto-sync note to enabled destinations
-        NoteSyncManager.syncNote(note, bookKey);
+        let noteSyncManager = new NoteSyncManager(
+          DatabaseService,
+          ConfigService
+        );
+        noteSyncManager.syncNote(note, bookKey);
       });
     }
   }

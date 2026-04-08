@@ -915,6 +915,7 @@
   "Deletion failed": "删除失败",
   "Failed to parse model configuration": "解析模型配置失败",
   "Edit prompt": "编辑提示词",
+  "Action after selecting text": "选中文字后的操作",
   "AI translation model": "AI 翻译模型",
   "AI dictionary model": "AI 词典模型",
   "AI assistance model": "AI 辅助模型",
