@@ -10,11 +10,7 @@ import DOMPurify from "dompurify";
 import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
-import {
-  defaultPrompts,
-  getWebsiteUrl,
-  openExternalUrl,
-} from "../../../utils/common";
+import { getWebsiteUrl, openExternalUrl } from "../../../utils/common";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import {
@@ -100,7 +96,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           ];
         let systemPrompt =
           ConfigService.getReaderConfig("aiDictPrompt") ||
-          defaultPrompts.aiDict;
+          KookitConfig.DefaultPrompts.aiDict;
         systemPrompt = systemPrompt.replace("{word}", text);
         systemPrompt = systemPrompt.replace("{to}", targetLang);
         let config: any = plugin.config || {};
