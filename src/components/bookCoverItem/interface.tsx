@@ -11,6 +11,8 @@ export interface BookCoverProps extends RouteComponentProps<any> {
   isSelected: boolean;
   selectedBooks: string[];
   refreshBookKey: string;
+  allBooks?: BookModel[];
+  bookIndex?: number;
   handleSelectBook: (isSelectBook: boolean) => void;
   handleRefreshBookCover: (key: string) => void;
   handleReadingBook: (book: BookModel) => void;

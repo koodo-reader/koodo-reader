@@ -295,6 +295,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
             key: index,
             book: item,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            allBooks: displayedBooks,
+            bookIndex: index,
           }}
         />
       ) : this.props.viewMode === "card" ? (
@@ -304,6 +306,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
             book: item,
             cardScale: this.state.cardScale,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            allBooks: displayedBooks,
+            bookIndex: index,
           }}
         />
       ) : (
@@ -312,6 +316,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
             key: index,
             book: item,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            allBooks: displayedBooks,
+            bookIndex: index,
           }}
         />
       );
