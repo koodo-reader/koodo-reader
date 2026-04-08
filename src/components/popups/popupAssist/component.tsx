@@ -96,7 +96,11 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         let systemPrompt =
           ConfigService.getReaderConfig("aiAssistancePrompt") ||
           defaultPrompts.aiAssistance;
-        systemPrompt = systemPrompt.replace("{text}", text);
+        if (this.state.mode === "ask") {
+          systemPrompt = systemPrompt.replace("{text}", text);
+        } else {
+          systemPrompt = systemPrompt.replace("{text}", "");
+        }
         let config: any = plugin.config || {};
         let chatHistory =
           this.state.mode === "ask"
@@ -106,6 +110,10 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         const historyMessages = chatHistory.slice(0, -1); // exclude the latest user message we just added
         const currentQuestion =
           chatHistory[chatHistory.length - 1]?.content || this.state.question;
+        console.log(historyMessages, systemPrompt);
+        if (!currentQuestion) {
+          return;
+        }
         await chatStream(
           config.endpoint,
           config.apiKey,
