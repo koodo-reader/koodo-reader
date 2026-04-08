@@ -225,9 +225,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
       providerName: provider ? provider.name : "Custom",
     };
     const pluginRecord = {
-      key: isEditing
-        ? editingKey
-        : `ai-${selectedProvider || "custom"}-${modelId}-${Date.now()}`,
+      key: isEditing ? editingKey : Date.now().toString(),
       type: "ai",
       displayName: modelName,
       icon: "ai-assist",
@@ -549,7 +547,11 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
         {aiPlugins.map((item) => {
           const config = this.parseConfig(item);
           return (
-            <div className="setting-dialog-new-title" key={item.key}>
+            <div
+              className="setting-dialog-new-title"
+              key={item.key}
+              style={{ marginLeft: "15px" }}
+            >
               <span>
                 <span className="icon-ai-assist setting-plugin-icon"></span>
                 <span className="setting-plugin-name">
