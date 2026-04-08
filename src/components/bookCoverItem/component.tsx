@@ -3,7 +3,6 @@ import "./bookCoverItem.css";
 import { BookCoverProps, BookCoverState } from "./interface";
 import ActionDialog from "../dialogs/actionDialog";
 import { withRouter } from "react-router-dom";
-import { isElectron } from "react-device-detect";
 import EmptyCover from "../emptyCover";
 import { Trans } from "react-i18next";
 import BookUtil from "../../utils/file/bookUtil";
