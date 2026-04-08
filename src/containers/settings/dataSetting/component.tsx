@@ -83,10 +83,10 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         const { ipcRenderer } = window.require("electron");
         const folder = await ipcRenderer.invoke("select-path");
         if (!folder) return;
-
-        ConfigService.setReaderConfig(
+        ConfigService.setObjectConfig(
           item.authConfigKey,
-          JSON.stringify({ folder: folder })
+          { folder: folder },
+          "thirdpartyToken"
         );
         this.setState({ [item.propName]: true } as any);
         ConfigService.setReaderConfig(item.propName, "yes");
@@ -95,12 +95,14 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       }
 
       // Enabling: prompt for auth credentials
-      const existingConfig = ConfigService.getReaderConfig(item.authConfigKey);
+      const existingConfig = ConfigService.getObjectConfig(
+        item.authConfigKey,
+        "thirdpartyToken",
+        {}
+      );
       let savedValues: Record<string, any> = {};
       if (existingConfig) {
-        try {
-          savedValues = JSON.parse(existingConfig);
-        } catch {}
+        savedValues = existingConfig;
       }
       // Build defaultValues record: key -> saved value or placeholder
       const defaultValues: Record<string, any> = {};
@@ -136,7 +138,11 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       }
 
       // Save auth config
-      ConfigService.setReaderConfig(item.authConfigKey, JSON.stringify(result));
+      ConfigService.setObjectConfig(
+        item.authConfigKey,
+        result,
+        "thirdpartyToken"
+      );
 
       // Enable the setting
       this.setState({ [item.propName]: true } as any);
@@ -192,13 +198,17 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             isElectron &&
             (() => {
               let folder = "";
-              try {
-                const raw = ConfigService.getReaderConfig(item.authConfigKey);
-                if (raw) {
-                  const parsed = JSON.parse(raw);
-                  folder = parsed["folder"] || "";
-                }
-              } catch {}
+
+              const raw = ConfigService.getObjectConfig(
+                item.authConfigKey,
+                "thirdpartyToken",
+                {}
+              );
+              if (raw) {
+                const parsed = raw;
+                folder = parsed["folder"] || "";
+              }
+
               return folder ? (
                 <div className="setting-dialog-location-title">{folder}</div>
               ) : null;
