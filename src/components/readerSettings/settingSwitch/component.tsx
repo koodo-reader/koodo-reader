@@ -101,6 +101,9 @@ class SettingSwitch extends React.Component<
                   "isCustomBookCSS",
                   next ? "yes" : "no"
                 );
+                if (!this.state.customBookCSS) {
+                  return;
+                }
                 toast(this.props.t("Change successful"));
                 setTimeout(async () => {
                   await this.props.renderBookFunc();
