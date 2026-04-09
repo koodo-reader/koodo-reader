@@ -30,4 +30,5 @@ export interface BookListState {
   isLoadingMore: boolean;
   fullBooksData: BookModel[];
   cardScale: number;
+  readingStatusFilter: string;
 }
