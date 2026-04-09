@@ -234,24 +234,29 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
               <Trans>Total chapters</Trans>:
               {this.props.htmlBook.flattenChapters.length}
             </div>
-            <div
-              onClick={() => {
-                ConfigService.setReaderConfig(
-                  "isExpandContent",
-                  this.state.isExpandContent ? "no" : "yes"
-                );
-                this.setState({
-                  isExpandContent: !this.state.isExpandContent,
-                });
-              }}
-              className="book-content-expand"
-            >
-              <span className="icon-collapse"></span>
-              {this.state.isExpandContent ? (
-                <Trans>Collapse chapters</Trans>
-              ) : (
-                <Trans>Expand chapters</Trans>
-              )}
+            <div style={{ display: "flex", gap: "0px" }}>
+              {/* <div onClick={() => {}} className="book-content-expand">
+                <Trans>Edit</Trans>
+              </div> */}
+              <div
+                onClick={() => {
+                  ConfigService.setReaderConfig(
+                    "isExpandContent",
+                    this.state.isExpandContent ? "no" : "yes"
+                  );
+                  this.setState({
+                    isExpandContent: !this.state.isExpandContent,
+                  });
+                }}
+                className="book-content-expand"
+              >
+                <span className="icon-collapse"></span>
+                {this.state.isExpandContent ? (
+                  <Trans>Collapse chapters</Trans>
+                ) : (
+                  <Trans>Expand chapters</Trans>
+                )}
+              </div>
             </div>
           </div>
         )}
