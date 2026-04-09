@@ -348,6 +348,9 @@ class AppearanceSetting extends React.Component<
                   "isCustomSystemCSS",
                   next ? "yes" : "no"
                 );
+                if (!this.state.customSystemCSS) {
+                  return;
+                }
                 applyCustomSystemCSS();
                 this.handleRest(next);
               });

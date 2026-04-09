@@ -91,13 +91,13 @@ class SettingDialog extends React.Component<
               "appearance",
               "icon-highlight-line",
               "Appearance",
-              "18px"
+              "20px"
             )}
             {this.renderSidebarItem(
               "background",
               "icon-image",
               "Background",
-              "16px"
+              "20px"
             )}
             {this.renderSidebarItem("sync", "icon-sync", "Sync and backup", "")}
 
