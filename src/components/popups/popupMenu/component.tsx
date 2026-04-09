@@ -4,7 +4,10 @@ import PopupOption from "../popupOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { getSelection } from "../../../utils/reader/mouseEvent";
+import {
+  getSelection,
+  getSelectionSentence,
+} from "../../../utils/reader/mouseEvent";
 import { createHighlight } from "../../../utils/reader/noteUtil";
 
 declare var window: any;
@@ -180,6 +183,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         break;
       case "dict":
         this.props.handleOriginalText(text);
+        this.props.handleOriginalSentence(getSelectionSentence(format));
         this.props.handleMenuMode("dict");
         this.props.handleOpenMenu(true);
         break;

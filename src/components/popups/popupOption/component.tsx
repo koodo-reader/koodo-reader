@@ -8,6 +8,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import {
   getSelection,
+  getSelectionSentence,
   searchInTheBook,
 } from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";
@@ -48,6 +49,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleDict = () => {
     this.props.handleMenuMode("dict");
     this.props.handleOriginalText(getSelection(this.props.currentBook.format));
+    this.props.handleOriginalSentence(
+      getSelectionSentence(this.props.currentBook.format)
+    );
   };
   handleDigest = async () => {
     await createHighlight({

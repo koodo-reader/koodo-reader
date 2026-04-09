@@ -7,6 +7,7 @@ import {
 import {
   handleFetchNotes,
   handleOriginalText,
+  handleOriginalSentence,
   handleNoteKey,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
@@ -26,6 +27,7 @@ const actionCreator = {
   handleMenuMode,
   handleFetchNotes,
   handleOriginalText,
+  handleOriginalSentence,
   handleChangeDirection,
   handleNoteKey,
 };

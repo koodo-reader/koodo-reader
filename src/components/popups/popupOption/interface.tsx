@@ -16,6 +16,7 @@ export interface PopupOptionProps {
   handleMenuMode: (menu: string) => void;
   handleFetchNotes: () => void;
   handleOriginalText: (originalText: string) => void;
+  handleOriginalSentence: (originalSentence: string) => void;
   handleChangeDirection: (isChangeDirection: boolean) => void;
   t: (title: string) => string;
 }

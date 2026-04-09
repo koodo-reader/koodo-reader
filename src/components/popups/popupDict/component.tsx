@@ -64,9 +64,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       }
     }
     this.handleDict(originalText);
-    this.handleRecordHistory(originalText);
+    this.handleRecordHistory(originalText, this.props.originalSentence || "");
   }
-  handleRecordHistory = async (text: string) => {
+  handleRecordHistory = async (text: string, sentence: string) => {
     let bookKey = this.props.currentBook.key;
     let bookLocation = ConfigService.getObjectConfig(
       bookKey,
@@ -74,7 +74,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       {}
     );
     let chapter = bookLocation.chapterTitle;
-    let word = new DictHistory(bookKey, text, chapter);
+    let word = new DictHistory(bookKey, text, chapter, sentence);
     await DatabaseService.saveRecord(word, "words");
   };
   handleDict = async (text: string) => {
@@ -212,6 +212,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         text,
         "auto",
         navigator.language,
+        this.props.originalSentence,
         isFullAnalysis,
         (result) => {
           if (result && result.text) {

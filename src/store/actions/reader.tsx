@@ -16,6 +16,9 @@ export function handleHighlights(highlights: NoteModel[]) {
 export function handleOriginalText(originalText: string) {
   return { type: "HANDLE_ORIGINAL_TEXT", payload: originalText };
 }
+export function handleOriginalSentence(originalSentence: string) {
+  return { type: "HANDLE_ORIGINAL_SENTENCE", payload: originalSentence };
+}
 export function handleColor(color: number) {
   return { type: "HANDLE_COLOR", payload: color };
 }
