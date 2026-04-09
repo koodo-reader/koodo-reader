@@ -161,6 +161,14 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
     );
     dbConnection[dbName].pragma("journal_mode = WAL");
     dbConnection[dbName].exec(sqlStatement["createTableStatement"][dbName]);
+    if (sqlStatement["migrateStatement"][dbName]) {
+      let sqlList = sqlStatement["migrateStatement"][dbName];
+      for (let sql of sqlList) {
+        try {
+          dbConnection[dbName].exec(sql);
+        } catch (error) {}
+      }
+    }
   }
   return dbConnection[dbName];
 };
