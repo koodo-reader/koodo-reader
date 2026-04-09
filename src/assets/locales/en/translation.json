@@ -804,5 +804,9 @@
   "Model assignment": "Model assignment",
   "Added AI models": "Added AI models",
   "No AI models added yet": "No AI models added yet",
-  "Add new model": "Add new model"
+  "Add new model": "Add new model",
+  "AllStatus": "All",
+  "UnreadStatus": "Unread",
+  "ReadingStatus": "Reading",
+  "FinishedStatus": "Finished"
 }
