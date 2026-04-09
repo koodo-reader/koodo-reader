@@ -72,6 +72,7 @@ export const getDictionaryStream = async (
   word: string,
   from: string,
   to: string,
+  sentence: string,
   isFullAnalysis: boolean,
   onMessage: (result) => void
 ) => {
@@ -81,6 +82,7 @@ export const getDictionaryStream = async (
       word,
       from,
       to,
+      sentence,
       is_full_analysis: isFullAnalysis,
     },
     onMessage

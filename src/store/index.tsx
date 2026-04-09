@@ -117,6 +117,7 @@ export type stateType = {
     currentChapter: string;
     currentChapterIndex: number;
     originalText: string;
+    originalSentence: string;
     htmlBook: HtmlBookModel;
   };
   sidebar: {

@@ -12,6 +12,7 @@ import PopupTrans from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     originalText: state.reader.originalText,
+    originalSentence: state.reader.originalSentence,
     plugins: state.manager.plugins,
     isAuthed: state.manager.isAuthed,
     currentBook: state.book.currentBook,

@@ -23,6 +23,7 @@ export interface PopupMenuProps {
   handleChangeDirection: (isChangeDirection: boolean) => void;
   handleRenderNoteFunc: (renderNoteFunc: () => void) => void;
   handleOriginalText: (originalText: string) => void;
+  handleOriginalSentence: (originalSentence: string) => void;
 }
 export interface PopupMenuStates {
   deleteKey: string;
