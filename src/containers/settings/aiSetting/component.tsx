@@ -3,7 +3,6 @@ import { SettingInfoProps, SettingInfoState, AIModelConfig } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
-import { aiProviderList } from "../../../constants/aiModelList";
 import { handleContextMenu, vexTextareaAsync } from "../../../utils/common";
 import {
   ConfigService,
@@ -72,7 +71,9 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
   };
 
   handleProviderChange = (providerId: string) => {
-    const provider = aiProviderList.find((p) => p.id === providerId);
+    const provider = KookitConfig.AiProviderList.find(
+      (p) => p.id === providerId
+    );
     this.setState({
       selectedProvider: providerId,
       selectedModel: "",
@@ -99,7 +100,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
   };
 
   handleFetchModels = async () => {
-    const provider = aiProviderList.find(
+    const provider = KookitConfig.AiProviderList.find(
       (p) => p.id === this.state.selectedProvider
     );
     if (!provider || !provider.modelsEndpoint) {
@@ -214,7 +215,9 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
       toast.error(this.props.t("Please fill in all required fields"));
       return;
     }
-    const provider = aiProviderList.find((p) => p.id === selectedProvider);
+    const provider = KookitConfig.AiProviderList.find(
+      (p) => p.id === selectedProvider
+    );
     const config: AIModelConfig = {
       endpoint,
       modelName,
@@ -318,7 +321,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
   renderAddForm = () => {
     const isCustom =
       !this.state.selectedProvider || this.state.selectedProvider === "custom";
-    const provider = aiProviderList.find(
+    const provider = KookitConfig.AiProviderList.find(
       (p) => p.id === this.state.selectedProvider
     );
     const hasModelsEndpoint = provider && provider.modelsEndpoint;
@@ -347,7 +350,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <option value="" className="lang-setting-option">
               {this.props.t("Please select")}
             </option>
-            {aiProviderList.map((p) => (
+            {KookitConfig.AiProviderList.map((p) => (
               <option key={p.id} value={p.id} className="lang-setting-option">
                 {this.props.t(p.name)}
               </option>
