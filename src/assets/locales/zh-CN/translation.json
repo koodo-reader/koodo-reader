@@ -936,6 +936,7 @@
   "AI dictionary model": "AI 词典模型",
   "Trial quota": "试用额度",
   "Clear all style": "清除全部样式",
+  "Please install local fonts to your machine and then restart the application": "请将本地字体安装到您的计算机上，然后重启应用程序",
   "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice.": "AI 生成内容仅供参考，请注意甄别，不构成专业建议。",
   "Force path style": "强制路径风格",
   "Enter 1 to enable, leave empty to disable. Required for some S3 storage services that are not compatible with virtual host style URL": "输入 1 启用，留空禁用。某些不兼容虚拟主机风格 URL 的 S3 存储服务需要启用",
