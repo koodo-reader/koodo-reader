@@ -706,7 +706,7 @@
   "The book that you read from last time will be open automatically when launching": "软件启动时，自动打开上次阅读的图书",
   "All the folded content will be expanded in the navigation panel": "自动展开图书的多级目录",
   "Reader window will be maximized to fit the screen when opening a book": "打开图书时，窗口自动最大化",
-  "You have exhausted your daily free AI voice character quota. Please upgrade to Pro to continue using this feature or wait until the quota resets. You can also use other TTS voices instead.": "您今日的免费 AI 语音字符额度已用完，请升级到专业版以继续使用此功能，或等待额度重置。您也可以使用其他 TTS 语音替代。",
+  "You have exhausted your daily trial quota. Please upgrade to Pro to continue using this feature or wait until the quota resets. You can also use other TTS voices instead.": "您每日的试用额度已用完，请升级到专业版以继续使用此功能，或等待额度重置。您也可以使用其他 TTS 语音替代。",
   "Open books in the main window": "直接在主窗口打开图书",
   "Minimize to tray on close": "关闭时最小化到托盘",
   "When closing the window, the app will minimize to the system tray instead of quitting": "关闭窗口时，应用将最小化到系统托盘，而不是退出",
