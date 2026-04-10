@@ -450,7 +450,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                             opacity: 0.8,
                           }}
                         >
-                          {this.props.t("Example")}: {item.example}
+                          {this.props.t("Example")}:{" "}
+                          {this.props.t(item.example)}
                         </div>
                       )}
                     </div>
