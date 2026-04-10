@@ -63,7 +63,9 @@ class AppearanceSetting extends React.Component<
         fontFamilyItem.option = fontFamilyItem.option.concat(result || []);
       }
       if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
-        subFontFamilyItem.option = subFontFamilyItem.option.concat(result || []);
+        subFontFamilyItem.option = subFontFamilyItem.option.concat(
+          result || []
+        );
       }
       this.setState((prevState) => ({
         fontListVersion: prevState.fontListVersion + 1,
@@ -110,19 +112,9 @@ class AppearanceSetting extends React.Component<
     if (font === "Load local fonts") {
       vexComfirmAsync(
         this.props.t(
-          "Please install local fonts to your machine and then click confirm. Do you want to load local fonts now?"
+          "Please install local fonts to your machine and then restart the application"
         )
-      )
-        .then((confirmed) => {
-          if (confirmed) {
-            this.loadFont();
-          } else {
-            toast(this.props.t("Operation cancelled"));
-          }
-        })
-        .catch(() => {
-          toast(this.props.t("Operation cancelled"));
-        });
+      );
 
       return;
     }
