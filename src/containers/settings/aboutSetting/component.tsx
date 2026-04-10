@@ -66,18 +66,20 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             ))}
           </select>
         </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Get debug logs</Trans>
-          <span
-            className="change-location-button"
-            onClick={async () => {
-              const { ipcRenderer } = window.require("electron");
-              ipcRenderer.invoke("get-debug-logs", "ping");
-            }}
-          >
-            <Trans>Locate</Trans>
-          </span>
-        </div>
+        {isElectron && (
+          <div className="setting-dialog-new-title">
+            <Trans>Get debug logs</Trans>
+            <span
+              className="change-location-button"
+              onClick={async () => {
+                const { ipcRenderer } = window.require("electron");
+                ipcRenderer.invoke("get-debug-logs", "ping");
+              }}
+            >
+              <Trans>Locate</Trans>
+            </span>
+          </div>
+        )}
 
         {isElectron && (
           <div className="setting-dialog-new-title">
