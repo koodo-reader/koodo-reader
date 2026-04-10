@@ -12,7 +12,11 @@ import { themeList } from "../../../constants/themeList";
 import { Panel as ColorPickerPanel } from "rc-color-picker";
 import "rc-color-picker/assets/index.css";
 import { dropdownList } from "../../../constants/dropdownList";
-import { loadFontData, reloadManager } from "../../../utils/common";
+import {
+  loadFontData,
+  reloadManager,
+  vexComfirmAsync,
+} from "../../../utils/common";
 import { applyCustomSystemCSS } from "../../../utils/reader/launchUtil";
 
 class AppearanceSetting extends React.Component<
@@ -60,6 +64,7 @@ class AppearanceSetting extends React.Component<
       if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
         subFontFamilyItem.option = subFontFamilyItem.option.concat(result);
       }
+      console.log(dropdownList);
     });
   };
 
@@ -100,7 +105,22 @@ class AppearanceSetting extends React.Component<
 
   changeFont = (font: string) => {
     if (font === "Load local fonts") {
-      this.loadFont();
+      vexComfirmAsync(
+        this.props.t(
+          "Please install local fonts to your machine and then click confirm. Do you want to load local fonts now?"
+        )
+      )
+        .then((confirmed) => {
+          if (confirmed) {
+            this.loadFont();
+          } else {
+            toast(this.props.t("Operation cancelled"));
+          }
+        })
+        .catch(() => {
+          toast(this.props.t("Operation cancelled"));
+        });
+
       return;
     }
     let body = document.getElementsByTagName("body")[0];

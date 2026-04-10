@@ -342,6 +342,14 @@ export const driveInputConfig: DriveInputConfig = {
       type: "password",
       required: true,
     },
+    {
+      label: "Force path style",
+      value: "forcePathStyle",
+      type: "text",
+      required: false,
+      example:
+        "Enter 1 to enable, leave empty to disable. Required for some S3 storage services that are not compatible with virtual host style URL",
+    },
   ],
   google: [
     {

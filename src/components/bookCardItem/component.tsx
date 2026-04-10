@@ -87,12 +87,33 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
           {!isCoverExist ||
           (props.book.format === "PDF" &&
             ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
-            <div className="book-item-image">
+            <div
+              style={{
+                width:
+                  105 *
+                  (props.cardScale ??
+                    parseFloat(
+                      ConfigService.getReaderConfig("cardScale") || "1"
+                    )),
+                height:
+                  137 *
+                  (props.cardScale ??
+                    parseFloat(
+                      ConfigService.getReaderConfig("cardScale") || "1"
+                    )),
+              }}
+            >
               <EmptyCover
                 {...{
                   format: props.book.format,
                   title: props.book.name,
-                  scale: 1,
+                  viewMode: "card",
+                  scale:
+                    1 *
+                    (props.cardScale ??
+                      parseFloat(
+                        ConfigService.getReaderConfig("cardScale") || "1"
+                      )),
                 }}
               />
             </div>
