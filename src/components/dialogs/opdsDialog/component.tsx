@@ -13,24 +13,6 @@ import {
   OPDSDialogState,
 } from "./interface";
 import { supportedFormats } from "../../../utils/common";
-import { isElectron } from "react-device-detect";
-
-const BUILT_IN_CATALOGS: OPDSCatalog[] = [
-  {
-    id: "project-gutenberg",
-    title: "Project Gutenberg",
-    url: "https://www.gutenberg.org/ebooks.opds/",
-    isBuiltIn: true,
-    isElectronicOnly: false,
-  },
-  {
-    id: "manybooks",
-    title: "ManyBooks",
-    url: "https://manybooks.net/opds/index.php",
-    isBuiltIn: true,
-    isElectronicOnly: true,
-  },
-];
 
 const OPDS_CATALOGS_KEY = "opdsCatalogs";
 
@@ -166,11 +148,21 @@ async function fetchWithCatalogAuth(
   const challengeHeader = firstResponse.headers.get("www-authenticate") || "";
   let authorization = "";
   if (/^Digest\s+/i.test(challengeHeader)) {
-    authorization = buildDigestAuthHeader(url, method, catalog, challengeHeader);
+    authorization = buildDigestAuthHeader(
+      url,
+      method,
+      catalog,
+      challengeHeader
+    );
   } else if (/^Basic\s+/i.test(challengeHeader)) {
     authorization = getBasicAuthHeader(catalog);
   } else if (challengeHeader.toLowerCase().includes("digest")) {
-    authorization = buildDigestAuthHeader(url, method, catalog, challengeHeader);
+    authorization = buildDigestAuthHeader(
+      url,
+      method,
+      catalog,
+      challengeHeader
+    );
   } else {
     authorization = getBasicAuthHeader(catalog);
   }
@@ -757,28 +749,9 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
             </div>
           </div>
         ) : null}
-        {/* Popular catalogs */}
-        <div className="opds-section-label">
-          <Trans>Popular OPDS Catalogs</Trans>
-        </div>
-        {BUILT_IN_CATALOGS.filter((item) => {
-          if (item.isElectronicOnly) {
-            return isElectron;
-          }
-          return true;
-        }).map((catalog) => (
-          <div
-            key={catalog.id}
-            className="cloud-drive-item"
-            onClick={() => this.openCatalog(catalog)}
-          >
-            <span className="cloud-drive-label">{catalog.title}</span>
-            <span className="icon-dropdown import-dialog-more-file"></span>
-          </div>
-        ))}
 
         {/* User catalogs */}
-        {userCatalogs.length > 0 && (
+        {userCatalogs.length > 0 ? (
           <>
             <div className="opds-section-label">
               <Trans>My OPDS Catalogs</Trans>
@@ -806,6 +779,17 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
               </div>
             ))}
           </>
+        ) : (
+          <div
+            style={{
+              textAlign: "center",
+              opacity: 0.5,
+              padding: "30px 0",
+              fontSize: "14px",
+            }}
+          >
+            <Trans>No AI models added yet</Trans>
+          </div>
         )}
       </>
     );
