@@ -362,6 +362,8 @@ class TextToSpeech extends React.Component<
         console.log(nodeList, "nodeList");
       } else {
         toast.error(this.props.t("Analysis failed"));
+        this.setState({ isAudioOn: false });
+        return [];
       }
     }
 

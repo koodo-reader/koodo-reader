@@ -301,6 +301,19 @@ export const getSplitSentence = async (texts: string) => {
   } else if (response.code === 401) {
     handleExitApp();
     return response;
+  } else if (response.code === 20009) {
+    toast.error(
+      i18n.t("You have reached the daily limit for this feature.") +
+        " " +
+        i18n.t("AI multi-role speech is paused for now.") +
+        " " +
+        i18n.t("Your quota will be reset in", {
+          ttl:
+            response.data && response.data.ttl
+              ? (response.data.ttl / 3600).toFixed(1)
+              : "",
+        })
+    );
   } else {
     toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
   }
