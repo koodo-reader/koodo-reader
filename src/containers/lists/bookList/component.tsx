@@ -433,7 +433,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
               onChange={(e) => {
                 this.setState({ readingStatusFilter: e.target.value });
               }}
-              style={{ marginRight: "10px" }}
+              style={{ marginRight: "10px", width: "60px", borderWidth: "0px" }}
             >
               <option value="" className="lang-setting-option">
                 {this.props.t("AllStatus")}
