@@ -8,6 +8,7 @@ export interface SettingInfoState {
   isShowCustomColorPicker: boolean;
   customColor: string;
   pendingCustomColor: string;
+  fontListVersion: number;
   isDisablePDFCover: boolean;
   isDisableCrop: boolean;
   isCustomSystemCSS: boolean;

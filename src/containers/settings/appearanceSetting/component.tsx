@@ -36,6 +36,7 @@ class AppearanceSetting extends React.Component<
       customColor: ConfigService.getReaderConfig("themeColor") || "#0179CA",
       pendingCustomColor:
         ConfigService.getReaderConfig("themeColor") || "#0179CA",
+      fontListVersion: 0,
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
@@ -59,12 +60,14 @@ class AppearanceSetting extends React.Component<
 
     loadFontData().then((result) => {
       if (fontFamilyItem && fontFamilyItem.option.length <= 2) {
-        fontFamilyItem.option = fontFamilyItem.option.concat(result);
+        fontFamilyItem.option = fontFamilyItem.option.concat(result || []);
       }
       if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
-        subFontFamilyItem.option = subFontFamilyItem.option.concat(result);
+        subFontFamilyItem.option = subFontFamilyItem.option.concat(result || []);
       }
-      console.log(dropdownList);
+      this.setState((prevState) => ({
+        fontListVersion: prevState.fontListVersion + 1,
+      }));
     });
   };
 
