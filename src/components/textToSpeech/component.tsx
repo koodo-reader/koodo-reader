@@ -63,6 +63,12 @@ class TextToSpeech extends React.Component<
       multiRoleFemaleEngine:
         ConfigService.getReaderConfig("multiRoleFemaleEngine") ||
         ConfigService.getReaderConfig("voiceEngine"),
+      multiRoleChildVoice:
+        ConfigService.getReaderConfig("multiRoleChildVoice") ||
+        ConfigService.getReaderConfig("voiceName"),
+      multiRoleChildEngine:
+        ConfigService.getReaderConfig("multiRoleChildEngine") ||
+        ConfigService.getReaderConfig("voiceEngine"),
     };
     this.nodeList = [];
     this.voices = [];
@@ -342,6 +348,8 @@ class TextToSpeech extends React.Component<
       let maleEngine = this.state.multiRoleMaleEngine;
       let femaleVoice = this.state.multiRoleFemaleVoice;
       let femaleEngine = this.state.multiRoleFemaleEngine;
+      let childVoice = this.state.multiRoleChildVoice;
+      let childEngine = this.state.multiRoleChildEngine;
       if (res && res.data && res.data.sentences) {
         nodeList = res.data.sentences.map((item: any) => {
           let voiceName = narratorVoice;
@@ -352,6 +360,9 @@ class TextToSpeech extends React.Component<
           } else if (item.role === "female") {
             voiceName = femaleVoice || narratorVoice;
             voiceEngine = femaleEngine || narratorEngine;
+          } else if (item.role === "child") {
+            voiceName = childVoice || narratorVoice;
+            voiceEngine = childEngine || narratorEngine;
           }
           return {
             text: item.text,
@@ -1203,6 +1214,51 @@ class TextToSpeech extends React.Component<
                       {this.props.t(item.displayName || item.name)}
                     </option>
                   ))}
+              </select>
+            </div>
+            {/* Child voice */}
+            <div
+              className="setting-dialog-new-title"
+              style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
+            >
+              <Trans>Child voice</Trans>
+              <select
+                name=""
+                className="lang-setting-dropdown"
+                id="multi-role-child-voice"
+                onChange={(event) => {
+                  let selectedValue = event.target.value;
+                  let [voiceName, plugin] = selectedValue.split("#");
+                  ConfigService.setReaderConfig(
+                    "multiRoleChildVoice",
+                    voiceName
+                  );
+                  ConfigService.setReaderConfig(
+                    "multiRoleChildEngine",
+                    plugin || "system"
+                  );
+                  this.setState({
+                    multiRoleChildVoice: voiceName,
+                    multiRoleChildEngine: plugin || "system",
+                  });
+                  toast.success(this.props.t("Setup successful"));
+                }}
+              >
+                <option value="" className="lang-setting-option">
+                  {this.props.t("Please select")}
+                </option>
+                {this.getVoicesByType(this.state.multiRoleVoiceType).map(
+                  (item) => (
+                    <option
+                      value={[item.name, item.plugin].join("#")}
+                      key={[item.name, item.plugin].join("#")}
+                      className="lang-setting-option"
+                      selected={item.name === this.state.multiRoleChildVoice}
+                    >
+                      {this.props.t(item.displayName || item.name)}
+                    </option>
+                  )
+                )}
               </select>
             </div>
           </>
