@@ -30,4 +30,6 @@ export interface TextToSpeechState {
   multiRoleNarratorEngine: string;
   multiRoleMaleEngine: string;
   multiRoleFemaleEngine: string;
+  multiRoleChildVoice: string;
+  multiRoleChildEngine: string;
 }
