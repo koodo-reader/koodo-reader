@@ -2,9 +2,13 @@ import React from "react";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../assets/lib/kookit-extra-browser.min";
 import {
   getAllVoices,
+  getFormatFromAudioPath,
   langToName,
   sleep,
   splitSentences,
@@ -16,6 +20,7 @@ import TTSUtil from "../../utils/reader/ttsUtil";
 import "./textToSpeech.css";
 import { fetchUserInfo } from "../../utils/request/user";
 import { getSplitSentence } from "../../utils/request/reader";
+import { Howl } from "howler";
 declare var window: any;
 class TextToSpeech extends React.Component<
   TextToSpeechProps,
@@ -29,6 +34,7 @@ class TextToSpeech extends React.Component<
   customVoices: any;
   voices: any;
   nativeVoices: any;
+  previewPlayer: Howl | null;
   constructor(props: TextToSpeechProps) {
     super(props);
     this.state = {
@@ -74,6 +80,7 @@ class TextToSpeech extends React.Component<
     this.voices = [];
     this.customVoices = [];
     this.nativeVoices = [];
+    this.previewPlayer = null;
   }
   async componentDidMount() {
     if ("speechSynthesis" in window) {
@@ -177,6 +184,9 @@ class TextToSpeech extends React.Component<
       });
     }
   }
+  componentWillUnmount() {
+    this.stopPreviewAudio();
+  }
   handleMultiRoleToggle = (enabled: boolean) => {
     if (enabled) {
       ConfigService.setListConfig(
@@ -190,6 +200,124 @@ class TextToSpeech extends React.Component<
       );
     }
     this.setState({ multiRoleEnabled: enabled });
+  };
+  stopPreviewAudio = () => {
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    if (this.previewPlayer) {
+      this.previewPlayer.stop();
+      this.previewPlayer.unload();
+      this.previewPlayer = null;
+    }
+  };
+  getPreviewText = (voice: any) => {
+    const voiceCode =
+      voice?.locale ||
+      voice?.lang ||
+      voice?.language ||
+      this.state.voiceLocale ||
+      navigator.language ||
+      "en";
+    const normalizedCode = voiceCode.toLowerCase().split("-")[0];
+    const speech =
+      KookitConfig.SpeechList.find((item) => item.code === normalizedCode) ||
+      KookitConfig.SpeechList[0];
+    return speech.example;
+  };
+  getVoiceByNameAndEngine = (voiceName: string, voiceEngine: string) => {
+    return this.voices.find(
+      (item: any) => item.name === voiceName && item.plugin === voiceEngine
+    );
+  };
+  handlePreviewVoice = async (voiceName: string, voiceEngine: string) => {
+    if (!voiceName) {
+      toast(this.props.t("Please select"));
+      return;
+    }
+    const engine = voiceEngine || "system";
+    const voice = this.getVoiceByNameAndEngine(voiceName, engine);
+    if (!voice) {
+      toast.error(this.props.t("Audio loading failed, stopped playback"));
+      return;
+    }
+    const previewText = this.getPreviewText(voice);
+    const speed = parseFloat(ConfigService.getReaderConfig("voiceSpeed")) || 1;
+
+    this.stopPreviewAudio();
+
+    if (engine === "system") {
+      const msg = new SpeechSynthesisUtterance();
+      msg.text = previewText;
+      msg.voice =
+        this.nativeVoices.find((item: any) => item.name === voiceName) ||
+        this.nativeVoices[0];
+      msg.rate = speed;
+      msg.onerror = () => {
+        toast.error(this.props.t("Audio loading failed, stopped playback"));
+      };
+      window.speechSynthesis && window.speechSynthesis.speak(msg);
+      return;
+    }
+
+    if (engine === "official-ai-voice-plugin") {
+      if (!this.props.isAuthed) {
+        toast(this.props.t("Please upgrade to Pro to use this feature"));
+        return;
+      }
+      await fetchUserInfo();
+    }
+
+    const plugin = this.props.plugins.find((item) => item.key === engine);
+    if (!plugin) {
+      toast.error(this.props.t("Audio loading failed, stopped playback"));
+      return;
+    }
+    const pluginVoice = (plugin.voiceList as any[]).find(
+      (item) => item.name === voiceName
+    );
+    if (!pluginVoice) {
+      toast.error(this.props.t("Audio loading failed, stopped playback"));
+      return;
+    }
+    const audioPath = await TTSUtil.getAudioPath(
+      previewText,
+      speed * 100 - 100,
+      engine,
+      plugin,
+      pluginVoice,
+      true
+    );
+    if (!audioPath) {
+      toast.error(this.props.t("Audio loading failed, stopped playback"));
+      return;
+    }
+    this.previewPlayer = new Howl({
+      src: [audioPath],
+      format: [getFormatFromAudioPath(audioPath)],
+      onloaderror: () => {
+        toast.error(this.props.t("Audio loading failed, stopped playback"));
+      },
+    });
+    this.previewPlayer.play();
+  };
+  renderVoicePreviewLabel = (
+    label: string,
+    voiceName: string,
+    voiceEngine: string
+  ) => {
+    return (
+      <span className="tts-preview-label">
+        <Trans>{label}</Trans>
+        <span
+          className="tts-preview-btn"
+          title={this.props.t("Test")}
+          onClick={() => this.handlePreviewVoice(voiceName, voiceEngine)}
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M3 10v4h3l4 4V6L6 10H3zm11.5 2a3.5 3.5 0 0 0-2-3.15v6.29A3.5 3.5 0 0 0 14.5 12zm0-7.5v2.06A7.003 7.003 0 0 1 19 12a7.003 7.003 0 0 1-4.5 5.44v2.06c3.45-.9 6-4.03 6-7.5s-2.55-6.6-6-7.5z" />
+          </svg>
+        </span>
+      </span>
+    );
   };
 
   getVoicesByType = (voiceType: string) => {
@@ -868,7 +996,11 @@ class TextToSpeech extends React.Component<
             fontWeight: 500,
           }}
         >
-          <Trans>Voice</Trans>
+          {this.renderVoicePreviewLabel(
+            "Voice",
+            ConfigService.getReaderConfig("voiceName"),
+            ConfigService.getReaderConfig("voiceEngine")
+          )}
           <select
             name=""
             className="lang-setting-dropdown"
@@ -1085,7 +1217,11 @@ class TextToSpeech extends React.Component<
               className="setting-dialog-new-title"
               style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
             >
-              <Trans>Narrator voice</Trans>
+              {this.renderVoicePreviewLabel(
+                "Narrator voice",
+                this.state.multiRoleNarratorVoice,
+                this.state.multiRoleNarratorEngine
+              )}
               <select
                 name=""
                 className="lang-setting-dropdown"
@@ -1130,7 +1266,11 @@ class TextToSpeech extends React.Component<
               className="setting-dialog-new-title"
               style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
             >
-              <Trans>Male voice</Trans>
+              {this.renderVoicePreviewLabel(
+                "Male voice",
+                this.state.multiRoleMaleVoice,
+                this.state.multiRoleMaleEngine
+              )}
               <select
                 name=""
                 className="lang-setting-dropdown"
@@ -1175,7 +1315,11 @@ class TextToSpeech extends React.Component<
               className="setting-dialog-new-title"
               style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
             >
-              <Trans>Female voice</Trans>
+              {this.renderVoicePreviewLabel(
+                "Female voice",
+                this.state.multiRoleFemaleVoice,
+                this.state.multiRoleFemaleEngine
+              )}
               <select
                 name=""
                 className="lang-setting-dropdown"
@@ -1221,7 +1365,11 @@ class TextToSpeech extends React.Component<
               className="setting-dialog-new-title"
               style={{ marginLeft: "20px", width: "88%", fontWeight: 500 }}
             >
-              <Trans>Child voice</Trans>
+              {this.renderVoicePreviewLabel(
+                "Child voice",
+                this.state.multiRoleChildVoice,
+                this.state.multiRoleChildEngine
+              )}
               <select
                 name=""
                 className="lang-setting-dropdown"
