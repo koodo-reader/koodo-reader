@@ -147,6 +147,7 @@ interface ConfigItem {
   type: string;
   required?: boolean;
   example?: string;
+  note?: string;
 }
 
 // Type the driveInputConfig
@@ -347,8 +348,7 @@ export const driveInputConfig: DriveInputConfig = {
       value: "forcePathStyle",
       type: "text",
       required: false,
-      example:
-        "Enter 1 to enable, leave empty to disable. Required for some S3 storage services that are not compatible with virtual host style URL",
+      note: "Enter 1 to enable, leave empty to disable. Required for some S3 storage services that are not compatible with virtual host style URL",
     },
   ],
   google: [
