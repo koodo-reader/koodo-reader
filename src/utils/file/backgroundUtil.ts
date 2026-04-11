@@ -4,6 +4,8 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { LocalFileManager } from "./localFile";
 import localforage from "localforage";
 import { Buffer } from "buffer";
+// @ts-ignore – no bundled type declarations
+import ColorThief from "color-thief-browser";
 
 declare var window: any;
 
@@ -111,19 +113,63 @@ class BackgroundUtil {
   /**
    * Background image metadata is stored via ConfigService.setObjectConfig
    * using the image id as key and "customBackgrounds" as the store name.
-   * Each entry: { id, name, extension }
+   * Each entry: { id, name, extension, textColor?, backgroundColor? }
    */
   static saveImageMeta(
     id: string,
-    meta: { name: string; extension: string }
+    meta: {
+      name: string;
+      extension: string;
+      textColor?: string;
+      backgroundColor?: string;
+    }
   ): void {
     ConfigService.setObjectConfig(id, { id, ...meta }, "customBackgrounds");
   }
 
-  static getImageMeta(
-    id: string
-  ): { id: string; name: string; extension: string } | null {
+  static getImageMeta(id: string): {
+    id: string;
+    name: string;
+    extension: string;
+    textColor?: string;
+    backgroundColor?: string;
+  } | null {
     return ConfigService.getObjectConfig(id, "customBackgrounds", null);
+  }
+
+  /**
+   * Analyse dominant color from a data-URL and return recommended
+   * backgroundColor and textColor values.
+   */
+  static async analyzeImageColors(
+    dataUrl: string
+  ): Promise<{ backgroundColor: string; textColor: string }> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        try {
+          const colorThief = new ColorThief();
+          const [r, g, b]: [number, number, number] = colorThief.getColor(
+            img,
+            10
+          );
+          const backgroundColor = `#${r.toString(16).padStart(2, "0")}${g
+            .toString(16)
+            .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+          // WCAG-based luminance contrast
+          const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+          const textColor = luminance > 0.5 ? "#000000" : "#ffffff";
+          resolve({ backgroundColor, textColor });
+        } catch {
+          resolve({ backgroundColor: "#ffffff", textColor: "#000000" });
+        }
+      };
+      img.onerror = () => {
+        resolve({ backgroundColor: "#ffffff", textColor: "#000000" });
+      };
+      img.src = dataUrl;
+    });
   }
 
   static deleteImageMeta(id: string): void {

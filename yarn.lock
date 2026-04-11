@@ -5965,6 +5965,11 @@ color-name@~1.1.4:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
+color-thief-browser@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/color-thief-browser/-/color-thief-browser-2.0.2.tgz#6fbe6af73717e706802cf01ed16647b2683ff0c2"
+  integrity sha512-dXHq3ytLWEN7Nbu+oZAbtBP/TRd3uNT1Ll38idklwgr8Cng3XGI7bzMz6xWYID+zPd7AupdHpyNYVacQ8uhK0w==
+
 colord@^2.9.1:
   version "2.9.3"
   resolved "https://registry.yarnpkg.com/colord/-/colord-2.9.3.tgz#4f8ce919de456f1d5c1c368c307fe20f3e59fb43"

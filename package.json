@@ -26,6 +26,7 @@
     "better-sqlite3": "^11.6.0",
     "buffer": "^6.0.3",
     "chardet": "^2.0.0",
+    "color-thief-browser": "^2.0.2",
     "copy-text-to-clipboard": "^2.2.0",
     "discord-rpc": "^4.0.1",
     "dompurify": "^3.2.4",
