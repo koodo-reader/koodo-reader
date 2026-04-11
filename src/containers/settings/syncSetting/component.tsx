@@ -450,8 +450,20 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                             opacity: 0.8,
                           }}
                         >
-                          {this.props.t("Example")}:{" "}
-                          {this.props.t(item.example)}
+                          {this.props.t("Example")}: {item.example}
+                        </div>
+                      )}
+                      {item.note && (
+                        <div
+                          style={{
+                            marginTop: "5px",
+                            marginBottom: "2px",
+                            marginLeft: "2px",
+                            fontSize: "12px",
+                            opacity: 0.8,
+                          }}
+                        >
+                          {this.props.t(item.note)}
                         </div>
                       )}
                     </div>
