@@ -45,7 +45,13 @@ class BackgroundSetting extends React.Component<
     for (const id of ids) {
       const meta = BackgroundUtil.getImageMeta(id);
       if (!meta) continue;
-      images.push({ id, name: meta.name, extension: meta.extension });
+      images.push({
+        id,
+        name: meta.name,
+        extension: meta.extension,
+        textColor: meta.textColor,
+        backgroundColor: meta.backgroundColor,
+      });
       const url = await BackgroundUtil.loadImage(id, meta.extension);
       if (url) loadedUrls[id] = url;
     }
@@ -70,14 +76,25 @@ class BackgroundSetting extends React.Component<
 
       const id = Date.now().toString();
       const { extension } = BackgroundUtil.convertDataUrl(dataUrl);
-      const meta = { name: file.name, extension };
+
+      // Analyse dominant color before saving metadata
+      const { backgroundColor, textColor } =
+        await BackgroundUtil.analyzeImageColors(dataUrl);
+
+      const meta = { name: file.name, extension, backgroundColor, textColor };
 
       try {
         await BackgroundUtil.saveImage(id, dataUrl);
         BackgroundUtil.saveImageMeta(id, meta);
         BackgroundUtil.addImageId(id);
 
-        const newImage: BackgroundImage = { id, name: file.name, extension };
+        const newImage: BackgroundImage = {
+          id,
+          name: file.name,
+          extension,
+          backgroundColor,
+          textColor,
+        };
         this.setState((prev) => ({
           images: [...prev.images, newImage],
           loadedUrls: { ...prev.loadedUrls, [id]: dataUrl },
@@ -120,6 +137,12 @@ class BackgroundSetting extends React.Component<
     const dataUrl = this.state.loadedUrls[image.id] || "";
     ConfigService.setReaderConfig(READER_BG_KEY, image.id);
     ConfigService.setReaderConfig(READER_BG_KEY + "_url", dataUrl);
+    if (image.textColor) {
+      ConfigService.setReaderConfig("textColor", image.textColor);
+    }
+    if (image.backgroundColor) {
+      ConfigService.setReaderConfig("backgroundColor", image.backgroundColor);
+    }
     this.setState({ readerBackgroundId: image.id, previewImage: null });
     toast.success(this.props.t("Change successful"));
   };

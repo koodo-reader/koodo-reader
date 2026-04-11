@@ -8,6 +8,8 @@ export interface BackgroundImage {
   id: string;
   name: string;
   extension: string;
+  textColor?: string;
+  backgroundColor?: string;
 }
 
 export interface SettingInfoState {
