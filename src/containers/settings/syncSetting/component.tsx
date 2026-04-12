@@ -123,14 +123,19 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         this.props.handleSettingDrive("");
         return;
       }
+      SyncService.removeSyncUtil(settingDrive);
+      removeCloudConfig(settingDrive);
+      if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        await ipcRenderer.invoke("cloud-close", {
+          service: settingDrive,
+        });
+      }
       ConfigService.setListConfig(settingDrive, "dataSourceList");
       toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
       if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
         ConfigService.setItem("defaultSyncOption", settingDrive);
-        if (
-          ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
-          this.props.userInfo.default_sync_option !== settingDrive
-        ) {
+        if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
           resetKoodoSync();
         }
         this.props.handleFetchDefaultSyncOption();
@@ -256,12 +261,17 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         this.state.driveConfig.token
       );
     }
+    SyncService.removeSyncUtil(this.props.settingDrive);
+    removeCloudConfig(this.props.settingDrive);
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      await ipcRenderer.invoke("cloud-close", {
+        service: this.props.settingDrive,
+      });
+    }
     if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
       ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
-      if (
-        ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
-        this.props.userInfo.default_sync_option !== this.props.settingDrive
-      ) {
+      if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
         resetKoodoSync();
       }
       this.props.handleFetchDefaultSyncOption();
