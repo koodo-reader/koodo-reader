@@ -345,7 +345,11 @@ class SupportDialog extends React.Component<
                                 toast.error(
                                   this.props.t(
                                     "You haven't upgraded to Pro yet"
-                                  ),
+                                  ) +
+                                    "\n" +
+                                    this.props.t(
+                                      "If you purchased a redemption code, please click the redeem button to redeem it, or contact our support team for assistance"
+                                    ),
                                   {
                                     id: "check-payment-status",
                                   }
