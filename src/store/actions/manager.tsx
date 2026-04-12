@@ -271,6 +271,8 @@ export function handleFetchUserInfo() {
         resetThirdpartyRequest();
       }
     }
+
+    console.log("asdfsgdfgf45656756");
     dispatch(handleUserInfo(userInfo));
   };
 }
