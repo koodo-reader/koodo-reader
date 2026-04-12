@@ -317,6 +317,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     let config = await getCloudConfig(
       ConfigService.getItem("defaultSyncOption") || ""
     );
+    console.log("Cloud config:", JSON.stringify(config));
     if (Object.keys(config).length === 0) {
       toast.error(this.props.t("Cannot get sync config"));
       return false;

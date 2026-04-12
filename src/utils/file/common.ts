@@ -260,6 +260,7 @@ export const upgradeConfig = (): Boolean => {
 };
 export const getCloudConfig = async (service: string) => {
   let config = await getCloudToken(service);
+  console.log(service, "config:", config);
   if (!config) {
     return {};
   }
