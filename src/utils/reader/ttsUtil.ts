@@ -9,6 +9,7 @@ class TTSUtil {
   static currentAudioPath: string = "";
   static audioPaths: { index: number; audioPath: string }[] = [];
   static isPaused: boolean = false;
+  static pausedMidSentence: boolean = false;
   static processingIndexes: Set<number> = new Set();
   static async readAloud(currentIndex: number) {
     return new Promise<string>(async (resolve) => {
@@ -194,15 +195,26 @@ class TTSUtil {
     }
   }
   static async pauseAudio() {
-    if (this.player && this.player.stop) {
-      this.player.stop();
+    if (this.player) {
+      this.player.pause();
       this.isPaused = true;
+      this.pausedMidSentence = true;
     }
+  }
+  static resumeAudio(): boolean {
+    if (this.player && this.pausedMidSentence) {
+      this.player.play();
+      this.isPaused = false;
+      this.pausedMidSentence = false;
+      return true;
+    }
+    return false;
   }
   static async stopAudio() {
     if (this.player && this.player.stop) {
       this.player.stop();
       this.isPaused = true;
+      this.pausedMidSentence = false;
       setTimeout(() => {
         this.clearAudioPaths();
         this.audioPaths = [];
@@ -255,6 +267,7 @@ class TTSUtil {
   static setAudioPaths() {
     this.audioPaths = [];
     this.processingIndexes.clear();
+    this.pausedMidSentence = false;
   }
   static getPlayer() {
     return this.player;
