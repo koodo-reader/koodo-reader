@@ -434,6 +434,70 @@ class TextToSpeech extends React.Component<
       });
     }
   };
+  handleVoiceSwitch = async (
+    newVoiceName: string,
+    newVoiceEngine: string,
+    previousEngine: string
+  ) => {
+    if (!this.state.isAudioOn || this.nodeList.length === 0) return;
+
+    const currentIndex = this.state.currentIndex;
+
+    // 鉴权检查（AI 语音）
+    if (
+      newVoiceEngine === "official-ai-voice-plugin" &&
+      !this.props.isAuthed
+    ) {
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      return;
+    }
+
+    // 停止系统语音
+    window.speechSynthesis && window.speechSynthesis.cancel();
+
+    // 停止自定义音频播放器
+    const player = TTSUtil.getPlayer();
+    if (player && player.stop) {
+      player.stop();
+    }
+    TTSUtil.isPaused = true;
+    TTSUtil.pausedMidSentence = false;
+
+    // 若之前是 AI 语音，清除已生成的音频文件
+    if (previousEngine === "official-ai-voice-plugin") {
+      await TTSUtil.clearAudioPaths();
+    }
+    // 重置内存中的音频路径缓存（适用于所有引擎切换）
+    TTSUtil.setAudioPaths();
+
+    // AI 语音需要刷新用户信息
+    if (this.props.isAuthed && newVoiceEngine !== "system") {
+      toast.loading(this.props.t("Loading audio, please wait..."), {
+        id: "tts-load",
+      });
+      await fetchUserInfo();
+    }
+
+    // 非多角色模式下，将 nodeList 所有节点更新为新语音
+    if (!this.state.multiRoleEnabled) {
+      this.nodeList = this.nodeList.map((node) => ({
+        ...node,
+        voiceName: newVoiceName,
+        voiceEngine: newVoiceEngine,
+      }));
+    }
+
+    // 先将 isPaused 置 true 终止旧循环，再置 false 从当前句子重新播放
+    this.setState({ isPaused: true }, () => {
+      this.setState({ isPaused: false }, () => {
+        if (newVoiceEngine !== "system") {
+          this.handleCustomRead(currentIndex);
+        } else {
+          this.handleSystemRead(currentIndex);
+        }
+      });
+    });
+  };
   handleStartSpeech = () => {
     this.setState({ isAudioOn: true, isPaused: false, currentIndex: 0 }, () => {
       this.handleAudio();
@@ -1028,6 +1092,8 @@ class TextToSpeech extends React.Component<
             onChange={(event) => {
               let selectedValue = event.target.value;
               let [voiceName, plugin] = selectedValue.split("#");
+              const previousEngine =
+                ConfigService.getReaderConfig("voiceEngine");
               ConfigService.setReaderConfig("voiceName", voiceName);
               let voice = this.voices.find(
                 (item) => item.name === voiceName && item.plugin === plugin
@@ -1035,12 +1101,8 @@ class TextToSpeech extends React.Component<
               if (!voice) {
                 return;
               }
-              console.log(voice, "voice");
-              if (voice.plugin) {
-                ConfigService.setReaderConfig("voiceEngine", voice.plugin);
-              } else {
-                ConfigService.setReaderConfig("voiceEngine", "system");
-              }
+              const newEngine = voice.plugin || "system";
+              ConfigService.setReaderConfig("voiceEngine", newEngine);
               if (
                 voice.plugin === "official-ai-voice-plugin" &&
                 event.target.value.indexOf("Neural") > -1
@@ -1057,7 +1119,7 @@ class TextToSpeech extends React.Component<
               }
 
               if (this.state.isAudioOn) {
-                toast(this.props.t("Take effect in a while"));
+                this.handleVoiceSwitch(voiceName, newEngine, previousEngine);
               }
             }}
           >
