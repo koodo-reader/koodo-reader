@@ -127,6 +127,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         .then(() => {
           this.props.handleFetchBooks();
           if (this.props.mode === "shelf") {
+            if (!this.state.importingShelfTitle) {
+              this.setState({ importingShelfTitle: this.props.shelfTitle });
+            }
             ConfigService.setMapConfig(
               this.state.importingShelfTitle || this.props.shelfTitle,
               book.key,
