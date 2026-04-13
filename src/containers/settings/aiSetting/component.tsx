@@ -138,9 +138,9 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
         name: m.display_name || m.name || m.model || m.id,
       }));
       console.log(models, rawModels);
-      // models.sort((a: { name: string }, b: { name: string }) =>
-      //   a.name.localeCompare(b.name)
-      // );
+      models.sort((a: { name: string }, b: { name: string }) =>
+        a.name.localeCompare(b.name)
+      );
       this.setState({ fetchedModels: models });
       if (models.length > 0) {
         toast.success(this.props.t("Fetched models") + ": " + models.length);
