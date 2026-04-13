@@ -21,7 +21,11 @@ declare var window: any;
 class BookUtil {
   static async addBook(key: string, format: string, buffer: ArrayBuffer) {
     // for both original books and cached boks
-
+    if (ConfigService.getItem("defaultSyncOption")) {
+      toast.loading(i18n.t("Uploading book"), {
+        id: "add-book",
+      });
+    }
     if (isElectron) {
       const fs = window.require("fs");
       const path = window.require("path");
