@@ -85,7 +85,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     window.addEventListener("resize", (event) => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        BookUtil.reloadBooks(this.props.currentBook);
+        this.setState(
+          getPageWidth(
+            this.props.readerMode,
+            this.props.scale,
+            parseInt(this.props.margin),
+            this.props.isNavLocked,
+            this.props.isSettingLocked
+          )
+        );
+        this.handleRenderBook();
       }, 300); // 300ms 防抖
     });
   }
