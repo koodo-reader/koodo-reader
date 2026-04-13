@@ -1,43 +1,47 @@
 .edit-dialog-container {
   width: 380px;
-  height: 440px;
+  height: 540px;
   opacity: 1;
   position: absolute;
   left: calc(50% - 190px);
-  top: calc(50% - 220px);
+  top: calc(50% - 270px);
   z-index: 10;
   animation: popup 0.1s ease-in-out 0s 1;
   border-radius: 5px;
-  padding: 22px 20px 16px;
+  padding: 0;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 .edit-dialog-title {
   font-size: 18px;
   font-weight: 500;
   text-align: center;
-  margin-bottom: 16px;
+  padding: 22px 20px 14px;
+  flex-shrink: 0;
 }
-/* Generic row layout */
-.edit-dialog-row {
+/* Scrollable body */
+.edit-dialog-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px;
+  min-height: 0;
+}
+/* Field: label on top, input below */
+.edit-dialog-field {
   display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+  flex-direction: column;
+  margin-bottom: 12px;
   width: 100%;
 }
-.edit-dialog-row-description {
-  align-items: flex-start;
-}
 .edit-dialog-label {
-  font-size: 14px;
-  width: 40px;
-  min-width: 50px;
-  flex-shrink: 0;
-  text-align: right;
-  margin-right: 10px;
-  line-height: 32px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  line-height: 1.4;
 }
 .edit-dialog-input {
-  flex: 1;
+  width: 100%;
   height: 32px;
   box-sizing: border-box;
   padding-left: 8px;
@@ -50,7 +54,7 @@
   background: transparent;
 }
 .edit-dialog-textarea {
-  flex: 1;
+  width: 100%;
   box-sizing: border-box;
   padding: 6px 8px;
   font-size: 14px;
@@ -67,8 +71,8 @@
 }
 /* Cover picker */
 .edit-dialog-cover-box {
-  flex: 1;
-  height: 100px;
+  width: 100%;
+  height: 120px;
   border-radius: 5px;
   border: 2px dashed rgba(75, 75, 75, 1);
   cursor: pointer;
@@ -77,6 +81,7 @@
   justify-content: center;
   overflow: hidden;
   transition: border-color 0.15s;
+  box-sizing: border-box;
 }
 .edit-dialog-cover-box:hover {
   border-color: rgba(75, 75, 75, 1);
@@ -92,10 +97,12 @@
   padding: 8px;
   text-align: center;
 }
-/* Button row */
-.edit-dialog-button-container {
+/* Fixed footer with buttons */
+.edit-dialog-footer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 10px;
-  margin-top: 12px;
+  padding: 12px 20px 16px;
+  flex-shrink: 0;
 }

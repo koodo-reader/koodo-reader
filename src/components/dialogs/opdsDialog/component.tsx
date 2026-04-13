@@ -788,7 +788,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
               fontSize: "14px",
             }}
           >
-            <Trans>No AI models added yet</Trans>
+            <Trans>No OPDS added yet</Trans>
           </div>
         )}
       </>
