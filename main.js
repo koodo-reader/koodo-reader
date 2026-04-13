@@ -180,7 +180,10 @@ const getSyncUtil = async (config, isUseCache = true) => {
   return syncUtilCache[config.service];
 };
 const removeSyncUtil = (config) => {
-  delete syncUtilCache[config.service];
+  if (syncUtilCache[config.service]) {
+    syncUtilCache[config.service].clearQueue();
+    delete syncUtilCache[config.service];
+  }
 };
 const getPickerUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !pickerUtilCache[config.service]) {
