@@ -360,7 +360,14 @@ class TextToSpeech extends React.Component<
     this.handleStartSpeech();
   };
   handlePauseAudio = async () => {
-    window.speechSynthesis && window.speechSynthesis.cancel();
+    if (window.speechSynthesis) {
+      if (window.speechSynthesis.speaking) {
+        // 在句子中途暂停，保留 utterance 状态以便从暂停位置恢复
+        window.speechSynthesis.pause();
+      } else {
+        window.speechSynthesis.cancel();
+      }
+    }
     await TTSUtil.pauseAudio();
     this.setState({ isPaused: true });
   };
@@ -371,12 +378,23 @@ class TextToSpeech extends React.Component<
     this.nodeList = [];
   };
   handlePauseResume = () => {
-    // Resume from current index
+    const currentNode = this.nodeList[this.state.currentIndex];
+    if (!currentNode) return;
+
     this.setState({ isPaused: false }, () => {
-      if (this.nodeList[this.state.currentIndex].voiceEngine !== "system") {
-        this.handleCustomRead(this.state.currentIndex);
+      if (currentNode.voiceEngine !== "system") {
+        // 尝试从自定义音频暂停位置恢复，失败则从句首重新播放
+        const resumed = TTSUtil.resumeAudio();
+        if (!resumed) {
+          this.handleCustomRead(this.state.currentIndex);
+        }
       } else {
-        this.handleSystemRead(this.state.currentIndex);
+        // 若 Web Speech API 处于暂停状态则从暂停位置恢复，否则从句首重新朗读
+        if (window.speechSynthesis && window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        } else {
+          this.handleSystemRead(this.state.currentIndex);
+        }
       }
     });
   };
@@ -385,6 +403,7 @@ class TextToSpeech extends React.Component<
     let prevIndex = Math.max(0, this.state.currentIndex - 1);
     window.speechSynthesis && window.speechSynthesis.cancel();
     await TTSUtil.pauseAudio();
+    TTSUtil.pausedMidSentence = false; // 跳转句子时不从暂停位置恢复
     this.setState({ currentIndex: prevIndex, isPaused: false }, () => {
       if (this.nodeList[prevIndex].voiceEngine !== "system") {
         this.handleCustomRead(prevIndex);
@@ -398,6 +417,7 @@ class TextToSpeech extends React.Component<
     let nextIndex = this.state.currentIndex + 1;
     window.speechSynthesis && window.speechSynthesis.cancel();
     await TTSUtil.pauseAudio();
+    TTSUtil.pausedMidSentence = false; // 跳转句子时不从暂停位置恢复
     if (nextIndex >= this.nodeList.length) {
       // Move to next page
       this.setState({ currentIndex: 0, isPaused: false }, async () => {
