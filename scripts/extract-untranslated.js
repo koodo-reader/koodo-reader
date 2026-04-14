@@ -59,8 +59,6 @@ function extractUntranslated() {
       `${langFile.padEnd(15)} ${String(count).padStart(10)} 条  ->  ${outPath}`
     );
   }
-
-  console.log();
   console.log(`提取完成！结果已保存到 ${outputDir}/ 目录。`);
 }
 

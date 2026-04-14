@@ -472,7 +472,6 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         l.rel === "subsection" ||
         l.rel === "related"
     );
-    console.log(navLink, "navLink");
     if (!navLink) return;
     this.setState((prev) => ({
       isLoading: true,
@@ -525,7 +524,6 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   handleSearch = async () => {
     const { currentFeed, searchQuery, currentCatalogAuth } = this.state;
     if (!currentFeed?.searchTemplate || !searchQuery.trim()) return;
-    console.log(searchQuery, currentFeed);
     let searchUrl = currentFeed.searchTemplate;
     if (!searchUrl.includes("searchTerms")) {
       try {
@@ -545,15 +543,12 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         // fallback to original
       }
     }
-    console.log(searchUrl, "searchUrl");
     let finalUrl = searchUrl
       .replace("{searchTerms}", encodeURIComponent(searchQuery.trim()))
       .replace("%7BsearchTerms%7D", encodeURIComponent(searchQuery.trim()));
-    console.log(finalUrl, "finalUrl");
     this.setState({ isLoading: true, error: "" });
     try {
       const feed = await fetchOPDSFeed(finalUrl, currentCatalogAuth);
-      console.log(feed);
       this.setState((prev) => ({
         currentFeed: {
           ...feed,
@@ -924,7 +919,6 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   renderDetailView() {
     const { selectedBook, currentCatalogAuth } = this.state;
     if (!selectedBook) return null;
-    console.log(selectedBook);
     const formatUpdated = (iso: string) => {
       if (!iso) return "";
       try {

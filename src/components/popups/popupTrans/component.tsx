@@ -48,7 +48,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   }
 
   handleTrans = async (text: string) => {
-    console.log(this.state.transService);
     if (
       this.state.transService &&
       this.state.transService !== "official-ai-trans-plugin" &&

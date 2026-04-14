@@ -79,7 +79,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     this.lastBatchTranslationTriggerAt = now;
 
     let batchTransTexts = await rendition.getBatchTransTexts();
-    console.log(batchTransTexts, "batchTransTexts");
     if (batchTransTexts && batchTransTexts.length > 0) {
       let res = await getBatchTrans(
         batchTransTexts,
@@ -88,7 +87,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           ConfigService.getReaderConfig("lang") || "zhCN"
         ]
       );
-      console.log(res, "res");
       if (res && res.data && res.data.texts) {
         rendition.handleBatchTransResult(batchTransTexts, res.data.texts);
       }

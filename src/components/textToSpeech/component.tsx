@@ -444,10 +444,7 @@ class TextToSpeech extends React.Component<
     const currentIndex = this.state.currentIndex;
 
     // 鉴权检查（AI 语音）
-    if (
-      newVoiceEngine === "official-ai-voice-plugin" &&
-      !this.props.isAuthed
-    ) {
+    if (newVoiceEngine === "official-ai-voice-plugin" && !this.props.isAuthed) {
       toast(this.props.t("Please upgrade to Pro to use this feature"));
       return;
     }
@@ -508,7 +505,6 @@ class TextToSpeech extends React.Component<
     if (this.nodeList.length === 0) {
       return;
     }
-    console.log(this.nodeList, "nodelist");
     if (this.nodeList[0].voiceEngine !== "system") {
       await this.handleCustomRead(0);
     } else {
@@ -552,7 +548,6 @@ class TextToSpeech extends React.Component<
         return [];
       }
       let res = await getSplitSentence(nodeTextList);
-      console.log(res, "res");
       toast.dismiss("tts-analysis");
       let narratorVoice = this.state.multiRoleNarratorVoice;
       let narratorEngine = this.state.multiRoleNarratorEngine;
@@ -582,7 +577,6 @@ class TextToSpeech extends React.Component<
             voiceEngine,
           };
         });
-        console.log(nodeList, "nodeList");
       } else {
         toast.error(this.props.t("Analysis failed"));
         this.setState({ isAudioOn: false });
@@ -630,7 +624,6 @@ class TextToSpeech extends React.Component<
           true,
           node.voiceEngine === "official-ai-voice-plugin"
         );
-        console.log(result, "safsdfsd");
         toast.dismiss("tts-load");
         if (result === "error") {
           toast.error(this.props.t("Audio loading failed, stopped playback"));
@@ -654,7 +647,6 @@ class TextToSpeech extends React.Component<
         node.voiceEngine === "official-ai-voice-plugin"
       );
       let res = await this.handleSpeech(index);
-      console.log(res, "dfgghgfh");
       if (res === "error") {
         toast.error(this.props.t("Audio loading failed, stopped playback"));
         this.setState({ isAudioOn: false });
@@ -675,7 +667,6 @@ class TextToSpeech extends React.Component<
 
         lastVisibleTextList = rawNodeList.flat();
       }
-      console.log(lastVisibleTextList, this.nodeList, "dfghfgjdfjjhgj");
       let isReachPageEnd =
         this.nodeList[index].text ===
         lastVisibleTextList[lastVisibleTextList.length - 1];
@@ -857,10 +848,6 @@ class TextToSpeech extends React.Component<
       if (!voiceName) {
         voiceName = this.nativeVoices[0]?.name;
       }
-      console.log(
-        this.nativeVoices.find((voice: any) => voice.name === voiceName),
-        "afdfsd"
-      );
       msg.voice = this.nativeVoices.find(
         (voice: any) => voice.name === voiceName
       );
@@ -1407,7 +1394,6 @@ class TextToSpeech extends React.Component<
                 className="lang-setting-dropdown"
                 id="multi-role-female-voice"
                 onChange={(event) => {
-                  console.log(event.target.value);
                   let selectedValue = event.target.value;
                   let [voiceName, plugin] = selectedValue.split("#");
                   ConfigService.setReaderConfig(
