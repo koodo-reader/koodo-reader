@@ -58,6 +58,12 @@ export function handleMargin(margin: string) {
 export function handleBackgroundColor(backgroundColor: string) {
   return { type: "HANDLE_BACKGROUND_COLOR", payload: backgroundColor };
 }
+export function handleReaderBackgroundImage(readerBackgroundImage: string) {
+  return {
+    type: "HANDLE_READER_BACKGROUND_IMAGE",
+    payload: readerBackgroundImage,
+  };
+}
 export function handleNavLock(isNavLocked: boolean) {
   return { type: "HANDLE_NAV_LOCK", payload: isNavLocked };
 }

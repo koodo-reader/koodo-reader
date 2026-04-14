@@ -49,6 +49,8 @@ const initState = {
     ConfigService.getReaderConfig("isHidePDFConvertButton") === "yes",
   isShowPageBorder: ConfigService.getReaderConfig("isShowPageBorder") === "yes",
   textOrientation: ConfigService.getReaderConfig("textOrientation") || "",
+  readerBackgroundImage:
+    ConfigService.getReaderConfig("readerBackgroundImage") || "",
 };
 export function reader(
   state = initState,
@@ -180,6 +182,11 @@ export function reader(
       return {
         ...state,
         backgroundColor: action.payload,
+      };
+    case "HANDLE_READER_BACKGROUND_IMAGE":
+      return {
+        ...state,
+        readerBackgroundImage: action.payload,
       };
     case "HANDLE_NOTE_KEY":
       return {
