@@ -13,7 +13,6 @@ class TTSUtil {
   static processingIndexes: Set<number> = new Set();
   static async readAloud(currentIndex: number) {
     return new Promise<string>(async (resolve) => {
-      console.log(this.audioPaths, currentIndex, "dfgsdg");
       let audioPath = this.audioPaths.find(
         (item) => item.index === currentIndex
       )?.audioPath;
@@ -84,14 +83,12 @@ class TTSUtil {
           let plugin = plugins.find(
             (item) => item.key === audioNode.voiceEngine
           );
-          console.log(plugins, audioNode);
           if (!plugin) {
             return "error";
           }
           let voice = (plugin.voiceList as any[]).find(
             (voice) => voice.name === audioNode.voiceName
           );
-          console.log(plugin.voiceList, audioNode, "asf");
           if (!voice) {
             return "error";
           }
@@ -238,7 +235,6 @@ class TTSUtil {
     isFirst: boolean
   ) {
     if (voiceEngine === "official-ai-voice-plugin") {
-      console.log(text, voice);
       let res = await getTTSAudio(
         text,
         voice.language,
@@ -247,7 +243,6 @@ class TTSUtil {
         1.0,
         isFirst
       );
-      console.log(res);
       if (res && res.data && res.data.audio_base64) {
         return res.data.audio_base64;
       }

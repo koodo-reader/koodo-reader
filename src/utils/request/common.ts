@@ -102,7 +102,6 @@ export const chatStream = async (
     });
 
     source.addEventListener("message", (e: any) => {
-      console.log(e);
       if (!e.data) return;
       if (e.data === "[DONE]") {
         source.close();

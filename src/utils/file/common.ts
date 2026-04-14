@@ -262,9 +262,7 @@ export const upgradeConfig = (): Boolean => {
 export const getCloudConfig = (service: string): Promise<any> => {
   const prev = cloudConfigLocks[service] ?? Promise.resolve();
   const next = prev.then(async () => {
-    console.log(new Date().getTime(), "Getting cloud config for", service);
     let config = await getCloudToken(service);
-    console.log(service, "config:", JSON.stringify(config));
     if (!config) {
       return {};
     }

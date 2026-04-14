@@ -188,7 +188,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         this.props.handleOpenMenu(true);
         break;
       case "highlight":
-        console.log("gdgdgsdgdf");
         await createHighlight({
           currentBook: this.props.currentBook,
           htmlBook: this.props.htmlBook,

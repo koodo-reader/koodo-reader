@@ -131,13 +131,11 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
         throw new Error(`HTTP ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
       const rawModels = data.data || data.models || data || [];
       const models = rawModels.map((m: any) => ({
         id: m.id || m.model || m.name,
         name: m.display_name || m.name || m.model || m.id,
       }));
-      console.log(models, rawModels);
       models.sort((a: { name: string }, b: { name: string }) =>
         a.name.localeCompare(b.name)
       );
@@ -514,10 +512,6 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
   render() {
     const aiPlugins = this.getAIPlugins();
-    console.log(
-      this.state.aiAssistanceModel,
-      ConfigService.getReaderConfig("aiAssistanceModel")
-    );
 
     return (
       <>
