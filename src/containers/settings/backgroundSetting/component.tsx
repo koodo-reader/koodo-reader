@@ -11,9 +11,6 @@ import toast from "react-hot-toast";
 import { applyAppBackgroundImage } from "../../../utils/reader/launchUtil";
 import BackgroundUtil from "../../../utils/file/backgroundUtil";
 
-const APP_BG_KEY = "appBackgroundImage";
-const READER_BG_KEY = "readerBackgroundImage";
-
 class BackgroundSetting extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -26,8 +23,10 @@ class BackgroundSetting extends React.Component<
       images: [],
       loadedUrls: {},
       previewImage: null,
-      appBackgroundId: ConfigService.getReaderConfig(APP_BG_KEY) || "",
-      readerBackgroundId: ConfigService.getReaderConfig(READER_BG_KEY) || "",
+      appBackgroundId:
+        ConfigService.getReaderConfig("appBackgroundImage") || "",
+      readerBackgroundId:
+        ConfigService.getReaderConfig("readerBackgroundImage") || "",
       isLoading: true,
     };
   }
@@ -118,16 +117,16 @@ class BackgroundSetting extends React.Component<
 
   handleSetAppBackground = (image: BackgroundImage) => {
     const dataUrl = this.state.loadedUrls[image.id] || "";
-    ConfigService.setReaderConfig(APP_BG_KEY, image.id);
-    ConfigService.setReaderConfig(APP_BG_KEY + "_url", dataUrl);
+    ConfigService.setReaderConfig("appBackgroundImage", image.id);
+    ConfigService.setReaderConfig("appBackgroundImage_url", dataUrl);
     this.setState({ appBackgroundId: image.id, previewImage: null });
     applyAppBackgroundImage();
     toast.success(this.props.t("Change successful"));
   };
 
   handleClearAppBackground = () => {
-    ConfigService.setReaderConfig(APP_BG_KEY, "");
-    ConfigService.setReaderConfig(APP_BG_KEY + "_url", "");
+    ConfigService.setReaderConfig("appBackgroundImage", "");
+    ConfigService.setReaderConfig("appBackgroundImage_url", "");
     this.setState({ appBackgroundId: "", previewImage: null });
     applyAppBackgroundImage();
     toast.success(this.props.t("Change successful"));
@@ -135,8 +134,8 @@ class BackgroundSetting extends React.Component<
 
   handleSetReaderBackground = (image: BackgroundImage) => {
     const dataUrl = this.state.loadedUrls[image.id] || "";
-    ConfigService.setReaderConfig(READER_BG_KEY, image.id);
-    ConfigService.setReaderConfig(READER_BG_KEY + "_url", dataUrl);
+    ConfigService.setReaderConfig("readerBackgroundImage", image.id);
+    ConfigService.setReaderConfig("readerBackgroundImage_url", dataUrl);
     if (image.textColor) {
       ConfigService.setReaderConfig("textColor", image.textColor);
     }
@@ -148,8 +147,8 @@ class BackgroundSetting extends React.Component<
   };
 
   handleClearReaderBackground = () => {
-    ConfigService.setReaderConfig(READER_BG_KEY, "");
-    ConfigService.setReaderConfig(READER_BG_KEY + "_url", "");
+    ConfigService.setReaderConfig("readerBackgroundImage", "");
+    ConfigService.setReaderConfig("readerBackgroundImage_url", "");
     this.setState({ readerBackgroundId: "", previewImage: null });
     toast.success(this.props.t("Change successful"));
   };
@@ -170,14 +169,14 @@ class BackgroundSetting extends React.Component<
       }));
 
       if (this.state.appBackgroundId === image.id) {
-        ConfigService.setReaderConfig(APP_BG_KEY, "");
-        ConfigService.setReaderConfig(APP_BG_KEY + "_url", "");
+        ConfigService.setReaderConfig("appBackgroundImage", "");
+        ConfigService.setReaderConfig("appBackgroundImage_url", "");
         this.setState({ appBackgroundId: "" });
         applyAppBackgroundImage();
       }
       if (this.state.readerBackgroundId === image.id) {
-        ConfigService.setReaderConfig(READER_BG_KEY, "");
-        ConfigService.setReaderConfig(READER_BG_KEY + "_url", "");
+        ConfigService.setReaderConfig("readerBackgroundImage", "");
+        ConfigService.setReaderConfig("readerBackgroundImage_url", "");
         this.setState({ readerBackgroundId: "" });
       }
       toast.success(this.props.t("Deletion successful"));
