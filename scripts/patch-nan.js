@@ -8,7 +8,7 @@ const path = require("path");
 const nanHPath = path.join(__dirname, "..", "node_modules", "nan", "nan.h");
 
 if (!fs.existsSync(nanHPath)) {
-  console.log("nan.h not found, skipping patch.");
+  console.info("nan.h not found, skipping patch.");
   process.exit(0);
 }
 
@@ -19,8 +19,8 @@ const patched = content.replace(
 );
 
 if (content === patched) {
-  console.log("nan.h already patched or pattern not found, skipping.");
+  console.info("nan.h already patched or pattern not found, skipping.");
 } else {
   fs.writeFileSync(nanHPath, patched, "utf8");
-  console.log("nan.h patched successfully.");
+  console.info("nan.h patched successfully.");
 }

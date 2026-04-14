@@ -39,8 +39,8 @@ function extractUntranslated() {
     )
     .sort();
 
-  console.log(`${"文件".padEnd(15)} ${"未翻译条目数".padStart(10)}`);
-  console.log("-".repeat(30));
+  console.info(`${"文件".padEnd(15)} ${"未翻译条目数".padStart(10)}`);
+  console.info("-".repeat(30));
 
   for (const langFile of langFiles) {
     const filepath = path.join(localesDir, langFile);
@@ -55,11 +55,11 @@ function extractUntranslated() {
     saveJson(outPath, untranslated);
 
     const count = Object.keys(untranslated).length;
-    console.log(
+    console.info(
       `${langFile.padEnd(15)} ${String(count).padStart(10)} 条  ->  ${outPath}`
     );
   }
-  console.log(`提取完成！结果已保存到 ${outputDir}/ 目录。`);
+  console.info(`提取完成！结果已保存到 ${outputDir}/ 目录。`);
 }
 
 extractUntranslated();

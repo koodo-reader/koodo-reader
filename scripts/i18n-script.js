@@ -8,7 +8,7 @@ for (let index = 0; index < folders.length; index++) {
   const folder = folders[index];
   resources.push(`../src/assets/locales/${folder}/translation.json`);
 }
-console.log(resources);
+console.info(resources);
 
 // find the missing terms in the english
 const zhdataRaw = fs.readFileSync(
@@ -27,12 +27,12 @@ let missingTerms = {};
 for (let index = 0; index < Object.keys(zhData).length; index++) {
   const term = Object.keys(zhData)[index];
   if (Object.keys(enData).indexOf(term) === -1) {
-    console.log(zhData[term]);
+    console.info(zhData[term]);
     missingTerms[term] = term;
   }
 }
-console.log(JSON.stringify(missingTerms));
-console.log(Object.keys(zhData).length, Object.keys(enData).length);
+console.info(JSON.stringify(missingTerms));
+console.info(Object.keys(zhData).length, Object.keys(enData).length);
 
 // Step2: copy the missing terms to the english file
 const mergedObj = Object.assign({}, enData, missingTerms);
@@ -51,18 +51,18 @@ const referData = JSON.parse(data);
 for (let index = 0; index < resources.length; index++) {
   try {
     const resource = resources[index];
-    console.log(path.join(__dirname, resource));
+    console.info(path.join(__dirname, resource));
     const data = fs.readFileSync(path.join(__dirname, resource), "utf-8");
     const targetData = JSON.parse(data);
     let missingTerms = {};
     for (let index = 0; index < Object.keys(referData).length; index++) {
       const term = Object.keys(referData)[index];
       if (Object.keys(targetData).indexOf(term) === -1) {
-        console.log(referData[term]);
+        console.info(referData[term]);
         missingTerms[term] = referData[term];
       }
     }
-    // console.log(missingTerms);
+    // console.info(missingTerms);
     const mergedObj = Object.assign({}, targetData, missingTerms);
 
     fs.writeFileSync(

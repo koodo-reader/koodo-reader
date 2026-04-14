@@ -33,7 +33,7 @@ const VALID_CREDENTIALS = {
 
 // 验证密码来源
 if (getDockerSecret(SERVER_PASSWORD_FILE)) {
-  console.log("Using password from Docker Secret");
+  console.info("Using password from Docker Secret");
 } else if (process.env.SERVER_PASSWORD) {
   console.warn("Using password from environment variable (less secure)");
 } else {
@@ -50,7 +50,7 @@ if (!process.env.SERVER_USERNAME) {
 
 // 检查服务器是否启用
 if (!SERVER_ENABLED) {
-  console.log(
+  console.info(
     "HTTP Server is disabled. Set ENABLE_HTTP_SERVER=true to enable it."
   );
   process.exit(0);
@@ -163,7 +163,7 @@ function handleUpload(req, res, dirParam) {
       const parts = parseMultipart(buffer, boundary);
 
       if (!parts.file || !parts.filename) {
-        console.log("Parsed parts:", Object.keys(parts)); // 调试信息
+        console.info("Parsed parts:", Object.keys(parts)); // 调试信息
         throw new Error("No valid file uploaded");
       }
 
@@ -249,7 +249,7 @@ function parseMultipart(buffer, boundary) {
       if (filenameMatch && filenameMatch[1]) {
         result.filename = filenameMatch[1];
         result.file = actualContent;
-        console.log(
+        console.info(
           `Found file: ${result.filename}, size: ${actualContent.length} bytes`
         ); // 调试信息
       } else {
@@ -431,7 +431,7 @@ function handleList(req, res, dirParam) {
 
 // 启动服务器
 server.listen(PORT, () => {
-  console.log(`Secure File Server running at http://localhost:${PORT}`);
-  console.log(`Username: ${VALID_CREDENTIALS.username}`);
-  console.log("Password: [HIDDEN FOR SECURITY]");
+  console.info(`Secure File Server running at http://localhost:${PORT}`);
+  console.info(`Username: ${VALID_CREDENTIALS.username}`);
+  console.info("Password: [HIDDEN FOR SECURITY]");
 });
