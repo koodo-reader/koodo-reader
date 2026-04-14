@@ -295,9 +295,13 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                       "zip",
                       cache
                     );
-                    toast.success(this.props.t("Pre-caching successful"));
+                    toast.success(this.props.t("Pre-caching successful"), {
+                      id: "add-book",
+                    });
                   } else {
-                    toast.error(this.props.t("Pre-caching failed"));
+                    toast.error(this.props.t("Pre-caching failed"), {
+                      id: "add-book",
+                    });
                   }
                 });
               }}

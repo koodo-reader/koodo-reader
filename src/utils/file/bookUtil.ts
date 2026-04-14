@@ -353,6 +353,7 @@ class BookUtil {
         return false;
       }
       await this.addBook("cache-" + key, "zip", cache);
+      toast.dismiss("add-book");
       return true;
     }
   }
@@ -384,6 +385,7 @@ class BookUtil {
         return false;
       }
       await this.addBook(key, format, bookBuffer);
+      toast.dismiss("add-book");
       return true;
     }
   }

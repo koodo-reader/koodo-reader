@@ -492,6 +492,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
     let cache = await rendition.preCache(result);
     if (cache !== "err" || cache) {
       await BookUtil.addBook("cache-" + selectedBook.key, "zip", cache);
+      toast.dismiss("add-book");
     }
   }
 };

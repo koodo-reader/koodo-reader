@@ -58,11 +58,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           dictService: pluginList[0].key,
         });
         ConfigService.setReaderConfig("dictService", pluginList[0].key);
+        await new Promise((resolve) => setTimeout(resolve, 100));
       } else {
         this.setState({ isAddNew: true });
         return;
       }
     }
+    console.log(originalText, "originaltext");
     this.handleDict(originalText);
     this.handleRecordHistory(originalText, this.props.originalSentence || "");
   }

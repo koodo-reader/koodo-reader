@@ -222,19 +222,23 @@ class SettingDialog extends React.Component<
                     </span>
                   </span>
 
-                  {!item.key.startsWith("official") && (
-                    <span
-                      className="change-location-button"
-                      onClick={async () => {
-                        await DatabaseService.deleteRecord(item.key, "plugins");
-                        this.props.handleFetchPlugins();
-                        toast.success(this.props.t("Deletion successful"));
-                        this.handleGetPluginList();
-                      }}
-                    >
-                      <Trans>Delete</Trans>
-                    </span>
-                  )}
+                  {!item.key.startsWith("official") &&
+                    !item.key.startsWith("custom") && (
+                      <span
+                        className="change-location-button"
+                        onClick={async () => {
+                          await DatabaseService.deleteRecord(
+                            item.key,
+                            "plugins"
+                          );
+                          this.props.handleFetchPlugins();
+                          toast.success(this.props.t("Deletion successful"));
+                          this.handleGetPluginList();
+                        }}
+                      >
+                        <Trans>Delete</Trans>
+                      </span>
+                    )}
                 </div>
               );
             })}
