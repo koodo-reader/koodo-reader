@@ -54,7 +54,7 @@ function initDiscordRPC() {
       DiscordRPC.register(DISCORD_CLIENT_ID);
       const client = new DiscordRPC.Client({ transport: "ipc" });
       client.on("ready", () => {
-        console.log("Discord RPC connected");
+        console.info("Discord RPC connected");
         discordRPCClient = client;
         discordRPCReady = true;
         discordRPCConnecting = false;
@@ -429,7 +429,7 @@ const createMainWin = () => {
 
       res.pipe(file);
       file.on("finish", () => {
-        console.log("\n下载完成！");
+        console.info("\n下载完成！");
         file.close();
 
         let updateExePath = path.join(app.getPath("temp"), fileName);
@@ -480,7 +480,7 @@ const createMainWin = () => {
     let id;
     if (isPreventSleep === "yes") {
       id = powerSaveBlocker.start("prevent-display-sleep");
-      console.log(powerSaveBlocker.isStarted(id));
+      console.info(powerSaveBlocker.isStarted(id));
     }
     if (readerWindow) {
       readerWindowList.push(readerWindow);
@@ -826,11 +826,11 @@ const createMainWin = () => {
     });
 
     if (result.canceled) {
-      console.log("User canceled the file selection");
+      console.info("User canceled the file selection");
       return [];
     } else {
       const filePaths = result.filePaths;
-      console.log("Selected file path:", filePaths);
+      console.info("Selected file path:", filePaths);
       return filePaths;
     }
   });
@@ -1055,25 +1055,25 @@ const createMainWin = () => {
   ipcMain.handle("enter-tab-fullscreen", () => {
     if (mainWin && mainView) {
       mainWin.setFullScreen(true);
-      console.log("enter full");
+      console.info("enter full");
     }
   });
   ipcMain.handle("exit-tab-fullscreen", () => {
     if (mainWin && mainView) {
       mainWin.setFullScreen(false);
-      console.log("exit full");
+      console.info("exit full");
     }
   });
   ipcMain.handle("enter-fullscreen", () => {
     if (readerWindow) {
       readerWindow.setFullScreen(true);
-      console.log("enter full");
+      console.info("enter full");
     }
   });
   ipcMain.handle("exit-fullscreen", () => {
     if (readerWindow) {
       readerWindow.setFullScreen(false);
-      console.log("exit full");
+      console.info("exit full");
     }
   });
   ipcMain.handle("open-url", (event, config) => {
@@ -1103,7 +1103,7 @@ const createMainWin = () => {
     let id;
     if (store.get("isPreventSleep") === "yes") {
       id = powerSaveBlocker.start("prevent-display-sleep");
-      console.log(powerSaveBlocker.isStarted(id));
+      console.info(powerSaveBlocker.isStarted(id));
     }
     if (readerWindow) {
       readerWindow.close();
@@ -1314,6 +1314,6 @@ const handleCallback = (url) => {
     }
   } catch (error) {
     console.error("Error handling callback URL:", error);
-    console.log("Problematic URL:", url);
+    console.info("Problematic URL:", url);
   }
 };

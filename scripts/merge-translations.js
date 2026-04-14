@@ -26,7 +26,7 @@ for (const file of files) {
   fs.writeFileSync(localesPath, JSON.stringify(merged, null, 2), "utf-8");
 
   totalMerged += mergedCount;
-  console.log(`✅ ${file}: merged ${mergedCount} entries`);
+  console.info(`✅ ${file}: merged ${mergedCount} entries`);
 }
 
-console.log(`\nDone. Total entries merged: ${totalMerged}`);
+console.info(`\nDone. Total entries merged: ${totalMerged}`);
