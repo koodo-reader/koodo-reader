@@ -25,7 +25,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       isFinishOutput: false,
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
     let originalText = this.props.originalText.replace(/(\r\n|\n|\r)/gm, "");
     this.setState({ originalText: originalText });
     if (!this.state.transService) {
@@ -37,6 +37,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           transService: pluginList[0].key,
         });
         ConfigService.setReaderConfig("transService", pluginList[0].key);
+        await new Promise((resolve) => setTimeout(resolve, 100));
       } else {
         this.setState({
           isAddNew: true,
