@@ -119,6 +119,7 @@ export type stateType = {
     originalText: string;
     originalSentence: string;
     htmlBook: HtmlBookModel;
+    readerBackgroundImage: string;
   };
   sidebar: {
     mode: string;

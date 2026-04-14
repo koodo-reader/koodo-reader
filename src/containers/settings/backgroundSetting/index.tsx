@@ -2,11 +2,12 @@ import { connect } from "react-redux";
 import BackgroundSetting from "./component";
 import { withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
+import { handleReaderBackgroundImage } from "../../../store/actions/reader";
 
 const mapStateToProps = () => {
   return {};
 };
-const actionCreator = {};
+const actionCreator = { handleReaderBackgroundImage };
 export default connect(
   mapStateToProps,
   actionCreator

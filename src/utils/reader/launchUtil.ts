@@ -7,6 +7,7 @@ import {
 } from "react-device-detect";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../package.json";
+import BackgroundUtil from "../file/backgroundUtil";
 export const initTheme = () => {
   const style = document.createElement("link");
   style.rel = "stylesheet";
@@ -77,20 +78,23 @@ export const applyCustomSystemCSS = () => {
   }
 };
 
-export const applyAppBackgroundImage = () => {
-  const imageUrl =
-    ConfigService.getReaderConfig("appBackgroundImage_url") || "";
+export const applyAppBackgroundImage = async () => {
+  const imageId = ConfigService.getReaderConfig("appBackgroundImage") || "";
   const root = document.getElementById("root");
   if (!root) return;
-  if (imageUrl) {
-    root.style.backgroundImage = `url("${imageUrl}")`;
-    root.style.backgroundSize = "cover";
-    root.style.backgroundPosition = "center";
-    root.style.backgroundAttachment = "fixed";
-  } else {
-    root.style.backgroundImage = "";
-    root.style.backgroundSize = "";
-    root.style.backgroundPosition = "";
-    root.style.backgroundAttachment = "";
+  if (imageId) {
+    const meta = BackgroundUtil.getImageMeta(imageId);
+    const imageUrl = await BackgroundUtil.loadImage(imageId, meta?.extension);
+    if (imageUrl) {
+      root.style.backgroundImage = `url("${imageUrl}")`;
+      root.style.backgroundSize = "cover";
+      root.style.backgroundPosition = "center";
+      root.style.backgroundAttachment = "fixed";
+      return;
+    }
   }
+  root.style.backgroundImage = "";
+  root.style.backgroundSize = "";
+  root.style.backgroundPosition = "";
+  root.style.backgroundAttachment = "";
 };
