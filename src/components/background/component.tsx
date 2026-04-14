@@ -24,6 +24,21 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         this.props.isSettingLocked
       )
     );
+    let resizeTimer: NodeJS.Timeout;
+    window.addEventListener("resize", (event) => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.setState(
+          getPageWidth(
+            this.props.readerMode,
+            this.props.scale,
+            parseInt(this.props.margin),
+            this.props.isNavLocked,
+            this.props.isSettingLocked
+          )
+        );
+      }, 300); // 300ms 防抖
+    });
   }
   async UNSAFE_componentWillReceiveProps(nextProps: BackgroundProps) {
     if (
