@@ -64,7 +64,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         return;
       }
     }
-    console.log(originalText, "originaltext");
     this.handleDict(originalText);
     this.handleRecordHistory(originalText, this.props.originalSentence || "");
   }
