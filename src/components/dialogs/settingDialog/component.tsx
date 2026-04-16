@@ -88,25 +88,20 @@ class SettingDialog extends React.Component<
             {this.renderSidebarItem("general", "icon-setting", "General", "")}
             {this.renderSidebarItem("data", "icon-archive", "Data", "15px")}
             {this.renderSidebarItem(
-              "appearance",
-              "icon-highlight-line",
-              "Appearance",
-              "20px"
-            )}
-            {this.renderSidebarItem(
-              "background",
-              "icon-image",
-              "Background",
-              "20px"
-            )}
-            {this.renderSidebarItem("sync", "icon-sync", "Sync and backup", "")}
-
-            {this.renderSidebarItem(
               "reading",
               "icon-bookshelf-line",
               "Reading",
               ""
             )}
+            {this.renderSidebarItem(
+              "appearance",
+              "icon-highlight-line",
+              "Appearance",
+              "20px"
+            )}
+
+            {this.renderSidebarItem("sync", "icon-sync", "Sync and backup", "")}
+
             {this.renderSidebarItem("account", "icon-user", "Account", "18px")}
           </div>
 
@@ -120,6 +115,12 @@ class SettingDialog extends React.Component<
               "icon-idea-line",
               "AI service",
               "18px"
+            )}
+            {this.renderSidebarItem(
+              "background",
+              "icon-image",
+              "Background",
+              "20px"
             )}
             {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>

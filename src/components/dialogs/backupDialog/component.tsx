@@ -130,6 +130,8 @@ class BackupDialog extends React.Component<
     }
     if (event.target.value === "add") {
       toast(this.props.t("Please add data source in the setting"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("sync");
       return;
     }
     this.setState({ currentDrive: event.target.value });

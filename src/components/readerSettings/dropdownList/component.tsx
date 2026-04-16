@@ -140,6 +140,7 @@ class DropdownList extends React.Component<
             "fullTranslationBooks"
           );
         }
+        toast.success(this.props.t("Setup successful"));
         break;
       case "textOrientation":
         this.setState({
@@ -156,6 +157,7 @@ class DropdownList extends React.Component<
         this.setState({
           currentSelectActionValue: arr[0],
         });
+        toast.success(this.props.t("Setup successful"));
         return;
       default:
         break;
