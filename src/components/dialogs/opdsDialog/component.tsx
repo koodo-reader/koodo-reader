@@ -14,8 +14,6 @@ import {
 } from "./interface";
 import { supportedFormats } from "../../../utils/common";
 
-const OPDS_CATALOGS_KEY = "opdsCatalogs";
-
 const BUILT_IN_CATALOGS: OPDSCatalog[] = [
   {
     id: "project-gutenberg",
@@ -445,14 +443,15 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
 
   loadUserCatalogs(): OPDSCatalog[] {
     try {
-      return JSON.parse(ConfigService.getItem(OPDS_CATALOGS_KEY) || "[]");
+      const catalogMap = ConfigService.getAllObjectConfig("opdsCatalogs") || {};
+      const catalogList =
+        ConfigService.getAllListConfig("opdsCatalogList") || [];
+      return catalogList
+        .map((id: string) => catalogMap[id])
+        .filter(Boolean) as OPDSCatalog[];
     } catch {
       return [];
     }
-  }
-
-  saveUserCatalogs(catalogs: OPDSCatalog[]) {
-    ConfigService.setItem(OPDS_CATALOGS_KEY, JSON.stringify(catalogs));
   }
 
   handleClose = () => this.props.handleOPDSDialog(false);
@@ -621,23 +620,23 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       newCatalogTitle,
       newCatalogUsername,
       newCatalogPassword,
-      userCatalogs,
     } = this.state;
     if (!newCatalogUrl.trim()) {
       toast.error(this.props.t("Please enter a valid URL"));
       return;
     }
+    const id = Date.now() + "";
     const newCatalog: OPDSCatalog = {
-      id: "user-" + Date.now(),
+      id,
       title: newCatalogTitle.trim() || newCatalogUrl.trim(),
       url: newCatalogUrl.trim(),
       username: newCatalogUsername.trim(),
       password: newCatalogPassword,
     };
-    const updated = [...userCatalogs, newCatalog];
-    this.saveUserCatalogs(updated);
+    ConfigService.setObjectConfig(id, newCatalog, "opdsCatalogs");
+    ConfigService.setListConfig(id, "opdsCatalogList");
     this.setState({
-      userCatalogs: updated,
+      userCatalogs: this.loadUserCatalogs(),
       isAddingCatalog: false,
       newCatalogUrl: "",
       newCatalogTitle: "",
@@ -648,9 +647,9 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   };
 
   handleRemoveCatalog = (id: string) => {
-    const updated = this.state.userCatalogs.filter((c) => c.id !== id);
-    this.saveUserCatalogs(updated);
-    this.setState({ userCatalogs: updated });
+    ConfigService.deleteObjectConfig(id, "opdsCatalogs");
+    ConfigService.deleteListConfig(id, "opdsCatalogList");
+    this.setState({ userCatalogs: this.loadUserCatalogs() });
   };
 
   getDownloadLinks(entry: OPDSEntry): OPDSLink[] {
