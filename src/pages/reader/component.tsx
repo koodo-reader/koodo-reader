@@ -424,7 +424,16 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <div className="drag-background"></div>
           </>
         )}
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            style: {
+              wordWrap: "break-word",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              overflowWrap: "break-word",
+            },
+          }}
+        />
 
         <div
           className="left-panel"
