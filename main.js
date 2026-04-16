@@ -241,7 +241,12 @@ const createTray = () => {
   const iconPath = isDev
     ? path.join(__dirname, "./public/assets/icon.png")
     : path.join(__dirname, "./build/assets/icon.png");
-  tray = new Tray(nativeImage.createFromPath(iconPath));
+  let trayIcon = nativeImage.createFromPath(iconPath);
+  if (os.platform() === "darwin") {
+    trayIcon = trayIcon.resize({ width: 16, height: 16 });
+    trayIcon.setTemplateImage(true);
+  }
+  tray = new Tray(trayIcon);
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "Open Koodo Reader",
@@ -391,6 +396,7 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("discord-rpc-clear", async (event) => {
+    console.log("discordRPCClient lcear");
     if (discordRPCClient) {
       try {
         await discordRPCClient.clearActivity();
@@ -548,6 +554,13 @@ const createMainWin = () => {
       }
       if (mainWin && !mainWin.isDestroyed()) {
         mainWin.webContents.send("reading-finished", {});
+      }
+      if (discordRPCClient) {
+        try {
+          discordRPCClient.clearActivity();
+        } catch (e) {
+          console.warn("Failed to clear Discord activity:", e.message);
+        }
       }
     });
 
@@ -1051,6 +1064,13 @@ const createMainWin = () => {
     if (mainWin && mainView) {
       mainWin.contentView.removeChildView(mainView);
     }
+    if (discordRPCClient) {
+      try {
+        discordRPCClient.clearActivity();
+      } catch (e) {
+        console.warn("Failed to clear Discord activity:", e.message);
+      }
+    }
   });
   ipcMain.handle("enter-tab-fullscreen", () => {
     if (mainWin && mainView) {
@@ -1164,6 +1184,13 @@ const createMainWin = () => {
         }
         if (mainWin && !mainWin.isDestroyed()) {
           mainWin.webContents.send("reading-finished", {});
+        }
+        if (discordRPCClient) {
+          try {
+            discordRPCClient.clearActivity();
+          } catch (e) {
+            console.warn("Failed to clear Discord activity:", e.message);
+          }
         }
       });
     }
