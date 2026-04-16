@@ -63,6 +63,11 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
           onClick={(event) => {
             handleJump(event);
           }}
+          onMouseDown={(event) => {
+            if (event.shiftKey) {
+              event.preventDefault();
+            }
+          }}
           onMouseEnter={() => {
             setIsHover(true);
           }}
