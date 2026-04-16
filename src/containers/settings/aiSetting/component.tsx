@@ -132,6 +132,15 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
       }
       const data = await response.json();
       const rawModels = data.data || data.models || data.results || data || [];
+      if (rawModels.length === 0) {
+        toast.error(this.props.t("No models found"));
+        toast.error(
+          this.props.t(
+            "You can add models manually by selecting the custom model"
+          )
+        );
+        return;
+      }
       const models = rawModels.map((m: any) => ({
         id: m.id || m.model || m.name,
         name: m.id || m.display_name || m.name || m.model,
