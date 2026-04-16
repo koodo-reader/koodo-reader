@@ -19,6 +19,7 @@ import {
 } from "../../../utils/request/reader";
 import { chatStream } from "../../../utils/request/common";
 import { marked } from "marked";
+import { getIframeDoc } from "../../../utils/reader/docUtil";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   constructor(props: PopupDictProps) {
@@ -173,6 +174,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
 
       if (dictText.startsWith("https://")) {
         openExternalUrl(dictText, true, "dict");
+        let docs = getIframeDoc(this.props.currentBook.format);
+        for (let i = 0; i < docs.length; i++) {
+          let doc = docs[i];
+          if (!doc) continue;
+          doc.getSelection()?.empty();
+        }
       } else {
         this.setState(
           {
@@ -190,7 +197,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       }
       if (
         this.props.isAuthed &&
-        ConfigService.getReaderConfig("isDisableAI") !== "yes"
+        ConfigService.getReaderConfig("isDisableAI") !== "yes" &&
+        this.state.dictService === "official-ai-dict-plugin"
       ) {
         this.handleDictionaryStream(text, isFullAnalysis);
       }
