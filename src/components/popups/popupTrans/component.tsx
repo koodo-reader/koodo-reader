@@ -119,6 +119,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       let config: any = plugin.config || {};
       await chatStream(
         config.endpoint,
+        config.providerId,
         config.apiKey,
         config.modelId,
         systemPrompt,

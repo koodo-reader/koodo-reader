@@ -104,6 +104,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         this.setState({ aiAnswer: "", isAiWaiting: true });
         await chatStream(
           config.endpoint,
+          config.providerId,
           config.apiKey,
           config.modelId,
           systemPrompt,

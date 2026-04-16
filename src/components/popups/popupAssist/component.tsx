@@ -118,6 +118,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         }
         await chatStream(
           config.endpoint,
+          config.providerId,
           config.apiKey,
           config.modelId,
           systemPrompt + "\n\nUser question: " + currentQuestion,
