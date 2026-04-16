@@ -80,7 +80,7 @@ export const onSyncCallback = async (service: string, authCode: string) => {
   if (service === "yiyiwu") {
     toast(
       "115 网盘只推荐 115 会员使用，非会员基本上无法使用，并且由于 115 网盘严格的API限制，请务必启用 Koodo Sync，并且 1 小时内不要导入超过5本书以防止被 115 风控。如果出现了风控，请等待至少半小时再使用。",
-      { duration: 8000 }
+      { duration: 10000 }
     );
   }
   return res;
