@@ -4,7 +4,7 @@ import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { loadFontData } from "../../../utils/common";
+import { loadFontData, vexComfirmAsync } from "../../../utils/common";
 import toast from "react-hot-toast";
 declare var window: any;
 class DropdownList extends React.Component<
@@ -83,7 +83,13 @@ class DropdownList extends React.Component<
           ConfigService.setReaderConfig(option, "");
         }
         if (arr[0] === "Load local fonts") {
-          loadFontData();
+          vexComfirmAsync(
+            this.props.t(
+              "Please install local fonts to your machine and then restart the application"
+            )
+          );
+
+          return;
         }
 
         break;

@@ -117,14 +117,14 @@ class BackgroundSetting extends React.Component<
 
   handleSetAppBackground = (image: BackgroundImage) => {
     ConfigService.setReaderConfig("appBackgroundImage", image.id);
-    this.setState({ appBackgroundId: image.id, previewImage: null });
+    this.setState({ appBackgroundId: image.id });
     applyAppBackgroundImage();
     toast.success(this.props.t("Change successful"));
   };
 
   handleClearAppBackground = () => {
     ConfigService.setReaderConfig("appBackgroundImage", "");
-    this.setState({ appBackgroundId: "", previewImage: null });
+    this.setState({ appBackgroundId: "" });
     applyAppBackgroundImage();
     toast.success(this.props.t("Change successful"));
   };
@@ -137,16 +137,18 @@ class BackgroundSetting extends React.Component<
     if (image.backgroundColor) {
       ConfigService.setReaderConfig("backgroundColor", image.backgroundColor);
     }
-    this.setState({ readerBackgroundId: image.id, previewImage: null });
+    this.setState({ readerBackgroundId: image.id });
     this.props.handleReaderBackgroundImage?.(image.id);
     toast.success(this.props.t("Change successful"));
   };
 
   handleClearReaderBackground = () => {
     ConfigService.setReaderConfig("readerBackgroundImage", "");
-    this.setState({ readerBackgroundId: "", previewImage: null });
+    this.setState({ readerBackgroundId: "" });
     this.props.handleReaderBackgroundImage?.("");
     toast.success(this.props.t("Change successful"));
+    ConfigService.setReaderConfig("textColor", "");
+    ConfigService.setReaderConfig("backgroundColor", "");
   };
 
   handleDelete = async (e: React.MouseEvent, image: BackgroundImage) => {

@@ -1106,7 +1106,7 @@ class TextToSpeech extends React.Component<
                   }
                 );
               }
-
+              toast.success(this.props.t("Setup successful"));
               if (this.state.isAudioOn) {
                 this.handleVoiceSwitch(voiceName, newEngine, previousEngine);
               }
