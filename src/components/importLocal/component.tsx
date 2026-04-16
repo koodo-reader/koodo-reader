@@ -94,7 +94,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       if (this.state.isOpenFile) {
         if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           //ignore
-        } else if (this.props.isAuthed) {
+        } else if (
+          this.props.isAuthed &&
+          ConfigService.getItem("defaultSyncOption")
+        ) {
           await BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
           await CoverUtil.addCover(book);
         } else if (ConfigService.getReaderConfig("isImportPath") === "yes") {
@@ -113,7 +116,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       } else {
         if (
           ConfigService.getReaderConfig("isImportPath") !== "yes" ||
-          this.props.isAuthed
+          (this.props.isAuthed && ConfigService.getItem("defaultSyncOption"))
         ) {
           await BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
         }

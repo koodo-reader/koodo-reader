@@ -1,8 +1,10 @@
 import Plugin from "../../../models/Plugin";
+import BookModel from "../../../models/Book";
 
 export interface PopupTransProps {
   originalText: string;
   plugins: Plugin[];
+  currentBook: BookModel;
   isAuthed: boolean;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;

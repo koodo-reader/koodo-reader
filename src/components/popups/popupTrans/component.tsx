@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { getDefaultTransTarget, openExternalUrl } from "../../../utils/common";
 import { getTransStream } from "../../../utils/request/reader";
 import { chatStream } from "../../../utils/request/common";
+import { getIframeDoc } from "../../../utils/reader/docUtil";
 declare var window: any;
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
@@ -75,6 +76,12 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         .then((res: string) => {
           if (res.startsWith("https://")) {
             openExternalUrl(res, true, "trans");
+            let docs = getIframeDoc(this.props.currentBook.format);
+            for (let i = 0; i < docs.length; i++) {
+              let doc = docs[i];
+              if (!doc) continue;
+              doc.getSelection()?.empty();
+            }
           } else {
             this.setState({
               translatedText: res,
