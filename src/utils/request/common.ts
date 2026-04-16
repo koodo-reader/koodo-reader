@@ -121,6 +121,10 @@ export const chatStream = async (
 
     source.addEventListener("error", (e: any) => {
       console.error("ChatStream error:", e);
+      toast.error(e.data ? JSON.stringify(e.data) : "Unknown error", {
+        id: "chat-stream-error",
+        duration: 5000,
+      });
       source.close();
       reject(e);
     });

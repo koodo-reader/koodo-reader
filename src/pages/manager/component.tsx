@@ -195,7 +195,16 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           </div>
         )}
         <Sidebar />
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            style: {
+              wordWrap: "break-word",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              overflowWrap: "break-word",
+            },
+          }}
+        />
         <Header {...{ handleDrag: this.handleDrag }} />
         {this.props.isOpenDeleteDialog && <DeleteDialog />}
         {this.props.isOpenEditDialog && <EditDialog />}

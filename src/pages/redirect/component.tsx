@@ -97,7 +97,16 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     if (this.state.isError || this.state.isAuthed) {
       return (
         <div className="backup-page-finish-container">
-          <Toaster />
+          <Toaster
+            toastOptions={{
+              style: {
+                wordWrap: "break-word",
+                wordBreak: "break-word",
+                whiteSpace: "normal",
+                overflowWrap: "break-word",
+              },
+            }}
+          />
           <div className="backup-page-finish">
             {this.state.isAuthed ? (
               <Lottie options={successOptions} height={80} width={80} />
@@ -155,7 +164,20 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
           alt=""
           className="empty-page-illustration"
         />
-        <Toaster />
+        <Toaster
+          position="top-right"
+          containerStyle={{
+            maxWidth: "500px",
+          }}
+          toastOptions={{
+            style: {
+              wordWrap: "break-word",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              overflowWrap: "break-word",
+            },
+          }}
+        />
       </div>
     );
   }

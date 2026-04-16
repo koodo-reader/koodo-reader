@@ -543,7 +543,9 @@ class TextToSpeech extends React.Component<
         id: "tts-analysis",
       });
       if (nodeTextList.join("").length > 50000) {
-        toast.error(this.props.t("The text is too long to analyze"));
+        toast.error(this.props.t("The text is too long to analyze"), {
+          id: "tts-analysis",
+        });
         this.setState({ isAudioOn: false });
         return [];
       }
