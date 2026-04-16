@@ -352,6 +352,7 @@ class SupportDialog extends React.Component<
                                     ),
                                   {
                                     id: "check-payment-status",
+                                    duration: 6000,
                                   }
                                 );
                               } else {
