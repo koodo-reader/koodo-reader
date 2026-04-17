@@ -12,7 +12,6 @@ import {
   langToName,
   sleep,
   splitSentences,
-  trimSpecialCharacters,
 } from "../../utils/common";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
@@ -189,6 +188,12 @@ class TextToSpeech extends React.Component<
   }
   handleMultiRoleToggle = (enabled: boolean) => {
     if (enabled) {
+      if (!this.props.isAuthed) {
+        toast(this.props.t("Please upgrade to Pro to use this feature"));
+        this.props.handleSetting(true);
+        this.props.handleSettingMode("account");
+        return;
+      }
       ConfigService.setListConfig(
         this.props.currentBook.key,
         "multiRoleVoiceBooks"
@@ -506,6 +511,10 @@ class TextToSpeech extends React.Component<
       return;
     }
     if (this.nodeList[0].voiceEngine !== "system") {
+      toast.loading(this.props.t("Loading audio, please wait..."), {
+        id: "tts-load",
+      });
+
       await this.handleCustomRead(0);
     } else {
       await this.handleSystemRead(0);
@@ -519,18 +528,18 @@ class TextToSpeech extends React.Component<
     let nodeTextList = (await this.props.htmlBook.rendition.audioText()).filter(
       (item: string) => item && item.trim()
     );
-    if (!this.state.multiRoleEnabled || !this.props.isAuthed) {
-      if (
-        this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
-      ) {
-      } else {
-        let rawNodeList = nodeTextList.map((text) => {
-          return splitSentences(text);
-        });
+    if (
+      this.props.currentBook.format === "PDF" &&
+      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+    ) {
+    } else {
+      let rawNodeList = nodeTextList.map((text) => {
+        return splitSentences(text);
+      });
 
-        nodeTextList = rawNodeList.flat();
-      }
+      nodeTextList = rawNodeList.flat();
+    }
+    if (!this.state.multiRoleEnabled || !this.props.isAuthed) {
       nodeList = nodeTextList.map((text: string) => {
         return {
           text,
@@ -540,17 +549,19 @@ class TextToSpeech extends React.Component<
       });
     } else {
       toast.loading(this.props.t("Analyzing roles, please wait..."), {
-        id: "tts-analysis",
+        id: "tts-load",
       });
       if (nodeTextList.join("").length > 50000) {
         toast.error(this.props.t("The text is too long to analyze"), {
-          id: "tts-analysis",
+          id: "tts-load",
         });
         this.setState({ isAudioOn: false });
         return [];
       }
+      console.log(nodeTextList, "nodeTextList");
       let res = await getSplitSentence(nodeTextList);
-      toast.dismiss("tts-analysis");
+      toast.dismiss("tts-load");
+
       let narratorVoice = this.state.multiRoleNarratorVoice;
       let narratorEngine = this.state.multiRoleNarratorEngine;
       let maleVoice = this.state.multiRoleMaleVoice;
@@ -585,6 +596,7 @@ class TextToSpeech extends React.Component<
         return [];
       }
     }
+    console.log(nodeList, "nodeList");
 
     if (nodeList.length === 0) {
       if (
@@ -672,16 +684,16 @@ class TextToSpeech extends React.Component<
       let isReachPageEnd =
         this.nodeList[index].text ===
         lastVisibleTextList[lastVisibleTextList.length - 1];
-      if (this.state.multiRoleEnabled) {
-        isReachPageEnd =
-          trimSpecialCharacters(this.nodeList[index].text).includes(
-            trimSpecialCharacters(
-              lastVisibleTextList[lastVisibleTextList.length - 1]
-            )
-          ) ||
-          trimSpecialCharacters(
-            lastVisibleTextList[lastVisibleTextList.length - 1]
-          ).includes(trimSpecialCharacters(this.nodeList[index].text));
+      if (
+        this.state.multiRoleEnabled &&
+        lastVisibleTextList[lastVisibleTextList.length - 1] &&
+        (lastVisibleTextList[lastVisibleTextList.length - 1].indexOf("“") >
+          -1 ||
+          lastVisibleTextList[lastVisibleTextList.length - 1].indexOf('"') > -1)
+      ) {
+        isReachPageEnd = lastVisibleTextList[
+          lastVisibleTextList.length - 1
+        ].endsWith(this.nodeList[index].text);
       }
       if (index === this.nodeList.length - 1) {
         isReachPageEnd = true;
@@ -757,16 +769,16 @@ class TextToSpeech extends React.Component<
       let isReachPageEnd =
         this.nodeList[index].text ===
         lastVisibleTextList[lastVisibleTextList.length - 1];
-      if (this.state.multiRoleEnabled) {
-        isReachPageEnd =
-          trimSpecialCharacters(this.nodeList[index].text).includes(
-            trimSpecialCharacters(
-              lastVisibleTextList[lastVisibleTextList.length - 1]
-            )
-          ) ||
-          trimSpecialCharacters(
-            lastVisibleTextList[lastVisibleTextList.length - 1]
-          ).includes(trimSpecialCharacters(this.nodeList[index].text));
+      if (
+        this.state.multiRoleEnabled &&
+        lastVisibleTextList[lastVisibleTextList.length - 1] &&
+        (lastVisibleTextList[lastVisibleTextList.length - 1].indexOf("“") >
+          -1 ||
+          lastVisibleTextList[lastVisibleTextList.length - 1].indexOf('"') > -1)
+      ) {
+        isReachPageEnd = lastVisibleTextList[
+          lastVisibleTextList.length - 1
+        ].includes(this.nodeList[index].text);
       }
       if (index === this.nodeList.length - 1) {
         isReachPageEnd = true;
@@ -1197,14 +1209,6 @@ class TextToSpeech extends React.Component<
           <span
             className="single-control-switch"
             onClick={() => {
-              if (!this.props.isAuthed) {
-                toast(
-                  this.props.t("Please upgrade to Pro to use this feature")
-                );
-                this.props.handleSetting(true);
-                this.props.handleSettingMode("account");
-                return;
-              }
               this.handleMultiRoleToggle(!this.state.multiRoleEnabled);
             }}
             style={this.state.multiRoleEnabled ? {} : { opacity: 0.6 }}
