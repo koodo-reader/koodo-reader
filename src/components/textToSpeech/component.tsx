@@ -558,7 +558,6 @@ class TextToSpeech extends React.Component<
         this.setState({ isAudioOn: false });
         return [];
       }
-      console.log(nodeTextList, "nodeTextList");
       let res = await getSplitSentence(nodeTextList);
       toast.dismiss("tts-load");
 
@@ -596,7 +595,6 @@ class TextToSpeech extends React.Component<
         return [];
       }
     }
-    console.log(nodeList, "nodeList");
 
     if (nodeList.length === 0) {
       if (
