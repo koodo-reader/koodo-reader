@@ -1139,7 +1139,6 @@ export const splitSentences = (text: string, maxLength?: number) => {
   const trimmed = sentences
     .map((sentence) => sentence.trim())
     .filter((sentence) => sentence.trim() !== "");
-  console.log(lang, text, trimmed);
   const splitLongSentence = (sentence: string): string[] => {
     if (sentence.length <= resolvedMaxLength) return [sentence];
 

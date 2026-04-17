@@ -29,7 +29,6 @@ import {
   dataSettingList,
   noteSyncSettingList,
 } from "../../../constants/settingList";
-
 declare var window: any;
 class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -273,6 +272,11 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     ConfigService.setItem("storageLocation", newPath);
     this.setState({ storageLocation: newPath });
+    let targetDrive = ConfigService.getItem("defaultSyncOption");
+    await ipcRenderer.invoke("cloud-close", {
+      service: targetDrive,
+    });
+
     toast.success(this.props.t("Change successful"));
     this.props.handleFetchBooks();
   };
@@ -303,7 +307,10 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       } catch (error) {
         console.error("Error reading config.json:", error);
       }
-
+      let targetDrive = ConfigService.getItem("defaultSyncOption");
+      await ipcRenderer.invoke("cloud-close", {
+        service: targetDrive,
+      });
       toast.success(this.props.t("Switch successful"));
       this.props.handleFetchBooks();
       await generateSyncRecord();
