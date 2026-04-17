@@ -50,18 +50,18 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
-        await this.handleBatchTranslation(nextProps.htmlBook.rendition, 10000);
+        await this.handleBatchTranslation(nextProps.htmlBook.rendition);
       });
       nextProps.htmlBook.rendition.on("rendered", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
-        await this.handleBatchTranslation(nextProps.htmlBook.rendition, 0);
+        await this.handleBatchTranslation(nextProps.htmlBook.rendition);
       });
     }
     if (nextProps.readerMode !== this.props.readerMode) {
       this.setState({ isSingle: nextProps.readerMode !== "double" });
     }
   }
-  async handleBatchTranslation(rendition, interval: number) {
+  async handleBatchTranslation(rendition) {
     if (
       !ConfigService.getAllListConfig("fullTranslationBooks").includes(
         this.props.currentBook.key
@@ -73,13 +73,14 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     }
 
     const now = Date.now();
-    if (now - this.lastBatchTranslationTriggerAt < interval) {
-      return;
-    }
-    this.lastBatchTranslationTriggerAt = now;
 
     let batchTransTexts = await rendition.getBatchTransTexts();
     if (batchTransTexts && batchTransTexts.length > 0) {
+      console.log(now - this.lastBatchTranslationTriggerAt, "dfsgdfg");
+      if (now - this.lastBatchTranslationTriggerAt < 10000) {
+        return;
+      }
+      this.lastBatchTranslationTriggerAt = now;
       let res = await getBatchTrans(
         batchTransTexts,
         "Automatic",

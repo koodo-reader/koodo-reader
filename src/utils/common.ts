@@ -1108,16 +1108,29 @@ export const handleAutoCloudSync = async () => {
   }
   return false;
 };
-const isCJKText = (text: string): boolean => {
-  // Check if the majority of characters are CJK (Chinese, Japanese, Korean)
-  const cjkPattern = /[\u3000-\u9fff\uac00-\ud7af\uf900-\ufaff]/g;
-  const cjkCount = (text.match(cjkPattern) || []).length;
-  return cjkCount / text.length > 0.3;
+const detectLanguage = (text: string): string => {
+  const chinesePattern = /[\u4e00-\u9fff\u3000-\u303f\uf900-\ufaff]/g;
+  const japanesePattern = /[\u3040-\u309f\u30a0-\u30ff]/g;
+  const koreanPattern = /[\uac00-\ud7af\u1100-\u11ff]/g;
+
+  const chineseCount = (text.match(chinesePattern) || []).length;
+  const japaneseCount = (text.match(japanesePattern) || []).length;
+  const koreanCount = (text.match(koreanPattern) || []).length;
+
+  const cjkTotal = chineseCount + japaneseCount + koreanCount;
+  if (cjkTotal / text.length <= 0.3) return "en";
+
+  if (chineseCount >= japaneseCount && chineseCount >= koreanCount) return "zh";
+  if (japaneseCount >= chineseCount && japaneseCount >= koreanCount)
+    return "ja";
+  return "ko";
 };
 
 export const splitSentences = (text: string, maxLength?: number) => {
-  const resolvedMaxLength = maxLength ?? (isCJKText(text) ? 50 : 150);
-  const segmenter = new (Intl as any).Segmenter("zh", {
+  const lang = detectLanguage(text);
+  const resolvedMaxLength = maxLength ?? (lang === "en" ? 150 : 50);
+
+  const segmenter = new (Intl as any).Segmenter(lang, {
     granularity: "sentence",
   });
   const segments = segmenter.segment(text);
@@ -1126,7 +1139,7 @@ export const splitSentences = (text: string, maxLength?: number) => {
   const trimmed = sentences
     .map((sentence) => sentence.trim())
     .filter((sentence) => sentence.trim() !== "");
-
+  console.log(lang, text, trimmed);
   const splitLongSentence = (sentence: string): string[] => {
     if (sentence.length <= resolvedMaxLength) return [sentence];
 
