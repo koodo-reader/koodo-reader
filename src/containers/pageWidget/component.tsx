@@ -77,7 +77,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     let batchTransTexts = await rendition.getBatchTransTexts();
     if (batchTransTexts && batchTransTexts.length > 0) {
       console.log(now - this.lastBatchTranslationTriggerAt, "dfsgdfg");
-      if (now - this.lastBatchTranslationTriggerAt < 10000) {
+      if (now - this.lastBatchTranslationTriggerAt < 6000) {
         return;
       }
       this.lastBatchTranslationTriggerAt = now;
@@ -88,6 +88,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           ConfigService.getReaderConfig("lang") || "zhCN"
         ]
       );
+      console.log(batchTransTexts, res.data.texts);
       if (res && res.data && res.data.texts) {
         rendition.handleBatchTransResult(batchTransTexts, res.data.texts);
       }
