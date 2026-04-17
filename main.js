@@ -396,7 +396,6 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("discord-rpc-clear", async (event) => {
-    console.log("discordRPCClient lcear");
     if (discordRPCClient) {
       try {
         await discordRPCClient.clearActivity();
