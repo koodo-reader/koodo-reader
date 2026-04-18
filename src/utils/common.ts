@@ -1144,7 +1144,7 @@ export const splitSentences = (text: string, maxLength?: number) => {
 
     // Try splitting by common punctuation marks (Chinese and Western)
     const parts = sentence
-      .split(/(?<=[,，;；:：、。！？…\.!\?])/)
+      .split(/(?<=[,，;；:：、…])/)
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
 
