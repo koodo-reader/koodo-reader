@@ -528,12 +528,13 @@ class TextToSpeech extends React.Component<
     let nodeTextList = (await this.props.htmlBook.rendition.audioText()).filter(
       (item: string) => item && item.trim()
     );
+    let rawNodeList: string[][] = [];
     if (
       this.props.currentBook.format === "PDF" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
     } else {
-      let rawNodeList = nodeTextList.map((text) => {
+      rawNodeList = nodeTextList.map((text) => {
         return splitSentences(text);
       });
 
@@ -558,7 +559,10 @@ class TextToSpeech extends React.Component<
         this.setState({ isAudioOn: false });
         return [];
       }
-      let res = await getSplitSentence(nodeTextList);
+      let splitTextList = rawNodeList.flatMap((texts, index) =>
+        texts.map((text) => ({ text, index: index }))
+      );
+      let res = await getSplitSentence(splitTextList);
       toast.dismiss("tts-load");
 
       let narratorVoice = this.state.multiRoleNarratorVoice;
