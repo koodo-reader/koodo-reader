@@ -120,7 +120,7 @@ class SettingDialog extends React.Component<
               "background",
               "icon-image",
               "Background",
-              "20px"
+              "18px"
             )}
             {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>
