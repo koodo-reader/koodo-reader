@@ -293,7 +293,9 @@ export const getBatchTrans = async (
   }
   return response;
 };
-export const getSplitSentence = async (texts: string) => {
+export const getSplitSentence = async (
+  texts: { text: string; index: number }[]
+) => {
   let readerRequest = await getReaderRequest();
   let response = await readerRequest.getSplitSentence({ texts });
   if (response.code === 200) {
