@@ -433,12 +433,6 @@ class CoverUtil {
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let cloudCoverList = await syncUtil.listFiles("cover");
-      let books: Book[] | null = await DatabaseService.getAllRecords("books");
-      if (books && books.length > 0) {
-        cloudCoverList = cloudCoverList.filter((item) => {
-          return books?.some((book) => item.startsWith(book.key));
-        });
-      }
       return cloudCoverList;
     }
   }
@@ -448,6 +442,7 @@ class CoverUtil {
       return;
     }
     let coverList = await this.getCloudCoverList();
+    console.log(coverList, key, "coverList");
     for (let cover of coverList) {
       if (cover.startsWith(key)) {
         if (isElectron) {
@@ -467,6 +462,7 @@ class CoverUtil {
           });
         } else {
           let syncUtil = await SyncService.getSyncUtil();
+          console.log("before delete");
           await syncUtil.deleteFile(cover, "cover");
         }
       }
