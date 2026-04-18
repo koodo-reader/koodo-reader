@@ -72,14 +72,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       return;
     }
 
-    const now = Date.now();
-
     let batchTransTexts = await rendition.getBatchTransTexts();
     if (batchTransTexts && batchTransTexts.length > 0) {
-      if (now - this.lastBatchTranslationTriggerAt < 6000) {
-        return;
-      }
-      this.lastBatchTranslationTriggerAt = now;
       let res = await getBatchTrans(
         batchTransTexts,
         "Automatic",
