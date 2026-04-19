@@ -15,6 +15,10 @@ import ConvertDialog from "../../components/dialogs/convertDialog";
 import { isElectron } from "react-device-detect";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import SpeechDialog from "../../components/dialogs/speechDialog";
+import {
+  updateDiscordPresence,
+  clearDiscordPresence,
+} from "../../utils/reader/discordRPC";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -102,7 +106,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           : ConfigService.getReaderConfig("readerMode") || "double";
       this.props.handleReaderMode(readerMode);
       this.props.handleReadingBook(book);
+      if (isElectron) {
+        updateDiscordPresence(book);
+      }
     });
+  }
+
+  componentWillUnmount() {
+    if (isElectron) {
+      clearDiscordPresence();
+    }
+    clearInterval(this.tickTimer);
   }
 
   handleEnterReader = (position: string) => {
@@ -241,8 +255,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   ></span>
                 </div>
               )}
-              {this.props.isAuthed &&
-                !this.props.isHideAIButton &&
+              {!this.props.isHideAIButton &&
                 ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
                   <div
                     className="next-chapter-single-container"
@@ -411,7 +424,16 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <div className="drag-background"></div>
           </>
         )}
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            style: {
+              wordWrap: "break-word",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              overflowWrap: "break-word",
+            },
+          }}
+        />
 
         <div
           className="left-panel"
@@ -671,7 +693,15 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         {this.props.currentBook.key && <Viewer {...renditionProps} />}
         {this.props.isConvertOpen && <ConvertDialog />}
         {
-          <div style={this.props.isSpeechOpen ? {} : { display: "none" }}>
+          <div
+            style={
+              this.props.isSpeechOpen
+                ? {}
+                : {
+                    display: "none",
+                  }
+            }
+          >
             <SpeechDialog />
           </div>
         }

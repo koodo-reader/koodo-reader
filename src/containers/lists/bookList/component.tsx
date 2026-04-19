@@ -46,6 +46,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
       displayedBooksCount: 24,
       isLoadingMore: false,
       fullBooksData: [], // 存储从数据库加载的完整书籍数据
+      cardScale: parseFloat(ConfigService.getReaderConfig("cardScale") || "1"),
+      readingStatusFilter: "",
     };
   }
   UNSAFE_componentWillMount() {
@@ -115,7 +117,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     }
   }
 
-  componentDidUpdate(prevProps: BookListProps) {
+  componentDidUpdate(prevProps: BookListProps, prevState: BookListState) {
     // 当书籍列表更新时，重置显示数量
     if (
       prevProps.books !== this.props.books ||
@@ -134,6 +136,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
         this.scrollContainer.current.scrollTop = 0;
       }
       // 重新加载完整的书籍数据
+      this.loadFullBooksData();
+    }
+    // 阅读状态筛选变化时，重新加载完整书籍数据
+    if (prevState.readingStatusFilter !== this.state.readingStatusFilter) {
       this.loadFullBooksData();
     }
   }
@@ -268,6 +274,33 @@ class BookList extends React.Component<BookListProps, BookListState> {
       );
     });
   };
+  handleCardScaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const scale = parseFloat(e.target.value);
+    this.setState({ cardScale: scale });
+    ConfigService.setReaderConfig("cardScale", String(scale));
+  };
+
+  filterBooksByReadingStatus = (books: Book[], status: string): Book[] => {
+    if (!status) return books;
+    return books.filter((book) => {
+      const record = ConfigService.getObjectConfig(
+        book.key,
+        "recordLocation",
+        {}
+      );
+      const percentage: string =
+        record && record.percentage ? record.percentage : "";
+      if (status === "unread") {
+        return !percentage || percentage === "0";
+      } else if (status === "reading") {
+        return percentage && percentage !== "0" && percentage !== "1";
+      } else if (status === "finished") {
+        return percentage === "1";
+      }
+      return true;
+    });
+  };
+
   renderBookList = (books: Book[], bookMode: string) => {
     if (books.length === 0 && !this.props.isSearch) {
       return <Redirect to="/manager/empty" />;
@@ -276,10 +309,11 @@ class BookList extends React.Component<BookListProps, BookListState> {
       currentBookMode = bookMode;
     }
 
-    // 使用状态中已加载的完整书籍数据
+    // 使用状态中已加载的完整书籍数据，并按当前过滤后的 books 顺序/范围进行裁剪
+    const filteredKeys = new Set(books.map((b) => b.key));
     const displayedBooks = this.props.isSearch
       ? books
-      : this.state.fullBooksData;
+      : this.state.fullBooksData.filter((b) => filteredKeys.has(b.key));
 
     return displayedBooks.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
@@ -288,6 +322,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
             key: index,
             book: item,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            allBooks: displayedBooks,
+            bookIndex: index,
           }}
         />
       ) : this.props.viewMode === "card" ? (
@@ -295,7 +331,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
           {...{
             key: index,
             book: item,
+            cardScale: this.state.cardScale,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            allBooks: displayedBooks,
+            bookIndex: index,
           }}
         />
       ) : (
@@ -304,6 +343,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
             key: index,
             book: item,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            allBooks: displayedBooks,
+            bookIndex: index,
           }}
         />
       );
@@ -332,6 +373,12 @@ class BookList extends React.Component<BookListProps, BookListState> {
             : bookMode === "hide"
               ? this.handleFilterShelfBook(this.props.books)
               : this.props.books;
+    if (this.state.readingStatusFilter) {
+      books = this.filterBooksByReadingStatus(
+        books,
+        this.state.readingStatusFilter
+      );
+    }
     return {
       books,
       bookMode,
@@ -363,11 +410,44 @@ class BookList extends React.Component<BookListProps, BookListState> {
             style={this.props.isSelectBook ? { display: "none" } : {}}
             className="book-list-header-right"
           >
+            {this.props.viewMode === "card" && (
+              <input
+                type="range"
+                min="0.6"
+                max="2"
+                step="0.05"
+                value={this.state.cardScale}
+                onChange={this.handleCardScaleChange}
+                className="book-card-scale-slider"
+                title="Adjust cover size"
+              />
+            )}
             <div className="book-list-total-page">
               <Trans i18nKey="Total books" count={books.length}>
                 {"Total " + books.length + " books"}
               </Trans>
             </div>
+            <select
+              className="lang-setting-dropdown"
+              value={this.state.readingStatusFilter}
+              onChange={(e) => {
+                this.setState({ readingStatusFilter: e.target.value });
+              }}
+              style={{ marginRight: "10px", width: "70px", borderWidth: "0px" }}
+            >
+              <option value="" className="lang-setting-option">
+                {this.props.t("AllStatus")}
+              </option>
+              <option value="unread" className="lang-setting-option">
+                {this.props.t("UnreadStatus")}
+              </option>
+              <option value="reading" className="lang-setting-option">
+                {this.props.t("ReadingStatus")}
+              </option>
+              <option value="finished" className="lang-setting-option">
+                {this.props.t("FinishedStatus")}
+              </option>
+            </select>
             <ViewMode />
           </div>
         </div>
@@ -380,7 +460,13 @@ class BookList extends React.Component<BookListProps, BookListState> {
           }
         >
           <div className="book-list-container">
-            <ul className="book-list-item-box" ref={this.scrollContainer}>
+            <ul
+              className="book-list-item-box"
+              ref={this.scrollContainer}
+              style={
+                { "--card-scale": this.state.cardScale } as React.CSSProperties
+              }
+            >
               {this.renderBookList(books, bookMode)}
             </ul>
           </div>

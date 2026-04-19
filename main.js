@@ -3,6 +3,8 @@ const {
   BrowserWindow,
   WebContentsView,
   Menu,
+  Tray,
+  nativeImage,
   ipcMain,
   dialog,
   powerSaveBlocker,
@@ -21,6 +23,8 @@ const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 const packageJson = require("./package.json");
 let mainWin;
+let tray = null;
+let isQuitting = false;
 let readerWindow;
 let readerWindowList = [];
 let dictWindow;
@@ -34,6 +38,60 @@ let dbConnection = {};
 let syncUtilCache = {};
 let pickerUtilCache = {};
 let downloadRequest = null;
+
+// Discord Rich Presence setup
+let discordRPCClient = null;
+let discordRPCReady = false;
+let discordRPCConnecting = false;
+const DISCORD_CLIENT_ID = "1490863275074781305"; // Koodo Reader Discord App ID
+
+function initDiscordRPC() {
+  if (discordRPCConnecting || discordRPCReady) return Promise.resolve();
+  discordRPCConnecting = true;
+  return new Promise((resolve) => {
+    try {
+      const DiscordRPC = require("discord-rpc");
+      DiscordRPC.register(DISCORD_CLIENT_ID);
+      const client = new DiscordRPC.Client({ transport: "ipc" });
+      client.on("ready", () => {
+        console.info("Discord RPC connected");
+        discordRPCClient = client;
+        discordRPCReady = true;
+        discordRPCConnecting = false;
+        resolve();
+      });
+      client.login({ clientId: DISCORD_CLIENT_ID }).catch((err) => {
+        console.warn("Discord RPC login failed:", err.message);
+        discordRPCClient = null;
+        discordRPCReady = false;
+        discordRPCConnecting = false;
+        resolve();
+      });
+    } catch (e) {
+      console.warn("Discord RPC init failed:", e.message);
+      discordRPCClient = null;
+      discordRPCReady = false;
+      discordRPCConnecting = false;
+      resolve();
+    }
+  });
+}
+function destroyDiscordRPC() {
+  if (discordRPCClient) {
+    try {
+      discordRPCClient.destroy();
+    } catch (_) {}
+    discordRPCClient = null;
+  }
+  discordRPCReady = false;
+  discordRPCConnecting = false;
+}
+function buildProgressBar(percentage) {
+  const total = 10;
+  const filled = Math.round((percentage / 100) * total);
+  const empty = total - filled;
+  return "▓".repeat(filled) + "░".repeat(empty);
+}
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
@@ -103,6 +161,14 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
     );
     dbConnection[dbName].pragma("journal_mode = WAL");
     dbConnection[dbName].exec(sqlStatement["createTableStatement"][dbName]);
+    if (sqlStatement["migrateStatement"][dbName]) {
+      let sqlList = sqlStatement["migrateStatement"][dbName];
+      for (let sql of sqlList) {
+        try {
+          dbConnection[dbName].exec(sql);
+        } catch (error) {}
+      }
+    }
   }
   return dbConnection[dbName];
 };
@@ -114,7 +180,10 @@ const getSyncUtil = async (config, isUseCache = true) => {
   return syncUtilCache[config.service];
 };
 const removeSyncUtil = (config) => {
-  delete syncUtilCache[config.service];
+  if (syncUtilCache[config.service]) {
+    syncUtilCache[config.service].clearQueue();
+    delete syncUtilCache[config.service];
+  }
 };
 const getPickerUtil = async (config, isUseCache = true) => {
   if (!isUseCache || !pickerUtilCache[config.service]) {
@@ -168,6 +237,43 @@ const isWindowPartiallyVisible = (bounds) => {
   }
   return false;
 };
+const createTray = () => {
+  const iconPath = isDev
+    ? path.join(__dirname, "./public/assets/icon.png")
+    : path.join(__dirname, "./build/assets/icon.png");
+  let trayIcon = nativeImage.createFromPath(iconPath);
+  if (os.platform() === "darwin") {
+    trayIcon = trayIcon.resize({ width: 16, height: 16 });
+    trayIcon.setTemplateImage(true);
+  }
+  tray = new Tray(trayIcon);
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "Open Koodo Reader",
+      click: () => {
+        if (mainWin) {
+          mainWin.show();
+          mainWin.focus();
+        }
+      },
+    },
+    {
+      label: "Quit",
+      click: () => {
+        isQuitting = true;
+        app.quit();
+      },
+    },
+  ]);
+  tray.setToolTip("Koodo Reader");
+  tray.setContextMenu(contextMenu);
+  tray.on("click", () => {
+    if (mainWin) {
+      mainWin.show();
+      mainWin.focus();
+    }
+  });
+};
 const createMainWin = () => {
   const isMainWindVisible = isWindowPartiallyVisible({
     width: parseInt(store.get("mainWinWidth") || 1050) / mainWinDisplayScale,
@@ -195,7 +301,15 @@ const createMainWin = () => {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
-  mainWin.on("close", () => {
+  mainWin.on("close", (event) => {
+    if (!isQuitting && store.get("isMinimizeToTray") === "yes") {
+      event.preventDefault();
+      mainWin.hide();
+      if (!tray) {
+        createTray();
+      }
+      return;
+    }
     if (mainWin && !mainWin.isDestroyed()) {
       let bounds = mainWin.getBounds();
       const currentDisplay = screen.getDisplayMatching(bounds);
@@ -254,6 +368,42 @@ const createMainWin = () => {
     }
     event.returnValue = "cancelled";
   });
+  // Discord RPC handlers
+  ipcMain.handle("discord-rpc-update", async (event, config) => {
+    const { bookTitle, author, percentage } = config;
+    if (!discordRPCReady) {
+      await initDiscordRPC();
+    }
+    if (!discordRPCClient || !discordRPCReady) return;
+    try {
+      const progressBar = buildProgressBar(percentage);
+      await discordRPCClient.setActivity({
+        details: bookTitle,
+        state: `${progressBar} ${percentage}%  |  by ${author}`,
+        largeImageKey: "koodo_reader_logo",
+        largeImageText: "Koodo Reader",
+        startTimestamp: Date.now(),
+        instance: false,
+        buttons: [
+          {
+            label: "Get Koodo Reader",
+            url: "https://koodoreader.com",
+          },
+        ],
+      });
+    } catch (e) {
+      console.warn("Failed to set Discord activity:", e.message);
+    }
+  });
+  ipcMain.handle("discord-rpc-clear", async (event) => {
+    if (discordRPCClient) {
+      try {
+        await discordRPCClient.clearActivity();
+      } catch (e) {
+        console.warn("Failed to clear Discord activity:", e.message);
+      }
+    }
+  });
   ipcMain.handle("update-win-app", (event, config) => {
     let fileName = `koodo-reader-installer.exe`;
     let supportedArchs = ["x64", "ia32", "arm64"];
@@ -284,7 +434,7 @@ const createMainWin = () => {
 
       res.pipe(file);
       file.on("finish", () => {
-        console.log("\n下载完成！");
+        console.info("\n下载完成！");
         file.close();
 
         let updateExePath = path.join(app.getPath("temp"), fileName);
@@ -335,7 +485,7 @@ const createMainWin = () => {
     let id;
     if (isPreventSleep === "yes") {
       id = powerSaveBlocker.start("prevent-display-sleep");
-      console.log(powerSaveBlocker.isStarted(id));
+      console.info(powerSaveBlocker.isStarted(id));
     }
     if (readerWindow) {
       readerWindowList.push(readerWindow);
@@ -403,6 +553,13 @@ const createMainWin = () => {
       }
       if (mainWin && !mainWin.isDestroyed()) {
         mainWin.webContents.send("reading-finished", {});
+      }
+      if (discordRPCClient) {
+        try {
+          discordRPCClient.clearActivity();
+        } catch (e) {
+          console.warn("Failed to clear Discord activity:", e.message);
+        }
       }
     });
 
@@ -681,11 +838,11 @@ const createMainWin = () => {
     });
 
     if (result.canceled) {
-      console.log("User canceled the file selection");
+      console.info("User canceled the file selection");
       return [];
     } else {
       const filePaths = result.filePaths;
-      console.log("Selected file path:", filePaths);
+      console.info("Selected file path:", filePaths);
       return filePaths;
     }
   });
@@ -781,6 +938,14 @@ const createMainWin = () => {
     app.setLoginItemSettings({
       openAtLogin: config.isAutoLaunch === "yes",
     });
+    return "pong";
+  });
+  ipcMain.handle("toggle-minimize-to-tray", async (event, config) => {
+    store.set("isMinimizeToTray", config.isMinimizeToTray);
+    if (config.isMinimizeToTray === "no" && tray) {
+      tray.destroy();
+      tray = null;
+    }
     return "pong";
   });
   ipcMain.handle("open-explorer-folder", async (event, config) => {
@@ -898,29 +1063,36 @@ const createMainWin = () => {
     if (mainWin && mainView) {
       mainWin.contentView.removeChildView(mainView);
     }
+    if (discordRPCClient) {
+      try {
+        discordRPCClient.clearActivity();
+      } catch (e) {
+        console.warn("Failed to clear Discord activity:", e.message);
+      }
+    }
   });
   ipcMain.handle("enter-tab-fullscreen", () => {
     if (mainWin && mainView) {
       mainWin.setFullScreen(true);
-      console.log("enter full");
+      console.info("enter full");
     }
   });
   ipcMain.handle("exit-tab-fullscreen", () => {
     if (mainWin && mainView) {
       mainWin.setFullScreen(false);
-      console.log("exit full");
+      console.info("exit full");
     }
   });
   ipcMain.handle("enter-fullscreen", () => {
     if (readerWindow) {
       readerWindow.setFullScreen(true);
-      console.log("enter full");
+      console.info("enter full");
     }
   });
   ipcMain.handle("exit-fullscreen", () => {
     if (readerWindow) {
       readerWindow.setFullScreen(false);
-      console.log("exit full");
+      console.info("exit full");
     }
   });
   ipcMain.handle("open-url", (event, config) => {
@@ -950,7 +1122,7 @@ const createMainWin = () => {
     let id;
     if (store.get("isPreventSleep") === "yes") {
       id = powerSaveBlocker.start("prevent-display-sleep");
-      console.log(powerSaveBlocker.isStarted(id));
+      console.info(powerSaveBlocker.isStarted(id));
     }
     if (readerWindow) {
       readerWindow.close();
@@ -1011,6 +1183,13 @@ const createMainWin = () => {
         }
         if (mainWin && !mainWin.isDestroyed()) {
           mainWin.webContents.send("reading-finished", {});
+        }
+        if (discordRPCClient) {
+          try {
+            discordRPCClient.clearActivity();
+          } catch (e) {
+            console.warn("Failed to clear Discord activity:", e.message);
+          }
         }
       });
     }
@@ -1081,6 +1260,10 @@ const createMainWin = () => {
 
 app.on("ready", () => {
   createMainWin();
+});
+app.on("before-quit", () => {
+  isQuitting = true;
+  destroyDiscordRPC();
 });
 app.on("window-all-closed", () => {
   app.quit();
@@ -1157,6 +1340,6 @@ const handleCallback = (url) => {
     }
   } catch (error) {
     console.error("Error handling callback URL:", error);
-    console.log("Problematic URL:", url);
+    console.info("Problematic URL:", url);
   }
 };

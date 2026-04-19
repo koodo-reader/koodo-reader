@@ -27,8 +27,7 @@ export interface SettingInfoState {
   isTouch: boolean;
   isPreventTrigger: boolean;
   isMergeWord: boolean;
-  appSkin: string;
-  storageLocation: string;
+
   isImportPath: boolean;
   isOpenBook: boolean;
   isDisablePopup: boolean;
@@ -38,6 +37,7 @@ export interface SettingInfoState {
   isAlwaysOnTop: boolean;
   isAutoMaximizeWin: boolean;
   isAutoLaunch: boolean;
+  isMinimizeToTray: boolean;
   isOpenInMain: boolean;
   isDisableUpdate: boolean;
   isExportOriginalName: boolean;
@@ -49,11 +49,5 @@ export interface SettingInfoState {
   isDisablePDFCover: boolean;
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
-  isAddNew: boolean;
   startupShelf: string;
-  currentThemeIndex: number;
-  driveConfig: any;
-  loginConfig: any;
-  settingLogin: string;
-  status: any;
 }

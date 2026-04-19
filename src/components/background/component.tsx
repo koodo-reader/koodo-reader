@@ -3,6 +3,7 @@ import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { getPageWidth } from "../../utils/common";
+import BackgroundUtil from "../../utils/file/backgroundUtil";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   constructor(props: any) {
@@ -11,9 +12,22 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       isSingle: this.props.readerMode !== "double",
       pageOffset: "",
       pageWidth: "",
+      readerBackgroundUrl: "",
     };
     this.isFirst = true;
   }
+  loadReaderBackground = async (imageId?: string) => {
+    const id =
+      imageId ?? ConfigService.getReaderConfig("readerBackgroundImage") ?? "";
+    if (!id) {
+      this.setState({ readerBackgroundUrl: "" });
+      return;
+    }
+    const meta = BackgroundUtil.getImageMeta(id);
+    const url = await BackgroundUtil.loadImage(id, meta?.extension);
+    this.setState({ readerBackgroundUrl: url || "" });
+  };
+
   componentDidMount() {
     this.setState(
       getPageWidth(
@@ -24,6 +38,22 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         this.props.isSettingLocked
       )
     );
+    this.loadReaderBackground();
+    let resizeTimer: NodeJS.Timeout;
+    window.addEventListener("resize", (event) => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.setState(
+          getPageWidth(
+            this.props.readerMode,
+            this.props.scale,
+            parseInt(this.props.margin),
+            this.props.isNavLocked,
+            this.props.isSettingLocked
+          )
+        );
+      }, 300); // 300ms 防抖
+    });
   }
   async UNSAFE_componentWillReceiveProps(nextProps: BackgroundProps) {
     if (
@@ -45,6 +75,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     }
     if (nextProps.readerMode !== this.props.readerMode) {
       this.setState({ isSingle: nextProps.readerMode !== "double" });
+    }
+    if (nextProps.readerBackgroundImage !== this.props.readerBackgroundImage) {
+      await this.loadReaderBackground(nextProps.readerBackgroundImage ?? "");
     }
   }
 
@@ -130,10 +163,24 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
                   left: this.state.pageOffset,
                   width: `calc(${this.state.pageWidth} + 102px)`,
                   boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
+                  ...(this.state.readerBackgroundUrl
+                    ? {
+                        backgroundImage: `url("${this.state.readerBackgroundUrl}")`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }
+                    : {}),
                 }
               : {
                   left: this.props.isNavLocked ? 309 : 9,
                   right: this.props.isSettingLocked ? 309 : 9,
+                  ...(this.state.readerBackgroundUrl
+                    ? {
+                        backgroundImage: `url("${this.state.readerBackgroundUrl}")`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }
+                    : {}),
                 }
           }
         ></div>

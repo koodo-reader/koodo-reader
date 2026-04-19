@@ -88,74 +88,76 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
           <Trans>Edit Book</Trans>
         </div>
 
-        {/* Cover */}
-        <div className="edit-dialog-row">
-          <span className="edit-dialog-label">
-            <Trans>Cover</Trans>
-          </span>
-          <div
-            className="edit-dialog-cover-box"
-            onClick={() => this.coverInputRef.current?.click()}
-            title={this.props.t("Click to select image")}
-          >
-            {coverPreview ? (
-              <img
-                src={coverPreview}
-                alt="cover"
-                className="edit-dialog-cover-img"
-              />
-            ) : (
-              <span className="edit-dialog-cover-placeholder">
-                <Trans>Click to select image</Trans>
-              </span>
-            )}
+        <div className="edit-dialog-body">
+          {/* Cover */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Cover</Trans>
+            </span>
+            <div
+              className="edit-dialog-cover-box"
+              onClick={() => this.coverInputRef.current?.click()}
+              title={this.props.t("Click to select image")}
+            >
+              {coverPreview ? (
+                <img
+                  src={coverPreview}
+                  alt="cover"
+                  className="edit-dialog-cover-img"
+                />
+              ) : (
+                <span className="edit-dialog-cover-placeholder">
+                  <Trans>Click to select image</Trans>
+                </span>
+              )}
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              ref={this.coverInputRef}
+              style={{ display: "none" }}
+              onChange={this.handleCoverSelect}
+            />
           </div>
-          <input
-            type="file"
-            accept="image/*"
-            ref={this.coverInputRef}
-            style={{ display: "none" }}
-            onChange={this.handleCoverSelect}
-          />
+
+          {/* Book name */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Book name</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.nameRef} />
+          </div>
+
+          {/* Author */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Author</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.authorRef} />
+          </div>
+
+          {/* Publisher */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Publisher</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.publisherRef} />
+          </div>
+
+          {/* Description */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Description</Trans>
+            </span>
+            <textarea
+              className="edit-dialog-textarea"
+              ref={this.descriptionRef}
+              rows={3}
+            />
+          </div>
         </div>
 
-        {/* Book name */}
-        <div className="edit-dialog-row">
-          <span className="edit-dialog-label">
-            <Trans>Book name</Trans>
-          </span>
-          <input className="edit-dialog-input" ref={this.nameRef} />
-        </div>
-
-        {/* Author */}
-        <div className="edit-dialog-row">
-          <span className="edit-dialog-label">
-            <Trans>Author</Trans>
-          </span>
-          <input className="edit-dialog-input" ref={this.authorRef} />
-        </div>
-
-        {/* Publisher */}
-        <div className="edit-dialog-row">
-          <span className="edit-dialog-label">
-            <Trans>Publisher</Trans>
-          </span>
-          <input className="edit-dialog-input" ref={this.publisherRef} />
-        </div>
-
-        {/* Description */}
-        <div className="edit-dialog-row edit-dialog-row-description">
-          <span className="edit-dialog-label">
-            <Trans>Description</Trans>
-          </span>
-          <textarea
-            className="edit-dialog-textarea"
-            ref={this.descriptionRef}
-            rows={3}
-          />
-        </div>
-
-        <div className="edit-dialog-button-container">
+        <div className="edit-dialog-footer">
           <div
             className="add-dialog-cancel"
             onClick={() => {

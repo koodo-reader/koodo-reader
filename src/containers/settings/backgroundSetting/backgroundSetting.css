@@ -1,0 +1,140 @@
+.background-setting-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 25px 60px 25px;
+}
+
+.background-setting-item {
+  width: 120px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  position: relative;
+  flex-shrink: 0;
+  transition:
+    border-color 0.15s,
+    transform 0.1s;
+  box-sizing: border-box;
+}
+
+.background-setting-item:hover {
+  transform: scale(1.04);
+}
+
+.background-setting-item.active-bg-item {
+  border-color: var(--color-theme-color, #0179ca);
+}
+
+.background-setting-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.background-setting-placeholder {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(128, 128, 128, 0.08),
+    rgba(128, 128, 128, 0.08) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+}
+
+.background-setting-badge {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 10px;
+  padding: 2px 5px;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+.background-setting-delete {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+  line-height: 1;
+}
+
+.background-setting-item:hover .background-setting-delete {
+  opacity: 1;
+}
+
+/* Import button fixed to bottom-right */
+.background-import-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
+/* Preview overlay */
+.background-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.15s ease;
+}
+
+.background-preview-image {
+  max-width: 80vw;
+  max-height: 60vh;
+  border-radius: 10px;
+  object-fit: contain;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.background-preview-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.background-preview-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+
+.background-preview-close:hover {
+  opacity: 1;
+}
+
+.background-setting-empty {
+  text-align: center;
+  opacity: 0.45;
+  padding: 40px 0 20px;
+  font-size: 14px;
+  width: 100%;
+}

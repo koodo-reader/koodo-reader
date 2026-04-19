@@ -22,6 +22,7 @@ import { azureTTSVoiceList, officialVoiceList } from "../../constants/ttsList";
 import { langToName } from "../../utils/common";
 import { resetReaderRequest } from "../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
+import Plugin from "../../models/Plugin";
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -132,6 +133,9 @@ export function handleFetchBooks() {
         break;
       case 6:
         sortField = "percentage";
+        break;
+      case 7:
+        sortField = "size";
         break;
     }
     let orderField = "ASC";
@@ -267,13 +271,84 @@ export function handleFetchUserInfo() {
         resetThirdpartyRequest();
       }
     }
+
     dispatch(handleUserInfo(userInfo));
+    return userInfo;
   };
 }
 export function handleFetchPlugins() {
   return async (dispatch: Dispatch) => {
     DatabaseService.getAllRecords("plugins").then((pluginList) => {
       try {
+        if (ConfigService.getReaderConfig("aiTranslateModel")) {
+          let plugin: Plugin = pluginList.find(
+            (p: PluginModel) =>
+              p.key === ConfigService.getReaderConfig("aiTranslateModel")
+          );
+          let aiTranslateModel = plugin;
+          if (aiTranslateModel && aiTranslateModel.key) {
+            let transPlugin = new PluginModel(
+              "custom-ai-trans-plugin",
+              "translation",
+              "Custom AI Translation",
+              "translation",
+              "1.0.0",
+              "",
+              aiTranslateModel.config || {},
+              officialTranList,
+              [],
+              "",
+              ""
+            );
+            pluginList.push(transPlugin);
+          }
+        }
+        if (ConfigService.getReaderConfig("aiDictModel")) {
+          let plugin: Plugin = pluginList.find(
+            (p: PluginModel) =>
+              p.key === ConfigService.getReaderConfig("aiDictModel")
+          );
+          let aiDictModel = plugin;
+          if (aiDictModel && aiDictModel.key) {
+            let dictPlugin = new PluginModel(
+              "custom-ai-dict-plugin",
+              "dictionary",
+              "Custom AI Dictionary",
+              "dict",
+              "1.0.0",
+              "",
+              aiDictModel.config || {},
+              officialDictList,
+              [],
+              "",
+              ""
+            );
+            pluginList.push(dictPlugin);
+          }
+        }
+        if (ConfigService.getReaderConfig("aiAssistanceModel")) {
+          let plugin: Plugin = pluginList.find(
+            (p: PluginModel) =>
+              p.key === ConfigService.getReaderConfig("aiAssistanceModel")
+          );
+          let aiAssistanceModel = plugin;
+          if (aiAssistanceModel && aiAssistanceModel.key) {
+            let assistPlugin = new PluginModel(
+              "custom-ai-assistant-plugin",
+              "assistant",
+              "Custom AI Assistance",
+              "assistant",
+              "1.0.0",
+              "",
+              aiAssistanceModel.config || {},
+              officialTranList,
+              [],
+              "",
+              ""
+            );
+            pluginList.push(assistPlugin);
+          }
+        }
         TokenService.getToken("is_authed").then((value) => {
           let isAuthed = value === "yes";
           if (

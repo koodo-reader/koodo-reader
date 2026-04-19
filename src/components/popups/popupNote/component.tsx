@@ -7,7 +7,10 @@ import NoteTag from "../../noteTag";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  NoteSyncManager,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
@@ -151,6 +154,12 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           note,
           this.handleNoteClick
         );
+        // Auto-sync note to enabled destinations
+        let noteSyncManager = new NoteSyncManager(
+          DatabaseService,
+          ConfigService
+        );
+        noteSyncManager.syncNote(note, bookKey);
       });
     }
   }

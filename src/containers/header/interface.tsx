@@ -21,7 +21,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   handleImportDialog: (isOpenImportDialog: boolean) => void;
   handleFetchAuthed: () => void;
   handleSearchResults: (results: number[]) => void;
-  handleFetchUserInfo: () => Promise<void>;
+  handleFetchUserInfo: () => Promise<any>;
   handleSettingMode: (settingMode: string) => void;
   handleFetchDefaultSyncOption: () => void;
   handleFetchLoginOptionList: () => void;
@@ -33,7 +33,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   handleFetchBookmarks: () => void;
   handleReadingBook: (book: Book) => void;
   handleCloudSyncFunc: (
-    cloudSyncFunc: () => Promise<false | undefined>
+    cloudSyncFunc: (userInfo: any) => Promise<false | undefined>
   ) => void;
 }
 

@@ -2,6 +2,7 @@ import BookModel from "../../../models/Book";
 import PluginModel from "../../../models/Plugin";
 export interface PopupDictProps {
   originalText: string;
+  originalSentence: string;
   plugins: PluginModel[];
   isAuthed: boolean;
   currentBook: BookModel;

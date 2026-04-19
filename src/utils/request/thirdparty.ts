@@ -79,10 +79,8 @@ export const onSyncCallback = async (service: string, authCode: string) => {
   }
   if (service === "yiyiwu") {
     toast(
-      i18n.t(
-        "The 115 cloud is only recommended for VIP users, as it is nearly unusable for free users. Additionally, due to API issues with 115 cloud, synchronization can be very slow. If you insist on using 115 cloud storage for syncing, it is recommended to enable Koodo Sync simultaneously, which will significantly improve the synchronization speed."
-      ),
-      { duration: 8000 }
+      "115 网盘只推荐 115 会员使用，非会员基本上无法使用，并且由于 115 网盘严格的API限制，请务必启用 Koodo Sync，并且 1 小时内不要导入超过5本书以防止被 115 风控。如果出现了风控，请等待至少半小时再使用。",
+      { duration: 10000 }
     );
   }
   return res;

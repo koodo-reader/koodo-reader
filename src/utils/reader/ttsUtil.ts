@@ -9,7 +9,7 @@ class TTSUtil {
   static currentAudioPath: string = "";
   static audioPaths: { index: number; audioPath: string }[] = [];
   static isPaused: boolean = false;
-  static voiceEngine: string = "";
+  static pausedMidSentence: boolean = false;
   static processingIndexes: Set<number> = new Set();
   static async readAloud(currentIndex: number) {
     return new Promise<string>(async (resolve) => {
@@ -36,27 +36,20 @@ class TTSUtil {
   }
   static async cacheAudio(
     startIndex: number,
-    voiceName: string,
     speed: number,
-    voiceEngine: string,
     plugins: PluginModel[],
-    audioNodeList: string[],
+    audioNodeList: {
+      text: string;
+      voiceName: string;
+      voiceEngine: string;
+    }[],
     targetCacheCount: number,
-    isFirst: boolean
+    isFirst: boolean,
+    isOfficialAIVoice: boolean
   ) {
-    this.voiceEngine = voiceEngine;
     this.isPaused = false;
-    let plugin = plugins.find((item) => item.key === voiceEngine);
-    if (!plugin) {
-      return "error";
-    }
-    let voice = (plugin.voiceList as any[]).find(
-      (voice) => voice.name === voiceName
-    );
-    if (!voice) {
-      return "error";
-    }
-    if (voiceEngine === "official-ai-voice-plugin") {
+
+    if (isOfficialAIVoice) {
       const cacheCount = Math.min(
         targetCacheCount,
         audioNodeList.length - startIndex
@@ -86,12 +79,24 @@ class TTSUtil {
           // 标记为正在处理
           this.processingIndexes.add(index);
 
-          const text = audioNodeList[index];
+          const audioNode = audioNodeList[index];
+          let plugin = plugins.find(
+            (item) => item.key === audioNode.voiceEngine
+          );
+          if (!plugin) {
+            return "error";
+          }
+          let voice = (plugin.voiceList as any[]).find(
+            (voice) => voice.name === audioNode.voiceName
+          );
+          if (!voice) {
+            return "error";
+          }
           // 创建异步任务
           const task = this.getAudioPath(
-            text,
+            audioNode.text,
             speed,
-            voiceEngine,
+            audioNode.voiceEngine,
             plugin,
             voice,
             isFirst
@@ -156,11 +161,21 @@ class TTSUtil {
         }
         // 标记为正在处理
         this.processingIndexes.add(index);
-        const text = audioNodeList[index];
+        const audioNode = audioNodeList[index];
+        let plugin = plugins.find((item) => item.key === audioNode.voiceEngine);
+        if (!plugin) {
+          return "error";
+        }
+        let voice = (plugin.voiceList as any[]).find(
+          (voice) => voice.name === audioNode.voiceName
+        );
+        if (!voice) {
+          return "error";
+        }
         let audioPath = await this.getAudioPath(
-          text,
+          audioNode.text,
           speed,
-          voiceEngine,
+          audioNode.voiceEngine,
           plugin,
           voice,
           isFirst
@@ -177,15 +192,26 @@ class TTSUtil {
     }
   }
   static async pauseAudio() {
-    if (this.player && this.player.stop) {
-      this.player.stop();
+    if (this.player) {
+      this.player.pause();
       this.isPaused = true;
+      this.pausedMidSentence = true;
     }
+  }
+  static resumeAudio(): boolean {
+    if (this.player && this.pausedMidSentence) {
+      this.player.play();
+      this.isPaused = false;
+      this.pausedMidSentence = false;
+      return true;
+    }
+    return false;
   }
   static async stopAudio() {
     if (this.player && this.player.stop) {
       this.player.stop();
       this.isPaused = true;
+      this.pausedMidSentence = false;
       setTimeout(() => {
         this.clearAudioPaths();
         this.audioPaths = [];
@@ -194,9 +220,6 @@ class TTSUtil {
     }
   }
   static async clearAudioPaths() {
-    if (this.voiceEngine === "official-ai-voice-plugin") {
-      return;
-    }
     if (!isElectron) return;
     window.require("electron").ipcRenderer.invoke("clear-tts");
   }
@@ -239,6 +262,7 @@ class TTSUtil {
   static setAudioPaths() {
     this.audioPaths = [];
     this.processingIndexes.clear();
+    this.pausedMidSentence = false;
   }
   static getPlayer() {
     return this.player;

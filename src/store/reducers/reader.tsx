@@ -25,6 +25,7 @@ const initState = {
           : "rgba(255,255,255,1)",
   noteKey: "",
   originalText: "",
+  originalSentence: "",
   htmlBook: null,
   scale: ConfigService.getReaderConfig("scale") || "1",
   margin: ConfigService.getReaderConfig("margin") || "0",
@@ -48,6 +49,8 @@ const initState = {
     ConfigService.getReaderConfig("isHidePDFConvertButton") === "yes",
   isShowPageBorder: ConfigService.getReaderConfig("isShowPageBorder") === "yes",
   textOrientation: ConfigService.getReaderConfig("textOrientation") || "",
+  readerBackgroundImage:
+    ConfigService.getReaderConfig("readerBackgroundImage") || "",
 };
 export function reader(
   state = initState,
@@ -94,6 +97,11 @@ export function reader(
       return {
         ...state,
         originalText: action.payload,
+      };
+    case "HANDLE_ORIGINAL_SENTENCE":
+      return {
+        ...state,
+        originalSentence: action.payload,
       };
     case "HANDLE_NAV_LOCK":
       return {
@@ -174,6 +182,11 @@ export function reader(
       return {
         ...state,
         backgroundColor: action.payload,
+      };
+    case "HANDLE_READER_BACKGROUND_IMAGE":
+      return {
+        ...state,
+        readerBackgroundImage: action.payload,
       };
     case "HANDLE_NOTE_KEY":
       return {

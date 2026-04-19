@@ -9,7 +9,9 @@
   overflow: hidden;
   overflow-x: hidden;
 }
-
+.view-icon {
+  font-size: 16px;
+}
 .action-dialog-actions-container {
   font-size: 15px;
   text-align: center;

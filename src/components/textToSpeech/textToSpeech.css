@@ -91,3 +91,27 @@
   opacity: 0.6;
   user-select: none;
 }
+.tts-preview-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tts-preview-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.75;
+  margin-top: 2px;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
+}
+.tts-preview-btn:hover {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.15);
+}

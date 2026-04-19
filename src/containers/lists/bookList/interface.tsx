@@ -29,4 +29,6 @@ export interface BookListState {
   displayedBooksCount: number;
   isLoadingMore: boolean;
   fullBooksData: BookModel[];
+  cardScale: number;
+  readingStatusFilter: string;
 }

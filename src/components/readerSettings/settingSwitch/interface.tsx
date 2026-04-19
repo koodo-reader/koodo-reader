@@ -41,4 +41,6 @@ export interface SettingSwitchState {
   isHideMenuButton: boolean;
   isHideAudiobookButton: boolean;
   isShowPageBorder: boolean;
+  isCustomBookCSS: boolean;
+  customBookCSS: string;
 }

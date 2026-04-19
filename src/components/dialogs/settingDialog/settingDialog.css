@@ -1,14 +1,86 @@
 .setting-dialog-container {
-  width: 510px;
-  height: 490px;
+  width: 760px;
+  height: 540px;
   position: absolute;
-  left: calc(50% - 255px);
-  top: calc(50% - 245px);
+  left: calc(50% - 380px);
+  top: calc(50% - 270px);
   overflow: hidden;
   opacity: 1;
   z-index: 20;
-  border-radius: 5px;
+  border-radius: 10px;
   animation: popup 0.1s ease-in-out 0s 1;
+  display: flex;
+  flex-direction: row;
+}
+.setting-dialog-sidebar {
+  width: 180px;
+  min-width: 180px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0 16px 0;
+  box-sizing: border-box;
+  overflow-y: auto;
+  flex-shrink: 0;
+  z-index: 101;
+}
+.setting-dialog-sidebar-title {
+  font-size: 20px;
+  font-weight: 700;
+  padding: 0 18px 16px 18px;
+  letter-spacing: 0.5px;
+}
+.setting-dialog-sidebar-group {
+  margin-bottom: 8px;
+}
+.setting-dialog-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px 9px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  margin: 1px 8px;
+  transition:
+    background 0.15s,
+    opacity 0.15s;
+  opacity: 0.6;
+  user-select: none;
+  white-space: nowrap;
+}
+.setting-dialog-sidebar-item:hover {
+  opacity: 0.85;
+}
+.setting-dialog-sidebar-item.active {
+  opacity: 1;
+  font-weight: 600;
+}
+.setting-dialog-sidebar-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.setting-dialog-sidebar-divider {
+  height: 1px;
+  margin: 8px 18px;
+  opacity: 0.15;
+}
+.setting-dialog-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+}
+.setting-dialog-main-header {
+  font-size: 22px;
+  font-weight: 700;
+  padding: 22px 28px 10px 28px;
+  flex-shrink: 0;
 }
 .setting-dialog-title {
   font-size: 18px;
@@ -17,11 +89,12 @@
   opacity: 1;
   margin: 15px 0px 10px;
   text-align: center;
+  display: none;
 }
 .setting-dialog-new-title {
   font-size: 15px;
-  line-height: 20px;
-  margin-top: 10px;
+  line-height: 30px;
+  margin-top: 5px;
   margin-left: 25px;
   width: calc(100% - 50px);
   margin-bottom: 5px;
@@ -48,8 +121,11 @@
   margin: 20px 30px;
 }
 .setting-dialog-info {
-  height: 340px;
-  overflow-y: scroll;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 16px;
+  margin-bottom: 50px;
 }
 .setting-dialog-illustration {
   width: 200px;
@@ -96,6 +172,7 @@
   width: 38px;
   height: 38px;
   cursor: pointer;
+  z-index: 5;
 }
 
 .setting-close-container:hover {
@@ -109,20 +186,17 @@
   cursor: pointer;
 }
 .setting-subtitle {
-  font-size: 15px;
-  margin: 5px;
-  margin-bottom: 0px;
-  text-align: center;
+  display: none;
 }
 .setting-plugin-icon {
   margin: 5px;
   font-size: 18px;
   display: inline-block;
   width: 20px;
+  position: relative;
+  top: 4px;
 }
 .setting-plugin-name {
-  position: relative;
-  bottom: 3px;
 }
 .lang-setting-dropdown {
   width: 100px;
@@ -170,6 +244,7 @@
   justify-content: center;
   align-items: center;
   line-height: 1;
+  margin-top: 5px;
 }
 .theme-setting-item {
   display: flex;
@@ -256,6 +331,7 @@
   margin-left: 25px;
   margin-right: 25px;
   line-height: 15px;
+  margin-top: -5px;
 }
 .setting-dialog-new-plugin {
   position: absolute;
@@ -323,4 +399,19 @@
   padding-left: 5px;
   border-radius: 5px;
   box-sizing: border-box;
+}
+
+/* AI Setting styles */
+.ai-setting-form-row {
+  margin-bottom: 12px;
+}
+.ai-setting-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  margin-top: 8px;
+}
+.ai-setting-form-row .token-dialog-username-box {
+  margin-top: 0;
 }

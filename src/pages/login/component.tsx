@@ -137,7 +137,16 @@ class Login extends React.Component<LoginProps, LoginState> {
   render() {
     return (
       <>
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            style: {
+              wordWrap: "break-word",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              overflowWrap: "break-word",
+            },
+          }}
+        />
         <div
           className="login-close-container"
           onClick={() => {

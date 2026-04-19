@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?qn1hwh');
-  src:  url('fonts/icomoon.eot?qn1hwh#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?qn1hwh') format('truetype'),
-    url('fonts/icomoon.woff?qn1hwh') format('woff'),
-    url('fonts/icomoon.svg?qn1hwh#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?5fxwt2');
+  src:  url('fonts/icomoon.eot?5fxwt2#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?5fxwt2') format('truetype'),
+    url('fonts/icomoon.woff?5fxwt2') format('woff'),
+    url('fonts/icomoon.svg?5fxwt2#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-ai-assist:before {
+  content: "\e960";
+}
+.icon-image:before {
+  content: "\e965";
+}
+.icon-user:before {
+  content: "\e964";
+}
 .icon-earphone:before {
   content: "\e963";
 }
@@ -33,9 +42,6 @@
 }
 .icon-cloud:before {
   content: "\e961";
-}
-.icon-ai-assist:before {
-  content: "\e960";
 }
 .icon-collapse:before {
   content: "\e95f";

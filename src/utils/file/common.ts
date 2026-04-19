@@ -18,6 +18,7 @@ declare var window: any;
 // File System Access API type declarations
 
 let configCache: any = {};
+let cloudConfigLocks: { [service: string]: Promise<any> } = {};
 export const changePath = async (newPath: string) => {
   if (isFolderContainsFile(newPath)) {
     toast.error(i18n.t("Please select an empty folder"));
@@ -258,12 +259,18 @@ export const upgradeConfig = (): Boolean => {
     return false;
   }
 };
-export const getCloudConfig = async (service: string) => {
-  let config = await getCloudToken(service);
-  if (!config) {
-    return {};
-  }
-  return await prepareThirdConfig(service, config);
+export const getCloudConfig = (service: string): Promise<any> => {
+  const prev = cloudConfigLocks[service] ?? Promise.resolve();
+  const next = prev.then(async () => {
+    let config = await getCloudToken(service);
+    if (!config) {
+      return {};
+    }
+    return await prepareThirdConfig(service, config);
+  });
+  // 链上错误处理，避免一次失败阻断后续调用
+  cloudConfigLocks[service] = next.catch(() => {});
+  return next;
 };
 export const getCloudToken = async (service: string) => {
   if (configCache[service]) {

@@ -4,7 +4,13 @@ class DictHistory {
   date: { year: number; month: number; day: number };
   word: string;
   chapter: string;
-  constructor(bookKey: string, word: string, chapter: string) {
+  sentence: string;
+  constructor(
+    bookKey: string,
+    word: string,
+    chapter: string,
+    sentence?: string
+  ) {
     this.key = new Date().getTime() + "";
     this.bookKey = bookKey;
     this.date = {
@@ -14,6 +20,7 @@ class DictHistory {
     };
     this.word = word;
     this.chapter = chapter;
+    this.sentence = sentence || "";
   }
 }
 

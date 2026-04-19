@@ -75,6 +75,50 @@ export const dropdownList = [
     ],
     isPDF: false,
   },
+  {
+    title: "Action after selecting text",
+    value: "selectAction",
+    option: [
+      { label: "Default", value: "" },
+      {
+        label: "Translate",
+        value: "translation",
+      },
+      {
+        label: "Dictionary",
+        value: "dict",
+      },
+      {
+        label: "Highlight",
+        value: "highlight",
+      },
+      {
+        label: "Take a note",
+        value: "note",
+      },
+      {
+        label: "Speak the text",
+        value: "speaker",
+      },
+    ],
+    isPDF: true,
+  },
+  {
+    title: "Full text translation",
+    value: "fullTranslationMode",
+    option: [
+      { label: "Disable", value: "no" },
+      {
+        label: "Bilingual translation",
+        value: "both",
+      },
+      {
+        label: "Only translation",
+        value: "target",
+      },
+    ],
+    isPDF: false,
+  },
 ];
 export const sliderConfigs = [
   {

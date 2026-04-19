@@ -10,6 +10,7 @@ const mapStateToProps = (state: stateType) => {
     backgroundColor: state.reader.backgroundColor,
     scale: state.reader.scale,
     margin: state.reader.margin,
+    readerBackgroundImage: state.reader.readerBackgroundImage,
   };
 };
 const actionCreator = {};

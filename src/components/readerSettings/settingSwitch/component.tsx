@@ -43,6 +43,9 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("isHideAudiobookButton") === "yes",
       isShowPageBorder:
         ConfigService.getReaderConfig("isShowPageBorder") === "yes",
+      isCustomBookCSS:
+        ConfigService.getReaderConfig("isCustomBookCSS") === "yes",
+      customBookCSS: ConfigService.getReaderConfig("customBookCSS") || "",
     };
   }
 
@@ -85,6 +88,73 @@ class SettingSwitch extends React.Component<
             </Trans>
           </span>
         </div>
+        <div className="single-control-switch-container" key="isCustomBookCSS">
+          <span className="single-control-switch-title">
+            <Trans>Custom book style (CSS)</Trans>
+          </span>
+          <span
+            className="single-control-switch"
+            onClick={() => {
+              const next = !this.state.isCustomBookCSS;
+              this.setState({ isCustomBookCSS: next }, () => {
+                ConfigService.setReaderConfig(
+                  "isCustomBookCSS",
+                  next ? "yes" : "no"
+                );
+                if (!this.state.customBookCSS) {
+                  return;
+                }
+                toast(this.props.t("Change successful"));
+                setTimeout(async () => {
+                  await this.props.renderBookFunc();
+                }, 500);
+              });
+            }}
+            style={this.state.isCustomBookCSS ? {} : { opacity: 0.6 }}
+          >
+            <span
+              className="single-control-button"
+              style={
+                !this.state.isCustomBookCSS
+                  ? {
+                      transform: "translateX(0px)",
+                      transition: "transform 0.5s ease",
+                      marginTop: "3px",
+                    }
+                  : {
+                      transform: "translateX(20px)",
+                      transition: "transform 0.5s ease",
+                      marginTop: "3px",
+                    }
+              }
+            ></span>
+          </span>
+        </div>
+        {this.state.isCustomBookCSS && (
+          <div style={{ margin: "10px 20px" }}>
+            <textarea
+              className="token-dialog-token-box"
+              placeholder={
+                "/* " + this.props.t("Enter custom CSS here") + " */"
+              }
+              value={this.state.customBookCSS}
+              onChange={(e) => {
+                const val = e.target.value;
+                this.setState({ customBookCSS: val });
+              }}
+              onBlur={() => {
+                ConfigService.setReaderConfig(
+                  "customBookCSS",
+                  this.state.customBookCSS
+                );
+                toast(this.props.t("Change successful"));
+                setTimeout(async () => {
+                  await this.props.renderBookFunc();
+                }, 500);
+              }}
+            />
+          </div>
+        )}
         {readerSettingList
           .filter((item) => {
             if (
@@ -170,10 +240,12 @@ class SettingSwitch extends React.Component<
                       ? {
                           transform: "translateX(0px)",
                           transition: "transform 0.5s ease",
+                          marginTop: "3px",
                         }
                       : {
                           transform: "translateX(20px)",
                           transition: "transform 0.5s ease",
+                          marginTop: "3px",
                         }
                   }
                 ></span>

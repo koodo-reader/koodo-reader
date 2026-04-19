@@ -233,6 +233,7 @@ export const exportDictionaryHistory = (
       date: `${item.date.year}-${
         item.date.month <= 9 ? "0" + item.date.month : item.date.month
       }-${item.date.day <= 9 ? "0" + item.date.day : item.date.day}`,
+      sentence: item.sentence || "",
       bookName: bookName,
       bookAuthor: bookAuthor,
     };

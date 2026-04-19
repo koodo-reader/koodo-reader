@@ -18,61 +18,60 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       margin: ConfigService.getReaderConfig("margin") || "0",
     };
   }
+
+  getClampedValue = (rawValue: string) => {
+    const { minValue, maxValue } = this.props.item;
+    const parsedValue = parseFloat(rawValue);
+    const min = parseFloat(minValue);
+    const max = parseFloat(maxValue);
+
+    if (Number.isNaN(parsedValue)) {
+      return this.state[this.props.item.mode];
+    }
+
+    return Math.min(Math.max(parsedValue, min), max).toString();
+  };
+
+  applyValue = (mode: string, nextValue: string) => {
+    this.setState({ [mode]: nextValue } as any);
+    ConfigService.setReaderConfig(mode, nextValue);
+
+    if (mode === "scale") {
+      this.props.handleScale(nextValue);
+    }
+
+    if (mode === "margin") {
+      this.props.handleMargin(nextValue);
+    }
+  };
+
   handleRest = async (mode) => {
     this.props.renderBookFunc();
   };
   onValueChange = (event: any, mode: string) => {
-    if (mode === "fontSize") {
-      const fontSize = event.target.value;
-      this.setState({ [mode]: fontSize });
-      ConfigService.setReaderConfig("fontSize", fontSize);
-    } else if (mode === "scale") {
-      const scale = event.target.value;
-      this.setState({ [mode]: scale });
-      this.props.handleScale(scale);
-      ConfigService.setReaderConfig("scale", scale);
-    } else if (mode === "letterSpacing") {
-      const letterSpacing = event.target.value;
-      this.setState({ [mode]: letterSpacing });
-      ConfigService.setReaderConfig("letterSpacing", letterSpacing);
-    } else if (mode === "paraSpacing") {
-      const paraSpacing = event.target.value;
-      this.setState({ [mode]: paraSpacing });
-      ConfigService.setReaderConfig("paraSpacing", paraSpacing);
-    } else if (mode === "brightness") {
-      let brightness = event.target.value;
-      if (brightness < 0.3) {
-        brightness = 0.3;
-      }
-      this.setState({ [mode]: brightness });
-      ConfigService.setReaderConfig("brightness", brightness);
-    } else {
-      const margin = event.target.value;
-      this.setState({ [mode]: margin } as any);
-      this.props.handleMargin(margin);
-      ConfigService.setReaderConfig("margin", margin);
-    }
+    const nextValue = this.getClampedValue(event.target.value);
+    event.target.value = nextValue;
+    this.setState({ inputValue: nextValue });
+    this.applyValue(mode, nextValue);
   };
   onValueInput = (event: any, mode: string) => {
     this.setState({ [mode]: event.target.value } as any);
   };
-  handleMinus = (step: number, mode: string) => {
-    this.setState({ [mode]: parseFloat(this.state[mode]) - step + "" } as any);
+  updateValueByStep = (step: number, mode: string, direction: 1 | -1) => {
     this.onValueChange(
       {
-        target: { value: parseFloat(this.state[mode]) - step + "" },
+        target: {
+          value: (parseFloat(this.state[mode]) + step * direction).toString(),
+        },
       },
       mode
     );
   };
+  handleMinus = (step: number, mode: string) => {
+    this.updateValueByStep(step, mode, -1);
+  };
   handleAdd = (step: number, mode: string) => {
-    this.setState({ [mode]: parseFloat(this.state[mode]) + step + "" } as any);
-    this.onValueChange(
-      {
-        target: { value: parseFloat(this.state[mode]) + step + "" },
-      },
-      mode
-    );
+    this.updateValueByStep(step, mode, 1);
   };
   render() {
     return (
