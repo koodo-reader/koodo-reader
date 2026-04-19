@@ -21,7 +21,10 @@ class SyncService {
     return this.syncUtilCache[service];
   }
   static removeSyncUtil(service) {
-    delete this.syncUtilCache[service];
+    if (this.syncUtilCache[service]) {
+      this.syncUtilCache[service].clearQueue();
+      delete this.syncUtilCache[service];
+    }
   }
   static async getPickerUtil(service: string) {
     if (!this.pickerUtilCache[service] || (await isTokenExpired(service))) {

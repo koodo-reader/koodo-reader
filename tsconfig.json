@@ -20,7 +20,11 @@
     // "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/assets/lib/kookit-extra.min.mjs"],
+  "include": [
+    "src",
+    "src/assets/lib/kookit-extra.min.mjs",
+    "scripts/i18n-script.js"
+  ],
   "exclude": ["utils"],
   "paths": {
     "*": ["./node_modules/@types", "./types"]

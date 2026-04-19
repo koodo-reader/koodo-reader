@@ -7,6 +7,7 @@ import {
 } from "react-device-detect";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../package.json";
+import BackgroundUtil from "../file/backgroundUtil";
 export const initTheme = () => {
   const style = document.createElement("link");
   style.rel = "stylesheet";
@@ -55,4 +56,45 @@ export const initSystemFont = () => {
         "!important"
     );
   }
+};
+
+export const applyCustomSystemCSS = () => {
+  const isCustomSystemCSS =
+    ConfigService.getReaderConfig("isCustomSystemCSS") === "yes";
+  const customSystemCSS =
+    ConfigService.getReaderConfig("customSystemCSS") || "";
+  let styleElement = document.getElementById("custom-system-style");
+  if (isCustomSystemCSS && customSystemCSS) {
+    if (styleElement) {
+      styleElement.textContent = customSystemCSS;
+    } else {
+      const style = document.createElement("style");
+      style.id = "custom-system-style";
+      style.textContent = customSystemCSS;
+      document.head.appendChild(style);
+    }
+  } else if (styleElement) {
+    styleElement.textContent = "";
+  }
+};
+
+export const applyAppBackgroundImage = async () => {
+  const imageId = ConfigService.getReaderConfig("appBackgroundImage") || "";
+  const root = document.getElementById("root");
+  if (!root) return;
+  if (imageId) {
+    const meta = BackgroundUtil.getImageMeta(imageId);
+    const imageUrl = await BackgroundUtil.loadImage(imageId, meta?.extension);
+    if (imageUrl) {
+      root.style.backgroundImage = `url("${imageUrl}")`;
+      root.style.backgroundSize = "cover";
+      root.style.backgroundPosition = "center";
+      root.style.backgroundAttachment = "fixed";
+      return;
+    }
+  }
+  root.style.backgroundImage = "";
+  root.style.backgroundSize = "";
+  root.style.backgroundPosition = "";
+  root.style.backgroundAttachment = "";
 };

@@ -186,7 +186,6 @@ class NavList extends React.Component<NavListProps, NavListState> {
                 margin: "5px",
                 marginTop: "10px",
                 marginBottom: "10px",
-                width: "100%",
               }}
               onClick={async () => {
                 await this.handleJump(item.cfi);

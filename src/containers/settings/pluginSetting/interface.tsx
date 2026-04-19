@@ -23,21 +23,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   settingDrive: string;
 }
 export interface SettingInfoState {
-  isPreventTrigger: boolean;
-  appSkin: string;
-  storageLocation: string;
-  isDisablePopup: boolean;
-  isDeleteShelfBook: boolean;
-  isOpenInMain: boolean;
-  isPrecacheBook: boolean;
-  isDisablePDFCover: boolean;
-  isHideShelfBook: boolean;
-  isPreventAdd: boolean;
   isAddNew: boolean;
-  currentThemeIndex: number;
-  driveConfig: any;
-  loginConfig: any;
-  settingLogin: string;
   availablePlugins: any[];
   expandedPluginKey: string | null;
   activePluginTab: string;

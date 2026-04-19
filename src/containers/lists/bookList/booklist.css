@@ -104,3 +104,35 @@
   display: flex;
   align-items: center;
 }
+.book-card-scale-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 120px !important;
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  margin-right: 10px;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+.book-card-scale-slider:hover {
+  opacity: 1;
+}
+.book-card-scale-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 2px;
+}
+.book-card-scale-slider::-moz-range-thumb {
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  margin-top: 2px;
+}

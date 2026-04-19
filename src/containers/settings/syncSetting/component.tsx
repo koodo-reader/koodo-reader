@@ -6,7 +6,7 @@ import { removeCloudConfig } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import _ from "underscore";
 import { syncSettingList } from "../../../constants/settingList";
-import { themeList } from "../../../constants/themeList";
+
 import toast from "react-hot-toast";
 import {
   generateSyncRecord,
@@ -22,10 +22,9 @@ import {
   testCORS,
   vexComfirmAsync,
 } from "../../../utils/common";
-import { getStorageLocation } from "../../../utils/common";
+
 import { driveInputConfig, driveList } from "../../../constants/driveList";
 import {
-  CommonTool,
   ConfigService,
   KookitConfig,
   SyncHelper,
@@ -41,40 +40,21 @@ import { updateUserConfig } from "../../../utils/request/user";
 import BookUtil from "../../../utils/file/bookUtil";
 import Book from "../../../models/Book";
 import ConfigUtil from "../../../utils/file/configUtil";
-import { getSnapshots } from "../../../utils/file/backup";
-import { restoreFromSnapshot } from "../../../utils/file/restore";
 declare var window: any;
 class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
-      appSkin: ConfigService.getReaderConfig("appSkin"),
       isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
       autoOffline: ConfigService.getReaderConfig("autoOffline") === "yes",
       isDisableAutoSync:
         ConfigService.getReaderConfig("isDisableAutoSync") === "yes",
       isEnableKoodoSync:
         ConfigService.getReaderConfig("isEnableKoodoSync") === "yes",
-      currentThemeIndex: themeList.findIndex(
-        (item) =>
-          item.color ===
-          (ConfigService.getReaderConfig("themeColor") || "default")
-      ),
-      storageLocation: getStorageLocation() || "",
-      isAddNew: false,
-      settingLogin: "",
       driveConfig: {},
-      loginConfig: {},
-      snapshotList: [],
     };
   }
-  componentDidMount(): void {
-    if (isElectron) {
-      this.setState({
-        snapshotList: getSnapshots(),
-      });
-    }
-  }
+
   handleRest = (_bool: boolean) => {
     toast.success(this.props.t("Change successful"));
   };
@@ -111,7 +91,9 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       driveList.find((item) => item.value === targetDrive)?.isPro &&
       !this.props.isAuthed
     ) {
-      toast(this.props.t("This feature is not available in the free version"));
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
       return;
     }
     this.props.handleSettingDrive(targetDrive);
@@ -141,14 +123,19 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         this.props.handleSettingDrive("");
         return;
       }
+      SyncService.removeSyncUtil(settingDrive);
+      removeCloudConfig(settingDrive);
+      if (isElectron) {
+        const { ipcRenderer } = window.require("electron");
+        await ipcRenderer.invoke("cloud-close", {
+          service: settingDrive,
+        });
+      }
       ConfigService.setListConfig(settingDrive, "dataSourceList");
       toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
       if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
         ConfigService.setItem("defaultSyncOption", settingDrive);
-        if (
-          ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
-          this.props.userInfo.default_sync_option !== settingDrive
-        ) {
+        if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
           resetKoodoSync();
         }
         this.props.handleFetchDefaultSyncOption();
@@ -274,12 +261,17 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         this.state.driveConfig.token
       );
     }
+    SyncService.removeSyncUtil(this.props.settingDrive);
+    removeCloudConfig(this.props.settingDrive);
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      await ipcRenderer.invoke("cloud-close", {
+        service: this.props.settingDrive,
+      });
+    }
     if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
       ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
-      if (
-        ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
-        this.props.userInfo.default_sync_option !== this.props.settingDrive
-      ) {
+      if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
         resetKoodoSync();
       }
       this.props.handleFetchDefaultSyncOption();
@@ -287,31 +279,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     this.props.handleFetchDataSourceList();
     this.props.handleSettingDrive("");
   };
-  handleRestoreSnapshot = async (event: any) => {
-    let targetFile = event.target.value;
-    if (!targetFile) {
-      return;
-    }
-    let confirm = await vexComfirmAsync(
-      this.props.t(
-        "Restoring from a snapshot will overwrite your current data. Are you sure you want to continue?"
-      )
-    );
-    if (!confirm) {
-      return;
-    }
-    let result = await restoreFromSnapshot(targetFile);
-    if (result) {
-      toast.success(this.props.t("Restore successful"), {
-        id: "restore-snapshot",
-      });
-      this.props.handleFetchBooks();
-      setTimeout(() => {
-        this.props.history.push("/manager/home");
-      }, 2000);
-    }
-    event.target.value = "";
-  };
+
   renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
@@ -339,12 +307,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                       default_sync_option: this.props.defaultSyncOption,
                       default_sync_token: encryptToken || "",
                     });
-                    await this.props.handleFetchUserInfo();
+                    let userInfo = await this.props.handleFetchUserInfo();
                     if (
                       ConfigService.getReaderConfig("isEnableKoodoSync") ===
                       "yes"
                     ) {
-                      this.props.cloudSyncFunc();
+                      this.props.cloudSyncFunc(userInfo);
                     }
 
                     break;
@@ -493,6 +461,19 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                           }}
                         >
                           {this.props.t("Example")}: {item.example}
+                        </div>
+                      )}
+                      {item.note && (
+                        <div
+                          style={{
+                            marginTop: "5px",
+                            marginBottom: "2px",
+                            marginLeft: "2px",
+                            fontSize: "12px",
+                            opacity: 0.8,
+                          }}
+                        >
+                          {this.props.t(item.note)}
                         </div>
                       )}
                     </div>
@@ -819,45 +800,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 ))}
             </select>
           </div>
-        )}
-        {isElectron && (
-          <>
-            <div className="setting-dialog-new-title">
-              <Trans>Restore from snapshots</Trans>
-              <select
-                name=""
-                className="lang-setting-dropdown"
-                onChange={this.handleRestoreSnapshot}
-              >
-                <option value={""} className="lang-setting-option">
-                  {this.props.t("Please select")}
-                </option>
-                {this.state.snapshotList
-                  .map((item) => {
-                    return {
-                      label: new Date(item.time).toLocaleString(),
-                      value: item.file,
-                    };
-                  })
-                  .map((item) => (
-                    <option
-                      value={item.value}
-                      key={item.value}
-                      className="lang-setting-option"
-                    >
-                      {item.label}
-                    </option>
-                  ))}
-              </select>
-            </div>
-            <p className="setting-option-subtitle">
-              <Trans>
-                {
-                  "Each time you open Koodo Reader, it automatically creates a snapshot of your library (excluding books and covers). You can use these snapshots to restore your library to a previous state. Please note that restoring from a snapshot will overwrite your current data"
-                }
-              </Trans>
-            </p>
-          </>
         )}
 
         {this.props.isAuthed && this.renderSwitchOption(syncSettingList)}

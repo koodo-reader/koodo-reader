@@ -199,7 +199,7 @@ class ActionDialog extends React.Component<
             >
               <span
                 className="icon-idea-line view-icon"
-                style={{ fontSize: "17px" }}
+                style={{ fontSize: "18px" }}
               ></span>
               <p className="action-name" style={{ marginLeft: "12px" }}>
                 <Trans>Details</Trans>
@@ -231,7 +231,7 @@ class ActionDialog extends React.Component<
                     marginRight: "12px",
                     marginLeft: "3px",
                     transform: "rotate(90deg)",
-                    fontSize: "12px",
+                    fontSize: "14px",
                   }}
                 ></span>
                 <Trans>More actions</Trans>

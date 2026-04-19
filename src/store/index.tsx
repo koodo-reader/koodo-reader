@@ -77,6 +77,7 @@ export type stateType = {
     isBackup: boolean;
     isOpenLocalFileDialog: boolean;
     isOpenImportDialog: boolean;
+    isOpenOPDSDialog: boolean;
     isOpenSortShelfDialog: boolean;
     isOpenTokenDialog: boolean;
     dataSourceList: string[];
@@ -116,7 +117,9 @@ export type stateType = {
     currentChapter: string;
     currentChapterIndex: number;
     originalText: string;
+    originalSentence: string;
     htmlBook: HtmlBookModel;
+    readerBackgroundImage: string;
   };
   sidebar: {
     mode: string;

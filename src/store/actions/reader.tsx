@@ -16,6 +16,9 @@ export function handleHighlights(highlights: NoteModel[]) {
 export function handleOriginalText(originalText: string) {
   return { type: "HANDLE_ORIGINAL_TEXT", payload: originalText };
 }
+export function handleOriginalSentence(originalSentence: string) {
+  return { type: "HANDLE_ORIGINAL_SENTENCE", payload: originalSentence };
+}
 export function handleColor(color: number) {
   return { type: "HANDLE_COLOR", payload: color };
 }
@@ -54,6 +57,12 @@ export function handleMargin(margin: string) {
 }
 export function handleBackgroundColor(backgroundColor: string) {
   return { type: "HANDLE_BACKGROUND_COLOR", payload: backgroundColor };
+}
+export function handleReaderBackgroundImage(readerBackgroundImage: string) {
+  return {
+    type: "HANDLE_READER_BACKGROUND_IMAGE",
+    payload: readerBackgroundImage,
+  };
 }
 export function handleNavLock(isNavLocked: boolean) {
   return { type: "HANDLE_NAV_LOCK", payload: isNavLocked };
@@ -100,6 +109,7 @@ export function handleShowBorder(isShowPageBorder: boolean) {
 export function handleTextOrientation(textOrientation: string) {
   return { type: "HANDLE_TEXT_ORIENTATION", payload: textOrientation };
 }
+
 export function handleFetchNotes() {
   return async (
     dispatch: (arg0: { type: string; payload: NoteModel[] }) => void

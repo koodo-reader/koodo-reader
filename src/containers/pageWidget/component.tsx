@@ -1,11 +1,17 @@
 import React from "react";
 import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
+import { getBatchTrans } from "../../utils/request/reader";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   timeInterval: any;
+  lastBatchTranslationTriggerAt: number;
+  batchTranslationLock: Promise<any>;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -16,6 +22,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       percentage: "",
     };
     this.isFirst = true;
+    this.lastBatchTranslationTriggerAt = 0;
+    this.batchTranslationLock = Promise.resolve();
   }
 
   getFormattedTime() {
@@ -44,14 +52,46 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
+        await this.handleBatchTranslation(nextProps.htmlBook.rendition);
       });
       nextProps.htmlBook.rendition.on("rendered", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
+        await this.handleBatchTranslation(nextProps.htmlBook.rendition);
       });
     }
     if (nextProps.readerMode !== this.props.readerMode) {
       this.setState({ isSingle: nextProps.readerMode !== "double" });
     }
+  }
+  async handleBatchTranslation(rendition) {
+    const prev = this.batchTranslationLock;
+    const next = prev.then(async () => {
+      if (
+        !ConfigService.getAllListConfig("fullTranslationBooks").includes(
+          this.props.currentBook.key
+        ) ||
+        ConfigService.getReaderConfig("fullTranslationMode") === "no" ||
+        !this.props.isAuthed
+      ) {
+        return;
+      }
+
+      let batchTransTexts = await rendition.getBatchTransTexts();
+      if (batchTransTexts && batchTransTexts.length > 0) {
+        let res = await getBatchTrans(
+          batchTransTexts,
+          "Automatic",
+          KookitConfig.ConvertLangMap[
+            ConfigService.getReaderConfig("lang") || "zhCN"
+          ]
+        );
+        if (res && res.data && res.data.texts) {
+          rendition.handleBatchTransResult(batchTransTexts, res.data.texts);
+        }
+      }
+    });
+    this.batchTranslationLock = next.catch(() => {});
+    return next;
   }
 
   async handlePageNum(rendition) {
@@ -140,7 +180,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               <span className="footer-time">
                 {this.state.currentTime}
                 {this.state.percentage
-                  ? "  " + parseFloat(this.state.percentage).toFixed(2) + "%"
+                  ? "  " +
+                    (parseFloat(this.state.percentage) * 100).toFixed(2) +
+                    "%"
                   : ""}
               </span>
             </>

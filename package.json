@@ -15,7 +15,8 @@
   "private": false,
   "resolutions": {
     "//": "See https://github.com/facebook/create-react-app/issues/11773",
-    "react-error-overlay": "6.0.9"
+    "react-error-overlay": "6.0.9",
+    "node-gyp": "^10.0.0"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
@@ -25,7 +26,9 @@
     "better-sqlite3": "^11.6.0",
     "buffer": "^6.0.3",
     "chardet": "^2.0.0",
+    "color-thief-browser": "^2.0.2",
     "copy-text-to-clipboard": "^2.2.0",
+    "discord-rpc": "^4.0.1",
     "dompurify": "^3.2.4",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^5.4.3",
@@ -110,7 +113,7 @@
     "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://127.0.0.1:3000/ && nodemon --watch main.js --exec electron .\"",
     "release": "electron-builder",
     "prerelease": "react-scripts build",
-    "postinstall": "sed 's/^#include .nan_scriptorigin\\.h./\\/\\/ #include nan_scriptorigin.h/' ./node_modules/nan/nan.h > ./node_modules/nan/nan.h.new && mv ./node_modules/nan/nan.h.new ./node_modules/nan/nan.h && electron-builder install-app-deps",
+    "postinstall": "node scripts/patch-nan.js && electron-builder install-app-deps",
     "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "homepage": "./",

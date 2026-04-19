@@ -280,6 +280,40 @@ class SupportDialog extends React.Component<
                         </div>
                       </div>
                     </div>
+                    <p
+                      className="support-dialog-list"
+                      style={{
+                        textAlign: "left",
+                        lineHeight: "1.5",
+                        margin: 0,
+                        fontSize: 14,
+                      }}
+                    >
+                      {getServerRegion() === "china"
+                        ? this.props.t(
+                            "After placing your order, you will be redirected to the purchase confirmation page, which will display your product key (i.e., redemption code). The redemption code will also be sent to the email address you provided before placing your order. If you haven’t received it, you can visit this link and use the email address you provided to retrieve your redemption code."
+                          )
+                        : this.props.t(
+                            "Redemption code has been sent to the email address you provided during checkout. If you haven't received the code, please check the spam foler or contact our support team for assistance."
+                          )}
+                    </p>
+                    <p
+                      className="support-dialog-list"
+                      style={{
+                        textAlign: "center",
+                        lineHeight: "1.5",
+                        color: "rgb(231, 69, 69)",
+                        opacity: 0.8,
+                        margin: 0,
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        openInBrowser("https://www.fakamiao.com/orderQuery");
+                      }}
+                    >
+                      {getServerRegion() === "china" &&
+                        this.props.t("Query redemption code")}
+                    </p>
                   </div>
                 ) : (
                   <>
@@ -292,49 +326,58 @@ class SupportDialog extends React.Component<
                       >
                         {this.props.t("Exit Pro")}
                       </div>
-                      <div
-                        onClick={async () => {
-                          toast.loading(
-                            this.props.t("Checking payment status"),
-                            {
-                              id: "check-payment-status",
-                            }
-                          );
-                          let res = await fetchUserInfo();
-                          if (res.code === 200) {
-                            let userInfo = res.data;
-                            if (
-                              userInfo.valid_until <
-                              parseInt(new Date().getTime() / 1000 + "")
-                            ) {
-                              toast.error(
-                                this.props.t("You haven't upgraded to Pro yet"),
-                                {
-                                  id: "check-payment-status",
-                                }
-                              );
-                            } else {
-                              this.props.handleFetchUserInfo();
-                              toast.success(
-                                this.props.t("Thanks for your support"),
-                                {
-                                  id: "check-payment-status",
-                                }
-                              );
-
-                              this.props.handleShowSupport(false);
-                            }
-                          } else {
-                            toast.error(
-                              this.props.t("Failed to get user info")
+                      {getServerRegion() === "global" && (
+                        <div
+                          onClick={async () => {
+                            toast.loading(
+                              this.props.t("Checking payment status"),
+                              {
+                                id: "check-payment-status",
+                              }
                             );
-                          }
-                        }}
-                        className="support-us-need-help"
-                        style={{ marginRight: 10 }}
-                      >
-                        {this.props.t("I've paid")}
-                      </div>
+                            let res = await fetchUserInfo();
+                            if (res.code === 200) {
+                              let userInfo = res.data;
+                              if (
+                                userInfo.valid_until <
+                                parseInt(new Date().getTime() / 1000 + "")
+                              ) {
+                                toast.error(
+                                  this.props.t(
+                                    "You haven't upgraded to Pro yet"
+                                  ) +
+                                    "\n" +
+                                    this.props.t(
+                                      "If you purchased a redemption code, please click the redeem button to redeem it, or contact our support team for assistance"
+                                    ),
+                                  {
+                                    id: "check-payment-status",
+                                    duration: 6000,
+                                  }
+                                );
+                              } else {
+                                this.props.handleFetchUserInfo();
+                                toast.success(
+                                  this.props.t("Thanks for your support"),
+                                  {
+                                    id: "check-payment-status",
+                                  }
+                                );
+
+                                this.props.handleShowSupport(false);
+                              }
+                            } else {
+                              toast.error(
+                                this.props.t("Failed to get user info")
+                              );
+                            }
+                          }}
+                          className="support-us-need-help"
+                          style={{ marginRight: 10 }}
+                        >
+                          {this.props.t("I've paid")}
+                        </div>
+                      )}
                     </div>
                     <div className="support-us-info" style={{ height: 420 }}>
                       <div className="new-version-animation">
@@ -380,7 +423,11 @@ class SupportDialog extends React.Component<
                           }}
                           style={{ fontWeight: "bold" }}
                         >
-                          <Trans>Upgrade</Trans>
+                          {getServerRegion() === "global" ? (
+                            <Trans>Upgrade</Trans>
+                          ) : (
+                            <Trans>Purchase the code</Trans>
+                          )}
                         </div>
                       </div>
                       <p

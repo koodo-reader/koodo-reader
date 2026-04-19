@@ -1,7 +1,6 @@
 import React from "react";
 import "./popupOption.css";
 
-import Note from "../../../models/Note";
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
 import { popupList } from "../../../constants/popupList";
@@ -9,12 +8,13 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import {
   getSelection,
+  getSelectionSentence,
   searchInTheBook,
 } from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { openExternalUrl } from "../../../utils/common";
-import DatabaseService from "../../../utils/storage/databaseService";
+import { createHighlight } from "../../../utils/reader/noteUtil";
 
 declare var window: any;
 
@@ -49,74 +49,24 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleDict = () => {
     this.props.handleMenuMode("dict");
     this.props.handleOriginalText(getSelection(this.props.currentBook.format));
+    this.props.handleOriginalSentence(
+      getSelectionSentence(this.props.currentBook.format)
+    );
   };
   handleDigest = async () => {
-    let bookKey = this.props.currentBook.key;
-    let bookLocation = ConfigService.getObjectConfig(
-      this.props.currentBook.key,
-      "recordLocation",
-      {}
-    );
-    let cfi = JSON.stringify(bookLocation);
-    if (
-      this.props.currentBook.format === "PDF" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
-    ) {
-      let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(
-        this.props.chapterDocIndex
-      );
-      cfi = JSON.stringify(bookLocation);
-    }
-    let percentage = bookLocation.percentage ? bookLocation.percentage : "0";
-    let color = this.props.color;
-    let notes = "";
-    let pageArea = document.getElementById("page-area");
-    if (!pageArea) return;
-    let iframe = pageArea.getElementsByTagName("iframe")[0];
-    if (!iframe) return;
-    let docs = getIframeDoc(this.props.currentBook.format);
-    let text = "";
-    for (let i = 0; i < docs.length; i++) {
-      let doc = docs[i];
-      if (!doc) continue;
-      text = doc.getSelection()?.toString() || "";
-      if (text) {
-        break;
-      }
-    }
-
-    let range = JSON.stringify(
-      await this.props.htmlBook.rendition.getHightlightCoords(
-        this.props.chapterDocIndex
-      )
-    );
-    if (!text) return;
-    text = text.replace(/\s\s/g, "");
-    text = text.replace(/\r/g, "");
-    text = text.replace(/\n/g, "");
-    text = text.replace(/\t/g, "");
-    text = text.replace(/\f/g, "");
-    let highlight = new Note(
-      bookKey,
-      this.props.chapter,
-      this.props.chapterDocIndex,
-      text,
-      cfi,
-      range,
-      notes,
-      percentage,
-      color,
-      []
-    );
-    DatabaseService.saveRecord(highlight, "notes").then(async () => {
-      this.props.handleOpenMenu(false);
-      toast.success(this.props.t("Addition successful"));
-      this.props.handleFetchNotes();
-      this.props.handleMenuMode("");
-      await this.props.htmlBook.rendition.createOneNote(
-        highlight,
-        this.handleNoteClick
-      );
+    await createHighlight({
+      currentBook: this.props.currentBook,
+      htmlBook: this.props.htmlBook,
+      chapterDocIndex: this.props.chapterDocIndex,
+      chapter: this.props.chapter,
+      color: this.props.color,
+      t: this.props.t,
+      onNoteClick: this.handleNoteClick,
+      onSuccess: () => {
+        this.props.handleOpenMenu(false);
+        this.props.handleFetchNotes();
+        this.props.handleMenuMode("");
+      },
     });
   };
 

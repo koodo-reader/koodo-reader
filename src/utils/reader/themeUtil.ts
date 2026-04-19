@@ -18,6 +18,7 @@ const BG_SOLID_SELECTORS = [
   ".import-from-local",
   ".single-control-switch",
   ".side-menu-selector-container",
+  ".setting-dialog-sidebar-item.active",
   ".previous-chapter-single-container",
   ".next-chapter-single-container",
   ".book-bookmark-link",

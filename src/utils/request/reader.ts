@@ -6,13 +6,14 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
-import { officialDictList } from "../../constants/settingList";
 import {
   getServerRegion,
   getWebsiteUrl,
   openExternalUrl,
+  openInBrowser,
   vexComfirmAsync,
 } from "../common";
+import { getTempToken } from "./user";
 let readerRequest: ReaderRequest | undefined;
 let isShowingQuotaAlert = false;
 let quotaAlertDismissTime = 0;
@@ -71,6 +72,7 @@ export const getDictionaryStream = async (
   word: string,
   from: string,
   to: string,
+  sentence: string,
   isFullAnalysis: boolean,
   onMessage: (result) => void
 ) => {
@@ -80,6 +82,7 @@ export const getDictionaryStream = async (
       word,
       from,
       to,
+      sentence,
       is_full_analysis: isFullAnalysis,
     },
     onMessage
@@ -201,36 +204,131 @@ export const getTTSAudio = async (
     const now = Date.now();
     const timeSinceDismiss = now - quotaAlertDismissTime;
 
-    if (!isShowingQuotaAlert && timeSinceDismiss >= 10000) {
+    if (!isShowingQuotaAlert && timeSinceDismiss >= 10000 && response.data) {
       isShowingQuotaAlert = true;
-      let result = await vexComfirmAsync(
-        i18n.t(
-          "You have exhausted your daily free AI voice character quota. Please purchase more quota to continue using this feature or wait until the quota resets. You can also use other TTS voices instead."
-        ) +
-          " " +
-          (response.data && response.data.ttl
-            ? i18n.t("Your quota will be reset in", {
-                ttl: (response.data.ttl / 3600).toFixed(1),
-              })
-            : ""),
-        "Purchase more quota"
-      );
-      if (result) {
-        isShowingQuotaAlert = false;
-        quotaAlertDismissTime = Date.now();
-        openExternalUrl(
-          getWebsiteUrl() +
-            (ConfigService.getReaderConfig("lang").startsWith("zh")
-              ? "/zh"
-              : "/en") +
-            "/tts-quota"
+      if (response.data.user_type === "pro") {
+        let result = await vexComfirmAsync(
+          i18n.t(
+            "You have exhausted your daily free AI voice character quota. Please purchase more quota to continue using this feature or wait until the quota resets. You can also use other TTS voices instead."
+          ) +
+            " " +
+            (response.data && response.data.ttl
+              ? i18n.t("Your quota will be reset in", {
+                  ttl: (response.data.ttl / 3600).toFixed(1),
+                })
+              : ""),
+          "Purchase more quota"
         );
+        if (result) {
+          isShowingQuotaAlert = false;
+          quotaAlertDismissTime = Date.now();
+          openExternalUrl(
+            getWebsiteUrl() +
+              (ConfigService.getReaderConfig("lang").startsWith("zh")
+                ? "/zh"
+                : "/en") +
+              "/tts-quota"
+          );
+        } else {
+          isShowingQuotaAlert = false;
+          quotaAlertDismissTime = Date.now();
+        }
       } else {
-        isShowingQuotaAlert = false;
-        quotaAlertDismissTime = Date.now();
+        let result = await vexComfirmAsync(
+          i18n.t(
+            "You have exhausted your daily trial quota. Please upgrade to Pro to continue using this feature or wait until the quota resets. You can also use other TTS voices instead."
+          ) +
+            " " +
+            (response.data && response.data.ttl
+              ? i18n.t("Your quota will be reset in", {
+                  ttl: (response.data.ttl / 3600).toFixed(1),
+                })
+              : ""),
+          "Upgrade to Pro"
+        );
+        if (result) {
+          isShowingQuotaAlert = false;
+          quotaAlertDismissTime = Date.now();
+          let response = await getTempToken();
+          if (response.code === 200) {
+            let tempToken = response.data.access_token;
+            let deviceUuid = await TokenService.getFingerprint();
+            openInBrowser(
+              getWebsiteUrl() +
+                (ConfigService.getReaderConfig("lang").startsWith("zh")
+                  ? "/zh"
+                  : "/en") +
+                "/pricing?temp_token=" +
+                tempToken +
+                "&device_uuid=" +
+                deviceUuid
+            );
+          }
+        } else {
+          isShowingQuotaAlert = false;
+          quotaAlertDismissTime = Date.now();
+        }
       }
     }
     return response;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return null;
+};
+export const getBatchTrans = async (
+  texts: string[],
+  from: string,
+  to: string
+) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.getBatchTrans({ texts, from, to });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return response;
+};
+export const getSplitSentence = async (
+  texts: { text: string; index: number }[]
+) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.getSplitSentence({ texts });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return response;
+  } else if (response.code === 20009) {
+    toast.error(
+      i18n.t("You have reached the daily limit for this feature.") +
+        " " +
+        i18n.t("AI multi-role speech is paused for now.") +
+        " " +
+        i18n.t("Your quota will be reset in", {
+          ttl:
+            response.data && response.data.ttl
+              ? (response.data.ttl / 3600).toFixed(1)
+              : "",
+        })
+    );
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return response;
+};
+export const detectLanguage = async (text: string) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.detectLanguage({ text });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return;
   } else {
     toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
   }

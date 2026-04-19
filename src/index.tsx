@@ -8,11 +8,18 @@ import "./i18n";
 import store from "./store";
 import Router from "./router/index";
 import StyleUtil from "./utils/reader/styleUtil";
-import { initSystemFont, initTheme } from "./utils/reader/launchUtil";
+import {
+  initSystemFont,
+  initTheme,
+  applyCustomSystemCSS,
+  applyAppBackgroundImage,
+} from "./utils/reader/launchUtil";
 import { migrateThemeConfig } from "./utils/reader/themeUtil";
 initTheme();
 initSystemFont();
 migrateThemeConfig();
+applyCustomSystemCSS();
+applyAppBackgroundImage();
 ReactDOM.render(
   <Provider store={store}>
     <Router />

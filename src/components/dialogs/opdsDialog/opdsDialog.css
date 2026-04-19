@@ -1,0 +1,122 @@
+/* Section label (reuses cloud-drive-item rhythm) */
+.opds-section-label {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.45;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 12px 15px 4px;
+}
+
+/* Add catalog form */
+.opds-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 15px 4px;
+}
+
+.opds-input {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 13px;
+  border-radius: 5px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  background: transparent;
+  color: inherit;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.opds-input:focus {
+  border-color: #f16464;
+}
+
+/* Search bar */
+.opds-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 15px 8px;
+}
+
+.opds-search-bar .opds-input {
+  flex: 1;
+}
+
+/* Entry row with cover thumbnail */
+.opds-entry-row {
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  gap: 10px;
+}
+
+.opds-thumb {
+  width: 38px;
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(128, 128, 128, 0.08);
+  border-radius: 3px;
+}
+
+.opds-thumb-img {
+  width: 38px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.opds-entry-info {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.opds-entry-author {
+  font-size: 12px;
+  opacity: 0.55;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+
+.opds-entry-formats {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+}
+
+.opds-format-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background-color: rgba(241, 100, 100, 0.12);
+  color: #f16464;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.opds-format-tag:hover {
+  background-color: rgba(241, 100, 100, 0.28);
+}
+
+/* Download buttons bar (detail view, bottom-left) */
+.opds-bottom-bar {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-width: calc(100% - 120px);
+}

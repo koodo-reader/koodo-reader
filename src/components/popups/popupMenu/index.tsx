@@ -5,6 +5,8 @@ import {
   handleChangeDirection,
   handleNoteKey,
   handleRenderNoteFunc,
+  handleOriginalText,
+  handleOriginalSentence,
 } from "../../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
@@ -20,6 +22,7 @@ const mapStateToProps = (state: stateType) => {
     readerMode: state.reader.readerMode,
     color: state.reader.color,
     isChangeDirection: state.viewArea.isChangeDirection,
+    htmlBook: state.reader.htmlBook,
   };
 };
 const actionCreator = {
@@ -29,6 +32,8 @@ const actionCreator = {
   handleChangeDirection,
   handleNoteKey,
   handleRenderNoteFunc,
+  handleOriginalText,
+  handleOriginalSentence,
 };
 export default connect(
   mapStateToProps,

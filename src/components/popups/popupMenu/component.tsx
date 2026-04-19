@@ -4,6 +4,13 @@ import PopupOption from "../popupOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  getSelection,
+  getSelectionSentence,
+} from "../../../utils/reader/mouseEvent";
+import { createHighlight } from "../../../utils/reader/noteUtil";
+
+declare var window: any;
 
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;
@@ -152,8 +159,65 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.props.handleNoteKey("");
       return;
     }
+
+    const selectAction = ConfigService.getReaderConfig("selectAction");
+    if (selectAction && selectAction !== "") {
+      this.handleSelectAction(selectAction, sel);
+      return;
+    }
+
     this.showMenu();
     this.props.handleMenuMode("menu");
+  };
+
+  handleSelectAction = async (action: string, sel: Selection) => {
+    const format = this.props.currentBook.format;
+    const text = getSelection(format);
+    if (!text) return;
+
+    switch (action) {
+      case "translation":
+        this.props.handleOriginalText(text);
+        this.props.handleMenuMode("trans");
+        this.props.handleOpenMenu(true);
+        break;
+      case "dict":
+        this.props.handleOriginalText(text);
+        this.props.handleOriginalSentence(getSelectionSentence(format));
+        this.props.handleMenuMode("dict");
+        this.props.handleOpenMenu(true);
+        break;
+      case "highlight":
+        await createHighlight({
+          currentBook: this.props.currentBook,
+          htmlBook: this.props.htmlBook,
+          chapterDocIndex: this.props.chapterDocIndex,
+          chapter: this.props.chapter,
+          color: this.props.color,
+          t: this.props.t,
+          onSuccess: () => {
+            this.props.handleOpenMenu(false);
+          },
+        });
+        break;
+      case "note":
+        this.props.handleMenuMode("note");
+        this.showMenu();
+        this.props.handleOpenMenu(true);
+        break;
+      case "speaker":
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = text;
+        if (window.speechSynthesis && window.speechSynthesis.getVoices) {
+          msg.voice = window.speechSynthesis.getVoices()[0];
+          window.speechSynthesis.speak(msg);
+        }
+        break;
+      default:
+        this.showMenu();
+        this.props.handleMenuMode("menu");
+        break;
+    }
   };
 
   render() {

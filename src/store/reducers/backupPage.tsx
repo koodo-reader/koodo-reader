@@ -3,6 +3,7 @@ const initState = {
   isOpenLocalFileDialog: false,
   isOpenTokenDialog: false,
   isOpenImportDialog: false,
+  isOpenOPDSDialog: false,
   isOpenSortShelfDialog: false,
   dataSourceList: [],
   loginOptionList: [],
@@ -27,6 +28,11 @@ export function backupPage(
       return {
         ...state,
         isOpenImportDialog: action.payload,
+      };
+    case "HANDLE_OPDS_DIALOG":
+      return {
+        ...state,
+        isOpenOPDSDialog: action.payload,
       };
     case "HANDLE_SORT_SHELF_DIALOG":
       return {

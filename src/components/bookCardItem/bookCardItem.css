@@ -1,15 +1,16 @@
 .book-list-item {
-  width: 133px;
+  width: calc(133px * var(--card-scale, 1));
   /* height: 192px; */
   float: left;
   overflow: hidden;
   position: relative;
 }
 .book-item-cover {
-  width: 105px;
+  width: calc(105px * var(--card-scale, 1));
   /* height: 137px; */
   opacity: 1;
-  margin: 10px 15px 5px 15px;
+  margin: calc(10px * var(--card-scale, 1)) calc(15px * var(--card-scale, 1))
+    calc(5px * var(--card-scale, 1)) calc(15px * var(--card-scale, 1));
   cursor: pointer;
   /* overflow: hidden; */
   display: flex;

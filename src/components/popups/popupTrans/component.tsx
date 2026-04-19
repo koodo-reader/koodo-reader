@@ -1,19 +1,17 @@
 import React from "react";
 import "./popupTrans.css";
 import { PopupTransProps, PopupTransState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import axios from "axios";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import {
-  getDefaultTransTarget,
-  getWebsiteUrl,
-  handleContextMenu,
-  openExternalUrl,
-} from "../../../utils/common";
-import DatabaseService from "../../../utils/storage/databaseService";
-import { checkPlugin } from "../../../utils/common";
+import { getDefaultTransTarget, openExternalUrl } from "../../../utils/common";
 import { getTransStream } from "../../../utils/request/reader";
+import { chatStream } from "../../../utils/request/common";
+import { getIframeDoc } from "../../../utils/reader/docUtil";
 declare var window: any;
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   constructor(props: PopupTransProps) {
@@ -28,13 +26,24 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       isFinishOutput: false,
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
     let originalText = this.props.originalText.replace(/(\r\n|\n|\r)/gm, "");
     this.setState({ originalText: originalText });
     if (!this.state.transService) {
-      this.setState({
-        isAddNew: true,
-      });
+      let pluginList = this.props.plugins.filter(
+        (item) => item.type === "translation"
+      );
+      if (pluginList.length > 0) {
+        this.setState({
+          transService: pluginList[0].key,
+        });
+        ConfigService.setReaderConfig("transService", pluginList[0].key);
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      } else {
+        this.setState({
+          isAddNew: true,
+        });
+      }
     }
 
     this.handleTrans(originalText);
@@ -43,7 +52,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   handleTrans = async (text: string) => {
     if (
       this.state.transService &&
-      this.state.transService !== "official-ai-trans-plugin"
+      this.state.transService !== "official-ai-trans-plugin" &&
+      this.state.transService !== "custom-ai-trans-plugin"
     ) {
       let plugin = this.props.plugins.find(
         (item) => item.key === this.state.transService
@@ -66,6 +76,12 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         .then((res: string) => {
           if (res.startsWith("https://")) {
             openExternalUrl(res, true, "trans");
+            let docs = getIframeDoc(this.props.currentBook.format);
+            for (let i = 0; i < docs.length; i++) {
+              let doc = docs[i];
+              if (!doc) continue;
+              doc.getSelection()?.empty();
+            }
           } else {
             this.setState({
               translatedText: res,
@@ -80,6 +96,61 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           );
           console.error(err);
         });
+    } else if (this.state.transService === "custom-ai-trans-plugin") {
+      this.setState({
+        transService: "custom-ai-trans-plugin",
+        isAddNew: false,
+      });
+      let plugin = this.props.plugins.find(
+        (item) => item.key === "custom-ai-trans-plugin"
+      );
+      if (!plugin) {
+        return;
+      }
+      let isFirst = true;
+      let targetLang =
+        ConfigService.getReaderConfig("transTarget") ||
+        getDefaultTransTarget(plugin.langList);
+      if (targetLang === "Traditional Chinese") {
+        targetLang = "繁体中文";
+      }
+      let systemPrompt =
+        ConfigService.getReaderConfig("aiTranslatePrompt") ||
+        KookitConfig.DefaultPrompts.aiTranslate;
+      systemPrompt = systemPrompt.replace(
+        "{from}",
+        ConfigService.getReaderConfig("transSource") || "Automatic"
+      );
+      systemPrompt = systemPrompt.replace("{to}", targetLang);
+      systemPrompt = systemPrompt.replace("{text}", text);
+      let config: any = plugin.config || {};
+      await chatStream(
+        config.endpoint,
+        config.providerId,
+        config.apiKey,
+        config.modelId,
+        systemPrompt,
+        [],
+        (result) => {
+          if (result && result.done) {
+            this.setState({ isFinishOutput: true });
+            return;
+          }
+          if (result && result.text) {
+            if (isFirst) {
+              this.setState({
+                translatedText: result.text,
+              });
+              isFirst = false;
+            } else {
+              this.setState({
+                translatedText: this.state.translatedText + result.text,
+              });
+            }
+          }
+        }
+      );
+      this.setState({ isFinishOutput: true });
     } else if (
       this.props.isAuthed &&
       ConfigService.getReaderConfig("isDisableAI") !== "yes"

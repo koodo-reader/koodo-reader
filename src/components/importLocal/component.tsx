@@ -94,7 +94,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       if (this.state.isOpenFile) {
         if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           //ignore
-        } else if (this.props.isAuthed) {
+        } else if (
+          this.props.isAuthed &&
+          ConfigService.getItem("defaultSyncOption")
+        ) {
           await BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
           await CoverUtil.addCover(book);
         } else if (ConfigService.getReaderConfig("isImportPath") === "yes") {
@@ -113,7 +116,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       } else {
         if (
           ConfigService.getReaderConfig("isImportPath") !== "yes" ||
-          this.props.isAuthed
+          (this.props.isAuthed && ConfigService.getItem("defaultSyncOption"))
         ) {
           await BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
         }
@@ -127,6 +130,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         .then(() => {
           this.props.handleFetchBooks();
           if (this.props.mode === "shelf") {
+            if (!this.state.importingShelfTitle) {
+              this.setState({ importingShelfTitle: this.props.shelfTitle });
+            }
             ConfigService.setMapConfig(
               this.state.importingShelfTitle || this.props.shelfTitle,
               book.key,
@@ -251,6 +257,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                       : "",
                   convertChinese:
                     ConfigService.getReaderConfig("convertChinese"),
+                  fullTranslationMode: "no",
                   textOrientation:
                     ConfigService.getReaderConfig("textOrientation"),
                   parserRegex: "",
@@ -326,6 +333,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.setState({ isMoreOptionsVisible: false });
 
     this.props.handleImportDialog(true);
+  };
+
+  // Handle OPDS import
+  handleOPDSImport = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the Dropzone
+    this.setState({ isMoreOptionsVisible: false });
+    this.props.handleOPDSDialog(true);
   };
   render() {
     return (
@@ -528,6 +542,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     >
                       <span className="more-option-text">
                         <Trans>From cloud storage</Trans>
+                      </span>
+                    </div>
+                    <div
+                      className="more-option-item"
+                      onClick={this.handleOPDSImport}
+                    >
+                      <span className="more-option-text">
+                        <Trans>From OPDS</Trans>
                       </span>
                     </div>
                   </div>

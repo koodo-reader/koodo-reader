@@ -123,9 +123,11 @@ class ConvertDialog extends React.Component<
                       ) {
                         toast(
                           this.props.t(
-                            "This feature is not available in the free version"
+                            "Please upgrade to Pro to use this feature"
                           )
                         );
+                        this.props.handleSetting(true);
+                        this.props.handleSettingMode("account");
                         return;
                       }
                       ConfigService.setReaderConfig(

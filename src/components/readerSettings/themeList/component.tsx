@@ -59,7 +59,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
     ) {
     } else {
-      StyleUtil.addDefaultCss();
+      StyleUtil.addDefaultCss(this.props.currentBook.key);
     }
   };
   handleColorTextPicker = (isShowTextPicker: boolean) => {
