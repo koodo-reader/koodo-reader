@@ -18,8 +18,8 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   t: (title: string) => string;
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
-  cloudSyncFunc: () => Promise<void>;
-  handleFetchUserInfo: () => Promise<void>;
+  cloudSyncFunc: (userInfo: any) => Promise<void>;
+  handleFetchUserInfo: () => Promise<any>;
   plugins: PluginModel[];
   books: BookModel[];
   dataSourceList: string[];

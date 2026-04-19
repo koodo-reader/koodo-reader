@@ -175,13 +175,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           console.error(error);
         }
       }
-      await this.props.handleFetchUserInfo();
+      let userInfo = await this.props.handleFetchUserInfo();
       if (
         ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
         ConfigService.getItem("defaultSyncOption")
       ) {
         this.setState({ isSync: true });
-        await this.handleCloudSync();
+        await this.handleCloudSync(userInfo);
         await this.handleOpenLastReadBook();
       }
     }
@@ -224,9 +224,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       !this.state.isSync
     ) {
       ConfigService.setItem("isFinshReading", "yes");
-      await this.props.handleFetchUserInfo();
+      let userInfo = await this.props.handleFetchUserInfo();
       this.setState({ isSync: true }, async () => {
-        await this.handleCloudSync();
+        await this.handleCloudSync(userInfo);
         ConfigService.setItem("isFinshReading", "no");
       });
     }
@@ -288,16 +288,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     this.setState({ isSync: false });
   };
-  beforeSync = async () => {
+  beforeSync = async (userInfo: any) => {
     if (!ConfigService.getItem("defaultSyncOption")) {
       toast.error(this.props.t("Please add data source in the setting"));
       return false;
     }
     if (
       ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
-      this.props.userInfo &&
-      this.props.userInfo.default_sync_option &&
-      this.props.userInfo.default_sync_option !== this.props.defaultSyncOption
+      userInfo &&
+      userInfo.default_sync_option &&
+      userInfo.default_sync_option !== this.props.defaultSyncOption
     ) {
       toast.error(
         this.props.t(
@@ -305,7 +305,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         ) +
           this.props.t(
             driveList.find(
-              (item) => item.value === this.props.userInfo.default_sync_option
+              (item) => item.value === userInfo.default_sync_option
             )?.label || ""
           ),
         {
@@ -393,7 +393,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   handleSyncStateChange = (isSyncing: boolean) => {
     this.setState({ isSync: isSyncing });
   };
-  handleCloudSync = async (): Promise<false | undefined> => {
+  handleCloudSync = async (userInfo: any): Promise<false | undefined> => {
     if (this.isSyncing) {
       console.info("Sync already in progress, skipping...");
       return false;
@@ -407,7 +407,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         return false;
       }
 
-      let res = await this.beforeSync();
+      let res = await this.beforeSync(userInfo);
       if (!res) {
         clearInterval(this.timer);
         this.setState({ isSync: false });
@@ -500,9 +500,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               default_sync_option: this.props.defaultSyncOption,
               default_sync_token: encryptedToken || "",
             });
-            await this.props.handleFetchUserInfo();
+            let userInfo = await this.props.handleFetchUserInfo();
             toast.success(this.props.t("Setup successful"));
-            this.handleCloudSync();
+            this.handleCloudSync(userInfo);
           }
         }
       }
@@ -695,8 +695,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               }
               this.setState({ isSync: true });
               if (this.props.isAuthed) {
-                await this.props.handleFetchUserInfo();
-                this.handleCloudSync();
+                let userInfo = await this.props.handleFetchUserInfo();
+                this.handleCloudSync(userInfo);
               } else {
                 this.handleLocalSync();
               }
