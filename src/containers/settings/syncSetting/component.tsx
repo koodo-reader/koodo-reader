@@ -307,12 +307,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                       default_sync_option: this.props.defaultSyncOption,
                       default_sync_token: encryptToken || "",
                     });
-                    await this.props.handleFetchUserInfo();
+                    let userInfo = await this.props.handleFetchUserInfo();
                     if (
                       ConfigService.getReaderConfig("isEnableKoodoSync") ===
                       "yes"
                     ) {
-                      this.props.cloudSyncFunc();
+                      this.props.cloudSyncFunc(userInfo);
                     }
 
                     break;

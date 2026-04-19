@@ -273,6 +273,7 @@ export function handleFetchUserInfo() {
     }
 
     dispatch(handleUserInfo(userInfo));
+    return userInfo;
   };
 }
 export function handleFetchPlugins() {
