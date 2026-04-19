@@ -1,43 +1,18 @@
 class Book {
-  key: string;
-  name: string;
-  author: string;
-  description: string;
-  md5: string;
-  cover: string;
-  format: string;
-  publisher: string;
-  size: number;
-  page: number;
-  path: string;
-  charset: string;
   constructor(
-    key: string,
-    name: string,
-    author: string,
-    description: string,
-    md5: string,
-    cover: string,
-    format: string,
-    publisher: string,
-    size: number,
-    page: number,
-    path: string,
-    charset: string
-  ) {
-    this.key = key;
-    this.name = name;
-    this.author = author;
-    this.description = description;
-    this.md5 = md5;
-    this.cover = cover;
-    this.format = format;
-    this.publisher = publisher;
-    this.size = size;
-    this.page = page;
-    this.path = path;
-    this.charset = charset;
-  }
+    readonly key: string,
+    readonly name: string,
+    readonly author: string,
+    readonly description: string,
+    readonly md5: string,
+    readonly cover: string,
+    readonly format: string,
+    readonly publisher: string,
+    readonly size: number,
+    readonly page: number,
+    readonly path: string,
+    readonly charset: string
+  ) {}
 }
 
 export default Book;

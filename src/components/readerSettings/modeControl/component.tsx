@@ -4,13 +4,14 @@ import { ModeControlProps, ModeControlState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
 
+type ReaderViewMode = "single" | "double" | "scroll";
+
 class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   constructor(props: ModeControlProps) {
     super(props);
-    this.state = {};
   }
 
-  handleChangeMode = (mode: string) => {
+  handleChangeMode = (mode: ReaderViewMode) => {
     if (
       (this.props.currentBook.format === "PDF" &&
         ConfigService.getReaderConfig("isConvertPDF") !== "yes") ||

@@ -19,13 +19,12 @@ function getDefaultHeight(menuMode: string) {
 }
 
 class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
-  highlighter: any;
-  timer!: NodeJS.Timeout;
-  key: any;
-  mode: string;
-  showNote: boolean;
-  isFirstShow: boolean;
-  rect: any;
+  private highlighter: unknown = null;
+  private timer: ReturnType<typeof setTimeout> | null = null;
+  private mode: string = "";
+  private showNote: boolean = false;
+  private isFirstShow: boolean = false;
+  private rect: PopupBoxProps["rect"];
   private isResizing: boolean = false;
   private resizeStartX: number = 0;
   private resizeStartY: number = 0;
@@ -38,11 +37,12 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     this.isFirstShow = false;
     this.highlighter = null;
     this.mode = "";
+    this.rect = props.rect;
 
     const savedSize = this.getSavedSize();
     this.state = {
       deleteKey: "",
-      rect: this.props.rect,
+      rect: props.rect,
       isShowUrl: false,
       popupWidth: savedSize ? savedSize.width : DEFAULT_WIDTH,
       popupHeight: savedSize
@@ -58,23 +58,31 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
         const parsed = JSON.parse(saved);
         if (parsed.width && parsed.height) return parsed;
       }
-    } catch (e) {}
+    } catch (e) {
+      // Config parse error - use defaults
+    }
     return null;
   }
 
-  saveSizeToConfig(width: number, height: number) {
+  saveSizeToConfig(width: number, height: number): void {
     try {
       ConfigService.setReaderConfig(
         POPUP_SIZE_KEY,
         JSON.stringify({ width, height })
       );
-    } catch (e) {}
+    } catch (e) {
+      // Config save error - size won't persist
+    }
   }
 
   componentDidMount(): void {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
-      let isShowUrl = ipcRenderer.sendSync("url-window-status", {
+      // Use dynamic import for Electron API to avoid TypeScript errors
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { ipcRenderer } = window.require("electron") as {
+        ipcRenderer: { sendSync: (channel: string, data: object) => boolean };
+      };
+      const isShowUrl = ipcRenderer.sendSync("url-window-status", {
         type: this.props.menuMode,
       });
       this.setState({ isShowUrl });
