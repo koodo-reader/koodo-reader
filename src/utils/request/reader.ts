@@ -293,6 +293,23 @@ export const getBatchTrans = async (
   }
   return response;
 };
+export const getWordDefinitions = async (
+  text: string,
+  level: string,
+  lang: string
+) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.analyzeText({ text, level, lang });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return response;
+};
 export const getSplitSentence = async (
   texts: { text: string; index: number }[]
 ) => {
