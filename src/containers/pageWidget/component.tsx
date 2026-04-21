@@ -111,7 +111,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       if (fullTexts && fullTexts.length > 0) {
         let res = await getWordDefinitions(
           fullTexts.join(" "),
-          "GRE",
+          "高中",
           "English"
         );
         if (res && res.data && res.data.words) {
