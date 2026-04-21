@@ -6,7 +6,7 @@ import {
   KookitConfig,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
-import { getBatchTrans } from "../../utils/request/reader";
+import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   timeInterval: any;
@@ -57,6 +57,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       nextProps.htmlBook.rendition.on("rendered", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
         await this.handleBatchTranslation(nextProps.htmlBook.rendition);
+        await this.handleWordDefinition(nextProps.htmlBook.rendition);
       });
     }
     if (nextProps.readerMode !== this.props.readerMode) {
@@ -93,7 +94,34 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     this.batchTranslationLock = next.catch(() => {});
     return next;
   }
+  async handleWordDefinition(rendition) {
+    const prev = this.batchTranslationLock;
+    const next = prev.then(async () => {
+      // if (
+      //   !ConfigService.getAllListConfig("wordDefinitionBooks").includes(
+      //     this.props.currentBook.key
+      //   ) ||
+      //   ConfigService.getReaderConfig("wordDefinitionMode") === "no" ||
+      //   !this.props.isAuthed
+      // ) {
+      //   return;
+      // }
 
+      let fullTexts = await rendition.audioText();
+      if (fullTexts && fullTexts.length > 0) {
+        let res = await getWordDefinitions(
+          fullTexts.join(" "),
+          "GRE",
+          "English"
+        );
+        if (res && res.data && res.data.words) {
+          rendition.handleWordDefinitionResult(res.data.words);
+        }
+      }
+    });
+    this.batchTranslationLock = next.catch(() => {});
+    return next;
+  }
   async handlePageNum(rendition) {
     let pageInfo = await rendition.getProgress();
     if (
