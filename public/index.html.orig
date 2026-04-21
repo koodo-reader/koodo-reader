@@ -13,11 +13,6 @@
         top: 0px;
         left: 0px;
       }
-      @media (max-width: 768px) {
-        body {
-          font-weight: normal;
-        }
-      }
     </style>
     <title>Koodo Reader</title>
     <script
