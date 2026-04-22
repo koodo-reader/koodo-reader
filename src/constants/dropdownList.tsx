@@ -120,6 +120,69 @@ export const dropdownList = [
     isPDF: false,
   },
 ];
+export const wordFrequencyList = [
+  {
+    title: "Current Chinese level",
+    value: "currentChineseLevel",
+    option: [
+      { label: "Default", value: "HSK3" },
+      {
+        label: "HSK1",
+        value: "1",
+      },
+      {
+        label: "HSK2",
+        value: "2",
+      },
+      {
+        label: "HSK3",
+        value: "3",
+      },
+      {
+        label: "HSK4",
+        value: "4",
+      },
+      {
+        label: "HSK5",
+        value: "5",
+      },
+      {
+        label: "HSK6",
+        value: "6",
+      },
+      { label: "HSK7~9", value: "7~9" },
+    ],
+    isPDF: false,
+  },
+  {
+    title: "Current Japanese level",
+    value: "currentJapaneseLevel",
+    option: [
+      { label: "Default", value: "N3" },
+      { label: "N1", value: "N1" },
+      { label: "N2", value: "N2" },
+      { label: "N3", value: "N3" },
+      { label: "N4", value: "N4" },
+      { label: "N5", value: "N5" },
+    ],
+    isPDF: false,
+  },
+  {
+    title: "Current English level",
+    value: "currentEnglishLevel",
+    option: [
+      { label: "Default", value: "四级" },
+      { label: "小学", value: "小学" },
+      { label: "初中", value: "初中" },
+      { label: "高中", value: "高中" },
+      { label: "四级", value: "四级" },
+      { label: "六级", value: "六级" },
+      { label: "专四专八", value: "专四专八" },
+      { label: "GRE", value: "GRE" },
+    ],
+    isPDF: false,
+  },
+];
 export const sliderConfigs = [
   {
     maxValue: 40,
