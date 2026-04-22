@@ -294,12 +294,12 @@ export const getBatchTrans = async (
   return response;
 };
 export const getWordDefinitions = async (
-  text: string,
+  texts: string[],
   level: string,
   lang: string
 ) => {
   let readerRequest = await getReaderRequest();
-  let response = await readerRequest.analyzeText({ text, level, lang });
+  let response = await readerRequest.analyzeText({ texts, level, lang });
   if (response.code === 200) {
     return response;
   } else if (response.code === 401) {

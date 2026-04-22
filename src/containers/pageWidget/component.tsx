@@ -7,6 +7,7 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
 import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
+import toast from "react-hot-toast";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   timeInterval: any;
@@ -97,6 +98,10 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   async handleWordDefinition(rendition) {
     const prev = this.batchTranslationLock;
     const next = prev.then(async () => {
+      toast("Fetching word definitions...", {
+        icon: "🔍",
+        id: "fetching-word-definitions",
+      });
       // if (
       //   !ConfigService.getAllListConfig("wordDefinitionBooks").includes(
       //     this.props.currentBook.key
@@ -107,15 +112,17 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       //   return;
       // }
 
-      let fullTexts = await rendition.audioText();
-      if (fullTexts && fullTexts.length > 0) {
-        let res = await getWordDefinitions(
-          fullTexts.join(" "),
-          "高中",
-          "English"
-        );
-        if (res && res.data && res.data.words) {
-          rendition.handleWordDefinitionResult(res.data.words);
+      let wordTexts = await rendition.audioText();
+      if (wordTexts && wordTexts.length > 0) {
+        let res = await getWordDefinitions(wordTexts, "6", "Chinese");
+        toast.dismiss("fetching-word-definitions");
+        console.log(res, "res");
+        if (res && res.data && res.data.results) {
+          rendition.handleWordDefinitionResult(
+            res.data.results,
+            "Chinese",
+            "zhCN"
+          );
         }
       }
     });
