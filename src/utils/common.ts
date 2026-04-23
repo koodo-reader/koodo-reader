@@ -1108,7 +1108,7 @@ export const handleAutoCloudSync = async () => {
   }
   return false;
 };
-const detectLanguage = (text: string): string => {
+const detectLocalLanguage = (text: string): string => {
   const chinesePattern = /[\u4e00-\u9fff\u3000-\u303f\uf900-\ufaff]/g;
   const japanesePattern = /[\u3040-\u309f\u30a0-\u30ff]/g;
   const koreanPattern = /[\uac00-\ud7af\u1100-\u11ff]/g;
@@ -1127,7 +1127,7 @@ const detectLanguage = (text: string): string => {
 };
 
 export const splitSentences = (text: string, maxLength?: number) => {
-  const lang = detectLanguage(text);
+  const lang = detectLocalLanguage(text);
   const resolvedMaxLength = maxLength ?? (lang === "en" ? 150 : 50);
 
   const segmenter = new (Intl as any).Segmenter(lang, {
