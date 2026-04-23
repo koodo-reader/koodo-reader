@@ -7,7 +7,7 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
 import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
-import toast from "react-hot-toast";
+import { detectLocalLanguage } from "../../utils/common";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   timeInterval: any;
@@ -98,30 +98,32 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   async handleWordDefinition(rendition) {
     const prev = this.batchTranslationLock;
     const next = prev.then(async () => {
-      toast("Fetching word definitions...", {
-        icon: "🔍",
-        id: "fetching-word-definitions",
-      });
-      // if (
-      //   !ConfigService.getAllListConfig("wordDefinitionBooks").includes(
-      //     this.props.currentBook.key
-      //   ) ||
-      //   ConfigService.getReaderConfig("wordDefinitionMode") === "no" ||
-      //   !this.props.isAuthed
-      // ) {
-      //   return;
-      // }
+      if (
+        !ConfigService.getAllListConfig("wordDefinitionBooks").includes(
+          this.props.currentBook.key
+        ) ||
+        !this.props.isAuthed
+      ) {
+        return;
+      }
 
       let wordTexts = await rendition.audioText();
       if (wordTexts && wordTexts.length > 0) {
-        let res = await getWordDefinitions(wordTexts, "6", "Chinese");
-        toast.dismiss("fetching-word-definitions");
+        let lang = detectLocalLanguage(wordTexts.slice(0, 500).join(" "));
+        let currentLevel =
+          lang === "zh"
+            ? ConfigService.getReaderConfig("currentChineseLevel") || "HSK3"
+            : lang === "ja"
+              ? ConfigService.getReaderConfig("currentJapaneseLevel") || "N3"
+              : ConfigService.getReaderConfig("currentEnglishLevel") || "四级";
+        let res = await getWordDefinitions(wordTexts, currentLevel, lang);
+
         console.log(res, "res");
         if (res && res.data && res.data.results) {
           rendition.handleWordDefinitionResult(
             res.data.results,
-            "Chinese",
-            "zhCN"
+            lang,
+            ConfigService.getReaderConfig("lang")
           );
         }
       }

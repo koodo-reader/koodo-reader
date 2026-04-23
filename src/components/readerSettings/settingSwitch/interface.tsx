@@ -3,8 +3,9 @@ import PluginModel from "../../../models/Plugin";
 import HtmlBookModel from "../../../models/HtmlBook";
 export interface SettingSwitchProps {
   currentBook: BookModel;
-  htmlBook: HtmlBookModel;
+  htmlBook: HtmlBookModel | null;
   plugins: PluginModel[];
+  isAuthed?: boolean;
   renderBookFunc: () => void;
   handleHideFooter: (isHideFooter: boolean) => void;
   handleHideHeader: (isHideHeader: boolean) => void;
@@ -17,6 +18,8 @@ export interface SettingSwitchProps {
   handleHideScaleButton: (isHideScaleButton: boolean) => void;
   handleHidePDFConvertButton: (isHidePDFConvertButton: boolean) => void;
   handleShowBorder: (isShowPageBorder: boolean) => void;
+  handleSetting: (isOpenSetting: boolean) => void;
+  handleSettingMode: (mode: string) => void;
 }
 export interface SettingSwitchState {
   isHideBackground: boolean;
@@ -43,4 +46,9 @@ export interface SettingSwitchState {
   isShowPageBorder: boolean;
   isCustomBookCSS: boolean;
   customBookCSS: string;
+  isWordDefinition: boolean;
+  wordDefinitionLang: string;
+  currentChineseLevel: string;
+  currentJapaneseLevel: string;
+  currentEnglishLevel: string;
 }
