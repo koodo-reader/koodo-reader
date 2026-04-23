@@ -471,7 +471,6 @@ const createMainWin = () => {
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isAutoFullscreen, isAutoMaximize, isPreventSleep } =
       config;
-    options.webPreferences.nodeIntegrationInSubFrames = true;
     if (isMergeWord) {
       delete options.backgroundColor;
     }
@@ -1139,7 +1138,6 @@ const createMainWin = () => {
         hasShadow: store.get("isMergeWord") !== "yes" ? false : true,
         transparent: store.get("isMergeWord") !== "yes" ? true : false,
       });
-      options.webPreferences.nodeIntegrationInSubFrames = true;
 
       store.set(
         "isMergeWord",
