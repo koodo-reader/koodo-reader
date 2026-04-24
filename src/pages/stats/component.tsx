@@ -8,8 +8,9 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { ReadingTimeUtil } from "../../utils/reader/readingTimeUtil";
 import DatabaseService from "../../utils/storage/databaseService";
 import {
-  LineChart,
   Line,
+  AreaChart,
+  Area,
   BarChart,
   Bar,
   XAxis,
@@ -105,9 +106,14 @@ class Stats extends React.Component<StatsProps, StatsState> {
 
     // ── 6. Heatmap: last 52 weeks ─────────────────────────────────────────
     const heatmapData: { date: string; seconds: number }[] = [];
-    for (let i = 363; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
+    const heatmapStart = new Date(today);
+    heatmapStart.setDate(today.getDate() - 51 * 7);
+    heatmapStart.setDate(heatmapStart.getDate() - heatmapStart.getDay());
+    for (
+      const d = new Date(heatmapStart);
+      d <= today;
+      d.setDate(d.getDate() + 1)
+    ) {
       const key = this.dateToKey(d);
       heatmapData.push({ date: key, seconds: dateSecondsMap[key] || 0 });
     }
@@ -159,13 +165,9 @@ class Stats extends React.Component<StatsProps, StatsState> {
 
     // Build week columns: each column is 7 days (Sun–Sat)
     // We need to figure out which day of week the first date falls on
-    const firstDate = new Date(heatmapData[0]?.date || "");
-    const startDow = firstDate.getDay(); // 0=Sun
-
-    // Pad beginning with empty cells
     const padded: ({ date: string; seconds: number } | null)[] = [
-      ...Array(startDow).fill(null),
       ...heatmapData,
+      ...Array((7 - (heatmapData.length % 7 || 7)) % 7).fill(null),
     ];
 
     // Split into columns of 7
@@ -176,19 +178,19 @@ class Stats extends React.Component<StatsProps, StatsState> {
 
     // Month labels
     const monthLabels: { label: string; colIndex: number }[] = [];
-    let lastMonth = -1;
     weeks.forEach((week, wi) => {
-      const firstNonNull = week.find((c) => c !== null);
-      if (firstNonNull) {
-        const d = new Date(firstNonNull.date);
-        const m = d.getMonth();
-        if (m !== lastMonth) {
-          monthLabels.push({
-            label: d.toLocaleString("default", { month: "short" }),
-            colIndex: wi,
-          });
-          lastMonth = m;
-        }
+      const firstVisibleCell = week.find((cell) => cell !== null);
+      const monthStartCell =
+        wi === 0
+          ? firstVisibleCell
+          : week.find((cell) => cell && new Date(cell.date).getDate() === 1);
+
+      if (monthStartCell) {
+        const d = new Date(monthStartCell.date);
+        monthLabels.push({
+          label: d.toLocaleString("default", { month: "short" }),
+          colIndex: wi,
+        });
       }
     });
 
@@ -197,57 +199,55 @@ class Stats extends React.Component<StatsProps, StatsState> {
 
     return (
       <div>
-        {/* Month row */}
-        <div style={{ display: "flex", marginLeft: 28, marginBottom: 4 }}>
-          {weeks.map((_, wi) => {
-            const label = monthLabels.find((ml) => ml.colIndex === wi);
-            return (
-              <div
-                key={wi}
-                className="heatmap-month-label"
-                style={{ width: 16, flexShrink: 0 }}
-              >
-                {label ? label.label : ""}
-              </div>
-            );
-          })}
-        </div>
-        <div className="heatmap-container">
-          {/* Weekday labels */}
-          <div className="heatmap-weekdays">
-            {weekDays.map((d, i) => (
-              <div key={i} className="heatmap-weekday-label">
-                {d}
-              </div>
-            ))}
+        <div className="heatmap-layout">
+          <div className="heatmap-side">
+            <div className="heatmap-month-spacer" />
+            <div className="heatmap-weekdays">
+              {weekDays.map((d, i) => (
+                <div key={i} className="heatmap-weekday-label">
+                  {d}
+                </div>
+              ))}
+            </div>
           </div>
-          {/* Grid */}
-          <div className="heatmap-grid">
-            {weeks.map((week, wi) => (
-              <div key={wi} className="heatmap-col">
-                {week.map((cell, di) =>
-                  cell === null ? (
-                    <div
-                      key={di}
-                      className="heatmap-cell"
-                      style={{ visibility: "hidden" }}
-                    />
-                  ) : (
-                    <div
-                      key={di}
-                      className="heatmap-cell"
-                      title={`${cell.date}: ${this.formatTime(cell.seconds)}`}
-                      style={{
-                        backgroundColor: this.getHeatmapColor(
-                          cell.seconds,
-                          isDark
-                        ),
-                      }}
-                    />
-                  )
-                )}
-              </div>
-            ))}
+          <div className="heatmap-main">
+            <div className="heatmap-months">
+              {weeks.map((_, wi) => {
+                const label = monthLabels.find((ml) => ml.colIndex === wi);
+                return (
+                  <div key={wi} className="heatmap-month-label">
+                    {label ? label.label : ""}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="heatmap-grid">
+              {weeks.map((week, wi) => (
+                <div key={wi} className="heatmap-col">
+                  {week.map((cell, di) =>
+                    cell === null ? (
+                      <div
+                        key={di}
+                        className="heatmap-cell"
+                        style={{ visibility: "hidden" }}
+                      />
+                    ) : (
+                      <div
+                        key={di}
+                        className="heatmap-cell"
+                        title={`${cell.date}: ${this.formatTime(cell.seconds)}`}
+                        style={{
+                          backgroundColor: this.getHeatmapColor(
+                            cell.seconds,
+                            isDark
+                          ),
+                        }}
+                      />
+                    )
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         {/* Legend */}
@@ -282,6 +282,10 @@ class Stats extends React.Component<StatsProps, StatsState> {
     const cardBg = isDark ? "#2a2a2a" : "#ffffff";
     const textColor = isDark ? "#e0e0e0" : "#333333";
     const chartColor = textColor;
+    const lineChartColor = isDark ? "#ffb066" : "#ff6b1a";
+    const lineChartGradientId = `stats-line-gradient-${
+      isDark ? "dark" : "light"
+    }`;
     const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
     const tabActiveBg = isDark ? "#3a3a3a" : "#333";
     const tabActiveColor = isDark ? "#fff" : "#fff";
@@ -468,10 +472,35 @@ class Stats extends React.Component<StatsProps, StatsState> {
                     />
                   </BarChart>
                 ) : (
-                  <LineChart
+                  <AreaChart
                     data={chartData}
                     margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
                   >
+                    <defs>
+                      <linearGradient
+                        id={lineChartGradientId}
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor={lineChartColor}
+                          stopOpacity={0.32}
+                        />
+                        <stop
+                          offset="70%"
+                          stopColor={lineChartColor}
+                          stopOpacity={0.1}
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor={lineChartColor}
+                          stopOpacity={0.02}
+                        />
+                      </linearGradient>
+                    </defs>
                     <CartesianGrid
                       strokeDasharray="3 3"
                       stroke={gridColor}
@@ -499,16 +528,29 @@ class Stats extends React.Component<StatsProps, StatsState> {
                         color: textColor,
                         fontSize: 12,
                       }}
+                      cursor={{
+                        fill: isDark
+                          ? "rgba(255,255,255,0.05)"
+                          : "rgba(0,0,0,0.05)",
+                      }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="minutes"
+                      stroke="none"
+                      fill={`url(#${lineChartGradientId})`}
                     />
                     <Line
                       type="monotone"
                       dataKey="minutes"
-                      stroke={chartColor}
+                      stroke={lineChartColor}
                       strokeWidth={2.5}
                       dot={false}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       activeDot={{ r: 5 }}
                     />
-                  </LineChart>
+                  </AreaChart>
                 )}
               </ResponsiveContainer>
             </div>
