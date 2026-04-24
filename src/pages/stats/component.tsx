@@ -308,14 +308,14 @@ class Stats extends React.Component<StatsProps, StatsState> {
         value: this.formatTime(totalSeconds),
         label: this.props.t("Total reading time"),
         color: textColor,
-        iconSize: 20,
+        iconSize: 24,
       },
       {
         icon: "icon-clock",
         value: `${longestStreak}`,
         label: this.props.t("Reading streak (days)"),
         color: textColor,
-        iconSize: 24,
+        iconSize: 28,
       },
       {
         icon: "icon-chart",
