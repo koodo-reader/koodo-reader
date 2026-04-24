@@ -801,9 +801,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         ) : null}
 
         <ImportLocal
-          {...{
+          {...({
             handleDrag: this.props.handleDrag,
-          }}
+          } as any)}
         />
         <SupportDialog />
         <UpdateInfo />

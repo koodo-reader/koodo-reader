@@ -215,7 +215,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
               );
             })}
           </div>
-          <ColorOption {...PopupProps} />
+          <ColorOption {...(PopupProps as any)} />
         </>
       );
     };

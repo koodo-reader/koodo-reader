@@ -5,7 +5,7 @@ import { Trans } from "react-i18next";
 import { getParamsFromUrl } from "../../utils/file/common";
 import copy from "copy-text-to-clipboard";
 import { withRouter } from "react-router-dom";
-import Lottie from "react-lottie";
+import Lottie from "lottie-react";
 import emptyDark from "../../assets/images/empty-dark.svg";
 import emptyLight from "../../assets/images/empty-light.svg";
 import animationSuccess from "../../assets/lotties/success.json";
@@ -15,14 +15,6 @@ import * as Kookit from "../../assets/lib/kookit.min";
 import { removeSearchParams } from "../../utils/common";
 import { BookHelper } from "../../assets/lib/kookit.min";
 declare var window: any;
-const successOptions = {
-  loop: false,
-  autoplay: true,
-  animationData: animationSuccess,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
 
 class Redirect extends React.Component<RedirectProps, RedirectState> {
   timer!: NodeJS.Timeout;
@@ -109,7 +101,11 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
           />
           <div className="backup-page-finish">
             {this.state.isAuthed ? (
-              <Lottie options={successOptions} height={80} width={80} />
+              <Lottie
+                animationData={animationSuccess}
+                loop={false}
+                style={{ height: 80, width: 80 }}
+              />
             ) : (
               <span className="icon-close auth-page-close-icon theme-color-delete"></span>
             )}

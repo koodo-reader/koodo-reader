@@ -215,13 +215,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
             }}
           >
             <NoteTag
-              {...{
+              {...({
                 handleTag: this.handleTag,
                 tag: this.props.noteKey && note ? note.tag : [],
-              }}
+              } as any)}
             />
           </div>
-          <ColorOption {...PopupProps} />
+          <ColorOption {...(PopupProps as any)} />
           <div className="note-button-container">
             <span
               className="book-manage-title"

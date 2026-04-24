@@ -244,7 +244,7 @@ class ActionDialog extends React.Component<
             </div>
           </div>
         </div>
-        <MoreAction {...moreActionProps} />
+        <MoreAction {...(moreActionProps as any)} />
       </>
     );
   }

@@ -93,7 +93,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       >
         <div className="note-list-header">
           <div className="note-tags" style={{ width: "calc(100% - 240px)" }}>
-            <NoteTag {...{ handleTag: this.handleTag }} />
+            <NoteTag {...({ handleTag: this.handleTag } as any)} />
           </div>
           {noteProps.cards.length > 0 && (
             <div style={{ marginRight: "10px", marginTop: "3px" }}>
@@ -160,7 +160,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
             {this.state.tag.length === 0 && <Empty />}
           </div>
         ) : (
-          <CardList {...noteProps} />
+          <CardList {...(noteProps as any)} />
         )}
       </div>
     );

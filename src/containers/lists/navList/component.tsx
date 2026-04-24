@@ -222,7 +222,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
               {Math.floor(item.percentage * 100)}%
             </div>
             {this.state.deleteIndex === index ? (
-              <DeleteIcon {...bookmarkProps} />
+              <DeleteIcon {...(bookmarkProps as any)} />
             ) : null}
           </li>
         );

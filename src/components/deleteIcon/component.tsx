@@ -70,7 +70,9 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
     };
     return (
       <>
-        {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
+        {this.state.isOpenDelete && (
+          <DeletePopup {...(deletePopupProps as any)} />
+        )}
         <div
           className="delete-digest-button"
           onClick={() => {

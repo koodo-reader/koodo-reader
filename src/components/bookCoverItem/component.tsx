@@ -211,7 +211,7 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
         </div>
       </div>
       {props.isOpenActionDialog && props.book.key === props.currentBook.key ? (
-        <ActionDialog {...actionProps} />
+        <ActionDialog {...(actionProps as any)} />
       ) : null}
     </>
   );

@@ -5,21 +5,13 @@ import { backup } from "../../../utils/file/backup";
 import { restore } from "../../../utils/file/restore";
 import { Trans } from "react-i18next";
 import { BackupDialogProps, BackupDialogState } from "./interface";
-import Lottie from "react-lottie";
+import Lottie from "lottie-react";
 import animationSuccess from "../../../assets/lotties/success.json";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
 import { generateSyncRecord } from "../../../utils/common";
-const successOptions = {
-  loop: false,
-  autoplay: true,
-  animationData: animationSuccess,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
 class BackupDialog extends React.Component<
   BackupDialogProps,
   BackupDialogState
@@ -234,7 +226,11 @@ class BackupDialog extends React.Component<
         ) : (
           <div className="backup-page-finish-container">
             <div className="backup-page-finish">
-              <Lottie options={successOptions} height={80} width={80} />
+              <Lottie
+                animationData={animationSuccess}
+                loop={false}
+                style={{ height: 80, width: 80 }}
+              />
               <div className="backup-page-finish-text">
                 <Trans>
                   {this.state.isBackup === "yes"
