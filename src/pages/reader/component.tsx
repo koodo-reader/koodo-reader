@@ -29,7 +29,28 @@ let isMouseMoving = false;
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
-  private readingTimeUtil = new ReadingTimeUtil();
+  private readingTimeUtil = new ReadingTimeUtil(
+    ConfigService,
+    isElectron
+      ? {
+          registerUnloadHandler(callback: () => void): () => void {
+            const { ipcRenderer } = (window as any).require("electron");
+            ipcRenderer.on("before-reader-close", callback);
+            return () =>
+              ipcRenderer.removeListener("before-reader-close", callback);
+          },
+          onBeforeClose(): void {
+            const { ipcRenderer } = (window as any).require("electron");
+            ipcRenderer.send("reader-close-ready");
+          },
+        }
+      : {
+          registerUnloadHandler(callback: () => void): () => void {
+            window.addEventListener("beforeunload", callback);
+            return () => window.removeEventListener("beforeunload", callback);
+          },
+        }
+  );
   constructor(props: ReaderProps) {
     super(props);
     this.state = {
@@ -100,7 +121,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       // Start event-driven reading-time tracking
       this.readingTimeUtil.start(book.key);
       // Initialise UI duration from persisted total
-      const savedTotal = ReadingTimeUtil.getTotalSeconds(book.key);
+      const savedTotal = this.readingTimeUtil.getTotalSeconds(book.key);
       this.setState({ totalDuration: savedTotal, currentDuration: 0 });
       if (isElectron) {
         updateDiscordPresence(book);

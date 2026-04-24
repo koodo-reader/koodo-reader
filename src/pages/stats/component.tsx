@@ -20,6 +20,9 @@ import {
 } from "recharts";
 
 class Stats extends React.Component<StatsProps, StatsState> {
+  private readingTimeUtil = new ReadingTimeUtil(ConfigService, {
+    registerUnloadHandler: () => () => {},
+  });
   constructor(props: StatsProps) {
     super(props);
     this.state = {
@@ -55,11 +58,11 @@ class Stats extends React.Component<StatsProps, StatsState> {
     }
 
     // ── 2. Total reading time from readingStats ────────────────────────────
-    const allDates = ReadingTimeUtil.getAllDates();
+    const allDates = this.readingTimeUtil.getAllDates();
     let totalSeconds = 0;
     const dateSecondsMap: Record<string, number> = {};
     for (const dateKey of allDates) {
-      const dayStats = ReadingTimeUtil.getDayStats(dateKey);
+      const dayStats = this.readingTimeUtil.getDayStats(dateKey);
       const dayTotal = dayStats.reduce((sum, s) => sum + s.seconds, 0);
       totalSeconds += dayTotal;
       dateSecondsMap[dateKey] = dayTotal;
