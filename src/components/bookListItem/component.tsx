@@ -176,7 +176,7 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
       </div>
       {props.isOpenActionDialog && props.book.key === props.currentBook.key ? (
         <div className="action-dialog-parent">
-          <ActionDialog {...actionProps} />
+          <ActionDialog {...(actionProps as any)} />
         </div>
       ) : null}
     </>

@@ -620,9 +620,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }
         >
           <NavigationPanel
-            {...{
+            {...({
               totalDuration: this.state.totalDuration,
-            }}
+            } as any)}
           />
         </div>
         <div
@@ -681,14 +681,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           {this.props.htmlBook && (
             <OperationPanel
-              {...{
+              {...({
                 currentDuration: this.state.currentDuration,
-              }}
+              } as any)}
             />
           )}
         </div>
 
-        {this.props.currentBook.key && <Viewer {...renditionProps} />}
+        {this.props.currentBook.key && <Viewer {...(renditionProps as any)} />}
         {this.props.isConvertOpen && <ConvertDialog />}
         {
           <div

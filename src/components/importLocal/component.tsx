@@ -360,7 +360,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           }
           this.setState({ importingShelfTitle: "" });
         }}
-        accept={supportedFormats}
+        accept={supportedFormats as any}
         multiple={true}
       >
         {({ getRootProps, getInputProps }) => (

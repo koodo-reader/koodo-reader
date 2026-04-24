@@ -233,7 +233,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         >
           <div className="popup-menu-box">
             {this.props.menuMode === "menu" ? (
-              <PopupOption {...PopupProps} />
+              <PopupOption {...(PopupProps as any)} />
             ) : null}
           </div>
           {this.props.menuMode === "menu" &&

@@ -115,7 +115,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               height: "360px",
             }}
           >
-            <PopupNote {...PopupProps} />
+            <PopupNote {...(PopupProps as any)} />
           </div>
         )}
 
@@ -205,7 +205,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
             },
           }}
         />
-        <Header {...{ handleDrag: this.handleDrag }} />
+        <Header {...({ handleDrag: this.handleDrag } as any)} />
         {this.props.isOpenDeleteDialog && <DeleteDialog />}
         {this.props.isOpenEditDialog && <EditDialog />}
         {this.props.isOpenAddDialog && <AddDialog />}

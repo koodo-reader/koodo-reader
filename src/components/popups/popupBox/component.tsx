@@ -156,13 +156,13 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
           }}
         >
           {this.props.menuMode === "note" ? (
-            <PopupNote {...PopupProps} />
+            <PopupNote {...(PopupProps as any)} />
           ) : this.props.menuMode === "trans" ? (
-            <PopupTrans {...PopupProps} />
+            <PopupTrans {...(PopupProps as any)} />
           ) : this.props.menuMode === "dict" ? (
-            <PopupDict {...PopupProps} />
+            <PopupDict {...(PopupProps as any)} />
           ) : this.props.menuMode === "assistant" ? (
-            <PopupAssist {...PopupProps} />
+            <PopupAssist {...(PopupProps as any)} />
           ) : null}
           <span
             className="icon-close popup-close"

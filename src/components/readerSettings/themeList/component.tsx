@@ -5,8 +5,7 @@ import "./themeList.css";
 import { Trans } from "react-i18next";
 import { ThemeListProps, ThemeListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { Panel as ColorPickerPanel } from "rc-color-picker";
-import "rc-color-picker/assets/index.css";
+import { HexColorPicker } from "react-colorful";
 import toast from "react-hot-toast";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
@@ -51,9 +50,9 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     this.props.renderBookFunc();
   };
 
-  handleChooseBgColor = (color) => {
-    ConfigService.setReaderConfig("backgroundColor", color.color);
-    this.props.handleBackgroundColor(color.color);
+  handleChooseBgColor = (color: string) => {
+    ConfigService.setReaderConfig("backgroundColor", color);
+    this.props.handleBackgroundColor(color);
     if (
       this.props.currentBook.format === "PDF" &&
       ConfigService.getReaderConfig("isConvertPDF") !== "yes"
@@ -101,18 +100,13 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     }
     this.setState({ isShowBgPicker });
   };
-  handleChooseTextColor = (color) => {
-    if (typeof color !== "object") {
-      this.setState({
-        currentTextIndex: textList
-          .concat(ConfigService.getAllListConfig("themeColors"))
-          .indexOf(color),
-      });
-    }
-    ConfigService.setReaderConfig(
-      "textColor",
-      typeof color === "object" ? color.color : color
-    );
+  handleChooseTextColor = (color: string) => {
+    this.setState({
+      currentTextIndex: textList
+        .concat(ConfigService.getAllListConfig("themeColors"))
+        .indexOf(color),
+    });
+    ConfigService.setReaderConfig("textColor", color);
     this.props.renderBookFunc();
   };
   render() {
@@ -213,11 +207,11 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           {renderBackgroundColorList()}
         </ul>
         {this.state.isShowBgPicker && (
-          <ColorPickerPanel
-            enableAlpha={false}
-            color={ConfigService.getReaderConfig("backgroundColor")}
+          <HexColorPicker
+            color={
+              ConfigService.getReaderConfig("backgroundColor") || "#ffffff"
+            }
             onChange={this.handleChooseBgColor}
-            mode="RGB"
             style={{
               margin: 20,
               animation: "fade-in 0.2s ease-in-out 0s 1",
@@ -262,11 +256,9 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           {renderTextColorList()}
         </ul>
         {this.state.isShowTextPicker && (
-          <ColorPickerPanel
-            enableAlpha={false}
-            color={ConfigService.getReaderConfig("textColor")}
+          <HexColorPicker
+            color={ConfigService.getReaderConfig("textColor") || "#000000"}
             onChange={this.handleChooseTextColor}
-            mode="RGB"
             style={{
               margin: 20,
               animation: "fade-in 0.2s ease-in-out 0s 1",

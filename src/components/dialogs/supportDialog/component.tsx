@@ -2,7 +2,7 @@ import React from "react";
 import "./supportDialog.css";
 import { SupportDialogProps, SupportDialogState } from "./interface";
 import { Trans } from "react-i18next";
-import Lottie from "react-lottie";
+import Lottie from "lottie-react";
 import supportAnimation from "../../../assets/lotties/support.json";
 import exitAnimation from "../../../assets/lotties/exit.json";
 import {
@@ -22,22 +22,6 @@ import {
   getTempToken,
   getUserRequest,
 } from "../../../utils/request/user";
-const newOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: supportAnimation,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
-const exitOptions = {
-  loop: true,
-  autoplay: true,
-  animationData: exitAnimation,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
 class SupportDialog extends React.Component<
   SupportDialogProps,
   SupportDialogState
@@ -95,9 +79,9 @@ class SupportDialog extends React.Component<
                         style={{ marginLeft: 20 }}
                       >
                         <Lottie
-                          options={exitOptions}
-                          height={180}
-                          width={220}
+                          animationData={exitAnimation}
+                          loop={true}
+                          style={{ height: 180, width: "100%" }}
                         />
                       </div>
                     </div>
@@ -381,7 +365,11 @@ class SupportDialog extends React.Component<
                     </div>
                     <div className="support-us-info" style={{ height: 420 }}>
                       <div className="new-version-animation">
-                        <Lottie options={newOptions} height={200} width={320} />
+                        <Lottie
+                          animationData={supportAnimation}
+                          loop={true}
+                          style={{ height: 200, width: "100%" }}
+                        />
                       </div>
                       <div
                         style={{

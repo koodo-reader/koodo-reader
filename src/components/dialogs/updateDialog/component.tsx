@@ -3,7 +3,7 @@ import "./updateInfo.css";
 import { UpdateInfoProps, UpdateInfoState } from "./interface";
 import packageInfo from "../../../../package.json";
 import { Trans } from "react-i18next";
-import Lottie from "react-lottie";
+import Lottie from "lottie-react";
 import animationNew from "../../../assets/lotties/new.json";
 import {
   compareVersions,
@@ -23,14 +23,6 @@ import {
 } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { isWindows } from "react-device-detect";
-const newOptions = {
-  loop: false,
-  autoplay: true,
-  animationData: animationNew,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
 
 class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
   constructor(props: UpdateInfoProps) {
@@ -147,7 +139,11 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
             )}
             <div className="update-dialog-info" style={{ height: 420 }}>
               <div className="new-version-animation">
-                <Lottie options={newOptions} height={220} width={220} />
+                <Lottie
+                  animationData={animationNew}
+                  loop={false}
+                  style={{ height: 220, width: "100%" }}
+                />
               </div>
               <div
                 style={{

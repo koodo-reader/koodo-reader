@@ -9,8 +9,7 @@ import {
   skinList,
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
-import { Panel as ColorPickerPanel } from "rc-color-picker";
-import "rc-color-picker/assets/index.css";
+import { HexColorPicker } from "react-colorful";
 import { dropdownList } from "../../../constants/dropdownList";
 import {
   loadFontData,
@@ -132,8 +131,7 @@ class AppearanceSetting extends React.Component<
     reloadManager();
   };
 
-  handleCustomColor = (colorObj: any) => {
-    const color = colorObj.color;
+  handleCustomColor = (color: string) => {
     this.setState({ pendingCustomColor: color });
   };
 
@@ -307,11 +305,9 @@ class AppearanceSetting extends React.Component<
                 alignItems: "center",
               }}
             >
-              <ColorPickerPanel
-                enableAlpha={false}
+              <HexColorPicker
                 color={this.state.pendingCustomColor}
                 onChange={this.handleCustomColor}
-                mode="RGB"
                 style={{
                   margin: "10px 0",
                   animation: "fade-in 0.2s ease-in-out 0s 1",

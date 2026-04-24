@@ -539,20 +539,20 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       <>
         {this.props.htmlBook ? (
           <PopupMenu
-            {...{
+            {...({
               rendition: this.props.htmlBook.rendition,
               rect: this.state.rect,
               chapterDocIndex: this.state.chapterDocIndex,
               chapter: this.state.chapter,
-            }}
+            } as any)}
           />
         ) : null}
         {this.props.htmlBook ? (
           <PopupRefer
-            {...{
+            {...({
               rendition: this.props.htmlBook.rendition,
               chapterDocIndex: this.state.chapterDocIndex,
-            }}
+            } as any)}
           />
         ) : null}
         {this.props.isOpenMenu &&
@@ -562,22 +562,22 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.menuMode === "assistant" ||
           this.props.menuMode === "note") ? (
           <PopupBox
-            {...{
+            {...({
               rendition: this.props.htmlBook.rendition,
               rect: this.state.rect,
               chapterDocIndex: this.state.chapterDocIndex,
               chapter: this.state.chapter,
-            }}
+            } as any)}
           />
         ) : null}
         {this.props.htmlBook && this.props.currentBook.format !== "PDF" && (
           <ImageViewer
-            {...{
+            {...({
               isShow: this.props.isShow,
               rendition: this.props.htmlBook.rendition,
               handleEnterReader: this.props.handleEnterReader,
               handleLeaveReader: this.props.handleLeaveReader,
-            }}
+            } as any)}
           />
         )}
         <div
