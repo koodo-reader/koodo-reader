@@ -2,7 +2,6 @@ import React from "react";
 import "./stats.css";
 import { StatsProps, StatsState } from "./interface";
 import { withRouter } from "react-router-dom";
-import { withTranslation } from "react-i18next";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { ReadingTimeUtil } from "../../utils/reader/readingTimeUtil";
@@ -451,7 +450,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
                       tickFormatter={(v) => `${v}m`}
                     />
                     <Tooltip
-                      formatter={(value: any) => [`${value} min`, ""]}
+                      formatter={(value: any) => [`${value} min`]}
                       contentStyle={{
                         backgroundColor: cardBg,
                         border: "none",
@@ -520,7 +519,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
                       tickFormatter={(v) => `${v}m`}
                     />
                     <Tooltip
-                      formatter={(value: any) => [`${value} min`, ""]}
+                      formatter={(value: any) => [`${value} min`]}
                       contentStyle={{
                         backgroundColor: cardBg,
                         border: "none",
