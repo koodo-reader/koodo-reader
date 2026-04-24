@@ -3,8 +3,10 @@ import "./stats.css";
 import { StatsProps, StatsState } from "./interface";
 import { withRouter } from "react-router-dom";
 import { Trans } from "react-i18next";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import { ReadingTimeUtil } from "../../utils/reader/readingTimeUtil";
+import {
+  ConfigService,
+  ReadingTimeUtil,
+} from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
 import {
   Line,

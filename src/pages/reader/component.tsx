@@ -5,7 +5,10 @@ import OperationPanel from "../../containers/panels/operationPanel";
 import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  ReadingTimeUtil,
+} from "../../assets/lib/kookit-extra-browser.min";
 import Viewer from "../../containers/viewer";
 import { Tooltip } from "react-tooltip";
 import "./index.css";
@@ -19,7 +22,6 @@ import {
   updateDiscordPresence,
   clearDiscordPresence,
 } from "../../utils/reader/discordRPC";
-import { ReadingTimeUtil } from "../../utils/reader/readingTimeUtil";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
