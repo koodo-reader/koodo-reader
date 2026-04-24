@@ -521,7 +521,19 @@ const createMainWin = () => {
     if (store.get("isAlwaysOnTop") === "yes") {
       readerWindow.setAlwaysOnTop(true);
     }
+    let readerWindowReadyToClose = false;
     readerWindow.on("close", (event) => {
+      // --- Step 1: ask renderer to flush reading-time data first ---
+      if (
+        !readerWindowReadyToClose &&
+        readerWindow &&
+        !readerWindow.isDestroyed()
+      ) {
+        event.preventDefault();
+        readerWindow.webContents.send("before-reader-close");
+        return;
+      }
+      // --- Step 2: actual close logic (reached after renderer replied) ---
       if (readerWindow && !readerWindow.isDestroyed()) {
         let bounds = readerWindow.getBounds();
         const currentDisplay = screen.getDisplayMatching(bounds);
@@ -559,6 +571,13 @@ const createMainWin = () => {
         } catch (e) {
           console.warn("Failed to clear Discord activity:", e.message);
         }
+      }
+    });
+    // Renderer finished flushing reading-time data — proceed with actual close
+    ipcMain.once("reader-close-ready", () => {
+      if (readerWindow && !readerWindow.isDestroyed()) {
+        readerWindowReadyToClose = true;
+        readerWindow.close();
       }
     });
 
