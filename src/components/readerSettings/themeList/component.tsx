@@ -7,6 +7,7 @@ import { ThemeListProps, ThemeListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { HexColorPicker } from "react-colorful";
 import toast from "react-hot-toast";
+import { normalizePickerColor } from "../../../utils/common";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
@@ -208,9 +209,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         </ul>
         {this.state.isShowBgPicker && (
           <HexColorPicker
-            color={
-              ConfigService.getReaderConfig("backgroundColor") || "#ffffff"
-            }
+            color={normalizePickerColor(
+              ConfigService.getReaderConfig("backgroundColor"),
+              "#ffffff"
+            )}
             onChange={this.handleChooseBgColor}
             style={{
               margin: 20,
@@ -257,7 +259,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         </ul>
         {this.state.isShowTextPicker && (
           <HexColorPicker
-            color={ConfigService.getReaderConfig("textColor") || "#000000"}
+            color={normalizePickerColor(
+              ConfigService.getReaderConfig("textColor"),
+              "#000000"
+            )}
             onChange={this.handleChooseTextColor}
             style={{
               margin: 20,

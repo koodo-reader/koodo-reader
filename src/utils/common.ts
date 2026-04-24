@@ -1125,7 +1125,43 @@ export const detectLocalLanguage = (text: string): string => {
     return "ja";
   return "ko";
 };
+export const normalizePickerColor = (
+  color: string | undefined,
+  fallback: string
+): string => {
+  if (!color) {
+    return fallback;
+  }
 
+  if (color.startsWith("#")) {
+    const hex = color.slice(1);
+    if (/^[0-9a-fA-F]{6}$/.test(hex)) {
+      return `#${hex.toLowerCase()}`;
+    }
+    if (/^[0-9a-fA-F]{3}$/.test(hex)) {
+      return `#${hex
+        .split("")
+        .map((item) => item + item)
+        .join("")
+        .toLowerCase()}`;
+    }
+    return fallback;
+  }
+
+  const match = color.match(
+    /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*[\d.]+\s*)?\)/
+  );
+  if (!match) {
+    return fallback;
+  }
+
+  return `#${[match[1], match[2], match[3]]
+    .map((item) => {
+      const value = Math.max(0, Math.min(255, parseInt(item, 10)));
+      return value.toString(16).padStart(2, "0");
+    })
+    .join("")}`;
+};
 export const splitSentences = (text: string, maxLength?: number) => {
   const lang = detectLocalLanguage(text);
   const resolvedMaxLength = maxLength ?? (lang === "en" ? 150 : 50);
