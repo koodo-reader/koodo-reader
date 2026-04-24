@@ -59,6 +59,26 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("currentEnglishLevel") || "四级",
     };
   }
+  async UNSAFE_componentWillReceiveProps(nextProps: SettingSwitchProps) {
+    if (nextProps.currentBook?.key !== this.props.currentBook?.key) {
+      this.setState({
+        isWordDefinition: ConfigService.getAllListConfig(
+          "wordDefinitionBooks"
+        ).includes(nextProps.currentBook?.key),
+      });
+    }
+    if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
+      nextProps.htmlBook.rendition.on("rendered", async () => {
+        let text = await nextProps.htmlBook?.rendition.audioText();
+        console.log(text, "textss");
+        if (text && text.length > 0) {
+          const lang = detectLocalLanguage(text.slice(0, 500).join(" "));
+          this.setState({ wordDefinitionLang: lang });
+        }
+      });
+      console.log(nextProps.htmlBook);
+    }
+  }
 
   _handleChange = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any, () => {
@@ -83,6 +103,13 @@ class SettingSwitch extends React.Component<
     toast(this.props.t("Change successful"));
   };
   render() {
+    console.log(
+      this.state.isWordDefinition,
+      "isWordDefinition",
+
+      this.props.currentBook,
+      ConfigService.getAllListConfig("wordDefinitionBooks")
+    );
     return (
       <>
         <div style={{ marginTop: "20px", textAlign: "center" }}>

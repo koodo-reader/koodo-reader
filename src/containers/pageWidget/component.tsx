@@ -98,6 +98,10 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   async handleWordDefinition(rendition) {
     const prev = this.batchTranslationLock;
     const next = prev.then(async () => {
+      console.log(
+        this.props.currentBook,
+        ConfigService.getAllListConfig("wordDefinitionBooks")
+      );
       if (
         !ConfigService.getAllListConfig("wordDefinitionBooks").includes(
           this.props.currentBook.key
