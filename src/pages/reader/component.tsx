@@ -19,6 +19,7 @@ import {
   updateDiscordPresence,
   clearDiscordPresence,
 } from "../../utils/reader/discordRPC";
+import { ReadingTimeUtil } from "../../utils/reader/readingTimeUtil";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -28,6 +29,7 @@ let isMouseMoving = false;
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
+  private readingTimeUtil = new ReadingTimeUtil();
   constructor(props: ReaderProps) {
     super(props);
     this.state = {
@@ -51,28 +53,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
     }
-    let totalDuration = 0;
-    let seconds = 0;
 
+    // Update UI counters every second so the navigation panel still shows
+    // live reading-time values, but actual storage writes only happen when
+    // a reading session ends (visibility hidden / blur / unmount).
     this.tickTimer = setInterval(() => {
-      if (totalDuration === 0) {
-        totalDuration = ConfigService.getObjectConfig(
-          this.props.currentBook.key,
-          "readingTime",
-          0
-        );
-      }
-      if (this.props.currentBook.key) {
-        seconds += 5;
-        this.setState({ totalDuration: totalDuration + seconds });
-        this.setState({ currentDuration: seconds });
-        ConfigService.setObjectConfig(
-          this.props.currentBook.key,
-          totalDuration + seconds,
-          "readingTime"
-        );
-      }
-    }, 5000);
+      if (!this.props.currentBook.key) return;
+      this.setState((prev) => ({
+        totalDuration: prev.totalDuration + 1,
+        currentDuration: prev.currentDuration + 1,
+      }));
+    }, 1000);
 
     window.addEventListener("beforeunload", function (event) {
       if (!isElectron) {
@@ -106,6 +97,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           : ConfigService.getReaderConfig("readerMode") || "double";
       this.props.handleReaderMode(readerMode);
       this.props.handleReadingBook(book);
+      // Start event-driven reading-time tracking
+      this.readingTimeUtil.start(book.key);
+      // Initialise UI duration from persisted total
+      const savedTotal = ReadingTimeUtil.getTotalSeconds(book.key);
+      this.setState({ totalDuration: savedTotal, currentDuration: 0 });
       if (isElectron) {
         updateDiscordPresence(book);
       }
@@ -117,6 +113,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       clearDiscordPresence();
     }
     clearInterval(this.tickTimer);
+    // Flush any in-flight session time before the component tears down
+    this.readingTimeUtil.stop();
   }
 
   handleEnterReader = (position: string) => {
