@@ -252,9 +252,6 @@ class Stats extends React.Component<StatsProps, StatsState> {
         </div>
         {/* Legend */}
         <div className="heatmap-legend">
-          <span>
-            <Trans>Less</Trans>
-          </span>
           {legendLevels.map((lvl) => (
             <div
               key={lvl}
@@ -264,9 +261,6 @@ class Stats extends React.Component<StatsProps, StatsState> {
               }}
             />
           ))}
-          <span>
-            <Trans>More</Trans>
-          </span>
         </div>
       </div>
     );
@@ -287,8 +281,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
     const bgColor = isDark ? "#1e1e1e" : "#f5f5f5";
     const cardBg = isDark ? "#2a2a2a" : "#ffffff";
     const textColor = isDark ? "#e0e0e0" : "#333333";
-    const accentColor = "#4CAF50";
-    const chartColor = "#4CAF50";
+    const chartColor = textColor;
     const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
     const tabActiveBg = isDark ? "#3a3a3a" : "#333";
     const tabActiveColor = isDark ? "#fff" : "#fff";
@@ -304,25 +297,29 @@ class Stats extends React.Component<StatsProps, StatsState> {
         icon: "icon-bookshelf",
         value: totalBooks,
         label: this.props.t("Books read"),
-        color: "#4CAF50",
+        color: textColor,
+        iconSize: 24,
       },
       {
-        icon: "icon-audio",
+        icon: "icon-grid",
         value: this.formatTime(totalSeconds),
         label: this.props.t("Total reading time"),
-        color: "#2196F3",
+        color: textColor,
+        iconSize: 20,
       },
       {
-        icon: "icon-heart",
+        icon: "icon-clock",
         value: `${longestStreak}`,
         label: this.props.t("Reading streak (days)"),
-        color: "#FF9800",
+        color: textColor,
+        iconSize: 24,
       },
       {
-        icon: "icon-idea",
+        icon: "icon-chart",
         value: this.formatTime(avgDailySeconds),
         label: this.props.t("Daily average"),
-        color: "#9C27B0",
+        color: textColor,
+        iconSize: 22,
       },
     ];
 
@@ -364,7 +361,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
                 >
                   <div
                     className="stats-card-icon"
-                    style={{ color: card.color }}
+                    style={{ color: card.color, fontSize: card.iconSize }}
                   >
                     <span className={card.icon}></span>
                   </div>
