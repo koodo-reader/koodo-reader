@@ -1,0 +1,188 @@
+.stats-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  z-index: 1000;
+  box-sizing: border-box;
+  padding: 40px 60px 60px 60px;
+}
+
+.stats-close-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 1001;
+  transition: background 0.2s;
+}
+
+.stats-close-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.stats-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  margin-top: 10px;
+}
+
+/* ── Cards ── */
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 900px) {
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stats-page {
+    padding: 40px 20px 60px 20px;
+  }
+}
+
+.stats-card {
+  border-radius: 16px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stats-card-icon {
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.stats-card-value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.stats-card-label {
+  font-size: 13px;
+  opacity: 0.6;
+  font-weight: 500;
+}
+
+/* ── Section titles ── */
+.stats-section-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  margin-top: 8px;
+}
+
+/* ── Heatmap ── */
+.stats-heatmap-wrapper {
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 40px;
+  overflow-x: auto;
+}
+
+.heatmap-grid {
+  display: flex;
+  gap: 3px;
+}
+
+.heatmap-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.heatmap-cell {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  cursor: default;
+}
+
+.heatmap-months {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 6px;
+  padding-left: 0;
+}
+
+.heatmap-month-label {
+  font-size: 11px;
+  opacity: 0.55;
+  min-width: 13px;
+}
+
+.heatmap-weekdays {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-right: 6px;
+  justify-content: flex-start;
+}
+
+.heatmap-weekday-label {
+  font-size: 11px;
+  opacity: 0.55;
+  height: 13px;
+  line-height: 13px;
+}
+
+.heatmap-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  font-size: 11px;
+  opacity: 0.55;
+  justify-content: flex-end;
+}
+
+.heatmap-legend-cell {
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+}
+
+/* ── Chart ── */
+.stats-chart-wrapper {
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 40px;
+}
+
+.stats-chart-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.stats-chart-tab {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}

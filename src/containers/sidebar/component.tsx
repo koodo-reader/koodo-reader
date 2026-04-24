@@ -423,6 +423,43 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               <ul className="side-shelf-container">{renderSideShelf()}</ul>
             )}
           </div>
+          {/* Stats button at the bottom */}
+          <div className="side-menu-about" style={{ paddingBottom: 12 }}>
+            <div
+              className={"side-menu-selector"}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                this.props.history.push("/stats");
+              }}
+            >
+              <div
+                className="side-menu-icon"
+                style={this.props.isCollapsed ? {} : { marginLeft: "38px" }}
+              >
+                <span
+                  className="icon-digest"
+                  style={
+                    this.props.isCollapsed
+                      ? {
+                          position: "relative",
+                          marginLeft: "-9px",
+                          fontSize: 20,
+                        }
+                      : { fontSize: 20 }
+                  }
+                ></span>
+              </div>
+              <span
+                style={
+                  this.props.isCollapsed
+                    ? { display: "none", width: "70%" }
+                    : { width: "60%" }
+                }
+              >
+                {this.props.t("Reading Stats")}
+              </span>
+            </div>
+          </div>
         </div>
       </>
     );

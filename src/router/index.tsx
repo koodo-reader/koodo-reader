@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
 import Login from "../pages/login";
+import Stats from "../pages/stats";
 import HtmlReader from "../pages/reader";
 import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
@@ -146,6 +147,7 @@ const Router = () => {
       <Switch>
         <Route component={Manager} path="/manager" />
         <Route component={Login} path="/login" />
+        <Route component={Stats} path="/stats" />
         <Route component={HtmlReader} path="/epub" />
         <Route component={HtmlReader} path="/mobi" />
         <Route component={HtmlReader} path="/cbr" />

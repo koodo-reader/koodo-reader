@@ -14,7 +14,7 @@
   position: relative;
   top: 85px;
   width: 210px;
-  height: calc(100% - 100px);
+  height: calc(100% - 155px);
   overflow-x: hidden;
   overflow-y: scroll;
 }
