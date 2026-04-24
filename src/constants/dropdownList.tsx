@@ -122,7 +122,7 @@ export const dropdownList = [
 ];
 export const wordFrequencyList = [
   {
-    title: "Current Chinese level",
+    title: "Chinese words level",
     value: "currentChineseLevel",
     option: [
       { label: "Default", value: "HSK3" },
@@ -155,20 +155,20 @@ export const wordFrequencyList = [
     isPDF: false,
   },
   {
-    title: "Current Japanese level",
+    title: "Japanese words level",
     value: "currentJapaneseLevel",
     option: [
       { label: "Default", value: "N3" },
-      { label: "N1", value: "N1" },
-      { label: "N2", value: "N2" },
-      { label: "N3", value: "N3" },
-      { label: "N4", value: "N4" },
       { label: "N5", value: "N5" },
+      { label: "N4", value: "N4" },
+      { label: "N3", value: "N3" },
+      { label: "N2", value: "N2" },
+      { label: "N1", value: "N1" },
     ],
     isPDF: false,
   },
   {
-    title: "Current English level",
+    title: "English words level",
     value: "currentEnglishLevel",
     option: [
       { label: "Default", value: "四级" },
