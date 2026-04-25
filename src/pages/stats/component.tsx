@@ -313,7 +313,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
         value: this.formatTime(totalSeconds),
         label: this.props.t("Total reading time"),
         color: textColor,
-        iconSize: 24,
+        iconSize: 22,
       },
       {
         icon: "icon-clock",
