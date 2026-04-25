@@ -434,18 +434,22 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             >
               <div
                 className="side-menu-icon"
-                style={this.props.isCollapsed ? {} : { marginLeft: "38px" }}
+                style={
+                  this.props.isCollapsed
+                    ? {}
+                    : { marginLeft: "25px", marginRight: "5px" }
+                }
               >
                 <span
-                  className="icon-digest"
+                  className="icon-chart"
                   style={
                     this.props.isCollapsed
                       ? {
                           position: "relative",
                           marginLeft: "-9px",
-                          fontSize: 20,
+                          fontSize: 16,
                         }
-                      : { fontSize: 20 }
+                      : { fontSize: 16 }
                   }
                 ></span>
               </div>
