@@ -437,7 +437,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 style={
                   this.props.isCollapsed
                     ? {}
-                    : { marginLeft: "25px", marginRight: "5px" }
+                    : { marginLeft: "20px", marginRight: "15px" }
                 }
               >
                 <span
@@ -446,10 +446,10 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                     this.props.isCollapsed
                       ? {
                           position: "relative",
-                          marginLeft: "-9px",
-                          fontSize: 16,
+                          marginLeft: "-0px",
+                          fontSize: 14,
                         }
-                      : { fontSize: 16 }
+                      : { fontSize: 14 }
                   }
                 ></span>
               </div>
