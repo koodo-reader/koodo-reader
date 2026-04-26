@@ -12,6 +12,7 @@ import AboutSetting from "../../../containers/settings/aboutSetting";
 import DataSetting from "../../../containers/settings/dataSetting";
 import AISetting from "../../../containers/settings/aiSetting";
 import BackgroundSetting from "../../../containers/settings/backgroundSetting";
+import ChapterSetting from "../../../containers/settings/chapterSetting";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -69,6 +70,8 @@ class SettingDialog extends React.Component<
         return "AI service";
       case "background":
         return "Background";
+      case "chapter":
+        return "Chapter parser";
       default:
         return "Setting";
     }
@@ -122,6 +125,12 @@ class SettingDialog extends React.Component<
               "Background",
               "18px"
             )}
+            {this.renderSidebarItem(
+              "chapter",
+              "icon-catalog",
+              "chapter parser",
+              "18px"
+            )}
             {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>
         </div>
@@ -161,6 +170,8 @@ class SettingDialog extends React.Component<
               <AISetting />
             ) : this.props.settingMode === "background" ? (
               <BackgroundSetting />
+            ) : this.props.settingMode === "chapter" ? (
+              <ChapterSetting />
             ) : (
               <PluginSetting />
             )}

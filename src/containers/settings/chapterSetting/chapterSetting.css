@@ -1,0 +1,167 @@
+.chapter-setting-list {
+  margin: 0 25px 20px 25px;
+}
+
+.chapter-setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.chapter-setting-item:last-child {
+  border-bottom: none;
+}
+
+.chapter-setting-item-info {
+  flex: 1;
+  min-width: 0;
+  margin-right: 12px;
+}
+
+.chapter-setting-item-label {
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chapter-setting-item-subtitle {
+  font-size: 12px;
+  opacity: 0.55;
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chapter-setting-item-regex {
+  font-size: 11px;
+  opacity: 0.4;
+  margin-top: 2px;
+  font-family: monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chapter-setting-item-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.chapter-setting-action-btn {
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border, rgba(128, 128, 128, 0.3));
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+  transition: background 0.15s;
+}
+
+.chapter-setting-action-btn:hover {
+  background: var(--color-hover, rgba(128, 128, 128, 0.12));
+}
+
+.chapter-setting-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 25px 30px 25px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px dashed var(--color-border, rgba(128, 128, 128, 0.4));
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.chapter-setting-add-btn:hover {
+  background: var(--color-hover, rgba(128, 128, 128, 0.08));
+}
+
+/* Form overlay */
+.chapter-setting-form-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--color-background, #fff);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 25px;
+  overflow-y: auto;
+}
+
+.chapter-setting-form-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.chapter-setting-form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.chapter-setting-label {
+  font-size: 13px;
+  opacity: 0.6;
+  margin-bottom: 5px;
+}
+
+.chapter-setting-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 7px;
+  border: 1.5px solid var(--color-border, rgba(128, 128, 128, 0.3));
+  font-size: 13px;
+  background: transparent;
+  color: inherit;
+  box-sizing: border-box;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.chapter-setting-input:focus {
+  outline: none;
+  border-color: var(--color-theme-color, #0179ca);
+}
+
+.chapter-setting-form-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.chapter-setting-cancel-btn {
+  padding: 7px 18px;
+  border-radius: 7px;
+  border: 1px solid var(--color-border, rgba(128, 128, 128, 0.3));
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: inherit;
+}
+
+.chapter-setting-save-btn {
+  padding: 7px 18px;
+  border-radius: 7px;
+  border: none;
+  background: var(--color-theme-color, #0179ca);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.chapter-setting-section-title {
+  font-size: 13px;
+  opacity: 0.55;
+  font-weight: 500;
+  margin: 16px 25px 6px 25px;
+}
