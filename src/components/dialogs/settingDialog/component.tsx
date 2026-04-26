@@ -129,7 +129,7 @@ class SettingDialog extends React.Component<
               "chapter",
               "icon-convert-text",
               "TXT parser",
-              "18px"
+              "19px"
             )}
             {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>
