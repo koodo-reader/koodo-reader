@@ -81,6 +81,7 @@
   font-weight: 700;
   padding: 22px 28px 10px 28px;
   flex-shrink: 0;
+  padding-left: 20px;
 }
 .setting-dialog-title {
   font-size: 18px;

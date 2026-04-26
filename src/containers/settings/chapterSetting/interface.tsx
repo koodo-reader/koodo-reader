@@ -17,6 +17,5 @@ export interface SettingInfoState {
   isEditing: boolean;
   editingLabel: string;
   formLabel: string;
-  formSubtitle: string;
   formRegex: string;
 }
