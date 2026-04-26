@@ -31,6 +31,7 @@ import { driveList } from "../constants/driveList";
 import { updateUserConfig } from "./request/user";
 import { languageCNMap, languageENMap } from "../constants/ttsList";
 import { BookHelper } from "../assets/lib/kookit.min";
+import { contentRegxConfig } from "../constants/dropdownList";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -1124,6 +1125,30 @@ export const detectLocalLanguage = (text: string): string => {
   if (japaneseCount >= chineseCount && japaneseCount >= koreanCount)
     return "ja";
   return "ko";
+};
+export const getParserRegex = (extension: string, bookKey?: string) => {
+  let parserRegex = "";
+  if (extension.toLowerCase().endsWith("txt")) {
+    let defaultTxtParser = "Default parser";
+    // Per-book parser overrides the global setting
+    if (bookKey) {
+      const rule = ConfigService.getObjectConfig(bookKey, "bookRules", {});
+      if (rule?.defaultTxtParser) {
+        defaultTxtParser = rule.defaultTxtParser;
+      }
+    }
+    let txtParsers: any[] = [
+      ...Object.values(ConfigService.getAllObjectConfig("txtParsers")),
+      ...contentRegxConfig,
+    ];
+    let txtParser = txtParsers.find(
+      (parser) => parser.value === defaultTxtParser
+    );
+    if (txtParser) {
+      parserRegex = txtParser.regex;
+    }
+  }
+  return parserRegex;
 };
 export const normalizePickerColor = (
   color: string | undefined,
