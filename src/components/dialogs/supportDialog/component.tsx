@@ -281,23 +281,6 @@ class SupportDialog extends React.Component<
                             "Redemption code has been sent to the email address you provided during checkout. If you haven't received the code, please check the spam foler or contact our support team for assistance."
                           )}
                     </p>
-                    <p
-                      className="support-dialog-list"
-                      style={{
-                        textAlign: "center",
-                        lineHeight: "1.5",
-                        color: "rgb(231, 69, 69)",
-                        opacity: 0.8,
-                        margin: 0,
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        openInBrowser("https://www.fakamiao.com/orderQuery");
-                      }}
-                    >
-                      {getServerRegion() === "china" &&
-                        this.props.t("Query redemption code")}
-                    </p>
                   </div>
                 ) : (
                   <>

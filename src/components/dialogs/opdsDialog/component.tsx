@@ -438,6 +438,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       newCatalogTitle: "",
       newCatalogUsername: "",
       newCatalogPassword: "",
+      isTesting: false,
     };
   }
 
@@ -642,8 +643,32 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       newCatalogTitle: "",
       newCatalogUsername: "",
       newCatalogPassword: "",
+      isTesting: false,
     });
     toast.success(this.props.t("Added successfully"));
+  };
+
+  handleTestCatalog = async () => {
+    const { newCatalogUrl, newCatalogUsername, newCatalogPassword } =
+      this.state;
+    if (!newCatalogUrl.trim()) {
+      toast.error(this.props.t("Please enter a valid URL"));
+      return;
+    }
+    this.setState({ isTesting: true });
+    try {
+      const auth =
+        newCatalogUsername || newCatalogPassword
+          ? { username: newCatalogUsername, password: newCatalogPassword }
+          : null;
+      await fetchOPDSFeed(newCatalogUrl.trim(), auth);
+      toast.success(this.props.t("Connection successful"));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast.error(this.props.t("Connection failed") + ": " + msg);
+    } finally {
+      this.setState({ isTesting: false });
+    }
   };
 
   handleRemoveCatalog = (id: string) => {
@@ -671,6 +696,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       newCatalogTitle,
       newCatalogUsername,
       newCatalogPassword,
+      isTesting,
     } = this.state;
 
     return (
@@ -730,33 +756,56 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
               style={{
                 display: "flex",
                 gap: "10px",
-                padding: "0 25px",
-                justifyContent: "flex-end",
+                justifyContent: "space-between",
                 marginTop: "10px",
                 paddingRight: "0px",
               }}
             >
               <span
-                className="voice-add-cancel"
-                onClick={() =>
-                  this.setState({
-                    isAddingCatalog: false,
-                    newCatalogUrl: "",
-                    newCatalogTitle: "",
-                    newCatalogUsername: "",
-                    newCatalogPassword: "",
-                  })
-                }
-              >
-                <Trans>Cancel</Trans>
-              </span>
-              <span
                 className="voice-add-confirm"
-                style={{ position: "static", fontSize: "14px" }}
-                onClick={this.handleAddCatalog}
+                style={{
+                  position: "static",
+                  fontSize: "14px",
+                  marginRight: "10px",
+                  opacity: isTesting ? 0.6 : 1,
+                  pointerEvents: isTesting ? "none" : "auto",
+                }}
+                onClick={this.handleTestCatalog}
               >
-                <Trans>Add</Trans>
+                {isTesting ? <Trans>Testing...</Trans> : <Trans>Test</Trans>}
               </span>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <span
+                  className="voice-add-cancel"
+                  onClick={() =>
+                    this.setState({
+                      isAddingCatalog: false,
+                      newCatalogUrl: "",
+                      newCatalogTitle: "",
+                      newCatalogUsername: "",
+                      newCatalogPassword: "",
+                      isTesting: false,
+                    })
+                  }
+                >
+                  <Trans>Cancel</Trans>
+                </span>
+
+                <span
+                  className="voice-add-confirm"
+                  style={{ position: "static", fontSize: "14px" }}
+                  onClick={this.handleAddCatalog}
+                >
+                  <Trans>Add</Trans>
+                </span>
+              </div>
             </div>
           </div>
         ) : null}
