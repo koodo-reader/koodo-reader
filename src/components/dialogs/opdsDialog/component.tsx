@@ -1064,12 +1064,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     return (
       <div
         className="backup-page-container"
-        style={{
-          height: "450px",
-          top: "calc(50% - 225px)",
-          width: "500px",
-          left: "calc(50% - 250px)",
-        }}
+        style={{ height: "450px", top: "calc(50% - 225px)" }}
       >
         <div className="backup-dialog-title">{this.renderTitle()}</div>
 
