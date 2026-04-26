@@ -1,5 +1,8 @@
 import React from "react";
-import { dropdownList } from "../../../constants/dropdownList";
+import {
+  contentRegxConfig,
+  dropdownList,
+} from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
@@ -31,6 +34,10 @@ class DropdownList extends React.Component<
         ConfigService.getReaderConfig("textOrientation") || "",
       currentSelectActionValue:
         ConfigService.getReaderConfig("selectAction") || "",
+      currentTxtParserValue:
+        ConfigService.getObjectConfig(props.currentBook?.key, "bookRules", {})
+          ?.defaultTxtParser || "",
+      txtParserOptions: [],
     };
   }
   UNSAFE_componentWillReceiveProps(nextProps: DropdownListProps) {
@@ -41,10 +48,25 @@ class DropdownList extends React.Component<
         ).includes(nextProps.currentBook?.key)
           ? ConfigService.getReaderConfig("fullTranslationMode") || ""
           : "",
+        currentTxtParserValue:
+          ConfigService.getObjectConfig(
+            nextProps.currentBook?.key,
+            "bookRules",
+            {}
+          )?.defaultTxtParser || "",
       });
     }
   }
   componentDidMount() {
+    const customParserLabels: string[] =
+      ConfigService.getAllListConfig("txtParserList") || [];
+    const customParserOptions = customParserLabels.map((label) => ({
+      label,
+      value: label,
+    }));
+    this.setState({
+      txtParserOptions: [...contentRegxConfig, ...customParserOptions],
+    });
     loadFontData().then((result) => {
       if (!result || result.length === 0) return;
       let fontFamilyItem = dropdownList.find(
@@ -176,6 +198,22 @@ class DropdownList extends React.Component<
         });
         toast.success(this.props.t("Setup successful"));
         return;
+      case "txtParser": {
+        this.setState({ currentTxtParserValue: arr[0] });
+        const rule = ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "bookRules",
+          {}
+        );
+        ConfigService.setObjectConfig(
+          this.props.currentBook.key,
+          { ...rule, defaultTxtParser: arr[0] },
+          "bookRules"
+        );
+        toast.success(this.props.t("Setup successful"));
+        this.props.renderBookFunc();
+        return;
+      }
       default:
         break;
     }
@@ -235,9 +273,36 @@ class DropdownList extends React.Component<
       ));
     };
 
+    const isTxt = this.props.currentBook?.format?.toUpperCase() === "TXT";
+
     return (
       <ul className="paragraph-character-setting">
         {renderParagraphCharacter()}
+        {isTxt && (
+          <li className="paragraph-character-container">
+            <p className="general-setting-title">
+              <Trans>TXT parser</Trans>
+            </p>
+            <select
+              name=""
+              className="general-setting-dropdown"
+              onChange={(event) => {
+                this.handleView(event, "txtParser");
+              }}
+            >
+              {this.state.txtParserOptions.map((option, index) => (
+                <option
+                  value={option.value}
+                  key={index}
+                  className="general-setting-option"
+                  selected={option.value === this.state.currentTxtParserValue}
+                >
+                  {this.props.t(option.label)}
+                </option>
+              ))}
+            </select>
+          </li>
+        )}
       </ul>
     );
   }

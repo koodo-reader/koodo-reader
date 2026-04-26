@@ -15,6 +15,7 @@ import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import {
   getPageWidth,
+  getParserRegex,
   getPdfPassword,
   getServerRegion,
   showDownloadProgress,
@@ -239,6 +240,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? "sliding"
               : "",
           convertChinese: ConfigService.getReaderConfig("convertChinese"),
+          parserRegex: getParserRegex(
+            this.props.currentBook.format,
+            this.props.currentBook.key
+          ),
           fullTranslationMode:
             ConfigService.getAllListConfig("fullTranslationBooks").includes(
               this.props.currentBook.key
@@ -246,7 +251,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? ConfigService.getReaderConfig("fullTranslationMode")
               : "no",
           textOrientation: ConfigService.getReaderConfig("textOrientation"),
-          parserRegex: "",
           isDarkMode:
             ConfigService.getReaderConfig("backgroundColor") ===
             "rgba(44,47,49,1)"

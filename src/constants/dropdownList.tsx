@@ -338,3 +338,23 @@ export const titleSizeList = [
   { label: "4", value: "4" },
   { label: "5", value: "5" },
 ];
+export const contentRegxConfig = [
+  {
+    label: "Default parser",
+    value: "Default parser",
+    subtitle: "Suitable for most txt files",
+    regex: "",
+  },
+  {
+    label: "Chinese novel parser",
+    value: "Chinese novel parser",
+    subtitle: "Suitable for most Chinese novels, eg. 第一章，第2回",
+    regex: String.raw`^\s*(第[0-9一二三四五六七八九十百千万零]+[章回])\s*(.*?)$`,
+  },
+  {
+    label: "English novel parser",
+    value: "English novel parser",
+    subtitle: "Suitable for most English novels, eg. Chapter 1, Part II",
+    regex: String.raw`^(Chapter|Part|Book|CHAPTER|PART|BOOK)\b.*$`,
+  },
+];

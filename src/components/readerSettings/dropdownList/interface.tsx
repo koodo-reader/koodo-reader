@@ -19,4 +19,6 @@ export interface DropdownListState {
   fullTranslationModeValue: string;
   currentTextOrientationValue: string;
   currentSelectActionValue: string;
+  currentTxtParserValue: string;
+  txtParserOptions: { label: string; value: string }[];
 }
