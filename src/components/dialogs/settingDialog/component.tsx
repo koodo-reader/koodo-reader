@@ -71,7 +71,7 @@ class SettingDialog extends React.Component<
       case "background":
         return "Background";
       case "chapter":
-        return "Chapter parser";
+        return "TXT parser";
       default:
         return "Setting";
     }
@@ -127,8 +127,8 @@ class SettingDialog extends React.Component<
             )}
             {this.renderSidebarItem(
               "chapter",
-              "icon-catalog",
-              "chapter parser",
+              "icon-convert-text",
+              "TXT parser",
               "18px"
             )}
             {this.renderSidebarItem("about", "icon-detail", "About", "18px")}

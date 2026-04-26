@@ -37,7 +37,6 @@ class ChapterSetting extends React.Component<
       isEditing: false,
       editingLabel: "",
       formLabel: "",
-      formSubtitle: "",
       formRegex: "",
     };
   }
@@ -54,7 +53,6 @@ class ChapterSetting extends React.Component<
       isEditing: false,
       editingLabel: "",
       formLabel: "",
-      formSubtitle: "",
       formRegex: "",
     });
   };
@@ -70,7 +68,6 @@ class ChapterSetting extends React.Component<
       isEditing: true,
       editingLabel: parserLabel,
       formLabel: parserObj?.label || parserLabel,
-      formSubtitle: parserObj?.subtitle || "",
       formRegex: parserObj?.regex || "",
     });
     const infoEl = document.querySelector(".setting-dialog-info");
@@ -83,14 +80,12 @@ class ChapterSetting extends React.Component<
       isEditing: false,
       editingLabel: "",
       formLabel: "",
-      formSubtitle: "",
       formRegex: "",
     });
   };
 
   handleSave = () => {
-    const { formLabel, formRegex, formSubtitle, isEditing, editingLabel } =
-      this.state;
+    const { formLabel, formRegex, isEditing, editingLabel } = this.state;
     const label = formLabel.trim();
     const regex = formRegex.trim();
 
@@ -120,7 +115,7 @@ class ChapterSetting extends React.Component<
       }
       ConfigService.setObjectConfig(
         label,
-        { label, value: label, subtitle: formSubtitle, regex },
+        { label, value: label, regex },
         "txtParsers"
       );
       if (label !== editingLabel) {
@@ -130,7 +125,7 @@ class ChapterSetting extends React.Component<
     } else {
       ConfigService.setObjectConfig(
         label,
-        { label, value: label, subtitle: formSubtitle, regex },
+        { label, value: label, regex },
         "txtParsers"
       );
       ConfigService.setListConfig(label, "txtParserList");
@@ -149,7 +144,7 @@ class ChapterSetting extends React.Component<
   };
 
   renderForm = () => {
-    const { isEditing, formLabel, formSubtitle, formRegex } = this.state;
+    const { isEditing, formLabel, formRegex } = this.state;
     return (
       <div
         className="voice-add-new-container"
@@ -169,19 +164,6 @@ class ChapterSetting extends React.Component<
             placeholder={this.props.t("Please enter parser name")}
             value={formLabel}
             onChange={(e) => this.setState({ formLabel: e.target.value })}
-          />
-        </div>
-
-        <div className="ai-setting-form-row">
-          <label className="ai-setting-label">
-            <Trans>Description</Trans>
-          </label>
-          <input
-            type="text"
-            className="token-dialog-username-box"
-            placeholder={this.props.t("Optional description")}
-            value={formSubtitle}
-            onChange={(e) => this.setState({ formSubtitle: e.target.value })}
           />
         </div>
 
@@ -237,9 +219,13 @@ class ChapterSetting extends React.Component<
           <div
             className="setting-dialog-new-title"
             key={parser.label}
-            style={{ marginLeft: "15px" }}
+            style={{
+              marginLeft: "20px",
+              display: "flex",
+              flexDirection: "column",
+            }}
           >
-            <span>
+            <p>
               <span className="setting-plugin-name">
                 <Trans>{parser.label}</Trans>
               </span>
@@ -254,21 +240,20 @@ class ChapterSetting extends React.Component<
                   (<Trans>{parser.subtitle}</Trans>)
                 </span>
               )}
-            </span>
+            </p>
             {parser.regex && (
-              <span
+              <p
                 style={{
                   fontSize: "11px",
-                  opacity: 0.4,
-                  fontFamily: "monospace",
-                  maxWidth: "180px",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
+                  marginTop: "-10px",
+                  opacity: 0.7,
                 }}
               >
                 {parser.regex}
-              </span>
+              </p>
             )}
           </div>
         ))}
@@ -359,7 +344,6 @@ class ChapterSetting extends React.Component<
                   isEditing: false,
                   editingLabel: "",
                   formLabel: "",
-                  formSubtitle: "",
                   formRegex: "",
                 },
                 () => {
