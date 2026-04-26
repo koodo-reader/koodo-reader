@@ -1,5 +1,4 @@
 import React from "react";
-import "./chapterSetting.css";
 import { SettingInfoProps, SettingInfoState, TxtParser } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -74,6 +73,8 @@ class ChapterSetting extends React.Component<
       formSubtitle: parserObj?.subtitle || "",
       formRegex: parserObj?.regex || "",
     });
+    const infoEl = document.querySelector(".setting-dialog-info");
+    if (infoEl) infoEl.scrollTop = 0;
   };
 
   handleCancel = () => {
@@ -147,170 +148,230 @@ class ChapterSetting extends React.Component<
     toast.success(this.props.t("Deletion successful"));
   };
 
+  renderForm = () => {
+    const { isEditing, formLabel, formSubtitle, formRegex } = this.state;
+    return (
+      <div
+        className="voice-add-new-container"
+        style={{
+          marginLeft: "25px",
+          width: "calc(100% - 50px)",
+          fontWeight: 500,
+        }}
+      >
+        <div className="ai-setting-form-row">
+          <label className="ai-setting-label">
+            <Trans>Parser name</Trans>
+          </label>
+          <input
+            type="text"
+            className="token-dialog-username-box"
+            placeholder={this.props.t("Please enter parser name")}
+            value={formLabel}
+            onChange={(e) => this.setState({ formLabel: e.target.value })}
+          />
+        </div>
+
+        <div className="ai-setting-form-row">
+          <label className="ai-setting-label">
+            <Trans>Description</Trans>
+          </label>
+          <input
+            type="text"
+            className="token-dialog-username-box"
+            placeholder={this.props.t("Optional description")}
+            value={formSubtitle}
+            onChange={(e) => this.setState({ formSubtitle: e.target.value })}
+          />
+        </div>
+
+        <div className="ai-setting-form-row">
+          <label className="ai-setting-label">
+            <Trans>Parser regex</Trans>
+          </label>
+          <input
+            type="text"
+            className="token-dialog-username-box"
+            placeholder={this.props.t(
+              "Regex example: ^(Chapter|Part|Book|CHAPTER|PART|BOOK)\\b.*$"
+            )}
+            value={formRegex}
+            onChange={(e) => this.setState({ formRegex: e.target.value })}
+          />
+        </div>
+
+        <div className="token-dialog-button-container">
+          <div className="voice-add-confirm" onClick={this.handleSave}>
+            <Trans>{isEditing ? "Save" : "Add"}</Trans>
+          </div>
+          <div className="voice-add-button-container">
+            <div className="voice-add-cancel" onClick={this.handleCancel}>
+              <Trans>Cancel</Trans>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   render() {
-    const {
-      parserList,
-      isAddNew,
-      isEditing,
-      formLabel,
-      formSubtitle,
-      formRegex,
-    } = this.state;
+    const { parserList, isAddNew, isEditing } = this.state;
 
     return (
-      <div style={{ position: "relative" }}>
-        {/* Form overlay */}
-        {(isAddNew || isEditing) && (
-          <div className="chapter-setting-form-overlay">
-            <div className="chapter-setting-form-title">
-              <Trans>{isEditing ? "Edit TXT parser" : "Add TXT parser"}</Trans>
-            </div>
+      <>
+        {(isAddNew || isEditing) && this.renderForm()}
 
-            <div className="chapter-setting-form-row">
-              <label className="chapter-setting-label">
-                <Trans>Parser name</Trans>
-              </label>
-              <input
-                className="chapter-setting-input"
-                value={formLabel}
-                onChange={(e) => this.setState({ formLabel: e.target.value })}
-                placeholder={this.props.t("Please enter parser name")}
-              />
-            </div>
+        <div
+          style={{
+            fontWeight: "bold",
+            textAlign: "left",
+            marginBottom: "20px",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
+          <Trans>Built-in parsers</Trans>
+        </div>
 
-            <div className="chapter-setting-form-row">
-              <label className="chapter-setting-label">
-                <Trans>Description</Trans>
-              </label>
-              <input
-                className="chapter-setting-input"
-                value={formSubtitle}
-                onChange={(e) =>
-                  this.setState({ formSubtitle: e.target.value })
-                }
-                placeholder={this.props.t("Optional description")}
-              />
-            </div>
-
-            <div className="chapter-setting-form-row">
-              <label className="chapter-setting-label">
-                <Trans>Parser regex</Trans>
-              </label>
-              <textarea
-                className="chapter-setting-input"
-                rows={3}
-                value={formRegex}
-                onChange={(e) => this.setState({ formRegex: e.target.value })}
-                placeholder={this.props.t(
-                  "Regex example: ^(Chapter|Part|Book|CHAPTER|PART|BOOK)\\b.*$"
-                )}
-              />
-            </div>
-
-            <div className="chapter-setting-form-btns">
-              <button
-                className="chapter-setting-cancel-btn"
-                onClick={this.handleCancel}
+        {DEFAULT_PARSERS.map((parser) => (
+          <div
+            className="setting-dialog-new-title"
+            key={parser.label}
+            style={{ marginLeft: "15px" }}
+          >
+            <span>
+              <span className="setting-plugin-name">
+                <Trans>{parser.label}</Trans>
+              </span>
+              {parser.subtitle && (
+                <span
+                  style={{
+                    opacity: 0.6,
+                    marginLeft: "8px",
+                    fontSize: "12px",
+                  }}
+                >
+                  (<Trans>{parser.subtitle}</Trans>)
+                </span>
+              )}
+            </span>
+            {parser.regex && (
+              <span
+                style={{
+                  fontSize: "11px",
+                  opacity: 0.4,
+                  fontFamily: "monospace",
+                  maxWidth: "180px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
               >
-                <Trans>Cancel</Trans>
-              </button>
-              <button
-                className="chapter-setting-save-btn"
-                onClick={this.handleSave}
-              >
-                <Trans>{isEditing ? "Save" : "Add"}</Trans>
-              </button>
-            </div>
+                {parser.regex}
+              </span>
+            )}
+          </div>
+        ))}
+
+        <div
+          style={{
+            fontWeight: "bold",
+            textAlign: "left",
+            marginBottom: "20px",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
+          <Trans>Custom parsers</Trans>
+        </div>
+
+        {parserList.length === 0 && (
+          <div
+            style={{
+              textAlign: "center",
+              opacity: 0.5,
+              padding: "20px 0",
+              fontSize: "14px",
+            }}
+          >
+            <Trans>No custom parsers added</Trans>
           </div>
         )}
 
-        {/* Default parsers */}
-        <div className="chapter-setting-section-title">
-          <Trans>Built-in parsers</Trans>
-        </div>
-        <div className="chapter-setting-list">
-          {DEFAULT_PARSERS.map((parser) => (
-            <div className="chapter-setting-item" key={parser.label}>
-              <div className="chapter-setting-item-info">
-                <div className="chapter-setting-item-label">
-                  <Trans>{parser.label}</Trans>
-                </div>
-                {parser.subtitle && (
-                  <div className="chapter-setting-item-subtitle">
-                    <Trans>{parser.subtitle}</Trans>
-                  </div>
-                )}
-                {parser.regex && (
-                  <div className="chapter-setting-item-regex">
-                    {parser.regex}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Custom parsers */}
-        <div className="chapter-setting-section-title">
-          <Trans>Custom parsers</Trans>
-        </div>
-        <div className="chapter-setting-list">
-          {parserList.length === 0 && (
-            <div style={{ fontSize: 13, opacity: 0.4, padding: "12px 0" }}>
-              <Trans>No custom parsers added</Trans>
-            </div>
-          )}
-          {parserList.map((parserLabel) => {
-            const parserObj = ConfigService.getObjectConfig(
-              parserLabel,
-              "txtParsers",
-              null
-            ) as TxtParser | null;
-            return (
-              <div className="chapter-setting-item" key={parserLabel}>
-                <div className="chapter-setting-item-info">
-                  <div className="chapter-setting-item-label">
-                    {parserLabel}
-                  </div>
-                  {parserObj?.subtitle && (
-                    <div className="chapter-setting-item-subtitle">
-                      {parserObj.subtitle}
-                    </div>
-                  )}
-                  {parserObj?.regex && (
-                    <div className="chapter-setting-item-regex">
-                      {parserObj.regex}
-                    </div>
-                  )}
-                </div>
-                <div className="chapter-setting-item-actions">
-                  <button
-                    className="chapter-setting-action-btn"
-                    onClick={() => this.openEditForm(parserLabel)}
+        {parserList.map((parserLabel) => {
+          const parserObj = ConfigService.getObjectConfig(
+            parserLabel,
+            "txtParsers",
+            null
+          ) as TxtParser | null;
+          return (
+            <div
+              className="setting-dialog-new-title"
+              key={parserLabel}
+              style={{ marginLeft: "15px" }}
+            >
+              <span>
+                <span className="setting-plugin-name">{parserLabel}</span>
+                {parserObj?.subtitle && (
+                  <span
+                    style={{
+                      opacity: 0.6,
+                      marginLeft: "8px",
+                      fontSize: "12px",
+                    }}
                   >
-                    <Trans>Edit</Trans>
-                  </button>
-                  <button
-                    className="chapter-setting-action-btn"
-                    onClick={() => this.handleDelete(parserLabel)}
-                  >
-                    <Trans>Delete</Trans>
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                    ({parserObj.subtitle})
+                  </span>
+                )}
+              </span>
+              <span
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  alignItems: "center",
+                }}
+              >
+                <span
+                  className="change-location-button"
+                  onClick={() => this.openEditForm(parserLabel)}
+                >
+                  <Trans>Edit</Trans>
+                </span>
+                <span
+                  className="change-location-button"
+                  onClick={() => this.handleDelete(parserLabel)}
+                >
+                  <Trans>Delete</Trans>
+                </span>
+              </span>
+            </div>
+          );
+        })}
 
-        {/* Add button */}
-        <div className="chapter-setting-add-btn" onClick={this.openAddForm}>
+        <div className="setting-dialog-new-plugin">
           <span
-            className="icon-plus"
-            style={{ marginRight: 6, fontSize: 14 }}
-          ></span>
-          <Trans>Add TXT parser</Trans>
+            style={{ fontWeight: "bold" }}
+            onClick={() => {
+              const infoEl = document.querySelector(".setting-dialog-info");
+              this.setState(
+                {
+                  isAddNew: true,
+                  isEditing: false,
+                  editingLabel: "",
+                  formLabel: "",
+                  formSubtitle: "",
+                  formRegex: "",
+                },
+                () => {
+                  if (infoEl) infoEl.scrollTop = 0;
+                }
+              );
+            }}
+          >
+            <Trans>Add TXT parser</Trans>
+          </span>
         </div>
-      </div>
+      </>
     );
   }
 }
