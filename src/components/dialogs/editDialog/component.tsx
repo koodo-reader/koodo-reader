@@ -6,6 +6,8 @@ import { EditDialogProps, EditDialogState } from "./interface";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import CoverUtil from "../../../utils/file/coverUtil";
+import { isElectron } from "react-device-detect";
+declare var window: any;
 
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
   private nameRef = React.createRef<HTMLInputElement>();
@@ -16,7 +18,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
 
   constructor(props: EditDialogProps) {
     super(props);
-    this.state = { isCheck: false, coverPreview: "" };
+    this.state = { isCheck: false, coverPreview: "", bookPath: "" };
   }
 
   async componentDidMount() {
@@ -37,6 +39,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     if (cover) {
       this.setState({ coverPreview: cover });
     }
+    this.setState({ bookPath: this.props.currentBook.path || "" });
   }
 
   handleCancel = () => {
@@ -54,6 +57,14 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     reader.readAsDataURL(file);
   };
 
+  handleSelectBookPath = async () => {
+    if (!isElectron) return;
+    const { ipcRenderer } = window.require("electron");
+    const filePath = await ipcRenderer.invoke("select-book-path");
+    if (!filePath) return;
+    this.setState({ bookPath: filePath });
+  };
+
   handleComfirm = async () => {
     const name = this.nameRef.current?.value || "";
     const author = this.authorRef.current?.value || "";
@@ -64,6 +75,9 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     this.props.currentBook.author = author;
     this.props.currentBook.publisher = publisher;
     this.props.currentBook.description = description;
+    if (this.state.bookPath) {
+      this.props.currentBook.path = this.state.bookPath;
+    }
 
     // Handle cover update: if user picked a new image (base64 data URL)
     const { coverPreview } = this.state;
@@ -154,6 +168,51 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
               ref={this.descriptionRef}
               rows={3}
             />
+          </div>
+
+          {/* Book path */}
+          <div className="edit-dialog-field">
+            <div className="edit-dialog-path-row">
+              <span className="edit-dialog-label">
+                <Trans>Book path</Trans>
+              </span>
+              {isElectron && (
+                <div style={{ display: "flex", gap: "6px" }}>
+                  <span
+                    className="change-location-button"
+                    onClick={() => {
+                      const { ipcRenderer } = window.require("electron");
+                      ipcRenderer.invoke("open-explorer-folder", {
+                        path: this.state.bookPath,
+                        isFolder: false,
+                      });
+                    }}
+                  >
+                    <Trans>Locate</Trans>
+                  </span>
+                  <span
+                    className="change-location-button"
+                    onClick={this.handleSelectBookPath}
+                  >
+                    <Trans>Select</Trans>
+                  </span>
+                </div>
+              )}
+            </div>
+            <div
+              className="setting-dialog-location-title"
+              style={{
+                width: "100%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                margin: "0px",
+                boxSizing: "border-box",
+                marginTop: "4px",
+                marginBottom: "4px",
+              }}
+            >
+              {this.state.bookPath || "-"}
+            </div>
           </div>
         </div>
 
