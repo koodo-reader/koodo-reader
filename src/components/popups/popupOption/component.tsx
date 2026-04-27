@@ -28,7 +28,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (!text) return;
     if (
       this.props.currentBook.format === "PDF" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
       text = text.split("\n").join(" ").trim();
     }

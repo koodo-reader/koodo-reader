@@ -139,7 +139,9 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     let pageInfo = await rendition.getProgress();
     if (
       this.props.currentBook.format === "PDF" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
       this.setState({
         prevPage: pageInfo.currentPage,

@@ -531,7 +531,9 @@ class TextToSpeech extends React.Component<
     let rawNodeList: string[][] = [];
     if (
       this.props.currentBook.format === "PDF" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
     } else {
       rawNodeList = nodeTextList.map((text) => {
@@ -603,7 +605,9 @@ class TextToSpeech extends React.Component<
     if (nodeList.length === 0) {
       if (
         this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
       ) {
         let currentPosition = this.props.htmlBook.rendition.getPosition();
         await this.props.htmlBook.rendition.goToChapterIndex(
@@ -674,7 +678,9 @@ class TextToSpeech extends React.Component<
       let lastVisibleTextList = visibleTextList;
       if (
         this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
       ) {
       } else {
         let rawNodeList = visibleTextList.map((text) => {
@@ -704,7 +710,9 @@ class TextToSpeech extends React.Component<
       if (isReachPageEnd) {
         if (
           this.props.currentBook.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          )
         ) {
           let currentPosition = this.props.htmlBook.rendition.getPosition();
           await this.props.htmlBook.rendition.goToChapterIndex(
@@ -759,7 +767,9 @@ class TextToSpeech extends React.Component<
       let lastVisibleTextList = visibleTextList;
       if (
         this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
       ) {
       } else {
         let rawNodeList = visibleTextList.map((text) => {
@@ -788,7 +798,9 @@ class TextToSpeech extends React.Component<
       if (isReachPageEnd) {
         if (
           this.props.currentBook.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          )
         ) {
           let currentPosition = this.props.htmlBook.rendition.getPosition();
           await this.props.htmlBook.rendition.goToChapterIndex(

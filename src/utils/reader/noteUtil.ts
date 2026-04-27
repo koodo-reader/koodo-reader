@@ -42,14 +42,14 @@ export async function createHighlight(params: DigestParams): Promise<void> {
 
   if (
     currentBook.format === "PDF" &&
-    ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+    !ConfigService.getAllListConfig("convertPDFBooks").includes(currentBook.key)
   ) {
     let pdfLocation = htmlBook.rendition.getPositionByChapter(chapterDocIndex);
     cfi = JSON.stringify(pdfLocation);
   }
 
   let percentage = bookLocation.percentage ? bookLocation.percentage : "0";
-  let docs = getIframeDoc(currentBook.format);
+  let docs = getIframeDoc(currentBook.format, currentBook.key);
   let text = "";
   for (let i = 0; i < docs.length; i++) {
     let doc = docs[i];

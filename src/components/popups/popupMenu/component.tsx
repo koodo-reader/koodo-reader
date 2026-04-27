@@ -95,14 +95,18 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&
       this.props.chapterDocIndex % 2 === 1 &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
       posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "scroll" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes" &&
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      ) &&
       posY < 0
     ) {
       posY = posY + this.props.chapterDocIndex * pageSize.sectionHeight;
@@ -131,7 +135,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       if (!doc) continue;
       if (
         this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
       ) {
         let targetIframe = doc?.defaultView?.frameElement;
         let id = targetIframe?.getAttribute("id") || "";

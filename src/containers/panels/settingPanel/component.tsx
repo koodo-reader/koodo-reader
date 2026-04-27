@@ -121,7 +121,9 @@ class SettingPanel extends React.Component<
             .filter((item) => {
               if (
                 this.props.currentBook.format === "PDF" &&
-                ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+                !ConfigService.getAllListConfig("convertPDFBooks").includes(
+                  this.props.currentBook.key
+                )
               ) {
                 return item.isPDF;
               }
@@ -131,7 +133,9 @@ class SettingPanel extends React.Component<
               <SliderList key={item.mode} {...{ item }} />
             ))}
           {this.props.currentBook.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes" ? null : (
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          ) ? null : (
             <DropdownList />
           )}
           <SettingSwitch />

@@ -321,7 +321,9 @@ class SettingSwitch extends React.Component<
           .filter((item) => {
             if (
               this.props.currentBook.format === "PDF" &&
-              ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+              !ConfigService.getAllListConfig("convertPDFBooks").includes(
+                this.props.currentBook.key
+              )
             ) {
               return item.isPDF;
             }
