@@ -9,8 +9,8 @@ declare var window: any;
 let throttleTime =
   ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 100;
 
-export const getSelection = (format: string) => {
-  let docs = getIframeDoc(format);
+export const getSelection = (format: string, bookKey?: string) => {
+  let docs = getIframeDoc(format, bookKey);
   let text = "";
   for (let i = 0; i < docs.length; i++) {
     let doc = docs[i];
@@ -27,8 +27,11 @@ export const getSelection = (format: string) => {
   return text;
 };
 
-export const getSelectionSentence = (format: string): string => {
-  let docs = getIframeDoc(format);
+export const getSelectionSentence = (
+  format: string,
+  bookKey?: string
+): string => {
+  let docs = getIframeDoc(format, bookKey);
   for (let i = 0; i < docs.length; i++) {
     let doc = docs[i];
     if (!doc) continue;
@@ -349,7 +352,7 @@ export const htmlMouseEvent = (
     let iframe = getIframeWin();
     if (!iframe) return;
     iframe?.focus();
-    let docs = getIframeDoc(format);
+    let docs = getIframeDoc(format, key);
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;

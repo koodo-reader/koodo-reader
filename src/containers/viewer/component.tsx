@@ -160,7 +160,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.format === "PDF" &&
       (this.props.readerMode === "double" ||
         this.props.readerMode === "scroll") &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
       let highlightersByChapter = highlighters.filter((item: Note) => {
         let cfi = JSON.parse(item.cfi);
@@ -265,7 +267,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isBionic: ConfigService.getReaderConfig("isBionic"),
           password: getPdfPassword(this.props.currentBook),
           scale: parseFloat(this.props.scale),
-          isConvertPDF: ConfigService.getReaderConfig("isConvertPDF"),
+          isConvertPDF: ConfigService.getAllListConfig(
+            "convertPDFBooks"
+          ).includes(this.props.currentBook.key)
+            ? "yes"
+            : "no",
           ocrLang: ConfigService.getReaderConfig("ocrLang")
             ? ConfigService.getReaderConfig("ocrLang")
             : ConfigService.getReaderConfig("ocrEngine") === "tesseract"
@@ -338,7 +344,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
     if (
       this.props.currentBook.format === "PDF" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
     } else {
       StyleUtil.addDefaultCss(this.props.currentBook.key);
@@ -419,7 +427,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
       if (
         this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
       ) {
       } else {
         StyleUtil.addDefaultCss(this.props.currentBook.key);
@@ -469,7 +479,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
   handleBindGesture = () => {
-    let docs = getIframeDoc(this.props.currentBook.format);
+    let docs = getIframeDoc(
+      this.props.currentBook.format,
+      this.props.currentBook.key
+    );
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
@@ -482,7 +495,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       doc.addEventListener("mouseup", (event) => {
         if (
           this.props.currentBook.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          )
         ) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
@@ -510,7 +525,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       doc.addEventListener("contextmenu", (event) => {
         if (
           this.props.currentBook.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          )
         ) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;

@@ -15,5 +15,4 @@ export interface SpeechDialogProps {
 }
 export interface SpeechDialogState {
   isShowExportAll: boolean;
-  isConvertPDF: boolean;
 }

@@ -21,7 +21,9 @@ class ConvertDialog extends React.Component<
     super(props);
     this.state = {
       isShowExportAll: false,
-      isConvertPDF: ConfigService.getReaderConfig("isConvertPDF") === "yes",
+      isConvertPDF: ConfigService.getAllListConfig("convertPDFBooks").includes(
+        props.currentBook?.key
+      ),
     };
   }
   renderSwitchOption = (optionList: any[]) => {
@@ -43,13 +45,28 @@ class ConvertDialog extends React.Component<
             <span
               className="single-control-switch"
               onClick={() => {
+                const newValue = !this.state[item.propName];
                 this.setState({
-                  [item.propName]: !this.state[item.propName],
+                  [item.propName]: newValue,
                 } as any);
-                ConfigService.setReaderConfig(
-                  item.propName,
-                  this.state[item.propName] ? "no" : "yes"
-                );
+                if (item.propName === "isConvertPDF") {
+                  if (newValue) {
+                    ConfigService.setListConfig(
+                      this.props.currentBook.key,
+                      "convertPDFBooks"
+                    );
+                  } else {
+                    ConfigService.deleteListConfig(
+                      this.props.currentBook.key,
+                      "convertPDFBooks"
+                    );
+                  }
+                } else {
+                  ConfigService.setReaderConfig(
+                    item.propName,
+                    this.state[item.propName] ? "no" : "yes"
+                  );
+                }
                 BookUtil.reloadBooks(this.props.currentBook);
               }}
               style={this.state[item.propName] ? {} : { opacity: 0.6 }}
@@ -150,7 +167,9 @@ class ConvertDialog extends React.Component<
                         );
                       }
                       if (
-                        ConfigService.getReaderConfig("isConvertPDF") === "yes"
+                        ConfigService.getAllListConfig(
+                          "convertPDFBooks"
+                        ).includes(this.props.currentBook.key)
                       ) {
                         BookUtil.reloadBooks(this.props.currentBook);
                       }
@@ -214,7 +233,9 @@ class ConvertDialog extends React.Component<
                         event.target.value
                       );
                       if (
-                        ConfigService.getReaderConfig("isConvertPDF") === "yes"
+                        ConfigService.getAllListConfig(
+                          "convertPDFBooks"
+                        ).includes(this.props.currentBook.key)
                       ) {
                         BookUtil.reloadBooks(this.props.currentBook);
                       }
@@ -274,8 +295,9 @@ class ConvertDialog extends React.Component<
                           event.target.value
                         );
                         if (
-                          ConfigService.getReaderConfig("isConvertPDF") ===
-                          "yes"
+                          ConfigService.getAllListConfig(
+                            "convertPDFBooks"
+                          ).includes(this.props.currentBook.key)
                         ) {
                           BookUtil.reloadBooks(this.props.currentBook);
                         }
@@ -335,8 +357,9 @@ class ConvertDialog extends React.Component<
                           event.target.value
                         );
                         if (
-                          ConfigService.getReaderConfig("isConvertPDF") ===
-                          "yes"
+                          ConfigService.getAllListConfig(
+                            "convertPDFBooks"
+                          ).includes(this.props.currentBook.key)
                         ) {
                           BookUtil.reloadBooks(this.props.currentBook);
                         }
