@@ -379,6 +379,15 @@ class BookList extends React.Component<BookListProps, BookListState> {
         this.state.readingStatusFilter
       );
     }
+    const topBookKeys: string[] = ConfigService.getAllListConfig("topBooks");
+    if (topBookKeys.length > 0) {
+      const topSet = new Set(topBookKeys);
+      const topBooks = [...topBookKeys]
+        .map((key) => books.find((b) => b.key === key))
+        .filter(Boolean) as Book[];
+      const restBooks = books.filter((b) => !topSet.has(b.key));
+      books = [...topBooks, ...restBooks];
+    }
     return {
       books,
       bookMode,
