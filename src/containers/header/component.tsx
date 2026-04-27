@@ -486,7 +486,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               ) +
               " " +
               this.props.t(
-                "Your reading progress, notes, highlights, bookmarks, and other data will be stored and synced through our cloud service. Your books and covers will still be synced by your added data sources. To save you from repeatedly entering your data source credentials on new devices, your credentials will be encrypted and stored securely in our cloud too. You can disable this feature anytime in the settings."
+                "Your reading progress, notes, highlights, bookmarks, and other data will be stored and synced through our cloud service. Your books and covers will still be synced by your added data sources. All your data will be encrypted and stored securely in our cloud. You can disable this feature anytime in the settings."
               )
             }</p>`
           );
