@@ -689,6 +689,12 @@ const createMainWin = () => {
     });
     return path.filePaths[0];
   });
+  ipcMain.handle("select-book-path", async (event) => {
+    var result = await dialog.showOpenDialog({
+      properties: ["openFile"],
+    });
+    return result.filePaths[0];
+  });
   ipcMain.handle("encrypt-data", async (event, config) => {
     const { TokenService } =
       await import("./src/assets/lib/kookit-extra.min.mjs");
