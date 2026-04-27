@@ -441,7 +441,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 }
               >
                 <span
-                  className="icon-chart"
+                  className="icon-chart sidebar-shelf-icon"
                   style={
                     this.props.isCollapsed
                       ? {
