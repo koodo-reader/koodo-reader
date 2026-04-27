@@ -28,6 +28,7 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     handleSelectIconClick,
     getPercentage,
     isFavoriteBook,
+    isTopBook,
     setIsFavorite,
   } = useBookItem(props);
 
@@ -91,8 +92,15 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
               handleMoreAction(event);
             }}
           ></span>
-          {isFavoriteBook() && (
-            <span className="icon-heart book-heart-action"></span>
+          {(isFavoriteBook() || isTopBook()) && (
+            <span className="book-cover-status-actions">
+              {isFavoriteBook() && (
+                <span className="icon-heart book-heart-action"></span>
+              )}
+              {isTopBook() && (
+                <span className="icon-pin book-top-action"></span>
+              )}
+            </span>
           )}
         </div>
 
