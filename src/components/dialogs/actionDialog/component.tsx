@@ -54,6 +54,18 @@ class ActionDialog extends React.Component<
     this.props.handleSelectedBooks([this.props.currentBook.key]);
     this.props.handleActionDialog(false);
   };
+  handleTopBook = () => {
+    ConfigService.setListConfig(this.props.currentBook.key, "topBooks");
+    toast.success(this.props.t("Addition successful"));
+    this.props.handleActionDialog(false);
+    this.props.handleFetchBooks();
+  };
+  handleCancelTopBook = () => {
+    ConfigService.deleteListConfig(this.props.currentBook.key, "topBooks");
+    toast.success(this.props.t("Cancellation successful"));
+    this.props.handleActionDialog(false);
+    this.props.handleFetchBooks();
+  };
   handleCancelLoveBook = () => {
     ConfigService.deleteListConfig(this.props.currentBook.key, "favoriteBooks");
     if (
@@ -167,6 +179,34 @@ class ActionDialog extends React.Component<
               <span className="icon-select view-icon"></span>
               <p className="action-name">
                 <Trans>Multiple selection</Trans>
+              </p>
+            </div>
+            <div
+              className="action-dialog-add"
+              onClick={() => {
+                if (
+                  ConfigService.getAllListConfig("topBooks").indexOf(
+                    this.props.currentBook.key
+                  ) > -1
+                ) {
+                  this.handleCancelTopBook();
+                } else {
+                  this.handleTopBook();
+                }
+              }}
+            >
+              <span
+                className="icon-sort-desc view-icon"
+                style={{ display: "inline-block", transform: "rotate(180deg)" }}
+              ></span>
+              <p className="action-name">
+                {ConfigService.getAllListConfig("topBooks").indexOf(
+                  this.props.currentBook.key
+                ) > -1 ? (
+                  <Trans>Unpin from top</Trans>
+                ) : (
+                  <Trans>Pin to top</Trans>
+                )}
               </p>
             </div>
             <div
