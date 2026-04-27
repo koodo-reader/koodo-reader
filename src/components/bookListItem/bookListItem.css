@@ -57,6 +57,24 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.book-item-list-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.book-item-list-favorite {
+  font-size: 14px;
+  color: rgb(231, 69, 69);
+  opacity: 0.8;
+}
+.book-item-list-top {
+  font-size: 14px;
+  opacity: 1;
+  color: #77a2da;
+}
 .book-item-list-config {
   cursor: pointer;
 }
