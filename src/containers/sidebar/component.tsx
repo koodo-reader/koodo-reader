@@ -158,9 +158,14 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         ConfigService.getAllListConfig("sortedShelfList") || [];
       let shelfList = ConfigService.getAllMapConfig("shelfList");
       let shelfTitleList = Object.keys(shelfList);
+      let isShowShelfBookCount =
+        ConfigService.getReaderConfig("isShowShelfBookCount") === "yes";
 
       return Array.from(new Set([...sortedShelfList, ...shelfTitleList])).map(
         (item, index) => {
+          const shelfBookCount = Array.isArray(shelfList[item])
+            ? shelfList[item].length
+            : 0;
           return (
             <li
               key={item}
@@ -226,10 +231,23 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                   style={
                     this.props.isCollapsed
                       ? { display: "none", width: "70%" }
-                      : { width: "60%" }
+                      : {
+                          width: "calc(100% - 70px)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: "8px",
+                        }
                   }
                 >
-                  {this.props.t(item)}
+                  <span className="sidebar-shelf-name">
+                    {this.props.t(item)}
+                  </span>
+                  {isShowShelfBookCount && (
+                    <span className="sidebar-shelf-count">
+                      {shelfBookCount}
+                    </span>
+                  )}
                 </span>
               </div>
             </li>

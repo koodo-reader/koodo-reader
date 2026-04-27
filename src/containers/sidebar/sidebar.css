@@ -118,6 +118,19 @@
   align-items: center;
   font-weight: 500;
 }
+.sidebar-shelf-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+}
+.sidebar-shelf-count {
+  flex-shrink: 0;
+  font-size: 12px;
+  opacity: 0.65;
+  margin-right: 20px;
+}
 
 .shelf-list-container-parent {
   margin-top: 20px;

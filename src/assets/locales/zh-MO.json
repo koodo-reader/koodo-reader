@@ -951,6 +951,7 @@
   "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice.": "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice.",
   "Force path style": "Force path style",
   "Enter 1 to enable, leave empty to disable. Required for some S3 storage services that are not compatible with virtual host style URL": "Enter 1 to enable, leave empty to disable. Required for some S3 storage services that are not compatible with virtual host style URL",
+  "Show number of books in each shelf": "顯示每個書架中的圖書數量",
   "Custom AI Translation": "Custom AI Translation",
   "Custom AI Dictionary": "Custom AI Dictionary",
   "Custom AI Assistance": "Custom AI Assistance"

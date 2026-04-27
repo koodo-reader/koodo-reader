@@ -39,6 +39,8 @@ class AppearanceSetting extends React.Component<
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
+      isShowShelfBookCount:
+        ConfigService.getReaderConfig("isShowShelfBookCount") === "yes",
       isCustomSystemCSS:
         ConfigService.getReaderConfig("isCustomSystemCSS") === "yes",
       customSystemCSS: ConfigService.getReaderConfig("customSystemCSS") || "",
@@ -77,12 +79,10 @@ class AppearanceSetting extends React.Component<
   };
 
   handleSetting = (stateName: string) => {
-    this.setState({ [stateName]: !this.state[stateName] } as any);
-    ConfigService.setReaderConfig(
-      stateName,
-      this.state[stateName] ? "no" : "yes"
-    );
-    this.handleRest(this.state[stateName]);
+    const nextValue = !this.state[stateName];
+    this.setState({ [stateName]: nextValue } as any);
+    ConfigService.setReaderConfig(stateName, nextValue ? "yes" : "no");
+    this.handleRest(nextValue);
   };
 
   changeSkin = (skin: string) => {
