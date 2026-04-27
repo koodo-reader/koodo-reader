@@ -108,6 +108,11 @@ export const appearanceSettingList = [
     title: "Don't crop book cover",
     propName: "isDisableCrop",
   },
+  {
+    isElectron: false,
+    title: "Show number of books in each shelf",
+    propName: "isShowShelfBookCount",
+  },
 ];
 export const dataSettingList = [
   {

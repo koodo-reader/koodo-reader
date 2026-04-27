@@ -11,6 +11,7 @@ export interface SettingInfoState {
   fontListVersion: number;
   isDisablePDFCover: boolean;
   isDisableCrop: boolean;
+  isShowShelfBookCount: boolean;
   isCustomSystemCSS: boolean;
   customSystemCSS: string;
 }
