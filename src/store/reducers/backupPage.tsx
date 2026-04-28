@@ -5,6 +5,8 @@ const initState = {
   isOpenImportDialog: false,
   isOpenOPDSDialog: false,
   isOpenSortShelfDialog: false,
+  isOpenPopupOptionDialog: false,
+  popupOptionUpdateIndex: 0,
   dataSourceList: [],
   loginOptionList: [],
   defaultSyncOption: "",
@@ -38,6 +40,16 @@ export function backupPage(
       return {
         ...state,
         isOpenSortShelfDialog: action.payload,
+      };
+    case "HANDLE_POPUP_OPTION_DIALOG":
+      return {
+        ...state,
+        isOpenPopupOptionDialog: action.payload,
+      };
+    case "HANDLE_POPUP_OPTION_UPDATE":
+      return {
+        ...state,
+        popupOptionUpdateIndex: action.payload,
       };
     case "HANDLE_TOKEN_DIALOG":
       return {

@@ -10,6 +10,9 @@
 .highlight-option,
 .translation-option,
 .speaker-option,
+.speech-start-option,
+.assistant-option,
+.setting-option,
 .search-book-option,
 .browser-option,
 .dict-option,
@@ -36,6 +39,9 @@
 .highlight-option:hover,
 .translation-option:hover,
 .speaker-option:hover,
+.speech-start-option:hover,
+.assistant-option:hover,
+.setting-option:hover,
 .search-book-option:hover,
 .browser-option:hover,
 .dict-option:hover,
@@ -47,6 +53,9 @@
 .note-icon,
 .translation-icon,
 .speaker-icon,
+.speech-start-icon,
+.assistant-icon,
+.setting-icon,
 .search-book-icon,
 .browser-icon,
 .dict-icon,
@@ -75,6 +84,10 @@
   font-size: 30px;
   margin-left: 5px;
 }
+.speech-start-icon {
+  color: #ff7d52;
+  font-size: 26px;
+}
 .search-book-icon {
   color: #6867d1;
 }
@@ -85,6 +98,14 @@
 .dict-icon {
   color: #2084e8;
   font-size: 25px;
+}
+.assistant-icon {
+  color: #0aa89e;
+  font-size: 24px;
+}
+.setting-icon {
+  color: #8a8f9f;
+  font-size: 24px;
 }
 .wikipedia-icon {
   font-size: 22px;

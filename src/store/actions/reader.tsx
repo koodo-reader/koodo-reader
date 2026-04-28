@@ -28,6 +28,12 @@ export function handleConvertDialog(isConvertOpen: boolean) {
 export function handleSpeechDialog(isSpeechOpen: boolean) {
   return { type: "HANDLE_SPEECH_DIALOG", payload: isSpeechOpen };
 }
+export function handleSpeechStartText(speechStartText: string) {
+  return { type: "HANDLE_SPEECH_START_TEXT", payload: speechStartText };
+}
+export function handleSpeechAutoStart(isSpeechAutoStart: boolean) {
+  return { type: "HANDLE_SPEECH_AUTO_START", payload: isSpeechAutoStart };
+}
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };
 }

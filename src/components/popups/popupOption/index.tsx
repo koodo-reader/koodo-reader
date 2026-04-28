@@ -3,6 +3,11 @@ import {
   handleOpenMenu,
   handleMenuMode,
   handleChangeDirection,
+  handlePopupOptionDialog,
+  handlePopupOptionUpdate,
+  handleSpeechDialog,
+  handleSpeechStartText,
+  handleSpeechAutoStart,
 } from "../../../store/actions";
 import {
   handleFetchNotes,
@@ -17,6 +22,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     selection: state.viewArea.selection,
+    popupOptionUpdateIndex: state.backupPage.popupOptionUpdateIndex,
 
     color: state.reader.color,
     htmlBook: state.reader.htmlBook,
@@ -30,6 +36,11 @@ const actionCreator = {
   handleOriginalSentence,
   handleChangeDirection,
   handleNoteKey,
+  handlePopupOptionDialog,
+  handlePopupOptionUpdate,
+  handleSpeechDialog,
+  handleSpeechStartText,
+  handleSpeechAutoStart,
 };
 export default connect(
   mapStateToProps,

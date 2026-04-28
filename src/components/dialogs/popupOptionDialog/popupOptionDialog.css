@@ -1,0 +1,50 @@
+.popup-option-dialog-container {
+  height: 520px;
+  top: calc(50% - 260px);
+}
+
+.popup-option-dialog-item {
+  gap: 12px;
+  padding-right: 15px;
+}
+
+.popup-option-dialog-item-icon {
+  width: 28px;
+  font-size: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.popup-option-dialog-item-label {
+  width: calc(100% - 120px);
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.popup-option-dialog-switch {
+  flex-shrink: 0;
+}
+
+.popup-option-dialog-drag {
+  font-size: 18px;
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.popup-option-dialog-drag:active {
+  cursor: grabbing;
+}
+
+.popup-option-dialog-tip {
+  position: absolute;
+  bottom: 20px;
+  font-size: 13px;
+}
+
+.popup-option-dialog-limit {
+  left: 20px;
+}

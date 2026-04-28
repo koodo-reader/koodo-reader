@@ -79,6 +79,8 @@ export type stateType = {
     isOpenImportDialog: boolean;
     isOpenOPDSDialog: boolean;
     isOpenSortShelfDialog: boolean;
+    isOpenPopupOptionDialog: boolean;
+    popupOptionUpdateIndex: number;
     isOpenTokenDialog: boolean;
     dataSourceList: string[];
     loginOptionList: { email: string; provider: string }[];
@@ -98,6 +100,8 @@ export type stateType = {
     margin: string;
     backgroundColor: string;
     section: any;
+    speechStartText: string;
+    isSpeechAutoStart: boolean;
     isNavLocked: boolean;
     isSettingLocked: boolean;
     isConvertOpen: boolean;

@@ -27,6 +27,7 @@ const mapStateToProps = (state: stateType) => {
     isNavLocked: state.reader.isNavLocked,
     isConvertOpen: state.reader.isConvertOpen,
     isSpeechOpen: state.reader.isSpeechOpen,
+    isOpenPopupOptionDialog: state.backupPage.isOpenPopupOptionDialog,
     isSettingLocked: state.reader.isSettingLocked,
     isAuthed: state.manager.isAuthed,
     isSearch: state.manager.isSearch,

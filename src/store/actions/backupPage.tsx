@@ -18,6 +18,15 @@ export function handleOPDSDialog(mode: boolean) {
 export function handleSortShelfDialog(isOpen: boolean) {
   return { type: "HANDLE_SORT_SHELF_DIALOG", payload: isOpen };
 }
+export function handlePopupOptionDialog(isOpen: boolean) {
+  return { type: "HANDLE_POPUP_OPTION_DIALOG", payload: isOpen };
+}
+export function handlePopupOptionUpdate(popupOptionUpdateIndex: number) {
+  return {
+    type: "HANDLE_POPUP_OPTION_UPDATE",
+    payload: popupOptionUpdateIndex,
+  };
+}
 export function handleTokenDialog(mode: boolean) {
   return { type: "HANDLE_TOKEN_DIALOG", payload: mode };
 }

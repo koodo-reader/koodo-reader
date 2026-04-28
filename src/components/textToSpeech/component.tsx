@@ -186,6 +186,51 @@ class TextToSpeech extends React.Component<
   componentWillUnmount() {
     this.stopPreviewAudio();
   }
+  componentDidUpdate(prevProps: Readonly<TextToSpeechProps>) {
+    if (this.props.isSpeechAutoStart && !prevProps.isSpeechAutoStart) {
+      this.handleSpeechAutoStartRequest();
+    }
+  }
+  normalizeSpeechText = (text: string) => {
+    return text.replace(/\s+/g, " ").trim();
+  };
+  clearSpeechStartState = () => {
+    if (this.props.speechStartText) {
+      this.props.handleSpeechStartText("");
+    }
+    if (this.props.isSpeechAutoStart) {
+      this.props.handleSpeechAutoStart(false);
+    }
+  };
+  getSpeechStartIndex = (nodeTextList: string[]) => {
+    const speechStartText = this.normalizeSpeechText(
+      this.props.speechStartText
+    );
+    if (!speechStartText) return -1;
+
+    const candidates = [speechStartText];
+    if (speechStartText.length > 40) {
+      candidates.push(speechStartText.slice(0, 40));
+      candidates.push(speechStartText.slice(-40));
+    }
+    console.log(nodeTextList, candidates, "candidates");
+
+    return nodeTextList.findIndex((item) => {
+      const normalizedItem = this.normalizeSpeechText(item);
+      return candidates.some((candidate) => {
+        return (
+          normalizedItem.includes(candidate) ||
+          candidate.includes(normalizedItem)
+        );
+      });
+    });
+  };
+  handleSpeechAutoStartRequest = async () => {
+    if (this.state.isAudioOn) {
+      await this.handleStop();
+    }
+    this.handleStartAudio();
+  };
   handleMultiRoleToggle = (enabled: boolean) => {
     if (enabled) {
       if (!this.props.isAuthed) {
@@ -542,6 +587,11 @@ class TextToSpeech extends React.Component<
 
       nodeTextList = rawNodeList.flat();
     }
+    const speechStartIndex = this.getSpeechStartIndex(nodeTextList);
+    if (speechStartIndex > -1) {
+      nodeTextList = nodeTextList.slice(speechStartIndex);
+    }
+    this.clearSpeechStartState();
     if (!this.state.multiRoleEnabled || !this.props.isAuthed) {
       nodeList = nodeTextList.map((text: string) => {
         return {

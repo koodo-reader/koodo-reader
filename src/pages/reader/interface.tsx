@@ -9,6 +9,7 @@ export interface ReaderProps {
   isSettingLocked: boolean;
   isConvertOpen: boolean;
   isSpeechOpen: boolean;
+  isOpenPopupOptionDialog: boolean;
   isSearch: boolean;
   isAuthed: boolean;
   isHidePageButton: boolean;
