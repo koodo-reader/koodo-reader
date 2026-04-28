@@ -16,6 +16,8 @@ import { marked } from "marked";
 import { sampleQuestion } from "../../../constants/settingList";
 class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
   private chatBoxRef: React.RefObject<HTMLDivElement>;
+  private textareaRef: React.RefObject<HTMLTextAreaElement>;
+  private singleLineScrollHeight: number = 0;
 
   constructor(props: PopupAssistProps) {
     super(props);
@@ -31,6 +33,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       inputQuestion: "",
     };
     this.chatBoxRef = React.createRef();
+    this.textareaRef = React.createRef();
   }
   componentDidMount(): void {
     if (!this.state.aiService) {
@@ -49,6 +52,28 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       }
     }
   }
+  autoResizeTextarea = () => {
+    const el = this.textareaRef.current;
+    if (!el) return;
+    // Reset height to measure scrollHeight correctly
+    el.style.height = "auto";
+    const lineHeight = parseInt(getComputedStyle(el).lineHeight) || 20;
+    const maxLines = 5;
+    const maxHeight =
+      lineHeight * maxLines +
+      parseInt(getComputedStyle(el).paddingTop) +
+      parseInt(getComputedStyle(el).paddingBottom);
+    if (el.scrollHeight >= maxHeight) {
+      el.style.height = maxHeight + "px";
+      el.style.overflowY = "auto";
+    } else if (el.scrollHeight === 58) {
+      el.style.height = "40px";
+      el.style.overflowY = "hidden";
+    } else {
+      el.style.height = el.scrollHeight - 20 + "px";
+      el.style.overflowY = "hidden";
+    }
+  };
   scrollToBottom = () => {
     if (this.chatBoxRef.current) {
       const scrollHeight = this.chatBoxRef.current.scrollHeight;
@@ -459,135 +484,153 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         {!this.state.isAddNew && (
           <>
             <div
-              className="dict-text-box"
               style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "calc(100% - 10px)",
                 marginTop: "60px",
-                width: "calc(100% + 20px)",
-                height: "calc(100% - 120px)",
-                paddingBottom: "0px",
-                paddingLeft: "0px",
-                paddingRight: "20px",
-              }}
-              ref={this.chatBoxRef}
-            >
-              {this.handleRenderHistoryMessage(
-                this.state.mode === "ask"
-                  ? this.state.askHistory
-                  : this.state.chatHistory
-              )}
-              {this.state.isWaiting ? (
-                <div
-                  className="popup-message-assistant"
-                  style={{ float: "left" }}
-                >
-                  <span
-                    className="icon-loading popup-assistant-loading"
-                    style={{
-                      marginRight: "10px",
-                      marginTop: "5px",
-                    }}
-                  ></span>
-                  <span>{this.props.t("Thinking, please wait...")}</span>
-                </div>
-              ) : (this.state.mode === "ask"
-                  ? this.state.askHistory
-                  : this.state.chatHistory
-                ).length > 0 ? (
-                <div className="popup-message-assistant">
-                  {Parser(
-                    DOMPurify.sanitize(
-                      marked.parse(this.state.answer ? this.state.answer : "") +
-                        "<address></address>"
-                    ) || " ",
-                    {
-                      replace: (_domNode) => {},
-                    }
-                  )}
-                </div>
-              ) : (
-                <div className="popup-message-assistant">
-                  {this.state.mode === "ask"
-                    ? this.props.t(
-                        "Hi there! What questions do you have about this chapter?"
-                      )
-                    : this.props.t(
-                        "Hi there! I'm happy to help with any questions about reading or learning"
-                      )}
-                </div>
-              )}
-            </div>
-            <div
-              style={{
-                marginLeft: "-25px",
-                marginRight: "-25px",
-                marginBottom: "-20px",
-                padding: "0px 25px",
+                paddingBottom: "20px",
               }}
             >
-              <div className="popup-assist-shortcut-container">
-                {sampleQuestion
-                  .filter((item) => item.mode === this.state.mode)
-                  .map((item) => {
-                    return (
-                      <div
-                        className="popup-assist-shortcut"
-                        onClick={() => {
-                          this.handleNewQuestion(item.question);
-                        }}
-                      >
-                        {item.emoji + " " + this.props.t(item.question)}
-                      </div>
-                    );
-                  })}
+              <div
+                className="dict-text-box"
+                style={{
+                  flex: 1,
+                  marginTop: "0px",
+                  width: "calc(100% + 20px)",
+                  height: undefined,
+                  paddingBottom: "0px",
+                  paddingLeft: "0px",
+                  paddingRight: "20px",
+                }}
+                ref={this.chatBoxRef}
+              >
+                {this.handleRenderHistoryMessage(
+                  this.state.mode === "ask"
+                    ? this.state.askHistory
+                    : this.state.chatHistory
+                )}
+                {this.state.isWaiting ? (
+                  <div
+                    className="popup-message-assistant"
+                    style={{ float: "left" }}
+                  >
+                    <span
+                      className="icon-loading popup-assistant-loading"
+                      style={{
+                        marginRight: "10px",
+                        marginTop: "5px",
+                      }}
+                    ></span>
+                    <span>{this.props.t("Thinking, please wait...")}</span>
+                  </div>
+                ) : (this.state.mode === "ask"
+                    ? this.state.askHistory
+                    : this.state.chatHistory
+                  ).length > 0 ? (
+                  <div className="popup-message-assistant">
+                    {Parser(
+                      DOMPurify.sanitize(
+                        marked.parse(
+                          this.state.answer ? this.state.answer : ""
+                        ) + "<address></address>"
+                      ) || " ",
+                      {
+                        replace: (_domNode) => {},
+                      }
+                    )}
+                  </div>
+                ) : (
+                  <div className="popup-message-assistant">
+                    {this.state.mode === "ask"
+                      ? this.props.t(
+                          "Hi there! What questions do you have about this chapter?"
+                        )
+                      : this.props.t(
+                          "Hi there! I'm happy to help with any questions about reading or learning"
+                        )}
+                  </div>
+                )}
               </div>
-
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+                  marginLeft: "-25px",
+                  marginRight: "-25px",
+                  marginBottom: "0px",
+                  padding: "0px 25px",
                 }}
               >
-                <textarea
-                  name="url"
-                  placeholder={this.props.t(
-                    this.state.mode === "ask"
-                      ? "Ask anything about this chapter"
-                      : "Ask anything about reading or learning"
-                  )}
-                  id="trans-add-content-box"
-                  className="trans-add-content-box"
-                  style={{
-                    height: "40px",
-                    paddingRight: "40px",
-                    resize: "none",
+                <div className="popup-assist-shortcut-container">
+                  {sampleQuestion
+                    .filter((item) => item.mode === this.state.mode)
+                    .map((item) => {
+                      return (
+                        <div
+                          className="popup-assist-shortcut"
+                          onClick={() => {
+                            this.handleNewQuestion(item.question);
+                          }}
+                        >
+                          {item.emoji + " " + this.props.t(item.question)}
+                        </div>
+                      );
+                    })}
+                </div>
 
-                    marginRight: "10px",
-                    marginBottom: "0px",
-                  }}
-                  onContextMenu={() => {
-                    handleContextMenu("trans-add-content-box");
-                  }}
-                  value={this.state.inputQuestion}
-                  onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
-                    this.setState({
-                      inputQuestion: event.target.value,
-                    });
-                  }}
-                />
                 <div
-                  className="popup-assistant-send-button"
-                  onClick={() => {
-                    if (this.state.answer || this.state.isWaiting) {
-                      return;
-                    }
-                    this.handleNewQuestion(this.state.inputQuestion);
-                    this.setState({
-                      inputQuestion: "",
-                    });
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-end",
+                    justifyContent: "space-between",
                   }}
                 >
-                  {this.props.t("Send")}
+                  <textarea
+                    ref={this.textareaRef}
+                    name="url"
+                    placeholder={this.props.t(
+                      this.state.mode === "ask"
+                        ? "Ask anything about this chapter"
+                        : "Ask anything about reading or learning"
+                    )}
+                    id="trans-add-content-box"
+                    className="trans-add-content-box"
+                    style={{
+                      height: "40px",
+                      paddingRight: "40px",
+                      resize: "none",
+                      overflowY: "hidden",
+                      marginRight: "10px",
+                      marginBottom: "0px",
+                    }}
+                    onContextMenu={() => {
+                      handleContextMenu("trans-add-content-box");
+                    }}
+                    value={this.state.inputQuestion}
+                    onChange={(
+                      event: React.ChangeEvent<HTMLTextAreaElement>
+                    ) => {
+                      this.setState(
+                        { inputQuestion: event.target.value },
+                        () => {
+                          this.autoResizeTextarea();
+                        }
+                      );
+                    }}
+                  />
+                  <div
+                    className="popup-assistant-send-button"
+                    onClick={() => {
+                      if (this.state.answer || this.state.isWaiting) {
+                        return;
+                      }
+                      this.handleNewQuestion(this.state.inputQuestion);
+                      this.setState({
+                        inputQuestion: "",
+                      });
+                    }}
+                  >
+                    {this.props.t("Send")}
+                  </div>
                 </div>
               </div>
             </div>
