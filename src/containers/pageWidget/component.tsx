@@ -8,6 +8,7 @@ import {
 import { Trans } from "react-i18next";
 import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
 import { detectLocalLanguage } from "../../utils/common";
+import toast from "react-hot-toast";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   timeInterval: any;
@@ -114,6 +115,14 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       let wordTexts = await rendition.audioText();
       if (wordTexts && wordTexts.length > 0) {
         let lang = detectLocalLanguage(wordTexts.slice(0, 500).join(" "));
+        if (lang === "ko") {
+          toast.error(
+            this.props.t(
+              "Unsupported language for word definition, currently only Chinese, Japanese and English are supported"
+            )
+          );
+          return;
+        }
         let currentLevel =
           lang === "zh"
             ? ConfigService.getReaderConfig("currentChineseLevel") || "HSK3"
