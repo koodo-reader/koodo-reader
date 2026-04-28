@@ -18,6 +18,7 @@ import ConvertDialog from "../../components/dialogs/convertDialog";
 import { isElectron } from "react-device-detect";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import SpeechDialog from "../../components/dialogs/speechDialog";
+import PopupOptionDialog from "../../components/dialogs/popupOptionDialog";
 import {
   updateDiscordPresence,
   clearDiscordPresence,
@@ -715,6 +716,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
         {this.props.currentBook.key && <Viewer {...(renditionProps as any)} />}
         {this.props.isConvertOpen && <ConvertDialog />}
+        {this.props.isOpenPopupOptionDialog && (
+          <>
+            <PopupOptionDialog />
+            <div className="drag-background"></div>
+          </>
+        )}
         {
           <div
             style={

@@ -33,6 +33,8 @@ const initState = {
   readerMode: "double",
   isConvertOpen: false,
   isSpeechOpen: false,
+  speechStartText: "",
+  isSpeechAutoStart: false,
   isNavLocked: ConfigService.getReaderConfig("isNavLocked") === "yes",
   isSettingLocked: ConfigService.getReaderConfig("isSettingLocked") === "yes",
   isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
@@ -87,6 +89,16 @@ export function reader(
       return {
         ...state,
         isSpeechOpen: action.payload,
+      };
+    case "HANDLE_SPEECH_START_TEXT":
+      return {
+        ...state,
+        speechStartText: action.payload,
+      };
+    case "HANDLE_SPEECH_AUTO_START":
+      return {
+        ...state,
+        isSpeechAutoStart: action.payload,
       };
     case "HANDLE_CURRENT_CHAPTER_INDEX":
       return {
