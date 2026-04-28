@@ -273,7 +273,10 @@ class PopupOption extends React.Component<PopupOptionProps> {
                 data-tooltip-id="my-tooltip"
                 data-tooltip-content={this.props.t("Customize popup menu")}
               >
-                <span className="icon-setting setting-icon"></span>
+                <span
+                  className="icon-setting setting-icon"
+                  style={{ color: "#8a8f9f", fontSize: "24px" }}
+                ></span>
               </span>
             </div>
           </div>

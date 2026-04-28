@@ -1148,7 +1148,7 @@ const createMainWin = () => {
       id = powerSaveBlocker.start("prevent-display-sleep");
       console.info(powerSaveBlocker.isStarted(id));
     }
-    if (readerWindow) {
+    if (readerWindow && !readerWindow.isDestroyed()) {
       readerWindow.close();
       if (store.get("isMergeWord") === "yes") {
         delete options.backgroundColor;
