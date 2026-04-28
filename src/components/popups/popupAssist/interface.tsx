@@ -1,8 +1,10 @@
 import PluginModel from "../../../models/Plugin";
 export interface PopupAssistProps {
   originalText: string;
+  quoteText: string;
   plugins: PluginModel[];
   isAuthed: boolean;
+  handleQuoteText: (quoteText: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleFetchPlugins: () => void;

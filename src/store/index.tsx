@@ -122,6 +122,7 @@ export type stateType = {
     currentChapterIndex: number;
     originalText: string;
     originalSentence: string;
+    quoteText: string;
     htmlBook: HtmlBookModel;
     readerBackgroundImage: string;
   };

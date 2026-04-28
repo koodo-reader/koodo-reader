@@ -36,6 +36,18 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     this.textareaRef = React.createRef();
   }
   componentDidMount(): void {
+    if (this.props.quoteText) {
+      this.setState({ inputQuestion: this.props.quoteText + "\n" }, () => {
+        this.autoResizeTextarea();
+        const el = this.textareaRef.current;
+        if (el) {
+          el.focus();
+          const len = el.value.length;
+          el.setSelectionRange(len, len);
+        }
+      });
+      this.props.handleQuoteText("");
+    }
     if (!this.state.aiService) {
       let pluginList = this.props.plugins.filter(
         (item) => item.type === "assistant"
