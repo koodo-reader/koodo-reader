@@ -183,16 +183,6 @@ class PopupOption extends React.Component<PopupOptionProps> {
 
     this.props.handleMenuMode("assistant");
     this.props.handleOpenMenu(true);
-    setTimeout(() => {
-      let textAreaElement = document.querySelector(
-        "#trans-add-content-box"
-      ) as HTMLTextAreaElement;
-      console.log(textAreaElement, "textAreaElement");
-      if (textAreaElement) {
-        textAreaElement.value = text;
-        textAreaElement.dispatchEvent(new Event("input", { bubbles: true }));
-      }
-    }, 1000);
   };
 
   handleOpenPopupOptionDialog = () => {
