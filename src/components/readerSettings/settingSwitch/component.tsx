@@ -264,6 +264,14 @@ class SettingSwitch extends React.Component<
             ></span>
           </span>
         </div>
+        <p
+          className="setting-option-subtitle"
+          style={{ marginLeft: "20px", marginRight: "20px" }}
+        >
+          <Trans>
+            {"Add definition next to the English, Chinese, Japanese words"}
+          </Trans>
+        </p>
         {this.state.isWordDefinition &&
           (this.state.wordDefinitionLang === "zh" ||
             this.state.wordDefinitionLang === "ja" ||

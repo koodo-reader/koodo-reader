@@ -5,6 +5,7 @@ import {
   handleCurrentChapter,
   handleCurrentChapterIndex,
 } from "../../store/actions";
+import { withTranslation } from "react-i18next";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
@@ -24,4 +25,7 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = { handleCurrentChapter, handleCurrentChapterIndex };
-export default connect(mapStateToProps, actionCreator)(Background as any);
+export default connect(
+  mapStateToProps,
+  actionCreator
+)(withTranslation()(Background) as any);

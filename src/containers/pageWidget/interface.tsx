@@ -15,6 +15,7 @@ export interface BackgroundProps {
   isShowPageBorder: boolean;
   textOrientation: string;
   backgroundColor: string;
+  t: (title: string) => string;
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
 }
