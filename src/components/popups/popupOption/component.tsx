@@ -181,6 +181,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     const text = getSelection(this.props.currentBook.format);
     if (!text) return;
 
+    this.props.handleQuoteText(text);
     this.props.handleMenuMode("assistant");
     this.props.handleOpenMenu(true);
   };

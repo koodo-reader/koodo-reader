@@ -16,6 +16,9 @@ export function handleHighlights(highlights: NoteModel[]) {
 export function handleOriginalText(originalText: string) {
   return { type: "HANDLE_ORIGINAL_TEXT", payload: originalText };
 }
+export function handleQuoteText(quoteText: string) {
+  return { type: "HANDLE_QUOTE_TEXT", payload: quoteText };
+}
 export function handleOriginalSentence(originalSentence: string) {
   return { type: "HANDLE_ORIGINAL_SENTENCE", payload: originalSentence };
 }
