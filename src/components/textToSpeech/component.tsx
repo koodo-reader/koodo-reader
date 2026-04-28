@@ -191,9 +191,6 @@ class TextToSpeech extends React.Component<
       this.handleSpeechAutoStartRequest();
     }
   }
-  normalizeSpeechText = (text: string) => {
-    return text.replace(/\s+/g, " ").trim();
-  };
   clearSpeechStartState = () => {
     if (this.props.speechStartText) {
       this.props.handleSpeechStartText("");
@@ -203,26 +200,12 @@ class TextToSpeech extends React.Component<
     }
   };
   getSpeechStartIndex = (nodeTextList: string[]) => {
-    const speechStartText = this.normalizeSpeechText(
-      this.props.speechStartText
-    );
+    const speechStartText = this.props.speechStartText;
+
     if (!speechStartText) return -1;
 
-    const candidates = [speechStartText];
-    if (speechStartText.length > 40) {
-      candidates.push(speechStartText.slice(0, 40));
-      candidates.push(speechStartText.slice(-40));
-    }
-    console.log(nodeTextList, candidates, "candidates");
-
     return nodeTextList.findIndex((item) => {
-      const normalizedItem = this.normalizeSpeechText(item);
-      return candidates.some((candidate) => {
-        return (
-          normalizedItem.includes(candidate) ||
-          candidate.includes(normalizedItem)
-        );
-      });
+      return item.includes(speechStartText) || speechStartText.includes(item);
     });
   };
   handleSpeechAutoStartRequest = async () => {
