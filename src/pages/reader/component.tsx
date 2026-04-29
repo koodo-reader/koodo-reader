@@ -23,6 +23,7 @@ import {
   updateDiscordPresence,
   clearDiscordPresence,
 } from "../../utils/reader/discordRPC";
+import SupportDialog from "../../components/dialogs/supportDialog";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -716,6 +717,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
         {this.props.currentBook.key && <Viewer {...(renditionProps as any)} />}
         {this.props.isConvertOpen && <ConvertDialog />}
+        <SupportDialog />
         {this.props.isOpenPopupOptionDialog && (
           <>
             <PopupOptionDialog />

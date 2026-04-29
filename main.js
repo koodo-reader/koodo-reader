@@ -315,7 +315,7 @@ const createMainWin = () => {
       let bounds = mainWin.getBounds();
       const currentDisplay = screen.getDisplayMatching(bounds);
       const primaryDisplay = screen.getPrimaryDisplay();
-      if (bounds.width > 0 && bounds.height > 0) {
+      if (bounds.width > 300 && bounds.height > 100) {
         store.set({
           mainWinWidth: bounds.width,
           mainWinHeight: bounds.height,
@@ -539,7 +539,7 @@ const createMainWin = () => {
         let bounds = readerWindow.getBounds();
         const currentDisplay = screen.getDisplayMatching(bounds);
         const primaryDisplay = screen.getPrimaryDisplay();
-        if (bounds.width > 0 && bounds.height > 0) {
+        if (bounds.width > 300 && bounds.height > 100) {
           store.set({
             windowWidth: bounds.width,
             windowHeight: bounds.height,
@@ -1179,12 +1179,25 @@ const createMainWin = () => {
       }
 
       readerWindow.loadURL(store.get("url"));
+      readerWindowReadyToClose = false;
       readerWindow.on("close", (event) => {
+        // --- Step 1: ask renderer to flush reading-time data first ---
+        if (
+          !readerWindowReadyToClose &&
+          readerWindow &&
+          !readerWindow.isDestroyed()
+        ) {
+          event.preventDefault();
+          readerWindow.webContents.send("before-reader-close");
+          return;
+        }
+        // --- Step 2: actual close logic (reached after renderer replied) ---
         if (!readerWindow.isDestroyed()) {
           let bounds = readerWindow.getBounds();
           const currentDisplay = screen.getDisplayMatching(bounds);
           const primaryDisplay = screen.getPrimaryDisplay();
-          if (bounds.width > 0 && bounds.height > 0) {
+          console.log(bounds, "boundsss");
+          if (bounds.width > 300 && bounds.height > 100) {
             store.set({
               windowWidth: bounds.width,
               windowHeight: bounds.height,
@@ -1215,6 +1228,13 @@ const createMainWin = () => {
           } catch (e) {
             console.warn("Failed to clear Discord activity:", e.message);
           }
+        }
+      });
+      // Renderer finished flushing reading-time data — proceed with actual close
+      ipcMain.once("reader-close-ready", () => {
+        if (readerWindow && !readerWindow.isDestroyed()) {
+          readerWindowReadyToClose = true;
+          readerWindow.close();
         }
       });
     }
