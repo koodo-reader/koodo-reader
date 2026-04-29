@@ -290,61 +290,60 @@ class SupportDialog extends React.Component<
                           this.setState({ isExitPro: true });
                         }}
                         className="support-us-need-help"
+                        style={{ marginRight: 10 }}
                       >
                         {this.props.t("Exit Pro")}
                       </div>
-                      {getServerRegion() === "global" && (
-                        <div
-                          onClick={async () => {
-                            toast.loading(
-                              this.props.t("Checking payment status"),
-                              {
-                                id: "check-payment-status",
-                              }
-                            );
-                            let res = await fetchUserInfo();
-                            if (res.code === 200) {
-                              let userInfo = res.data;
-                              if (
-                                userInfo.valid_until <
-                                parseInt(new Date().getTime() / 1000 + "")
-                              ) {
-                                toast.error(
-                                  this.props.t(
-                                    "You haven't upgraded to Pro yet"
-                                  ) +
-                                    "\n" +
-                                    this.props.t(
-                                      "If you purchased a redemption code, please click the redeem button to redeem it, or contact our support team for assistance"
-                                    ),
-                                  {
-                                    id: "check-payment-status",
-                                    duration: 6000,
-                                  }
-                                );
-                              } else {
-                                this.props.handleFetchUserInfo();
-                                toast.success(
-                                  this.props.t("Thanks for your support"),
-                                  {
-                                    id: "check-payment-status",
-                                  }
-                                );
-
-                                this.props.handleShowSupport(false);
-                              }
-                            } else {
-                              toast.error(
-                                this.props.t("Failed to get user info")
-                              );
+                      <div
+                        onClick={async () => {
+                          toast.loading(
+                            this.props.t("Checking payment status"),
+                            {
+                              id: "check-payment-status",
                             }
-                          }}
-                          className="support-us-need-help"
-                          style={{ marginRight: 10 }}
-                        >
-                          {this.props.t("I've paid")}
-                        </div>
-                      )}
+                          );
+                          let res = await fetchUserInfo();
+                          if (res.code === 200) {
+                            let userInfo = res.data;
+                            if (
+                              userInfo.valid_until <
+                              parseInt(new Date().getTime() / 1000 + "")
+                            ) {
+                              toast.error(
+                                this.props.t(
+                                  "You haven't upgraded to Pro yet"
+                                ) +
+                                  "\n" +
+                                  this.props.t(
+                                    "If you purchased a redemption code, please click the redeem button to redeem it, or contact our support team for assistance"
+                                  ),
+                                {
+                                  id: "check-payment-status",
+                                  duration: 6000,
+                                }
+                              );
+                            } else {
+                              this.props.handleFetchUserInfo();
+                              toast.success(
+                                this.props.t("Thanks for your support"),
+                                {
+                                  id: "check-payment-status",
+                                }
+                              );
+
+                              this.props.handleShowSupport(false);
+                            }
+                          } else {
+                            toast.error(
+                              this.props.t("Failed to get user info")
+                            );
+                          }
+                        }}
+                        className="support-us-need-help"
+                        style={{ marginRight: 10, marginLeft: 10 }}
+                      >
+                        {this.props.t("I've paid")}
+                      </div>
                     </div>
                     <div className="support-us-info" style={{ height: 420 }}>
                       <div className="new-version-animation">
