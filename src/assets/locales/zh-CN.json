@@ -729,6 +729,8 @@
   "Reader menu will not be triggered by hovering but clicking on the area": "阅读器菜单不是进入特定区域就触发，而是需要点击相关区域才能触发",
   "Gesture and UI optimization for touch screen": "针对触控屏进行了UI和手势操作的优化",
   "The book that you read from last time will be open automatically when launching": "软件启动时，自动打开上次阅读的图书",
+  "Number parser": "数字目录解析器",
+  "Suitable for novels with number chapter titles, eg. 1, 2, 3": "适用于章节标题为数字的小说，如 1、2、一、二",
   "All the folded content will be expanded in the navigation panel": "自动展开图书的多级目录",
   "Reader window will be maximized to fit the screen when opening a book": "打开图书时，窗口自动最大化",
   "Please upgrade to Pro to unlock more daily free quota or wait until the quota resets. You can also use other TTS voices instead.": "请升级到专业版以解锁更多每日免费额度，或等待额度重置。您也可以使用其他 TTS 语音替代。",

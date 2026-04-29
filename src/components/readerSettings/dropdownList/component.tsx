@@ -1,12 +1,12 @@
 import React from "react";
-import {
-  contentRegxConfig,
-  dropdownList,
-} from "../../../constants/dropdownList";
+import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import { loadFontData, vexComfirmAsync } from "../../../utils/common";
 import toast from "react-hot-toast";
 declare var window: any;
@@ -65,7 +65,10 @@ class DropdownList extends React.Component<
       value: label,
     }));
     this.setState({
-      txtParserOptions: [...contentRegxConfig, ...customParserOptions],
+      txtParserOptions: [
+        ...KookitConfig.ContentRegxConfig,
+        ...customParserOptions,
+      ],
     });
     loadFontData().then((result) => {
       if (!result || result.length === 0) return;

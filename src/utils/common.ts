@@ -31,7 +31,6 @@ import { driveList } from "../constants/driveList";
 import { updateUserConfig } from "./request/user";
 import { languageCNMap, languageENMap } from "../constants/ttsList";
 import { BookHelper } from "../assets/lib/kookit.min";
-import { contentRegxConfig } from "../constants/dropdownList";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -1139,7 +1138,7 @@ export const getParserRegex = (extension: string, bookKey?: string) => {
     }
     let txtParsers: any[] = [
       ...Object.values(ConfigService.getAllObjectConfig("txtParsers")),
-      ...contentRegxConfig,
+      ...KookitConfig.ContentRegxConfig,
     ];
     let txtParser = txtParsers.find(
       (parser) => parser.value === defaultTxtParser

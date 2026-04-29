@@ -2,8 +2,10 @@ import React from "react";
 import { SettingInfoProps, SettingInfoState, TxtParser } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { contentRegxConfig } from "../../../constants/dropdownList";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 
 class ChapterSetting extends React.Component<
   SettingInfoProps,
@@ -195,7 +197,7 @@ class ChapterSetting extends React.Component<
           <Trans>Built-in parsers</Trans>
         </div>
 
-        {contentRegxConfig.map((parser) => (
+        {KookitConfig.ContentRegxConfig.map((parser) => (
           <div
             className="setting-dialog-new-title"
             key={parser.label}
