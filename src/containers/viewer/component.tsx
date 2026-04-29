@@ -453,6 +453,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       ) {
         return;
       }
+      if (
+        flattenChapters.length > 0 &&
+        flattenChapters[0].label === "Chapter 0"
+      ) {
+        return;
+      }
       setTimeout(async () => {
         await rendition.refreshContent();
         let chapters = rendition.getChapter();
