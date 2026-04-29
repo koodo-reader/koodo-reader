@@ -384,17 +384,6 @@ class Stats extends React.Component<StatsProps, StatsState> {
               ))}
             </div>
 
-            {/* Heatmap */}
-            <div
-              className="stats-heatmap-wrapper"
-              style={{ backgroundColor: cardBg }}
-            >
-              <div className="stats-section-title">
-                <Trans>Reading Activity</Trans>
-              </div>
-              {this.renderHeatmap()}
-            </div>
-
             {/* Chart */}
             <div
               className="stats-chart-wrapper"
@@ -557,6 +546,17 @@ class Stats extends React.Component<StatsProps, StatsState> {
                   </AreaChart>
                 )}
               </ResponsiveContainer>
+            </div>
+
+            {/* Heatmap */}
+            <div
+              className="stats-heatmap-wrapper"
+              style={{ backgroundColor: cardBg }}
+            >
+              <div className="stats-section-title">
+                <Trans>Reading Activity</Trans>
+              </div>
+              {this.renderHeatmap()}
             </div>
           </>
         )}

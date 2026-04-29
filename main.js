@@ -33,6 +33,7 @@ let linkWindow;
 let mainView;
 //multi tab
 // let mainViewList = []
+let readerWindowReadyToClose = false;
 let chatWindow;
 let dbConnection = {};
 let syncUtilCache = {};
@@ -521,7 +522,7 @@ const createMainWin = () => {
     if (store.get("isAlwaysOnTop") === "yes") {
       readerWindow.setAlwaysOnTop(true);
     }
-    let readerWindowReadyToClose = false;
+    readerWindowReadyToClose = false;
     readerWindow.on("close", (event) => {
       // --- Step 1: ask renderer to flush reading-time data first ---
       if (
@@ -1114,7 +1115,7 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("exit-fullscreen", () => {
-    if (readerWindow) {
+    if (readerWindow && !readerWindow.isDestroyed()) {
       readerWindow.setFullScreen(false);
       console.info("exit full");
     }
@@ -1149,6 +1150,7 @@ const createMainWin = () => {
       console.info(powerSaveBlocker.isStarted(id));
     }
     if (readerWindow && !readerWindow.isDestroyed()) {
+      readerWindowReadyToClose = true;
       readerWindow.close();
       if (store.get("isMergeWord") === "yes") {
         delete options.backgroundColor;
