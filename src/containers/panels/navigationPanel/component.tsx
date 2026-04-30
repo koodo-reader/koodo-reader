@@ -116,7 +116,17 @@ class NavigationPanel extends React.Component<
               );
             }}
           >
-            {Parser(DOMPurify.sanitize(item.excerpt))}
+            <div>{Parser(DOMPurify.sanitize(item.excerpt))}</div>
+            <div
+              style={{
+                textAlign: "right",
+                fontSize: "15px",
+                marginTop: "5px",
+                opacity: 0.7,
+              }}
+            >
+              {JSON.parse(item.cfi).chapterTitle}
+            </div>
           </li>
         );
       });
