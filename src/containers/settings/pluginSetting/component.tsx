@@ -336,7 +336,7 @@ class SettingDialog extends React.Component<
                       } setting-plugin-icon`}
                     ></span>
                     <span className="setting-plugin-name">
-                      {this.props.t(item.plugin.displayName)}
+                      {this.props.t(item.name)}
                     </span>
                   </span>
                   <span
