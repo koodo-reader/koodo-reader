@@ -19,6 +19,7 @@ const log = require("electron-log/main");
 const os = require("os");
 const store = new Store();
 const fs = require("fs");
+const JSZip = require("jszip");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 const packageJson = require("./package.json");
@@ -197,6 +198,116 @@ const removePickerUtil = (config) => {
   if (pickerUtilCache[config.service]) {
     pickerUtilCache[config.service] = null;
   }
+};
+const addDirectoryToZip = async (zip, sourceDir, zipDir) => {
+  const entries = await fs.promises.readdir(sourceDir, { withFileTypes: true });
+
+  if (entries.length === 0) {
+    zip.file(zipDir, null, { dir: true, createFolders: true });
+    return;
+  }
+
+  for (const entry of entries) {
+    const sourcePath = path.join(sourceDir, entry.name);
+    const zipPath = path.posix.join(zipDir, entry.name);
+
+    if (entry.isDirectory()) {
+      await addDirectoryToZip(zip, sourcePath, zipPath);
+      continue;
+    }
+
+    if (!entry.isFile()) {
+      continue;
+    }
+
+    const stats = await fs.promises.stat(sourcePath);
+    zip.file(zipPath, fs.createReadStream(sourcePath), {
+      binary: true,
+      createFolders: true,
+      date: stats.mtime,
+    });
+  }
+};
+const createBackupArchive = async (config) => {
+  const { dataPath, targetPath, fileName, databaseList = [] } = config;
+  const destinationPath = path.join(targetPath, fileName);
+  const tempPath = destinationPath + ".tmp";
+  const zip = new JSZip();
+
+  await fs.promises.mkdir(targetPath, { recursive: true });
+
+  if (fs.existsSync(tempPath)) {
+    await fs.promises.unlink(tempPath);
+  }
+
+  const directories = [
+    { source: path.join(dataPath, "book"), target: "book" },
+    { source: path.join(dataPath, "cover"), target: "cover" },
+  ];
+  for (const directory of directories) {
+    if (fs.existsSync(directory.source)) {
+      await addDirectoryToZip(zip, directory.source, directory.target);
+    }
+  }
+
+  const configFiles = ["config.json", "sync.json"];
+  for (const configFile of configFiles) {
+    const sourcePath = path.join(dataPath, "config", configFile);
+    if (!fs.existsSync(sourcePath)) {
+      continue;
+    }
+    const stats = await fs.promises.stat(sourcePath);
+    zip.file(path.posix.join("config", configFile), fs.createReadStream(sourcePath), {
+      binary: true,
+      createFolders: true,
+      date: stats.mtime,
+    });
+  }
+
+  for (const dbName of databaseList) {
+    const sourcePath = path.join(dataPath, "config", `${dbName}.db`);
+    if (!fs.existsSync(sourcePath)) {
+      continue;
+    }
+    const stats = await fs.promises.stat(sourcePath);
+    zip.file(path.posix.join("config", `${dbName}.db`), fs.createReadStream(sourcePath), {
+      binary: true,
+      createFolders: true,
+      date: stats.mtime,
+    });
+  }
+
+  await new Promise((resolve, reject) => {
+    const output = fs.createWriteStream(tempPath);
+    const stream = zip.generateNodeStream({
+      type: "nodebuffer",
+      streamFiles: true,
+      compression: "DEFLATE",
+      compressionOptions: { level: 6 },
+    });
+
+    const handleError = async (error) => {
+      output.destroy();
+      if (fs.existsSync(tempPath)) {
+        try {
+          await fs.promises.unlink(tempPath);
+        } catch (_) {}
+      }
+      reject(error);
+    };
+
+    output.on("close", resolve);
+    output.on("error", handleError);
+    stream.on("error", handleError);
+    stream.pipe(output);
+  });
+
+  if (fs.existsSync(destinationPath)) {
+    await fs.promises.unlink(destinationPath);
+  }
+
+  await fs.promises.rename(tempPath, destinationPath);
+  return destinationPath;
 };
 // Simple encryption function
 const encrypt = (text, key) => {
@@ -695,6 +806,18 @@ const createMainWin = () => {
       properties: ["openFile"],
     });
     return result.filePaths[0];
+  });
+  ipcMain.handle("stream-backup-zip", async (event, config) => {
+    try {
+      await createBackupArchive(config);
+      return { ok: true };
+    } catch (error) {
+      console.error("Failed to create backup archive:", error);
+      return {
+        ok: false,
+        message: error instanceof Error ? error.message : String(error),
+      };
+    }
   });
   ipcMain.handle("encrypt-data", async (event, config) => {
     const { TokenService } =

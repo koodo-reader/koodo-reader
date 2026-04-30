@@ -44,7 +44,10 @@ export const backup = async (service: string): Promise<Boolean> => {
     });
     // 让 UI 有时间渲染 toast
     await new Promise((resolve) => setTimeout(resolve, 100));
-    await backupFromPath(targetPath, fileName);
+    const backupResult = await backupFromPath(targetPath, fileName);
+    if (!backupResult) {
+      return false;
+    }
     if (service === "local") {
       return true;
     } else {
@@ -158,44 +161,37 @@ export const getSnapshots = () => {
 };
 export const backupFromPath = async (targetPath: string, fileName: string) => {
   const path = window.require("path");
-  const AdmZip = window.require("adm-zip");
   const dataPath = getStorageLocation() || "";
-  let zip = new AdmZip();
   const fs = window.require("fs");
+  const { ipcRenderer } = window.require("electron");
   if (!fs.existsSync(path.join(targetPath))) {
     fs.mkdirSync(path.join(targetPath), { recursive: true });
   }
   await backupToConfigJson();
-
-  if (fs.existsSync(path.join(dataPath, "book"))) {
-    zip.addLocalFolder(path.join(dataPath, "book"), "book");
-  }
-  if (fs.existsSync(path.join(dataPath, "cover"))) {
-    zip.addLocalFolder(path.join(dataPath, "cover"), "cover");
-  }
-  if (fs.existsSync(path.join(dataPath, "config", "config.json"))) {
-    zip.addLocalFile(path.join(dataPath, "config", "config.json"), "config");
-  }
-  if (fs.existsSync(path.join(dataPath, "config", "sync.json"))) {
-    zip.addLocalFile(path.join(dataPath, "config", "sync.json"), "config");
-  }
+  await backupToSyncJson();
   let databaseList = CommonTool.databaseList;
   for (let i = 0; i < databaseList.length; i++) {
-    await window.require("electron").ipcRenderer.invoke("close-database", {
+    await ipcRenderer.invoke("close-database", {
       dbName: databaseList[i],
       storagePath: getStorageLocation(),
     });
-    if (fs.existsSync(path.join(dataPath, "config", databaseList[i] + ".db"))) {
-      zip.addLocalFile(
-        path.join(dataPath, "config", databaseList[i] + ".db"),
-        "config"
-      );
-    }
   }
 
-  await zip.writeZip(path.join(targetPath, fileName));
+  const result = await ipcRenderer.invoke("stream-backup-zip", {
+    dataPath,
+    targetPath,
+    fileName,
+    databaseList,
+  });
+  if (!result?.ok) {
+    console.error("backup zip stream error:", result?.message);
+    toast.error(result?.message || i18n.t("Backup failed"), {
+      id: "backup",
+    });
+    return false;
+  }
 
-  // return new Blob([zip.toBuffer()], { type: "application/zip" });
+  return true;
 };
 export const backupFromStorage = async () => {
   let zip = new JSZip();
