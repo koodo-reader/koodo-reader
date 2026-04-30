@@ -96,16 +96,16 @@ class AccountSetting extends React.Component<
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Log out successful"));
   };
-  handleAddLoginOption = (event: any) => {
-    if (!event.target.value) {
+  handleAddLoginOption = (value: string) => {
+    if (!value) {
       return;
     }
-    this.setState({ settingLogin: event.target.value });
-    if (event.target.value !== "email") {
+    this.setState({ settingLogin: value });
+    if (value !== "email") {
       let url = LoginHelper.getAuthUrl(
-        event.target.value,
+        value,
         "manual",
-        getServerRegion() === "china" && event.target.value === "microsoft"
+        getServerRegion() === "china" && value === "microsoft"
           ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
           : KookitConfig.ThirdpartyConfig.callbackUrl
       );
@@ -693,26 +693,27 @@ class AccountSetting extends React.Component<
           )}
         </div>
         {!this.props.isAuthed && (
-          <div className="setting-dialog-new-title">
-            <Trans>Select login method</Trans>
-            <select
-              name=""
-              className="lang-setting-dropdown"
-              onChange={this.handleAddLoginOption}
-            >
-              {[{ label: "Please select", value: "" }, ...loginList].map(
-                (item) => (
-                  <option
-                    value={item.value}
+          <>
+            <div className="setting-dialog-new-title">
+              <Trans>Select login method</Trans>
+            </div>
+            <div>
+              {loginList.map((item) => {
+                return (
+                  <div
                     key={item.value}
-                    className="lang-setting-option"
+                    onClick={() => {
+                      console.log(item);
+                      this.handleAddLoginOption(item.value);
+                    }}
                   >
-                    {this.props.t(item.label)}
-                  </option>
-                )
-              )}
-            </select>
-          </div>
+                    <span className={item.icon}></span>
+                    <span>{this.props.t(item.label)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
         {!this.props.isAuthed && (
           <>
@@ -760,9 +761,7 @@ class AccountSetting extends React.Component<
                       (item) => item.provider === login.value
                     )
                   ) {
-                    this.handleAddLoginOption({
-                      target: { value: login.value },
-                    });
+                    this.handleAddLoginOption(login.value);
                   }
                 }}
               >
