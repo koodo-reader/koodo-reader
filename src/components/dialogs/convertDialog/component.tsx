@@ -105,7 +105,12 @@ class ConvertDialog extends React.Component<
           onMouseEnter={() => {
             this.props.handleConvertDialog(true);
           }}
-          style={{ right: "20px", left: "auto", top: "50px", width: "240px" }}
+          style={{
+            left: "auto",
+            top: "50px",
+            width: "240px",
+            right: this.props.isSettingLocked ? 325 : 20,
+          }}
         >
           <ul className="sort-by-category">
             {this.renderSwitchOption([

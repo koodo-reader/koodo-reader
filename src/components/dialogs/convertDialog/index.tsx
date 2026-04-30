@@ -13,6 +13,7 @@ const mapStateToProps = (state: stateType) => {
     isConvertOpen: state.reader.isConvertOpen,
     isAuthed: state.manager.isAuthed,
     currentBook: state.book.currentBook,
+    isSettingLocked: state.reader.isSettingLocked,
   };
 };
 const actionCreator = {
