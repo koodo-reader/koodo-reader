@@ -112,6 +112,34 @@
   margin-top: 30px;
   text-align: center;
 }
+.account-login-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 6px 25px 0;
+  margin-left: 150px;
+  margin-right: 150px;
+}
+.account-login-option {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+  font-size: 15px;
+}
+.account-login-option-icon {
+  line-height: 1;
+  flex-shrink: 0;
+}
+.account-login-option-label {
+  line-height: 1.2;
+}
 .setting-dialog-list {
   font-size: 15px;
   line-height: 18px;

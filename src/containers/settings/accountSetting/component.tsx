@@ -697,18 +697,23 @@ class AccountSetting extends React.Component<
             <div className="setting-dialog-new-title">
               <Trans>Select login method</Trans>
             </div>
-            <div>
+            <div className="account-login-grid">
               {loginList.map((item) => {
                 return (
                   <div
+                    className="account-login-option"
                     key={item.value}
                     onClick={() => {
-                      console.log(item);
                       this.handleAddLoginOption(item.value);
                     }}
                   >
-                    <span className={item.icon}></span>
-                    <span>{this.props.t(item.label)}</span>
+                    <span
+                      className={item.icon + " account-login-option-icon"}
+                      style={{ fontSize: item.fontsize }}
+                    ></span>
+                    <span className="account-login-option-label">
+                      {this.props.t(item.label)}
+                    </span>
                   </div>
                 );
               })}
