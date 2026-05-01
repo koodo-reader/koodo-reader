@@ -47,6 +47,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         res = await checkDeveloperUpdate();
       }
       const newVersion = res.version;
+      const stableVersion = res.stable_version || "1.0.0";
       await sleep(500);
       if (
         res.stable === "no" &&
@@ -55,6 +56,9 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
         return;
       }
       if ((process as any).windowsStore) {
+        return;
+      }
+      if (stableVersion === packageInfo.version) {
         return;
       }
       if (compareVersions(newVersion, packageInfo.version) > 0) {
