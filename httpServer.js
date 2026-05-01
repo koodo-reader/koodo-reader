@@ -31,6 +31,14 @@ const VALID_CREDENTIALS = {
   password: SERVER_PASSWORD,
 };
 
+// CORS 允许的来源列表（逗号分隔）。默认不允许任何跨域来源，
+// 仅允许同源（无 Origin 头）请求，以避免 CSRF/凭据滥用。
+// 例如：ALLOWED_ORIGINS="https://reader.example.com,https://app.example.com"
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter((o) => o.length > 0);
+
 // 验证密码来源
 if (getDockerSecret(SERVER_PASSWORD_FILE)) {
   console.info("Using password from Docker Secret");
@@ -48,6 +56,13 @@ if (!process.env.SERVER_USERNAME) {
   );
 }
 
+if (ALLOWED_ORIGINS.length === 0) {
+  console.warn(
+    "Warning: No ALLOWED_ORIGINS configured. Cross-origin requests will be denied. " +
+      "Set ALLOWED_ORIGINS to a comma-separated list of trusted origins if needed."
+  );
+}
+
 // 检查服务器是否启用
 if (!SERVER_ENABLED) {
   console.info(
@@ -61,18 +76,45 @@ if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
-const server = http.createServer((req, res) => {
-  // 设置CORS头部
-  res.setHeader("Access-Control-Allow-Origin", "*");
+// 设置安全的 CORS 头部：
+// - 仅当请求 Origin 在白名单中时回显该 Origin，并允许凭据
+// - 否则不发送 ACAO 头，浏览器会阻止跨域响应读取
+// 永远不会同时使用通配符 "*" 与 Allow-Credentials: true。
+function applyCorsHeaders(req, res) {
+  const origin = req.headers["origin"];
+  res.setHeader("Vary", "Origin");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    return true;
+  }
+  return false;
+}
+
+const server = http.createServer((req, res) => {
+  const origin = req.headers["origin"];
+  const corsAllowed = applyCorsHeaders(req, res);
 
   // 处理预检请求
   if (req.method === "OPTIONS") {
-    res.writeHead(200);
+    if (origin && !corsAllowed) {
+      res.writeHead(403, { "Content-Type": "text/plain" });
+      return res.end("Origin not allowed");
+    }
+    res.writeHead(204);
     return res.end();
   }
+
+  // 对于带 Origin 的实际请求，若不在白名单则拒绝，
+  // 防止凭据被跨站请求滥用 (CSRF / CWE-942)。
+  if (origin && !corsAllowed) {
+    res.writeHead(403, { "Content-Type": "text/plain" });
+    return res.end("Origin not allowed");
+  }
+
   // 认证检查
   if (!authenticate(req)) {
     res.writeHead(401, {
