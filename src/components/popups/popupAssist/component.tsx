@@ -430,7 +430,10 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             style={{ margin: 0, color: "#f16464" }}
             onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
               if (event.target.value === "add-new") {
-                this.setState({ isAddNew: true });
+                this.props.handleOpenMenu(false);
+                this.props.handleMenuMode("");
+                this.props.handleSetting(true);
+                this.props.handleSettingMode("ai");
                 return;
               }
               this.handleChangeAiService(event.target.value);
