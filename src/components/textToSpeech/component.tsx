@@ -594,6 +594,9 @@ class TextToSpeech extends React.Component<
         this.setState({ isAudioOn: false });
         return [];
       }
+      if (nodeTextList.length === 0) {
+        return [];
+      }
       let splitTextList = rawNodeList.flatMap((texts, index) =>
         texts.map((text) => ({ text, index: index }))
       );
