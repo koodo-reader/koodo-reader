@@ -47,6 +47,7 @@ export interface SettingSwitchState {
   isCustomBookCSS: boolean;
   customBookCSS: string;
   isWordDefinition: boolean;
+  isSeperateStyle: boolean;
   wordDefinitionLang: string;
   currentChineseLevel: string;
   currentJapaneseLevel: string;

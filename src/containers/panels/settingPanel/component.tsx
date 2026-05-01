@@ -7,7 +7,10 @@ import ModeControl from "../../../components/readerSettings/modeControl";
 import SettingSwitch from "../../../components/readerSettings/settingSwitch";
 import { SettingPanelProps, SettingPanelState } from "./interface";
 import { Trans } from "react-i18next";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import { sliderConfigs } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
 
@@ -36,53 +39,24 @@ class SettingPanel extends React.Component<
   };
 
   handleClearAllStyle = () => {
-    const styleKeys = [
-      "backgroundColor",
-      "textColor",
-      "fontSize",
-      "margin",
-      "letterSpacing",
-      "paraSpacing",
-      "scale",
-      "brightness",
-      "fontFamily",
-      "subFontFamily",
-      "lineHeight",
-      "textAlign",
-      "textOrientation",
-      "convertChinese",
-      "selectAction",
-      "fullTranslationMode",
-      "readerMode",
-      "pdfReaderMode",
-      "isBold",
-      "isIndent",
-      "isSliding",
-      "isUnderline",
-      "isShadow",
-      "isItalic",
-      "isInvert",
-      "isBionic",
-      "isHyphenation",
-      "isOrphanWidow",
-      "isAllowScript",
-      "isStartFromEven",
-      "isHideBackground",
-      "isHideFooter",
-      "isHideHeader",
-      "isHideAIButton",
-      "isHideScaleButton",
-      "isHidePDFConvertButton",
-      "isHidePageButton",
-      "isHideMenuButton",
-      "isHideAudiobookButton",
-      "isShowPageBorder",
-    ];
-    const readerConfig = JSON.parse(
-      localStorage.getItem("readerConfig") || "{}"
-    );
-    styleKeys.forEach((key) => delete readerConfig[key]);
-    localStorage.setItem("readerConfig", JSON.stringify(readerConfig));
+    if (
+      ConfigService.getAllListConfig("seperateStyleBooks").includes(
+        this.props.currentBook.key
+      )
+    ) {
+      ConfigService.deleteObjectConfig(
+        this.props.currentBook.key,
+        "seperateStyleConfig"
+      );
+      return;
+    } else {
+      const readerConfig = JSON.parse(
+        localStorage.getItem("readerConfig") || "{}"
+      );
+      KookitConfig.StyleKeys.forEach((key) => delete readerConfig[key]);
+      localStorage.setItem("readerConfig", JSON.stringify(readerConfig));
+    }
+
     toast.success(this.props.t("Clear successful"));
     this.props.renderBookFunc();
   };

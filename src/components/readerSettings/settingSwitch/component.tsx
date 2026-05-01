@@ -50,6 +50,9 @@ class SettingSwitch extends React.Component<
       isWordDefinition: ConfigService.getAllListConfig(
         "wordDefinitionBooks"
       ).includes(props.currentBook?.key),
+      isSeperateStyle: ConfigService.getAllListConfig(
+        "seperateStyleBooks"
+      ).includes(props.currentBook?.key),
       wordDefinitionLang: "",
       currentChineseLevel:
         ConfigService.getReaderConfig("currentChineseLevel") || "HSK3",
@@ -64,6 +67,9 @@ class SettingSwitch extends React.Component<
       this.setState({
         isWordDefinition: ConfigService.getAllListConfig(
           "wordDefinitionBooks"
+        ).includes(nextProps.currentBook?.key),
+        isSeperateStyle: ConfigService.getAllListConfig(
+          "seperateStyleBooks"
         ).includes(nextProps.currentBook?.key),
       });
     }
@@ -193,6 +199,54 @@ class SettingSwitch extends React.Component<
             />
           </div>
         )}
+        <div className="single-control-switch-container" key="isSeperateStyle">
+          <span className="single-control-switch-title">
+            <Trans>Enable seperate style for this book</Trans>
+          </span>
+          <span
+            className="single-control-switch"
+            onClick={async () => {
+              const next = !this.state.isSeperateStyle;
+              if (next) {
+                ConfigService.setListConfig(
+                  this.props.currentBook.key,
+                  "seperateStyleBooks"
+                );
+                this.setState({
+                  isSeperateStyle: true,
+                });
+              } else {
+                ConfigService.deleteListConfig(
+                  this.props.currentBook.key,
+                  "seperateStyleBooks"
+                );
+                this.setState({
+                  isSeperateStyle: false,
+                });
+              }
+              toast(this.props.t("Change successful"));
+              this.props.renderBookFunc();
+            }}
+            style={this.state.isSeperateStyle ? {} : { opacity: 0.6 }}
+          >
+            <span
+              className="single-control-button"
+              style={
+                !this.state.isSeperateStyle
+                  ? {
+                      transform: "translateX(0px)",
+                      transition: "transform 0.5s ease",
+                      marginTop: "3px",
+                    }
+                  : {
+                      transform: "translateX(20px)",
+                      transition: "transform 0.5s ease",
+                      marginTop: "3px",
+                    }
+              }
+            ></span>
+          </span>
+        </div>
         <div className="single-control-switch-container" key="isWordDefinition">
           <span className="single-control-switch-title">
             <Trans>Enable word definitions</Trans>
