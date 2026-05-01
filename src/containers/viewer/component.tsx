@@ -204,6 +204,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (this.state.rendition) {
       this.state.rendition.removeContent();
     }
+    if (
+      ConfigService.getAllListConfig("seperateStyleBooks").includes(
+        this.props.currentBook?.key
+      )
+    ) {
+      window.currentBookKey = this.props.currentBook.key;
+    }
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, "zip", path);
     BookUtil.fetchBook(
       isCacheExsit ? "cache-" + key : key,
