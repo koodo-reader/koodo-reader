@@ -655,12 +655,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               data-tooltip-content={this.props.t("Setting")}
               data-tooltip-place="left"
             >
-              <span
-                className="icon-setting setting-icon"
-                style={
-                  this.props.isNewWarning ? { color: "rgb(35, 170, 242)" } : {}
-                }
-              ></span>
+              <span className="icon-setting setting-icon"></span>
             </span>
           </div>
           <div
