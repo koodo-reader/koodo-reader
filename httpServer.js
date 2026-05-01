@@ -94,13 +94,28 @@ function applyCorsHeaders(req, res) {
   return false;
 }
 
+// 计算请求的有效服务端 Origin，用于判断 Origin 头是否表示同源请求。
+// 浏览器在同源的 POST/DELETE/fetch 请求中也会发送 Origin 头，
+// 因此不能仅凭 Origin 头存在就将其视为跨域请求。
+function getServerOrigin(req) {
+  const host = req.headers["host"];
+  if (!host) return null;
+  const scheme =
+    req.socket && req.socket.encrypted
+      ? "https"
+      : (req.headers["x-forwarded-proto"] || "http").split(",")[0].trim();
+  return `${scheme}://${host}`;
+}
+
 const server = http.createServer((req, res) => {
   const origin = req.headers["origin"];
+  const serverOrigin = getServerOrigin(req);
+  const isCrossOrigin = !!origin && origin !== serverOrigin;
   const corsAllowed = applyCorsHeaders(req, res);
 
   // 处理预检请求
   if (req.method === "OPTIONS") {
-    if (origin && !corsAllowed) {
+    if (isCrossOrigin && !corsAllowed) {
       res.writeHead(403, { "Content-Type": "text/plain" });
       return res.end("Origin not allowed");
     }
@@ -108,9 +123,10 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
 
-  // 对于带 Origin 的实际请求，若不在白名单则拒绝，
+  // 对于跨域的实际请求，若来源不在白名单则拒绝，
   // 防止凭据被跨站请求滥用 (CSRF / CWE-942)。
-  if (origin && !corsAllowed) {
+  // 同源请求（包括带 Origin 头的 POST/DELETE）允许通过。
+  if (isCrossOrigin && !corsAllowed) {
     res.writeHead(403, { "Content-Type": "text/plain" });
     return res.end("Origin not allowed");
   }
