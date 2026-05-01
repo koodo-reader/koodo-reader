@@ -257,11 +257,15 @@ const createBackupArchive = async (config) => {
       continue;
     }
     const stats = await fs.promises.stat(sourcePath);
-    zip.file(path.posix.join("config", configFile), fs.createReadStream(sourcePath), {
-      binary: true,
-      createFolders: true,
-      date: stats.mtime,
-    });
+    zip.file(
+      path.posix.join("config", configFile),
+      fs.createReadStream(sourcePath),
+      {
+        binary: true,
+        createFolders: true,
+        date: stats.mtime,
+      }
+    );
   }
 
   for (const dbName of databaseList) {
@@ -270,11 +274,15 @@ const createBackupArchive = async (config) => {
       continue;
     }
     const stats = await fs.promises.stat(sourcePath);
-    zip.file(path.posix.join("config", `${dbName}.db`), fs.createReadStream(sourcePath), {
-      binary: true,
-      createFolders: true,
-      date: stats.mtime,
-    });
+    zip.file(
+      path.posix.join("config", `${dbName}.db`),
+      fs.createReadStream(sourcePath),
+      {
+        binary: true,
+        createFolders: true,
+        date: stats.mtime,
+      }
+    );
   }
 
   await new Promise((resolve, reject) => {
