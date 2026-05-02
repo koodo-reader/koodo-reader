@@ -60,7 +60,7 @@ export const driveList = [
     value: "dubox",
     icon: "icon-dubox",
     isPro: true,
-    support: ["desktop", "phone"],
+    support: ["desktop", "browser", "phone"],
     scoped: false,
   },
 
