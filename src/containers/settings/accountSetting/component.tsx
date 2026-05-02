@@ -112,8 +112,8 @@ class AccountSetting extends React.Component<
       this.handleJump(url);
     }
   };
-  handleDeleteLoginOption = async (event: any) => {
-    if (!event.target.value) {
+  handleDeleteLoginOption = async (targetValue: string) => {
+    if (!targetValue) {
       return;
     }
     if (this.props.loginOptionList.length === 1) {
@@ -125,7 +125,7 @@ class AccountSetting extends React.Component<
     });
     let userRequest = await getUserRequest();
     let response = await userRequest.removeLogin({
-      provider: event.target.value,
+      provider: targetValue,
     });
     if (response.code === 200) {
       toast.success(this.props.t("Removal successful"), {
@@ -805,9 +805,7 @@ class AccountSetting extends React.Component<
                     }}
                     onClick={(event) => {
                       event.stopPropagation();
-                      this.handleDeleteLoginOption({
-                        target: { value: login.value },
-                      });
+                      this.handleDeleteLoginOption(login.value);
                     }}
                   ></span>
                 ) : (
