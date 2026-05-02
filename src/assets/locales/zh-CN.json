@@ -997,9 +997,9 @@
   "Force path style": "强制路径风格",
   "Enter 1 to enable, leave empty to disable. Required for some S3 storage services that are not compatible with virtual host style URL": "输入 1 启用，留空禁用。某些不兼容虚拟主机风格 URL 的 S3 存储服务需要启用",
   "AI assistance model": "AI 辅助模型",
-  "Custom AI Translation": "自定义 AI 翻译",
-  "Custom AI Dictionary": "自定义 AI 词典",
-  "Custom AI Assistance": "自定义 AI 辅助",
+  "Custom AI Translation": "自定义AI翻译",
+  "Custom AI Dictionary": "自定义AI词典",
+  "Custom AI Assistance": "自定义AI辅助",
   "Show number of books in each shelf": "显示每个书架中的图书数量",
   "Model assignment": "模型分配"
 }
