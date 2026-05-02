@@ -22,6 +22,9 @@ import { marked } from "marked";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
+  private aiTextAccumulator: string = "";
+  private updateInterval: ReturnType<typeof setInterval> | null = null;
+
   constructor(props: PopupDictProps) {
     super(props);
     this.state = {
@@ -36,6 +39,27 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       aiAnswer: "",
       isAiWaiting: false,
     };
+  }
+
+  private startUpdateInterval() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+    this.updateInterval = setInterval(() => {
+      if (this.aiTextAccumulator) {
+        this.setState({ aiAnswer: this.aiTextAccumulator });
+      }
+    }, 150);
+  }
+
+  private stopUpdateInterval() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
+    }
+    if (this.aiTextAccumulator) {
+      this.setState({ aiAnswer: this.aiTextAccumulator });
+    }
   }
   componentDidMount() {
     this.handleLookUp();
@@ -89,7 +113,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           (item) => item.key === "custom-ai-dict-plugin"
         );
         if (!plugin) return;
-        let isFirst = true;
         let targetLang =
           this.state.dictTarget ||
           ConfigService.getReaderConfig("dictTarget") ||
@@ -102,7 +125,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         systemPrompt = systemPrompt.replace("{word}", text);
         systemPrompt = systemPrompt.replace("{to}", targetLang);
         let config: any = plugin.config || {};
+        this.aiTextAccumulator = "";
         this.setState({ aiAnswer: "", isAiWaiting: true });
+        this.startUpdateInterval();
         await chatStream(
           config.endpoint,
           config.providerId,
@@ -112,24 +137,18 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           [],
           (result) => {
             if (result && result.done) {
-              this.setState({ isAiWaiting: false });
               return;
             }
             if (result && result.text) {
-              if (isFirst) {
-                this.setState({
-                  aiAnswer: result.text,
-                  isAiWaiting: false,
-                });
-                isFirst = false;
-              } else {
-                this.setState({
-                  aiAnswer: this.state.aiAnswer + result.text,
-                });
+              if (!this.aiTextAccumulator) {
+                this.setState({ isAiWaiting: false });
               }
+              this.aiTextAccumulator += result.text;
             }
           }
         );
+        this.stopUpdateInterval();
+        this.aiTextAccumulator = "";
         this.setState({ isAiWaiting: false, dictText: " " });
         return;
       } else if (
@@ -216,8 +235,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   };
   handleDictionaryStream = async (text: string, isFullAnalysis: boolean) => {
     try {
+      this.aiTextAccumulator = "";
       this.setState({ aiAnswer: "", isAiWaiting: true });
-      let isFirst = true;
+      this.startUpdateInterval();
       let res = await getDictionaryStream(
         text,
         "auto",
@@ -226,19 +246,21 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         isFullAnalysis,
         (result) => {
           if (result && result.text) {
-            if (isFirst) {
-              this.setState({ aiAnswer: result.text, isAiWaiting: false });
-              isFirst = false;
-            } else {
-              this.setState({ aiAnswer: this.state.aiAnswer + result.text });
+            if (!this.aiTextAccumulator) {
+              this.setState({ isAiWaiting: false });
             }
+            this.aiTextAccumulator += result.text;
           }
         }
       );
+      this.stopUpdateInterval();
+      this.aiTextAccumulator = "";
       if (res && res.done) {
         this.setState({ isAiWaiting: false });
       }
     } catch (error) {
+      this.stopUpdateInterval();
+      this.aiTextAccumulator = "";
       this.setState({ isAiWaiting: false });
       console.error(error);
     }

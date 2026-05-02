@@ -14,6 +14,9 @@ import { chatStream } from "../../../utils/request/common";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 declare var window: any;
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
+  private textAccumulator: string = "";
+  private updateInterval: ReturnType<typeof setInterval> | null = null;
+
   constructor(props: PopupTransProps) {
     super(props);
     this.state = {
@@ -25,6 +28,27 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       isAddNew: false,
       isFinishOutput: false,
     };
+  }
+
+  private startUpdateInterval() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+    this.updateInterval = setInterval(() => {
+      if (this.textAccumulator) {
+        this.setState({ translatedText: this.textAccumulator });
+      }
+    }, 150);
+  }
+
+  private stopUpdateInterval() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
+    }
+    if (this.textAccumulator) {
+      this.setState({ translatedText: this.textAccumulator });
+    }
   }
   async componentDidMount() {
     let originalText = this.props.originalText.replace(/(\r\n|\n|\r)/gm, "");
@@ -107,7 +131,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       if (!plugin) {
         return;
       }
-      let isFirst = true;
       let targetLang =
         ConfigService.getReaderConfig("transTarget") ||
         getDefaultTransTarget(plugin.langList);
@@ -124,6 +147,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       systemPrompt = systemPrompt.replace("{to}", targetLang);
       systemPrompt = systemPrompt.replace("{text}", text);
       let config: any = plugin.config || {};
+      this.textAccumulator = "";
+      this.startUpdateInterval();
       await chatStream(
         config.endpoint,
         config.providerId,
@@ -133,23 +158,15 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         [],
         (result) => {
           if (result && result.done) {
-            this.setState({ isFinishOutput: true });
             return;
           }
           if (result && result.text) {
-            if (isFirst) {
-              this.setState({
-                translatedText: result.text,
-              });
-              isFirst = false;
-            } else {
-              this.setState({
-                translatedText: this.state.translatedText + result.text,
-              });
-            }
+            this.textAccumulator += result.text;
           }
         }
       );
+      this.stopUpdateInterval();
+      this.textAccumulator = "";
       this.setState({ isFinishOutput: true });
     } else if (
       this.props.isAuthed &&
@@ -165,13 +182,14 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       if (!plugin) {
         return;
       }
-      let isFirst = true;
       let targetLang =
         ConfigService.getReaderConfig("transTarget") ||
         getDefaultTransTarget(plugin.langList);
       if (targetLang === "Traditional Chinese") {
         targetLang = "繁体中文";
       }
+      this.textAccumulator = "";
+      this.startUpdateInterval();
       await getTransStream(
         text,
         ConfigService.getReaderConfig("transSource") || "Automatic",
@@ -179,23 +197,15 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           getDefaultTransTarget(plugin.langList),
         (result) => {
           if (result && result.done) {
-            this.setState({ isFinishOutput: true });
             return;
           }
           if (result && result.text) {
-            if (isFirst) {
-              this.setState({
-                translatedText: result.text,
-              });
-              isFirst = false;
-            } else {
-              this.setState({
-                translatedText: this.state.translatedText + result.text,
-              });
-            }
+            this.textAccumulator += result.text;
           }
         }
       );
+      this.stopUpdateInterval();
+      this.textAccumulator = "";
       this.setState({ isFinishOutput: true });
     }
   };
