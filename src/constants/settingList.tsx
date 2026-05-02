@@ -95,6 +95,12 @@ export const generalSettingList = [
     title: "Open url with built-in browser",
     propName: "isUseBuiltIn",
   },
+  {
+    isElectron: false,
+    title: "Merge Notes and Highlights",
+    desc: "Merge the notes and highlights sections in the sidebar into just Notes",
+    propName: "isMergeNotes",
+  },
 ];
 export const appearanceSettingList = [
   {

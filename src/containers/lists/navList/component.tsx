@@ -88,11 +88,34 @@ class NavList extends React.Component<NavListProps, NavListState> {
     notes: Note[],
     highlights: Note[]
   ) {
+    const isMergeNotes =
+      ConfigService.getReaderConfig("isMergeNotes") === "yes";
+
     if (currentTab === "bookmarks") {
       this.setState({
         currentData: bookmarks
           .filter((item) => item.bookKey === currentBook.key)
           .reverse(),
+      });
+    } else if (currentTab === "notes" && isMergeNotes) {
+      let noteList = notes.filter((item) => item.bookKey === currentBook.key);
+      let highlightList = highlights.filter(
+        (item) => item.bookKey === currentBook.key
+      );
+      let combined = [...noteList, ...highlightList];
+      combined.sort(
+        (a: any, b: any) => Number(b.percentage) - Number(a.percentage)
+      );
+
+      let fullData: any[] = [];
+      for (let i = 0; i < combined.length; i++) {
+        let record = await DatabaseService.getRecord(combined[i].key, "notes");
+        if (record) {
+          fullData.push(record);
+        }
+      }
+      this.setState({
+        currentData: fullData,
       });
     } else if (currentTab === "notes") {
       let noteList = notes.filter((item) => item.bookKey === currentBook.key);

@@ -49,5 +49,6 @@ export interface SettingInfoState {
   isDisablePDFCover: boolean;
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
+  isMergeNotes: boolean;
   startupShelf: string;
 }

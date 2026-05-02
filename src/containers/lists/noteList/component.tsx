@@ -7,6 +7,7 @@ import Empty from "../../emptyPage";
 import { Trans } from "react-i18next";
 import ConfigUtil from "../../../utils/file/configUtil";
 import BookUtil from "../../../utils/file/bookUtil";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import Note from "../../../models/Note";
 
 class NoteList extends React.Component<NoteListProps, NoteListState> {
@@ -19,20 +20,46 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       cardList: [],
     };
   }
+  getDisplayList = (notes: Note[], highlights: Note[], tabMode: string) => {
+    const isMergeNotes =
+      ConfigService.getReaderConfig("isMergeNotes") === "yes";
+    if (tabMode === "note" && isMergeNotes) {
+      let merged = [...notes, ...highlights];
+      let noteSortCodeStr =
+        ConfigService.getReaderConfig("noteSortCode") ||
+        '{"sort":1,"order":2}';
+      let noteSortCode = JSON.parse(noteSortCodeStr);
+      let sortField = noteSortCode.sort === 1 ? "key" : "percentage";
+      let sortOrder = noteSortCode.order === 1 ? "ASC" : "DESC";
+
+      merged.sort((a: any, b: any) => {
+        let valA = Number(a[sortField]);
+        let valB = Number(b[sortField]);
+        if (sortOrder === "ASC") {
+          return valA - valB;
+        } else {
+          return valB - valA;
+        }
+      });
+      return merged;
+    }
+    return tabMode === "note" ? notes : highlights;
+  };
   async UNSAFE_componentWillMount() {
     this.props.handleFetchNotes();
 
     this.setState({
-      cardList:
-        this.props.tabMode === "note"
-          ? this.props.notes
-          : this.props.highlights,
+      cardList: this.getDisplayList(
+        this.props.notes,
+        this.props.highlights,
+        this.props.tabMode
+      ),
     });
   }
   async componentDidMount() {
     this.props.handleFetchNotes();
   }
-  async componentWillReceiveProps(
+  async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<NoteListProps>,
     nextContext: any
   ) {
@@ -41,11 +68,18 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
       nextProps.highlights !== this.props.highlights
     ) {
       this.handleNamesMap(
-        nextProps.tabMode === "note" ? nextProps.notes : nextProps.highlights
+        this.getDisplayList(
+          nextProps.notes,
+          nextProps.highlights,
+          nextProps.tabMode
+        )
       );
       this.setState({
-        cardList:
-          nextProps.tabMode === "note" ? nextProps.notes : nextProps.highlights,
+        cardList: this.getDisplayList(
+          nextProps.notes,
+          nextProps.highlights,
+          nextProps.tabMode
+        ),
       });
     }
   }
@@ -59,16 +93,23 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     if (tag.length === 0) {
       this.setState({
         tag: [],
-        cardList:
-          this.props.tabMode === "note"
-            ? this.props.notes
-            : this.props.highlights,
+        cardList: this.getDisplayList(
+          this.props.notes,
+          this.props.highlights,
+          this.props.tabMode
+        ),
       });
       return;
     }
+    const isMergeNotes =
+      ConfigService.getReaderConfig("isMergeNotes") === "yes";
     let cardList = await ConfigUtil.getNoteWithTags(tag);
     cardList = cardList.filter((note) =>
-      this.props.tabMode === "note" ? note.notes !== "" : note.notes === ""
+      isMergeNotes && this.props.tabMode === "note"
+        ? true
+        : this.props.tabMode === "note"
+          ? note.notes !== ""
+          : note.notes === ""
     );
     this.setState({ tag, cardList });
   };
@@ -105,20 +146,25 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
                 name=""
                 className="lang-setting-dropdown"
                 onChange={async (event) => {
+                  const isMergeNotes =
+                    ConfigService.getReaderConfig("isMergeNotes") === "yes";
                   this.setState({
                     currentSelectedBook: event.target.value,
                     cardList: await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
                       event.target.value,
-                      this.props.tabMode
+                      isMergeNotes && this.props.tabMode === "note"
+                        ? ""
+                        : this.props.tabMode
                     ),
                   });
                 }}
               >
                 {[
                   { value: "", label: this.props.t("Please select") },
-                  ...(this.props.tabMode === "note"
-                    ? this.props.notes
-                    : this.props.highlights
+                  ...this.getDisplayList(
+                    this.props.notes,
+                    this.props.highlights,
+                    this.props.tabMode
                   )
                     .map((note) => {
                       return {

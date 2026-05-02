@@ -331,19 +331,21 @@ class NavigationPanel extends React.Component<
                 >
                   <Trans>Note</Trans>
                 </span>
-                <span
-                  className="book-bookmark-title"
-                  style={
-                    this.state.currentTab === "highlights"
-                      ? {}
-                      : { opacity: 0.5 }
-                  }
-                  onClick={() => {
-                    this.handleChangeTab("highlights");
-                  }}
-                >
-                  <Trans>Highlight</Trans>
-                </span>
+                {ConfigService.getReaderConfig("isMergeNotes") !== "yes" && (
+                  <span
+                    className="book-bookmark-title"
+                    style={
+                      this.state.currentTab === "highlights"
+                        ? {}
+                        : { opacity: 0.5 }
+                    }
+                    onClick={() => {
+                      this.handleChangeTab("highlights");
+                    }}
+                  >
+                    <Trans>Highlight</Trans>
+                  </span>
+                )}
               </div>
             </div>
             <div className="navigation-body-parent">

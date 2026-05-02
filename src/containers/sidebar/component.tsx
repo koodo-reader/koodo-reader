@@ -87,7 +87,11 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   };
   render() {
     const renderSideMenu = () => {
-      return sideMenu.map((item) => {
+      const isMergeNotes =
+        ConfigService.getReaderConfig("isMergeNotes") === "yes";
+      return sideMenu
+        .filter((item) => !(isMergeNotes && item.mode === "highlight"))
+        .map((item) => {
         return (
           <li
             key={item.name}

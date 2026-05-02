@@ -56,6 +56,7 @@ class GeneralSetting extends React.Component<
         ConfigService.getReaderConfig("isDeleteOriginal") === "yes",
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
+      isMergeNotes: ConfigService.getReaderConfig("isMergeNotes") === "yes",
       startupShelf: ConfigService.getReaderConfig("startupShelf") || "",
     };
   }

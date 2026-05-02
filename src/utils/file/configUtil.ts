@@ -255,20 +255,20 @@ class ConfigUtil {
       let queryString = "";
       let data: any[] = [];
       if (type === "note" && bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes != '' ORDER BY ${sort} ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex, percentage FROM notes WHERE bookKey = ? AND notes != '' ORDER BY ${sort} ${order}`;
         data = [bookKey];
       } else if (type === "highlight" && bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes = '' ORDER BY ${sort} ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex, percentage FROM notes WHERE bookKey = ? AND notes = '' ORDER BY ${sort} ${order}`;
         data = [bookKey];
       } else if (type === "note" && !bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes != '' ORDER BY ${sort} ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex, percentage FROM notes WHERE notes != '' ORDER BY ${sort} ${order}`;
       } else if (type === "highlight" && !bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes = '' ORDER BY ${sort} ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex, percentage FROM notes WHERE notes = '' ORDER BY ${sort} ${order}`;
       } else if (!type && bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? ORDER BY ${sort} ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex, percentage FROM notes WHERE bookKey = ? ORDER BY ${sort} ${order}`;
         data = [bookKey];
       } else {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes ORDER BY ${sort} ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex, percentage FROM notes ORDER BY ${sort} ${order}`;
       }
       const { ipcRenderer } = window.require("electron");
       return await ipcRenderer.invoke("custom-database-command", {
