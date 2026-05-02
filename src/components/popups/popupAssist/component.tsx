@@ -18,6 +18,8 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
   private chatBoxRef: React.RefObject<HTMLDivElement>;
   private textareaRef: React.RefObject<HTMLTextAreaElement>;
   private singleLineScrollHeight: number = 0;
+  private answerTextAccumulator: string = "";
+  private updateInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor(props: PopupAssistProps) {
     super(props);
@@ -34,6 +36,30 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     };
     this.chatBoxRef = React.createRef();
     this.textareaRef = React.createRef();
+  }
+
+  private startUpdateInterval() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+    this.updateInterval = setInterval(() => {
+      if (this.answerTextAccumulator) {
+        this.setState({ answer: this.answerTextAccumulator });
+        if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
+          this.scrollToBottom();
+        }
+      }
+    }, 150);
+  }
+
+  private stopUpdateInterval(finalAnswer?: string) {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
+    }
+    if (finalAnswer !== undefined) {
+      this.setState({ answer: finalAnswer });
+    }
   }
   componentDidMount(): void {
     if (this.props.quoteText) {
@@ -132,7 +158,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         if (!plugin) {
           return;
         }
-        let isFirst = true;
         let systemPrompt =
           ConfigService.getReaderConfig("aiAssistancePrompt") ||
           KookitConfig.DefaultPrompts.aiAssistance;
@@ -153,6 +178,8 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         if (!currentQuestion) {
           return;
         }
+        this.answerTextAccumulator = "";
+        this.startUpdateInterval();
         await chatStream(
           config.endpoint,
           config.providerId,
@@ -165,25 +192,21 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
               return;
             }
             if (result && result.text) {
-              if (isFirst) {
-                this.setState({ answer: result.text, isWaiting: false });
-                isFirst = false;
-              } else {
-                this.setState({
-                  answer: this.state.answer + result.text,
-                });
+              if (!this.answerTextAccumulator) {
+                this.setState({ isWaiting: false });
               }
-            }
-            if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
-              this.scrollToBottom();
+              this.answerTextAccumulator += result.text;
             }
           }
         );
+        this.stopUpdateInterval(this.answerTextAccumulator);
+        const finalAnswer = this.answerTextAccumulator;
+        this.answerTextAccumulator = "";
         if (this.state.mode === "ask") {
           this.setState({
             askHistory: [
               ...this.state.askHistory,
-              { role: "assistant", content: this.state.answer },
+              { role: "assistant", content: finalAnswer },
             ],
             answer: "",
             question: "",
@@ -193,7 +216,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
           this.setState({
             chatHistory: [
               ...this.state.chatHistory,
-              { role: "assistant", content: this.state.answer },
+              { role: "assistant", content: finalAnswer },
             ],
             answer: "",
             question: "",
@@ -214,7 +237,8 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         if (!plugin) {
           return;
         }
-        let isFirst = true;
+        this.answerTextAccumulator = "";
+        this.startUpdateInterval();
         let res = await getAnswerStream(
           text,
           this.state.question,
@@ -224,23 +248,16 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
           this.state.mode,
           (result) => {
             if (result && result.text) {
-              if (isFirst) {
-                this.setState({
-                  answer: result.text,
-                  isWaiting: false,
-                });
-                isFirst = false;
-              } else {
-                this.setState({
-                  answer: this.state.answer + result.text,
-                });
+              if (!this.answerTextAccumulator) {
+                this.setState({ isWaiting: false });
               }
-            }
-            if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
-              this.scrollToBottom();
+              this.answerTextAccumulator += result.text;
             }
           }
         );
+        this.stopUpdateInterval(this.answerTextAccumulator);
+        const finalAnswer = this.answerTextAccumulator;
+        this.answerTextAccumulator = "";
         if (res.data && res.done) {
           if (this.state.mode === "ask") {
             this.setState({
@@ -248,7 +265,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                 ...this.state.askHistory,
                 {
                   role: "assistant",
-                  content: this.state.answer,
+                  content: finalAnswer,
                 },
               ],
               answer: "",
@@ -261,7 +278,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                 ...this.state.chatHistory,
                 {
                   role: "assistant",
-                  content: this.state.answer,
+                  content: finalAnswer,
                 },
               ],
               answer: "",
@@ -270,13 +287,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             });
           }
         }
-        // if (res.code === 20006) {
-        //   this.setState({
-        //     isWaiting: false,
-        //     answer: "",
-        //     question: "",
-        //   });
-        // }
         if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
           this.scrollToBottom();
         }

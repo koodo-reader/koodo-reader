@@ -34,21 +34,6 @@ export const getTransStream = async (
   );
   return result;
 };
-export const getSummaryStream = async (
-  text: string,
-  to: string,
-  onMessage: (result) => void
-) => {
-  let readerRequest = await getReaderRequest();
-  let result = await readerRequest.getSummaryFetch(
-    {
-      text,
-      to,
-    },
-    onMessage
-  );
-  return result;
-};
 export const getAnswerStream = async (
   text: string,
   question: string,
