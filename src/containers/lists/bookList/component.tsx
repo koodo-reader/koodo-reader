@@ -318,34 +318,34 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return displayedBooks.map((item: BookModel, index: number) => {
       return this.props.viewMode === "list" ? (
         <BookListItem
-          {...{
-            key: index,
+          key={index}
+          {...({
             book: item,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
             allBooks: displayedBooks,
             bookIndex: index,
-          }}
+          } as any)}
         />
       ) : this.props.viewMode === "card" ? (
         <BookCardItem
-          {...{
-            key: index,
+          key={index}
+          {...({
             book: item,
             cardScale: this.state.cardScale,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
             allBooks: displayedBooks,
             bookIndex: index,
-          }}
+          } as any)}
         />
       ) : (
         <BookCoverItem
-          {...{
-            key: index,
+          key={index}
+          {...({
             book: item,
             isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
             allBooks: displayedBooks,
             bookIndex: index,
-          }}
+          } as any)}
         />
       );
     });
