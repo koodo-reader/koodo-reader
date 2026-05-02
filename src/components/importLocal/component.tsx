@@ -19,6 +19,14 @@ import {
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit.min";
+
+// Convert supportedFormats to react-dropzone v14+ accept format
+const supportedFormatsAccept = supportedFormats.reduce<
+  Record<string, string[]>
+>((obj, ext) => {
+  obj[ext] = [ext];
+  return obj;
+}, {});
 declare var window: any;
 let clickFilePath = "";
 
@@ -360,7 +368,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           }
           this.setState({ importingShelfTitle: "" });
         }}
-        accept={supportedFormats as any}
+        accept={supportedFormatsAccept}
         multiple={true}
       >
         {({ getRootProps, getInputProps }) => (
