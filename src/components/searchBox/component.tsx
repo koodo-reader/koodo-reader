@@ -6,11 +6,13 @@ import ConfigUtil from "../../utils/file/configUtil";
 import BookUtil from "../../utils/file/bookUtil";
 
 class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
+  private searchBoxRef: React.RefObject<HTMLInputElement>;
   constructor(props: SearchBoxProps) {
     super(props);
     this.state = {
       isFocused: false,
     };
+    this.searchBoxRef = React.createRef<HTMLInputElement>();
   }
   componentDidMount() {
     if (this.props.isNavSearch) {
@@ -19,7 +21,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     }
   }
   handleMouse = async () => {
-    let value = (this.refs.searchBox as any).value;
+    let value = this.searchBoxRef.current?.value || "";
     if (this.props.isNavSearch) {
       value && this.search(value);
     }
@@ -63,7 +65,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     if (event.keyCode !== 13) {
       return;
     }
-    let value = (this.refs.searchBox as any).value;
+    let value = this.searchBoxRef.current?.value || "";
     if (this.props.isNavSearch || this.props.isReading) {
       value && this.search(value);
     }
@@ -115,7 +117,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
       <div style={{ position: "relative" }}>
         <input
           type="text"
-          ref="searchBox"
+          ref={this.searchBoxRef}
           className="header-search-box"
           onKeyDown={(event) => {
             this.handleKey(event);
