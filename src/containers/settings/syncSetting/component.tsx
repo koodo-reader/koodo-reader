@@ -195,14 +195,18 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     toast.success(this.props.t("Deletion successful"));
   };
-  handleSetDefaultSyncOption = async (event: any) => {
-    if (!event.target.value) {
+  handleSetDefaultSyncOption = async (newValue: string) => {
+    console.log(newValue, "dsgfg");
+    if (!newValue) {
       return;
     }
-    ConfigService.setItem("defaultSyncOption", event.target.value);
+    console.log(newValue);
+
+    ConfigService.setItem("defaultSyncOption", newValue);
     if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
       resetKoodoSync();
     }
+    console.log(1);
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Change successful"));
     if (
@@ -746,7 +750,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 event.preventDefault();
                 const newValue = event.target.value;
                 const currentValue = this.props.defaultSyncOption;
-
+                console.log("dsfgdfg");
                 let onlineBooks: Book[] = [];
                 for (let i = 0; i < this.props.books.length; i++) {
                   if (
@@ -755,6 +759,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     onlineBooks.push(this.props.books[i]);
                   }
                 }
+                console.log(newValue, "asdf");
                 if (
                   onlineBooks.length > 0 &&
                   this.props.defaultSyncOption &&
@@ -764,14 +769,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
                   );
                   if (result) {
-                    this.handleSetDefaultSyncOption({
-                      target: { value: newValue },
-                    });
+                    this.handleSetDefaultSyncOption(newValue);
                   } else {
                     event.target.value = currentValue;
                   }
                 } else {
-                  this.handleSetDefaultSyncOption(event);
+                  this.handleSetDefaultSyncOption(newValue);
                 }
               }}
             >

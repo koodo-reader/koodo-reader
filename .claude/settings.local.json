@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(node -e \"console.log\\(require\\(''./package.json''\\).dependencies.react || require\\(''./package.json''\\).devDependencies.react\\)\")"
     ]
   }
 }
