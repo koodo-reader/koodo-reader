@@ -308,12 +308,14 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   <select
                     className="original-lang-selector"
                     style={{ maxWidth: "120px", margin: 0 }}
+                    value={ConfigService.getReaderConfig("transSource")}
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                       let targetLang = event.target.value;
                       ConfigService.setReaderConfig("transSource", targetLang);
                       this.handleTrans(
                         this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
                       );
+                      this.forceUpdate();
                     }}
                   >
                     {this.props.plugins.find(
@@ -329,12 +331,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                             value={item}
                             key={index}
                             className="add-dialog-shelf-list-option"
-                            selected={
-                              ConfigService.getReaderConfig("transSource") ===
-                              item
-                                ? true
-                                : false
-                            }
                           >
                             {this.props.t(
                               Object.values(
@@ -352,12 +348,21 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   <select
                     className="trans-lang-selector"
                     style={{ maxWidth: "120px", margin: 0 }}
+                    value={
+                      ConfigService.getReaderConfig("transTarget") ||
+                      getDefaultTransTarget(
+                        this.props.plugins.find(
+                          (item) => item.key === this.state.transService
+                        )?.langList
+                      )
+                    }
                     onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                       let targetLang = event.target.value;
                       ConfigService.setReaderConfig("transTarget", targetLang);
                       this.handleTrans(
                         this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
                       );
+                      this.forceUpdate();
                     }}
                   >
                     {this.props.plugins.find(
@@ -373,17 +378,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                             value={item}
                             key={index}
                             className="add-dialog-shelf-list-option"
-                            selected={
-                              (ConfigService.getReaderConfig("transTarget") ||
-                                getDefaultTransTarget(
-                                  this.props.plugins.find(
-                                    (item) =>
-                                      item.key === this.state.transService
-                                  )?.langList
-                                )) === item
-                                ? true
-                                : false
-                            }
                           >
                             {this.props.t(
                               Object.values(

@@ -79,12 +79,14 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <select
             name=""
             className="lang-setting-dropdown"
+            value={ConfigService.getReaderConfig("updateChannel")}
             onChange={(event) => {
               ConfigService.setReaderConfig(
                 "updateChannel",
                 event.target.value
               );
               toast.success(this.props.t("Change successful"));
+              this.forceUpdate();
             }}
           >
             {[
@@ -95,9 +97,6 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 value={item.value}
                 key={item.value}
                 className="lang-setting-option"
-                selected={
-                  item.value === ConfigService.getReaderConfig("updateChannel")
-                }
               >
                 {this.props.t(item.label)}
               </option>

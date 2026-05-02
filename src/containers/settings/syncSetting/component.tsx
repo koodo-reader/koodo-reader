@@ -674,6 +674,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <select
             name=""
             className="lang-setting-dropdown"
+            value={this.props.settingDrive}
             onChange={this.handleAddDataSource}
           >
             {[
@@ -704,9 +705,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   value={item.value}
                   key={item.value}
                   className="lang-setting-option"
-                  selected={
-                    item.value === this.props.settingDrive ? true : false
-                  }
                 >
                   {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                 </option>
@@ -743,6 +741,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <select
               name=""
               className="lang-setting-dropdown"
+              value={this.props.defaultSyncOption}
               onChange={async (event) => {
                 event.preventDefault();
                 const newValue = event.target.value;
@@ -791,9 +790,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     value={item.value}
                     key={item.value}
                     className="lang-setting-option"
-                    selected={
-                      item.value === this.props.defaultSyncOption ? true : false
-                    }
                   >
                     {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                   </option>

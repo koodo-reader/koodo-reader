@@ -138,6 +138,7 @@ class ConvertDialog extends React.Component<
                   <select
                     name=""
                     className="lang-setting-dropdown"
+                    value={ConfigService.getReaderConfig("ocrEngine") || "paddle"}
                     onChange={(event) => {
                       if (
                         event.target.value === "official-ai-ocr" &&
@@ -178,6 +179,7 @@ class ConvertDialog extends React.Component<
                       ) {
                         BookUtil.reloadBooks(this.props.currentBook);
                       }
+                      this.forceUpdate();
                     }}
                   >
                     {[
@@ -202,14 +204,6 @@ class ConvertDialog extends React.Component<
                         value={item.value}
                         key={item.value}
                         className="lang-setting-option"
-                        selected={
-                          ConfigService.getReaderConfig("ocrEngine")
-                            ? item.value ===
-                              ConfigService.getReaderConfig("ocrEngine")
-                            : item.value === "paddle"
-                              ? true
-                              : false
-                        }
                       >
                         {this.props.t(item.label)}
                       </option>
@@ -232,6 +226,18 @@ class ConvertDialog extends React.Component<
                     name=""
                     className="lang-setting-dropdown"
                     style={{ width: "70px" }}
+                    value={(() => {
+                      const ocrLang = ConfigService.getReaderConfig("ocrLang");
+                      if (ocrLang) return ocrLang;
+                      const engine = ConfigService.getReaderConfig("ocrEngine");
+                      const currentLang = ConfigService.getReaderConfig("lang");
+                      let list: any[];
+                      if (engine === "tesseract") list = ocrTesseractLangList;
+                      else if (engine === "official-ai-ocr") list = [{ label: "General", value: "general", lang: "" }];
+                      else list = getOcrPaddleLangList();
+                      const match = list.find((o: any) => o.lang === currentLang);
+                      return match ? match.value : "";
+                    })()}
                     onChange={(event) => {
                       ConfigService.setReaderConfig(
                         "ocrLang",
@@ -244,6 +250,7 @@ class ConvertDialog extends React.Component<
                       ) {
                         BookUtil.reloadBooks(this.props.currentBook);
                       }
+                      this.forceUpdate();
                     }}
                   >
                     {[
@@ -260,15 +267,6 @@ class ConvertDialog extends React.Component<
                         value={item.value}
                         key={item.value}
                         className="lang-setting-option"
-                        selected={
-                          ConfigService.getReaderConfig("ocrLang")
-                            ? item.value ===
-                              ConfigService.getReaderConfig("ocrLang")
-                            : item.lang ===
-                                ConfigService.getReaderConfig("lang")
-                              ? true
-                              : false
-                        }
                       >
                         {this.props.t(item.label)}
                       </option>
@@ -294,6 +292,7 @@ class ConvertDialog extends React.Component<
                       name=""
                       className="lang-setting-dropdown"
                       style={{ width: "70px" }}
+                      value={ConfigService.getReaderConfig("paraSpacingValue") || "1.5"}
                       onChange={(event) => {
                         ConfigService.setReaderConfig(
                           "paraSpacingValue",
@@ -306,6 +305,7 @@ class ConvertDialog extends React.Component<
                         ) {
                           BookUtil.reloadBooks(this.props.currentBook);
                         }
+                        this.forceUpdate();
                       }}
                     >
                       {[
@@ -316,14 +316,6 @@ class ConvertDialog extends React.Component<
                           value={item.value}
                           key={item.value}
                           className="lang-setting-option"
-                          selected={
-                            ConfigService.getReaderConfig("paraSpacingValue")
-                              ? item.value ===
-                                ConfigService.getReaderConfig(
-                                  "paraSpacingValue"
-                                )
-                              : item.value === "1.5"
-                          }
                         >
                           {this.props.t(item.label)}
                         </option>
@@ -356,6 +348,7 @@ class ConvertDialog extends React.Component<
                       name=""
                       className="lang-setting-dropdown"
                       style={{ width: "70px" }}
+                      value={ConfigService.getReaderConfig("titleSizeValue") || "1.2"}
                       onChange={(event) => {
                         ConfigService.setReaderConfig(
                           "titleSizeValue",
@@ -368,6 +361,7 @@ class ConvertDialog extends React.Component<
                         ) {
                           BookUtil.reloadBooks(this.props.currentBook);
                         }
+                        this.forceUpdate();
                       }}
                     >
                       {[
@@ -378,12 +372,6 @@ class ConvertDialog extends React.Component<
                           value={item.value}
                           key={item.value}
                           className="lang-setting-option"
-                          selected={
-                            ConfigService.getReaderConfig("titleSizeValue")
-                              ? item.value ===
-                                ConfigService.getReaderConfig("titleSizeValue")
-                              : item.value === "1.2"
-                          }
                         >
                           {this.props.t(item.label)}
                         </option>

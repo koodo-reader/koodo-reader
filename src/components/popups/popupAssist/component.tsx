@@ -438,6 +438,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
           <select
             className="dict-service-selector"
             style={{ margin: 0, color: "#f16464" }}
+            value={this.state.aiService}
             onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
               if (event.target.value === "add-new") {
                 this.props.handleOpenMenu(false);
@@ -464,7 +465,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                     value={item.key}
                     key={item.key}
                     className="add-dialog-shelf-list-option"
-                    selected={this.state.aiService === item.key ? true : false}
                   >
                     {this.props.t(item.displayName)}
                   </option>

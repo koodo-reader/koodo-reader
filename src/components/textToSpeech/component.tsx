@@ -1102,6 +1102,7 @@ class TextToSpeech extends React.Component<
             name=""
             className="lang-setting-dropdown"
             id="text-speech-locale"
+            value={ConfigService.getReaderConfig("voiceLocale")}
             onChange={(event) => {
               ConfigService.setReaderConfig("voiceLocale", event.target.value);
               this.setState({ voiceLocale: event.target.value });
@@ -1113,9 +1114,6 @@ class TextToSpeech extends React.Component<
                   value={item}
                   key={item}
                   className="lang-setting-option"
-                  selected={
-                    item === ConfigService.getReaderConfig("voiceLocale")
-                  }
                 >
                   {langToName(item)}
                 </option>
@@ -1140,6 +1138,7 @@ class TextToSpeech extends React.Component<
             name=""
             className="lang-setting-dropdown"
             id="text-speech-voice"
+            value={[ConfigService.getReaderConfig("voiceName"), ConfigService.getReaderConfig("voiceEngine")].join("#")}
             onChange={(event) => {
               let selectedValue = event.target.value;
               let [voiceName, plugin] = selectedValue.split("#");
@@ -1172,6 +1171,7 @@ class TextToSpeech extends React.Component<
               if (this.state.isAudioOn) {
                 this.handleVoiceSwitch(voiceName, newEngine, previousEngine);
               }
+              this.forceUpdate();
             }}
           >
             {(this.state.voiceList[this.state.voiceLocale] || this.voices).map(
@@ -1181,12 +1181,6 @@ class TextToSpeech extends React.Component<
                     value={[item.name, item.plugin].join("#")}
                     key={[item.name, item.plugin].join("#")}
                     className="lang-setting-option"
-                    selected={
-                      item.name ===
-                        ConfigService.getReaderConfig("voiceName") &&
-                      item.plugin ===
-                        ConfigService.getReaderConfig("voiceEngine")
-                    }
                   >
                     {this.props.t(item.displayName || item.name)}
                   </option>
@@ -1205,11 +1199,13 @@ class TextToSpeech extends React.Component<
             name=""
             id="text-speech-speed"
             className="lang-setting-dropdown"
+            value={ConfigService.getReaderConfig("voiceSpeed") || "1"}
             onChange={(event) => {
               ConfigService.setReaderConfig("voiceSpeed", event.target.value);
               if (this.state.isAudioOn) {
                 toast(this.props.t("Take effect in a while"));
               }
+              this.forceUpdate();
             }}
           >
             {speedList.option.map((item) => (
@@ -1217,10 +1213,6 @@ class TextToSpeech extends React.Component<
                 value={item.value}
                 className="lang-setting-option"
                 key={item.value}
-                selected={
-                  item.value ===
-                  (ConfigService.getReaderConfig("voiceSpeed") || "1")
-                }
               >
                 {item.label}
               </option>
@@ -1301,6 +1293,7 @@ class TextToSpeech extends React.Component<
                 name=""
                 className="lang-setting-dropdown"
                 id="multi-role-voice-type"
+                value={this.state.multiRoleVoiceType}
                 onChange={(event) => {
                   this.setState({ multiRoleVoiceType: event.target.value });
                   ConfigService.setReaderConfig(
@@ -1315,23 +1308,18 @@ class TextToSpeech extends React.Component<
                 <option
                   value="system"
                   className="lang-setting-option"
-                  selected={this.state.multiRoleVoiceType === "system"}
                 >
                   {this.props.t("System voice")}
                 </option>
                 <option
                   value="official-ai-voice-plugin"
                   className="lang-setting-option"
-                  selected={
-                    this.state.multiRoleVoiceType === "official-ai-voice-plugin"
-                  }
                 >
                   {this.props.t("Official AI Voice")}
                 </option>
                 <option
                   value="custom"
                   className="lang-setting-option"
-                  selected={this.state.multiRoleVoiceType === "custom"}
                 >
                   {this.props.t("Custom voice")}
                 </option>
@@ -1351,6 +1339,11 @@ class TextToSpeech extends React.Component<
                 name=""
                 className="lang-setting-dropdown"
                 id="multi-role-narrator-voice"
+                value={
+                  this.state.multiRoleNarratorVoice
+                    ? [this.state.multiRoleNarratorVoice, this.state.multiRoleNarratorEngine].join("#")
+                    : ""
+                }
                 onChange={(event) => {
                   let selectedValue = event.target.value;
                   let [voiceName, plugin] = selectedValue.split("#");
@@ -1378,7 +1371,6 @@ class TextToSpeech extends React.Component<
                       value={[item.name, item.plugin].join("#")}
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
-                      selected={item.name === this.state.multiRoleNarratorVoice}
                     >
                       {this.props.t(item.displayName || item.name)}
                     </option>
@@ -1400,6 +1392,11 @@ class TextToSpeech extends React.Component<
                 name=""
                 className="lang-setting-dropdown"
                 id="multi-role-male-voice"
+                value={
+                  this.state.multiRoleMaleVoice
+                    ? [this.state.multiRoleMaleVoice, this.state.multiRoleMaleEngine].join("#")
+                    : ""
+                }
                 onChange={(event) => {
                   let selectedValue = event.target.value;
                   let [voiceName, plugin] = selectedValue.split("#");
@@ -1428,7 +1425,6 @@ class TextToSpeech extends React.Component<
                       value={[item.name, item.plugin].join("#")}
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
-                      selected={item.name === this.state.multiRoleMaleVoice}
                     >
                       {this.props.t(item.displayName || item.name)}
                     </option>
@@ -1449,6 +1445,11 @@ class TextToSpeech extends React.Component<
                 name=""
                 className="lang-setting-dropdown"
                 id="multi-role-female-voice"
+                value={
+                  this.state.multiRoleFemaleVoice
+                    ? [this.state.multiRoleFemaleVoice, this.state.multiRoleFemaleEngine].join("#")
+                    : ""
+                }
                 onChange={(event) => {
                   let selectedValue = event.target.value;
                   let [voiceName, plugin] = selectedValue.split("#");
@@ -1477,7 +1478,6 @@ class TextToSpeech extends React.Component<
                       value={[item.name, item.plugin].join("#")}
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
-                      selected={item.name === this.state.multiRoleFemaleVoice}
                     >
                       {this.props.t(item.displayName || item.name)}
                     </option>
@@ -1498,6 +1498,11 @@ class TextToSpeech extends React.Component<
                 name=""
                 className="lang-setting-dropdown"
                 id="multi-role-child-voice"
+                value={
+                  this.state.multiRoleChildVoice
+                    ? [this.state.multiRoleChildVoice, this.state.multiRoleChildEngine].join("#")
+                    : ""
+                }
                 onChange={(event) => {
                   let selectedValue = event.target.value;
                   let [voiceName, plugin] = selectedValue.split("#");
@@ -1525,7 +1530,6 @@ class TextToSpeech extends React.Component<
                       value={[item.name, item.plugin].join("#")}
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
-                      selected={item.name === this.state.multiRoleChildVoice}
                     >
                       {this.props.t(item.displayName || item.name)}
                     </option>

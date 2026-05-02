@@ -661,6 +661,7 @@ class AccountSetting extends React.Component<
             <select
               name=""
               className="lang-setting-dropdown"
+              value={getServerRegion()}
               onChange={(event) => {
                 if (!event.target.value) {
                   return;
@@ -684,7 +685,6 @@ class AccountSetting extends React.Component<
                   value={item.value}
                   key={item.value}
                   className="lang-setting-option"
-                  selected={item.value === getServerRegion()}
                 >
                   {this.props.t(item.label)}
                 </option>
