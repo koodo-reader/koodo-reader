@@ -290,6 +290,11 @@ class DropdownList extends React.Component<
               name=""
               className="general-setting-dropdown"
               onChange={(event) => {
+                if (event.target.value === "add-parser") {
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("chapter");
+                  return;
+                }
                 this.handleView(event, "txtParser");
               }}
             >
@@ -303,6 +308,13 @@ class DropdownList extends React.Component<
                   {this.props.t(option.label)}
                 </option>
               ))}
+              <option
+                value="add-parser"
+                key="add"
+                className="general-setting-option"
+              >
+                {this.props.t("Add new parser")}
+              </option>
             </select>
           </li>
         )}

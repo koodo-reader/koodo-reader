@@ -976,6 +976,7 @@
   "Please install local fonts to your machine and then restart the application": "请将本地字体安装到您的计算机上，然后重启应用程序",
   "TXT parser": "TXT 解析器",
   "Default parser": "默认解析器",
+  "Add new parser": "添加新解析器",
   "Suitable for most txt files": "适用于大多数 txt 文件",
   "Chinese novel parser": "中文小说解析器",
   "Suitable for most Chinese novels, eg. 第一章，第2回": "适用于大多数中文小说，如：第一章，第2回",
