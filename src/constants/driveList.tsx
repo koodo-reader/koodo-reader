@@ -86,7 +86,7 @@ export const driveList = [
     value: "adrive",
     icon: "icon-adrive",
     isPro: true,
-    support: ["desktop", "phone"],
+    support: ["desktop", "browser", "phone"],
     scoped: false,
   },
   {
