@@ -294,6 +294,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             <select
               className="dict-service-selector"
               style={{ margin: 0 }}
+              value={this.state.dictService}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 if (event.target.value === "add-new") {
                   this.props.handleOpenMenu(false);
@@ -320,9 +321,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       value={item.key}
                       key={item.key}
                       className="add-dialog-shelf-list-option"
-                      selected={
-                        this.state.dictService === item.key ? true : false
-                      }
                     >
                       {this.props.t(item.displayName)}
                     </option>
@@ -342,6 +340,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             <select
               className="dict-service-selector"
               style={{ margin: 0 }}
+              value={this.state.dictTarget}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 this.setState(
                   {
@@ -370,9 +369,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       value={item.code}
                       key={item.code}
                       className="add-dialog-shelf-list-option"
-                      selected={
-                        this.state.dictTarget === item.code ? true : false
-                      }
                     >
                       {this.props.t(item["nativeLang"])}
                     </option>

@@ -120,6 +120,7 @@ class AppearanceSetting extends React.Component<
     let body = document.getElementsByTagName("body")[0];
     body?.setAttribute("style", "font-family:" + font + "!important");
     ConfigService.setReaderConfig("systemFont", font);
+    this.forceUpdate();
   };
 
   handleTheme = (color: string, index: number) => {
@@ -198,6 +199,7 @@ class AppearanceSetting extends React.Component<
           <select
             name=""
             className="lang-setting-dropdown"
+            value={ConfigService.getReaderConfig("systemFont")}
             onChange={(event) => {
               this.changeFont(event.target.value);
             }}
@@ -209,11 +211,6 @@ class AppearanceSetting extends React.Component<
                   value={item.value}
                   key={item.value}
                   className="lang-setting-option"
-                  selected={
-                    item.value === ConfigService.getReaderConfig("systemFont")
-                      ? true
-                      : false
-                  }
                 >
                   {this.props.t(item.label)}
                 </option>

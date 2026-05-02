@@ -232,6 +232,23 @@ class DropdownList extends React.Component<
           <select
             name=""
             className="general-setting-dropdown"
+            value={
+              item.value === "lineHeight"
+                ? this.state.currentLineHeightValue
+                : item.value === "textAlign"
+                  ? this.state.currentTextAlignValue
+                  : item.value === "convertChinese"
+                    ? this.state.chineseConversionValue
+                    : item.value === "fullTranslationMode"
+                      ? this.state.fullTranslationModeValue
+                      : item.value === "textOrientation"
+                        ? this.state.currentTextOrientationValue
+                        : item.value === "fontFamily"
+                          ? this.state.currentFontFamilyValue
+                          : item.value === "selectAction"
+                            ? this.state.currentSelectActionValue
+                            : this.state.currentSubFontFamilyValue
+            }
             onChange={(event) => {
               this.handleView(event, item.value);
             }}
@@ -248,24 +265,6 @@ class DropdownList extends React.Component<
                   value={subItem.value}
                   key={index}
                   className="general-setting-option"
-                  selected={
-                    subItem.value ===
-                    (item.value === "lineHeight"
-                      ? this.state.currentLineHeightValue
-                      : item.value === "textAlign"
-                        ? this.state.currentTextAlignValue
-                        : item.value === "convertChinese"
-                          ? this.state.chineseConversionValue
-                          : item.value === "fullTranslationMode"
-                            ? this.state.fullTranslationModeValue
-                            : item.value === "textOrientation"
-                              ? this.state.currentTextOrientationValue
-                              : item.value === "fontFamily"
-                                ? this.state.currentFontFamilyValue
-                                : item.value === "selectAction"
-                                  ? this.state.currentSelectActionValue
-                                  : this.state.currentSubFontFamilyValue)
-                  }
                 >
                   {this.props.t(subItem.label)}
                 </option>
@@ -289,6 +288,7 @@ class DropdownList extends React.Component<
             <select
               name=""
               className="general-setting-dropdown"
+              value={this.state.currentTxtParserValue}
               onChange={(event) => {
                 if (event.target.value === "add-parser") {
                   this.props.handleSetting(true);
@@ -303,7 +303,6 @@ class DropdownList extends React.Component<
                   value={option.value}
                   key={index}
                   className="general-setting-option"
-                  selected={option.value === this.state.currentTxtParserValue}
                 >
                   {this.props.t(option.label)}
                 </option>
