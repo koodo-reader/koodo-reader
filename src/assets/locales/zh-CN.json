@@ -1001,5 +1001,6 @@
   "Custom AI Dictionary": "自定义AI词典",
   "Custom AI Assistance": "自定义AI辅助",
   "Show number of books in each shelf": "显示每个书架中的图书数量",
+  "This data source is not directly supported in browser due to CORS restriction. In order to use it, you need to install the our browser extension. Do you want to go to the extension installation guide now? If you have already installed the extension, you can click the cancel button to continue adding this data source.": "由于浏览器的跨域限制，浏览器中无法直接使用此数据源。您需要安装我们的浏览器扩展程序才能正常使用。是否现在访问安装指南？如果您已经安装了扩展程序，可以点击取消按钮以继续使用此数据源。",
   "Model assignment": "模型分配"
 }
