@@ -94,7 +94,7 @@ export const driveList = [
     value: "yandex",
     icon: "icon-yandex",
     isPro: true,
-    support: ["desktop", "phone"],
+    support: ["desktop", "browser", "phone"],
     scoped: false,
   },
   {
@@ -102,7 +102,7 @@ export const driveList = [
     value: "yiyiwu",
     icon: "icon-yiyiwu",
     isPro: true,
-    support: ["desktop", "phone"],
+    support: ["desktop", "browser", "phone"],
     scoped: false,
   },
 
@@ -111,7 +111,7 @@ export const driveList = [
     value: "pcloud",
     icon: "icon-pcloud",
     isPro: true,
-    support: ["desktop", "phone"],
+    support: ["desktop", "browser", "phone"],
     scoped: true,
   },
 
