@@ -6,6 +6,7 @@ export const driveList = [
     isPro: false,
     support: ["desktop", "browser", "phone"],
     scoped: false,
+    needExtension: true,
   },
   {
     label: "S3 Compatible",
@@ -14,6 +15,7 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: false,
+    needExtension: true,
   },
   {
     label: "Docker",
@@ -62,6 +64,7 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: false,
+    needExtension: true,
   },
 
   {
@@ -88,6 +91,7 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: false,
+    needExtension: true,
   },
   {
     label: "Yandex Disk",
@@ -96,6 +100,7 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: false,
+    needExtension: true,
   },
   {
     label: "115 Yun",
@@ -104,6 +109,7 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: false,
+    needExtension: true,
   },
 
   {
@@ -113,6 +119,7 @@ export const driveList = [
     isPro: true,
     support: ["desktop", "browser", "phone"],
     scoped: true,
+    needExtension: true,
   },
 
   {

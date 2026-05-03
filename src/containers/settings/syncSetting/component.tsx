@@ -88,6 +88,25 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       return;
     }
     if (
+      !isElectron &&
+      driveList.find((item) => item.value === targetDrive)?.needExtension
+    ) {
+      let result = await vexComfirmAsync(
+        "This data source is not directly supported in browser due to CORS restriction. In order to use it, you need to install the our browser extension. Do you want to go to the extension installation guide now? If you have already installed the extension, you can click the cancel button to continue adding this data source."
+      );
+      if (result) {
+        if (
+          ConfigService.getReaderConfig("lang") &&
+          ConfigService.getReaderConfig("lang").startsWith("zh")
+        ) {
+          openExternalUrl(getWebsiteUrl() + "/zh/use-extension");
+        } else {
+          openExternalUrl(getWebsiteUrl() + "/en/use-extension");
+        }
+        return;
+      }
+    }
+    if (
       driveList.find((item) => item.value === targetDrive)?.isPro &&
       !this.props.isAuthed
     ) {
