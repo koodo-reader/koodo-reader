@@ -62,9 +62,8 @@ export const driveList = [
     value: "dubox",
     icon: "icon-dubox",
     isPro: true,
-    support: ["desktop", "browser", "phone"],
+    support: ["desktop", "phone"],
     scoped: false,
-    needExtension: true,
   },
 
   {
@@ -89,27 +88,24 @@ export const driveList = [
     value: "adrive",
     icon: "icon-adrive",
     isPro: true,
-    support: ["desktop", "browser", "phone"],
+    support: ["desktop", "phone"],
     scoped: false,
-    needExtension: true,
   },
   {
     label: "Yandex Disk",
     value: "yandex",
     icon: "icon-yandex",
     isPro: true,
-    support: ["desktop", "browser", "phone"],
+    support: ["desktop", "phone"],
     scoped: false,
-    needExtension: true,
   },
   {
     label: "115 Yun",
     value: "yiyiwu",
     icon: "icon-yiyiwu",
     isPro: true,
-    support: ["desktop", "browser", "phone"],
+    support: ["desktop", "phone"],
     scoped: false,
-    needExtension: true,
   },
 
   {
@@ -117,9 +113,8 @@ export const driveList = [
     value: "pcloud",
     icon: "icon-pcloud",
     isPro: true,
-    support: ["desktop", "browser", "phone"],
+    support: ["desktop", "phone"],
     scoped: true,
-    needExtension: true,
   },
 
   {
