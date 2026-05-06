@@ -99,10 +99,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
   async handleWordDefinition(rendition) {
     const prev = this.batchTranslationLock;
     const next = prev.then(async () => {
-      console.log(
-        this.props.currentBook,
-        ConfigService.getAllListConfig("wordDefinitionBooks")
-      );
       if (
         !ConfigService.getAllListConfig("wordDefinitionBooks").includes(
           this.props.currentBook.key
@@ -131,7 +127,6 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
               : ConfigService.getReaderConfig("currentEnglishLevel") || "四级";
         let res = await getWordDefinitions(wordTexts, currentLevel, lang);
 
-        console.log(res, "res");
         if (res && res.data && res.data.results) {
           rendition.handleWordDefinitionResult(
             res.data.results,
