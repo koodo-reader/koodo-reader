@@ -1327,7 +1327,6 @@ const createMainWin = () => {
           let bounds = readerWindow.getBounds();
           const currentDisplay = screen.getDisplayMatching(bounds);
           const primaryDisplay = screen.getPrimaryDisplay();
-          console.log(bounds, "boundsss");
           if (bounds.width > 300 && bounds.height > 100) {
             store.set({
               windowWidth: bounds.width,

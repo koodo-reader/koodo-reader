@@ -125,15 +125,12 @@ export const getEnabledPopupOptionKeys = () => {
   const savedEnabled = ConfigService.getAllListConfig(
     POPUP_OPTION_ENABLED_CONFIG
   );
-  console.log(savedEnabled, "savedEnabled43534");
   const normalizedSavedEnabled =
     savedEnabled && savedEnabled.length > 0
       ? savedEnabled.filter((item) =>
           popupOptionKeySet.has(item as PopupOptionKey)
         )
       : getDefaultEnabledPopupOptionKeys();
-  console.log(normalizedSavedEnabled, "normalizedSavedEnabled");
-  console.log(getPopupOptionOrder(), "getPopupOptionOrder()");
 
   return getPopupOptionOrder()
     .filter((item) => normalizedSavedEnabled.includes(item))
@@ -153,7 +150,6 @@ export const getPopupOptionSettingList = () => {
 export const savePopupOptionSettingList = (
   optionList: Array<{ key: PopupOptionKey; enabled: boolean }>
 ) => {
-  console.log(optionList, "savePopupOptionSettingList");
   const order = optionList.map((item) => item.key);
   const enabled = order
     .filter((key) => optionList.find((item) => item.key === key)?.enabled)

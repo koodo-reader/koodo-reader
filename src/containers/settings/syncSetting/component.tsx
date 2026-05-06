@@ -215,17 +215,14 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     toast.success(this.props.t("Deletion successful"));
   };
   handleSetDefaultSyncOption = async (newValue: string) => {
-    console.log(newValue, "dsgfg");
     if (!newValue) {
       return;
     }
-    console.log(newValue);
 
     ConfigService.setItem("defaultSyncOption", newValue);
     if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
       resetKoodoSync();
     }
-    console.log(1);
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Change successful"));
     if (
@@ -769,7 +766,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 event.preventDefault();
                 const newValue = event.target.value;
                 const currentValue = this.props.defaultSyncOption;
-                console.log("dsfgdfg");
                 let onlineBooks: Book[] = [];
                 for (let i = 0; i < this.props.books.length; i++) {
                   if (
@@ -778,7 +774,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     onlineBooks.push(this.props.books[i]);
                   }
                 }
-                console.log(newValue, "asdf");
                 if (
                   onlineBooks.length > 0 &&
                   this.props.defaultSyncOption &&
