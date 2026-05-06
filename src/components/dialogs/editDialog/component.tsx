@@ -171,12 +171,13 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
           </div>
 
           {/* Book path */}
-          <div className="edit-dialog-field">
-            <div className="edit-dialog-path-row">
-              <span className="edit-dialog-label">
-                <Trans>Book path</Trans>
-              </span>
-              {isElectron && (
+          {isElectron && (
+            <div className="edit-dialog-field">
+              <div className="edit-dialog-path-row">
+                <span className="edit-dialog-label">
+                  <Trans>Book path</Trans>
+                </span>
+
                 <div style={{ display: "flex", gap: "6px" }}>
                   <span
                     className="change-location-button"
@@ -197,23 +198,23 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
                     <Trans>Select</Trans>
                   </span>
                 </div>
-              )}
+              </div>
+              <div
+                className="setting-dialog-location-title"
+                style={{
+                  width: "100%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  margin: "0px",
+                  boxSizing: "border-box",
+                  marginTop: "4px",
+                  marginBottom: "4px",
+                }}
+              >
+                {this.state.bookPath || "-"}
+              </div>
             </div>
-            <div
-              className="setting-dialog-location-title"
-              style={{
-                width: "100%",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                margin: "0px",
-                boxSizing: "border-box",
-                marginTop: "4px",
-                marginBottom: "4px",
-              }}
-            >
-              {this.state.bookPath || "-"}
-            </div>
-          </div>
+          )}
         </div>
 
         <div className="edit-dialog-footer">
