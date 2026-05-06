@@ -102,13 +102,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       }, 100);
     });
   }
-  UNSAFE_componentWillMount() {
+  async UNSAFE_componentWillMount() {
     let url = document.location.href;
     let firstIndexOfQuestion = url.indexOf("?");
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     this.props.handleFetchBooks();
     this.props.handleFetchAuthed();
+    if (
+      key &&
+      ConfigService.getAllListConfig("convertPDFBooks").includes(key) &&
+      ConfigService.getReaderConfig("ocrEngine") === "official-ai-ocr"
+    ) {
+      await this.props.handleFetchUserInfo();
+    }
     DatabaseService.getRecord(key, "books").then((book: Book | null) => {
       book = book || JSON.parse(ConfigService.getItem("tempBook") || "{}");
       if (!book) return;
