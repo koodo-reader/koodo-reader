@@ -92,7 +92,7 @@ export const loginRegister = async (service: string, code: string) => {
   if (response.code === 20010) {
     vexComfirmAsync(
       i18n.t(
-        "You have reached the device limit for your account. Please install the latest mobile version of Koodo Reader to remove unused device after logging in."
+        "You have reached the device limit for your account. Please install the latest mobile version of Koodo Reader to remove unused device."
       )
     );
   }
