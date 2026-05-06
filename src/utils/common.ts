@@ -1149,6 +1149,42 @@ export const getParserRegex = (extension: string, bookKey?: string) => {
   }
   return parserRegex;
 };
+export const parseColorInput = (input: string): string | null => {
+  const trimmed = input.trim();
+  // Hex format: #rgb or #rrggbb
+  if (/^#[0-9a-fA-F]{3}$/.test(trimmed)) {
+    return (
+      "#" +
+      trimmed
+        .slice(1)
+        .split("")
+        .map((c) => c + c)
+        .join("")
+        .toLowerCase()
+    );
+  }
+  if (/^#[0-9a-fA-F]{6}$/.test(trimmed)) {
+    return trimmed.toLowerCase();
+  }
+  // rgb/rgba format
+  const match = trimmed.match(
+    /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*[\d.]+\s*)?\)$/
+  );
+  if (match) {
+    return (
+      "#" +
+      [match[1], match[2], match[3]]
+        .map((v) =>
+          Math.max(0, Math.min(255, parseInt(v, 10)))
+            .toString(16)
+            .padStart(2, "0")
+        )
+        .join("")
+    );
+  }
+  return null;
+};
+
 export const normalizePickerColor = (
   color: string | undefined,
   fallback: string

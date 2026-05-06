@@ -15,6 +15,7 @@ import {
   loadFontData,
   reloadManager,
   vexComfirmAsync,
+  parseColorInput,
 } from "../../../utils/common";
 import { applyCustomSystemCSS } from "../../../utils/reader/launchUtil";
 
@@ -308,6 +309,25 @@ class AppearanceSetting extends React.Component<
                 style={{
                   margin: "10px 0",
                   animation: "fade-in 0.2s ease-in-out 0s 1",
+                }}
+              />
+              <input
+                className="color-input-box"
+                style={{ marginBottom: 8 }}
+                value={this.state.pendingCustomColor}
+                placeholder="#rrggbb / rgba(r,g,b,a)"
+                onChange={(e) =>
+                  this.setState({ pendingCustomColor: e.target.value })
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const hex = parseColorInput(this.state.pendingCustomColor);
+                    if (hex) this.setState({ pendingCustomColor: hex });
+                  }
+                }}
+                onBlur={() => {
+                  const hex = parseColorInput(this.state.pendingCustomColor);
+                  if (hex) this.setState({ pendingCustomColor: hex });
                 }}
               />
               <span

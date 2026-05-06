@@ -83,3 +83,17 @@
   background-position: center;
   background-size: 55%;
 }
+.color-input-box {
+  width: 200px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(128, 128, 128, 0.4);
+  font-size: 13px;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  box-sizing: border-box;
+}
+.color-input-box:focus {
+  border-color: currentColor;
+}
