@@ -140,11 +140,17 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
               }}
               style={{ backgroundColor: item }}
             >
-              {index > 3 && index === this.state.currentBackgroundIndex && (
+              {index > 3 && (
                 <span
-                  className="icon-close theme-color-delete"
-                  onClick={() => {
+                  className="icon-close theme-color-delete theme-color-delete-hover"
+                  onClick={(e) => {
+                    e.stopPropagation();
                     ConfigService.deleteListConfig(item, "themeColors");
+                    if (index === this.state.currentBackgroundIndex) {
+                      this.handleChangeBgColor(backgroundList[0], 0);
+                    } else {
+                      this.forceUpdate();
+                    }
                   }}
                 ></span>
               )}
@@ -169,11 +175,17 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
               }}
               style={{ backgroundColor: item }}
             >
-              {index > 3 && index === this.state.currentTextIndex && (
+              {index > 3 && (
                 <span
-                  className="icon-close theme-color-delete"
-                  onClick={() => {
+                  className="icon-close theme-color-delete theme-color-delete-hover"
+                  onClick={(e) => {
+                    e.stopPropagation();
                     ConfigService.deleteListConfig(item, "themeColors");
+                    if (index === this.state.currentTextIndex) {
+                      this.handleChooseTextColor(textList[0]);
+                    } else {
+                      this.forceUpdate();
+                    }
                   }}
                 ></span>
               )}
