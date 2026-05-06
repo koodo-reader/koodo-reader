@@ -63,9 +63,26 @@
   cursor: pointer;
 }
 .theme-color-delete {
-  float: right;
-  font-size: 18px;
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 13px;
+  height: 13px;
+  font-size: 9px !important;
+  line-height: 13px;
+  text-align: center;
+  border-radius: 50%;
+  background: rgba(80, 80, 80, 0.75);
+  color: #fff;
   cursor: pointer;
+  z-index: 1;
+}
+.theme-color-delete-hover {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.background-color-circle:hover .theme-color-delete-hover {
+  opacity: 1;
 }
 .active-color.background-color-circle {
   box-shadow:
