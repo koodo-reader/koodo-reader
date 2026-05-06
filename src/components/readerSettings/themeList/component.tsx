@@ -7,7 +7,7 @@ import { ThemeListProps, ThemeListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { HexColorPicker } from "react-colorful";
 import toast from "react-hot-toast";
-import { normalizePickerColor } from "../../../utils/common";
+import { normalizePickerColor, parseColorInput } from "../../../utils/common";
 
 class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   constructor(props: ThemeListProps) {
@@ -32,6 +32,14 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         }),
       isShowTextPicker: false,
       isShowBgPicker: false,
+      bgColorInput: normalizePickerColor(
+        ConfigService.getReaderConfig("backgroundColor"),
+        "#ffffff"
+      ),
+      textColorInput: normalizePickerColor(
+        ConfigService.getReaderConfig("textColor"),
+        "#000000"
+      ),
     };
   }
   handleChangeBgColor = (color: string, index: number = -1) => {
@@ -52,6 +60,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
   };
 
   handleChooseBgColor = (color: string) => {
+    this.setState({ bgColorInput: color });
     ConfigService.setReaderConfig("backgroundColor", color);
     this.props.handleBackgroundColor(color);
     if (
@@ -108,6 +117,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       currentTextIndex: textList
         .concat(ConfigService.getAllListConfig("themeColors"))
         .indexOf(color),
+      textColorInput: color,
     });
     ConfigService.setReaderConfig("textColor", color);
     this.props.renderBookFunc();
@@ -210,17 +220,42 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           {renderBackgroundColorList()}
         </ul>
         {this.state.isShowBgPicker && (
-          <HexColorPicker
-            color={normalizePickerColor(
-              ConfigService.getReaderConfig("backgroundColor"),
-              "#ffffff"
-            )}
-            onChange={this.handleChooseBgColor}
-            style={{
-              margin: 20,
-              animation: "fade-in 0.2s ease-in-out 0s 1",
-            }}
-          />
+          <div style={{ margin: "10px 20px" }}>
+            <HexColorPicker
+              color={normalizePickerColor(
+                ConfigService.getReaderConfig("backgroundColor"),
+                "#ffffff"
+              )}
+              onChange={this.handleChooseBgColor}
+              style={{
+                marginBottom: 10,
+                animation: "fade-in 0.2s ease-in-out 0s 1",
+              }}
+            />
+            <input
+              className="color-input-box"
+              value={this.state.bgColorInput}
+              placeholder="#rrggbb / rgba(r,g,b,a)"
+              onChange={(e) => this.setState({ bgColorInput: e.target.value })}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const hex = parseColorInput(this.state.bgColorInput);
+                  if (hex) this.handleChooseBgColor(hex);
+                }
+              }}
+              onBlur={() => {
+                const hex = parseColorInput(this.state.bgColorInput);
+                if (hex) this.handleChooseBgColor(hex);
+                else
+                  this.setState({
+                    bgColorInput: normalizePickerColor(
+                      ConfigService.getReaderConfig("backgroundColor"),
+                      "#ffffff"
+                    ),
+                  });
+              }}
+            />
+          </div>
         )}
         <div
           className="background-color-text"
@@ -260,17 +295,44 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           {renderTextColorList()}
         </ul>
         {this.state.isShowTextPicker && (
-          <HexColorPicker
-            color={normalizePickerColor(
-              ConfigService.getReaderConfig("textColor"),
-              "#000000"
-            )}
-            onChange={this.handleChooseTextColor}
-            style={{
-              margin: 20,
-              animation: "fade-in 0.2s ease-in-out 0s 1",
-            }}
-          />
+          <div style={{ margin: "10px 20px" }}>
+            <HexColorPicker
+              color={normalizePickerColor(
+                ConfigService.getReaderConfig("textColor"),
+                "#000000"
+              )}
+              onChange={this.handleChooseTextColor}
+              style={{
+                marginBottom: 10,
+                animation: "fade-in 0.2s ease-in-out 0s 1",
+              }}
+            />
+            <input
+              className="color-input-box"
+              value={this.state.textColorInput}
+              placeholder="#rrggbb / rgba(r,g,b,a)"
+              onChange={(e) =>
+                this.setState({ textColorInput: e.target.value })
+              }
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const hex = parseColorInput(this.state.textColorInput);
+                  if (hex) this.handleChooseTextColor(hex);
+                }
+              }}
+              onBlur={() => {
+                const hex = parseColorInput(this.state.textColorInput);
+                if (hex) this.handleChooseTextColor(hex);
+                else
+                  this.setState({
+                    textColorInput: normalizePickerColor(
+                      ConfigService.getReaderConfig("textColor"),
+                      "#000000"
+                    ),
+                  });
+              }}
+            />
+          </div>
         )}
       </div>
     );
