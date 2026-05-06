@@ -168,7 +168,6 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
     fs.mkdirSync(path.join(targetPath), { recursive: true });
   }
   await backupToConfigJson();
-  await backupToSyncJson();
   let databaseList = CommonTool.databaseList;
   for (let i = 0; i < databaseList.length; i++) {
     await ipcRenderer.invoke("close-database", {
