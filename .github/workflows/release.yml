@@ -55,7 +55,7 @@ jobs:
         if: github.ref == 'refs/heads/dev'
         shell: bash
         run: |
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          if [[ "${{ matrix.os }}" == "windows-22" ]]; then
             powershell -Command "(Get-Content package.json) -replace '\"productName\": \"Koodo Reader\"', '\"productName\": \"Koodo Reader DEV\"' | Set-Content package.json"
           else
             sed -i.bak 's/"productName": "Koodo Reader"/"productName": "Koodo Reader DEV"/' package.json
