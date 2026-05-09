@@ -517,7 +517,6 @@
   "Voice type": "语音类型",
   "System voice": "系统语音",
   "Purchase the code": "购买兑换码",
-  "After placing your order, you will be redirected to the purchase confirmation page, which will display your product key (i.e., redemption code). The redemption code will also be sent to the email address you provided before placing your order. If you haven’t received it, you can visit this link and use the email address you provided to retrieve your redemption code.": "下单之后，会跳转到购买成功页面，这个页面会展示您的卡密（即兑换码），同时兑换码也会发送到您在下单前填写的邮箱。如果您未收到，可以访问此链接，使用预留的邮箱查询您的兑换码",
   "Please upgrade to Pro to use this feature": "请升级到专业版以使用此功能",
   "Query redemption code": "查询兑换码",
   "Custom voice": "自定义语音",
@@ -1003,5 +1002,7 @@
   "Show number of books in each shelf": "显示每个书架中的图书数量",
   "This data source is not directly supported in browser due to CORS restriction. In order to use it, you need to install the our browser extension. Do you want to go to the extension installation guide now? If you have already installed the extension, you can click the cancel button to continue adding this data source.": "由于浏览器的跨域限制，浏览器中无法直接使用此数据源。您需要安装我们的浏览器扩展程序才能正常使用。是否现在访问安装指南？如果您已经安装了扩展程序，可以点击取消按钮以继续使用此数据源。",
   "You have reached the device limit for your account. Please install the latest mobile version of Koodo Reader to remove unused device.": "您的账户已达到设备数量上限。请安装最新 Koodo Reader 移动版，移除未使用的设备。",
+  "Relink": "重新链接",
+  "The text is empty": "文本为空",
   "Model assignment": "模型分配"
 }

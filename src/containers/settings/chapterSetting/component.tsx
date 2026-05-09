@@ -275,7 +275,7 @@ class ChapterSetting extends React.Component<
             <div
               className="setting-dialog-new-title"
               key={parserLabel}
-              style={{ marginLeft: "15px" }}
+              style={{ marginLeft: "20px" }}
             >
               <span>
                 <span className="setting-plugin-name">{parserLabel}</span>

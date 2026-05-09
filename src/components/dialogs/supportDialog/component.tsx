@@ -273,13 +273,9 @@ class SupportDialog extends React.Component<
                         fontSize: 14,
                       }}
                     >
-                      {getServerRegion() === "china"
-                        ? this.props.t(
-                            "After placing your order, you will be redirected to the purchase confirmation page, which will display your product key (i.e., redemption code). The redemption code will also be sent to the email address you provided before placing your order. If you haven’t received it, you can visit this link and use the email address you provided to retrieve your redemption code."
-                          )
-                        : this.props.t(
-                            "Redemption code has been sent to the email address you provided during checkout. If you haven't received the code, please check the spam foler or contact our support team for assistance."
-                          )}
+                      {this.props.t(
+                        "Redemption code has been sent to the email address you provided during checkout. If you haven't received the code, please check the spam foler or contact our support team for assistance."
+                      )}
                     </p>
                   </div>
                 ) : (
