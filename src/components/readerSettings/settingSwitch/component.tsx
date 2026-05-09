@@ -154,12 +154,10 @@ class SettingSwitch extends React.Component<
                   ? {
                       transform: "translateX(0px)",
                       transition: "transform 0.5s ease",
-                      marginTop: "3px",
                     }
                   : {
                       transform: "translateX(20px)",
                       transition: "transform 0.5s ease",
-                      marginTop: "3px",
                     }
               }
             ></span>
@@ -227,12 +225,10 @@ class SettingSwitch extends React.Component<
                   ? {
                       transform: "translateX(0px)",
                       transition: "transform 0.5s ease",
-                      marginTop: "3px",
                     }
                   : {
                       transform: "translateX(20px)",
                       transition: "transform 0.5s ease",
-                      marginTop: "3px",
                     }
               }
             ></span>
@@ -298,12 +294,10 @@ class SettingSwitch extends React.Component<
                   ? {
                       transform: "translateX(0px)",
                       transition: "transform 0.5s ease",
-                      marginTop: "3px",
                     }
                   : {
                       transform: "translateX(20px)",
                       transition: "transform 0.5s ease",
-                      marginTop: "3px",
                     }
               }
             ></span>
@@ -457,12 +451,10 @@ class SettingSwitch extends React.Component<
                       ? {
                           transform: "translateX(0px)",
                           transition: "transform 0.5s ease",
-                          marginTop: "3px",
                         }
                       : {
                           transform: "translateX(20px)",
                           transition: "transform 0.5s ease",
-                          marginTop: "3px",
                         }
                   }
                 ></span>
