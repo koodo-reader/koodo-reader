@@ -228,16 +228,11 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 </div>
 
                 <span
+                  className="sidebar-shelf-content"
                   style={
                     this.props.isCollapsed
                       ? { display: "none", width: "70%" }
-                      : {
-                          width: "calc(100% - 70px)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: "8px",
-                        }
+                      : {}
                   }
                 >
                   <span className="sidebar-shelf-name">
