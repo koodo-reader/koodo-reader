@@ -195,7 +195,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
                     className="change-location-button"
                     onClick={this.handleSelectBookPath}
                   >
-                    <Trans>Select</Trans>
+                    <Trans>Relink</Trans>
                   </span>
                 </div>
               </div>

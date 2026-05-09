@@ -9,7 +9,7 @@ jobs:
     # Platforms to build on/for
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-22.04, windows-2022, ubuntu-24.04-arm]
+        os: [macos-26, ubuntu-22.04, windows-2022, ubuntu-24.04-arm]
 
     steps:
       - name: Check out Git repository

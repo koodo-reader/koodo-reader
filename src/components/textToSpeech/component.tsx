@@ -594,9 +594,6 @@ class TextToSpeech extends React.Component<
         this.setState({ isAudioOn: false });
         return [];
       }
-      if (nodeTextList.length === 0) {
-        return [];
-      }
       let splitTextList = rawNodeList.flatMap((texts, index) =>
         texts.map((text) => ({ text, index: index }))
       );
@@ -1110,11 +1107,7 @@ class TextToSpeech extends React.Component<
           >
             {this.state.languageList.map((item) => {
               return (
-                <option
-                  value={item}
-                  key={item}
-                  className="lang-setting-option"
-                >
+                <option value={item} key={item} className="lang-setting-option">
                   {langToName(item)}
                 </option>
               );
@@ -1138,7 +1131,10 @@ class TextToSpeech extends React.Component<
             name=""
             className="lang-setting-dropdown"
             id="text-speech-voice"
-            value={[ConfigService.getReaderConfig("voiceName"), ConfigService.getReaderConfig("voiceEngine")].join("#")}
+            value={[
+              ConfigService.getReaderConfig("voiceName"),
+              ConfigService.getReaderConfig("voiceEngine"),
+            ].join("#")}
             onChange={(event) => {
               let selectedValue = event.target.value;
               let [voiceName, plugin] = selectedValue.split("#");
@@ -1305,10 +1301,7 @@ class TextToSpeech extends React.Component<
                 <option value="" className="lang-setting-option">
                   {this.props.t("Please select")}
                 </option>
-                <option
-                  value="system"
-                  className="lang-setting-option"
-                >
+                <option value="system" className="lang-setting-option">
                   {this.props.t("System voice")}
                 </option>
                 <option
@@ -1317,10 +1310,7 @@ class TextToSpeech extends React.Component<
                 >
                   {this.props.t("Official AI Voice")}
                 </option>
-                <option
-                  value="custom"
-                  className="lang-setting-option"
-                >
+                <option value="custom" className="lang-setting-option">
                   {this.props.t("Custom voice")}
                 </option>
               </select>
@@ -1341,7 +1331,10 @@ class TextToSpeech extends React.Component<
                 id="multi-role-narrator-voice"
                 value={
                   this.state.multiRoleNarratorVoice
-                    ? [this.state.multiRoleNarratorVoice, this.state.multiRoleNarratorEngine].join("#")
+                    ? [
+                        this.state.multiRoleNarratorVoice,
+                        this.state.multiRoleNarratorEngine,
+                      ].join("#")
                     : ""
                 }
                 onChange={(event) => {
@@ -1394,7 +1387,10 @@ class TextToSpeech extends React.Component<
                 id="multi-role-male-voice"
                 value={
                   this.state.multiRoleMaleVoice
-                    ? [this.state.multiRoleMaleVoice, this.state.multiRoleMaleEngine].join("#")
+                    ? [
+                        this.state.multiRoleMaleVoice,
+                        this.state.multiRoleMaleEngine,
+                      ].join("#")
                     : ""
                 }
                 onChange={(event) => {
@@ -1447,7 +1443,10 @@ class TextToSpeech extends React.Component<
                 id="multi-role-female-voice"
                 value={
                   this.state.multiRoleFemaleVoice
-                    ? [this.state.multiRoleFemaleVoice, this.state.multiRoleFemaleEngine].join("#")
+                    ? [
+                        this.state.multiRoleFemaleVoice,
+                        this.state.multiRoleFemaleEngine,
+                      ].join("#")
                     : ""
                 }
                 onChange={(event) => {
@@ -1500,7 +1499,10 @@ class TextToSpeech extends React.Component<
                 id="multi-role-child-voice"
                 value={
                   this.state.multiRoleChildVoice
-                    ? [this.state.multiRoleChildVoice, this.state.multiRoleChildEngine].join("#")
+                    ? [
+                        this.state.multiRoleChildVoice,
+                        this.state.multiRoleChildEngine,
+                      ].join("#")
                     : ""
                 }
                 onChange={(event) => {
