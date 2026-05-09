@@ -1028,8 +1028,15 @@ export const compareVersions = (version1: string, version2: string) => {
   return 0; // Versions are equal
 };
 export const clearAllData = async () => {
+  let deviceUuid = "";
+  if (!isElectron) {
+    deviceUuid = ConfigService.getItem("fingerPrint") || "";
+  }
   localStorage.clear();
   sessionStorage.clear();
+  if (deviceUuid && !isElectron) {
+    ConfigService.setItem("fingerPrint", deviceUuid);
+  }
   //clear all indexed db data
 
   if (isElectron) {
