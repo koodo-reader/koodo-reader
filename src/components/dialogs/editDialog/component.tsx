@@ -183,6 +183,14 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
                     className="change-location-button"
                     onClick={() => {
                       const { ipcRenderer } = window.require("electron");
+                      const fs = window.require("fs");
+                      if (
+                        !this.state.bookPath ||
+                        !fs.existsSync(this.state.bookPath)
+                      ) {
+                        toast.error(this.props.t("Book not exists"));
+                        return;
+                      }
                       ipcRenderer.invoke("open-explorer-folder", {
                         path: this.state.bookPath,
                         isFolder: false,
