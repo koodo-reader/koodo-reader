@@ -252,10 +252,6 @@ class SettingSwitch extends React.Component<
                   ConfigService.setReaderConfig("fullTranslationMode", "no");
                   return;
                 }
-                ConfigService.setListConfig(
-                  this.props.currentBook.key,
-                  "wordDefinitionBooks"
-                );
                 let lang = "";
                 if (this.props.htmlBook?.rendition) {
                   try {
@@ -268,6 +264,19 @@ class SettingSwitch extends React.Component<
                     console.error(e);
                   }
                 }
+                if (lang === "ko") {
+                  toast.error(
+                    this.props.t(
+                      "Unsupported language for word definition, currently only Chinese, Japanese and English are supported"
+                    )
+                  );
+                  return;
+                }
+                ConfigService.setListConfig(
+                  this.props.currentBook.key,
+                  "wordDefinitionBooks"
+                );
+
                 this.setState({
                   isWordDefinition: true,
                   wordDefinitionLang: lang,
