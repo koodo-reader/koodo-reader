@@ -786,19 +786,7 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
 };
 export const testCORS = async (url: string) => {
   if (isElectron) return true;
-  // if (window.location.href.startsWith("https://")) {
-  //   if (url.startsWith("http://")) {
-  //     toast.error(
-  //       i18n.t(
-  //         "This data source cannot be accessed due to browser's security policy. Please switch to another data source or HTTPS-based service provider."
-  //       ),
-  //       {
-  //         duration: 8000,
-  //       }
-  //     );
-  //     return false;
-  //   }
-  // }
+
   try {
     const response = await fetch(url, {
       method: "GET", // 或 'POST' 等
@@ -815,13 +803,28 @@ export const testCORS = async (url: string) => {
       return true;
     }
   } catch (error) {
-    toast.error(
-      i18n.t(
-        "This data source cannot be accessed from browser due to CORS policy. Please switch to another data source or CORS-enabled service provider."
-      ) +
-        " " +
-        i18n.t("You can also use the desktop app to avoid this issue.")
-    );
+    if (window.location.href.startsWith("https://")) {
+      if (url.startsWith("http://")) {
+        toast.error(
+          i18n.t(
+            "This data source cannot be accessed due to browser's security policy. Please switch to another data source or HTTPS-based service provider."
+          ),
+          {
+            duration: 8000,
+          }
+        );
+        return false;
+      }
+    } else {
+      toast.error(
+        i18n.t(
+          "This data source cannot be accessed from browser due to CORS policy. Please switch to another data source or CORS-enabled service provider."
+        ) +
+          " " +
+          i18n.t("You can also use the desktop app to avoid this issue.")
+      );
+    }
+
     console.error("CORS not supported:", error);
     return false;
   }
