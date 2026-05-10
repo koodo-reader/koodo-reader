@@ -652,6 +652,10 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                       this.setState({
                         inputQuestion: "",
                       });
+                      let el = this.textareaRef.current;
+                      if (el) {
+                        el.style.height = "40px";
+                      }
                     }}
                   >
                     {this.props.t("Send")}
