@@ -229,88 +229,88 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     return (
       <div className="viewer">
         <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
+
         {!this.props.isHidePageButton && (
-          <>
+          <div
+            className="previous-chapter-single-container"
+            onClick={async () => {
+              if (lock) return;
+              lock = true;
+              await this.props.htmlBook.rendition.prev();
+              this.handleLocation();
+              setTimeout(() => (lock = false), throttleTime);
+            }}
+            style={{
+              left: this.props.isNavLocked ? 315 : 15,
+            }}
+          >
+            <span className="icon-dropdown previous-chapter-single"></span>
+          </div>
+        )}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 10,
+            right: this.props.isSettingLocked ? 315 : 15,
+            display: "flex",
+            flexDirection: "column-reverse",
+            alignItems: "center",
+            gap: "8px",
+            zIndex: 10,
+          }}
+        >
+          {!this.props.isHidePageButton && (
             <div
-              className="previous-chapter-single-container"
+              className="next-chapter-single-container"
               onClick={async () => {
                 if (lock) return;
                 lock = true;
-                await this.props.htmlBook.rendition.prev();
+                await this.props.htmlBook.rendition.next();
                 this.handleLocation();
                 setTimeout(() => (lock = false), throttleTime);
               }}
-              style={{
-                left: this.props.isNavLocked ? 315 : 15,
-              }}
+              style={{ position: "static" }}
             >
-              <span className="icon-dropdown previous-chapter-single"></span>
+              <span className="icon-dropdown next-chapter-single"></span>
             </div>
+          )}
+          {!this.props.isHideAudiobookButton && (
             <div
-              style={{
-                position: "absolute",
-                bottom: 10,
-                right: this.props.isSettingLocked ? 315 : 15,
-                display: "flex",
-                flexDirection: "column-reverse",
-                alignItems: "center",
-                gap: "8px",
-                zIndex: 10,
+              className="next-chapter-single-container"
+              onClick={async () => {
+                this.props.handleSpeechDialog(!this.props.isSpeechOpen);
               }}
+              style={{ position: "static", transform: "rotate(0deg)" }}
             >
+              <span
+                style={this.props.isSpeechOpen ? { fontWeight: "bold" } : {}}
+                className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
+              ></span>
+            </div>
+          )}
+          {!this.props.isHideAIButton &&
+            ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
               <div
                 className="next-chapter-single-container"
                 onClick={async () => {
-                  if (lock) return;
-                  lock = true;
-                  await this.props.htmlBook.rendition.next();
-                  this.handleLocation();
-                  setTimeout(() => (lock = false), throttleTime);
+                  this.props.handleMenuMode("assistant");
+                  this.props.handleOriginalText(
+                    await this.props.htmlBook.rendition.chapterText()
+                  );
+                  this.props.handleOpenMenu(true);
                 }}
-                style={{ position: "static" }}
+                style={{
+                  position: "static",
+                  transform: "rotate(0deg)",
+                  fontWeight: "bold",
+                  fontSize: "17px",
+                }}
               >
-                <span className="icon-dropdown next-chapter-single"></span>
+                AI
               </div>
-              {!this.props.isHideAudiobookButton && (
-                <div
-                  className="next-chapter-single-container"
-                  onClick={async () => {
-                    this.props.handleSpeechDialog(!this.props.isSpeechOpen);
-                  }}
-                  style={{ position: "static", transform: "rotate(0deg)" }}
-                >
-                  <span
-                    style={
-                      this.props.isSpeechOpen ? { fontWeight: "bold" } : {}
-                    }
-                    className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
-                  ></span>
-                </div>
-              )}
-              {!this.props.isHideAIButton &&
-                ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
-                  <div
-                    className="next-chapter-single-container"
-                    onClick={async () => {
-                      this.props.handleMenuMode("assistant");
-                      this.props.handleOriginalText(
-                        await this.props.htmlBook.rendition.chapterText()
-                      );
-                      this.props.handleOpenMenu(true);
-                    }}
-                    style={{
-                      position: "static",
-                      transform: "rotate(0deg)",
-                      fontWeight: "bold",
-                      fontSize: "17px",
-                    }}
-                  >
-                    AI
-                  </div>
-                )}
-            </div>
-          </>
-        )}
+            )}
+        </div>
+
         <div
           style={{
             position: "absolute",
