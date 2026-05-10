@@ -17,7 +17,6 @@ import { sampleQuestion } from "../../../constants/settingList";
 class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
   private chatBoxRef: React.RefObject<HTMLDivElement>;
   private textareaRef: React.RefObject<HTMLTextAreaElement>;
-  private singleLineScrollHeight: number = 0;
   private answerTextAccumulator: string = "";
   private updateInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -93,22 +92,20 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
   autoResizeTextarea = () => {
     const el = this.textareaRef.current;
     if (!el) return;
-    // Reset height to measure scrollHeight correctly
-    el.style.height = "auto";
-    const lineHeight = parseInt(getComputedStyle(el).lineHeight) || 20;
+    const style = getComputedStyle(el);
+    const lineHeight = parseFloat(style.lineHeight) || 20;
+    const paddingTop = parseFloat(style.paddingTop) || 0;
+    const paddingBottom = parseFloat(style.paddingBottom) || 0;
     const maxLines = 5;
-    const maxHeight =
-      lineHeight * maxLines +
-      parseInt(getComputedStyle(el).paddingTop) +
-      parseInt(getComputedStyle(el).paddingBottom);
-    if (el.scrollHeight >= maxHeight) {
+    const maxHeight = lineHeight * maxLines + paddingTop + paddingBottom;
+    // 先重置为最小高度，让 scrollHeight 反映真实内容高度
+    el.style.height = "0px";
+    const contentHeight = el.scrollHeight;
+    if (contentHeight >= maxHeight) {
       el.style.height = maxHeight + "px";
       el.style.overflowY = "auto";
-    } else if (el.scrollHeight === 58) {
-      el.style.height = "40px";
-      el.style.overflowY = "hidden";
     } else {
-      el.style.height = el.scrollHeight - 20 + "px";
+      el.style.height = contentHeight + "px";
       el.style.overflowY = "hidden";
     }
   };
@@ -621,7 +618,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                     className="trans-add-content-box"
                     style={{
                       height: "40px",
-                      paddingRight: "40px",
                       resize: "none",
                       overflowY: "hidden",
                       marginRight: "10px",
@@ -649,13 +645,13 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                         return;
                       }
                       this.handleNewQuestion(this.state.inputQuestion);
-                      this.setState({
-                        inputQuestion: "",
+                      this.setState({ inputQuestion: "" }, () => {
+                        const el = this.textareaRef.current;
+                        if (el) {
+                          el.style.height = "40px";
+                          el.style.overflowY = "hidden";
+                        }
                       });
-                      let el = this.textareaRef.current;
-                      if (el) {
-                        el.style.height = "40px";
-                      }
                     }}
                   >
                     {this.props.t("Send")}
