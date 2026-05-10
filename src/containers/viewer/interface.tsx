@@ -41,6 +41,7 @@ export interface ViewerProps {
   handleFetchPercentage: (book: BookModel) => void;
   handleScale: (scale: string) => void;
   renderBookFunc: () => void;
+  handleBackgroundColor: (color: string) => void;
 }
 export interface ViewerState {
   key: string;
