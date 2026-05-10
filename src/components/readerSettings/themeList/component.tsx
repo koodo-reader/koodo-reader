@@ -142,7 +142,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             >
               {index > 3 && (
                 <span
-                  className="icon-close theme-color-delete theme-color-delete-hover"
+                  className="icon-close theme-color-delete theme-color-delete-hover theme-color-delete-button"
                   onClick={(e) => {
                     e.stopPropagation();
                     ConfigService.deleteListConfig(item, "themeColors");

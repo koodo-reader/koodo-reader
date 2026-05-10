@@ -63,6 +63,14 @@
   cursor: pointer;
 }
 .theme-color-delete {
+  float: right;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 1;
+}
+.theme-color-delete-hover {
+  opacity: 0;
+  transition: opacity 0.15s ease;
   position: absolute;
   top: -7px;
   right: -7px;
@@ -74,12 +82,6 @@
   border-radius: 50%;
   background: rgba(80, 80, 80, 0.75);
   color: #fff;
-  cursor: pointer;
-  z-index: 1;
-}
-.theme-color-delete-hover {
-  opacity: 0;
-  transition: opacity 0.15s ease;
 }
 .background-color-circle:hover .theme-color-delete-hover {
   opacity: 1;
