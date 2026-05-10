@@ -210,6 +210,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       )
     ) {
       window.currentBookKey = this.props.currentBook.key;
+      this.props.handleBackgroundColor(
+        ConfigService.getReaderConfig("backgroundColor") || ""
+      );
     }
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, "zip", path);
     BookUtil.fetchBook(

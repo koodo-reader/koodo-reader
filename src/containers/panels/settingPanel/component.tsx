@@ -48,7 +48,6 @@ class SettingPanel extends React.Component<
         this.props.currentBook.key,
         "seperateStyleConfig"
       );
-      return;
     } else {
       const readerConfig = JSON.parse(
         localStorage.getItem("readerConfig") || "{}"
