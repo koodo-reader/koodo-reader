@@ -58,8 +58,8 @@ if (!process.env.SERVER_USERNAME) {
 
 if (ALLOWED_ORIGINS.length === 0) {
   console.warn(
-    "Warning: No ALLOWED_ORIGINS configured. Cross-origin requests will be denied. " +
-      "Set ALLOWED_ORIGINS to a comma-separated list of trusted origins if needed."
+    "Warning: No ALLOWED_ORIGINS configured. All cross-origin requests will be allowed. " +
+      "Set ALLOWED_ORIGINS to a comma-separated list of trusted origins to restrict access."
   );
 }
 
@@ -86,7 +86,10 @@ function applyCorsHeaders(req, res) {
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+  if (
+    origin &&
+    (ALLOWED_ORIGINS.length === 0 || ALLOWED_ORIGINS.includes(origin))
+  ) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Credentials", "true");
     return true;
