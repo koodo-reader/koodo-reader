@@ -106,10 +106,14 @@ export const vexTextareaAsync = (message, value = "") => {
   });
 };
 
-export const vexComfirmAsync = (message, confirmText: string = "Confirm") => {
+export const vexComfirmAsync = (
+  message: string,
+  confirmText: string = "Confirm",
+  cancelText: string = "Cancel"
+) => {
   return new Promise((resolve) => {
     window.vex.dialog.buttons.YES.text = i18n.t(confirmText);
-    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    window.vex.dialog.buttons.NO.text = i18n.t(cancelText);
     window.vex.dialog.confirm({
       unsafeMessage: i18n.t(message),
       contentClassName: "custom-confirm-width",
