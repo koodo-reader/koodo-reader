@@ -2,7 +2,6 @@ import React from "react";
 import { SettingInfoProps, SettingInfoState, AIModelConfig } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import DatabaseService from "../../../utils/storage/databaseService";
 import { handleContextMenu, vexTextareaAsync } from "../../../utils/common";
 import {
   ConfigService,
@@ -38,8 +37,21 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
     };
   }
 
-  getAIPlugins = () => {
-    return (this.props.plugins || []).filter((item) => item.type === "ai");
+  getAIModels = () => {
+    // Load AI models from ConfigService
+    let aiModels: { key: string; displayName: string; config: any }[] = [];
+    const aiModelConfig =
+      ConfigService.getAllObjectConfig("aiModelConfig") || {};
+    Object.values(aiModelConfig).forEach((entry: any) => {
+      if (entry && entry.key) {
+        aiModels.push({
+          key: entry.key,
+          displayName: entry.displayName,
+          config: entry.config,
+        });
+      }
+    });
+    return aiModels;
   };
 
   parseConfig = (plugin: any): AIModelConfig | null => {
@@ -233,28 +245,18 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
       providerId: selectedProvider || "custom",
       providerName: provider ? provider.name : "Custom",
     };
-    const pluginRecord = {
-      key: isEditing ? editingKey : Date.now().toString(),
-      type: "ai",
+    const key = isEditing ? editingKey : Date.now().toString();
+    const modelEntry = {
+      key,
       displayName: modelName,
-      icon: "ai-assist",
-      version: "1.0.0",
-      autoValue: "",
-      config: config,
-      langList: [],
-      voiceList: [],
-      scriptSHA256: "",
-      script: "",
+      config,
     };
 
     try {
-      if (isEditing) {
-        await DatabaseService.updateRecord(pluginRecord, "plugins");
-        toast.success(this.props.t("Update successful"));
-      } else {
-        await DatabaseService.saveRecord(pluginRecord, "plugins");
-        toast.success(this.props.t("Addition successful"));
-      }
+      ConfigService.setObjectConfig(key, modelEntry, "aiModelConfig");
+      toast.success(
+        this.props.t(isEditing ? "Update successful" : "Addition successful")
+      );
       this.props.handleFetchPlugins();
       this.resetForm();
     } catch (e: any) {
@@ -262,10 +264,9 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
   };
 
-  handleDelete = async (key: string) => {
+  handleDelete = (key: string) => {
     try {
-      await DatabaseService.deleteRecord(key, "plugins");
-      this.props.handleFetchPlugins();
+      ConfigService.deleteObjectConfig(key, "aiModelConfig");
       // 如果被删除的模型正被某个功能使用，则清空对应配置
       if (this.state.aiTranslateModel === key) {
         this.setState({ aiTranslateModel: "" });
@@ -287,7 +288,14 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
   };
 
   handleEdit = (plugin: any) => {
-    const config = this.parseConfig(plugin);
+    const entry = ConfigService.getObjectConfig(
+      plugin.key,
+      "aiModelConfig",
+      null
+    );
+    const config: AIModelConfig | null = entry
+      ? entry.config
+      : this.parseConfig(plugin);
     if (!config) {
       toast.error(this.props.t("Failed to parse model configuration"));
       return;
@@ -520,7 +528,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
   };
 
   render() {
-    const aiPlugins = this.getAIPlugins();
+    const aiModels = this.getAIModels();
 
     return (
       <>
@@ -538,7 +546,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <Trans>Added AI models</Trans>
         </div>
 
-        {aiPlugins.length === 0 && (
+        {aiModels.length === 0 && (
           <div
             style={{
               textAlign: "center",
@@ -551,7 +559,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
           </div>
         )}
 
-        {aiPlugins.map((item) => {
+        {aiModels.map((item) => {
           const config = this.parseConfig(item);
           return (
             <div
@@ -638,7 +646,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <option value="" className="lang-setting-option">
               {this.props.t("Please select")}
             </option>
-            {aiPlugins.map((item) => (
+            {aiModels.map((item) => (
               <option
                 key={item.key}
                 value={item.key}
@@ -675,7 +683,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <option value="" className="lang-setting-option">
               {this.props.t("Please select")}
             </option>
-            {aiPlugins.map((item) => (
+            {aiModels.map((item) => (
               <option
                 key={item.key}
                 value={item.key}
@@ -712,7 +720,7 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <option value="" className="lang-setting-option">
               {this.props.t("Please select")}
             </option>
-            {aiPlugins.map((item) => (
+            {aiModels.map((item) => (
               <option
                 key={item.key}
                 value={item.key}

@@ -15,6 +15,7 @@ import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import {
   getPageWidth,
+  getParserRegex,
   getPdfPassword,
   getServerRegion,
   showDownloadProgress,
@@ -159,7 +160,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.format === "PDF" &&
       (this.props.readerMode === "double" ||
         this.props.readerMode === "scroll") &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
       let highlightersByChapter = highlighters.filter((item: Note) => {
         let cfi = JSON.parse(item.cfi);
@@ -201,6 +204,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (this.state.rendition) {
       this.state.rendition.removeContent();
     }
+    if (
+      ConfigService.getAllListConfig("seperateStyleBooks").includes(
+        this.props.currentBook?.key
+      )
+    ) {
+      window.currentBookKey = this.props.currentBook.key;
+      this.props.handleBackgroundColor(
+        ConfigService.getReaderConfig("backgroundColor") || ""
+      );
+    }
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, "zip", path);
     BookUtil.fetchBook(
       isCacheExsit ? "cache-" + key : key,
@@ -239,6 +252,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? "sliding"
               : "",
           convertChinese: ConfigService.getReaderConfig("convertChinese"),
+          parserRegex: getParserRegex(
+            this.props.currentBook.format,
+            this.props.currentBook.key
+          ),
           fullTranslationMode:
             ConfigService.getAllListConfig("fullTranslationBooks").includes(
               this.props.currentBook.key
@@ -246,7 +263,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? ConfigService.getReaderConfig("fullTranslationMode")
               : "no",
           textOrientation: ConfigService.getReaderConfig("textOrientation"),
-          parserRegex: "",
           isDarkMode:
             ConfigService.getReaderConfig("backgroundColor") ===
             "rgba(44,47,49,1)"
@@ -261,7 +277,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isBionic: ConfigService.getReaderConfig("isBionic"),
           password: getPdfPassword(this.props.currentBook),
           scale: parseFloat(this.props.scale),
-          isConvertPDF: ConfigService.getReaderConfig("isConvertPDF"),
+          isConvertPDF: ConfigService.getAllListConfig(
+            "convertPDFBooks"
+          ).includes(this.props.currentBook.key)
+            ? "yes"
+            : "no",
           ocrLang: ConfigService.getReaderConfig("ocrLang")
             ? ConfigService.getReaderConfig("ocrLang")
             : ConfigService.getReaderConfig("ocrEngine") === "tesseract"
@@ -334,7 +354,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
     if (
       this.props.currentBook.format === "PDF" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
     } else {
       StyleUtil.addDefaultCss(this.props.currentBook.key);
@@ -415,7 +437,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       });
       if (
         this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
       ) {
       } else {
         StyleUtil.addDefaultCss(this.props.currentBook.key);
@@ -436,6 +460,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       if (
         flattenChapters.length === 1 &&
         flattenChapters[0].label === "Title"
+      ) {
+        return;
+      }
+      if (
+        flattenChapters.length > 0 &&
+        flattenChapters[0].label === "Chapter 0"
       ) {
         return;
       }
@@ -465,7 +495,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
   handleBindGesture = () => {
-    let docs = getIframeDoc(this.props.currentBook.format);
+    let docs = getIframeDoc(
+      this.props.currentBook.format,
+      this.props.currentBook.key
+    );
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
@@ -478,7 +511,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       doc.addEventListener("mouseup", (event) => {
         if (
           this.props.currentBook.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          )
         ) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
@@ -506,7 +541,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       doc.addEventListener("contextmenu", (event) => {
         if (
           this.props.currentBook.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          )
         ) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
@@ -539,20 +576,20 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       <>
         {this.props.htmlBook ? (
           <PopupMenu
-            {...{
+            {...({
               rendition: this.props.htmlBook.rendition,
               rect: this.state.rect,
               chapterDocIndex: this.state.chapterDocIndex,
               chapter: this.state.chapter,
-            }}
+            } as any)}
           />
         ) : null}
         {this.props.htmlBook ? (
           <PopupRefer
-            {...{
+            {...({
               rendition: this.props.htmlBook.rendition,
               chapterDocIndex: this.state.chapterDocIndex,
-            }}
+            } as any)}
           />
         ) : null}
         {this.props.isOpenMenu &&
@@ -562,22 +599,22 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.menuMode === "assistant" ||
           this.props.menuMode === "note") ? (
           <PopupBox
-            {...{
+            {...({
               rendition: this.props.htmlBook.rendition,
               rect: this.state.rect,
               chapterDocIndex: this.state.chapterDocIndex,
               chapter: this.state.chapter,
-            }}
+            } as any)}
           />
         ) : null}
         {this.props.htmlBook && this.props.currentBook.format !== "PDF" && (
           <ImageViewer
-            {...{
+            {...({
               isShow: this.props.isShow,
               rendition: this.props.htmlBook.rendition,
               handleEnterReader: this.props.handleEnterReader,
               handleLeaveReader: this.props.handleLeaveReader,
-            }}
+            } as any)}
           />
         )}
         <div

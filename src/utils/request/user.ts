@@ -15,7 +15,7 @@ import packageJson from "../../../package.json";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
-import { getServerRegion } from "../common";
+import { getServerRegion, vexComfirmAsync } from "../common";
 declare var window: any;
 let userRequest: UserRequest | undefined;
 
@@ -88,6 +88,13 @@ export const loginRegister = async (service: string, code: string) => {
         toast.error(i18n.t("Service unavailable") + ": " + diagnosis);
       }
     }
+  }
+  if (response.code === 20010) {
+    vexComfirmAsync(
+      i18n.t(
+        "You have reached the device limit for your account. Please install the latest mobile version of Koodo Reader to remove unused device by visiting Settings - Account - Device Management. "
+      )
+    );
   }
   return response;
 };

@@ -9,6 +9,7 @@ export interface ConvertDialogProps {
   handleConvertDialog: (isAboutOpen: boolean) => void;
   isAuthed: boolean;
   t: (title: string) => string;
+  isSettingLocked: boolean;
 }
 export interface ConvertDialogState {
   isShowExportAll: boolean;

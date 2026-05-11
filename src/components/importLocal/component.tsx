@@ -10,7 +10,10 @@ import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  CommonTool,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../utils/file/coverUtil";
 import {
   calculateFileMD5,
@@ -19,6 +22,19 @@ import {
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit.min";
+
+// Convert supportedFormats to react-dropzone v14+ accept format
+// Key is MIME type, value is array of file extensions
+const supportedFormatsAccept = supportedFormats.reduce<
+  Record<string, string[]>
+>((obj, ext) => {
+  const mimeType = CommonTool.getMimeType(ext.replace(".", ""));
+  if (mimeType) {
+    if (!obj[mimeType]) obj[mimeType] = [];
+    obj[mimeType].push(ext);
+  }
+  return obj;
+}, {});
 declare var window: any;
 let clickFilePath = "";
 
@@ -360,7 +376,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           }
           this.setState({ importingShelfTitle: "" });
         }}
-        accept={supportedFormats}
+        accept={supportedFormatsAccept}
         multiple={true}
       >
         {({ getRootProps, getInputProps }) => (

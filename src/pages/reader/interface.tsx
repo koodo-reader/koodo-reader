@@ -9,6 +9,7 @@ export interface ReaderProps {
   isSettingLocked: boolean;
   isConvertOpen: boolean;
   isSpeechOpen: boolean;
+  isOpenPopupOptionDialog: boolean;
   isSearch: boolean;
   isAuthed: boolean;
   isHidePageButton: boolean;
@@ -34,6 +35,7 @@ export interface ReaderProps {
   handleScale: (scale: string) => void;
   renderBookFunc: () => void;
   handleFetchAuthed: () => void;
+  handleFetchUserInfo: () => Promise<any>;
 }
 
 export interface ReaderState {

@@ -96,24 +96,24 @@ class AccountSetting extends React.Component<
     this.props.handleFetchDefaultSyncOption();
     toast.success(this.props.t("Log out successful"));
   };
-  handleAddLoginOption = (event: any) => {
-    if (!event.target.value) {
+  handleAddLoginOption = (value: string) => {
+    if (!value) {
       return;
     }
-    this.setState({ settingLogin: event.target.value });
-    if (event.target.value !== "email") {
+    this.setState({ settingLogin: value });
+    if (value !== "email") {
       let url = LoginHelper.getAuthUrl(
-        event.target.value,
+        value,
         "manual",
-        getServerRegion() === "china" && event.target.value === "microsoft"
+        getServerRegion() === "china" && value === "microsoft"
           ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
           : KookitConfig.ThirdpartyConfig.callbackUrl
       );
       this.handleJump(url);
     }
   };
-  handleDeleteLoginOption = async (event: any) => {
-    if (!event.target.value) {
+  handleDeleteLoginOption = async (targetValue: string) => {
+    if (!targetValue) {
       return;
     }
     if (this.props.loginOptionList.length === 1) {
@@ -125,7 +125,7 @@ class AccountSetting extends React.Component<
     });
     let userRequest = await getUserRequest();
     let response = await userRequest.removeLogin({
-      provider: event.target.value,
+      provider: targetValue,
     });
     if (response.code === 200) {
       toast.success(this.props.t("Removal successful"), {
@@ -661,6 +661,7 @@ class AccountSetting extends React.Component<
             <select
               name=""
               className="lang-setting-dropdown"
+              value={getServerRegion()}
               onChange={(event) => {
                 if (!event.target.value) {
                   return;
@@ -684,7 +685,6 @@ class AccountSetting extends React.Component<
                   value={item.value}
                   key={item.value}
                   className="lang-setting-option"
-                  selected={item.value === getServerRegion()}
                 >
                   {this.props.t(item.label)}
                 </option>
@@ -693,26 +693,32 @@ class AccountSetting extends React.Component<
           )}
         </div>
         {!this.props.isAuthed && (
-          <div className="setting-dialog-new-title">
-            <Trans>Select login method</Trans>
-            <select
-              name=""
-              className="lang-setting-dropdown"
-              onChange={this.handleAddLoginOption}
-            >
-              {[{ label: "Please select", value: "" }, ...loginList].map(
-                (item) => (
-                  <option
-                    value={item.value}
+          <>
+            <div className="setting-dialog-new-title">
+              <Trans>Select login method</Trans>
+            </div>
+            <div className="account-login-grid">
+              {loginList.map((item) => {
+                return (
+                  <div
+                    className="account-login-option"
                     key={item.value}
-                    className="lang-setting-option"
+                    onClick={() => {
+                      this.handleAddLoginOption(item.value);
+                    }}
                   >
-                    {this.props.t(item.label)}
-                  </option>
-                )
-              )}
-            </select>
-          </div>
+                    <span
+                      className={item.icon + " account-login-option-icon"}
+                      style={{ fontSize: item.fontsize }}
+                    ></span>
+                    <span className="account-login-option-label">
+                      {this.props.t(item.label)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
         {!this.props.isAuthed && (
           <>
@@ -760,9 +766,7 @@ class AccountSetting extends React.Component<
                       (item) => item.provider === login.value
                     )
                   ) {
-                    this.handleAddLoginOption({
-                      target: { value: login.value },
-                    });
+                    this.handleAddLoginOption(login.value);
                   }
                 }}
               >
@@ -801,9 +805,7 @@ class AccountSetting extends React.Component<
                     }}
                     onClick={(event) => {
                       event.stopPropagation();
-                      this.handleDeleteLoginOption({
-                        target: { value: login.value },
-                      });
+                      this.handleDeleteLoginOption(login.value);
                     }}
                   ></span>
                 ) : (

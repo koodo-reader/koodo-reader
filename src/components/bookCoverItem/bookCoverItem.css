@@ -8,6 +8,25 @@
 .book-cover-item-header {
   width: 150px;
 }
+.book-cover-status-actions {
+  float: right;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 6px;
+  margin-top: 4px;
+}
+.book-cover-status-actions .book-heart-action {
+  font-size: 14px;
+  font-weight: bold;
+  opacity: 0.8;
+  color: rgb(231, 69, 69);
+}
+.book-cover-status-actions .book-top-action {
+  font-size: 14px;
+  opacity: 1;
+  color: #77a2da;
+}
 .book-cover-item-cover {
   /* height: 170px; */
   opacity: 1;

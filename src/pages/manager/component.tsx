@@ -24,6 +24,7 @@ import SortShelfDialog from "../../components/dialogs/sortShelfDialog";
 import PopupNote from "../../components/popups/popupNote";
 import toast from "react-hot-toast";
 import { supportedFormats } from "../../utils/common";
+import Footer from "../../components/footer";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -115,7 +116,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               height: "360px",
             }}
           >
-            <PopupNote {...PopupProps} />
+            <PopupNote {...(PopupProps as any)} />
           </div>
         )}
 
@@ -205,7 +206,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
             },
           }}
         />
-        <Header {...{ handleDrag: this.handleDrag }} />
+        <Header {...({ handleDrag: this.handleDrag } as any)} />
         {this.props.isOpenDeleteDialog && <DeleteDialog />}
         {this.props.isOpenEditDialog && <EditDialog />}
         {this.props.isOpenAddDialog && <AddDialog />}
@@ -229,6 +230,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
             ))}
           </Switch>
         )}
+        <Footer />
       </div>
     );
   }

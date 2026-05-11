@@ -146,12 +146,12 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
               !this.props.isShowPopupNote &&
               !this.props.isCard ? (
                 <DeleteIcon
-                  {...{
+                  {...({
                     tagName: item,
                     mode: "tags",
                     index: index,
                     handleChangeTag: this.handleChangeTag,
-                  }}
+                  } as any)}
                 />
               ) : null}
             </div>

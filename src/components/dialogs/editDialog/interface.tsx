@@ -14,4 +14,5 @@ export interface EditDialogProps extends RouteComponentProps<any> {
 export interface EditDialogState {
   isCheck: boolean;
   coverPreview: string;
+  bookPath: string;
 }

@@ -3,7 +3,11 @@ import "./popupOption.css";
 
 import { PopupOptionProps } from "./interface";
 import ColorOption from "../../colorOption";
-import { popupList } from "../../../constants/popupList";
+import {
+  getEnabledPopupOptionKeys,
+  popupOptionMap,
+  PopupOptionKey,
+} from "../../../constants/popupList";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import {
@@ -28,7 +32,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
     if (!text) return;
     if (
       this.props.currentBook.format === "PDF" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
       text = text.split("\n").join(" ").trim();
     }
@@ -159,48 +165,91 @@ class PopupOption extends React.Component<PopupOptionProps> {
     }
   };
 
+  handleReadFromHere = () => {
+    const text =
+      getSelectionSentence(this.props.currentBook.format) ||
+      getSelection(this.props.currentBook.format);
+    if (!text) return;
+
+    this.props.handleSpeechStartText(text);
+    this.props.handleSpeechAutoStart(true);
+    this.props.handleSpeechDialog(true);
+    this.props.handleOpenMenu(false);
+  };
+
+  handleAssistant = () => {
+    const text = getSelection(this.props.currentBook.format);
+    if (!text) return;
+
+    this.props.handleQuoteText(text);
+    this.props.handleMenuMode("assistant");
+    this.props.handleOpenMenu(true);
+  };
+
+  handleOpenPopupOptionDialog = () => {
+    this.props.handleOpenMenu(false);
+    this.props.handlePopupOptionDialog(true);
+  };
+
+  handleOptionClick = (optionKey: PopupOptionKey) => {
+    switch (optionKey) {
+      case "note":
+        this.handleNote();
+        break;
+      case "highlight":
+        this.handleDigest();
+        break;
+      case "translation":
+        this.handleTrans();
+        break;
+      case "copy":
+        this.handleCopy();
+        break;
+      case "search-book":
+        this.handleSearchBook();
+        break;
+      case "dict":
+        this.handleDict();
+        break;
+      case "browser":
+        this.handleSearchInternet();
+        break;
+      case "speaker":
+        this.handleSpeak();
+        break;
+      case "speech-start":
+        this.handleReadFromHere();
+        break;
+      case "assistant":
+        this.handleAssistant();
+        break;
+      default:
+        break;
+    }
+  };
+
   render() {
     const PopupProps = {
       handleDigest: this.handleDigest,
     };
+    const popupOptionKeys = getEnabledPopupOptionKeys().filter((item) => {
+      return !(
+        item === "assistant" &&
+        ConfigService.getReaderConfig("isDisableAI") === "yes"
+      );
+    });
     const renderMenuList = () => {
       return (
         <>
           <div className="menu-list">
-            {popupList.map((item, index) => {
+            {popupOptionKeys.map((itemKey) => {
+              const item = popupOptionMap[itemKey];
               return (
                 <div
-                  key={item.name}
+                  key={item.key}
                   className={item.name + "-option"}
                   onClick={() => {
-                    switch (index) {
-                      case 0:
-                        this.handleNote();
-                        break;
-                      case 1:
-                        this.handleDigest();
-                        break;
-                      case 2:
-                        this.handleTrans();
-                        break;
-                      case 3:
-                        this.handleCopy();
-                        break;
-                      case 4:
-                        this.handleSearchBook();
-                        break;
-                      case 5:
-                        this.handleDict();
-                        break;
-                      case 6:
-                        this.handleSearchInternet();
-                        break;
-                      case 7:
-                        this.handleSpeak();
-                        break;
-                      default:
-                        break;
-                    }
+                    this.handleOptionClick(item.key);
                   }}
                 >
                   <span
@@ -214,8 +263,24 @@ class PopupOption extends React.Component<PopupOptionProps> {
                 </div>
               );
             })}
+            <div
+              className="setting-option"
+              onClick={() => {
+                this.handleOpenPopupOptionDialog();
+              }}
+            >
+              <span
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content={this.props.t("Customize popup menu")}
+              >
+                <span
+                  className="icon-setting setting-icon"
+                  style={{ color: "#8a8f9f", fontSize: "24px" }}
+                ></span>
+              </span>
+            </div>
           </div>
-          <ColorOption {...PopupProps} />
+          <ColorOption {...(PopupProps as any)} />
         </>
       );
     };

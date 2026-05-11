@@ -9,13 +9,13 @@ import {
   skinList,
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
-import { Panel as ColorPickerPanel } from "rc-color-picker";
-import "rc-color-picker/assets/index.css";
+import { HexColorPicker } from "react-colorful";
 import { dropdownList } from "../../../constants/dropdownList";
 import {
   loadFontData,
   reloadManager,
   vexComfirmAsync,
+  parseColorInput,
 } from "../../../utils/common";
 import { applyCustomSystemCSS } from "../../../utils/reader/launchUtil";
 
@@ -40,6 +40,8 @@ class AppearanceSetting extends React.Component<
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
+      isShowShelfBookCount:
+        ConfigService.getReaderConfig("isShowShelfBookCount") === "yes",
       isCustomSystemCSS:
         ConfigService.getReaderConfig("isCustomSystemCSS") === "yes",
       customSystemCSS: ConfigService.getReaderConfig("customSystemCSS") || "",
@@ -78,12 +80,10 @@ class AppearanceSetting extends React.Component<
   };
 
   handleSetting = (stateName: string) => {
-    this.setState({ [stateName]: !this.state[stateName] } as any);
-    ConfigService.setReaderConfig(
-      stateName,
-      this.state[stateName] ? "no" : "yes"
-    );
-    this.handleRest(this.state[stateName]);
+    const nextValue = !this.state[stateName];
+    this.setState({ [stateName]: nextValue } as any);
+    ConfigService.setReaderConfig(stateName, nextValue ? "yes" : "no");
+    this.handleRest(nextValue);
   };
 
   changeSkin = (skin: string) => {
@@ -121,6 +121,7 @@ class AppearanceSetting extends React.Component<
     let body = document.getElementsByTagName("body")[0];
     body?.setAttribute("style", "font-family:" + font + "!important");
     ConfigService.setReaderConfig("systemFont", font);
+    this.forceUpdate();
   };
 
   handleTheme = (color: string, index: number) => {
@@ -132,8 +133,7 @@ class AppearanceSetting extends React.Component<
     reloadManager();
   };
 
-  handleCustomColor = (colorObj: any) => {
-    const color = colorObj.color;
+  handleCustomColor = (color: string) => {
     this.setState({ pendingCustomColor: color });
   };
 
@@ -200,6 +200,7 @@ class AppearanceSetting extends React.Component<
           <select
             name=""
             className="lang-setting-dropdown"
+            value={ConfigService.getReaderConfig("systemFont")}
             onChange={(event) => {
               this.changeFont(event.target.value);
             }}
@@ -211,11 +212,6 @@ class AppearanceSetting extends React.Component<
                   value={item.value}
                   key={item.value}
                   className="lang-setting-option"
-                  selected={
-                    item.value === ConfigService.getReaderConfig("systemFont")
-                      ? true
-                      : false
-                  }
                 >
                   {this.props.t(item.label)}
                 </option>
@@ -307,14 +303,31 @@ class AppearanceSetting extends React.Component<
                 alignItems: "center",
               }}
             >
-              <ColorPickerPanel
-                enableAlpha={false}
+              <HexColorPicker
                 color={this.state.pendingCustomColor}
                 onChange={this.handleCustomColor}
-                mode="RGB"
                 style={{
                   margin: "10px 0",
                   animation: "fade-in 0.2s ease-in-out 0s 1",
+                }}
+              />
+              <input
+                className="color-input-box"
+                style={{ marginBottom: 8 }}
+                value={this.state.pendingCustomColor}
+                placeholder="#rrggbb / rgba(r,g,b,a)"
+                onChange={(e) =>
+                  this.setState({ pendingCustomColor: e.target.value })
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const hex = parseColorInput(this.state.pendingCustomColor);
+                    if (hex) this.setState({ pendingCustomColor: hex });
+                  }
+                }}
+                onBlur={() => {
+                  const hex = parseColorInput(this.state.pendingCustomColor);
+                  if (hex) this.setState({ pendingCustomColor: hex });
                 }}
               />
               <span

@@ -6,7 +6,9 @@ import {
   KookitConfig,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
-import { getBatchTrans } from "../../utils/request/reader";
+import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
+import { detectLocalLanguage } from "../../utils/common";
+import toast from "react-hot-toast";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
   isFirst: Boolean;
   timeInterval: any;
@@ -57,6 +59,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       nextProps.htmlBook.rendition.on("rendered", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
         await this.handleBatchTranslation(nextProps.htmlBook.rendition);
+        await this.handleWordDefinition(nextProps.htmlBook.rendition);
       });
     }
     if (nextProps.readerMode !== this.props.readerMode) {
@@ -93,12 +96,56 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     this.batchTranslationLock = next.catch(() => {});
     return next;
   }
+  async handleWordDefinition(rendition) {
+    const prev = this.batchTranslationLock;
+    const next = prev.then(async () => {
+      if (
+        !ConfigService.getAllListConfig("wordDefinitionBooks").includes(
+          this.props.currentBook.key
+        ) ||
+        !this.props.isAuthed
+      ) {
+        return;
+      }
 
+      let wordTexts = await rendition.audioText();
+      if (wordTexts && wordTexts.length > 0) {
+        let lang = detectLocalLanguage(wordTexts.slice(0, 500).join(" "));
+        if (lang === "ko") {
+          toast.error(
+            this.props.t(
+              "Unsupported language for word definition, currently only Chinese, Japanese and English are supported"
+            )
+          );
+          return;
+        }
+        let currentLevel =
+          lang === "zh"
+            ? ConfigService.getReaderConfig("currentChineseLevel") || "HSK3"
+            : lang === "ja"
+              ? ConfigService.getReaderConfig("currentJapaneseLevel") || "N3"
+              : ConfigService.getReaderConfig("currentEnglishLevel") || "四级";
+        let res = await getWordDefinitions(wordTexts, currentLevel, lang);
+
+        if (res && res.data && res.data.results) {
+          rendition.handleWordDefinitionResult(
+            res.data.results,
+            lang,
+            ConfigService.getReaderConfig("lang")
+          );
+        }
+      }
+    });
+    this.batchTranslationLock = next.catch(() => {});
+    return next;
+  }
   async handlePageNum(rendition) {
     let pageInfo = await rendition.getProgress();
     if (
       this.props.currentBook.format === "PDF" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
       this.setState({
         prevPage: pageInfo.currentPage,

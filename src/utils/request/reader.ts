@@ -34,21 +34,6 @@ export const getTransStream = async (
   );
   return result;
 };
-export const getSummaryStream = async (
-  text: string,
-  to: string,
-  onMessage: (result) => void
-) => {
-  let readerRequest = await getReaderRequest();
-  let result = await readerRequest.getSummaryFetch(
-    {
-      text,
-      to,
-    },
-    onMessage
-  );
-  return result;
-};
 export const getAnswerStream = async (
   text: string,
   question: string,
@@ -236,7 +221,7 @@ export const getTTSAudio = async (
       } else {
         let result = await vexComfirmAsync(
           i18n.t(
-            "You have exhausted your daily trial quota. Please upgrade to Pro to continue using this feature or wait until the quota resets. You can also use other TTS voices instead."
+            "Please upgrade to Pro to unlock more daily free quota or wait until the quota resets. You can also use other TTS voices instead."
           ) +
             " " +
             (response.data && response.data.ttl
@@ -283,6 +268,23 @@ export const getBatchTrans = async (
 ) => {
   let readerRequest = await getReaderRequest();
   let response = await readerRequest.getBatchTrans({ texts, from, to });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return response;
+};
+export const getWordDefinitions = async (
+  texts: string[],
+  level: string,
+  lang: string
+) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.analyzeText({ texts, level, lang });
   if (response.code === 200) {
     return response;
   } else if (response.code === 401) {

@@ -27,6 +27,8 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
     handleJump,
     handleSelectIconClick,
     getPercentage,
+    isFavoriteBook,
+    isTopBook,
     setIsFavorite,
   } = useBookItem(props);
 
@@ -152,6 +154,16 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
               {!isBookOffline && (
                 <span className="icon-cloud book-download-action"></span>
               )}
+              {(isFavoriteBook() || isTopBook()) && (
+                <span className="book-item-list-status">
+                  {isFavoriteBook() && (
+                    <span className="icon-heart book-item-list-favorite"></span>
+                  )}
+                  {isTopBook() && (
+                    <span className="icon-pin book-item-list-top"></span>
+                  )}
+                </span>
+              )}
               {props.book.name}
             </div>
           </div>
@@ -176,7 +188,7 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
       </div>
       {props.isOpenActionDialog && props.book.key === props.currentBook.key ? (
         <div className="action-dialog-parent">
-          <ActionDialog {...actionProps} />
+          <ActionDialog {...(actionProps as any)} />
         </div>
       ) : null}
     </>

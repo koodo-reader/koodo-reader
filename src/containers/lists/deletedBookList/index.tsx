@@ -28,4 +28,4 @@ const actionCreator = {
   handleDeleteDialog,
   handleFetchBooks,
 };
-export default connect(mappropsToProps, actionCreator)(BookList);
+export default connect(mappropsToProps, actionCreator)(BookList as any);

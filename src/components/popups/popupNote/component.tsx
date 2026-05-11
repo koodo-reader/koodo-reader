@@ -104,7 +104,9 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       );
       if (
         this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
       ) {
         let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(
           this.props.chapterDocIndex
@@ -215,13 +217,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
             }}
           >
             <NoteTag
-              {...{
+              {...({
                 handleTag: this.handleTag,
                 tag: this.props.noteKey && note ? note.tag : [],
-              }}
+              } as any)}
             />
           </div>
-          <ColorOption {...PopupProps} />
+          <ColorOption {...(PopupProps as any)} />
           <div className="note-button-container">
             <span
               className="book-manage-title"

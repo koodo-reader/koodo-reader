@@ -12,4 +12,6 @@ export interface ThemeListState {
   currentTextIndex: number;
   isShowTextPicker: boolean;
   isShowBgPicker: boolean;
+  bgColorInput: string;
+  textColorInput: string;
 }

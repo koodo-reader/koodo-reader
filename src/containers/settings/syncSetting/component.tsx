@@ -88,6 +88,27 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       return;
     }
     if (
+      !isElectron &&
+      driveList.find((item) => item.value === targetDrive)?.needExtension
+    ) {
+      let result = await vexComfirmAsync(
+        "Due to browser security restrictions, you may not be able to use this data source properly. If you encounter any issues, you can resolve them by installing our browser extension.",
+        "Confirm",
+        "Install extension"
+      );
+      if (!result) {
+        if (
+          ConfigService.getReaderConfig("lang") &&
+          ConfigService.getReaderConfig("lang").startsWith("zh")
+        ) {
+          openExternalUrl(getWebsiteUrl() + "/zh/use-extension");
+        } else {
+          openExternalUrl(getWebsiteUrl() + "/en/use-extension");
+        }
+        return;
+      }
+    }
+    if (
       driveList.find((item) => item.value === targetDrive)?.isPro &&
       !this.props.isAuthed
     ) {
@@ -195,11 +216,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     toast.success(this.props.t("Deletion successful"));
   };
-  handleSetDefaultSyncOption = async (event: any) => {
-    if (!event.target.value) {
+  handleSetDefaultSyncOption = async (newValue: string) => {
+    if (!newValue) {
       return;
     }
-    ConfigService.setItem("defaultSyncOption", event.target.value);
+
+    ConfigService.setItem("defaultSyncOption", newValue);
     if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
       resetKoodoSync();
     }
@@ -674,6 +696,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <select
             name=""
             className="lang-setting-dropdown"
+            value={this.props.settingDrive}
             onChange={this.handleAddDataSource}
           >
             {[
@@ -704,9 +727,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   value={item.value}
                   key={item.value}
                   className="lang-setting-option"
-                  selected={
-                    item.value === this.props.settingDrive ? true : false
-                  }
                 >
                   {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                 </option>
@@ -743,11 +763,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <select
               name=""
               className="lang-setting-dropdown"
+              value={this.props.defaultSyncOption}
               onChange={async (event) => {
                 event.preventDefault();
                 const newValue = event.target.value;
                 const currentValue = this.props.defaultSyncOption;
-
                 let onlineBooks: Book[] = [];
                 for (let i = 0; i < this.props.books.length; i++) {
                   if (
@@ -765,14 +785,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
                   );
                   if (result) {
-                    this.handleSetDefaultSyncOption({
-                      target: { value: newValue },
-                    });
+                    this.handleSetDefaultSyncOption(newValue);
                   } else {
                     event.target.value = currentValue;
                   }
                 } else {
-                  this.handleSetDefaultSyncOption(event);
+                  this.handleSetDefaultSyncOption(newValue);
                 }
               }}
             >
@@ -791,9 +809,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     value={item.value}
                     key={item.value}
                     className="lang-setting-option"
-                    selected={
-                      item.value === this.props.defaultSyncOption ? true : false
-                    }
                   >
                     {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                   </option>
