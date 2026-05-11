@@ -186,6 +186,34 @@ class TextToSpeech extends React.Component<
   componentWillUnmount() {
     this.stopPreviewAudio();
   }
+  componentDidUpdate(prevProps: Readonly<TextToSpeechProps>) {
+    if (this.props.isSpeechAutoStart && !prevProps.isSpeechAutoStart) {
+      this.handleSpeechAutoStartRequest();
+    }
+  }
+  clearSpeechStartState = () => {
+    if (this.props.speechStartText) {
+      this.props.handleSpeechStartText("");
+    }
+    if (this.props.isSpeechAutoStart) {
+      this.props.handleSpeechAutoStart(false);
+    }
+  };
+  getSpeechStartIndex = (nodeTextList: string[]) => {
+    const speechStartText = this.props.speechStartText;
+
+    if (!speechStartText) return -1;
+
+    return nodeTextList.findIndex((item) => {
+      return item.includes(speechStartText) || speechStartText.includes(item);
+    });
+  };
+  handleSpeechAutoStartRequest = async () => {
+    if (this.state.isAudioOn) {
+      await this.handleStop();
+    }
+    this.handleStartAudio();
+  };
   handleMultiRoleToggle = (enabled: boolean) => {
     if (enabled) {
       if (!this.props.isAuthed) {
@@ -531,7 +559,9 @@ class TextToSpeech extends React.Component<
     let rawNodeList: string[][] = [];
     if (
       this.props.currentBook.format === "PDF" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
     } else {
       rawNodeList = nodeTextList.map((text) => {
@@ -540,6 +570,11 @@ class TextToSpeech extends React.Component<
 
       nodeTextList = rawNodeList.flat();
     }
+    const speechStartIndex = this.getSpeechStartIndex(nodeTextList);
+    if (speechStartIndex > -1) {
+      nodeTextList = nodeTextList.slice(speechStartIndex);
+    }
+    this.clearSpeechStartState();
     if (!this.state.multiRoleEnabled || !this.props.isAuthed) {
       nodeList = nodeTextList.map((text: string) => {
         return {
@@ -603,7 +638,9 @@ class TextToSpeech extends React.Component<
     if (nodeList.length === 0) {
       if (
         this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
       ) {
         let currentPosition = this.props.htmlBook.rendition.getPosition();
         await this.props.htmlBook.rendition.goToChapterIndex(
@@ -674,7 +711,9 @@ class TextToSpeech extends React.Component<
       let lastVisibleTextList = visibleTextList;
       if (
         this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
       ) {
       } else {
         let rawNodeList = visibleTextList.map((text) => {
@@ -704,7 +743,9 @@ class TextToSpeech extends React.Component<
       if (isReachPageEnd) {
         if (
           this.props.currentBook.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          )
         ) {
           let currentPosition = this.props.htmlBook.rendition.getPosition();
           await this.props.htmlBook.rendition.goToChapterIndex(
@@ -759,7 +800,9 @@ class TextToSpeech extends React.Component<
       let lastVisibleTextList = visibleTextList;
       if (
         this.props.currentBook.format === "PDF" &&
-        ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
       ) {
       } else {
         let rawNodeList = visibleTextList.map((text) => {
@@ -788,7 +831,9 @@ class TextToSpeech extends React.Component<
       if (isReachPageEnd) {
         if (
           this.props.currentBook.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          )
         ) {
           let currentPosition = this.props.htmlBook.rendition.getPosition();
           await this.props.htmlBook.rendition.goToChapterIndex(
@@ -1054,6 +1099,7 @@ class TextToSpeech extends React.Component<
             name=""
             className="lang-setting-dropdown"
             id="text-speech-locale"
+            value={ConfigService.getReaderConfig("voiceLocale")}
             onChange={(event) => {
               ConfigService.setReaderConfig("voiceLocale", event.target.value);
               this.setState({ voiceLocale: event.target.value });
@@ -1061,14 +1107,7 @@ class TextToSpeech extends React.Component<
           >
             {this.state.languageList.map((item) => {
               return (
-                <option
-                  value={item}
-                  key={item}
-                  className="lang-setting-option"
-                  selected={
-                    item === ConfigService.getReaderConfig("voiceLocale")
-                  }
-                >
+                <option value={item} key={item} className="lang-setting-option">
                   {langToName(item)}
                 </option>
               );
@@ -1092,6 +1131,10 @@ class TextToSpeech extends React.Component<
             name=""
             className="lang-setting-dropdown"
             id="text-speech-voice"
+            value={[
+              ConfigService.getReaderConfig("voiceName"),
+              ConfigService.getReaderConfig("voiceEngine"),
+            ].join("#")}
             onChange={(event) => {
               let selectedValue = event.target.value;
               let [voiceName, plugin] = selectedValue.split("#");
@@ -1124,6 +1167,7 @@ class TextToSpeech extends React.Component<
               if (this.state.isAudioOn) {
                 this.handleVoiceSwitch(voiceName, newEngine, previousEngine);
               }
+              this.forceUpdate();
             }}
           >
             {(this.state.voiceList[this.state.voiceLocale] || this.voices).map(
@@ -1133,12 +1177,6 @@ class TextToSpeech extends React.Component<
                     value={[item.name, item.plugin].join("#")}
                     key={[item.name, item.plugin].join("#")}
                     className="lang-setting-option"
-                    selected={
-                      item.name ===
-                        ConfigService.getReaderConfig("voiceName") &&
-                      item.plugin ===
-                        ConfigService.getReaderConfig("voiceEngine")
-                    }
                   >
                     {this.props.t(item.displayName || item.name)}
                   </option>
@@ -1157,11 +1195,13 @@ class TextToSpeech extends React.Component<
             name=""
             id="text-speech-speed"
             className="lang-setting-dropdown"
+            value={ConfigService.getReaderConfig("voiceSpeed") || "1"}
             onChange={(event) => {
               ConfigService.setReaderConfig("voiceSpeed", event.target.value);
               if (this.state.isAudioOn) {
                 toast(this.props.t("Take effect in a while"));
               }
+              this.forceUpdate();
             }}
           >
             {speedList.option.map((item) => (
@@ -1169,10 +1209,6 @@ class TextToSpeech extends React.Component<
                 value={item.value}
                 className="lang-setting-option"
                 key={item.value}
-                selected={
-                  item.value ===
-                  (ConfigService.getReaderConfig("voiceSpeed") || "1")
-                }
               >
                 {item.label}
               </option>
@@ -1253,6 +1289,7 @@ class TextToSpeech extends React.Component<
                 name=""
                 className="lang-setting-dropdown"
                 id="multi-role-voice-type"
+                value={this.state.multiRoleVoiceType}
                 onChange={(event) => {
                   this.setState({ multiRoleVoiceType: event.target.value });
                   ConfigService.setReaderConfig(
@@ -1264,27 +1301,16 @@ class TextToSpeech extends React.Component<
                 <option value="" className="lang-setting-option">
                   {this.props.t("Please select")}
                 </option>
-                <option
-                  value="system"
-                  className="lang-setting-option"
-                  selected={this.state.multiRoleVoiceType === "system"}
-                >
+                <option value="system" className="lang-setting-option">
                   {this.props.t("System voice")}
                 </option>
                 <option
                   value="official-ai-voice-plugin"
                   className="lang-setting-option"
-                  selected={
-                    this.state.multiRoleVoiceType === "official-ai-voice-plugin"
-                  }
                 >
                   {this.props.t("Official AI Voice")}
                 </option>
-                <option
-                  value="custom"
-                  className="lang-setting-option"
-                  selected={this.state.multiRoleVoiceType === "custom"}
-                >
+                <option value="custom" className="lang-setting-option">
                   {this.props.t("Custom voice")}
                 </option>
               </select>
@@ -1303,6 +1329,14 @@ class TextToSpeech extends React.Component<
                 name=""
                 className="lang-setting-dropdown"
                 id="multi-role-narrator-voice"
+                value={
+                  this.state.multiRoleNarratorVoice
+                    ? [
+                        this.state.multiRoleNarratorVoice,
+                        this.state.multiRoleNarratorEngine,
+                      ].join("#")
+                    : ""
+                }
                 onChange={(event) => {
                   let selectedValue = event.target.value;
                   let [voiceName, plugin] = selectedValue.split("#");
@@ -1330,7 +1364,6 @@ class TextToSpeech extends React.Component<
                       value={[item.name, item.plugin].join("#")}
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
-                      selected={item.name === this.state.multiRoleNarratorVoice}
                     >
                       {this.props.t(item.displayName || item.name)}
                     </option>
@@ -1352,6 +1385,14 @@ class TextToSpeech extends React.Component<
                 name=""
                 className="lang-setting-dropdown"
                 id="multi-role-male-voice"
+                value={
+                  this.state.multiRoleMaleVoice
+                    ? [
+                        this.state.multiRoleMaleVoice,
+                        this.state.multiRoleMaleEngine,
+                      ].join("#")
+                    : ""
+                }
                 onChange={(event) => {
                   let selectedValue = event.target.value;
                   let [voiceName, plugin] = selectedValue.split("#");
@@ -1380,7 +1421,6 @@ class TextToSpeech extends React.Component<
                       value={[item.name, item.plugin].join("#")}
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
-                      selected={item.name === this.state.multiRoleMaleVoice}
                     >
                       {this.props.t(item.displayName || item.name)}
                     </option>
@@ -1401,6 +1441,14 @@ class TextToSpeech extends React.Component<
                 name=""
                 className="lang-setting-dropdown"
                 id="multi-role-female-voice"
+                value={
+                  this.state.multiRoleFemaleVoice
+                    ? [
+                        this.state.multiRoleFemaleVoice,
+                        this.state.multiRoleFemaleEngine,
+                      ].join("#")
+                    : ""
+                }
                 onChange={(event) => {
                   let selectedValue = event.target.value;
                   let [voiceName, plugin] = selectedValue.split("#");
@@ -1429,7 +1477,6 @@ class TextToSpeech extends React.Component<
                       value={[item.name, item.plugin].join("#")}
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
-                      selected={item.name === this.state.multiRoleFemaleVoice}
                     >
                       {this.props.t(item.displayName || item.name)}
                     </option>
@@ -1450,6 +1497,14 @@ class TextToSpeech extends React.Component<
                 name=""
                 className="lang-setting-dropdown"
                 id="multi-role-child-voice"
+                value={
+                  this.state.multiRoleChildVoice
+                    ? [
+                        this.state.multiRoleChildVoice,
+                        this.state.multiRoleChildEngine,
+                      ].join("#")
+                    : ""
+                }
                 onChange={(event) => {
                   let selectedValue = event.target.value;
                   let [voiceName, plugin] = selectedValue.split("#");
@@ -1477,7 +1532,6 @@ class TextToSpeech extends React.Component<
                       value={[item.name, item.plugin].join("#")}
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
-                      selected={item.name === this.state.multiRoleChildVoice}
                     >
                       {this.props.t(item.displayName || item.name)}
                     </option>

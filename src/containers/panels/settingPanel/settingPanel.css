@@ -42,7 +42,7 @@
   max-width: calc(100% - 40px);
 }
 .single-control-switch {
-  display: inline-block;
+  display: flex;
   width: 40px;
   height: 20px;
   opacity: 1;
@@ -55,8 +55,6 @@
   width: 16px;
   border-radius: 50%;
   margin: 2px;
-  position: relative;
-  bottom: 1px;
 }
 .lock-icon {
   position: absolute;

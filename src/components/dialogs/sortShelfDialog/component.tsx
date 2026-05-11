@@ -113,7 +113,9 @@ class SortShelfDialog extends React.Component<
           event.stopPropagation();
         }}
       >
-        {this.state.isOpenDelete && <DeletePopup {...deletePopupProps} />}
+        {this.state.isOpenDelete && (
+          <DeletePopup {...(deletePopupProps as any)} />
+        )}
         <div className="backup-dialog-title">
           <Trans>Manage shelf</Trans>
         </div>

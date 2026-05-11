@@ -5,7 +5,10 @@ import OperationPanel from "../../containers/panels/operationPanel";
 import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  ReadingTimeUtil,
+} from "../../assets/lib/kookit-extra-browser.min";
 import Viewer from "../../containers/viewer";
 import { Tooltip } from "react-tooltip";
 import "./index.css";
@@ -15,10 +18,12 @@ import ConvertDialog from "../../components/dialogs/convertDialog";
 import { isElectron } from "react-device-detect";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import SpeechDialog from "../../components/dialogs/speechDialog";
+import PopupOptionDialog from "../../components/dialogs/popupOptionDialog";
 import {
   updateDiscordPresence,
   clearDiscordPresence,
 } from "../../utils/reader/discordRPC";
+import SupportDialog from "../../components/dialogs/supportDialog";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
@@ -28,6 +33,28 @@ let isMouseMoving = false;
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
+  private readingTimeUtil = new ReadingTimeUtil(
+    ConfigService,
+    isElectron
+      ? {
+          registerUnloadHandler(callback: () => void): () => void {
+            const { ipcRenderer } = (window as any).require("electron");
+            ipcRenderer.on("before-reader-close", callback);
+            return () =>
+              ipcRenderer.removeListener("before-reader-close", callback);
+          },
+          onBeforeClose(): void {
+            const { ipcRenderer } = (window as any).require("electron");
+            ipcRenderer.send("reader-close-ready");
+          },
+        }
+      : {
+          registerUnloadHandler(callback: () => void): () => void {
+            window.addEventListener("beforeunload", callback);
+            return () => window.removeEventListener("beforeunload", callback);
+          },
+        }
+  );
   constructor(props: ReaderProps) {
     super(props);
     this.state = {
@@ -51,28 +78,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");
     }
-    let totalDuration = 0;
-    let seconds = 0;
 
+    // Update UI counters every second so the navigation panel still shows
+    // live reading-time values, but actual storage writes only happen when
+    // a reading session ends (visibility hidden / blur / unmount).
     this.tickTimer = setInterval(() => {
-      if (totalDuration === 0) {
-        totalDuration = ConfigService.getObjectConfig(
-          this.props.currentBook.key,
-          "readingTime",
-          0
-        );
-      }
-      if (this.props.currentBook.key) {
-        seconds += 5;
-        this.setState({ totalDuration: totalDuration + seconds });
-        this.setState({ currentDuration: seconds });
-        ConfigService.setObjectConfig(
-          this.props.currentBook.key,
-          totalDuration + seconds,
-          "readingTime"
-        );
-      }
-    }, 5000);
+      if (!this.props.currentBook.key) return;
+      this.setState((prev) => ({
+        totalDuration: prev.totalDuration + 1,
+        currentDuration: prev.currentDuration + 1,
+      }));
+    }, 1000);
 
     window.addEventListener("beforeunload", function (event) {
       if (!isElectron) {
@@ -86,13 +102,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       }, 100);
     });
   }
-  UNSAFE_componentWillMount() {
+  async UNSAFE_componentWillMount() {
     let url = document.location.href;
     let firstIndexOfQuestion = url.indexOf("?");
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     this.props.handleFetchBooks();
     this.props.handleFetchAuthed();
+    if (
+      key &&
+      ConfigService.getAllListConfig("convertPDFBooks").includes(key) &&
+      ConfigService.getReaderConfig("ocrEngine") === "official-ai-ocr"
+    ) {
+      await this.props.handleFetchUserInfo();
+    }
     DatabaseService.getRecord(key, "books").then((book: Book | null) => {
       book = book || JSON.parse(ConfigService.getItem("tempBook") || "{}");
       if (!book) return;
@@ -100,12 +123,19 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.props.handleFetchPercentage(book);
       let readerMode =
         (book.format === "PDF" &&
-          ConfigService.getReaderConfig("isConvertPDF") !== "yes") ||
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            book.key
+          )) ||
         book.format.startsWith("CB")
           ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
           : ConfigService.getReaderConfig("readerMode") || "double";
       this.props.handleReaderMode(readerMode);
       this.props.handleReadingBook(book);
+      // Start event-driven reading-time tracking
+      this.readingTimeUtil.start(book.key);
+      // Initialise UI duration from persisted total
+      const savedTotal = this.readingTimeUtil.getTotalSeconds(book.key);
+      this.setState({ totalDuration: savedTotal, currentDuration: 0 });
       if (isElectron) {
         updateDiscordPresence(book);
       }
@@ -117,6 +147,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       clearDiscordPresence();
     }
     clearInterval(this.tickTimer);
+    // Flush any in-flight session time before the component tears down
+    this.readingTimeUtil.stop();
   }
 
   handleEnterReader = (position: string) => {
@@ -197,88 +229,88 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     return (
       <div className="viewer">
         <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
+
         {!this.props.isHidePageButton && (
-          <>
+          <div
+            className="previous-chapter-single-container"
+            onClick={async () => {
+              if (lock) return;
+              lock = true;
+              await this.props.htmlBook.rendition.prev();
+              this.handleLocation();
+              setTimeout(() => (lock = false), throttleTime);
+            }}
+            style={{
+              left: this.props.isNavLocked ? 315 : 15,
+            }}
+          >
+            <span className="icon-dropdown previous-chapter-single"></span>
+          </div>
+        )}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 10,
+            right: this.props.isSettingLocked ? 315 : 15,
+            display: "flex",
+            flexDirection: "column-reverse",
+            alignItems: "center",
+            gap: "8px",
+            zIndex: 10,
+          }}
+        >
+          {!this.props.isHidePageButton && (
             <div
-              className="previous-chapter-single-container"
+              className="next-chapter-single-container"
               onClick={async () => {
                 if (lock) return;
                 lock = true;
-                await this.props.htmlBook.rendition.prev();
+                await this.props.htmlBook.rendition.next();
                 this.handleLocation();
                 setTimeout(() => (lock = false), throttleTime);
               }}
-              style={{
-                left: this.props.isNavLocked ? 315 : 15,
-              }}
+              style={{ position: "static" }}
             >
-              <span className="icon-dropdown previous-chapter-single"></span>
+              <span className="icon-dropdown next-chapter-single"></span>
             </div>
+          )}
+          {!this.props.isHideAudiobookButton && (
             <div
-              style={{
-                position: "absolute",
-                bottom: 10,
-                right: this.props.isSettingLocked ? 315 : 15,
-                display: "flex",
-                flexDirection: "column-reverse",
-                alignItems: "center",
-                gap: "8px",
-                zIndex: 10,
+              className="next-chapter-single-container"
+              onClick={async () => {
+                this.props.handleSpeechDialog(!this.props.isSpeechOpen);
               }}
+              style={{ position: "static", transform: "rotate(0deg)" }}
             >
+              <span
+                style={this.props.isSpeechOpen ? { fontWeight: "bold" } : {}}
+                className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
+              ></span>
+            </div>
+          )}
+          {!this.props.isHideAIButton &&
+            ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
               <div
                 className="next-chapter-single-container"
                 onClick={async () => {
-                  if (lock) return;
-                  lock = true;
-                  await this.props.htmlBook.rendition.next();
-                  this.handleLocation();
-                  setTimeout(() => (lock = false), throttleTime);
+                  this.props.handleMenuMode("assistant");
+                  this.props.handleOriginalText(
+                    await this.props.htmlBook.rendition.chapterText()
+                  );
+                  this.props.handleOpenMenu(true);
                 }}
-                style={{ position: "static" }}
+                style={{
+                  position: "static",
+                  transform: "rotate(0deg)",
+                  fontWeight: "bold",
+                  fontSize: "17px",
+                }}
               >
-                <span className="icon-dropdown next-chapter-single"></span>
+                AI
               </div>
-              {!this.props.isHideAudiobookButton && (
-                <div
-                  className="next-chapter-single-container"
-                  onClick={async () => {
-                    this.props.handleSpeechDialog(!this.props.isSpeechOpen);
-                  }}
-                  style={{ position: "static", transform: "rotate(0deg)" }}
-                >
-                  <span
-                    style={
-                      this.props.isSpeechOpen ? { fontWeight: "bold" } : {}
-                    }
-                    className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
-                  ></span>
-                </div>
-              )}
-              {!this.props.isHideAIButton &&
-                ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
-                  <div
-                    className="next-chapter-single-container"
-                    onClick={async () => {
-                      this.props.handleMenuMode("assistant");
-                      this.props.handleOriginalText(
-                        await this.props.htmlBook.rendition.chapterText()
-                      );
-                      this.props.handleOpenMenu(true);
-                    }}
-                    style={{
-                      position: "static",
-                      transform: "rotate(0deg)",
-                      fontWeight: "bold",
-                      fontSize: "17px",
-                    }}
-                  >
-                    AI
-                  </div>
-                )}
-            </div>
-          </>
-        )}
+            )}
+        </div>
+
         <div
           style={{
             position: "absolute",
@@ -622,9 +654,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           }
         >
           <NavigationPanel
-            {...{
+            {...({
               totalDuration: this.state.totalDuration,
-            }}
+            } as any)}
           />
         </div>
         <div
@@ -683,15 +715,22 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         >
           {this.props.htmlBook && (
             <OperationPanel
-              {...{
+              {...({
                 currentDuration: this.state.currentDuration,
-              }}
+              } as any)}
             />
           )}
         </div>
 
-        {this.props.currentBook.key && <Viewer {...renditionProps} />}
+        {this.props.currentBook.key && <Viewer {...(renditionProps as any)} />}
         {this.props.isConvertOpen && <ConvertDialog />}
+        <SupportDialog />
+        {this.props.isOpenPopupOptionDialog && (
+          <>
+            <PopupOptionDialog />
+            <div className="drag-background"></div>
+          </>
+        )}
         {
           <div
             style={

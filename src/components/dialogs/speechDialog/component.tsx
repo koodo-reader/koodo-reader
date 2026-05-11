@@ -12,7 +12,6 @@ class SpeechDialog extends React.Component<
     super(props);
     this.state = {
       isShowExportAll: false,
-      isConvertPDF: ConfigService.getReaderConfig("isConvertPDF") === "yes",
     };
   }
   componentDidMount(): void {

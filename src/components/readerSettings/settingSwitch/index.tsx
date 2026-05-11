@@ -13,6 +13,8 @@ import {
   handleHidePDFConvertButton,
   handleHideScaleButton,
   handleShowBorder,
+  handleSetting,
+  handleSettingMode,
 } from "../../../store/actions";
 
 const mapStateToProps = (state: stateType) => {
@@ -20,6 +22,8 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     renderBookFunc: state.book.renderBookFunc,
     plugins: state.manager.plugins,
+    htmlBook: state.reader.htmlBook,
+    isAuthed: state.manager.isAuthed as boolean,
   };
 };
 const actionCreator = {
@@ -33,6 +37,8 @@ const actionCreator = {
   handleHideScaleButton,
   handleHidePDFConvertButton,
   handleShowBorder,
+  handleSetting,
+  handleSettingMode,
 };
 export default connect(
   mapStateToProps,

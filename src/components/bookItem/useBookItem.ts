@@ -226,6 +226,10 @@ export function useBookItem(props: BookItemSharedProps) {
     );
   }, [book.key]);
 
+  const isTopBook = useCallback((): boolean => {
+    return ConfigService.getAllListConfig("topBooks").indexOf(book.key) > -1;
+  }, [book.key]);
+
   return {
     // state
     isFavorite,
@@ -247,5 +251,6 @@ export function useBookItem(props: BookItemSharedProps) {
     handleSelectIconClick,
     getPercentage,
     isFavoriteBook,
+    isTopBook,
   };
 }

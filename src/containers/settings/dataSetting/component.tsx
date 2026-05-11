@@ -116,11 +116,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         labelsMap[field.key] = this.props.t(field.label);
       }
 
-      const result = await vexOpenAsync(
-        defaultValues,
-        item.title + "\nPlease enter your credentials to enable sync:",
-        labelsMap
-      );
+      const result = await vexOpenAsync(defaultValues, "", labelsMap);
 
       if (!result) {
         // User cancelled

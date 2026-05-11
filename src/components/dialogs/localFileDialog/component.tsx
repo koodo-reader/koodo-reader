@@ -2,7 +2,7 @@ import React from "react";
 import "./localFileDialog.css";
 import { Trans } from "react-i18next";
 import { LocalFileDialogProps, LocalFileDialogState } from "./interface";
-import Lottie from "react-lottie";
+import Lottie from "lottie-react";
 import animationSuccess from "../../../assets/lotties/success.json";
 import animationSafe from "../../../assets/lotties/safe.json";
 import _ from "underscore";
@@ -13,22 +13,6 @@ import {
   exportToLocalFile,
   LocalFileManager,
 } from "../../../utils/file/localFile";
-const successOptions = {
-  loop: false,
-  autoplay: true,
-  animationData: animationSuccess,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
-const safeOptions = {
-  loop: false,
-  autoplay: true,
-  animationData: animationSafe,
-  rendererSettings: {
-    preserveAspectRatio: "xMidYMid slice",
-  },
-};
 class LocalFileDialog extends React.Component<
   LocalFileDialogProps,
   LocalFileDialogState
@@ -123,7 +107,11 @@ class LocalFileDialog extends React.Component<
             style={{ bottom: "0px", top: "0px" }}
           >
             <div className="backup-page-finish">
-              <Lottie options={safeOptions} height={120} width={150} />
+              <Lottie
+                animationData={animationSafe}
+                loop={false}
+                style={{ height: 120, width: "100%" }}
+              />
               <div className="backup-page-warning-text">
                 {this.state.status.needsReauthorization ? (
                   this.props.t("Need to reauthorize the access to directory") +
@@ -185,7 +173,11 @@ class LocalFileDialog extends React.Component<
         ) : (
           <div className="backup-page-finish-container">
             <div className="backup-page-finish">
-              <Lottie options={successOptions} height={80} width={80} />
+              <Lottie
+                animationData={animationSuccess}
+                loop={false}
+                style={{ height: 80, width: 80 }}
+              />
               <div className="backup-page-finish-text">
                 <Trans>Setup successful</Trans>
               </div>

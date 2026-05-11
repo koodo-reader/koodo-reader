@@ -19,6 +19,7 @@ const log = require("electron-log/main");
 const os = require("os");
 const store = new Store();
 const fs = require("fs");
+const JSZip = require("jszip");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 const packageJson = require("./package.json");
@@ -33,6 +34,7 @@ let linkWindow;
 let mainView;
 //multi tab
 // let mainViewList = []
+let readerWindowReadyToClose = false;
 let chatWindow;
 let dbConnection = {};
 let syncUtilCache = {};
@@ -109,8 +111,8 @@ let options = {
   x: parseInt(store.get("mainWinX")),
   y: parseInt(store.get("mainWinY")),
   backgroundColor: "#fff",
-  minWidth: 400,
-  minHeight: 300,
+  minWidth: 300,
+  minHeight: 100,
   webPreferences: {
     webSecurity: false,
     nodeIntegration: true,
@@ -197,6 +199,124 @@ const removePickerUtil = (config) => {
     pickerUtilCache[config.service] = null;
   }
 };
+const addDirectoryToZip = async (zip, sourceDir, zipDir) => {
+  const entries = await fs.promises.readdir(sourceDir, { withFileTypes: true });
+
+  if (entries.length === 0) {
+    zip.file(zipDir, null, { dir: true, createFolders: true });
+    return;
+  }
+
+  for (const entry of entries) {
+    const sourcePath = path.join(sourceDir, entry.name);
+    const zipPath = path.posix.join(zipDir, entry.name);
+
+    if (entry.isDirectory()) {
+      await addDirectoryToZip(zip, sourcePath, zipPath);
+      continue;
+    }
+
+    if (!entry.isFile()) {
+      continue;
+    }
+
+    const stats = await fs.promises.stat(sourcePath);
+    zip.file(zipPath, fs.createReadStream(sourcePath), {
+      binary: true,
+      createFolders: true,
+      date: stats.mtime,
+    });
+  }
+};
+const createBackupArchive = async (config) => {
+  const { dataPath, targetPath, fileName, databaseList = [] } = config;
+  const destinationPath = path.join(targetPath, fileName);
+  const tempPath = destinationPath + ".tmp";
+  const zip = new JSZip();
+
+  await fs.promises.mkdir(targetPath, { recursive: true });
+
+  if (fs.existsSync(tempPath)) {
+    await fs.promises.unlink(tempPath);
+  }
+
+  const directories = [
+    { source: path.join(dataPath, "book"), target: "book" },
+    { source: path.join(dataPath, "cover"), target: "cover" },
+  ];
+  for (const directory of directories) {
+    if (fs.existsSync(directory.source)) {
+      await addDirectoryToZip(zip, directory.source, directory.target);
+    }
+  }
+
+  const configFiles = ["config.json", "sync.json"];
+  for (const configFile of configFiles) {
+    const sourcePath = path.join(dataPath, "config", configFile);
+    if (!fs.existsSync(sourcePath)) {
+      continue;
+    }
+    const stats = await fs.promises.stat(sourcePath);
+    zip.file(
+      path.posix.join("config", configFile),
+      fs.createReadStream(sourcePath),
+      {
+        binary: true,
+        createFolders: true,
+        date: stats.mtime,
+      }
+    );
+  }
+
+  for (const dbName of databaseList) {
+    const sourcePath = path.join(dataPath, "config", `${dbName}.db`);
+    if (!fs.existsSync(sourcePath)) {
+      continue;
+    }
+    const stats = await fs.promises.stat(sourcePath);
+    zip.file(
+      path.posix.join("config", `${dbName}.db`),
+      fs.createReadStream(sourcePath),
+      {
+        binary: true,
+        createFolders: true,
+        date: stats.mtime,
+      }
+    );
+  }
+
+  await new Promise((resolve, reject) => {
+    const output = fs.createWriteStream(tempPath);
+    const stream = zip.generateNodeStream({
+      type: "nodebuffer",
+      streamFiles: true,
+      compression: "DEFLATE",
+      compressionOptions: { level: 6 },
+    });
+
+    const handleError = async (error) => {
+      output.destroy();
+      if (fs.existsSync(tempPath)) {
+        try {
+          await fs.promises.unlink(tempPath);
+        } catch (_) {}
+      }
+      reject(error);
+    };
+
+    output.on("close", resolve);
+    output.on("error", handleError);
+    stream.on("error", handleError);
+    stream.pipe(output);
+  });
+
+  if (fs.existsSync(destinationPath)) {
+    await fs.promises.unlink(destinationPath);
+  }
+
+  await fs.promises.rename(tempPath, destinationPath);
+  return destinationPath;
+};
 // Simple encryption function
 const encrypt = (text, key) => {
   let result = "";
@@ -243,7 +363,7 @@ const createTray = () => {
     : path.join(__dirname, "./build/assets/icon.png");
   let trayIcon = nativeImage.createFromPath(iconPath);
   if (os.platform() === "darwin") {
-    trayIcon = trayIcon.resize({ width: 16, height: 16 });
+    trayIcon = trayIcon.resize({ width: 16 });
     trayIcon.setTemplateImage(true);
   }
   tray = new Tray(trayIcon);
@@ -314,7 +434,7 @@ const createMainWin = () => {
       let bounds = mainWin.getBounds();
       const currentDisplay = screen.getDisplayMatching(bounds);
       const primaryDisplay = screen.getPrimaryDisplay();
-      if (bounds.width > 0 && bounds.height > 0) {
+      if (bounds.width > 300 && bounds.height > 100) {
         store.set({
           mainWinWidth: bounds.width,
           mainWinHeight: bounds.height,
@@ -471,7 +591,6 @@ const createMainWin = () => {
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isAutoFullscreen, isAutoMaximize, isPreventSleep } =
       config;
-    options.webPreferences.nodeIntegrationInSubFrames = true;
     if (isMergeWord) {
       delete options.backgroundColor;
     }
@@ -522,12 +641,24 @@ const createMainWin = () => {
     if (store.get("isAlwaysOnTop") === "yes") {
       readerWindow.setAlwaysOnTop(true);
     }
+    readerWindowReadyToClose = false;
     readerWindow.on("close", (event) => {
+      // --- Step 1: ask renderer to flush reading-time data first ---
+      if (
+        !readerWindowReadyToClose &&
+        readerWindow &&
+        !readerWindow.isDestroyed()
+      ) {
+        event.preventDefault();
+        readerWindow.webContents.send("before-reader-close");
+        return;
+      }
+      // --- Step 2: actual close logic (reached after renderer replied) ---
       if (readerWindow && !readerWindow.isDestroyed()) {
         let bounds = readerWindow.getBounds();
         const currentDisplay = screen.getDisplayMatching(bounds);
         const primaryDisplay = screen.getPrimaryDisplay();
-        if (bounds.width > 0 && bounds.height > 0) {
+        if (bounds.width > 300 && bounds.height > 100) {
           store.set({
             windowWidth: bounds.width,
             windowHeight: bounds.height,
@@ -560,6 +691,13 @@ const createMainWin = () => {
         } catch (e) {
           console.warn("Failed to clear Discord activity:", e.message);
         }
+      }
+    });
+    // Renderer finished flushing reading-time data — proceed with actual close
+    ipcMain.once("reader-close-ready", () => {
+      if (readerWindow && !readerWindow.isDestroyed()) {
+        readerWindowReadyToClose = true;
+        readerWindow.close();
       }
     });
 
@@ -670,6 +808,24 @@ const createMainWin = () => {
       properties: ["openDirectory"],
     });
     return path.filePaths[0];
+  });
+  ipcMain.handle("select-book-path", async (event) => {
+    var result = await dialog.showOpenDialog({
+      properties: ["openFile"],
+    });
+    return result.filePaths[0];
+  });
+  ipcMain.handle("stream-backup-zip", async (event, config) => {
+    try {
+      await createBackupArchive(config);
+      return { ok: true };
+    } catch (error) {
+      console.error("Failed to create backup archive:", error);
+      return {
+        ok: false,
+        message: error instanceof Error ? error.message : String(error),
+      };
+    }
   });
   ipcMain.handle("encrypt-data", async (event, config) => {
     const { TokenService } =
@@ -1090,7 +1246,7 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("exit-fullscreen", () => {
-    if (readerWindow) {
+    if (readerWindow && !readerWindow.isDestroyed()) {
       readerWindow.setFullScreen(false);
       console.info("exit full");
     }
@@ -1124,7 +1280,8 @@ const createMainWin = () => {
       id = powerSaveBlocker.start("prevent-display-sleep");
       console.info(powerSaveBlocker.isStarted(id));
     }
-    if (readerWindow) {
+    if (readerWindow && !readerWindow.isDestroyed()) {
+      readerWindowReadyToClose = true;
       readerWindow.close();
       if (store.get("isMergeWord") === "yes") {
         delete options.backgroundColor;
@@ -1139,7 +1296,6 @@ const createMainWin = () => {
         hasShadow: store.get("isMergeWord") !== "yes" ? false : true,
         transparent: store.get("isMergeWord") !== "yes" ? true : false,
       });
-      options.webPreferences.nodeIntegrationInSubFrames = true;
 
       store.set(
         "isMergeWord",
@@ -1154,12 +1310,24 @@ const createMainWin = () => {
       }
 
       readerWindow.loadURL(store.get("url"));
+      readerWindowReadyToClose = false;
       readerWindow.on("close", (event) => {
+        // --- Step 1: ask renderer to flush reading-time data first ---
+        if (
+          !readerWindowReadyToClose &&
+          readerWindow &&
+          !readerWindow.isDestroyed()
+        ) {
+          event.preventDefault();
+          readerWindow.webContents.send("before-reader-close");
+          return;
+        }
+        // --- Step 2: actual close logic (reached after renderer replied) ---
         if (!readerWindow.isDestroyed()) {
           let bounds = readerWindow.getBounds();
           const currentDisplay = screen.getDisplayMatching(bounds);
           const primaryDisplay = screen.getPrimaryDisplay();
-          if (bounds.width > 0 && bounds.height > 0) {
+          if (bounds.width > 300 && bounds.height > 100) {
             store.set({
               windowWidth: bounds.width,
               windowHeight: bounds.height,
@@ -1190,6 +1358,13 @@ const createMainWin = () => {
           } catch (e) {
             console.warn("Failed to clear Discord activity:", e.message);
           }
+        }
+      });
+      // Renderer finished flushing reading-time data — proceed with actual close
+      ipcMain.once("reader-close-ready", () => {
+        if (readerWindow && !readerWindow.isDestroyed()) {
+          readerWindowReadyToClose = true;
+          readerWindow.close();
         }
       });
     }

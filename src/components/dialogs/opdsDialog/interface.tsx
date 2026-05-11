@@ -67,4 +67,5 @@ export interface OPDSDialogState {
   newCatalogTitle: string;
   newCatalogUsername: string;
   newCatalogPassword: string;
+  isTesting: boolean;
 }

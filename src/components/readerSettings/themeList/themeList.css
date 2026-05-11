@@ -66,6 +66,25 @@
   float: right;
   font-size: 18px;
   cursor: pointer;
+  z-index: 1;
+}
+.theme-color-delete-hover {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 13px;
+  height: 13px;
+  font-size: 9px !important;
+  line-height: 13px;
+  text-align: center;
+  border-radius: 50%;
+  background: rgba(80, 80, 80, 0.75);
+  color: #fff;
+}
+.background-color-circle:hover .theme-color-delete-hover {
+  opacity: 1;
 }
 .active-color.background-color-circle {
   box-shadow:
@@ -82,4 +101,18 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: 55%;
+}
+.color-input-box {
+  width: 200px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(128, 128, 128, 0.4);
+  font-size: 13px;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  box-sizing: border-box;
+}
+.color-input-box:focus {
+  border-color: currentColor;
 }

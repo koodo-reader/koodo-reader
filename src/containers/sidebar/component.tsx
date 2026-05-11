@@ -158,9 +158,14 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         ConfigService.getAllListConfig("sortedShelfList") || [];
       let shelfList = ConfigService.getAllMapConfig("shelfList");
       let shelfTitleList = Object.keys(shelfList);
+      let isShowShelfBookCount =
+        ConfigService.getReaderConfig("isShowShelfBookCount") === "yes";
 
       return Array.from(new Set([...sortedShelfList, ...shelfTitleList])).map(
         (item, index) => {
+          const shelfBookCount = Array.isArray(shelfList[item])
+            ? shelfList[item].length
+            : 0;
           return (
             <li
               key={item}
@@ -223,13 +228,21 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 </div>
 
                 <span
+                  className="sidebar-shelf-content"
                   style={
                     this.props.isCollapsed
                       ? { display: "none", width: "70%" }
-                      : { width: "60%" }
+                      : {}
                   }
                 >
-                  {this.props.t(item)}
+                  <span className="sidebar-shelf-name">
+                    {this.props.t(item)}
+                  </span>
+                  {isShowShelfBookCount && (
+                    <span className="sidebar-shelf-count">
+                      {shelfBookCount}
+                    </span>
+                  )}
                 </span>
               </div>
             </li>
@@ -422,6 +435,47 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             {!this.state.isCollpaseShelf && (
               <ul className="side-shelf-container">{renderSideShelf()}</ul>
             )}
+          </div>
+          {/* Stats button at the bottom */}
+          <div className="side-menu-about" style={{ paddingBottom: 12 }}>
+            <div
+              className={"side-menu-selector"}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                this.props.history.push("/stats");
+              }}
+            >
+              <div
+                className="side-menu-icon"
+                style={
+                  this.props.isCollapsed
+                    ? {}
+                    : { marginLeft: "20px", marginRight: "15px" }
+                }
+              >
+                <span
+                  className="icon-chart sidebar-shelf-icon"
+                  style={
+                    this.props.isCollapsed
+                      ? {
+                          position: "relative",
+                          marginLeft: "-0px",
+                          fontSize: 14,
+                        }
+                      : { fontSize: 14 }
+                  }
+                ></span>
+              </div>
+              <span
+                style={
+                  this.props.isCollapsed
+                    ? { display: "none", width: "70%" }
+                    : { width: "60%" }
+                }
+              >
+                {this.props.t("Reading Stats")}
+              </span>
+            </div>
           </div>
         </div>
       </>

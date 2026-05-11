@@ -97,6 +97,24 @@
   padding: 8px;
   text-align: center;
 }
+/* Book path row */
+.edit-dialog-path-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.edit-dialog-path-value {
+  font-size: 12px;
+  word-break: break-all;
+  opacity: 0.7;
+  line-height: 1.4;
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(120, 120, 120, 0.3);
+  min-height: 24px;
+}
+
 /* Fixed footer with buttons */
 .edit-dialog-footer {
   display: flex;

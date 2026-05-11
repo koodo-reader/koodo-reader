@@ -21,7 +21,9 @@ class ConvertDialog extends React.Component<
     super(props);
     this.state = {
       isShowExportAll: false,
-      isConvertPDF: ConfigService.getReaderConfig("isConvertPDF") === "yes",
+      isConvertPDF: ConfigService.getAllListConfig("convertPDFBooks").includes(
+        props.currentBook?.key
+      ),
     };
   }
   renderSwitchOption = (optionList: any[]) => {
@@ -43,13 +45,28 @@ class ConvertDialog extends React.Component<
             <span
               className="single-control-switch"
               onClick={() => {
+                const newValue = !this.state[item.propName];
                 this.setState({
-                  [item.propName]: !this.state[item.propName],
+                  [item.propName]: newValue,
                 } as any);
-                ConfigService.setReaderConfig(
-                  item.propName,
-                  this.state[item.propName] ? "no" : "yes"
-                );
+                if (item.propName === "isConvertPDF") {
+                  if (newValue) {
+                    ConfigService.setListConfig(
+                      this.props.currentBook.key,
+                      "convertPDFBooks"
+                    );
+                  } else {
+                    ConfigService.deleteListConfig(
+                      this.props.currentBook.key,
+                      "convertPDFBooks"
+                    );
+                  }
+                } else {
+                  ConfigService.setReaderConfig(
+                    item.propName,
+                    this.state[item.propName] ? "no" : "yes"
+                  );
+                }
                 BookUtil.reloadBooks(this.props.currentBook);
               }}
               style={this.state[item.propName] ? {} : { opacity: 0.6 }}
@@ -88,7 +105,12 @@ class ConvertDialog extends React.Component<
           onMouseEnter={() => {
             this.props.handleConvertDialog(true);
           }}
-          style={{ right: "20px", left: "auto", top: "50px", width: "240px" }}
+          style={{
+            left: "auto",
+            top: "50px",
+            width: "240px",
+            right: this.props.isSettingLocked ? 325 : 20,
+          }}
         >
           <ul className="sort-by-category">
             {this.renderSwitchOption([
@@ -116,6 +138,7 @@ class ConvertDialog extends React.Component<
                   <select
                     name=""
                     className="lang-setting-dropdown"
+                    value={ConfigService.getReaderConfig("ocrEngine") || "paddle"}
                     onChange={(event) => {
                       if (
                         event.target.value === "official-ai-ocr" &&
@@ -150,10 +173,13 @@ class ConvertDialog extends React.Component<
                         );
                       }
                       if (
-                        ConfigService.getReaderConfig("isConvertPDF") === "yes"
+                        ConfigService.getAllListConfig(
+                          "convertPDFBooks"
+                        ).includes(this.props.currentBook.key)
                       ) {
                         BookUtil.reloadBooks(this.props.currentBook);
                       }
+                      this.forceUpdate();
                     }}
                   >
                     {[
@@ -178,14 +204,6 @@ class ConvertDialog extends React.Component<
                         value={item.value}
                         key={item.value}
                         className="lang-setting-option"
-                        selected={
-                          ConfigService.getReaderConfig("ocrEngine")
-                            ? item.value ===
-                              ConfigService.getReaderConfig("ocrEngine")
-                            : item.value === "paddle"
-                              ? true
-                              : false
-                        }
                       >
                         {this.props.t(item.label)}
                       </option>
@@ -208,16 +226,31 @@ class ConvertDialog extends React.Component<
                     name=""
                     className="lang-setting-dropdown"
                     style={{ width: "70px" }}
+                    value={(() => {
+                      const ocrLang = ConfigService.getReaderConfig("ocrLang");
+                      if (ocrLang) return ocrLang;
+                      const engine = ConfigService.getReaderConfig("ocrEngine");
+                      const currentLang = ConfigService.getReaderConfig("lang");
+                      let list: any[];
+                      if (engine === "tesseract") list = ocrTesseractLangList;
+                      else if (engine === "official-ai-ocr") list = [{ label: "General", value: "general", lang: "" }];
+                      else list = getOcrPaddleLangList();
+                      const match = list.find((o: any) => o.lang === currentLang);
+                      return match ? match.value : "";
+                    })()}
                     onChange={(event) => {
                       ConfigService.setReaderConfig(
                         "ocrLang",
                         event.target.value
                       );
                       if (
-                        ConfigService.getReaderConfig("isConvertPDF") === "yes"
+                        ConfigService.getAllListConfig(
+                          "convertPDFBooks"
+                        ).includes(this.props.currentBook.key)
                       ) {
                         BookUtil.reloadBooks(this.props.currentBook);
                       }
+                      this.forceUpdate();
                     }}
                   >
                     {[
@@ -234,15 +267,6 @@ class ConvertDialog extends React.Component<
                         value={item.value}
                         key={item.value}
                         className="lang-setting-option"
-                        selected={
-                          ConfigService.getReaderConfig("ocrLang")
-                            ? item.value ===
-                              ConfigService.getReaderConfig("ocrLang")
-                            : item.lang ===
-                                ConfigService.getReaderConfig("lang")
-                              ? true
-                              : false
-                        }
                       >
                         {this.props.t(item.label)}
                       </option>
@@ -268,17 +292,20 @@ class ConvertDialog extends React.Component<
                       name=""
                       className="lang-setting-dropdown"
                       style={{ width: "70px" }}
+                      value={ConfigService.getReaderConfig("paraSpacingValue") || "1.5"}
                       onChange={(event) => {
                         ConfigService.setReaderConfig(
                           "paraSpacingValue",
                           event.target.value
                         );
                         if (
-                          ConfigService.getReaderConfig("isConvertPDF") ===
-                          "yes"
+                          ConfigService.getAllListConfig(
+                            "convertPDFBooks"
+                          ).includes(this.props.currentBook.key)
                         ) {
                           BookUtil.reloadBooks(this.props.currentBook);
                         }
+                        this.forceUpdate();
                       }}
                     >
                       {[
@@ -289,14 +316,6 @@ class ConvertDialog extends React.Component<
                           value={item.value}
                           key={item.value}
                           className="lang-setting-option"
-                          selected={
-                            ConfigService.getReaderConfig("paraSpacingValue")
-                              ? item.value ===
-                                ConfigService.getReaderConfig(
-                                  "paraSpacingValue"
-                                )
-                              : item.value === "1.5"
-                          }
                         >
                           {this.props.t(item.label)}
                         </option>
@@ -329,17 +348,20 @@ class ConvertDialog extends React.Component<
                       name=""
                       className="lang-setting-dropdown"
                       style={{ width: "70px" }}
+                      value={ConfigService.getReaderConfig("titleSizeValue") || "1.2"}
                       onChange={(event) => {
                         ConfigService.setReaderConfig(
                           "titleSizeValue",
                           event.target.value
                         );
                         if (
-                          ConfigService.getReaderConfig("isConvertPDF") ===
-                          "yes"
+                          ConfigService.getAllListConfig(
+                            "convertPDFBooks"
+                          ).includes(this.props.currentBook.key)
                         ) {
                           BookUtil.reloadBooks(this.props.currentBook);
                         }
+                        this.forceUpdate();
                       }}
                     >
                       {[
@@ -350,12 +372,6 @@ class ConvertDialog extends React.Component<
                           value={item.value}
                           key={item.value}
                           className="lang-setting-option"
-                          selected={
-                            ConfigService.getReaderConfig("titleSizeValue")
-                              ? item.value ===
-                                ConfigService.getReaderConfig("titleSizeValue")
-                              : item.value === "1.2"
-                          }
                         >
                           {this.props.t(item.label)}
                         </option>

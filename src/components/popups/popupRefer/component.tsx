@@ -118,14 +118,18 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&
       this.props.chapterDocIndex % 2 === 1 &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
       posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "scroll" &&
-      ConfigService.getReaderConfig("isConvertPDF") !== "yes"
+      !ConfigService.getAllListConfig("convertPDFBooks").includes(
+        this.props.currentBook.key
+      )
     ) {
       posY = posY + this.props.chapterDocIndex * pageSize.sectionHeight;
     }

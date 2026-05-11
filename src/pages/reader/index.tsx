@@ -12,6 +12,7 @@ import {
   handleSpeechDialog,
   handleScale,
   handleFetchAuthed,
+  handleFetchUserInfo,
 } from "../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
@@ -27,6 +28,7 @@ const mapStateToProps = (state: stateType) => {
     isNavLocked: state.reader.isNavLocked,
     isConvertOpen: state.reader.isConvertOpen,
     isSpeechOpen: state.reader.isSpeechOpen,
+    isOpenPopupOptionDialog: state.backupPage.isOpenPopupOptionDialog,
     isSettingLocked: state.reader.isSettingLocked,
     isAuthed: state.manager.isAuthed,
     isSearch: state.manager.isSearch,
@@ -55,6 +57,7 @@ const actionCreator = {
   handleScale,
   handleFetchAuthed,
   handleSpeechDialog,
+  handleFetchUserInfo,
 };
 export default connect(
   mapStateToProps,

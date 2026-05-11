@@ -16,6 +16,9 @@ export function handleHighlights(highlights: NoteModel[]) {
 export function handleOriginalText(originalText: string) {
   return { type: "HANDLE_ORIGINAL_TEXT", payload: originalText };
 }
+export function handleQuoteText(quoteText: string) {
+  return { type: "HANDLE_QUOTE_TEXT", payload: quoteText };
+}
 export function handleOriginalSentence(originalSentence: string) {
   return { type: "HANDLE_ORIGINAL_SENTENCE", payload: originalSentence };
 }
@@ -27,6 +30,12 @@ export function handleConvertDialog(isConvertOpen: boolean) {
 }
 export function handleSpeechDialog(isSpeechOpen: boolean) {
   return { type: "HANDLE_SPEECH_DIALOG", payload: isSpeechOpen };
+}
+export function handleSpeechStartText(speechStartText: string) {
+  return { type: "HANDLE_SPEECH_START_TEXT", payload: speechStartText };
+}
+export function handleSpeechAutoStart(isSpeechAutoStart: boolean) {
+  return { type: "HANDLE_SPEECH_AUTO_START", payload: isSpeechAutoStart };
 }
 export function handleBookmarks(bookmarks: BookmarkModel[]) {
   return { type: "HANDLE_BOOKMARKS", payload: bookmarks };

@@ -19,6 +19,7 @@ import {
   handleReaderMode,
   handleFetchAuthed,
   handleScale,
+  handleBackgroundColor,
 } from "../../store/actions";
 import Viewer from "./component";
 import { stateType } from "../../store";
@@ -63,6 +64,7 @@ const actionCreator = {
   handleReaderMode,
   handleFetchAuthed,
   handleScale,
+  handleBackgroundColor,
 };
 export default connect(
   mapStateToProps,

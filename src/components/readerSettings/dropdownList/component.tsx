@@ -3,7 +3,10 @@ import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import { loadFontData, vexComfirmAsync } from "../../../utils/common";
 import toast from "react-hot-toast";
 declare var window: any;
@@ -31,6 +34,10 @@ class DropdownList extends React.Component<
         ConfigService.getReaderConfig("textOrientation") || "",
       currentSelectActionValue:
         ConfigService.getReaderConfig("selectAction") || "",
+      currentTxtParserValue:
+        ConfigService.getObjectConfig(props.currentBook?.key, "bookRules", {})
+          ?.defaultTxtParser || "",
+      txtParserOptions: [],
     };
   }
   UNSAFE_componentWillReceiveProps(nextProps: DropdownListProps) {
@@ -41,10 +48,28 @@ class DropdownList extends React.Component<
         ).includes(nextProps.currentBook?.key)
           ? ConfigService.getReaderConfig("fullTranslationMode") || ""
           : "",
+        currentTxtParserValue:
+          ConfigService.getObjectConfig(
+            nextProps.currentBook?.key,
+            "bookRules",
+            {}
+          )?.defaultTxtParser || "",
       });
     }
   }
   componentDidMount() {
+    const customParserLabels: string[] =
+      ConfigService.getAllListConfig("txtParserList") || [];
+    const customParserOptions = customParserLabels.map((label) => ({
+      label,
+      value: label,
+    }));
+    this.setState({
+      txtParserOptions: [
+        ...KookitConfig.ContentRegxConfig,
+        ...customParserOptions,
+      ],
+    });
     loadFontData().then((result) => {
       if (!result || result.length === 0) return;
       let fontFamilyItem = dropdownList.find(
@@ -176,6 +201,22 @@ class DropdownList extends React.Component<
         });
         toast.success(this.props.t("Setup successful"));
         return;
+      case "txtParser": {
+        this.setState({ currentTxtParserValue: arr[0] });
+        const rule = ConfigService.getObjectConfig(
+          this.props.currentBook.key,
+          "bookRules",
+          {}
+        );
+        ConfigService.setObjectConfig(
+          this.props.currentBook.key,
+          { ...rule, defaultTxtParser: arr[0] },
+          "bookRules"
+        );
+        toast.success(this.props.t("Setup successful"));
+        this.props.renderBookFunc();
+        return;
+      }
       default:
         break;
     }
@@ -191,6 +232,23 @@ class DropdownList extends React.Component<
           <select
             name=""
             className="general-setting-dropdown"
+            value={
+              item.value === "lineHeight"
+                ? this.state.currentLineHeightValue
+                : item.value === "textAlign"
+                  ? this.state.currentTextAlignValue
+                  : item.value === "convertChinese"
+                    ? this.state.chineseConversionValue
+                    : item.value === "fullTranslationMode"
+                      ? this.state.fullTranslationModeValue
+                      : item.value === "textOrientation"
+                        ? this.state.currentTextOrientationValue
+                        : item.value === "fontFamily"
+                          ? this.state.currentFontFamilyValue
+                          : item.value === "selectAction"
+                            ? this.state.currentSelectActionValue
+                            : this.state.currentSubFontFamilyValue
+            }
             onChange={(event) => {
               this.handleView(event, item.value);
             }}
@@ -207,24 +265,6 @@ class DropdownList extends React.Component<
                   value={subItem.value}
                   key={index}
                   className="general-setting-option"
-                  selected={
-                    subItem.value ===
-                    (item.value === "lineHeight"
-                      ? this.state.currentLineHeightValue
-                      : item.value === "textAlign"
-                        ? this.state.currentTextAlignValue
-                        : item.value === "convertChinese"
-                          ? this.state.chineseConversionValue
-                          : item.value === "fullTranslationMode"
-                            ? this.state.fullTranslationModeValue
-                            : item.value === "textOrientation"
-                              ? this.state.currentTextOrientationValue
-                              : item.value === "fontFamily"
-                                ? this.state.currentFontFamilyValue
-                                : item.value === "selectAction"
-                                  ? this.state.currentSelectActionValue
-                                  : this.state.currentSubFontFamilyValue)
-                  }
                 >
                   {this.props.t(subItem.label)}
                 </option>
@@ -235,9 +275,48 @@ class DropdownList extends React.Component<
       ));
     };
 
+    const isTxt = this.props.currentBook?.format?.toUpperCase() === "TXT";
+
     return (
       <ul className="paragraph-character-setting">
         {renderParagraphCharacter()}
+        {isTxt && (
+          <li className="paragraph-character-container">
+            <p className="general-setting-title">
+              <Trans>TXT parser</Trans>
+            </p>
+            <select
+              name=""
+              className="general-setting-dropdown"
+              value={this.state.currentTxtParserValue}
+              onChange={(event) => {
+                if (event.target.value === "add-parser") {
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("chapter");
+                  return;
+                }
+                this.handleView(event, "txtParser");
+              }}
+            >
+              {this.state.txtParserOptions.map((option, index) => (
+                <option
+                  value={option.value}
+                  key={index}
+                  className="general-setting-option"
+                >
+                  {this.props.t(option.label)}
+                </option>
+              ))}
+              <option
+                value="add-parser"
+                key="add"
+                className="general-setting-option"
+              >
+                {this.props.t("Add new parser")}
+              </option>
+            </select>
+          </li>
+        )}
       </ul>
     );
   }

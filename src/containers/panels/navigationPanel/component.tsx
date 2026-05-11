@@ -116,7 +116,17 @@ class NavigationPanel extends React.Component<
               );
             }}
           >
-            {Parser(DOMPurify.sanitize(item.excerpt))}
+            <div>{Parser(DOMPurify.sanitize(item.excerpt))}</div>
+            <div
+              style={{
+                textAlign: "right",
+                fontSize: "15px",
+                marginTop: "5px",
+                opacity: 0.7,
+              }}
+            >
+              {JSON.parse(item.cfi).chapterTitle}
+            </div>
           </li>
         );
       });
@@ -226,7 +236,7 @@ class NavigationPanel extends React.Component<
               >
                 <Trans>Search in the Book</Trans>
               </div>
-              <SearchBox {...searchProps} />
+              <SearchBox {...(searchProps as any)} />
             </div>
             <ul className="nav-search-list">
               {this.state.searchState === "searching" ? (
@@ -282,7 +292,7 @@ class NavigationPanel extends React.Component<
                 &nbsp; min
               </span>
               <div className="navigation-search-box">
-                <SearchBox {...searchProps} />
+                <SearchBox {...(searchProps as any)} />
               </div>
 
               <div className="navigation-navigation">
@@ -341,7 +351,9 @@ class NavigationPanel extends React.Component<
                 {this.state.currentTab === "contents" ? (
                   <ContentList />
                 ) : (
-                  <BookNavList {...{ currentTab: this.state.currentTab }} />
+                  <BookNavList
+                    {...({ currentTab: this.state.currentTab } as any)}
+                  />
                 )}
               </div>
             </div>

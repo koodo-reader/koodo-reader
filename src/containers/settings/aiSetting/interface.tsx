@@ -5,7 +5,6 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleSettingMode: (settingMode: string) => void;
   handleFetchPlugins: () => void;
   t: (title: string) => string;
-  plugins: PluginModel[];
 }
 export interface AIModelConfig {
   endpoint: string;

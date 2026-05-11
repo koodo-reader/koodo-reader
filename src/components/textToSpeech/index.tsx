@@ -6,6 +6,8 @@ import {
   handleFetchPlugins,
   handleSetting,
   handleSettingMode,
+  handleSpeechStartText,
+  handleSpeechAutoStart,
 } from "../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
@@ -15,9 +17,17 @@ const mapStateToProps = (state: stateType) => {
     plugins: state.manager.plugins,
     readerMode: state.reader.readerMode,
     isAuthed: state.manager.isAuthed,
+    speechStartText: state.reader.speechStartText,
+    isSpeechAutoStart: state.reader.isSpeechAutoStart,
   };
 };
-const actionCreator = { handleFetchPlugins, handleSetting, handleSettingMode };
+const actionCreator = {
+  handleFetchPlugins,
+  handleSetting,
+  handleSettingMode,
+  handleSpeechStartText,
+  handleSpeechAutoStart,
+};
 export default connect(
   mapStateToProps,
   actionCreator

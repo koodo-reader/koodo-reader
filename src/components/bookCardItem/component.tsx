@@ -26,6 +26,7 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
     handleSelectIconClick,
     getPercentage,
     isFavoriteBook,
+    isTopBook,
   } = useBookItem(props);
 
   const handleMoreAction = (event: any) => {
@@ -193,14 +194,19 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
             handleMoreAction(event);
           }}
         ></span>
-        {isFavoriteBook() && (
-          <span className="icon-heart book-heart-action"></span>
+        {(isFavoriteBook() || isTopBook()) && (
+          <span className="book-status-actions">
+            {isFavoriteBook() && (
+              <span className="icon-heart book-heart-action"></span>
+            )}
+            {isTopBook() && <span className="icon-pin book-top-action"></span>}
+          </span>
         )}
       </div>
 
       {props.isOpenActionDialog && props.book.key === props.currentBook.key ? (
         <div className="action-dialog-parent">
-          <ActionDialog {...actionProps} />
+          <ActionDialog {...(actionProps as any)} />
         </div>
       ) : null}
     </>
