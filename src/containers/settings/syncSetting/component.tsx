@@ -92,9 +92,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       driveList.find((item) => item.value === targetDrive)?.needExtension
     ) {
       let result = await vexComfirmAsync(
-        "This data source is not directly supported in browser due to CORS restriction. In order to use it, you need to install the our browser extension. Do you want to go to the extension installation guide now? If you have already installed the extension, you can click the cancel button to continue adding this data source."
+        "Due to browser security restrictions, you may not be able to use this data source properly. If you encounter any issues, you can resolve them by installing our browser extension.",
+        "Confirm",
+        "Install extension"
       );
-      if (result) {
+      if (!result) {
         if (
           ConfigService.getReaderConfig("lang") &&
           ConfigService.getReaderConfig("lang").startsWith("zh")
