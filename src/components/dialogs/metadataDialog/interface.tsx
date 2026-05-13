@@ -50,10 +50,26 @@ export interface AppleBookItem {
   formattedPrice?: string;
 }
 
+export interface OpenLibraryBookItem {
+  key: string;
+  title: string;
+  author_name?: string[];
+  publisher?: string[];
+  first_publish_year?: number;
+  cover_i?: number;
+  subject?: string[];
+  description?: string;
+  source: "openlibrary";
+}
+
+export type BookResultItem =
+  | (AppleBookItem & { source: "itunes" })
+  | OpenLibraryBookItem;
+
 export interface MetadataDialogState {
   searchName: string;
   searchAuthor: string;
-  results: AppleBookItem[];
+  results: BookResultItem[];
   selectedId: string | null;
   isLoading: boolean;
   error: string;

@@ -6,6 +6,8 @@ import {
   MetadataDialogState,
   MetadataResult,
   AppleBookItem,
+  OpenLibraryBookItem,
+  BookResultItem,
 } from "./interface";
 
 class MetadataDialog extends React.Component<
@@ -41,19 +43,55 @@ class MetadataDialog extends React.Component<
       results: [],
       selectedId: null,
     });
-    try {
+
+    const fetchItunes = async (): Promise<BookResultItem[]> => {
       const encoded = encodeURIComponent(query);
       const url = `https://itunes.apple.com/search?term=${encoded}&media=ebook&entity=ebook&limit=20`;
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Network error");
+      if (!res.ok) throw new Error("iTunes network error");
       const data = await res.json();
-      const items: AppleBookItem[] = data.results || [];
-      this.setState({ results: items, isLoading: false });
-    } catch (e) {
+      return ((data.results || []) as AppleBookItem[]).map((item) => ({
+        ...item,
+        source: "itunes" as const,
+      }));
+    };
+
+    const fetchOpenLibrary = async (): Promise<BookResultItem[]> => {
+      const parts: string[] = [];
+      if (searchName) parts.push(`title=${encodeURIComponent(searchName)}`);
+      if (searchAuthor)
+        parts.push(`author=${encodeURIComponent(searchAuthor)}`);
+      if (!parts.length) parts.push(`q=${encodeURIComponent(query)}`);
+      const url = `https://openlibrary.org/search.json?${parts.join("&")}&fields=key,title,author_name,publisher,first_publish_year,cover_i&limit=20`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Open Library network error");
+      const data = await res.json();
+      return ((data.docs || []) as Omit<OpenLibraryBookItem, "source">[]).map(
+        (item) => ({ ...item, source: "openlibrary" as const })
+      );
+    };
+
+    const results = await Promise.allSettled([
+      fetchItunes(),
+      fetchOpenLibrary(),
+    ]);
+    const merged: BookResultItem[] = [];
+    let hasError = false;
+    for (const r of results) {
+      if (r.status === "fulfilled") {
+        merged.push(...r.value);
+      } else {
+        hasError = true;
+      }
+    }
+
+    if (merged.length === 0 && hasError) {
       this.setState({
         isLoading: false,
         error: this.props.t("Failed to fetch metadata"),
       });
+    } else {
+      this.setState({ results: merged, isLoading: false });
     }
   };
 
@@ -63,17 +101,41 @@ class MetadataDialog extends React.Component<
     }));
   };
 
+  getItemId = (item: BookResultItem): string => {
+    if (item.source === "itunes") return item.trackId + "";
+    return item.key;
+  };
+
   handleApply = () => {
     const { results, selectedId } = this.state;
-    const item = results.find((r) => r.trackId + "" === selectedId);
+    const item = results.find((r) => {
+      if (r.source === "itunes") return r.trackId + "" === selectedId;
+      return r.key === selectedId;
+    });
     if (!item) return;
-    const metadata: MetadataResult = {
-      name: item.trackName || "",
-      author: item.artistName || "",
-      publisher: "",
-      description: item.description || "",
-      cover: item.artworkUrl100 || item.artworkUrl60 || "",
-    };
+    let metadata: MetadataResult;
+    if (item.source === "itunes") {
+      metadata = {
+        name: item.trackName || "",
+        author: item.artistName || "",
+        publisher: "",
+        description: item.description || "",
+        cover: item.artworkUrl100
+          ? item.artworkUrl100.replace("100x100", "600x600")
+          : "",
+      };
+    } else {
+      const coverUrl = item.cover_i
+        ? `https://covers.openlibrary.org/b/id/${item.cover_i}-L.jpg`
+        : "";
+      metadata = {
+        name: item.title || "",
+        author: (item.author_name || []).join(", "),
+        publisher: (item.publisher || [])[0] || "",
+        description: item.description || "",
+        cover: coverUrl,
+      };
+    }
     this.props.handleApplyMetadata(metadata);
     this.props.handleMetadataDialog(false);
   };
@@ -138,13 +200,35 @@ class MetadataDialog extends React.Component<
           )}
           {!isLoading &&
             results.map((item) => {
-              const isSelected = selectedId === item.trackId + "";
-              const thumb = item.artworkUrl100 || item.artworkUrl60 || "";
+              const id = this.getItemId(item);
+              const isSelected = selectedId === id;
+              let thumb = "";
+              let title = "";
+              let author = "";
+              let publisher = "";
+              let description = "";
+              let source = "";
+              if (item.source === "itunes") {
+                thumb = item.artworkUrl100 || item.artworkUrl60 || "";
+                title = item.trackName;
+                author = item.artistName;
+                description = item.description || "";
+                source = "iTunes";
+              } else {
+                thumb = item.cover_i
+                  ? `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg`
+                  : "";
+                title = item.title;
+                author = (item.author_name || []).join(", ");
+                publisher = (item.publisher || [])[0] || "";
+                description = item.description || "";
+                source = "Open Library";
+              }
               return (
                 <div
-                  key={item.trackId}
+                  key={id}
                   className="metadata-book-item"
-                  onClick={() => this.handleSelect(item.trackId + "")}
+                  onClick={() => this.handleSelect(id)}
                 >
                   <div className="metadata-book-item-header">
                     {thumb ? (
@@ -157,33 +241,32 @@ class MetadataDialog extends React.Component<
                       <div className="metadata-book-cover-placeholder">N/A</div>
                     )}
                     <div className="metadata-book-basic">
-                      <div className="metadata-book-name">{item.trackName}</div>
-                      <div className="metadata-book-author">
-                        {item.artistName}
-                      </div>
+                      <div className="metadata-book-name">{title}</div>
+                      <div className="metadata-book-author">{author}</div>
+                      <div className="metadata-book-source">{source}</div>
                     </div>
                   </div>
 
                   {/* Expanded detail */}
                   {isSelected && (
                     <div className="metadata-book-detail">
-                      {item.artistName && (
+                      {publisher && (
                         <div className="metadata-book-detail-row">
                           <span className="metadata-book-detail-label">
                             <Trans>Publisher</Trans>:
                           </span>
                           <span className="metadata-book-detail-value">
-                            {item.artistName}
+                            {publisher}
                           </span>
                         </div>
                       )}
-                      {item.description && (
+                      {description && (
                         <div className="metadata-book-detail-row">
                           <span className="metadata-book-detail-label">
                             <Trans>Description</Trans>:
                           </span>
                           <span className="metadata-book-detail-value">
-                            {item.description}
+                            {description}
                           </span>
                         </div>
                       )}
