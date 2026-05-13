@@ -102,7 +102,89 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     let chapter = bookLocation.chapterTitle;
     let word = new DictHistory(bookKey, text, chapter, sentence);
     await DatabaseService.saveRecord(word, "words");
+    this.syncWordToEudic(text, sentence);
+    this.syncWordToAnki(text, sentence);
   };
+
+  syncWordToEudic = async (text: string, sentence: string) => {
+    if (ConfigService.getReaderConfig("isEnableEudicSync") !== "yes") return;
+    try {
+      const config = ConfigService.getObjectConfig(
+        "eudicSyncConfig",
+        "thirdpartyToken",
+        {}
+      ) as any;
+      if (!config || !config.accessToken) return;
+      const categoryId = config.categoryId || "0";
+      const language = config.language || "en";
+      await axios.post(
+        "https://api.frdic.com/api/open/v1/studylist/word",
+        {
+          language,
+          word: text,
+          context_line: sentence || "",
+          category_ids: [parseInt(categoryId, 10) || 0],
+        },
+        {
+          headers: {
+            Authorization: `NIS ${config.accessToken}`,
+            "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0",
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Eudic sync error:", error);
+    }
+  };
+
+  syncWordToAnki = async (text: string, sentence: string) => {
+    if (ConfigService.getReaderConfig("isEnableAnkiSync") !== "yes") return;
+    try {
+      const config = ConfigService.getObjectConfig(
+        "ankiSyncConfig",
+        "thirdpartyToken",
+        {}
+      ) as any;
+      if (!config || !config.deckName) return;
+      const host = config.host || "127.0.0.1";
+      const port = config.port || "8765";
+      const endpoint = `http://${host}:${port}`;
+      const deckName = config.deckName || "Vocabulary";
+      const modelName = config.modelName || "Basic";
+      const tags = config.tags
+        ? String(config.tags)
+            .split(",")
+            .map((t: string) => t.trim())
+            .filter(Boolean)
+        : [];
+      const body: any = {
+        action: "addNote",
+        version: 6,
+        params: {
+          note: {
+            deckName,
+            modelName,
+            fields: {
+              Front: text,
+              Back: sentence || "",
+            },
+            options: {
+              allowDuplicate: false,
+            },
+            tags,
+          },
+        },
+      };
+      if (config.apiKey) {
+        body.key = config.apiKey;
+      }
+      await axios.post(endpoint, body);
+    } catch (error) {
+      console.error("AnkiConnect sync error:", error);
+    }
+  };
+
   handleDict = async (text: string) => {
     let dictText = "";
     let isFullAnalysis = true;
