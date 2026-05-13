@@ -46,7 +46,7 @@ class MetadataDialog extends React.Component<
 
     const fetchItunes = async (): Promise<BookResultItem[]> => {
       const encoded = encodeURIComponent(query);
-      const url = `https://itunes.apple.com/search?term=${encoded}&media=ebook&entity=ebook&limit=20`;
+      const url = `https://itunes.apple.com/search?term=${encoded}&media=ebook&entity=ebook&limit=3`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("iTunes network error");
       const data = await res.json();
@@ -62,7 +62,7 @@ class MetadataDialog extends React.Component<
       if (searchAuthor)
         parts.push(`author=${encodeURIComponent(searchAuthor)}`);
       if (!parts.length) parts.push(`q=${encodeURIComponent(query)}`);
-      const url = `https://openlibrary.org/search.json?${parts.join("&")}&fields=key,title,author_name,publisher,first_publish_year,cover_i&limit=20`;
+      const url = `https://openlibrary.org/search.json?${parts.join("&")}&fields=key,title,author_name,publisher,first_publish_year,cover_i&limit=3`;
       const res = await fetch(url);
       if (!res.ok) throw new Error("Open Library network error");
       const data = await res.json();
@@ -150,7 +150,7 @@ class MetadataDialog extends React.Component<
     return (
       <div className="metadata-dialog-container edit-dialog-container">
         <div className="metadata-dialog-title">
-          <Trans>Get Metadata</Trans>
+          <Trans>Get metadata</Trans>
         </div>
 
         {/* Search inputs */}
@@ -243,7 +243,9 @@ class MetadataDialog extends React.Component<
                     <div className="metadata-book-basic">
                       <div className="metadata-book-name">{title}</div>
                       <div className="metadata-book-author">{author}</div>
-                      <div className="metadata-book-source">{source}</div>
+                      <div className="metadata-book-source">
+                        {this.props.t("Data source") + ": " + source}
+                      </div>
                     </div>
                   </div>
 
