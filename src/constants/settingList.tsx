@@ -247,16 +247,6 @@ export const wordSyncSettingList = [
         label: "Deck Name",
         placeholder: "e.g. Vocabulary",
       },
-      {
-        key: "modelName",
-        label: "Note Type",
-        placeholder: "e.g. Basic",
-      },
-      {
-        key: "tags",
-        label: "Tags",
-        placeholder: "Comma-separated, e.g. koodo,vocabulary",
-      },
     ],
     authConfigKey: "ankiSyncConfig",
   },

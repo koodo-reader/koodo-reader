@@ -99,11 +99,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       "recordLocation",
       {}
     );
-    let chapter = bookLocation.chapterTitle;
+    let chapter = bookLocation.chapterTitle || "";
+    let bookName = this.props.currentBook.name || "";
     let word = new DictHistory(bookKey, text, chapter, sentence);
     await DatabaseService.saveRecord(word, "words");
     this.syncWordToEudic(text, sentence);
-    this.syncWordToAnki(text, sentence);
+    this.syncWordToAnki(text, sentence, bookName, chapter);
   };
 
   syncWordToEudic = async (text: string, sentence: string) => {
@@ -169,7 +170,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     }
   };
 
-  syncWordToAnki = async (text: string, sentence: string) => {
+  syncWordToAnki = async (
+    text: string,
+    sentence: string,
+    bookName: string,
+    chapter: string
+  ) => {
     if (ConfigService.getReaderConfig("isEnableAnkiSync") !== "yes") return;
     try {
       const config = ConfigService.getObjectConfig(
@@ -181,36 +187,54 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       const host = config.host || "127.0.0.1";
       const port = config.port || "8765";
       const endpoint = `http://${host}:${port}`;
-      const deckName = config.deckName || "Vocabulary";
-      const modelName = config.modelName || "Basic";
-      const tags = config.tags
-        ? String(config.tags)
-            .split(",")
-            .map((t: string) => t.trim())
-            .filter(Boolean)
-        : [];
-      const body: any = {
-        action: "addNote",
-        version: 6,
-        params: {
-          note: {
-            deckName,
-            modelName,
-            fields: {
-              Front: text,
-              Back: sentence || "",
-            },
-            options: {
-              allowDuplicate: false,
-            },
-            tags,
-          },
-        },
+      const deckName = config.deckName;
+      const MODEL_NAME = "Koodo Reader Word";
+
+      const ankiRequest = (action: string, params: any = {}) => {
+        const body: any = { action, version: 6, params };
+        if (config.apiKey) body.key = config.apiKey;
+        return axios.post(endpoint, body);
       };
-      if (config.apiKey) {
-        body.key = config.apiKey;
+
+      // Ensure model exists; create once and cache in config
+      if (!config.modelName) {
+        const namesRes = await ankiRequest("modelNames");
+        const existingModels: string[] = namesRes.data?.result || [];
+        if (!existingModels.includes(MODEL_NAME)) {
+          await ankiRequest("createModel", {
+            modelName: MODEL_NAME,
+            inOrderFields: ["Word", "Sentence", "Book", "Chapter"],
+            cardTemplates: [
+              {
+                Name: "Card 1",
+                Front: "<b>{{Word}}</b><br><br>{{Sentence}}",
+                Back: "{{FrontSide}}<hr><i>{{Book}}</i><br>{{Chapter}}",
+              },
+            ],
+          });
+        }
+        // Cache so we skip this check next time
+        ConfigService.setObjectConfig(
+          "ankiSyncConfig",
+          { ...config, modelName: MODEL_NAME },
+          "thirdpartyToken"
+        );
       }
-      await axios.post(endpoint, body);
+
+      await ankiRequest("addNote", {
+        note: {
+          deckName,
+          modelName: MODEL_NAME,
+          fields: {
+            Word: text,
+            Sentence: sentence || "",
+            Book: bookName || "",
+            Chapter: chapter || "",
+          },
+          options: { allowDuplicate: false },
+          tags: [],
+        },
+      });
     } catch (error) {
       console.error("AnkiConnect sync error:", error);
     }
