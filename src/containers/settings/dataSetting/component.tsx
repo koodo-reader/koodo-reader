@@ -28,6 +28,7 @@ import DatabaseService from "../../../utils/storage/databaseService";
 import {
   dataSettingList,
   noteSyncSettingList,
+  wordSyncSettingList,
 } from "../../../constants/settingList";
 declare var window: any;
 class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
@@ -48,6 +49,10 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         ConfigService.getReaderConfig("isEnableReadwiseSync") === "yes",
       isEnableMarkdownSync:
         ConfigService.getReaderConfig("isEnableMarkdownSync") === "yes",
+      isEnableEudicSync:
+        ConfigService.getReaderConfig("isEnableEudicSync") === "yes",
+      isEnableAnkiSync:
+        ConfigService.getReaderConfig("isEnableAnkiSync") === "yes",
     };
   }
   async componentDidMount() {
@@ -208,6 +213,45 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 <div className="setting-dialog-location-title">{folder}</div>
               ) : null;
             })()}
+        </div>
+      );
+    });
+  };
+
+  renderWordSyncOptions = () => {
+    return wordSyncSettingList.map((item) => {
+      return (
+        <div key={item.propName}>
+          <div className="setting-dialog-new-title" key={item.title}>
+            <span style={{ width: "calc(100% - 100px)" }}>
+              <Trans>{item.title}</Trans>
+            </span>
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                this.handleNoteSyncSetting(item);
+              }}
+              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
+            >
+              <span
+                className="single-control-button"
+                style={
+                  this.state[item.propName]
+                    ? {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
+              ></span>
+            </span>
+          </div>
+          <p className="setting-option-subtitle">
+            <Trans>{item.desc}</Trans>
+          </p>
         </div>
       );
     });
@@ -377,6 +421,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       <>
         {this.renderSwitchOption(dataSettingList)}
         {this.renderNoteSyncOptions()}
+        {this.renderWordSyncOptions()}
         {isElectron && (
           <>
             <div className="setting-dialog-new-title">

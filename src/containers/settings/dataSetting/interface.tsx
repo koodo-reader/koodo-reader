@@ -14,5 +14,7 @@ export interface SettingInfoState {
   isEnableYuqueSync: boolean;
   isEnableReadwiseSync: boolean;
   isEnableMarkdownSync: boolean;
+  isEnableEudicSync: boolean;
+  isEnableAnkiSync: boolean;
   [key: string]: any;
 }
