@@ -115,23 +115,54 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         {}
       ) as any;
       if (!config || !config.accessToken) return;
-      const categoryId = config.categoryId || "0";
       const language = config.language || "en";
+      const headers = {
+        Authorization: `NIS ${config.accessToken}`,
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0",
+      };
+
+      // Resolve categoryId from name, use cached value if available
+      let categoryId: string = "0";
+      const categoryName: string = (config.categoryName || "").trim();
+      if (categoryName) {
+        if (config.categoryId !== undefined) {
+          // Use cached id
+          categoryId = config.categoryId;
+        } else {
+          // Fetch all study lists and find matching one
+          const listRes = await axios.get(
+            `https://api.frdic.com/api/open/v1/studylist/category?language=${language}`,
+            { headers }
+          );
+          const lists: { id: string; name: string }[] =
+            listRes.data?.data || [];
+          const matched = lists.find((item) => item.name === categoryName);
+          if (matched) {
+            categoryId = matched.id || "0";
+          }
+          // Cache the resolved id alongside the name it was resolved from
+          const updatedConfig = {
+            ...config,
+            categoryId: categoryId,
+          };
+          ConfigService.setObjectConfig(
+            "eudicSyncConfig",
+            updatedConfig,
+            "thirdpartyToken"
+          );
+        }
+      }
+
       await axios.post(
         "https://api.frdic.com/api/open/v1/studylist/word",
         {
           language,
           word: text,
           context_line: sentence || "",
-          category_ids: [parseInt(categoryId, 10) || 0],
+          category_ids: [categoryId],
         },
-        {
-          headers: {
-            Authorization: `NIS ${config.accessToken}`,
-            "Content-Type": "application/json",
-            "User-Agent": "Mozilla/5.0",
-          },
-        }
+        { headers }
       );
     } catch (error) {
       console.error("Eudic sync error:", error);
