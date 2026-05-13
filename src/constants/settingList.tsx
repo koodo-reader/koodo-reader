@@ -240,7 +240,7 @@ export const wordSyncSettingList = [
       {
         key: "apiKey",
         label: "Key",
-        placeholder: "Leave blank if not configured",
+        placeholder: "Api key",
       },
       {
         key: "deckName",
