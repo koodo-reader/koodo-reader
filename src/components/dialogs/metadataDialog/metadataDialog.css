@@ -152,6 +152,12 @@
   white-space: nowrap;
 }
 
+.metadata-book-source {
+  font-size: 10px;
+  opacity: 0.45;
+  margin-top: 2px;
+}
+
 .metadata-book-detail {
   padding: 0 10px 10px 70px;
   font-size: 12px;
