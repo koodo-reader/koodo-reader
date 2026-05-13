@@ -162,12 +162,20 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
         )}
         <div className="edit-dialog-title" style={{ position: "relative" }}>
           <Trans>Edit Book</Trans>
-          <button
-            className="edit-dialog-metadata-btn add-dialog-confirm"
+          <div
+            style={{
+              fontSize: 16,
+              color: "rgb(231, 69, 69)",
+              position: "absolute",
+              right: 20,
+              top: 23,
+              cursor: "pointer",
+              opacity: 0.8,
+            }}
             onClick={() => this.setState({ isMetadataDialogOpen: true })}
           >
-            <Trans>Get Metadata</Trans>
-          </button>
+            <Trans>Get metadata</Trans>
+          </div>
         </div>
 
         <div className="edit-dialog-body">

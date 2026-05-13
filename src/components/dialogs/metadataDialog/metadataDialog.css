@@ -135,7 +135,6 @@
 .metadata-book-name {
   font-size: 14px;
   font-weight: 500;
-  line-height: 1.4;
   margin-bottom: 3px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -154,8 +153,9 @@
 
 .metadata-book-source {
   font-size: 10px;
-  opacity: 0.45;
-  margin-top: 2px;
+  opacity: 0.65;
+  margin-top: 4px;
+  float: right;
 }
 
 .metadata-book-detail {
