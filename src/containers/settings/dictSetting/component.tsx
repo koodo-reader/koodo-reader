@@ -2,11 +2,8 @@ import React from "react";
 import "./dictSetting.css";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
-import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import DictUtil, { DictMeta } from "../../../utils/file/dictUtil";
-
-declare var window: any;
 
 class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   fileInputRef = React.createRef<HTMLInputElement>();
@@ -44,10 +41,6 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     e.target.value = "";
 
     const ext = file.name.split(".").pop()?.toLowerCase() || "";
-    if (ext !== "mdx") {
-      toast.error(this.props.t("Only MDX files are supported"));
-      return;
-    }
 
     const reader = new FileReader();
     reader.onload = async (ev) => {
