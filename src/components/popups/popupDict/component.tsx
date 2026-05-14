@@ -89,10 +89,18 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         return;
       }
     }
-    this.handleDict(originalText);
-    this.handleRecordHistory(originalText, this.props.originalSentence || "");
+    const dictText = await this.handleDict(originalText);
+    this.handleRecordHistory(
+      originalText,
+      this.props.originalSentence || "",
+      dictText || ""
+    );
   }
-  handleRecordHistory = async (text: string, sentence: string) => {
+  handleRecordHistory = async (
+    text: string,
+    sentence: string,
+    dictText: string = ""
+  ) => {
     let bookKey = this.props.currentBook.key;
     let bookLocation = ConfigService.getObjectConfig(
       bookKey,
@@ -104,7 +112,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     let word = new DictHistory(bookKey, text, chapter, sentence);
     await DatabaseService.saveRecord(word, "words");
     this.syncWordToEudic(text, sentence);
-    this.syncWordToAnki(text, sentence, bookName, chapter);
+    this.syncWordToAnki(text, sentence, bookName, chapter, dictText);
   };
 
   syncWordToEudic = async (text: string, sentence: string) => {
@@ -174,7 +182,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     text: string,
     sentence: string,
     bookName: string,
-    chapter: string
+    chapter: string,
+    dictText: string = ""
   ) => {
     if (ConfigService.getReaderConfig("isEnableAnkiSync") !== "yes") return;
     try {
@@ -203,12 +212,19 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         if (!existingModels.includes(MODEL_NAME)) {
           await ankiRequest("createModel", {
             modelName: MODEL_NAME,
-            inOrderFields: ["Word", "Sentence", "Book", "Chapter"],
+            inOrderFields: [
+              "Word",
+              "Sentence",
+              "Book",
+              "Chapter",
+              "Definition",
+            ],
             cardTemplates: [
               {
                 Name: "Card 1",
-                Front: "<b>{{Word}}</b><br><br>{{Sentence}}",
-                Back: "{{FrontSide}}<hr><i>{{Book}}</i><br>{{Chapter}}",
+                Front:
+                  "<b>{{Word}}</b><br><br>{{Sentence}}<br><br><i>{{Book}}</i><br>{{Chapter}}",
+                Back: "{{Definition}}",
               },
             ],
           });
@@ -230,6 +246,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             Sentence: sentence || "",
             Book: bookName || "",
             Chapter: chapter || "",
+            Definition: dictText || "",
           },
           options: { allowDuplicate: false },
           tags: [],
@@ -240,7 +257,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     }
   };
 
-  handleDict = async (text: string) => {
+  handleDict = async (text: string): Promise<string> => {
     let dictText = "";
     let isFullAnalysis = true;
     try {
@@ -249,7 +266,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         let plugin = this.props.plugins.find(
           (item) => item.key === "custom-ai-dict-plugin"
         );
-        if (!plugin) return;
+        if (!plugin) return "";
         let targetLang =
           this.state.dictTarget ||
           ConfigService.getReaderConfig("dictTarget") ||
@@ -287,7 +304,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         this.stopUpdateInterval();
         this.aiTextAccumulator = "";
         this.setState({ isAiWaiting: false, dictText: " " });
-        return;
+        return "";
       } else if (
         this.state.dictService &&
         this.state.dictService !== "official-ai-dict-plugin"
@@ -295,7 +312,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         let plugin = this.props.plugins.find(
           (item) => item.key === this.state.dictService
         );
-        if (!plugin) return;
+        if (!plugin) return "";
         let dictFunc = plugin.script;
         // eslint-disable-next-line no-eval
         eval(dictFunc);
@@ -336,6 +353,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           if (!doc) continue;
           doc.getSelection()?.empty();
         }
+        return "";
       } else {
         this.setState(
           {
@@ -358,6 +376,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       ) {
         this.handleDictionaryStream(text, isFullAnalysis);
       }
+      return dictText;
     } catch (error) {
       toast.error(
         this.props.t("Error happened") +
@@ -368,6 +387,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       this.setState({
         dictText: this.props.t("Error happened"),
       });
+      return "";
     }
   };
   handleDictionaryStream = async (text: string, isFullAnalysis: boolean) => {
