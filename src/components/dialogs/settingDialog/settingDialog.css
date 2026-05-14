@@ -37,7 +37,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 14px 9px 18px;
+  padding: 8px 14px 8px 18px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -65,7 +65,7 @@
 }
 .setting-dialog-sidebar-divider {
   height: 1px;
-  margin: 8px 18px;
+  margin: 4px 18px;
   opacity: 0.15;
 }
 .setting-dialog-main {
