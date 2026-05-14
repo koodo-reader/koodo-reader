@@ -1,10 +1,7 @@
 import React from "react";
 import "./protection.css";
 import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
-import {
-  verifyPassword,
-  verifyPin,
-} from "../../utils/protectionUtil";
+import { verifyPassword, verifyPin } from "../../utils/protectionUtil";
 import { vexPasswordInputAsync } from "../../utils/common";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
@@ -87,7 +84,10 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
   };
 
   handlePinDelete = () => {
-    this.setState((s) => ({ pinValue: s.pinValue.slice(0, -1), pinError: false }));
+    this.setState((s) => ({
+      pinValue: s.pinValue.slice(0, -1),
+      pinError: false,
+    }));
   };
 
   render() {
@@ -96,7 +96,18 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
 
     if (method === "pin") {
       const digits: (number | "del" | null)[] = [
-        1, 2, 3, 4, 5, 6, 7, 8, 9, null, 0, "del",
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        null,
+        0,
+        "del",
       ];
       return (
         <div className="protection-overlay">
