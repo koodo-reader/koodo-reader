@@ -22,6 +22,7 @@ import { azureTTSVoiceList, officialVoiceList } from "../../constants/ttsList";
 import { langToName } from "../../utils/common";
 import { resetReaderRequest } from "../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
+import DictUtil from "../../utils/file/dictUtil";
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
 }
@@ -299,6 +300,29 @@ export function handleFetchPlugins() {
         }
         pluginList = pluginList.filter((p: PluginModel) => p.type !== "ai");
 
+        // Load local dictionary plugins from ConfigService
+        const localDictIds = DictUtil.getDictIds();
+        for (const dictId of localDictIds) {
+          const meta = DictUtil.getDictMeta(dictId);
+          console.log(meta, "dict mdeta");
+          if (meta) {
+            let localDictPlugin = new PluginModel(
+              `dict_${dictId}`,
+              "dictionary",
+              meta.name,
+              "dict",
+              "1.0.0",
+              "",
+              { dictId },
+              [],
+              [],
+              "",
+              ""
+            );
+            pluginList.push(localDictPlugin);
+          }
+        }
+
         if (ConfigService.getReaderConfig("aiTranslateModel")) {
           const modelKey = ConfigService.getReaderConfig("aiTranslateModel");
           const entry = ConfigService.getObjectConfig(
@@ -371,6 +395,7 @@ export function handleFetchPlugins() {
             pluginList.push(assistPlugin);
           }
         }
+        console.log(pluginList, "PLUGINLIST");
         TokenService.getToken("is_authed").then((value) => {
           let isAuthed = value === "yes";
           if (
