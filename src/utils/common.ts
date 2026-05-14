@@ -196,6 +196,7 @@ export const vexPasswordInputAsync = (
         ].join("");
     window.vex.dialog.open({
       input: inputHtml,
+      overlayClassName: "no-overlay",
       callback: function (data) {
         if (!data) {
           resolve(false);
