@@ -297,6 +297,7 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
                 className="lang-setting-dropdown"
                 value={protectionMethod}
                 onChange={(e) => this.handleChangeMethod(e.target.value)}
+                style={{ textAlign: "left" }}
               >
                 <option value="password">{this.props.t("Password")}</option>
                 <option value="pin">{this.props.t("PIN")}</option>

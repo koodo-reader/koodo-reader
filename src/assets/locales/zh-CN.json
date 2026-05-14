@@ -1026,6 +1026,7 @@
   "Show number of books in each shelf": "显示每个书架中的图书数量",
   "Enter password to unlock the app": "输入密码以解锁应用",
   "Authentication required to access the app": "需要身份验证才能访问应用",
+  "More settings": "更多设置",
   "Incorrect password, please try again": "密码错误，请重试",
   "Enter PIN to unlock the app": "输入 PIN 码以解锁应用",
   "Incorrect PIN, please try again": "PIN 码错误，请重试",

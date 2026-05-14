@@ -113,6 +113,12 @@ class SettingDialog extends React.Component<
             {this.renderSidebarItem("sync", "icon-sync", "Sync and backup", "")}
 
             {this.renderSidebarItem("account", "icon-user", "Account", "18px")}
+            {this.renderSidebarItem(
+              "more",
+              "icon-more",
+              "More settings",
+              "13px"
+            )}
           </div>
 
           <hr className="setting-dialog-sidebar-divider" />
@@ -146,7 +152,6 @@ class SettingDialog extends React.Component<
                 "18px"
               )}
             {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
-            {this.renderSidebarItem("more", "icon-more", "More", "18px")}
           </div>
         </div>
 
