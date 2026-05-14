@@ -7,4 +7,8 @@ export interface MoreSettingProps extends RouteComponentProps<any> {
 export interface MoreSettingState {
   protectionMethod: string;
   isLoading: boolean;
+  pinInputMode: "none" | "setup-enter" | "setup-confirm" | "verify";
+  pinValue: string;
+  pinFirstValue: string;
+  pinCallback: ((pin: string | false) => void) | null;
 }
