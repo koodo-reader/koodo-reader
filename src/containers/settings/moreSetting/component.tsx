@@ -56,11 +56,19 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
           });
         } else if (pinInputMode === "setup-confirm") {
           if (next === pinFirstValue) {
-            this.setState({ pinInputMode: "none", pinValue: "", pinFirstValue: "" });
+            this.setState({
+              pinInputMode: "none",
+              pinValue: "",
+              pinFirstValue: "",
+            });
             pinCallback && pinCallback(next);
           } else {
             toast.error(this.props.t("PINs do not match, please try again"));
-            this.setState({ pinValue: "", pinFirstValue: "", pinInputMode: "setup-enter" });
+            this.setState({
+              pinValue: "",
+              pinFirstValue: "",
+              pinInputMode: "setup-enter",
+            });
           }
         } else if (pinInputMode === "verify") {
           this.setState({ pinInputMode: "none", pinValue: "" });
@@ -165,10 +173,22 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
     if (pinInputMode === "setup-enter") title = i18n.t("Enter new 6-digit PIN");
     else if (pinInputMode === "setup-confirm")
       title = i18n.t("Confirm new 6-digit PIN");
-    else if (pinInputMode === "verify") title = i18n.t("Enter your current PIN");
+    else if (pinInputMode === "verify")
+      title = i18n.t("Enter your current PIN");
 
     const digits: (number | "del" | null)[] = [
-      1, 2, 3, 4, 5, 6, 7, 8, 9, null, 0, "del",
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      null,
+      0,
+      "del",
     ];
 
     return (

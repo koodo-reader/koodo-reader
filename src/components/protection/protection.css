@@ -87,7 +87,9 @@
   font-weight: 500;
   cursor: pointer;
   color: var(--text-color, #333);
-  transition: background 0.12s, opacity 0.12s;
+  transition:
+    background 0.12s,
+    opacity 0.12s;
   display: flex;
   align-items: center;
   justify-content: center;
