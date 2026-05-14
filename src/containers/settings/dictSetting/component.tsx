@@ -44,8 +44,8 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     e.target.value = "";
 
     const ext = file.name.split(".").pop()?.toLowerCase() || "";
-    if (ext !== "mdx" && ext !== "mdd") {
-      toast.error(this.props.t("Only MDX and MDD files are supported"));
+    if (ext !== "mdx") {
+      toast.error(this.props.t("Only MDX files are supported"));
       return;
     }
 
@@ -62,7 +62,7 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       };
 
       try {
-        await DictUtil.saveDict(id, fileNameWithoutExt, arrayBuffer);
+        await DictUtil.saveDict(id, file.name, arrayBuffer);
         DictUtil.saveDictMeta(id, meta);
         DictUtil.addDictId(id);
 
@@ -111,12 +111,17 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             </div>
           ) : (
             dicts.map((dict) => (
-              <div className="setting-dialog-new-title" key={dict.id}>
+              <div
+                className="setting-dialog-new-title"
+                key={dict.id}
+                style={{
+                  marginLeft: "0px",
+                  marginRight: "0px",
+                  width: "calc(100% - 20px)",
+                }}
+              >
                 <span>
-                  <span
-                    className="setting-dialog-new-title-name"
-                    style={{ marginLeft: "10px" }}
-                  >
+                  <span className="setting-dialog-new-title-name">
                     {dict.name}
                   </span>
                   <span
@@ -145,7 +150,7 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         <input
           ref={this.fileInputRef}
           type="file"
-          accept=".mdx,.mdd"
+          accept=".mdx"
           style={{ display: "none" }}
           onChange={this.handleFileChange}
         />

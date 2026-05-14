@@ -57,7 +57,7 @@ class DictUtil {
       }
     } else {
       if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-        for (const ext of ["mdx", "mdd"]) {
+        for (const ext of ["mdx"]) {
           await LocalFileManager.deleteFile(`${id}.${ext}`, DICT_FOLDER).catch(
             () => {}
           );
@@ -80,7 +80,7 @@ class DictUtil {
     return file ? path.join(dir, file) : null;
   }
 
-  /** Look up a word in the local MDX/MDD dictionary */
+  /** Look up a word in the local MDX dictionary */
   static async lookupWord(id: string, word: string): Promise<string> {
     if (isElectron) {
       try {
