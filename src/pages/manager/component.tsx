@@ -25,6 +25,7 @@ import PopupNote from "../../components/popups/popupNote";
 import toast from "react-hot-toast";
 import { supportedFormats } from "../../utils/common";
 import Footer from "../../components/footer";
+import ProtectionOverlay from "../../components/protection";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
   constructor(props: ManagerProps) {
@@ -107,6 +108,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           !this.props.dragItem && this.handleDrag(true);
         }}
       >
+        <ProtectionOverlay />
         <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
         {this.props.isShowPopupNote && (
           <div
