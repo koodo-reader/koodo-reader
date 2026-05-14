@@ -10,3 +10,117 @@
   align-items: center;
   justify-content: center;
 }
+
+.pin-keypad-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.55);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-keypad-container {
+  background: var(--background-color-1, #fff);
+  border-radius: 16px;
+  padding: 32px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 280px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+.pin-keypad-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: var(--text-color, #333);
+  text-align: center;
+}
+
+.pin-dots {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.pin-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--text-color-2, #999);
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.pin-dot.pin-dot-filled {
+  background: var(--primary-color, #6c63ff);
+  border-color: var(--primary-color, #6c63ff);
+}
+
+.pin-error-msg {
+  color: #e53e3e;
+  font-size: 13px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.pin-keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pin-key {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: var(--background-color-2, #f0f0f0);
+  font-size: 22px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-color, #333);
+  transition: background 0.12s, opacity 0.12s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-key:hover {
+  opacity: 0.8;
+}
+
+.pin-key:active {
+  opacity: 0.6;
+}
+
+.pin-key-empty {
+  width: 64px;
+  height: 64px;
+}
+
+.pin-key-del {
+  background: transparent;
+  font-size: 20px;
+}
+
+.pin-key-cancel {
+  margin-top: 4px;
+  background: none;
+  border: none;
+  color: var(--text-color-2, #999);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px 16px;
+}
+
+.pin-key-cancel:hover {
+  opacity: 0.7;
+}
