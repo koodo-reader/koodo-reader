@@ -9,7 +9,7 @@ jobs:
     # Platforms to build on/for
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-2022]
 
     steps:
       - name: Check out Git repository
