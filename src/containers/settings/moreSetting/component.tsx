@@ -206,16 +206,25 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
           <div className="pin-keypad-grid">
             {digits.map((d, idx) => {
               if (d === null) {
-                return <span key={idx} className="pin-key pin-key-empty" />;
+                return (
+                  <span
+                    key={idx}
+                    className="pin-key pin-key-empty"
+                    style={{ backgroundColor: "#fff" }}
+                  />
+                );
               }
               if (d === "del") {
                 return (
                   <button
                     key={idx}
-                    className="pin-key pin-key-del"
+                    className="pin-key pin-key-empty"
                     onClick={this.handlePinDelete}
                   >
-                    ⌫
+                    <span
+                      className="icon-close"
+                      style={{ fontSize: "18px" }}
+                    ></span>
                   </button>
                 );
               }

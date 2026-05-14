@@ -34,3 +34,6 @@
   width: 580px !important; /* 设置你需要的宽度 */
   max-width: 95% !important; /* 确保在移动端不会溢出 */
 }
+.vex-overlay {
+  background: rgba(0, 0, 0, 0) !important;
+}
