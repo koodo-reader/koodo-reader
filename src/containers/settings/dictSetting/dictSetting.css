@@ -1,0 +1,9 @@
+.dict-setting-list {
+  margin: 10px 25px 60px 25px;
+}
+
+.dict-setting-empty {
+  margin: 20px 30px;
+  color: #888;
+  font-size: 14px;
+}

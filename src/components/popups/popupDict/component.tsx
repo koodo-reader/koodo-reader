@@ -20,6 +20,7 @@ import {
 import { chatStream } from "../../../utils/request/common";
 import { marked } from "marked";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
+import DictUtil from "../../../utils/file/dictUtil";
 declare var window: any;
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   private aiTextAccumulator: string = "";
@@ -62,6 +63,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     }
   }
   componentDidMount() {
+    console.log(this.props.plugins, "plugins");
     this.handleLookUp();
   }
   async handleLookUp() {
@@ -305,6 +307,20 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         this.aiTextAccumulator = "";
         this.setState({ isAiWaiting: false, dictText: " " });
         return "";
+      } else if (
+        this.state.dictService &&
+        this.state.dictService.startsWith("dict_")
+      ) {
+        this.setState({ isAddNew: false });
+        const plugin = this.props.plugins.find(
+          (item) => item.key === this.state.dictService
+        );
+        if (!plugin) return "";
+        const config: any = plugin.config || {};
+        const dictId: string = config.dictId || "";
+        if (!dictId) return "";
+        console.log(dictId, "dictId");
+        dictText = await DictUtil.lookupWord(dictId, text);
       } else if (
         this.state.dictService &&
         this.state.dictService !== "official-ai-dict-plugin"
