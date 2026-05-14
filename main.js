@@ -827,6 +827,51 @@ const createMainWin = () => {
       };
     }
   });
+  ipcMain.handle("authenticate-biometric", async () => {
+    const os = require("os");
+    const platform = os.platform();
+    if (platform === "darwin") {
+      try {
+        const { systemPreferences } = require("electron");
+        if (systemPreferences.canPromptTouchID()) {
+          await systemPreferences.promptTouchID(
+            "Koodo Reader needs to verify your identity"
+          );
+          return true;
+        }
+        return false;
+      } catch (e) {
+        console.error("Touch ID failed:", e);
+        return false;
+      }
+    } else if (platform === "win32") {
+      try {
+        const { execSync } = require("child_process");
+        const script = [
+          "$OutputEncoding = [System.Text.Encoding]::UTF8",
+          "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8",
+          "Add-Type -AssemblyName System.Runtime.WindowsRuntime",
+          "$asTaskGeneric = ([System.WindowsRuntimeSystemExtensions].GetMethods() | Where-Object { $_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1' })[0]",
+          "$t = [Windows.Security.Credentials.UI.UserConsentVerifier,Windows.Security.Credentials.UI,ContentType=WindowsRuntime]",
+          "$op = $t::RequestVerificationAsync('Koodo Reader needs to verify your identity')",
+          "$asTask = $asTaskGeneric.MakeGenericMethod($op.GetType().GetGenericArguments())",
+          "$task = $asTask.Invoke($null, @($op))",
+          "$task.Wait()",
+          "if ($task.Result -eq [Windows.Security.Credentials.UI.UserConsentVerificationResult]::Verified) { Write-Output 'true' } else { Write-Output 'false' }",
+        ].join("; ");
+        const result = execSync(`powershell -NoProfile -Command "${script}"`, {
+          timeout: 30000,
+        })
+          .toString()
+          .trim();
+        return result === "true";
+      } catch (e) {
+        console.error("Windows Hello failed:", e);
+        return false;
+      }
+    }
+    return false;
+  });
   ipcMain.handle("encrypt-data", async (event, config) => {
     const { TokenService } =
       await import("./src/assets/lib/kookit-extra.min.mjs");

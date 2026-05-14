@@ -170,6 +170,80 @@ export const vexOpenAsync = (
   });
 };
 
+export const vexPasswordInputAsync = (
+  message: string,
+  confirmMessage?: string
+) => {
+  return new Promise<string | false>((resolve) => {
+    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    const inputHtml = confirmMessage
+      ? [
+          `<div style="margin-bottom:10px">`,
+          `<label style="display:block;margin-bottom:4px;font-weight:500">${i18n.t(message)}</label>`,
+          `<input name="vex-pwd" type="password" style="width:100%" required />`,
+          `</div>`,
+          `<div style="margin-bottom:10px">`,
+          `<label style="display:block;margin-bottom:4px;font-weight:500">${i18n.t(confirmMessage)}</label>`,
+          `<input name="vex-pwd-confirm" type="password" style="width:100%" required />`,
+          `</div>`,
+        ].join("")
+      : [
+          `<div style="margin-bottom:10px">`,
+          `<label style="display:block;margin-bottom:4px;font-weight:500">${i18n.t(message)}</label>`,
+          `<input name="vex-pwd" type="password" style="width:100%" required />`,
+          `</div>`,
+        ].join("");
+    window.vex.dialog.open({
+      input: inputHtml,
+      callback: function (data) {
+        if (!data) {
+          resolve(false);
+          return;
+        }
+        const pwd: string = data["vex-pwd"] ?? "";
+        if (!pwd) {
+          resolve(false);
+          return;
+        }
+        if (confirmMessage) {
+          const confirm: string = data["vex-pwd-confirm"] ?? "";
+          if (pwd !== confirm) {
+            resolve(false);
+            return;
+          }
+        }
+        resolve(pwd);
+      },
+    });
+  });
+};
+
+export const vexSelectAsync = (
+  message: string,
+  options: { value: string; label: string }[]
+) => {
+  return new Promise<string | false>((resolve) => {
+    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    const optionsHtml = options
+      .map((o) => `<option value="${o.value}">${i18n.t(o.label)}</option>`)
+      .join("");
+    const selectHtml = `<select name="vex-select" style="width:100%;padding:6px">${optionsHtml}</select>`;
+    window.vex.dialog.open({
+      unsafeMessage: i18n.t(message),
+      input: selectHtml,
+      callback: function (data) {
+        if (!data) {
+          resolve(false);
+        } else {
+          resolve(data["vex-select"] ?? false);
+        }
+      },
+    });
+  });
+};
+
 export const getFormatFromAudioPath = (audioPath: string) => {
   let format = "mp3";
   if (audioPath.indexOf(".wav") > -1) {

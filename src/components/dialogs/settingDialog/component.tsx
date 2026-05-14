@@ -14,6 +14,7 @@ import AISetting from "../../../containers/settings/aiSetting";
 import BackgroundSetting from "../../../containers/settings/backgroundSetting";
 import ChapterSetting from "../../../containers/settings/chapterSetting";
 import DictSetting from "../../../containers/settings/dictSetting";
+import MoreSetting from "../../../containers/settings/moreSetting";
 import { isElectron } from "react-device-detect";
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -76,6 +77,8 @@ class SettingDialog extends React.Component<
         return "TXT parser";
       case "dict":
         return "Local dictionary";
+      case "more":
+        return "More";
       default:
         return "Setting";
     }
@@ -143,6 +146,7 @@ class SettingDialog extends React.Component<
                 "18px"
               )}
             {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
+            {this.renderSidebarItem("more", "icon-more", "More", "18px")}
           </div>
         </div>
 
@@ -185,6 +189,8 @@ class SettingDialog extends React.Component<
               <ChapterSetting />
             ) : this.props.settingMode === "dict" ? (
               <DictSetting />
+            ) : this.props.settingMode === "more" ? (
+              <MoreSetting />
             ) : (
               <PluginSetting />
             )}
