@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #000;
+  background-color: #f5f5f5;
   z-index: 99999;
   display: flex;
   align-items: center;
@@ -32,7 +32,6 @@
   flex-direction: column;
   align-items: center;
   min-width: 280px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 }
 
 .pin-keypad-title {
@@ -59,12 +58,12 @@
 }
 
 .pin-dot.pin-dot-filled {
-  background: var(--primary-color, #6c63ff);
-  border-color: var(--primary-color, #6c63ff);
+  background: var(--primary-color, rgba(75, 75, 75, 1));
+  border-color: var(--primary-color, rgba(75, 75, 75, 1));
 }
 
 .pin-error-msg {
-  color: #e53e3e;
+  color: rgb(231, 69, 69, 0.8);
   font-size: 13px;
   margin-bottom: 10px;
   text-align: center;
