@@ -36,8 +36,8 @@
 .setting-dialog-sidebar-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 14px 8px 18px;
+  gap: 9px;
+  padding: 8.5px 14px 8.5px 18px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
