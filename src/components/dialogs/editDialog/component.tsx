@@ -10,6 +10,7 @@ import CoverUtil from "../../../utils/file/coverUtil";
 import { isElectron } from "react-device-detect";
 import MetadataDialog from "../metadataDialog";
 import { MetadataResult } from "../metadataDialog/interface";
+import { trimSpecialCharacters } from "../../../utils/common";
 declare var window: any;
 
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
@@ -145,19 +146,19 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
       <div className="edit-dialog-container">
         {this.state.isMetadataDialogOpen && (
           <MetadataDialog
-            t={this.props.t}
-            currentBookName={
-              this.nameRef.current?.value || this.props.currentBook.name || ""
-            }
-            currentBookAuthor={
-              this.authorRef.current?.value ||
-              this.props.currentBook.author ||
-              ""
-            }
-            handleMetadataDialog={(isShow) =>
-              this.setState({ isMetadataDialogOpen: isShow })
-            }
-            handleApplyMetadata={this.handleApplyMetadata}
+            {...({
+              currentBookName: trimSpecialCharacters(
+                this.nameRef.current?.value || this.props.currentBook.name || ""
+              ),
+              currentBookAuthor:
+                this.authorRef.current?.value ||
+                this.props.currentBook.author ||
+                "",
+              handleMetadataDialog: (isShow) => {
+                this.setState({ isMetadataDialogOpen: isShow });
+              },
+              handleApplyMetadata: this.handleApplyMetadata,
+            } as any)}
           />
         )}
         <div className="edit-dialog-title" style={{ position: "relative" }}>
