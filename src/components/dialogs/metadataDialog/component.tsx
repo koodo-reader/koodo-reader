@@ -9,6 +9,9 @@ import {
   OpenLibraryBookItem,
   BookResultItem,
 } from "./interface";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import toast from "react-hot-toast";
+import { getBookMetadata } from "../../../utils/request/reader";
 
 class MetadataDialog extends React.Component<
   MetadataDialogProps,
@@ -22,6 +25,7 @@ class MetadataDialog extends React.Component<
       results: [],
       selectedId: null,
       isLoading: false,
+      isCloudSearch: false,
       error: "",
     };
   }
@@ -124,6 +128,14 @@ class MetadataDialog extends React.Component<
           ? item.artworkUrl100.replace("100x100", "600x600")
           : "",
       };
+    } else if (item.source === "cloud") {
+      metadata = {
+        name: item.name || "",
+        author: item.author || "",
+        publisher: item.publisher || "",
+        description: item.description || "",
+        cover: item.cover || "",
+      };
     } else {
       const coverUrl = item.cover_i
         ? `https://covers.openlibrary.org/b/id/${item.cover_i}-L.jpg`
@@ -195,7 +207,7 @@ class MetadataDialog extends React.Component<
           )}
           {!isLoading && !error && results.length === 0 && (
             <div className="metadata-dialog-empty">
-              <Trans>No results</Trans>
+              <Trans>Empty</Trans>
             </div>
           )}
           {!isLoading &&
@@ -214,6 +226,13 @@ class MetadataDialog extends React.Component<
                 author = item.artistName;
                 description = item.description || "";
                 source = "iTunes";
+              } else if (item.source === "cloud") {
+                thumb = item.cover || "";
+                title = item.name;
+                author = item.author;
+                publisher = item.publisher || "";
+                description = item.description || "";
+                source = "Cloud";
               } else {
                 thumb = item.cover_i
                   ? `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg`
@@ -244,7 +263,9 @@ class MetadataDialog extends React.Component<
                       <div className="metadata-book-name">{title}</div>
                       <div className="metadata-book-author">{author}</div>
                       <div className="metadata-book-source">
-                        {this.props.t("Data source") + ": " + source}
+                        {this.props.t("Data source") +
+                          ": " +
+                          this.props.t(source)}
                       </div>
                     </div>
                   </div>
@@ -288,6 +309,59 @@ class MetadataDialog extends React.Component<
                 </div>
               );
             })}
+          {!this.state.isCloudSearch && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: 10,
+              }}
+            >
+              <div
+                onClick={async () => {
+                  if (!this.props.isAuthed) {
+                    toast(
+                      this.props.t("Please upgrade to Pro to use this feature")
+                    );
+                    this.props.handleSetting(true);
+                    this.props.handleSettingMode("account");
+                    ConfigService.setReaderConfig("fullTranslationMode", "no");
+                    return;
+                  }
+                  toast.loading(this.props.t("Fetching metadata from cloud"));
+                  let res = await getBookMetadata(
+                    this.props.currentBookName,
+                    this.props.currentBookAuthor
+                  );
+                  toast.dismiss();
+                  if (res && res.data) {
+                    const data = res.data as BookResultItem[];
+                    if (data.length === 0) {
+                      toast(this.props.t("No metadata found"));
+                    } else {
+                      this.setState({
+                        results: [...this.state.results, ...data],
+                        selectedId: null,
+                        isCloudSearch: true,
+                      });
+                    }
+                  }
+                }}
+                style={{
+                  marginTop: "10px",
+                  cursor: "pointer",
+                  textAlign: "center",
+                  height: "40px",
+                  borderRadius: "20px",
+                  lineHeight: "40px",
+                  width: "140px",
+                }}
+                className="token-dialog-token-text"
+              >
+                <Trans>Get more results</Trans>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="metadata-dialog-footer">

@@ -1070,6 +1070,8 @@
   "Enter username": "输入用户名",
   "Enter password": "输入密码",
   "Leave blank to keep the current password": "留空以保留当前密码",
+  "Cloud": "云端",
+  "Get more results": "获取更多结果",
   "Validation successful": "验证成功",
   "Validation failed": "验证失败",
   "Please configure the KOReader sync server first": "请先配置 KOReader 同步服务器"
