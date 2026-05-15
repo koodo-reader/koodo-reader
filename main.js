@@ -45,15 +45,23 @@ let downloadRequest = null;
 
 const extractClixmlErrors = (text) => {
   if (!text) return "";
-  const matches = text.match(/<S S="Error">([^<]*(?:<[^/][^>]*>[^<]*<\/[^>]*>)*[^<]*)<\/S>/g);
+  const matches = text.match(
+    /<S S="Error">([^<]*(?:<[^/][^>]*>[^<]*<\/[^>]*>)*[^<]*)<\/S>/g
+  );
   if (!matches) return text;
   return matches
-    .map((m) => m.replace(/<\/?S[^>]*>/g, "").replace(/<[^>]+>/g, "").replace(/_x000D__x000A_/g, "\n").trim())
+    .map((m) =>
+      m
+        .replace(/<\/?S[^>]*>/g, "")
+        .replace(/<[^>]+>/g, "")
+        .replace(/_x000D__x000A_/g, "\n")
+        .trim()
+    )
     .filter(Boolean)
     .join("\n");
 };
 
-const runPowerShellScript = (script) => {
+const runPowerShellScript = (script, timeout = 30000) => {
   return new Promise((resolve, reject) => {
     const encodedCommand = Buffer.from(script, "utf16le").toString("base64");
     execFile(
@@ -61,6 +69,7 @@ const runPowerShellScript = (script) => {
       [
         "-NoProfile",
         "-NonInteractive",
+        "-Sta",
         "-ExecutionPolicy",
         "Bypass",
         "-EncodedCommand",
@@ -68,7 +77,7 @@ const runPowerShellScript = (script) => {
       ],
       {
         windowsHide: true,
-        timeout: 30000,
+        timeout,
         maxBuffer: 1024 * 1024,
       },
       (error, stdout, stderr) => {
@@ -84,8 +93,31 @@ const runPowerShellScript = (script) => {
   });
 };
 
-const getWindowsHelloScript = (mode, message = "") => {
+const getWindowHandleValue = (win) => {
+  if (!win || typeof win.getNativeWindowHandle !== "function") {
+    return "";
+  }
+
+  try {
+    const handle = win.getNativeWindowHandle();
+    if (!Buffer.isBuffer(handle) || handle.length === 0) {
+      return "";
+    }
+
+    if (handle.length >= 8 && typeof handle.readBigUInt64LE === "function") {
+      return handle.readBigUInt64LE(0).toString();
+    }
+
+    return handle.readUInt32LE(0).toString();
+  } catch (error) {
+    console.warn("Failed to resolve native window handle:", error);
+    return "";
+  }
+};
+
+const getWindowsHelloScript = (mode, message = "", hwnd = "") => {
   const escapedMessage = message.replace(/'/g, "''");
+  const escapedHwnd = String(hwnd || "").replace(/'/g, "''");
   return `
 $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -115,6 +147,66 @@ function Invoke-WinRtAsync {
   return $task.GetAwaiter().GetResult()
 }
 
+function Request-WindowsHelloVerification {
+  param(
+    [Parameter(Mandatory = $true)] [string] $Message,
+    [string] $Hwnd
+  )
+
+  $isWindowInteropSupported = [Environment]::OSVersion.Version.Build -ge 22000 -and -not [string]::IsNullOrWhiteSpace($Hwnd)
+
+  if (-not $isWindowInteropSupported) {
+    return Invoke-WinRtAsync -Operation ($verifier::RequestVerificationAsync($Message)) -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerificationResult])
+  }
+
+  Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+namespace KoodoReaderInterop
+{
+    [ComImport]
+    [Guid("39E050C3-4E74-441A-8DC0-B81104DF949C")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIInspectable)]
+    public interface IUserConsentVerifierInterop
+    {
+        [return: MarshalAs(UnmanagedType.IInspectable)]
+        object RequestVerificationForWindowAsync(
+            IntPtr appWindow,
+            [MarshalAs(UnmanagedType.HString)] string message,
+            [In] ref Guid riid);
+    }
+
+    public static class UserConsentVerifierInteropHelper
+    {
+        public static object RequestVerificationForWindow(object activationFactory, long hwnd, string message, Guid riid)
+        {
+            IntPtr ptr = IntPtr.Zero;
+
+            try
+            {
+                ptr = Marshal.GetIUnknownForObject(activationFactory);
+                var interop = (IUserConsentVerifierInterop)Marshal.GetTypedObjectForIUnknown(ptr, typeof(IUserConsentVerifierInterop));
+                return interop.RequestVerificationForWindowAsync(new IntPtr(hwnd), message, ref riid);
+            }
+            finally
+            {
+                if (ptr != IntPtr.Zero)
+                {
+                    Marshal.Release(ptr);
+                }
+            }
+        }
+    }
+}
+"@
+
+  $activationFactory = [System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeMarshal]::GetActivationFactory($verifier)
+  $asyncOperationGuid = [Guid]::Parse('fd596ffd-2318-558f-9dbe-d21df43764a5')
+  $operation = [KoodoReaderInterop.UserConsentVerifierInteropHelper]::RequestVerificationForWindow($activationFactory, [Int64]::Parse($Hwnd), $Message, $asyncOperationGuid)
+  return Invoke-WinRtAsync -Operation $operation -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerificationResult])
+}
+
 $verifier = [Windows.Security.Credentials.UI.UserConsentVerifier, Windows.Security.Credentials.UI, ContentType = WindowsRuntime]
 $availability = Invoke-WinRtAsync -Operation ($verifier::CheckAvailabilityAsync()) -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerifierAvailability])
 
@@ -136,7 +228,7 @@ if ($availability.ToString() -ne 'Available') {
 }
 
 try {
-  $result = Invoke-WinRtAsync -Operation ($verifier::RequestVerificationAsync('${escapedMessage}')) -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerificationResult])
+  $result = Request-WindowsHelloVerification -Message '${escapedMessage}' -Hwnd '${escapedHwnd}'
   [Console]::Out.Write((@{
     success = ($result.ToString() -eq 'Verified')
     code = $result.ToString()
@@ -196,7 +288,10 @@ const getBiometricCapability = async () => {
   };
 };
 
-const promptBiometricAuth = async (promptMessage = "Authenticate") => {
+const promptBiometricAuth = async (
+  promptMessage = "Authenticate",
+  owningWindow = null
+) => {
   if (process.platform === "darwin") {
     const available =
       typeof systemPreferences.canPromptTouchID === "function" &&
@@ -229,8 +324,10 @@ const promptBiometricAuth = async (promptMessage = "Authenticate") => {
 
   if (process.platform === "win32") {
     try {
+      const hwnd = getWindowHandleValue(owningWindow);
       const output = await runPowerShellScript(
-        getWindowsHelloScript("verify", promptMessage)
+        getWindowsHelloScript("verify", promptMessage, hwnd),
+        120000
       );
       console.log(output);
       const result = output ? JSON.parse(output) : {};
@@ -1157,7 +1254,12 @@ const createMainWin = () => {
     return await getBiometricCapability();
   });
   ipcMain.handle("prompt-biometric-auth", async (event, config) => {
-    return await promptBiometricAuth(config?.message);
+    const senderWindow =
+      BrowserWindow.fromWebContents(event.sender) ||
+      BrowserWindow.getFocusedWindow() ||
+      mainWin ||
+      null;
+    return await promptBiometricAuth(config?.message, senderWindow);
   });
 
   ipcMain.handle("reset-reader-position", async (event) => {
