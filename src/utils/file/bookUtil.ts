@@ -172,6 +172,26 @@ class BookUtil {
       }
     }
   }
+  static getBookPath(book: Book) {
+    if (isElectron) {
+      var fs = window.require("fs");
+      var path = window.require("path");
+      let _bookPath = path.join(
+        getStorageLocation() || "",
+        `book`,
+        book.key + "." + book.format
+      );
+      if (fs.existsSync(_bookPath)) {
+        return _bookPath;
+      } else if (book.path && fs.existsSync(book.path)) {
+        return book.path;
+      } else {
+        return "";
+      }
+    } else {
+      return "";
+    }
+  }
   static fetchAllBooks(Books: BookModel[]) {
     return Books.map((item) => {
       return this.fetchBook(

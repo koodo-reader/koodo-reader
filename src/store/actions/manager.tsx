@@ -304,7 +304,6 @@ export function handleFetchPlugins() {
         const localDictIds = DictUtil.getDictIds();
         for (const dictId of localDictIds) {
           const meta = DictUtil.getDictMeta(dictId);
-          console.log(meta, "dict mdeta");
           if (meta) {
             let localDictPlugin = new PluginModel(
               `dict_${dictId}`,
@@ -395,7 +394,6 @@ export function handleFetchPlugins() {
             pluginList.push(assistPlugin);
           }
         }
-        console.log(pluginList, "PLUGINLIST");
         TokenService.getToken("is_authed").then((value) => {
           let isAuthed = value === "yes";
           if (
