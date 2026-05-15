@@ -17,6 +17,7 @@ import { LocalFileManager } from "../../../utils/file/localFile";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { changeLibrary, changePath } from "../../../utils/file/common";
 import { getSnapshots } from "../../../utils/file/backup";
+import { verifyAndBuildKOReaderSyncConfig } from "../../../utils/file/koReaderSync";
 import { restoreFromSnapshot } from "../../../utils/file/restore";
 import {
   exportBooks,
@@ -41,6 +42,8 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       exportHighlightsFormat: "",
       isEnableDiscordRPC:
         ConfigService.getReaderConfig("isEnableDiscordRPC") === "yes",
+      isEnableKoReaderSync:
+        ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes",
       isEnableNotionSync:
         ConfigService.getReaderConfig("isEnableNotionSync") === "yes",
       isEnableYuqueSync:
@@ -76,6 +79,88 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       this.state[stateName] ? "no" : "yes"
     );
     toast.success(this.props.t("Change successful"));
+  };
+
+  handleKOReaderSyncSetting = async () => {
+    const currentlyEnabled = this.state.isEnableKoReaderSync;
+    if (currentlyEnabled) {
+      this.setState({ isEnableKoReaderSync: false });
+      ConfigService.setReaderConfig("isEnableKoReaderSync", "no");
+      toast.success(this.props.t("Change successful"));
+      return;
+    }
+
+    const savedConfig = ConfigService.getReaderConfig("koReaderSyncConfig") || {};
+    const labels = {
+      serverUrl: this.props.t("Server address"),
+      username: this.props.t("Username"),
+      password: this.props.t("Password"),
+    };
+    const result = await vexOpenAsync(
+      {
+        serverUrl: {
+          value: savedConfig.serverUrl || "",
+          placeholder: "https://your-koreader-sync-server.com",
+          type: "text",
+        },
+        username: {
+          value: savedConfig.username || "",
+          placeholder: this.props.t("Enter username"),
+          type: "text",
+        },
+        password: {
+          value: "",
+          placeholder:
+            savedConfig.passwordHash && savedConfig.username
+              ? this.props.t("Leave blank to keep the current password")
+              : this.props.t("Enter password"),
+          type: "password",
+        },
+      },
+      "",
+      labels
+    );
+
+    if (!result) {
+      return;
+    }
+
+    if (!result.serverUrl || !result.username) {
+      toast.error(this.props.t("Please fill in all fields"));
+      return;
+    }
+    if (!result.password && !savedConfig.passwordHash) {
+      toast.error(this.props.t("Please fill in all fields"));
+      return;
+    }
+
+    try {
+      const verifiedConfig = await verifyAndBuildKOReaderSyncConfig({
+        serverUrl: result.serverUrl,
+        username: result.username,
+        password: result.password,
+        passwordHash:
+          !result.password && savedConfig.username === result.username
+            ? savedConfig.passwordHash
+            : "",
+      });
+      ConfigService.setReaderConfig("koReaderSyncConfig", verifiedConfig);
+      this.setState({ isEnableKoReaderSync: true });
+      ConfigService.setReaderConfig("isEnableKoReaderSync", "yes");
+      toast.success(this.props.t("Change successful"));
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : this.props.t("Binding failed")
+      );
+    }
+  };
+
+  handleDataSetting = async (item: any) => {
+    if (item.propName === "isEnableKoReaderSync") {
+      await this.handleKOReaderSyncSetting();
+      return;
+    }
+    this.handleSetting(item.propName);
   };
 
   handleNoteSyncSetting = async (item: any) => {
@@ -271,7 +356,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <span
               className="single-control-switch"
               onClick={() => {
-                this.handleSetting(item.propName);
+                this.handleDataSetting(item);
               }}
               style={this.state[item.propName] ? {} : { opacity: 0.6 }}
             >

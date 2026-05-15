@@ -27,6 +27,10 @@ import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import {
+  isKOReaderSyncEnabled,
+  syncKOReaderProgress,
+} from "../../utils/file/koReaderSync";
+import {
   addChatBox,
   checkBrokenDatabase,
   checkMissingBook,
@@ -286,7 +290,41 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     }
 
+    await this.handleKOReaderSync();
     this.setState({ isSync: false });
+  };
+  handleKOReaderSync = async () => {
+    if (!isKOReaderSyncEnabled()) {
+      return;
+    }
+
+    toast.loading(this.props.t("Start syncing") + " (KOReader)", {
+      id: "koreader-sync",
+      position: "bottom-center",
+    });
+    try {
+      const summary = await syncKOReaderProgress();
+      if (summary.pulledBooks > 0 || summary.pushedBooks > 0) {
+        this.props.handleFetchBooks();
+      }
+      toast.success(
+        this.props.t("Synchronisation successful") + " (KOReader)",
+        {
+          id: "koreader-sync",
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        this.props.t("Sync failed") +
+          " (KOReader): " +
+          (error instanceof Error ? error.message : String(error)),
+        {
+          id: "koreader-sync",
+          duration: 6000,
+        }
+      );
+    }
   };
   beforeSync = async (userInfo: any) => {
     if (!ConfigService.getItem("defaultSyncOption")) {
@@ -442,6 +480,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
+    await this.handleKOReaderSync();
     toast.success(this.props.t("Synchronisation successful"), {
       id: "syncing",
     });

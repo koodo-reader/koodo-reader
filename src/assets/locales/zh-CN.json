@@ -1063,4 +1063,10 @@
   "Relink": "重新链接",
   "The text is empty": "文本为空",
   "Model assignment": "模型分配"
+  ,
+  "Auto sync reading progress to KOReader sync server": "自动同步阅读进度到 KOReader 同步服务器",
+  "After enabling it, clicking the sync button will compare reading progress between Koodo Reader and the KOReader sync server by book MD5 and keep the faster progress": "启用后，点击同步按钮会根据图书 MD5 比较 Koodo Reader 与 KOReader 同步服务器中的阅读进度，并保留进度更快的一方",
+  "Enter username": "输入用户名",
+  "Leave blank to keep the current password": "留空以保留当前密码",
+  "Please configure the KOReader sync server first": "请先配置 KOReader 同步服务器"
 }
