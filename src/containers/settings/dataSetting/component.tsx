@@ -90,7 +90,8 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       return;
     }
 
-    const savedConfig = ConfigService.getReaderConfig("koReaderSyncConfig") || {};
+    const savedConfig =
+      ConfigService.getReaderConfig("koReaderSyncConfig") || {};
     const labels = {
       serverUrl: this.props.t("Server address"),
       username: this.props.t("Username"),
@@ -100,7 +101,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       {
         serverUrl: {
           value: savedConfig.serverUrl || "",
-          placeholder: "https://your-koreader-sync-server.com",
+          placeholder: "https://sync.koreader.rocks",
           type: "text",
         },
         username: {
@@ -135,6 +136,9 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
 
     try {
+      toast.loading(this.props.t("Validating server info..."), {
+        id: "ko-reader-sync",
+      });
       const verifiedConfig = await verifyAndBuildKOReaderSyncConfig({
         serverUrl: result.serverUrl,
         username: result.username,
@@ -147,10 +151,17 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       ConfigService.setReaderConfig("koReaderSyncConfig", verifiedConfig);
       this.setState({ isEnableKoReaderSync: true });
       ConfigService.setReaderConfig("isEnableKoReaderSync", "yes");
-      toast.success(this.props.t("Change successful"));
+      toast.success(this.props.t("Validation successful"), {
+        id: "ko-reader-sync",
+      });
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : this.props.t("Binding failed")
+        error instanceof Error
+          ? error.message
+          : this.props.t("Validation failed"),
+        {
+          id: "ko-reader-sync",
+        }
       );
     }
   };

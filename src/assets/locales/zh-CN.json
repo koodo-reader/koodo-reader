@@ -1062,11 +1062,15 @@
   "You have reached the device limit for your account. Please install the latest mobile version of Koodo Reader to remove unused device by visiting Settings - Account - Device Management. ": "您的账户已达到设备数量上限。请安装最新 Koodo Reader 移动版，移除未使用的设备，请前往 设置 - 账户 - 设备管理。",
   "Relink": "重新链接",
   "The text is empty": "文本为空",
-  "Model assignment": "模型分配"
-  ,
-  "Auto sync reading progress to KOReader sync server": "自动同步阅读进度到 KOReader 同步服务器",
-  "After enabling it, clicking the sync button will compare reading progress between Koodo Reader and the KOReader sync server by book MD5 and keep the faster progress": "启用后，点击同步按钮会根据图书 MD5 比较 Koodo Reader 与 KOReader 同步服务器中的阅读进度，并保留进度更快的一方",
+  "Model assignment": "模型分配",
+  "Auto sync reading progress to KOReader sync server": "自动将阅读进度同步到 KOReader 同步服务器",
+  "After enabling it, clicking the sync button will sync reading progress between Koodo Reader and KOReader with KOReader sync server. A faster reading progress will override the slower one.": "启用后，点击同步按钮将通过 KOReader 同步服务器在 Koodo Reader 和 KOReader 之间同步阅读进度。较快的阅读进度将覆盖较慢的阅读进度。",
+  "Please fill in all fields": "请填写所有字段",
+  "Validating server info...": "正在验证服务器信息...",
   "Enter username": "输入用户名",
+  "Enter password": "输入密码",
   "Leave blank to keep the current password": "留空以保留当前密码",
+  "Validation successful": "验证成功",
+  "Validation failed": "验证失败",
   "Please configure the KOReader sync server first": "请先配置 KOReader 同步服务器"
 }
