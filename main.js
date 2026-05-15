@@ -43,6 +43,16 @@ let syncUtilCache = {};
 let pickerUtilCache = {};
 let downloadRequest = null;
 
+const extractClixmlErrors = (text) => {
+  if (!text) return "";
+  const matches = text.match(/<S S="Error">([^<]*(?:<[^/][^>]*>[^<]*<\/[^>]*>)*[^<]*)<\/S>/g);
+  if (!matches) return text;
+  return matches
+    .map((m) => m.replace(/<\/?S[^>]*>/g, "").replace(/<[^>]+>/g, "").replace(/_x000D__x000A_/g, "\n").trim())
+    .filter(Boolean)
+    .join("\n");
+};
+
 const runPowerShellScript = (script) => {
   return new Promise((resolve, reject) => {
     const encodedCommand = Buffer.from(script, "utf16le").toString("base64");
@@ -63,9 +73,9 @@ const runPowerShellScript = (script) => {
       },
       (error, stdout, stderr) => {
         if (error) {
-          reject(
-            new Error((stderr || stdout || error.message || "").trim() || "")
-          );
+          const rawMessage = (stderr || stdout || error.message || "").trim();
+          const cleanMessage = extractClixmlErrors(rawMessage) || rawMessage;
+          reject(new Error(cleanMessage));
           return;
         }
         resolve((stdout || "").trim());
@@ -78,6 +88,7 @@ const getWindowsHelloScript = (mode, message = "") => {
   const escapedMessage = message.replace(/'/g, "''");
   return `
 $ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 Add-Type -AssemblyName System.Runtime.WindowsRuntime
 
 function Invoke-WinRtAsync {
@@ -124,13 +135,20 @@ if ($availability.ToString() -ne 'Available') {
   exit 0
 }
 
-$result = Invoke-WinRtAsync -Operation ($verifier::RequestVerificationAsync('${escapedMessage}')) -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerificationResult])
-
-[Console]::Out.Write((@{
-  success = ($result.ToString() -eq 'Verified')
-  code = $result.ToString()
-  status = $availability.ToString()
-} | ConvertTo-Json -Compress))
+try {
+  $result = Invoke-WinRtAsync -Operation ($verifier::RequestVerificationAsync('${escapedMessage}')) -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerificationResult])
+  [Console]::Out.Write((@{
+    success = ($result.ToString() -eq 'Verified')
+    code = $result.ToString()
+    status = $availability.ToString()
+  } | ConvertTo-Json -Compress))
+} catch {
+  [Console]::Out.Write((@{
+    success = $false
+    code = 'Error'
+    status = $_.Exception.Message
+  } | ConvertTo-Json -Compress))
+}
 `.trim();
 };
 
@@ -150,6 +168,7 @@ const getBiometricCapability = async () => {
   if (process.platform === "win32") {
     try {
       const output = await runPowerShellScript(getWindowsHelloScript("check"));
+      console.log(output);
       const result = output ? JSON.parse(output) : {};
       return {
         available: !!result.available,
@@ -158,6 +177,7 @@ const getBiometricCapability = async () => {
         status: result.status || "Unavailable",
       };
     } catch (error) {
+      console.log(error);
       return {
         available: false,
         provider: "Windows Hello",
@@ -197,6 +217,7 @@ const promptBiometricAuth = async (promptMessage = "Authenticate") => {
         provider: "Touch ID",
       };
     } catch (error) {
+      console.log(error, "asgdfsgsd");
       const message = error instanceof Error ? error.message : String(error);
       return {
         success: false,
@@ -211,6 +232,7 @@ const promptBiometricAuth = async (promptMessage = "Authenticate") => {
       const output = await runPowerShellScript(
         getWindowsHelloScript("verify", promptMessage)
       );
+      console.log(output);
       const result = output ? JSON.parse(output) : {};
       return {
         success: !!result.success,
@@ -221,6 +243,7 @@ const promptBiometricAuth = async (promptMessage = "Authenticate") => {
         provider: "Windows Hello",
       };
     } catch (error) {
+      console.error("Biometric verification error:", error.message);
       return {
         success: false,
         code: "Error",
