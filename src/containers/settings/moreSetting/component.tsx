@@ -23,7 +23,6 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
     this.state = {
       protectionMethod: "",
       biometricAvailable: false,
-      isLoading: true,
       pinInputMode: "none",
       pinValue: "",
       pinFirstValue: "",
@@ -31,15 +30,15 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
     };
   }
 
-  async componentDidMount() {
-    const [method, biometricCapability] = await Promise.all([
+  componentDidMount() {
+    Promise.all([
       TokenService.getToken("protection_method"),
       getBiometricCapability(),
-    ]);
-    this.setState({
-      protectionMethod: method || "",
-      biometricAvailable: biometricCapability.available,
-      isLoading: false,
+    ]).then(([method, biometricCapability]) => {
+      this.setState({
+        protectionMethod: method || "",
+        biometricAvailable: biometricCapability.available,
+      });
     });
   }
 
@@ -188,7 +187,9 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
     } else if (method === "biometric") {
       if (!this.state.biometricAvailable) {
         toast.error(
-          this.props.t("Biometric authentication is not available on this device")
+          this.props.t(
+            "Biometric authentication is not available on this device"
+          )
         );
         return;
       }
@@ -288,14 +289,10 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
   }
 
   render() {
-    const { protectionMethod, biometricAvailable, isLoading } = this.state;
+    const { protectionMethod, biometricAvailable } = this.state;
     const isEnabled = !!protectionMethod;
     const showBiometricOption =
       biometricAvailable || protectionMethod === "biometric";
-
-    if (isLoading) {
-      return null;
-    }
 
     return (
       <>

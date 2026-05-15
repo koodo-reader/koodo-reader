@@ -7,7 +7,6 @@ export interface MoreSettingProps extends RouteComponentProps<any> {
 export interface MoreSettingState {
   protectionMethod: string;
   biometricAvailable: boolean;
-  isLoading: boolean;
   pinInputMode: "none" | "setup-enter" | "setup-confirm" | "verify";
   pinValue: string;
   pinFirstValue: string;
