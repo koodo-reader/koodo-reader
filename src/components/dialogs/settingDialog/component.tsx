@@ -78,7 +78,7 @@ class SettingDialog extends React.Component<
       case "dict":
         return "Local dictionary";
       case "more":
-        return "More";
+        return "More settings";
       default:
         return "Setting";
     }
