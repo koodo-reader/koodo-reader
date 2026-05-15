@@ -5,6 +5,10 @@ import toast from "react-hot-toast";
 import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   clearProtection,
+  getBiometricCapability,
+  getBiometricErrorMessage,
+  promptBiometricAuth,
+  setProtectionBiometric,
   verifyPassword,
   verifyPin,
   setProtectionPassword,
@@ -18,6 +22,7 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
     super(props);
     this.state = {
       protectionMethod: "",
+      biometricAvailable: false,
       isLoading: true,
       pinInputMode: "none",
       pinValue: "",
@@ -27,8 +32,15 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
   }
 
   async componentDidMount() {
-    const method = (await TokenService.getToken("protection_method")) || "";
-    this.setState({ protectionMethod: method, isLoading: false });
+    const [method, biometricCapability] = await Promise.all([
+      TokenService.getToken("protection_method"),
+      getBiometricCapability(),
+    ]);
+    this.setState({
+      protectionMethod: method || "",
+      biometricAvailable: biometricCapability.available,
+      isLoading: false,
+    });
   }
 
   showPinKeypad = (mode: "setup" | "verify"): Promise<string | false> => {
@@ -109,12 +121,20 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
       const ok = await verifyPin(pin as string);
       if (!ok) toast.error(this.props.t("Incorrect PIN"));
       return ok;
+    } else if (protectionMethod === "biometric") {
+      const result = await promptBiometricAuth(
+        i18n.t("Authenticate to change protection settings")
+      );
+      if (!result.success) {
+        toast.error(getBiometricErrorMessage(result.code, this.props.t));
+      }
+      return result.success;
     }
     return true;
   };
 
   handleToggleProtection = async () => {
-    const { protectionMethod } = this.state;
+    const { protectionMethod, biometricAvailable } = this.state;
     if (protectionMethod) {
       const verified = await this.verifyCurrentMethod();
       if (!verified) return;
@@ -126,6 +146,9 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
         { value: "password", label: "Password" },
         { value: "pin", label: "PIN" },
       ];
+      if (biometricAvailable) {
+        methodOptions.push({ value: "biometric", label: "Biometric" });
+      }
       const method = await vexSelectAsync(
         "Select protection method",
         methodOptions
@@ -161,6 +184,23 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
       if (pin === false) return;
       await setProtectionPin(pin as string);
       this.setState({ protectionMethod: "pin" });
+      toast.success(this.props.t("Change successful"));
+    } else if (method === "biometric") {
+      if (!this.state.biometricAvailable) {
+        toast.error(
+          this.props.t("Biometric authentication is not available on this device")
+        );
+        return;
+      }
+      const result = await promptBiometricAuth(
+        i18n.t("Authenticate to enable biometric protection")
+      );
+      if (!result.success) {
+        toast.error(getBiometricErrorMessage(result.code, this.props.t));
+        return;
+      }
+      await setProtectionBiometric();
+      this.setState({ protectionMethod: "biometric" });
       toast.success(this.props.t("Change successful"));
     }
   };
@@ -248,8 +288,10 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
   }
 
   render() {
-    const { protectionMethod, isLoading } = this.state;
+    const { protectionMethod, biometricAvailable, isLoading } = this.state;
     const isEnabled = !!protectionMethod;
+    const showBiometricOption =
+      biometricAvailable || protectionMethod === "biometric";
 
     if (isLoading) {
       return null;
@@ -301,6 +343,9 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
               >
                 <option value="password">{this.props.t("Password")}</option>
                 <option value="pin">{this.props.t("PIN")}</option>
+                {showBiometricOption && (
+                  <option value="biometric">{this.props.t("Biometric")}</option>
+                )}
               </select>
             </div>
             <p className="setting-option-subtitle">
@@ -309,6 +354,9 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
               )}
               {protectionMethod === "pin" && (
                 <Trans>Use a 6-digit PIN to protect the app</Trans>
+              )}
+              {protectionMethod === "biometric" && (
+                <Trans>Use Touch ID or Windows Hello to protect the app</Trans>
               )}
             </p>
           </>

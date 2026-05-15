@@ -1,7 +1,12 @@
 import React from "react";
 import "./protection.css";
 import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
-import { verifyPassword, verifyPin } from "../../utils/protectionUtil";
+import {
+  getBiometricErrorMessage,
+  promptBiometricAuth,
+  verifyPassword,
+  verifyPin,
+} from "../../utils/protectionUtil";
 import { vexPasswordInputAsync } from "../../utils/common";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
@@ -12,6 +17,8 @@ interface ProtectionOverlayState {
   method: string;
   pinValue: string;
   pinError: boolean;
+  biometricError: string;
+  isAuthenticating: boolean;
 }
 
 class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
@@ -24,6 +31,8 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
       method: "",
       pinValue: "",
       pinError: false,
+      biometricError: "",
+      isAuthenticating: false,
     };
   }
 
@@ -31,8 +40,10 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
     const method = (await TokenService.getToken("protection_method")) || "";
     if (method) {
       this.setState({ isVisible: true, method }, () => {
-        if (method !== "pin") {
+        if (method === "password") {
           this.startPasswordAuth();
+        } else if (method === "biometric") {
+          this.startBiometricAuth();
         }
       });
     }
@@ -59,6 +70,27 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
       }
     }
     this.setState({ isVisible: false });
+  };
+
+  startBiometricAuth = async () => {
+    if (this.state.isAuthenticating) return;
+
+    this.setState({
+      isAuthenticating: true,
+      biometricError: "",
+    });
+    const result = await promptBiometricAuth(
+      i18n.t("Authenticate to unlock the app")
+    );
+    if (result.success) {
+      this.setState({ isVisible: false, isAuthenticating: false });
+      return;
+    }
+
+    this.setState({
+      isAuthenticating: false,
+      biometricError: getBiometricErrorMessage(result.code, i18n.t.bind(i18n)),
+    });
   };
 
   waitForPin = (): Promise<string> => {
@@ -91,7 +123,14 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
   };
 
   render() {
-    const { isVisible, method, pinValue, pinError } = this.state;
+    const {
+      isVisible,
+      method,
+      pinValue,
+      pinError,
+      biometricError,
+      isAuthenticating,
+    } = this.state;
     if (!isVisible) return null;
 
     if (method === "pin") {
@@ -164,6 +203,32 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
                 );
               })}
             </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (method === "biometric") {
+      return (
+        <div className="protection-overlay">
+          <div className="biometric-auth-container">
+            <div className="pin-keypad-title">
+              {i18n.t("Use biometric authentication to unlock the app")}
+            </div>
+            {biometricError && (
+              <div className="pin-error-msg">{biometricError}</div>
+            )}
+            <button
+              className="biometric-auth-button"
+              onClick={this.startBiometricAuth}
+              disabled={isAuthenticating}
+            >
+              {isAuthenticating ? (
+                <Trans>Authenticating with biometrics...</Trans>
+              ) : (
+                <Trans>Verify with biometrics</Trans>
+              )}
+            </button>
           </div>
         </div>
       );
