@@ -7,8 +7,6 @@ import Book from "../../models/Book";
 import DatabaseService from "../storage/databaseService";
 
 const KO_READER_DEVICE_NAME = "Koodo Reader";
-const KO_READER_SYNC_CONFIG_KEY = "koReaderSyncConfig";
-const KO_READER_RECENT_BOOKS_KEY = "koReaderRecentBooks";
 const KO_READER_ACCEPT = "application/vnd.koreader.v1+json";
 const EPSILON = 0.00001;
 
@@ -32,26 +30,6 @@ interface KOReaderProgressRecord {
   progress: string;
   device?: string;
   device_id?: string;
-}
-
-interface LocalRecordLocation {
-  percentage?: string;
-  cfi?: string;
-  text?: string;
-  count?: string;
-  chapterTitle?: string;
-  chapterDocIndex?: string;
-  chapterHref?: string;
-  page?: string;
-  koReader?: {
-    document: string;
-    percentage: string;
-    progress: string;
-    device?: string;
-    deviceId?: string;
-    syncedAt: number;
-  };
-  [key: string]: any;
 }
 
 class KOReaderRequestError extends Error {
@@ -92,13 +70,17 @@ const normalizePercentage = (value: any) => {
 };
 
 const getKOReaderSyncConfig = (): KOReaderSyncConfig | null => {
-  const raw = ConfigService.getReaderConfig(KO_READER_SYNC_CONFIG_KEY);
-  if (!raw || typeof raw !== "object") {
+  const config = ConfigService.getObjectConfig(
+    "koReaderSyncConfig",
+    "thirdpartyToken",
+    {}
+  );
+  if (!config || typeof config !== "object") {
     return null;
   }
-  const serverUrl = normalizeServerUrl(raw.serverUrl || "");
-  const username = (raw.username || "").trim();
-  const passwordHash = (raw.passwordHash || "").trim();
+  const serverUrl = normalizeServerUrl(config.serverUrl || "");
+  const username = (config.username || "").trim();
+  const passwordHash = (config.passwordHash || "").trim();
   if (!serverUrl || !username || !passwordHash) {
     return null;
   }
@@ -109,47 +91,18 @@ const getKOReaderSyncConfig = (): KOReaderSyncConfig | null => {
   };
 };
 
-const getLocalRecordLocation = (bookKey: string): LocalRecordLocation => {
-  return ConfigService.getObjectConfig(bookKey, "recordLocation", {}) || {};
-};
-
-const getKOReaderRecentBooks = (): string[] => {
-  const raw = ConfigService.getReaderConfig(KO_READER_RECENT_BOOKS_KEY);
-  return Array.isArray(raw) ? raw : [];
-};
-
-const setKOReaderRecentBooks = (bookKeys: string[]) => {
-  ConfigService.setReaderConfig(KO_READER_RECENT_BOOKS_KEY, bookKeys);
-};
-
-const pushKOReaderRecentBook = (bookKey: string) => {
-  const next = getKOReaderRecentBooks().filter((item) => item !== bookKey);
-  next.unshift(bookKey);
-  setKOReaderRecentBooks(next);
-};
-
 const persistKOReaderMetadata = (
   bookKey: string,
-  localRecord: LocalRecordLocation,
   payload: KOReaderProgressRecord,
   overrideLocalPercentage: boolean
 ) => {
-  const nextRecord: LocalRecordLocation = {
-    ...localRecord,
-    percentage: overrideLocalPercentage
-      ? payload.percentage.toString()
-      : (localRecord.percentage || payload.percentage.toString()).toString(),
-    koReader: {
-      document: payload.document,
-      percentage: payload.percentage.toString(),
-      progress: payload.progress,
-      device: payload.device || "",
-      deviceId: payload.device_id || "",
-      syncedAt: Date.now(),
-    },
-  };
-  ConfigService.setObjectConfig(bookKey, nextRecord, "recordLocation");
-  pushKOReaderRecentBook(bookKey);
+  if (overrideLocalPercentage) {
+    ConfigService.setObjectConfig(bookKey, payload, "koreaderLocation");
+  } else {
+    ConfigService.deleteObjectConfig(bookKey, "koreaderLocation");
+  }
+
+  ConfigService.setListConfig(bookKey, "koReaderBooks");
 };
 
 const extractErrorMessage = async (response: Response) => {
@@ -170,12 +123,7 @@ const extractErrorMessage = async (response: Response) => {
     (typeof body === "string" ? body : "") ||
     response.statusText ||
     "Request failed";
-  throw new KOReaderRequestError(
-    message,
-    response.status,
-    body?.code,
-    body
-  );
+  throw new KOReaderRequestError(message, response.status, body?.code, body);
 };
 
 const requestJSON = async <T>(
@@ -270,47 +218,6 @@ const updateBookProgress = async (
   });
 };
 
-const buildLocalUploadPayload = (
-  book: Book,
-  localRecord: LocalRecordLocation,
-  deviceId: string
-): KOReaderProgressRecord | null => {
-  const percentage = normalizePercentage(localRecord.percentage);
-  if (percentage <= EPSILON) {
-    return null;
-  }
-  const cachedProgress =
-    localRecord.koReader && typeof localRecord.koReader.progress === "string"
-      ? localRecord.koReader.progress
-      : "";
-  const fallbackProgress = JSON.stringify({
-    source: "koodo-reader",
-    bookKey: book.key,
-    cfi: localRecord.cfi || "",
-    text: localRecord.text || "",
-    count: localRecord.count || "",
-    chapterTitle: localRecord.chapterTitle || "",
-    chapterDocIndex: localRecord.chapterDocIndex || "",
-    chapterHref: localRecord.chapterHref || "",
-    page: localRecord.page || "",
-  });
-  return {
-    document: book.md5,
-    percentage,
-    progress: cachedProgress || fallbackProgress,
-    device: KO_READER_DEVICE_NAME,
-    device_id: deviceId,
-  };
-};
-
-const resolveDeviceId = async () => {
-  try {
-    return (await TokenService.getFingerprint()) || "koodo-reader";
-  } catch (_error) {
-    return "koodo-reader";
-  }
-};
-
 export const isKOReaderSyncEnabled = () => {
   return ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes";
 };
@@ -357,8 +264,8 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
 
   await authUser(config);
 
-  const deviceId = await resolveDeviceId();
-  const books = ((await DatabaseService.getAllRecords("books")) || []) as Book[];
+  const books = ((await DatabaseService.getAllRecords("books")) ||
+    []) as Book[];
   const summary: KOReaderSyncSummary = {
     checkedBooks: 0,
     matchedBooks: 0,
@@ -374,39 +281,53 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
     }
 
     summary.checkedBooks++;
-    const localRecord = getLocalRecordLocation(book.key);
+    const localRecord = ConfigService.getObjectConfig(
+      book.key,
+      "koreaderLocation",
+      {}
+    );
     const localPercentage = normalizePercentage(localRecord.percentage);
     const remoteRecord = await getBookProgress(config, book.md5);
+    console.log(remoteRecord, localPercentage, "remoteRecord");
 
     if (remoteRecord) {
       summary.matchedBooks++;
       if (remoteRecord.percentage > localPercentage + EPSILON) {
-        persistKOReaderMetadata(book.key, localRecord, remoteRecord, true);
+        persistKOReaderMetadata(book.key, remoteRecord, true);
         summary.pulledBooks++;
       } else if (localPercentage > remoteRecord.percentage + EPSILON) {
-        const uploadPayload = buildLocalUploadPayload(book, localRecord, deviceId);
+        const uploadPayload = ConfigService.getObjectConfig(
+          book.key,
+          "koreaderLocation",
+          {}
+        ) as KOReaderProgressRecord;
         if (!uploadPayload) {
           summary.skippedBooks++;
           continue;
         }
         await updateBookProgress(config, uploadPayload);
-        persistKOReaderMetadata(book.key, localRecord, uploadPayload, false);
+        persistKOReaderMetadata(book.key, uploadPayload, false);
         summary.pushedBooks++;
       } else {
-        persistKOReaderMetadata(book.key, localRecord, remoteRecord, false);
+        persistKOReaderMetadata(book.key, remoteRecord, false);
       }
       continue;
     }
 
-    const uploadPayload = buildLocalUploadPayload(book, localRecord, deviceId);
+    const uploadPayload = ConfigService.getObjectConfig(
+      book.key,
+      "koreaderLocation",
+      {}
+    ) as KOReaderProgressRecord;
     if (!uploadPayload) {
       summary.skippedBooks++;
       continue;
     }
     await updateBookProgress(config, uploadPayload);
-    persistKOReaderMetadata(book.key, localRecord, uploadPayload, false);
+    persistKOReaderMetadata(book.key, uploadPayload, false);
     summary.pushedBooks++;
   }
+  console.log(summary, "summary");
 
   return summary;
 };

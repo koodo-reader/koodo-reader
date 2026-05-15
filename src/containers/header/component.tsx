@@ -290,7 +290,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     }
 
-    await this.handleKOReaderSync();
     this.setState({ isSync: false });
   };
   handleKOReaderSync = async () => {
@@ -480,7 +479,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
-    await this.handleKOReaderSync();
+
     toast.success(this.props.t("Synchronisation successful"), {
       id: "syncing",
     });
@@ -730,10 +729,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               this.setState({ isSync: true });
               if (this.props.isAuthed) {
                 let userInfo = await this.props.handleFetchUserInfo();
-                this.handleCloudSync(userInfo);
+                await this.handleCloudSync(userInfo);
               } else {
-                this.handleLocalSync();
+                await this.handleLocalSync();
               }
+              this.handleKOReaderSync();
             }}
             style={{ marginTop: "2px" }}
           >
