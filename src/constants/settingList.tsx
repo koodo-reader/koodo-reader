@@ -124,7 +124,7 @@ export const dataSettingList = [
   {
     isElectron: false,
     title: "Auto sync reading progress to KOReader sync server",
-    desc: "After enabling it, clicking the sync button will compare reading progress between Koodo Reader and the KOReader sync server by book MD5 and keep the faster progress",
+    desc: "After enabling it, clicking the sync button will sync reading progress between Koodo Reader and KOReader with KOReader sync server. A faster reading progress will override the slower one.",
     propName: "isEnableKoReaderSync",
   },
 ];
