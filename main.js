@@ -260,7 +260,6 @@ const getBiometricCapability = async () => {
   if (process.platform === "win32") {
     try {
       const output = await runPowerShellScript(getWindowsHelloScript("check"));
-      console.log(output);
       const result = output ? JSON.parse(output) : {};
       return {
         available: !!result.available,
@@ -269,7 +268,6 @@ const getBiometricCapability = async () => {
         status: result.status || "Unavailable",
       };
     } catch (error) {
-      console.log(error);
       return {
         available: false,
         provider: "Windows Hello",
@@ -312,7 +310,6 @@ const promptBiometricAuth = async (
         provider: "Touch ID",
       };
     } catch (error) {
-      console.log(error, "asgdfsgsd");
       const message = error instanceof Error ? error.message : String(error);
       return {
         success: false,
@@ -329,7 +326,6 @@ const promptBiometricAuth = async (
         getWindowsHelloScript("verify", promptMessage, hwnd),
         120000
       );
-      console.log(output);
       const result = output ? JSON.parse(output) : {};
       return {
         success: !!result.success,

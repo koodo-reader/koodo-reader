@@ -5,10 +5,12 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import Book from "../../models/Book";
 import DatabaseService from "../storage/databaseService";
+import CryptoJS from "crypto-js";
+import { isElectron } from "react-device-detect";
+import BookUtil from "./bookUtil";
 
 const KO_READER_DEVICE_NAME = "Koodo Reader";
 const KO_READER_ACCEPT = "application/vnd.koreader.v1+json";
-const EPSILON = 0.00001;
 
 export interface KOReaderSyncConfig {
   serverUrl: string;
@@ -30,6 +32,7 @@ interface KOReaderProgressRecord {
   progress: string;
   device?: string;
   device_id?: string;
+  timestamp?: number;
 }
 
 interface LocalRecordLocation {
@@ -42,6 +45,7 @@ interface LocalRecordLocation {
   chapterHref?: string;
   page?: string;
   xpath?: string;
+  timestamp?: number;
   [key: string]: any;
 }
 
@@ -219,6 +223,7 @@ const getBookProgress = async (
     progress: response.progress || "",
     device: response.device || "",
     device_id: response.device_id || "",
+    timestamp: response.timestamp || 0,
   };
 };
 
@@ -235,26 +240,38 @@ const updateBookProgress = async (
       progress: payload.progress,
       device: payload.device || KO_READER_DEVICE_NAME,
       device_id: payload.device_id || "",
+      timestamp: payload.timestamp || parseInt(Date.now() / 1000 + ""),
     }),
   });
 };
 
-const buildLocalUploadPayload = (
+const buildLocalUploadPayload = async (
   book: Book,
   localRecord: LocalRecordLocation,
   deviceId: string
-): KOReaderProgressRecord | null => {
+): Promise<KOReaderProgressRecord | null> => {
   const percentage = normalizePercentage(localRecord.percentage);
-  if (percentage <= EPSILON) {
-    return null;
-  }
   const cachedProgress = localRecord.xpath || "";
+  const koreaderBook = ConfigService.getObjectConfig(
+    book.key,
+    "koreaderBooks",
+    {}
+  ) as any;
+  if (!koreaderBook.document) {
+    let partialMD5 = await getBookPartialMd5(book);
+    if (!partialMD5) {
+      return null;
+    }
+    koreaderBook.document = partialMD5;
+    ConfigService.setObjectConfig(book.key, koreaderBook, "koreaderBooks");
+  }
   return {
-    document: book.md5,
+    document: koreaderBook.document,
     percentage,
     progress: cachedProgress,
     device: KO_READER_DEVICE_NAME,
     device_id: deviceId,
+    timestamp: localRecord.timestamp || parseInt(Date.now() / 1000 + ""),
   };
 };
 
@@ -324,24 +341,24 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
   };
 
   for (const book of books) {
-    if (!book.md5) {
+    summary.checkedBooks++;
+    const localRecord = getLocalRecordLocation(book.key);
+    let partialMD5 = await getBookPartialMd5(book);
+    if (!partialMD5) {
       summary.skippedBooks++;
       continue;
     }
-
-    summary.checkedBooks++;
-    const localRecord = getLocalRecordLocation(book.key);
-    const localPercentage = normalizePercentage(localRecord.percentage);
-    const remoteRecord = await getBookProgress(config, book.md5);
-    console.log(remoteRecord);
+    const remoteRecord = await getBookProgress(config, partialMD5);
+    const remoteTimpstamp = remoteRecord?.timestamp || 0;
+    const localTimestamp = localRecord.timestamp || 0;
 
     if (remoteRecord) {
       summary.matchedBooks++;
-      if (remoteRecord.percentage > localPercentage + EPSILON) {
+      if (remoteTimpstamp > localTimestamp) {
         persistKOReaderMetadata(book.key, localRecord, remoteRecord, true);
         summary.pulledBooks++;
-      } else if (localPercentage > remoteRecord.percentage + EPSILON) {
-        const uploadPayload = buildLocalUploadPayload(
+      } else if (remoteTimpstamp < localTimestamp) {
+        const uploadPayload = await buildLocalUploadPayload(
           book,
           localRecord,
           deviceId
@@ -359,7 +376,11 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
       continue;
     }
 
-    const uploadPayload = buildLocalUploadPayload(book, localRecord, deviceId);
+    const uploadPayload = await buildLocalUploadPayload(
+      book,
+      localRecord,
+      deviceId
+    );
     if (!uploadPayload) {
       summary.skippedBooks++;
       continue;
@@ -370,4 +391,86 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
   }
 
   return summary;
+};
+export const getBookPartialMd5 = async (book: Book) => {
+  if (isElectron) {
+    const fs = window.require("fs");
+    const crypto = window.require("crypto");
+    function partialMD5(filepath) {
+      if (!filepath) return;
+
+      try {
+        const fd = fs.openSync(filepath, "r");
+        const step = 1024;
+        const size = 1024;
+        const hash = crypto.createHash("md5");
+        const buffer = Buffer.alloc(size);
+
+        for (let i = -1; i <= 10; i++) {
+          const position = step << (2 * i);
+
+          try {
+            const bytesRead = fs.readSync(fd, buffer, 0, size, position);
+            if (bytesRead > 0) {
+              hash.update(buffer.slice(0, bytesRead));
+            } else {
+              break;
+            }
+          } catch (err) {
+            break;
+          }
+        }
+
+        fs.closeSync(fd);
+        return hash.digest("hex");
+      } catch (err) {
+        return;
+      }
+    }
+    let filePath = BookUtil.getBookPath(book);
+    if (!filePath) {
+      return null;
+    }
+    return partialMD5(filePath);
+  } else {
+    function partialMD5(arrayBuffer) {
+      if (!arrayBuffer) return;
+
+      const step = 1024;
+      const size = 1024;
+      const fileSize = arrayBuffer.byteLength;
+      const hash = CryptoJS.algo.MD5.create();
+
+      for (let i = -1; i <= 10; i++) {
+        const position = step << (2 * i);
+
+        if (position >= fileSize) {
+          break;
+        }
+
+        const endPosition = Math.min(position + size, fileSize);
+        const chunk = arrayBuffer.slice(position, endPosition);
+
+        if (chunk.byteLength > 0) {
+          // 将 ArrayBuffer 转换为 WordArray
+          const wordArray = CryptoJS.lib.WordArray.create(
+            new Uint8Array(chunk)
+          );
+          hash.update(wordArray);
+        } else {
+          break;
+        }
+      }
+
+      return hash.finalize().toString();
+    }
+    let bookBuffer = await BookUtil.fetchBook(
+      book.key,
+      book.format.toLowerCase(),
+      true,
+      book.path
+    );
+    const md5 = partialMD5(bookBuffer);
+    return md5;
+  }
 };

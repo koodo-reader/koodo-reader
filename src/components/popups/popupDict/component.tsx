@@ -63,7 +63,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     }
   }
   componentDidMount() {
-    console.log(this.props.plugins, "plugins");
     this.handleLookUp();
   }
   async handleLookUp() {
@@ -319,7 +318,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         const config: any = plugin.config || {};
         const dictId: string = config.dictId || "";
         if (!dictId) return "";
-        console.log(dictId, "dictId");
         dictText = await DictUtil.lookupWord(dictId, text);
       } else if (
         this.state.dictService &&
