@@ -1,4 +1,5 @@
-FROM node:20-slim as builder
+# ── Stage 1: Build the React/web app ─────────────────────────────────────────
+FROM node:20-slim AS web-builder
 RUN apt-get update && apt-get install -y jq curl wget python3 git
 WORKDIR /app
 
@@ -15,20 +16,24 @@ RUN yarn --ignore-scripts --network-timeout 1000000
 
 ### Separate `yarn build` layer as a workaround for devices with low RAM.
 ### If build fails due to OOM, `yarn install` layer will be already cached.
-RUN yarn --ignore-scripts\
+RUN yarn --ignore-scripts \
     && yarn build
 
+# ── Stage 2: Build the Go file server ────────────────────────────────────────
+FROM golang:1.22-alpine AS go-builder
+WORKDIR /build
+COPY httpserver/ .
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o httpserver .
+
+# ── Stage 3: Final image ──────────────────────────────────────────────────────
 ### Nginx or Apache can also be used, Caddy is just smaller in size
 FROM caddy:latest
 
-# Install Node.js in the Caddy image
-RUN apk add --no-cache nodejs npm
-
 # Copy built website files to Caddy
-COPY --from=builder /app/build /usr/share/caddy
+COPY --from=web-builder /app/build /usr/share/caddy
 
-# Copy httpServer.js
-COPY --from=builder /app/httpServer.js /app/httpServer.js
+# Copy compiled Go binary
+COPY --from=go-builder /build/httpserver /app/httpserver
 
 # Create uploads directory with proper permissions
 RUN mkdir -p /app/uploads && \
@@ -40,7 +45,7 @@ EXPOSE 80 8080
 # Create startup script to run both services
 RUN echo '#!/bin/sh' > /start.sh && \
     echo 'cd /app' >> /start.sh && \
-    echo 'node httpServer.js &' >> /start.sh && \
+    echo '/app/httpserver &' >> /start.sh && \
     echo 'caddy run --config /etc/caddy/Caddyfile' >> /start.sh && \
     chmod +x /start.sh
 
