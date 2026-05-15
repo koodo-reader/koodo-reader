@@ -32,6 +32,19 @@ interface KOReaderProgressRecord {
   device_id?: string;
 }
 
+interface LocalRecordLocation {
+  percentage?: string;
+  cfi?: string;
+  text?: string;
+  count?: string;
+  chapterTitle?: string;
+  chapterDocIndex?: string;
+  chapterHref?: string;
+  page?: string;
+  xpath?: string;
+  [key: string]: any;
+}
+
 class KOReaderRequestError extends Error {
   status?: number;
   code?: number;
@@ -91,18 +104,26 @@ const getKOReaderSyncConfig = (): KOReaderSyncConfig | null => {
   };
 };
 
+const getLocalRecordLocation = (bookKey: string): LocalRecordLocation => {
+  return ConfigService.getObjectConfig(bookKey, "recordLocation", {}) || {};
+};
+
 const persistKOReaderMetadata = (
   bookKey: string,
+  localRecord: LocalRecordLocation,
   payload: KOReaderProgressRecord,
   overrideLocalPercentage: boolean
 ) => {
-  if (overrideLocalPercentage) {
-    ConfigService.setObjectConfig(bookKey, payload, "koreaderLocation");
-  } else {
-    ConfigService.deleteObjectConfig(bookKey, "koreaderLocation");
-  }
-
-  ConfigService.setListConfig(bookKey, "koReaderBooks");
+  const nextRecord: LocalRecordLocation = {
+    ...localRecord,
+    percentage: overrideLocalPercentage
+      ? payload.percentage.toString()
+      : (localRecord.percentage || payload.percentage.toString()).toString(),
+    xpath: overrideLocalPercentage
+      ? payload.progress
+      : localRecord.xpath || payload.progress,
+  };
+  ConfigService.setObjectConfig(bookKey, nextRecord, "recordLocation");
 };
 
 const extractErrorMessage = async (response: Response) => {
@@ -218,6 +239,33 @@ const updateBookProgress = async (
   });
 };
 
+const buildLocalUploadPayload = (
+  book: Book,
+  localRecord: LocalRecordLocation,
+  deviceId: string
+): KOReaderProgressRecord | null => {
+  const percentage = normalizePercentage(localRecord.percentage);
+  if (percentage <= EPSILON) {
+    return null;
+  }
+  const cachedProgress = localRecord.xpath || "";
+  return {
+    document: book.md5,
+    percentage,
+    progress: cachedProgress,
+    device: KO_READER_DEVICE_NAME,
+    device_id: deviceId,
+  };
+};
+
+const resolveDeviceId = async () => {
+  try {
+    return (await TokenService.getFingerprint()) || "koodo-reader";
+  } catch (_error) {
+    return "koodo-reader";
+  }
+};
+
 export const isKOReaderSyncEnabled = () => {
   return ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes";
 };
@@ -264,6 +312,7 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
 
   await authUser(config);
 
+  const deviceId = await resolveDeviceId();
   const books = ((await DatabaseService.getAllRecords("books")) ||
     []) as Book[];
   const summary: KOReaderSyncSummary = {
@@ -281,53 +330,44 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
     }
 
     summary.checkedBooks++;
-    const localRecord = ConfigService.getObjectConfig(
-      book.key,
-      "koreaderLocation",
-      {}
-    );
+    const localRecord = getLocalRecordLocation(book.key);
     const localPercentage = normalizePercentage(localRecord.percentage);
     const remoteRecord = await getBookProgress(config, book.md5);
-    console.log(remoteRecord, localPercentage, "remoteRecord");
+    console.log(remoteRecord);
 
     if (remoteRecord) {
       summary.matchedBooks++;
       if (remoteRecord.percentage > localPercentage + EPSILON) {
-        persistKOReaderMetadata(book.key, remoteRecord, true);
+        persistKOReaderMetadata(book.key, localRecord, remoteRecord, true);
         summary.pulledBooks++;
       } else if (localPercentage > remoteRecord.percentage + EPSILON) {
-        const uploadPayload = ConfigService.getObjectConfig(
-          book.key,
-          "koreaderLocation",
-          {}
-        ) as KOReaderProgressRecord;
-        if (!uploadPayload || Object.keys(uploadPayload).length === 0) {
+        const uploadPayload = buildLocalUploadPayload(
+          book,
+          localRecord,
+          deviceId
+        );
+        if (!uploadPayload) {
           summary.skippedBooks++;
           continue;
         }
         await updateBookProgress(config, uploadPayload);
-        persistKOReaderMetadata(book.key, uploadPayload, false);
+        persistKOReaderMetadata(book.key, localRecord, uploadPayload, false);
         summary.pushedBooks++;
       } else {
-        persistKOReaderMetadata(book.key, remoteRecord, false);
+        persistKOReaderMetadata(book.key, localRecord, remoteRecord, false);
       }
       continue;
     }
 
-    const uploadPayload = ConfigService.getObjectConfig(
-      book.key,
-      "koreaderLocation",
-      {}
-    ) as KOReaderProgressRecord;
-    if (!uploadPayload || Object.keys(uploadPayload).length === 0) {
+    const uploadPayload = buildLocalUploadPayload(book, localRecord, deviceId);
+    if (!uploadPayload) {
       summary.skippedBooks++;
       continue;
     }
     await updateBookProgress(config, uploadPayload);
-    persistKOReaderMetadata(book.key, uploadPayload, false);
+    persistKOReaderMetadata(book.key, localRecord, uploadPayload, false);
     summary.pushedBooks++;
   }
-  console.log(summary, "summary");
 
   return summary;
 };
