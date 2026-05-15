@@ -301,7 +301,7 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
           "koreaderLocation",
           {}
         ) as KOReaderProgressRecord;
-        if (!uploadPayload) {
+        if (!uploadPayload || Object.keys(uploadPayload).length === 0) {
           summary.skippedBooks++;
           continue;
         }
@@ -319,7 +319,7 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
       "koreaderLocation",
       {}
     ) as KOReaderProgressRecord;
-    if (!uploadPayload) {
+    if (!uploadPayload || Object.keys(uploadPayload).length === 0) {
       summary.skippedBooks++;
       continue;
     }
