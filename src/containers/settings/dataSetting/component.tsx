@@ -148,7 +148,11 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             ? savedConfig.passwordHash
             : "",
       });
-      ConfigService.setReaderConfig("koReaderSyncConfig", verifiedConfig);
+      ConfigService.setObjectConfig(
+        "koReaderSyncConfig",
+        verifiedConfig,
+        "thirdpartyToken"
+      );
       this.setState({ isEnableKoReaderSync: true });
       ConfigService.setReaderConfig("isEnableKoReaderSync", "yes");
       toast.success(this.props.t("Validation successful"), {
