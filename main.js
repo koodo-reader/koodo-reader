@@ -11,12 +11,14 @@ const {
   nativeTheme,
   protocol,
   screen,
+  systemPreferences,
 } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const log = require("electron-log/main");
 const os = require("os");
+const { execFile } = require("child_process");
 const store = new Store();
 const fs = require("fs");
 const JSZip = require("jszip");
@@ -40,6 +42,199 @@ let dbConnection = {};
 let syncUtilCache = {};
 let pickerUtilCache = {};
 let downloadRequest = null;
+
+const runPowerShellScript = (script) => {
+  return new Promise((resolve, reject) => {
+    const encodedCommand = Buffer.from(script, "utf16le").toString("base64");
+    execFile(
+      "powershell.exe",
+      [
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-EncodedCommand",
+        encodedCommand,
+      ],
+      {
+        windowsHide: true,
+        timeout: 30000,
+        maxBuffer: 1024 * 1024,
+      },
+      (error, stdout, stderr) => {
+        if (error) {
+          reject(
+            new Error((stderr || stdout || error.message || "").trim() || "")
+          );
+          return;
+        }
+        resolve((stdout || "").trim());
+      }
+    );
+  });
+};
+
+const getWindowsHelloScript = (mode, message = "") => {
+  const escapedMessage = message.replace(/'/g, "''");
+  return `
+$ErrorActionPreference = 'Stop'
+Add-Type -AssemblyName System.Runtime.WindowsRuntime
+
+function Invoke-WinRtAsync {
+  param(
+    [Parameter(Mandatory = $true)] $Operation,
+    [Parameter(Mandatory = $true)] [Type[]] $ResultTypes
+  )
+
+  $method = [System.WindowsRuntimeSystemExtensions].GetMethods() |
+    Where-Object {
+      $_.Name -eq 'AsTask' -and
+      $_.IsGenericMethodDefinition -and
+      $_.GetGenericArguments().Count -eq $ResultTypes.Count -and
+      $_.GetParameters().Count -eq 1
+    } |
+    Select-Object -First 1
+
+  if (-not $method) {
+    throw 'Unable to bridge Windows Runtime async operation.'
+  }
+
+  $genericMethod = $method.MakeGenericMethod($ResultTypes)
+  $task = $genericMethod.Invoke($null, @($Operation))
+  return $task.GetAwaiter().GetResult()
+}
+
+$verifier = [Windows.Security.Credentials.UI.UserConsentVerifier, Windows.Security.Credentials.UI, ContentType = WindowsRuntime]
+$availability = Invoke-WinRtAsync -Operation ($verifier::CheckAvailabilityAsync()) -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerifierAvailability])
+
+if ('${mode}' -eq 'check') {
+  [Console]::Out.Write((@{
+    available = ($availability.ToString() -eq 'Available')
+    status = $availability.ToString()
+  } | ConvertTo-Json -Compress))
+  exit 0
+}
+
+if ($availability.ToString() -ne 'Available') {
+  [Console]::Out.Write((@{
+    success = $false
+    code = 'Unavailable'
+    status = $availability.ToString()
+  } | ConvertTo-Json -Compress))
+  exit 0
+}
+
+$result = Invoke-WinRtAsync -Operation ($verifier::RequestVerificationAsync('${escapedMessage}')) -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerificationResult])
+
+[Console]::Out.Write((@{
+  success = ($result.ToString() -eq 'Verified')
+  code = $result.ToString()
+  status = $availability.ToString()
+} | ConvertTo-Json -Compress))
+`.trim();
+};
+
+const getBiometricCapability = async () => {
+  if (process.platform === "darwin") {
+    const available =
+      typeof systemPreferences.canPromptTouchID === "function" &&
+      systemPreferences.canPromptTouchID();
+    return {
+      available,
+      provider: "Touch ID",
+      platform: process.platform,
+      status: available ? "Available" : "Unavailable",
+    };
+  }
+
+  if (process.platform === "win32") {
+    try {
+      const output = await runPowerShellScript(getWindowsHelloScript("check"));
+      const result = output ? JSON.parse(output) : {};
+      return {
+        available: !!result.available,
+        provider: "Windows Hello",
+        platform: process.platform,
+        status: result.status || "Unavailable",
+      };
+    } catch (error) {
+      return {
+        available: false,
+        provider: "Windows Hello",
+        platform: process.platform,
+        status: "Error",
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
+  return {
+    available: false,
+    provider: "Biometric",
+    platform: process.platform,
+    status: "Unsupported",
+  };
+};
+
+const promptBiometricAuth = async (promptMessage = "Authenticate") => {
+  if (process.platform === "darwin") {
+    const available =
+      typeof systemPreferences.canPromptTouchID === "function" &&
+      systemPreferences.canPromptTouchID();
+    if (!available) {
+      return {
+        success: false,
+        code: "Unavailable",
+        provider: "Touch ID",
+      };
+    }
+
+    try {
+      await systemPreferences.promptTouchID(promptMessage);
+      return {
+        success: true,
+        code: "Verified",
+        provider: "Touch ID",
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return {
+        success: false,
+        code: /cancel/i.test(message) ? "Canceled" : "Failed",
+        provider: "Touch ID",
+      };
+    }
+  }
+
+  if (process.platform === "win32") {
+    try {
+      const output = await runPowerShellScript(
+        getWindowsHelloScript("verify", promptMessage)
+      );
+      const result = output ? JSON.parse(output) : {};
+      return {
+        success: !!result.success,
+        code:
+          result.code === "Unavailable" && result.status
+            ? result.status
+            : result.code || "Error",
+        provider: "Windows Hello",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        code: "Error",
+        provider: "Windows Hello",
+      };
+    }
+  }
+
+  return {
+    success: false,
+    code: "Unsupported",
+    provider: "Biometric",
+  };
+};
 
 // Discord Rich Presence setup
 let discordRPCClient = null;
@@ -934,6 +1129,12 @@ const createMainWin = () => {
   });
   ipcMain.handle("get-store-value", async (event, config) => {
     return store.get(config.key);
+  });
+  ipcMain.handle("get-biometric-capability", async () => {
+    return await getBiometricCapability();
+  });
+  ipcMain.handle("prompt-biometric-auth", async (event, config) => {
+    return await promptBiometricAuth(config?.message);
   });
 
   ipcMain.handle("reset-reader-position", async (event) => {

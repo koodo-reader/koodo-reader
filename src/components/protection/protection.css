@@ -34,6 +34,17 @@
   min-width: 280px;
 }
 
+.biometric-auth-container {
+  background: var(--background-color-1, #fff);
+  border-radius: 16px;
+  padding: 32px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 320px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
 .pin-keypad-title {
   font-size: 16px;
   font-weight: 500;
@@ -124,4 +135,35 @@
 
 .pin-key-cancel:hover {
   opacity: 0.7;
+}
+
+.biometric-auth-button {
+  margin-top: 8px;
+  min-width: 220px;
+  min-height: 44px;
+  border: none;
+  border-radius: 999px;
+  background: var(--primary-color, rgba(75, 75, 75, 1));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0 18px;
+  transition:
+    opacity 0.12s,
+    transform 0.12s;
+}
+
+.biometric-auth-button:hover {
+  opacity: 0.9;
+}
+
+.biometric-auth-button:active {
+  transform: scale(0.98);
+}
+
+.biometric-auth-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
 }
