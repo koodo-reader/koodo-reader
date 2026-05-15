@@ -121,6 +121,12 @@ export const dataSettingList = [
     desc: "Show your reading status and the book your're reading on your Discord profile. Discord needs to be running on your computer",
     propName: "isEnableDiscordRPC",
   },
+  {
+    isElectron: false,
+    title: "Auto sync reading progress to KOReader sync server",
+    desc: "After enabling it, clicking the sync button will compare reading progress between Koodo Reader and the KOReader sync server by book MD5 and keep the faster progress",
+    propName: "isEnableKoReaderSync",
+  },
 ];
 export const noteSyncSettingList = [
   {
