@@ -345,6 +345,8 @@ class MetadataDialog extends React.Component<
                         isCloudSearch: true,
                       });
                     }
+                  } else {
+                    toast(this.props.t("Failed to fetch metadata from cloud"));
                   }
                 }}
                 style={{
