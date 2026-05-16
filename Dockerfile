@@ -20,7 +20,7 @@ RUN yarn --ignore-scripts \
     && yarn build
 
 # ── Stage 2: Build the Go file server ────────────────────────────────────────
-FROM golang:1.22-alpine AS go-builder
+FROM golang:1.25-alpine AS go-builder
 WORKDIR /build
 COPY httpserver/ .
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o httpserver .
@@ -39,8 +39,8 @@ COPY --from=go-builder /build/httpserver /app/httpserver
 RUN mkdir -p /app/uploads && \
     chmod 755 /app/uploads
 
-# Expose both Caddy (80) and httpServer (8080) ports
-EXPOSE 80 8080
+# Expose both Caddy (80), httpServer (8080), and KOReader sync server (7200) ports
+EXPOSE 80 8080 7200
 
 # Create startup script to run both services
 RUN echo '#!/bin/sh' > /start.sh && \
@@ -50,9 +50,13 @@ RUN echo '#!/bin/sh' > /start.sh && \
     chmod +x /start.sh
 
 # Set default environment variables (can be overridden at runtime)
+ENV ENABLE_HTTP_SERVER=false
 ENV SERVER_USERNAME=admin
 ENV SERVER_PASSWORD=securePass123
 ENV SERVER_PASSWORD_FILE=my_secret
+ENV ENABLE_KOREADER_SERVER=false
+ENV KOREADER_PORT=7200
+ENV KOREADER_ENABLE_REGISTRATION=true
 
 # Define volume for uploads directory
 VOLUME ["/app/uploads"]

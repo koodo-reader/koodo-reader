@@ -265,6 +265,9 @@ const buildLocalUploadPayload = async (
     koreaderBook.document = partialMD5;
     ConfigService.setObjectConfig(book.key, koreaderBook, "koreaderBooks");
   }
+  if (!cachedProgress) {
+    return null;
+  }
   return {
     document: koreaderBook.document,
     percentage,
