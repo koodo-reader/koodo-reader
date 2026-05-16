@@ -488,6 +488,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		handleDelete(w, r, dirParam)
 	case r.Method == http.MethodGet && path == "/list":
 		handleList(w, r, dirParam)
+	case opdsEnabled && (path == "/opds" || path == "/opds/" || strings.HasPrefix(path, "/opds/")):
+		opdsHandler(w, r)
 	default:
 		writePlain(w, http.StatusNotFound, "Not Found")
 	}
@@ -501,7 +503,12 @@ func main() {
 		log.Println("All servers are disabled.")
 		log.Println("  Set ENABLE_HTTP_SERVER=true  to enable the file server.")
 		log.Println("  Set ENABLE_KOREADER_SERVER=true to enable the KOReader sync server.")
+		log.Println("  Set ENABLE_OPDS=true to enable the OPDS catalog (requires ENABLE_HTTP_SERVER=true).")
 		os.Exit(0)
+	}
+
+	if opdsEnabled && !serverEnabled {
+		log.Println("Warning: ENABLE_OPDS=true but ENABLE_HTTP_SERVER is not true. OPDS catalog will not be available.")
 	}
 
 	if err := os.MkdirAll(uploadDir, 0o755); err != nil {
@@ -519,6 +526,9 @@ func main() {
 		log.Printf("Secure File Server running at http://localhost%s", addr)
 		log.Printf("Username: %s", credentials.username)
 		log.Println("Password: [HIDDEN FOR SECURITY]")
+		if opdsEnabled {
+			log.Printf("OPDS catalog available at http://localhost%s/opds", addr)
+		}
 
 		srv := &http.Server{
 			Addr:         addr,
