@@ -17,6 +17,11 @@ import (
 	"time"
 )
 
+// decodeJSON decodes a JSON request body into v.
+func decodeJSON(r *http.Request, v any) error {
+	return json.NewDecoder(r.Body).Decode(v)
+}
+
 // ── Configuration ────────────────────────────────────────────────────────────
 
 var (
@@ -489,8 +494,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	if !serverEnabled {
-		log.Println("HTTP Server is disabled. Set ENABLE_HTTP_SERVER=true to enable it.")
+	// Initialise KOReader sync server (reads env, opens DB if enabled).
+	initKoreader()
+
+	if !serverEnabled && !koreaderEnabled {
+		log.Println("All servers are disabled.")
+		log.Println("  Set ENABLE_HTTP_SERVER=true  to enable the file server.")
+		log.Println("  Set ENABLE_KOREADER_SERVER=true to enable the KOReader sync server.")
 		os.Exit(0)
 	}
 
@@ -498,17 +508,28 @@ func main() {
 		log.Fatalf("Cannot create uploads directory: %v", err)
 	}
 
-	addr := ":" + port
-	log.Printf("Secure File Server running at http://localhost%s", addr)
-	log.Printf("Username: %s", credentials.username)
-	log.Println("Password: [HIDDEN FOR SECURITY]")
-
-	srv := &http.Server{
-		Addr:         addr,
-		Handler:      http.HandlerFunc(handler),
-		ReadTimeout:  5 * time.Minute, // allow large uploads
-		WriteTimeout: 5 * time.Minute,
-		IdleTimeout:  60 * time.Second,
+	// Start KOReader sync server in background if enabled.
+	if koreaderEnabled {
+		go startKoreaderServer()
 	}
-	log.Fatal(srv.ListenAndServe())
+
+	// Start the main file server if enabled.
+	if serverEnabled {
+		addr := ":" + port
+		log.Printf("Secure File Server running at http://localhost%s", addr)
+		log.Printf("Username: %s", credentials.username)
+		log.Println("Password: [HIDDEN FOR SECURITY]")
+
+		srv := &http.Server{
+			Addr:         addr,
+			Handler:      http.HandlerFunc(handler),
+			ReadTimeout:  5 * time.Minute, // allow large uploads
+			WriteTimeout: 5 * time.Minute,
+			IdleTimeout:  60 * time.Second,
+		}
+		log.Fatal(srv.ListenAndServe())
+	} else {
+		// Block forever while the KOReader goroutine runs.
+		select {}
+	}
 }
