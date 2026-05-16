@@ -1,16 +1,19 @@
 # ── Stage 1: Build the React/web app ─────────────────────────────────────────
 FROM node:20-slim AS web-builder
+RUN apt-get update && apt-get install -y jq curl wget python3 git
 WORKDIR /app
 
-# Copy dependency manifests first for better layer caching:
-# this layer is only invalidated when package.json / yarn.lock changes.
-COPY package.json yarn.lock ./
+### Get the latest release source code tarball
+# RUN tarball_url=$(curl -s https://api.github.com/repos/koodo-reader/koodo-reader/releases/latest | jq -r ".tarball_url") \
+#     && wget -qO- $tarball_url \
+#     | tar xvfz - --strip 1
+ARG BUILD_BRANCH=master
+RUN git clone https://github.com/koodo-reader/koodo-reader.git . && \
+    git checkout ${BUILD_BRANCH}
 
 ### --network-timeout 1000000 as a workaround for slow devices
+### when the package being installed is too large, Yarn assumes it's a network problem and throws an error
 RUN yarn --ignore-scripts --network-timeout 1000000
-
-# Copy the rest of the source code and build
-COPY . .
 
 ### Separate `yarn build` layer as a workaround for devices with low RAM.
 ### If build fails due to OOM, `yarn install` layer will be already cached.
