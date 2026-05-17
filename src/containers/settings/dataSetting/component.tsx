@@ -92,7 +92,11 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
 
     const savedConfig =
-      ConfigService.getReaderConfig("koReaderSyncConfig") || {};
+      ConfigService.getObjectConfig(
+        "koReaderSyncConfig",
+        "thirdpartyToken",
+        {}
+      ) || {};
     const labels = {
       serverUrl: this.props.t("Server address"),
       username: this.props.t("Username"),
