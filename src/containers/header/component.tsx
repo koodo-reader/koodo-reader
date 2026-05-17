@@ -50,6 +50,7 @@ import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
 import { getTempToken, updateUserConfig } from "../../utils/request/user";
+import i18n from "../../i18n";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -798,28 +799,82 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               new Date().getTime() / 1000 + 3 * 24 * 3600)) ? (
           <div className="header-report-container">
             <span
-              style={{ textDecoration: "underline" }}
-              onClick={async () => {
-                let response = await getTempToken();
-                if (response.code === 200) {
-                  let tempToken = response.data.access_token;
-                  let deviceUuid = await TokenService.getFingerprint();
-                  openInBrowser(
-                    getWebsiteUrl() +
-                      (ConfigService.getReaderConfig("lang").startsWith("zh")
-                        ? "/zh"
-                        : "/en") +
-                      "/pricing?temp_token=" +
-                      tempToken +
-                      "&device_uuid=" +
-                      deviceUuid
-                  );
-                } else if (response.code === 401) {
-                  this.props.handleFetchAuthed();
-                }
-              }}
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={i18n.t("Your trial will expire in", {
+                ttl: Math.ceil(
+                  (this.props.userInfo.valid_until -
+                    new Date().getTime() / 1000) /
+                    (24 * 3600)
+                ),
+              })}
             >
-              <Trans>Renew Pro</Trans>
+              <span
+                style={{ textDecoration: "underline" }}
+                onClick={async () => {
+                  let response = await getTempToken();
+                  if (response.code === 200) {
+                    let tempToken = response.data.access_token;
+                    let deviceUuid = await TokenService.getFingerprint();
+                    openInBrowser(
+                      getWebsiteUrl() +
+                        (ConfigService.getReaderConfig("lang").startsWith("zh")
+                          ? "/zh"
+                          : "/en") +
+                        "/pricing?temp_token=" +
+                        tempToken +
+                        "&device_uuid=" +
+                        deviceUuid
+                    );
+                  } else if (response.code === 401) {
+                    this.props.handleFetchAuthed();
+                  }
+                }}
+              >
+                <Trans>Renew Pro</Trans>
+              </span>
+            </span>
+          </div>
+        ) : null}
+        {this.props.isAuthed &&
+        this.props.userInfo &&
+        this.props.userInfo.type === "trial" &&
+        this.props.userInfo.valid_until >
+          new Date().getTime() / 1000 + 3 * 24 * 3600 ? (
+          <div className="header-report-container">
+            <span
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={i18n.t("Your trial will expire in", {
+                ttl: Math.ceil(
+                  (this.props.userInfo.valid_until -
+                    new Date().getTime() / 1000) /
+                    (24 * 3600)
+                ),
+              })}
+            >
+              <span
+                style={{ textDecoration: "underline" }}
+                onClick={async () => {
+                  let response = await getTempToken();
+                  if (response.code === 200) {
+                    let tempToken = response.data.access_token;
+                    let deviceUuid = await TokenService.getFingerprint();
+                    openInBrowser(
+                      getWebsiteUrl() +
+                        (ConfigService.getReaderConfig("lang").startsWith("zh")
+                          ? "/zh"
+                          : "/en") +
+                        "/pricing?temp_token=" +
+                        tempToken +
+                        "&device_uuid=" +
+                        deviceUuid
+                    );
+                  } else if (response.code === 401) {
+                    this.props.handleFetchAuthed();
+                  }
+                }}
+              >
+                <Trans>In trial</Trans>
+              </span>
             </span>
           </div>
         ) : null}
