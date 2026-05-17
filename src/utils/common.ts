@@ -130,7 +130,8 @@ export const vexComfirmAsync = (
 export const vexOpenAsync = (
   config: Record<string, any>,
   message: string,
-  labels?: Record<string, string>
+  labels?: Record<string, string>,
+  tutorialUrl?: string
 ) => {
   return new Promise<Record<string, any> | false>((resolve) => {
     window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
@@ -169,9 +170,26 @@ export const vexOpenAsync = (
         ].join("");
       })
       .join("");
+    const buttons = [
+      window.vex.dialog.buttons.YES,
+      window.vex.dialog.buttons.NO,
+      ...(tutorialUrl
+        ? [
+            {
+              text: i18n.t("Tutorial"),
+              type: "button",
+              className: "vex-dialog-button-secondary",
+              click: function () {
+                openExternalUrl(tutorialUrl!);
+              },
+            },
+          ]
+        : []),
+    ];
     window.vex.dialog.open({
       unsafeMessage: message ? i18n.t(message).replace(/\n/g, "<br>") : "",
       input: inputHtml,
+      buttons,
       callback: function (data) {
         if (!data) {
           resolve(false);
