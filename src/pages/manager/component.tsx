@@ -133,19 +133,67 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               e.preventDefault();
               e.stopPropagation();
               this.handleDrag(false);
-              const files = e.dataTransfer.files;
-              if (files && files.length > 0) {
-                for (let i = 0; i < files.length; i++) {
-                  const file = files[i];
-                  const ext = "." + file.name.split(".").pop()?.toLowerCase();
-                  if (!supportedFormats.includes(ext)) {
-                    toast.error(
-                      this.props.t("Unsupported file format") + ": " + ext
+              const collectFiles = (
+                entry: FileSystemEntry
+              ): Promise<File[]> => {
+                return new Promise((resolve) => {
+                  if (entry.isFile) {
+                    (entry as FileSystemFileEntry).file(
+                      (file) => resolve([file]),
+                      () => resolve([])
                     );
-                    continue;
+                  } else if (entry.isDirectory) {
+                    const reader = (
+                      entry as FileSystemDirectoryEntry
+                    ).createReader();
+                    const readAll = (
+                      collected: FileSystemEntry[] = []
+                    ): Promise<FileSystemEntry[]> =>
+                      new Promise((res) => {
+                        reader.readEntries(
+                          (results) => {
+                            if (results.length === 0) {
+                              res(collected);
+                            } else {
+                              readAll([
+                                ...collected,
+                                ...Array.from(results),
+                              ]).then(res);
+                            }
+                          },
+                          () => res(collected)
+                        );
+                      });
+                    readAll().then((entries) =>
+                      Promise.all(entries.map(collectFiles)).then((arrays) =>
+                        resolve(([] as File[]).concat(...arrays))
+                      )
+                    );
+                  } else {
+                    resolve([]);
                   }
-                  await this.props.importBookFunc(file);
+                });
+              };
+              const items = e.dataTransfer.items;
+              let allFiles: File[] = [];
+              if (items && items.length > 0) {
+                const entries: FileSystemEntry[] = [];
+                for (let i = 0; i < items.length; i++) {
+                  const entry = items[i].webkitGetAsEntry();
+                  if (entry) entries.push(entry);
                 }
+                const fileArrays = await Promise.all(entries.map(collectFiles));
+                allFiles = ([] as File[]).concat(...fileArrays);
+              }
+              for (const file of allFiles) {
+                const ext = "." + file.name.split(".").pop()?.toLowerCase();
+                if (!supportedFormats.includes(ext)) {
+                  toast.error(
+                    this.props.t("Unsupported file format") + ": " + ext
+                  );
+                  continue;
+                }
+                await this.props.importBookFunc(file);
               }
             }}
             onClick={() => {
