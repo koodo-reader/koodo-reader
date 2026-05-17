@@ -175,6 +175,19 @@ export const restoreFromfilePath = async (filePath: string) => {
 
   const dataPath = getStorageLocation() || "";
   let failed = false;
+  let processedCount = 0;
+
+  const allFiles = Object.keys(zip.files).filter(
+    (name) => !zip.files[name].dir
+  );
+  const totalFiles = allFiles.length;
+  const updateProgress = () => {
+    processedCount++;
+    const percent = Math.round(
+      (processedCount / Math.max(totalFiles, 1)) * 100
+    );
+    toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, { id: "backup" });
+  };
 
   const streamToBuffer = (stream: any): Promise<Buffer> =>
     new Promise((res, rej) => {
@@ -224,6 +237,7 @@ export const restoreFromfilePath = async (filePath: string) => {
         const cloudRecords = await sqlUtil.dbBufferToJson(buf, dbName);
         await DatabaseService.saveAllRecords(cloudRecords, dbName);
       }
+      updateProgress();
     } catch {
       failed = true;
       break;
@@ -244,6 +258,7 @@ export const restoreFromfilePath = async (filePath: string) => {
         const dest = path.join(dataPath, fileName);
         const stream = zip.file(fileName)!.nodeStream();
         await streamToFile(stream, dest);
+        updateProgress();
       } catch {
         failed = true;
       }
