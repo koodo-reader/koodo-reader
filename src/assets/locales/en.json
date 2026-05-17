@@ -12,6 +12,8 @@
   "Text alignment": "Text alignment",
   "Your quota will be reset in": "Your quota will be reset in {{ttl}} hours",
   "Your trial will expire in": "Your trial will expire in {{ttl}} days, please renew in time to continue enjoying Pro features",
+  "Minute duration": "{{tts}} minutes",
+  "Hour duration": "{{tts}} hours",
   "Synchronisation successful": "Synchronisation successful",
   "Permanently Delete": "Delete permanently",
   "Default search engine": "Default search engine",
