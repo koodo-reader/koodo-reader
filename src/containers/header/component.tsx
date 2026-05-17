@@ -55,6 +55,7 @@ declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   timer: any;
+  scheduledSyncTimer: any;
   private isSyncing: boolean = false;
   constructor(props: HeaderProps) {
     super(props);
@@ -162,7 +163,48 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (!willAutoSync) {
       this.handleOpenLastReadBook();
     }
+    this.startScheduledSync();
   }
+  componentWillUnmount() {
+    if (this.scheduledSyncTimer) {
+      clearInterval(this.scheduledSyncTimer);
+      this.scheduledSyncTimer = null;
+    }
+  }
+  startScheduledSync = () => {
+    if (this.scheduledSyncTimer) {
+      clearInterval(this.scheduledSyncTimer);
+      this.scheduledSyncTimer = null;
+    }
+    const intervalMinutes = parseInt(
+      ConfigService.getReaderConfig("scheduledSyncInterval") || "0"
+    );
+    if (!intervalMinutes || intervalMinutes <= 0) {
+      return;
+    }
+    const intervalMs = intervalMinutes * 60 * 1000;
+    this.scheduledSyncTimer = setInterval(async () => {
+      const currentInterval = parseInt(
+        ConfigService.getReaderConfig("scheduledSyncInterval") || "0"
+      );
+      if (!currentInterval || currentInterval <= 0) {
+        clearInterval(this.scheduledSyncTimer);
+        this.scheduledSyncTimer = null;
+        return;
+      }
+      const defaultSyncOption = ConfigService.getItem("defaultSyncOption");
+      if (
+        !defaultSyncOption ||
+        ConfigService.getReaderConfig("isDisableAutoSync") === "yes"
+      ) {
+        return;
+      }
+      if (!this.state.isSync && !this.isSyncing) {
+        const userInfo = await this.props.handleFetchUserInfo();
+        await this.handleCloudSync(userInfo);
+      }
+    }, intervalMs);
+  };
   async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<HeaderProps>,
     _nextContext: any
