@@ -441,6 +441,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.timer = await showTaskProgress(this.handleSyncStateChange);
       if (!this.timer) {
         this.setState({ isSync: false });
+        this.handleKOReaderSync();
         return false;
       }
 
@@ -448,12 +449,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       if (!res) {
         clearInterval(this.timer);
         this.setState({ isSync: false });
-        return;
+        this.handleKOReaderSync();
+        return false;
       }
       let compareResult = await this.getCompareResult();
       await this.handleSync(compareResult);
       clearInterval(this.timer);
       this.setState({ isSync: false });
+      this.handleKOReaderSync();
     } catch (error) {
       console.error(error);
       toast.error(
@@ -463,6 +466,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       );
       clearInterval(this.timer);
       this.setState({ isSync: false });
+      this.handleKOReaderSync();
       return false;
     } finally {
       this.isSyncing = false;
@@ -732,8 +736,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 await this.handleCloudSync(userInfo);
               } else {
                 await this.handleLocalSync();
+                this.handleKOReaderSync();
               }
-              this.handleKOReaderSync();
             }}
             style={{ marginTop: "2px" }}
           >

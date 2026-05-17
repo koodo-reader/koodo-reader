@@ -346,11 +346,25 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
   for (const book of books) {
     summary.checkedBooks++;
     const localRecord = getLocalRecordLocation(book.key);
-    let partialMD5 = await getBookPartialMd5(book);
-    if (!partialMD5) {
+    if (!localRecord || !localRecord.xpath) {
       summary.skippedBooks++;
       continue;
     }
+    const koreaderBook = ConfigService.getObjectConfig(
+      book.key,
+      "koreaderBooks",
+      {}
+    ) as any;
+    if (!koreaderBook.document) {
+      let partialMD5 = await getBookPartialMd5(book);
+      if (!partialMD5) {
+        summary.skippedBooks++;
+        continue;
+      }
+      koreaderBook.document = partialMD5;
+      ConfigService.setObjectConfig(book.key, koreaderBook, "koreaderBooks");
+    }
+    let partialMD5 = koreaderBook.document;
     const remoteRecord = await getBookProgress(config, partialMD5);
     const remoteTimpstamp = remoteRecord?.timestamp || 0;
     const localTimestamp = localRecord.timestamp || 0;
@@ -392,6 +406,7 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
     persistKOReaderMetadata(book.key, localRecord, uploadPayload, false);
     summary.pushedBooks++;
   }
+  console.log(summary, "summary");
 
   return summary;
 };
