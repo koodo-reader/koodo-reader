@@ -123,6 +123,41 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ipcRenderer.on("reading-finished", async (event: any, config: any) => {
         this.handleFinishReading();
       });
+      ipcRenderer.on(
+        "open-book-from-link",
+        async (_event: any, config: any) => {
+          const book = await DatabaseService.getRecord(config.bookKey, "books");
+          if (book) {
+            BookUtil.redirectBook(book);
+          }
+        }
+      );
+      ipcRenderer.on(
+        "open-note-from-link",
+        async (_event: any, config: any) => {
+          const note = await DatabaseService.getRecord(config.noteKey, "notes");
+          if (!note) return;
+          const book = await DatabaseService.getRecord(note.bookKey, "books");
+          if (!book) return;
+          let bookLocation: any = {};
+          try {
+            bookLocation = JSON.parse(note.cfi) || {};
+          } catch (error) {
+            bookLocation.cfi = note.cfi;
+            bookLocation.chapterTitle = note.chapter;
+          }
+          if (bookLocation.fingerprint) {
+            bookLocation.chapterDocIndex = bookLocation.page - 1 + "";
+            bookLocation.chapterHref = "title" + (bookLocation.page - 1);
+          }
+          ConfigService.setObjectConfig(
+            note.bookKey,
+            bookLocation,
+            "recordLocation"
+          );
+          BookUtil.redirectBook(book);
+        }
+      );
     } else {
       upgradeConfig();
       const status = await LocalFileManager.getPermissionStatus();

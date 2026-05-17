@@ -38,6 +38,8 @@
   "Your quota will be reset in": "您的额度将于 {{ttl}} 小时后重置",
   "Minute duration": "{{tts}}分钟",
   "Hour duration": "{{tts}}小时",
+  "Copy book link": "复制图书链接",
+  "Copy note link": "复制笔记链接",
   "Automatically sync your library with cloud at the specified interval.": "按照指定的时间间隔自动与云端同步您的书库",
   "The new sync interval will take effect after restarting Koodo Reader": "新的同步间隔将在重启 Koodo Reader 后生效",
   "Scheduled sync interval": "定时同步间隔",

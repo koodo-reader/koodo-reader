@@ -266,6 +266,27 @@ class CardList extends React.Component<CardListProps, CardListStates> {
                     }}
                   ></span>
                 </span>
+
+                <span
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-content={this.props.t("Copy note link")}
+                >
+                  <span
+                    className="icon-copy-line"
+                    style={{
+                      fontSize: "18px",
+                      marginLeft: "15px",
+                      position: "relative",
+                      top: "2px",
+                    }}
+                    onClick={() => {
+                      const link = `koodo-reader://open-note?noteKey=${item.key}`;
+                      navigator.clipboard.writeText(link).then(() => {
+                        toast(this.props.t("Copied"));
+                      });
+                    }}
+                  ></span>
+                </span>
               </div>
             </div>
           </li>

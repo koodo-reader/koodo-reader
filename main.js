@@ -1697,12 +1697,27 @@ const handleCallback = (url) => {
     const state = parsedUrl.searchParams.get("state");
     const pickerData = parsedUrl.searchParams.get("pickerData");
 
+    const bookKey = parsedUrl.searchParams.get("bookKey");
+    const noteKey = parsedUrl.searchParams.get("noteKey");
+
     if (code && mainWin) {
       mainWin.webContents.send("oauth-callback", { code, state });
     }
     if (pickerData && mainWin) {
       let config = JSON.parse(decodeURIComponent(pickerData));
       mainWin.webContents.send("picker-finished", config);
+    }
+    if (bookKey && mainWin) {
+      if (mainWin.isMinimized()) mainWin.restore();
+      mainWin.show();
+      mainWin.focus();
+      mainWin.webContents.send("open-book-from-link", { bookKey });
+    }
+    if (noteKey && mainWin) {
+      if (mainWin.isMinimized()) mainWin.restore();
+      mainWin.show();
+      mainWin.focus();
+      mainWin.webContents.send("open-note-from-link", { noteKey });
     }
   } catch (error) {
     console.error("Error handling callback URL:", error);
