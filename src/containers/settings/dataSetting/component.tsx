@@ -5,6 +5,7 @@ import {
   clearAllData,
   generateSyncRecord,
   getStorageLocation,
+  getWebsiteUrl,
   reloadManager,
   vexComfirmAsync,
   vexOpenAsync,
@@ -119,7 +120,14 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         },
       },
       "",
-      labels
+      labels,
+      getWebsiteUrl() +
+        `/${
+          ConfigService.getReaderConfig("lang") &&
+          ConfigService.getReaderConfig("lang").startsWith("zh")
+            ? "zh"
+            : "en"
+        }/add-thirdparty`
     );
 
     if (!result) {
@@ -221,7 +229,12 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         labelsMap[field.key] = this.props.t(field.label);
       }
 
-      const result = await vexOpenAsync(defaultValues, "", labelsMap);
+      const result = await vexOpenAsync(
+        defaultValues,
+        "",
+        labelsMap,
+        "https://koodoreader.com/zh/add-thirdparty"
+      );
 
       if (!result) {
         // User cancelled
