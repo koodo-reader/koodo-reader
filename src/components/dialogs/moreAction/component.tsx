@@ -19,7 +19,7 @@ import * as Kookit from "../../../assets/lib/kookit.min";
 import { getPdfPassword, getStorageLocation } from "../../../utils/common";
 import { BookHelper } from "../../../assets/lib/kookit.min";
 declare var window: any;
-class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
+class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
     super(props);
     this.state = { exportSubmenu: "" };
@@ -377,4 +377,4 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   }
 }
 
-export default ActionDialog;
+export default MoreAction;
