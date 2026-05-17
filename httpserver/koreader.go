@@ -43,7 +43,7 @@ func initKoreader() {
 	}
 
 	koreaderPort = getEnv("KOREADER_PORT", "7200")
-	koreaderRegistrationEnabled = getEnv("KOREADER_ENABLE_REGISTRATION", "true") != "false"
+	koreaderRegistrationEnabled = getEnv("ENABLE_KOREADER_REGISTRATION", "true") != "false"
 
 	// Ensure the config directory exists inside the uploads volume.
 	dbDir := filepath.Join(uploadDir, "config")

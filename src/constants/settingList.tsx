@@ -216,7 +216,7 @@ export const wordSyncSettingList = [
       {
         key: "categoryName",
         label: "Eudic Study List Name",
-        placeholder: "Enter the study list name (leave blank for default)",
+        placeholder: "Enter the study list name",
       },
       {
         key: "language",
