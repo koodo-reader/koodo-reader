@@ -630,7 +630,7 @@
   "Eudic Access Token": "欧路词典访问令牌",
   "Enter your Eudic NIS access token": "输入你的欧路词典 访问令牌",
   "Eudic Study List Name": "欧路词典生词本名称",
-  "Enter the study list name (leave blank for default)": "输入学习列表名称（留空使用默认值）",
+  "Enter the study list name": "输入生词本名称",
   "Eudic Language": "词典语言",
   "Language code, e.g. en / fr / de / es": "语言代码，例如 en / fr / de / es",
   "Auto sync new words to AnkiConnect": "自动同步生词到 AnkiConnect",
