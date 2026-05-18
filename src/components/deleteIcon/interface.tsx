@@ -1,8 +1,10 @@
+import BookModel from "../../models/Book";
 export interface DeleteIconProps {
   mode: string;
   index: number;
   tagName: string;
   itemKey: string;
+  currentBook: BookModel;
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;
   renderHighlighters: () => void;
