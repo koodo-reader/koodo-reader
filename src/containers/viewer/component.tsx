@@ -465,14 +465,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     ) {
       console.log(flattenChapters, "flattenChapters");
       if (
-        flattenChapters.length === 1 &&
-        flattenChapters[0].label === "Title"
-      ) {
-        return;
-      }
-      if (
         flattenChapters.length > 0 &&
-        flattenChapters[0].label === "Title 0"
+        flattenChapters[0].label === "Chapter 0"
       ) {
         return;
       }
