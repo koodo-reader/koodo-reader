@@ -10,6 +10,7 @@ import { withTranslation } from "react-i18next";
 const mapStateToProps = (state: stateType) => {
   return {
     htmlBook: state.reader.htmlBook,
+    currentBook: state.book.currentBook,
   };
 };
 const actionCreator = {
