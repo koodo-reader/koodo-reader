@@ -55,7 +55,9 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
     while (!success) {
       if (method === "password") {
         const input = await vexPasswordInputAsync(
-          i18n.t("Enter password to unlock the app")
+          i18n.t("Enter password to unlock the app"),
+          "",
+          true
         );
         if (!input) {
           toast.error(i18n.t("Authentication required to access the app"));
