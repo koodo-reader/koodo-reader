@@ -206,6 +206,11 @@ class CoverUtil {
       if (!fs.existsSync(directoryPath)) {
         fs.mkdirSync(directoryPath, { recursive: true });
       }
+      let files = fs.readdirSync(directoryPath);
+      let existingCover = files.find((file) => file.startsWith(book.key));
+      if (existingCover) {
+        fs.unlinkSync(path.join(directoryPath, existingCover));
+      }
       const result = await this.convertCoverBase64(book.cover);
       fs.writeFileSync(
         path.join(directoryPath, `${book.key}.${result.extension}`),

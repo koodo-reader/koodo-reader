@@ -28,6 +28,7 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
     isFavoriteBook,
     isTopBook,
   } = useBookItem(props);
+  console.log(cover, "coverss");
 
   const handleMoreAction = (event: any) => {
     event.preventDefault();
