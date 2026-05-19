@@ -121,14 +121,18 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     }
 
     // Handle cover update: if user picked a new image (base64 data URL) or got cover from metadata
-    const { coverPreview, pendingCover } = this.state;
+    let { coverPreview, pendingCover } = this.state;
     if (coverPreview && coverPreview.startsWith("data:")) {
       this.props.currentBook.cover = coverPreview;
       await CoverUtil.addCover(this.props.currentBook);
       this.props.handleRefreshBookCover(this.props.currentBook.key);
     } else if (pendingCover) {
-      // Cover from metadata (URL) - store as cover field
-      this.props.currentBook.cover = pendingCover.replace(/^http:/, "https:");
+      if (pendingCover.startsWith("http")) {
+        let response = await fetch(pendingCover);
+        let blob = await response.blob();
+        pendingCover = await CoverUtil.blobToBase64(blob);
+      }
+      this.props.currentBook.cover = pendingCover;
       await CoverUtil.addCover(this.props.currentBook);
       this.props.handleRefreshBookCover(this.props.currentBook.key);
     }
