@@ -1407,16 +1407,38 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("exit-tab", (event, message) => {
-    if (mainWin && mainView) {
-      mainWin.contentView.removeChildView(mainView);
-    }
-    if (discordRPCClient) {
-      try {
-        discordRPCClient.clearActivity();
-      } catch (e) {
-        console.warn("Failed to clear Discord activity:", e.message);
+    return new Promise((resolve) => {
+      const doRemoveTab = () => {
+        if (mainWin && mainView) {
+          mainWin.contentView.removeChildView(mainView);
+        }
+        if (discordRPCClient) {
+          try {
+            discordRPCClient.clearActivity();
+          } catch (e) {
+            console.warn("Failed to clear Discord activity:", e.message);
+          }
+        }
+        resolve(undefined);
+      };
+
+      // Ask the tab renderer to flush reading-time data first, then close
+      if (mainView && !mainView.webContents.isDestroyed()) {
+        const timeoutId = setTimeout(() => {
+          // Fallback: if renderer doesn't reply within 3s, close anyway
+          ipcMain.removeListener("tab-close-ready", onTabCloseReady);
+          doRemoveTab();
+        }, 3000);
+        const onTabCloseReady = () => {
+          clearTimeout(timeoutId);
+          doRemoveTab();
+        };
+        ipcMain.once("tab-close-ready", onTabCloseReady);
+        mainView.webContents.send("before-tab-close");
+      } else {
+        doRemoveTab();
       }
-    }
+    });
   });
   ipcMain.handle("enter-tab-fullscreen", () => {
     if (mainWin && mainView) {
