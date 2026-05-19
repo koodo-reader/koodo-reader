@@ -406,7 +406,6 @@ export const syncKOReaderProgress = async (): Promise<KOReaderSyncSummary> => {
     persistKOReaderMetadata(book.key, localRecord, uploadPayload, false);
     summary.pushedBooks++;
   }
-  console.log(summary, "summary");
 
   return summary;
 };

@@ -463,14 +463,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.format === "TXT" &&
       rendition.format !== "CACHE"
     ) {
-      console.log(flattenChapters, "flattenChapters");
       if (
         flattenChapters.length > 0 &&
         flattenChapters[0].label === "Chapter 0"
       ) {
         return;
       }
-      console.log("refreshing");
       setTimeout(async () => {
         await rendition.refreshContent();
         let chapters = rendition.getChapter();
