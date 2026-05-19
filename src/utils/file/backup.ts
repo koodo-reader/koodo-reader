@@ -2,13 +2,17 @@ import BookUtil from "./bookUtil";
 import { isElectron } from "react-device-detect";
 import { checkMissingBook, getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
-import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  CommonTool,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
 import DatabaseService from "../storage/databaseService";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import ConfigUtil from "./configUtil";
 import SyncService from "../storage/syncService";
+import BackgroundUtil from "./backgroundUtil";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
 
@@ -219,8 +223,8 @@ export const backupFromPath = async (
     }
   };
 
-  // Add book and cover directories
-  for (const dir of ["book", "cover"]) {
+  // Add book, cover, dict, background, snapshot directories
+  for (const dir of ["book", "cover", "dict", "background", "snapshot"]) {
     const sourceDir = path.join(dataPath, dir);
     if (fs.existsSync(sourceDir)) {
       addDirectoryToZip(zip, sourceDir, dir);
@@ -297,6 +301,7 @@ export const backupFromStorage = async () => {
   let sync = JSON.stringify(await ConfigUtil.dumpConfig("sync"));
   await zipCover(zip);
   await zipBook(zip);
+  await zipBackground(zip);
   let result = await zipConfig(
     zip,
     books,
@@ -381,13 +386,25 @@ export const zipCover = async (zip: any) => {
   } else {
     for (let i = 0; i < books.length; i++) {
       let cover = await CoverUtil.getCover(books[i]);
-      if (cover.startsWith("blob")) {
-        let response = await fetch(cover);
-        let blob = await response.blob();
-        cover = await CoverUtil.blobToBase64(blob);
-      }
-      const result = CoverUtil.convertCoverBase64(cover);
+      const result = await CoverUtil.convertCoverBase64(cover);
       coverZip.file(`${books[i].key}.${result.extension}`, result.arrayBuffer);
+    }
+  }
+};
+
+export const zipBackground = async (zip: any) => {
+  const backgroundIds = ConfigService.getAllListConfig("backgroundList") || [];
+  const bgZip = zip.folder("background");
+  for (const id of backgroundIds) {
+    const meta = BackgroundUtil.getImageMeta(id);
+    if (!meta) continue;
+    try {
+      const dataUrl = await BackgroundUtil.loadImage(id, meta.extension);
+      if (!dataUrl) continue;
+      const { arrayBuffer, extension } = BackgroundUtil.convertDataUrl(dataUrl);
+      bgZip.file(`${id}.${extension}`, arrayBuffer);
+    } catch (error) {
+      console.error(`Failed to backup background ${id}:`, error);
     }
   }
 };
