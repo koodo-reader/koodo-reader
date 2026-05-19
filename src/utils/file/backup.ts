@@ -380,9 +380,13 @@ export const zipCover = async (zip: any) => {
   if (isElectron) {
   } else {
     for (let i = 0; i < books.length; i++) {
-      const result = CoverUtil.convertCoverBase64(
-        await CoverUtil.getCover(books[i])
-      );
+      let cover = await CoverUtil.getCover(books[i]);
+      if (cover.startsWith("blob")) {
+        let response = await fetch(cover);
+        let blob = await response.blob();
+        cover = await CoverUtil.blobToBase64(blob);
+      }
+      const result = CoverUtil.convertCoverBase64(cover);
       coverZip.file(`${books[i].key}.${result.extension}`, result.arrayBuffer);
     }
   }
