@@ -51,11 +51,19 @@ export function useBookItem(props: BookItemSharedProps) {
   useEffect(() => {
     let cancelled = false;
     async function loadCoverAndOffline() {
-      const [newCover, newIsCoverExist, newIsBookOffline] = await Promise.all([
+      let [newCover, newIsCoverExist, newIsBookOffline] = await Promise.all([
         CoverUtil.getCover(book),
         CoverUtil.isCoverExist(book),
         BookUtil.isBookOffline(book.key),
       ]);
+      if (
+        newCover &&
+        !newCover.startsWith("data:") &&
+        !newCover.startsWith("blob:") &&
+        !newCover.startsWith("http")
+      ) {
+        newCover = newCover + "?t=" + Date.now();
+      }
       if (!cancelled) {
         setCover(newCover);
         setIsCoverExist(newIsCoverExist);
@@ -74,6 +82,11 @@ export function useBookItem(props: BookItemSharedProps) {
     const refreshTriggered =
       refreshBookKey === book.key &&
       refreshBookKey !== prevRefreshBookKeyRef.current;
+    console.log(
+      bookKeyChanged,
+      refreshTriggered,
+      "bookKeyChanged, refreshTriggered"
+    );
 
     prevBookKeyRef.current = book.key;
     prevRefreshBookKeyRef.current = refreshBookKey;
@@ -84,6 +97,7 @@ export function useBookItem(props: BookItemSharedProps) {
     async function refreshCover() {
       let newCover = await CoverUtil.getCover(book);
       const newIsCoverExist = await CoverUtil.isCoverExist(book);
+      console.log(newCover, "newCover");
       if (
         newCover &&
         !newCover.startsWith("data:") &&
@@ -97,6 +111,7 @@ export function useBookItem(props: BookItemSharedProps) {
         setIsFavorite(
           ConfigService.getAllListConfig("favoriteBooks").indexOf(book.key) > -1
         );
+        console.log(newCover, "newCover");
         setCover(newCover);
         setIsCoverExist(newIsCoverExist);
         setIsBookOffline(newIsBookOffline);

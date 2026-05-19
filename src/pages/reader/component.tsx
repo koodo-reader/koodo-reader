@@ -39,13 +39,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       ? {
           registerUnloadHandler(callback: () => void): () => void {
             const { ipcRenderer } = (window as any).require("electron");
+            // Separate reader window close
             ipcRenderer.on("before-reader-close", callback);
-            return () =>
+            // In-app tab (WebContentsView) close
+            ipcRenderer.on("before-tab-close", callback);
+            return () => {
               ipcRenderer.removeListener("before-reader-close", callback);
+              ipcRenderer.removeListener("before-tab-close", callback);
+            };
           },
           onBeforeClose(): void {
             const { ipcRenderer } = (window as any).require("electron");
+            // Reply to whichever close signal is active
             ipcRenderer.send("reader-close-ready");
+            ipcRenderer.send("tab-close-ready");
           },
         }
       : {

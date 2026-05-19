@@ -5,6 +5,7 @@ import {
   clearAllData,
   generateSyncRecord,
   getStorageLocation,
+  getWebsiteUrl,
   reloadManager,
   vexComfirmAsync,
   vexOpenAsync,
@@ -17,6 +18,7 @@ import { LocalFileManager } from "../../../utils/file/localFile";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { changeLibrary, changePath } from "../../../utils/file/common";
 import { getSnapshots } from "../../../utils/file/backup";
+import { verifyAndBuildKOReaderSyncConfig } from "../../../utils/file/koReaderSync";
 import { restoreFromSnapshot } from "../../../utils/file/restore";
 import {
   exportBooks,
@@ -28,6 +30,7 @@ import DatabaseService from "../../../utils/storage/databaseService";
 import {
   dataSettingList,
   noteSyncSettingList,
+  wordSyncSettingList,
 } from "../../../constants/settingList";
 declare var window: any;
 class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
@@ -40,6 +43,8 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       exportHighlightsFormat: "",
       isEnableDiscordRPC:
         ConfigService.getReaderConfig("isEnableDiscordRPC") === "yes",
+      isEnableKoReaderSync:
+        ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes",
       isEnableNotionSync:
         ConfigService.getReaderConfig("isEnableNotionSync") === "yes",
       isEnableYuqueSync:
@@ -48,6 +53,10 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         ConfigService.getReaderConfig("isEnableReadwiseSync") === "yes",
       isEnableMarkdownSync:
         ConfigService.getReaderConfig("isEnableMarkdownSync") === "yes",
+      isEnableEudicSync:
+        ConfigService.getReaderConfig("isEnableEudicSync") === "yes",
+      isEnableAnkiSync:
+        ConfigService.getReaderConfig("isEnableAnkiSync") === "yes",
     };
   }
   async componentDidMount() {
@@ -71,6 +80,114 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       this.state[stateName] ? "no" : "yes"
     );
     toast.success(this.props.t("Change successful"));
+  };
+
+  handleKOReaderSyncSetting = async () => {
+    const currentlyEnabled = this.state.isEnableKoReaderSync;
+    if (currentlyEnabled) {
+      this.setState({ isEnableKoReaderSync: false });
+      ConfigService.setReaderConfig("isEnableKoReaderSync", "no");
+      toast.success(this.props.t("Change successful"));
+      return;
+    }
+
+    const savedConfig =
+      ConfigService.getObjectConfig(
+        "koReaderSyncConfig",
+        "thirdpartyToken",
+        {}
+      ) || {};
+    const labels = {
+      serverUrl: this.props.t("Server address"),
+      username: this.props.t("Username"),
+      password: this.props.t("Password"),
+    };
+    const result = await vexOpenAsync(
+      {
+        serverUrl: {
+          value: savedConfig.serverUrl || "",
+          placeholder: "https://sync.koreader.rocks",
+          type: "text",
+        },
+        username: {
+          value: savedConfig.username || "",
+          placeholder: this.props.t("Enter username"),
+          type: "text",
+        },
+        password: {
+          value: "",
+          placeholder:
+            savedConfig.passwordHash && savedConfig.username
+              ? this.props.t("Leave blank to keep the current password")
+              : this.props.t("Enter password"),
+          type: "password",
+        },
+      },
+      "",
+      labels,
+      getWebsiteUrl() +
+        `/${
+          ConfigService.getReaderConfig("lang") &&
+          ConfigService.getReaderConfig("lang").startsWith("zh")
+            ? "zh"
+            : "en"
+        }/add-thirdparty`
+    );
+
+    if (!result) {
+      return;
+    }
+
+    if (!result.serverUrl || !result.username) {
+      toast.error(this.props.t("Please fill in all fields"));
+      return;
+    }
+    if (!result.password && !savedConfig.passwordHash) {
+      toast.error(this.props.t("Please fill in all fields"));
+      return;
+    }
+
+    try {
+      toast.loading(this.props.t("Validating server info..."), {
+        id: "ko-reader-sync",
+      });
+      const verifiedConfig = await verifyAndBuildKOReaderSyncConfig({
+        serverUrl: result.serverUrl,
+        username: result.username,
+        password: result.password,
+        passwordHash:
+          !result.password && savedConfig.username === result.username
+            ? savedConfig.passwordHash
+            : "",
+      });
+      ConfigService.setObjectConfig(
+        "koReaderSyncConfig",
+        verifiedConfig,
+        "thirdpartyToken"
+      );
+      this.setState({ isEnableKoReaderSync: true });
+      ConfigService.setReaderConfig("isEnableKoReaderSync", "yes");
+      toast.success(this.props.t("Validation successful"), {
+        id: "ko-reader-sync",
+      });
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : this.props.t("Validation failed"),
+        {
+          id: "ko-reader-sync",
+        }
+      );
+    }
+  };
+
+  handleDataSetting = async (item: any) => {
+    if (item.propName === "isEnableKoReaderSync") {
+      await this.handleKOReaderSyncSetting();
+      return;
+    }
+    this.handleSetting(item.propName);
   };
 
   handleNoteSyncSetting = async (item: any) => {
@@ -116,7 +233,12 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         labelsMap[field.key] = this.props.t(field.label);
       }
 
-      const result = await vexOpenAsync(defaultValues, "", labelsMap);
+      const result = await vexOpenAsync(
+        defaultValues,
+        "",
+        labelsMap,
+        "https://koodoreader.com/zh/add-thirdparty"
+      );
 
       if (!result) {
         // User cancelled
@@ -213,6 +335,45 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     });
   };
 
+  renderWordSyncOptions = () => {
+    return wordSyncSettingList.map((item) => {
+      return (
+        <div key={item.propName}>
+          <div className="setting-dialog-new-title" key={item.title}>
+            <span style={{ width: "calc(100% - 100px)" }}>
+              <Trans>{item.title}</Trans>
+            </span>
+            <span
+              className="single-control-switch"
+              onClick={() => {
+                this.handleNoteSyncSetting(item);
+              }}
+              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
+            >
+              <span
+                className="single-control-button"
+                style={
+                  this.state[item.propName]
+                    ? {
+                        transform: "translateX(20px)",
+                        transition: "transform 0.5s ease",
+                      }
+                    : {
+                        transform: "translateX(0px)",
+                        transition: "transform 0.5s ease",
+                      }
+                }
+              ></span>
+            </span>
+          </div>
+          <p className="setting-option-subtitle">
+            <Trans>{item.desc}</Trans>
+          </p>
+        </div>
+      );
+    });
+  };
+
   renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
@@ -227,7 +388,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <span
               className="single-control-switch"
               onClick={() => {
-                this.handleSetting(item.propName);
+                this.handleDataSetting(item);
               }}
               style={this.state[item.propName] ? {} : { opacity: 0.6 }}
             >
@@ -377,6 +538,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       <>
         {this.renderSwitchOption(dataSettingList)}
         {this.renderNoteSyncOptions()}
+        {this.renderWordSyncOptions()}
         {isElectron && (
           <>
             <div className="setting-dialog-new-title">

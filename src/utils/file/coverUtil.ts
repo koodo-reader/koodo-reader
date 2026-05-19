@@ -83,6 +83,18 @@ class CoverUtil {
       }
     }
   }
+  static async blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result as string);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsDataURL(blob);
+    });
+  }
   static async isCoverExist(book: BookModel) {
     if (!book) return false;
     if (book.cover) {
@@ -194,7 +206,12 @@ class CoverUtil {
       if (!fs.existsSync(directoryPath)) {
         fs.mkdirSync(directoryPath, { recursive: true });
       }
-      const result = this.convertCoverBase64(book.cover);
+      let files = fs.readdirSync(directoryPath);
+      let existingCover = files.find((file) => file.startsWith(book.key));
+      if (existingCover) {
+        fs.unlinkSync(path.join(directoryPath, existingCover));
+      }
+      const result = await this.convertCoverBase64(book.cover);
       fs.writeFileSync(
         path.join(directoryPath, `${book.key}.${result.extension}`),
         Buffer.from(result.arrayBuffer)
@@ -205,7 +222,7 @@ class CoverUtil {
       book.cover = "";
     } else {
       if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-        let result = this.convertCoverBase64(coverBase64);
+        let result = await this.convertCoverBase64(coverBase64);
         await LocalFileManager.saveFile(
           `${book.key}.${result.extension}`,
           result.arrayBuffer,
@@ -218,7 +235,12 @@ class CoverUtil {
       // book.cover = "";
     }
   }
-  static convertCoverBase64(base64: string) {
+  static async convertCoverBase64(base64: string) {
+    if (base64.startsWith("blob") || base64.startsWith("http")) {
+      let response = await fetch(base64);
+      let blob = await response.blob();
+      base64 = await CoverUtil.blobToBase64(blob);
+    }
     let extension = this.base64ToFileType(base64);
 
     const base64Data = base64.replace(/^data:.*;base64,/, "");
@@ -365,7 +387,8 @@ class CoverUtil {
         await syncUtil.uploadFile(cover, "cover", coverBuffer);
       } else {
         if (book && book.cover) {
-          let result = this.convertCoverBase64(book.cover);
+          let base64 = book.cover;
+          let result = await this.convertCoverBase64(base64);
           let coverBlob = new Blob([result.arrayBuffer], {
             type: `image/${result.extension}`,
           });
