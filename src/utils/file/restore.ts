@@ -189,14 +189,6 @@ export const restoreFromfilePath = async (filePath: string) => {
     toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, { id: "backup" });
   };
 
-  const streamToBuffer = (stream: any): Promise<Buffer> =>
-    new Promise((res, rej) => {
-      const chunks: any[] = [];
-      stream.on("data", (chunk: any) => chunks.push(chunk));
-      stream.on("end", () => res(Buffer.concat(chunks)));
-      stream.on("error", rej);
-    });
-
   const streamToFile = (stream: any, dest: string): Promise<void> =>
     new Promise((res, rej) => {
       const dir = path.dirname(dest);
@@ -250,7 +242,11 @@ export const restoreFromfilePath = async (filePath: string) => {
   const assetFiles = Object.keys(zip.files).filter(
     (name) =>
       !zip.files[name].dir &&
-      (name.startsWith("book/") || name.startsWith("cover/"))
+      (name.startsWith("book/") ||
+        name.startsWith("cover/") ||
+        name.startsWith("dict/") ||
+        name.startsWith("background/") ||
+        name.startsWith("snapshot/"))
   );
   await Promise.all(
     assetFiles.map(async (fileName) => {
@@ -280,20 +276,6 @@ export const restoreFromOldBackup = async (zipEntries: any) => {
       } else {
         return false;
       }
-    } else {
-      return false;
-    }
-  } else {
-    return false;
-  }
-};
-export const restoreFromNewBackup = async (zipEntries: any) => {
-  let result = await unzipConfig(zipEntries);
-  if (result) {
-    let res1 = await unzipBook(zipEntries);
-    let res2 = await unzipCover(zipEntries);
-    if (res1 || res2) {
-      return true;
     } else {
       return false;
     }
@@ -416,7 +398,6 @@ export const unzipCover = async (zipEntries: any) => {
   }
   return flag;
 };
-
 export const unzipOldConfig = (zipEntries: any) => {
   return new Promise<boolean>((resolve) => {
     zipEntries.forEach(function (zipEntry) {
