@@ -89,6 +89,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       );
       return;
     }
+    if (targetDrive === "webdav" && !this.props.isAuthed) {
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
+      return;
+    }
     if (
       !isElectron &&
       driveList.find((item) => item.value === targetDrive)?.needExtension
