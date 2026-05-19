@@ -31,7 +31,7 @@ let oldConfigArr = [
 export const restore = async (service: string): Promise<Boolean> => {
   const { ipcRenderer } = window.require("electron");
   if (service === "local") {
-    let filePath = await ipcRenderer.invoke("select-file", "ping");
+    let filePath = await ipcRenderer.invoke("select-zip-file", "ping");
     if (!filePath) return false;
     toast.loading(i18n.t("Restoring..."), {
       id: "backup",
