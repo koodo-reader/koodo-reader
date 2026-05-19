@@ -46,7 +46,6 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
         "bookmarks"
       );
       if (!bookmark) return;
-      console.log(bookmark, bookLocation);
       if (bookLocation.percentage === bookmark.percentage) {
         this.props.handleShowBookmark(false);
       }
