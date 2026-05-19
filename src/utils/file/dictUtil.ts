@@ -16,6 +16,18 @@ export interface DictMeta {
 }
 
 class DictUtil {
+  /** Copy dict file directly from a local path (Electron only, avoids loading into memory) */
+  static saveDictFromPath(id: string, sourcePath: string): void {
+    const fs = window.require("fs");
+    const path = window.require("path");
+    const ext = sourcePath.split(".").pop()?.toLowerCase() || "mdx";
+    const dir = path.join(getStorageLocation() || "", DICT_FOLDER);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.copyFileSync(sourcePath, path.join(dir, `${id}.${ext}`));
+  }
+
   /** Save dict file (ArrayBuffer) by id */
   static async saveDict(
     id: string,
@@ -33,12 +45,6 @@ class DictUtil {
         fs.mkdirSync(dir, { recursive: true });
       }
       fs.writeFileSync(path.join(dir, filename), Buffer.from(arrayBuffer));
-    } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-        await LocalFileManager.saveFile(filename, arrayBuffer, DICT_FOLDER);
-      } else {
-        await localforage.setItem(`dict_${id}`, arrayBuffer);
-      }
     }
   }
 

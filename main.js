@@ -1001,10 +1001,12 @@ const createMainWin = () => {
     });
     return path.filePaths[0];
   });
-  ipcMain.handle("select-file", async (event) => {
-    var result = await dialog.showOpenDialog({
-      properties: ["openFile"],
-    });
+  ipcMain.handle("select-file", async (event, config) => {
+    const dialogOptions = { properties: ["openFile"] };
+    if (config && config.filters) {
+      dialogOptions.filters = config.filters;
+    }
+    var result = await dialog.showOpenDialog(dialogOptions);
     return result.filePaths[0];
   });
   ipcMain.handle("encrypt-data", async (event, config) => {

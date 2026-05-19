@@ -6,8 +6,6 @@ import toast from "react-hot-toast";
 import DictUtil, { DictMeta } from "../../../utils/file/dictUtil";
 
 class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
-  fileInputRef = React.createRef<HTMLInputElement>();
-
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
@@ -30,47 +28,41 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     this.setState({ dicts, isLoading: false });
   };
 
-  handleImportClick = () => {
-    this.fileInputRef.current?.click();
-  };
+  handleImportClick = async () => {
+    const { ipcRenderer } = (window as any).require("electron");
+    const path = (window as any).require("path");
 
-  handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-    const file = files[0];
-    e.target.value = "";
+    const filePath: string | undefined = await ipcRenderer.invoke(
+      "select-file",
+      { filters: [{ name: "MDict", extensions: ["mdx"] }] }
+    );
+    if (!filePath) return;
 
-    const ext = file.name.split(".").pop()?.toLowerCase() || "";
+    const fileName = path.basename(filePath);
+    const ext = fileName.split(".").pop()?.toLowerCase() || "";
+    const fileNameWithoutExt = fileName.replace(/\.[^/.]+$/, "");
 
-    const reader = new FileReader();
-    reader.onload = async (ev) => {
-      const arrayBuffer = ev.target?.result as ArrayBuffer;
-      if (!arrayBuffer) return;
-
-      const id = Date.now().toString();
-      const fileNameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
-      const meta: Omit<DictMeta, "id"> = {
-        name: fileNameWithoutExt,
-        extension: ext,
-      };
-
-      try {
-        await DictUtil.saveDict(id, file.name, arrayBuffer);
-        DictUtil.saveDictMeta(id, meta);
-        DictUtil.addDictId(id);
-
-        const newDict: DictMeta = { id, ...meta };
-        this.setState((prev) => ({
-          dicts: [...prev.dicts, newDict],
-        }));
-        this.props.handleFetchPlugins();
-        toast.success(this.props.t("Import successful"));
-      } catch (err) {
-        console.error(err);
-        toast.error(this.props.t("Import failed"));
-      }
+    const id = Date.now().toString();
+    const meta: Omit<DictMeta, "id"> = {
+      name: fileNameWithoutExt,
+      extension: ext,
     };
-    reader.readAsArrayBuffer(file);
+
+    try {
+      DictUtil.saveDictFromPath(id, filePath);
+      DictUtil.saveDictMeta(id, meta);
+      DictUtil.addDictId(id);
+
+      const newDict: DictMeta = { id, ...meta };
+      this.setState((prev) => ({
+        dicts: [...prev.dicts, newDict],
+      }));
+      this.props.handleFetchPlugins();
+      toast.success(this.props.t("Import successful"));
+    } catch (err) {
+      console.error(err);
+      toast.error(this.props.t("Import failed"));
+    }
   };
 
   handleDelete = async (dict: DictMeta) => {
@@ -138,15 +130,6 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             ))
           )}
         </div>
-
-        {/* Hidden file input */}
-        <input
-          ref={this.fileInputRef}
-          type="file"
-          accept=".mdx"
-          style={{ display: "none" }}
-          onChange={this.handleFileChange}
-        />
 
         {/* Import button */}
         <div
