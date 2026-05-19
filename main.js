@@ -1001,7 +1001,7 @@ const createMainWin = () => {
     });
     return path.filePaths[0];
   });
-  ipcMain.handle("select-book-path", async (event) => {
+  ipcMain.handle("select-file", async (event) => {
     var result = await dialog.showOpenDialog({
       properties: ["openFile"],
     });
@@ -1140,7 +1140,7 @@ const createMainWin = () => {
     return "success";
   });
 
-  ipcMain.handle("select-file", async (event, config) => {
+  ipcMain.handle("select-zip-file", async (event, config) => {
     const result = await dialog.showOpenDialog({
       properties: ["openFile"],
       filters: [{ name: "Zip Files", extensions: ["zip"] }],

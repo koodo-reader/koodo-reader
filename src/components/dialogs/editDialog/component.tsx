@@ -101,7 +101,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
   handleSelectBookPath = async () => {
     if (!isElectron) return;
     const { ipcRenderer } = window.require("electron");
-    const filePath = await ipcRenderer.invoke("select-book-path");
+    const filePath = await ipcRenderer.invoke("select-file");
     if (!filePath) return;
     this.setState({ bookPath: filePath });
   };
