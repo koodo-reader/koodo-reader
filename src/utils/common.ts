@@ -207,7 +207,8 @@ export const vexOpenAsync = (
 
 export const vexPasswordInputAsync = (
   message: string,
-  confirmMessage?: string
+  confirmMessage?: string,
+  isNoOverlay?: boolean
 ) => {
   return new Promise<string | false>((resolve) => {
     window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
@@ -231,7 +232,7 @@ export const vexPasswordInputAsync = (
         ].join("");
     window.vex.dialog.open({
       input: inputHtml,
-      overlayClassName: "no-overlay",
+      overlayClassName: isNoOverlay ? "no-overlay" : "",
       callback: function (data) {
         if (!data) {
           resolve(false);
