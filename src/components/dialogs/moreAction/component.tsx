@@ -19,7 +19,7 @@ import * as Kookit from "../../../assets/lib/kookit.min";
 import { getPdfPassword, getStorageLocation } from "../../../utils/common";
 import { BookHelper } from "../../../assets/lib/kookit.min";
 declare var window: any;
-class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
+class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
     super(props);
     this.state = { exportSubmenu: "" };
@@ -325,6 +325,22 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
                 <Trans>Delete pre-cache</Trans>
               </p>
             </div>
+            <div
+              className="action-dialog-edit"
+              style={{ paddingLeft: "0px" }}
+              onClick={() => {
+                const link = `koodo-reader://open-book?bookKey=${this.props.currentBook.key}`;
+                navigator.clipboard.writeText(link).then(() => {
+                  toast.success(this.props.t("Copied"));
+                });
+                this.props.handleMoreAction(false);
+                this.props.handleActionDialog(false);
+              }}
+            >
+              <p className="action-name">
+                <Trans>Copy book link</Trans>
+              </p>
+            </div>
             {isElectron && (
               <div
                 className="action-dialog-edit"
@@ -377,4 +393,4 @@ class ActionDialog extends React.Component<MoreActionProps, MoreActionState> {
   }
 }
 
-export default ActionDialog;
+export default MoreAction;

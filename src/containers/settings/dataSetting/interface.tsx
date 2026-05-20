@@ -10,9 +10,12 @@ export interface SettingInfoState {
   exportNotesFormat: string;
   exportHighlightsFormat: string;
   isEnableDiscordRPC: boolean;
+  isEnableKoReaderSync: boolean;
   isEnableNotionSync: boolean;
   isEnableYuqueSync: boolean;
   isEnableReadwiseSync: boolean;
   isEnableMarkdownSync: boolean;
+  isEnableEudicSync: boolean;
+  isEnableAnkiSync: boolean;
   [key: string]: any;
 }

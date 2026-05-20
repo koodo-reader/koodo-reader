@@ -1,0 +1,230 @@
+.metadata-dialog-container {
+  width: 380px;
+  height: 540px;
+  opacity: 1;
+  position: absolute;
+  left: calc(50% - 190px);
+  top: calc(50% - 270px);
+  z-index: 20;
+  animation: popup 0.1s ease-in-out 0s 1;
+  border-radius: 5px;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.metadata-dialog-title {
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  padding: 22px 20px 14px;
+  flex-shrink: 0;
+}
+
+.metadata-dialog-search-bar {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  padding: 0 20px 12px;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.metadata-dialog-search-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.metadata-dialog-search-input {
+  flex: 1;
+  height: 32px;
+  box-sizing: border-box;
+  padding-left: 8px;
+  font-size: 14px;
+  border-radius: 5px;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 2px solid rgba(75, 75, 75, 1);
+  outline: none;
+  background: transparent;
+}
+
+.metadata-dialog-search-btn {
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.metadata-dialog-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px 10px;
+  min-height: 0;
+}
+
+.metadata-dialog-loading {
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.6;
+  padding: 30px 0;
+}
+
+.metadata-dialog-error {
+  text-align: center;
+  font-size: 13px;
+  color: #e74c3c;
+  padding: 20px 0;
+}
+
+.metadata-dialog-empty {
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.5;
+  padding: 30px 0;
+}
+
+.metadata-book-item {
+  cursor: pointer;
+  transition: background 0.12s;
+  overflow: hidden;
+  border-bottom: rgba(75, 75, 75, 0.1) solid 1px;
+}
+
+.metadata-book-item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+}
+
+.metadata-book-cover {
+  width: 48px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 3px;
+  flex-shrink: 0;
+  background: rgba(120, 120, 120, 0.15);
+}
+
+.metadata-book-cover-placeholder {
+  width: 48px;
+  height: 64px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  background: rgba(120, 120, 120, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+.metadata-book-basic {
+  flex: 1;
+  min-width: 0;
+}
+
+.metadata-book-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.metadata-book-author {
+  font-size: 12px;
+  opacity: 0.65;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metadata-book-source {
+  font-size: 10px;
+  opacity: 0.65;
+  margin-top: 4px;
+  float: right;
+}
+
+.metadata-book-detail {
+  padding: 0 10px 10px 70px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.metadata-book-detail-row {
+  margin-bottom: 3px;
+  display: flex;
+  gap: 6px;
+}
+
+.metadata-book-detail-label {
+  font-weight: 500;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.metadata-book-detail-value {
+  flex: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+.metadata-dialog-apply-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 10px 0;
+  padding-right: 0px;
+}
+
+.metadata-dialog-apply-btn {
+  height: 30px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.metadata-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 20px 16px;
+  flex-shrink: 0;
+}
+
+.edit-dialog-metadata-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  opacity: 0.85;
+}
+
+.edit-dialog-metadata-btn:hover {
+  opacity: 1;
+}

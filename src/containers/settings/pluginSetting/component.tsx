@@ -201,7 +201,7 @@ class SettingDialog extends React.Component<
 
         {this.props.plugins &&
           this.props.plugins
-            .filter((item) => item.type !== "ai")
+            .filter((item) => item.type !== "ai" && item.type !== "dictionary")
             .map((item) => {
               return (
                 <div className="setting-dialog-new-title" key={item.key}>

@@ -16,7 +16,8 @@ const Footer = () => {
         bottom: 0,
         width: "100%",
         backgroundColor: "#fff",
-        zIndex: 1000,
+        zIndex: -1,
+        opacity: 0.8,
       }}
     >
       <div

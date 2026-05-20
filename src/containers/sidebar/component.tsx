@@ -437,7 +437,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             )}
           </div>
           {/* Stats button at the bottom */}
-          <div className="side-menu-about" style={{ paddingBottom: 12 }}>
+          <div className="side-menu-about" style={{ paddingBottom: 8 }}>
             <div
               className={"side-menu-selector"}
               style={{ cursor: "pointer" }}

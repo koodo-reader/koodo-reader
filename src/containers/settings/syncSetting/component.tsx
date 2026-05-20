@@ -52,6 +52,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       isEnableKoodoSync:
         ConfigService.getReaderConfig("isEnableKoodoSync") === "yes",
       driveConfig: {},
+      scheduledSyncInterval:
+        ConfigService.getReaderConfig("scheduledSyncInterval") || "",
     };
   }
 
@@ -85,6 +87,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
         )
       );
+      return;
+    }
+    if (targetDrive === "webdav" && !this.props.isAuthed) {
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
       return;
     }
     if (
@@ -820,6 +828,86 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         {this.props.isAuthed && this.renderSwitchOption(syncSettingList)}
         {this.props.isAuthed && (
           <>
+            <div className="setting-dialog-new-title">
+              <Trans>Scheduled sync interval</Trans>
+              <select
+                name=""
+                className="lang-setting-dropdown"
+                value={this.state.scheduledSyncInterval}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  ConfigService.setReaderConfig("scheduledSyncInterval", value);
+                  this.setState({ scheduledSyncInterval: value });
+                  toast.success(this.props.t("Change successful"));
+                  toast(
+                    this.props.t(
+                      "The new sync interval will take effect after restarting Koodo Reader"
+                    )
+                  );
+                }}
+              >
+                <option value="" className="lang-setting-option">
+                  {this.props.t("Disabled")}
+                </option>
+                <option value="1" className="lang-setting-option">
+                  {i18n.t("Minute duration", {
+                    tts: 1,
+                  })}
+                </option>
+                <option value="5" className="lang-setting-option">
+                  {i18n.t("Minute duration", {
+                    tts: 5,
+                  })}
+                </option>
+                <option value="10" className="lang-setting-option">
+                  {i18n.t("Minute duration", {
+                    tts: 10,
+                  })}
+                </option>
+                <option value="15" className="lang-setting-option">
+                  {i18n.t("Minute duration", {
+                    tts: 15,
+                  })}
+                </option>
+                <option value="30" className="lang-setting-option">
+                  {i18n.t("Minute duration", {
+                    tts: 30,
+                  })}
+                </option>
+                <option value="60" className="lang-setting-option">
+                  {i18n.t("Hour duration", {
+                    tts: 1,
+                  })}
+                </option>
+                <option value="120" className="lang-setting-option">
+                  {i18n.t("Hour duration", {
+                    tts: 2,
+                  })}
+                </option>
+                <option value="360" className="lang-setting-option">
+                  {i18n.t("Hour duration", {
+                    tts: 6,
+                  })}
+                </option>
+                <option value="720" className="lang-setting-option">
+                  {i18n.t("Hour duration", {
+                    tts: 12,
+                  })}
+                </option>
+                <option value="1440" className="lang-setting-option">
+                  {i18n.t("Hour duration", {
+                    tts: 24,
+                  })}
+                </option>
+              </select>
+            </div>
+            <p className="setting-option-subtitle">
+              <Trans>
+                {
+                  "Automatically sync your library with cloud at the specified interval."
+                }
+              </Trans>
+            </p>
             <div className="setting-dialog-new-title">
               <Trans>Reset sync records</Trans>
 

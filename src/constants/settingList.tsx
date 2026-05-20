@@ -121,6 +121,12 @@ export const dataSettingList = [
     desc: "Show your reading status and the book your're reading on your Discord profile. Discord needs to be running on your computer",
     propName: "isEnableDiscordRPC",
   },
+  {
+    isElectron: false,
+    title: "Auto sync reading progress with KOReader",
+    desc: "Clicking the sync button will sync reading progress between Koodo Reader and KOReader with KOReader sync server.",
+    propName: "isEnableKoReaderSync",
+  },
 ];
 export const noteSyncSettingList = [
   {
@@ -192,6 +198,63 @@ export const noteSyncSettingList = [
       },
     ],
     authConfigKey: "markdownSyncConfig",
+  },
+];
+export const wordSyncSettingList = [
+  {
+    isElectron: false,
+    title: "Auto sync new words to Eudic",
+    desc: "When you look up a word, it will be automatically synced to your Eudic study list",
+    propName: "isEnableEudicSync",
+    requiresAuth: true,
+    authFields: [
+      {
+        key: "accessToken",
+        label: "Eudic Access Token",
+        placeholder: "Enter your Eudic NIS access token",
+      },
+      {
+        key: "categoryName",
+        label: "Eudic Study List Name",
+        placeholder: "Enter the study list name",
+      },
+      {
+        key: "language",
+        label: "Eudic Language",
+        placeholder: "Language code, e.g. en / fr / de / es",
+      },
+    ],
+    authConfigKey: "eudicSyncConfig",
+  },
+  {
+    isElectron: false,
+    title: "Auto sync new words to AnkiConnect",
+    desc: "When you look up a word, it will be automatically added to an Anki deck via AnkiConnect (must be running locally)",
+    propName: "isEnableAnkiSync",
+    requiresAuth: true,
+    authFields: [
+      {
+        key: "host",
+        label: "Host",
+        placeholder: "e.g. 127.0.0.1",
+      },
+      {
+        key: "port",
+        label: "Port",
+        placeholder: "e.g. 8765",
+      },
+      {
+        key: "apiKey",
+        label: "Key",
+        placeholder: "Api key",
+      },
+      {
+        key: "deckName",
+        label: "Deck Name",
+        placeholder: "e.g. Vocabulary",
+      },
+    ],
+    authConfigKey: "ankiSyncConfig",
   },
 ];
 export const syncSettingList = [

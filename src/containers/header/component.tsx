@@ -27,6 +27,10 @@ import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import {
+  isKOReaderSyncEnabled,
+  syncKOReaderProgress,
+} from "../../utils/file/koReaderSync";
+import {
   addChatBox,
   checkBrokenDatabase,
   checkMissingBook,
@@ -46,10 +50,12 @@ import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
 import { getTempToken, updateUserConfig } from "../../utils/request/user";
+import i18n from "../../i18n";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   timer: any;
+  scheduledSyncTimer: any;
   private isSyncing: boolean = false;
   constructor(props: HeaderProps) {
     super(props);
@@ -117,6 +123,41 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ipcRenderer.on("reading-finished", async (event: any, config: any) => {
         this.handleFinishReading();
       });
+      ipcRenderer.on(
+        "open-book-from-link",
+        async (_event: any, config: any) => {
+          const book = await DatabaseService.getRecord(config.bookKey, "books");
+          if (book) {
+            BookUtil.redirectBook(book);
+          }
+        }
+      );
+      ipcRenderer.on(
+        "open-note-from-link",
+        async (_event: any, config: any) => {
+          const note = await DatabaseService.getRecord(config.noteKey, "notes");
+          if (!note) return;
+          const book = await DatabaseService.getRecord(note.bookKey, "books");
+          if (!book) return;
+          let bookLocation: any = {};
+          try {
+            bookLocation = JSON.parse(note.cfi) || {};
+          } catch (error) {
+            bookLocation.cfi = note.cfi;
+            bookLocation.chapterTitle = note.chapter;
+          }
+          if (bookLocation.fingerprint) {
+            bookLocation.chapterDocIndex = bookLocation.page - 1 + "";
+            bookLocation.chapterHref = "title" + (bookLocation.page - 1);
+          }
+          ConfigService.setObjectConfig(
+            note.bookKey,
+            bookLocation,
+            "recordLocation"
+          );
+          BookUtil.redirectBook(book);
+        }
+      );
     } else {
       upgradeConfig();
       const status = await LocalFileManager.getPermissionStatus();
@@ -157,7 +198,48 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (!willAutoSync) {
       this.handleOpenLastReadBook();
     }
+    this.startScheduledSync();
   }
+  componentWillUnmount() {
+    if (this.scheduledSyncTimer) {
+      clearInterval(this.scheduledSyncTimer);
+      this.scheduledSyncTimer = null;
+    }
+  }
+  startScheduledSync = () => {
+    if (this.scheduledSyncTimer) {
+      clearInterval(this.scheduledSyncTimer);
+      this.scheduledSyncTimer = null;
+    }
+    const intervalMinutes = parseInt(
+      ConfigService.getReaderConfig("scheduledSyncInterval") || "0"
+    );
+    if (!intervalMinutes || intervalMinutes <= 0) {
+      return;
+    }
+    const intervalMs = intervalMinutes * 60 * 1000;
+    this.scheduledSyncTimer = setInterval(async () => {
+      const currentInterval = parseInt(
+        ConfigService.getReaderConfig("scheduledSyncInterval") || "0"
+      );
+      if (!currentInterval || currentInterval <= 0) {
+        clearInterval(this.scheduledSyncTimer);
+        this.scheduledSyncTimer = null;
+        return;
+      }
+      const defaultSyncOption = ConfigService.getItem("defaultSyncOption");
+      if (
+        !defaultSyncOption ||
+        ConfigService.getReaderConfig("isDisableAutoSync") === "yes"
+      ) {
+        return;
+      }
+      if (!this.state.isSync && !this.isSyncing) {
+        const userInfo = await this.props.handleFetchUserInfo();
+        await this.handleCloudSync(userInfo);
+      }
+    }, intervalMs);
+  };
   async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<HeaderProps>,
     _nextContext: any
@@ -288,6 +370,39 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     this.setState({ isSync: false });
   };
+  handleKOReaderSync = async () => {
+    if (!isKOReaderSyncEnabled()) {
+      return;
+    }
+
+    toast.loading(this.props.t("Start syncing") + " (KOReader)", {
+      id: "koreader-sync",
+      position: "bottom-center",
+    });
+    try {
+      const summary = await syncKOReaderProgress();
+      if (summary.pulledBooks > 0 || summary.pushedBooks > 0) {
+        this.props.handleFetchBooks();
+      }
+      toast.success(
+        this.props.t("Synchronisation successful") + " (KOReader)",
+        {
+          id: "koreader-sync",
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        this.props.t("Sync failed") +
+          " (KOReader): " +
+          (error instanceof Error ? error.message : String(error)),
+        {
+          id: "koreader-sync",
+          duration: 6000,
+        }
+      );
+    }
+  };
   beforeSync = async (userInfo: any) => {
     if (!ConfigService.getItem("defaultSyncOption")) {
       toast.error(this.props.t("Please add data source in the setting"));
@@ -404,6 +519,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.timer = await showTaskProgress(this.handleSyncStateChange);
       if (!this.timer) {
         this.setState({ isSync: false });
+        this.handleKOReaderSync();
         return false;
       }
 
@@ -411,12 +527,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       if (!res) {
         clearInterval(this.timer);
         this.setState({ isSync: false });
-        return;
+        this.handleKOReaderSync();
+        return false;
       }
       let compareResult = await this.getCompareResult();
       await this.handleSync(compareResult);
       clearInterval(this.timer);
       this.setState({ isSync: false });
+      this.handleKOReaderSync();
     } catch (error) {
       console.error(error);
       toast.error(
@@ -426,6 +544,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       );
       clearInterval(this.timer);
       this.setState({ isSync: false });
+      this.handleKOReaderSync();
       return false;
     } finally {
       this.isSyncing = false;
@@ -442,6 +561,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
+
     toast.success(this.props.t("Synchronisation successful"), {
       id: "syncing",
     });
@@ -691,9 +811,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               this.setState({ isSync: true });
               if (this.props.isAuthed) {
                 let userInfo = await this.props.handleFetchUserInfo();
-                this.handleCloudSync(userInfo);
+                await this.handleCloudSync(userInfo);
               } else {
-                this.handleLocalSync();
+                await this.handleLocalSync();
+                this.handleKOReaderSync();
               }
             }}
             style={{ marginTop: "2px" }}
@@ -755,28 +876,82 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               new Date().getTime() / 1000 + 3 * 24 * 3600)) ? (
           <div className="header-report-container">
             <span
-              style={{ textDecoration: "underline" }}
-              onClick={async () => {
-                let response = await getTempToken();
-                if (response.code === 200) {
-                  let tempToken = response.data.access_token;
-                  let deviceUuid = await TokenService.getFingerprint();
-                  openInBrowser(
-                    getWebsiteUrl() +
-                      (ConfigService.getReaderConfig("lang").startsWith("zh")
-                        ? "/zh"
-                        : "/en") +
-                      "/pricing?temp_token=" +
-                      tempToken +
-                      "&device_uuid=" +
-                      deviceUuid
-                  );
-                } else if (response.code === 401) {
-                  this.props.handleFetchAuthed();
-                }
-              }}
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={i18n.t("Your trial will expire in", {
+                ttl: Math.ceil(
+                  (this.props.userInfo.valid_until -
+                    new Date().getTime() / 1000) /
+                    (24 * 3600)
+                ),
+              })}
             >
-              <Trans>Renew Pro</Trans>
+              <span
+                style={{ textDecoration: "underline" }}
+                onClick={async () => {
+                  let response = await getTempToken();
+                  if (response.code === 200) {
+                    let tempToken = response.data.access_token;
+                    let deviceUuid = await TokenService.getFingerprint();
+                    openInBrowser(
+                      getWebsiteUrl() +
+                        (ConfigService.getReaderConfig("lang").startsWith("zh")
+                          ? "/zh"
+                          : "/en") +
+                        "/pricing?temp_token=" +
+                        tempToken +
+                        "&device_uuid=" +
+                        deviceUuid
+                    );
+                  } else if (response.code === 401) {
+                    this.props.handleFetchAuthed();
+                  }
+                }}
+              >
+                <Trans>Renew Pro</Trans>
+              </span>
+            </span>
+          </div>
+        ) : null}
+        {this.props.isAuthed &&
+        this.props.userInfo &&
+        this.props.userInfo.type === "trial" &&
+        this.props.userInfo.valid_until >
+          new Date().getTime() / 1000 + 3 * 24 * 3600 ? (
+          <div className="header-report-container">
+            <span
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={i18n.t("Your trial will expire in", {
+                ttl: Math.ceil(
+                  (this.props.userInfo.valid_until -
+                    new Date().getTime() / 1000) /
+                    (24 * 3600)
+                ),
+              })}
+            >
+              <span
+                style={{ textDecoration: "underline" }}
+                onClick={async () => {
+                  let response = await getTempToken();
+                  if (response.code === 200) {
+                    let tempToken = response.data.access_token;
+                    let deviceUuid = await TokenService.getFingerprint();
+                    openInBrowser(
+                      getWebsiteUrl() +
+                        (ConfigService.getReaderConfig("lang").startsWith("zh")
+                          ? "/zh"
+                          : "/en") +
+                        "/pricing?temp_token=" +
+                        tempToken +
+                        "&device_uuid=" +
+                        deviceUuid
+                    );
+                  } else if (response.code === 401) {
+                    this.props.handleFetchAuthed();
+                  }
+                }}
+              >
+                <Trans>In trial</Trans>
+              </span>
             </span>
           </div>
         ) : null}

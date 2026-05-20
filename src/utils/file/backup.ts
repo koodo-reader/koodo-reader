@@ -2,13 +2,17 @@ import BookUtil from "./bookUtil";
 import { isElectron } from "react-device-detect";
 import { checkMissingBook, getStorageLocation } from "../common";
 import CoverUtil from "./coverUtil";
-import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  CommonTool,
+  ConfigService,
+} from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
 import DatabaseService from "../storage/databaseService";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import ConfigUtil from "./configUtil";
 import SyncService from "../storage/syncService";
+import BackgroundUtil from "./backgroundUtil";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
 
@@ -39,12 +43,20 @@ export const backup = async (service: string): Promise<Boolean> => {
       const path = window.require("path");
       targetPath = path.join(getStorageLocation(), "backup");
     }
-    toast.loading(i18n.t("Backup..."), {
+    toast.loading(i18n.t("Backup...") + " (0%)", {
       id: "backup",
     });
     // 让 UI 有时间渲染 toast
     await new Promise((resolve) => setTimeout(resolve, 100));
-    const backupResult = await backupFromPath(targetPath, fileName);
+    const backupResult = await backupFromPath(
+      targetPath,
+      fileName,
+      (percent) => {
+        toast.loading(i18n.t("Backup...") + ` (${percent}%)`, {
+          id: "backup",
+        });
+      }
+    );
     if (!backupResult) {
       return false;
     }
@@ -159,15 +171,23 @@ export const getSnapshots = () => {
   snapshots.sort((a, b) => b.time - a.time);
   return snapshots;
 };
-export const backupFromPath = async (targetPath: string, fileName: string) => {
+export const backupFromPath = async (
+  targetPath: string,
+  fileName: string,
+  onProgress?: (percent: number) => void
+) => {
   const path = window.require("path");
   const dataPath = getStorageLocation() || "";
   const fs = window.require("fs");
+  const JSZipNode = window.require("jszip");
   const { ipcRenderer } = window.require("electron");
-  if (!fs.existsSync(path.join(targetPath))) {
-    fs.mkdirSync(path.join(targetPath), { recursive: true });
+
+  if (!fs.existsSync(targetPath)) {
+    fs.mkdirSync(targetPath, { recursive: true });
   }
+
   await backupToConfigJson();
+
   let databaseList = CommonTool.databaseList;
   for (let i = 0; i < databaseList.length; i++) {
     await ipcRenderer.invoke("close-database", {
@@ -176,17 +196,95 @@ export const backupFromPath = async (targetPath: string, fileName: string) => {
     });
   }
 
-  const result = await ipcRenderer.invoke("stream-backup-zip", {
-    dataPath,
-    targetPath,
-    fileName,
-    databaseList,
-  });
-  if (!result?.ok) {
-    console.error("backup zip stream error:", result?.message);
-    toast.error(result?.message || i18n.t("Backup failed"), {
-      id: "backup",
-    });
+  const zip = new JSZipNode();
+
+  // Recursively add a directory from disk into the zip
+  const addDirectoryToZip = (
+    zipFolder: any,
+    sourceDir: string,
+    zipDir: string
+  ) => {
+    const entries: any[] = fs.readdirSync(sourceDir, { withFileTypes: true });
+    if (entries.length === 0) {
+      zip.file(zipDir, null, { dir: true, createFolders: true });
+      return;
+    }
+    for (const entry of entries) {
+      const sourcePath = path.join(sourceDir, entry.name);
+      const zipPath = path.posix.join(zipDir, entry.name);
+      if (entry.isDirectory()) {
+        addDirectoryToZip(zipFolder, sourcePath, zipPath);
+      } else if (entry.isFile()) {
+        zip.file(zipPath, fs.readFileSync(sourcePath), {
+          binary: true,
+          createFolders: true,
+        });
+      }
+    }
+  };
+
+  // Add book, cover, dict, background, snapshot directories
+  for (const dir of ["book", "cover", "dict", "background", "snapshot"]) {
+    const sourceDir = path.join(dataPath, dir);
+    if (fs.existsSync(sourceDir)) {
+      addDirectoryToZip(zip, sourceDir, dir);
+    }
+  }
+
+  // Add config JSON files
+  for (const configFile of ["config.json", "sync.json"]) {
+    const sourcePath = path.join(dataPath, "config", configFile);
+    if (fs.existsSync(sourcePath)) {
+      zip.file(
+        path.posix.join("config", configFile),
+        fs.readFileSync(sourcePath),
+        {
+          binary: true,
+          createFolders: true,
+        }
+      );
+    }
+  }
+
+  // Add database files
+  for (const dbName of databaseList) {
+    const sourcePath = path.join(dataPath, "config", `${dbName}.db`);
+    if (fs.existsSync(sourcePath)) {
+      zip.file(
+        path.posix.join("config", `${dbName}.db`),
+        fs.readFileSync(sourcePath),
+        { binary: true, createFolders: true }
+      );
+    }
+  }
+
+  const destinationPath = path.join(targetPath, fileName);
+  const tempPath = destinationPath + ".tmp";
+
+  try {
+    const buffer = await zip.generateAsync(
+      {
+        type: "nodebuffer",
+        compression: "DEFLATE",
+        compressionOptions: { level: 6 },
+      },
+      (metadata: { percent: number }) => {
+        onProgress && onProgress(Math.round(metadata.percent));
+      }
+    );
+    fs.writeFileSync(tempPath, buffer);
+    if (fs.existsSync(destinationPath)) {
+      fs.unlinkSync(destinationPath);
+    }
+    fs.renameSync(tempPath, destinationPath);
+  } catch (error) {
+    if (fs.existsSync(tempPath)) {
+      try {
+        fs.unlinkSync(tempPath);
+      } catch (_) {}
+    }
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    toast.error(errorMessage, { id: "backup" });
     return false;
   }
 
@@ -203,6 +301,7 @@ export const backupFromStorage = async () => {
   let sync = JSON.stringify(await ConfigUtil.dumpConfig("sync"));
   await zipCover(zip);
   await zipBook(zip);
+  await zipBackground(zip);
   let result = await zipConfig(
     zip,
     books,
@@ -286,10 +385,26 @@ export const zipCover = async (zip: any) => {
   if (isElectron) {
   } else {
     for (let i = 0; i < books.length; i++) {
-      const result = CoverUtil.convertCoverBase64(
-        await CoverUtil.getCover(books[i])
-      );
+      let cover = await CoverUtil.getCover(books[i]);
+      const result = await CoverUtil.convertCoverBase64(cover);
       coverZip.file(`${books[i].key}.${result.extension}`, result.arrayBuffer);
+    }
+  }
+};
+
+export const zipBackground = async (zip: any) => {
+  const backgroundIds = ConfigService.getAllListConfig("backgroundList") || [];
+  const bgZip = zip.folder("background");
+  for (const id of backgroundIds) {
+    const meta = BackgroundUtil.getImageMeta(id);
+    if (!meta) continue;
+    try {
+      const dataUrl = await BackgroundUtil.loadImage(id, meta.extension);
+      if (!dataUrl) continue;
+      const { arrayBuffer, extension } = BackgroundUtil.convertDataUrl(dataUrl);
+      bgZip.file(`${id}.${extension}`, arrayBuffer);
+    } catch (error) {
+      console.error(`Failed to backup background ${id}:`, error);
     }
   }
 };

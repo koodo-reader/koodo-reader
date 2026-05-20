@@ -132,21 +132,21 @@ export const upgradeStorage = async (
     fs.mkdirSync(path.join(dataPath, "cover"), { recursive: true });
     let books: Book[] | null = await localforage.getItem("books");
     if (books && books.length > 0) {
-      books.forEach((item) => {
-        let cover = item.cover;
+      for (let i = 0; i < books.length; i++) {
+        let cover = books[i].cover;
         if (cover) {
-          let result = CoverUtil.convertCoverBase64(cover);
+          let result = await CoverUtil.convertCoverBase64(cover);
           fs.writeFileSync(
-            path.join(dataPath, "cover", `${item.key}.${result.extension}`),
+            path.join(dataPath, "cover", `${books[i].key}.${result.extension}`),
             Buffer.from(result.arrayBuffer)
           );
-          item.cover = "";
+          books[i].cover = "";
         }
         //fix sqlite3 text issue
-        if (typeof item.author !== "string") {
-          item.author = "";
+        if (typeof books[i].author !== "string") {
+          books[i].author = "";
         }
-      });
+      }
       await DatabaseService.saveAllRecords(books, "books");
     }
 

@@ -20,6 +20,7 @@ export interface SettingSwitchProps {
   handleShowBorder: (isShowPageBorder: boolean) => void;
   handleSetting: (isOpenSetting: boolean) => void;
   handleSettingMode: (mode: string) => void;
+  handleBackgroundColor: (color: string) => void;
 }
 export interface SettingSwitchState {
   isHideBackground: boolean;
