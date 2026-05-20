@@ -50,19 +50,19 @@
 - 利用 **OneDrive**, **Google Drive**, **Dropbox**, **iCloud**, **MEGA**, **pCloud**, **阿里云盘**, **百度网盘**, **115 网盘**, **Box**, **Yandex Disk**, **FTP**, **SFTP**, **SMB**, **Docker**, **WebDAV**, **对象存储** 实现数据多端同步和备份
 - 轻松从 **OneDrive**, **Google Drive**, **MEGA**, **阿里云盘**, **百度网盘**, **115 网盘**, **Box**, **Yandex Disk**, **FTP**, **SFTP**, **SMB**, **WebDAV**, **对象存储** 导入图书
 - 使用您的自定义 AI 模型，实现 AI 翻译、AI 词典、AI 总结与 AI 百科
-- 与 KOReader 同步图书阅读进度
-- 将笔记与高亮同步至 Readwise、Notion、Obsidian、Joplin 等三方平台
+- 与 **KOReader** 同步图书阅读进度
+- 将笔记与高亮同步至 **Readwise**、**Notion**、**Obsidian**、**Joplin** 等三方平台
 - 支持本地 MDX 词典查词
-- 自动同步生词到 Anki 与欧路词典
+- 自动同步生词到 **Anki** 与**欧路词典**
 - 通过密码、PIN 码、Windows Hello、Touch ID 等多重方式保护您的图书库
 - 一键导出全部图书
 - 一键导出笔记与高亮，支持 CSV、Markdown、HTML、TXT 等格式
 - 隐私优先，不使用任何追踪服务，不主动上传您的阅读数据与隐私信息
-- 支持 OPDS 协议，并可将您的书库以 OPDS 形式分享
+- 支持 **OPDS** 协议，并可将您的书库以 **OPDS** 形式分享
 - 内置 50+ 翻译、词典及听书插件，并支持自定义插件
 - 支持竖排图书阅读
 - 支持阅读统计功能
-- 内置 Paddle 与 Tesseract OCR 引擎
+- 内置 **Paddle** 与 **Tesseract** OCR 引擎
 - 支持图书库快照与版本控制
 - 全平台覆盖，支持 Windows、macOS、Linux、Android、iOS 及网页版
 - 双页模式，单页模式，滚动模式
