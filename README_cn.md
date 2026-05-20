@@ -61,6 +61,7 @@
 - 支持 OPDS 协议，并可将您的书库以 OPDS 形式分享
 - 内置 50+ 翻译、词典及听书插件，并支持自定义插件
 - 支持竖排图书阅读
+- 支持阅读统计功能
 - 内置 Paddle 与 Tesseract OCR 引擎
 - 支持图书库快照与版本控制
 - 全平台覆盖，支持 Windows、macOS、Linux、Android、iOS 及网页版
