@@ -61,6 +61,7 @@
 - Support OPDS protocol and share your library as an OPDS feed
 - Built-in 50+ plugins for translation, dictionaries, and text-to-speech, with support for custom plugins
 - Support vertical layout book
+- Support reading statistics
 - Built-in Paddle and Tesseract OCR engines
 - Support library snapshots and version control
 - Full cross-platform support: Windows, macOS, Linux, Android, iOS, and Web version
