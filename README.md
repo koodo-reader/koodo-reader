@@ -56,13 +56,13 @@
 - Automatically sync new words to **Anki** and **Eudic** Dictionary
 - Protect your library with multiple security options including password, PIN, Windows Hello, Touch ID, and more
 - One-click export of all books
-- One-click export of notes and highlights, supporting CSV, Markdown, HTML, TXT, and other formats
+- One-click export of notes and highlights, supporting **CSV**, **Markdown**, **HTML**, **TXT**, and other formats
 - Privacy-first design: no tracking services, and no proactive uploading of your reading data or personal information
 - Support **OPDS** protocol and share your library as an **OPDS** feed
 - Built-in 50+ plugins for translation, dictionaries, and text-to-speech, with support for custom plugins
 - Support vertical layout book
 - Support reading statistics
-- Built-in Paddle and Tesseract OCR engines
+- Built-in **Paddle** and **Tesseract** OCR engines
 - Support library snapshots and version control
 - Full cross-platform support: Windows, macOS, Linux, Android, iOS, and Web version
 - Single-column, two-column or continuous scrolling layouts
