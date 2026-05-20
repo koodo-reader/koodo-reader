@@ -295,6 +295,19 @@ export const getWordDefinitions = async (
   }
   return response;
 };
+export const getBookMetadata = async (name: string, author: string) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.getBookMetadata({ name, author });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return response;
+};
 export const getSplitSentence = async (
   texts: { text: string; index: number }[]
 ) => {

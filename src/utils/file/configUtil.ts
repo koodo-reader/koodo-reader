@@ -470,7 +470,14 @@ class ConfigUtil {
       config = ConfigService.getAllSyncRecord();
     } else {
       let configList = CommonTool.configList;
-      configList = [...configList, "readerConfig"];
+      configList = [
+        ...configList,
+        "dictList",
+        "backgroundList",
+        "readerConfig",
+        "customBackgrounds",
+        "customDicts",
+      ];
       for (let i = 0; i < configList.length; i++) {
         let item = configList[i];
         if (ConfigService.getItem(item)) {

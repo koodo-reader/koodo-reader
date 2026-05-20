@@ -51,11 +51,19 @@ export function useBookItem(props: BookItemSharedProps) {
   useEffect(() => {
     let cancelled = false;
     async function loadCoverAndOffline() {
-      const [newCover, newIsCoverExist, newIsBookOffline] = await Promise.all([
+      let [newCover, newIsCoverExist, newIsBookOffline] = await Promise.all([
         CoverUtil.getCover(book),
         CoverUtil.isCoverExist(book),
         BookUtil.isBookOffline(book.key),
       ]);
+      if (
+        newCover &&
+        !newCover.startsWith("data:") &&
+        !newCover.startsWith("blob:") &&
+        !newCover.startsWith("http")
+      ) {
+        newCover = newCover + "?t=" + Date.now();
+      }
       if (!cancelled) {
         setCover(newCover);
         setIsCoverExist(newIsCoverExist);

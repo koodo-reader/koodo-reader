@@ -31,7 +31,7 @@ let oldConfigArr = [
 export const restore = async (service: string): Promise<Boolean> => {
   const { ipcRenderer } = window.require("electron");
   if (service === "local") {
-    let filePath = await ipcRenderer.invoke("select-file", "ping");
+    let filePath = await ipcRenderer.invoke("select-zip-file", "ping");
     if (!filePath) return false;
     toast.loading(i18n.t("Restoring..."), {
       id: "backup",
@@ -152,22 +152,118 @@ export const restoreFromConfigJson = () => {
 };
 export const restoreFromfilePath = async (filePath: string) => {
   const fs = window.require("fs");
-  const AdmZip = window.require("adm-zip");
+  const path = window.require("path");
+  const JSZip = window.require("jszip");
   if (!fs.existsSync(filePath)) {
     return false;
   }
-  var zip = new AdmZip(filePath);
-  var zipEntries = zip.getEntries(); // an array of ZipEntry records
-  if (
-    zipEntries
-      .map((item: any) => item.entryName)
-      .indexOf("config/config.json") === -1
-  ) {
-    return await restoreFromOldBackup(zipEntries);
-  } else {
-    return await restoreFromNewBackup(zipEntries);
+
+  // Load zip structure lazily via Node.js stream — JSZip reads metadata upfront
+  // but decompresses each file on-demand via nodeStream(), avoiding holding all
+  // file contents in memory simultaneously.
+  const fileBuffer = fs.readFileSync(filePath);
+  const zip = await JSZip.loadAsync(fileBuffer);
+
+  const isNewBackup = zip.file("config/config.json") !== null;
+
+  if (!isNewBackup) {
+    // Old backup format: fall back to adm-zip (files are small in old format)
+    const AdmZip = window.require("adm-zip");
+    const admZip = new AdmZip(filePath);
+    return await restoreFromOldBackup(admZip.getEntries());
   }
+
+  const dataPath = getStorageLocation() || "";
+  let failed = false;
+  let processedCount = 0;
+
+  const allFiles = Object.keys(zip.files).filter(
+    (name) => !zip.files[name].dir
+  );
+  const totalFiles = allFiles.length;
+  const updateProgress = () => {
+    processedCount++;
+    const percent = Math.round(
+      (processedCount / Math.max(totalFiles, 1)) * 100
+    );
+    toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, { id: "backup" });
+  };
+
+  const streamToFile = (stream: any, dest: string): Promise<void> =>
+    new Promise((res, rej) => {
+      const dir = path.dirname(dest);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      const out = fs.createWriteStream(dest);
+      stream.pipe(out);
+      out.on("finish", res);
+      out.on("error", rej);
+      stream.on("error", rej);
+    });
+
+  // Process config entries first (sequential, small files)
+  const configFiles = Object.keys(zip.files).filter(
+    (name) => name.startsWith("config/") && !zip.files[name].dir
+  );
+  for (const fileName of configFiles) {
+    try {
+      const entryName = path.basename(fileName);
+      if (entryName === "config.json") {
+        const text = await zip.file(fileName)!.async("string");
+        if (!text) {
+          failed = true;
+          break;
+        }
+        const config = JSON.parse(text);
+        for (const key in config) ConfigService.setItem(key, config[key]);
+      } else if (entryName === "sync.json") {
+        const text = await zip.file(fileName)!.async("string");
+        if (!text) {
+          failed = true;
+          break;
+        }
+        ConfigService.setItem("syncRecord", text);
+      } else if (entryName.endsWith(".db")) {
+        const buf: ArrayBuffer = await zip.file(fileName)!.async("arraybuffer");
+        const sqlUtil = new SqlUtil();
+        const dbName = entryName.split(".")[0];
+        const cloudRecords = await sqlUtil.dbBufferToJson(buf, dbName);
+        await DatabaseService.saveAllRecords(cloudRecords, dbName);
+      }
+      updateProgress();
+    } catch {
+      failed = true;
+      break;
+    }
+  }
+
+  if (failed) return false;
+
+  // Stream book and cover files to disk concurrently via nodeStream()
+  const assetFiles = Object.keys(zip.files).filter(
+    (name) =>
+      !zip.files[name].dir &&
+      (name.startsWith("book/") ||
+        name.startsWith("cover/") ||
+        name.startsWith("dict/") ||
+        name.startsWith("background/") ||
+        name.startsWith("snapshot/"))
+  );
+  await Promise.all(
+    assetFiles.map(async (fileName) => {
+      try {
+        const dest = path.join(dataPath, fileName);
+        const stream = zip.file(fileName)!.nodeStream();
+        await streamToFile(stream, dest);
+        updateProgress();
+      } catch {
+        failed = true;
+      }
+    })
+  );
+
+  return !failed;
 };
+
 export const restoreFromOldBackup = async (zipEntries: any) => {
   let result = await unzipOldConfig(zipEntries);
   if (result) {
@@ -180,20 +276,6 @@ export const restoreFromOldBackup = async (zipEntries: any) => {
       } else {
         return false;
       }
-    } else {
-      return false;
-    }
-  } else {
-    return false;
-  }
-};
-export const restoreFromNewBackup = async (zipEntries: any) => {
-  let result = await unzipConfig(zipEntries);
-  if (result) {
-    let res1 = await unzipBook(zipEntries);
-    let res2 = await unzipCover(zipEntries);
-    if (res1 || res2) {
-      return true;
     } else {
       return false;
     }
@@ -316,7 +398,6 @@ export const unzipCover = async (zipEntries: any) => {
   }
   return flag;
 };
-
 export const unzipOldConfig = (zipEntries: any) => {
   return new Promise<boolean>((resolve) => {
     zipEntries.forEach(function (zipEntry) {

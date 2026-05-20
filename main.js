@@ -11,15 +11,16 @@ const {
   nativeTheme,
   protocol,
   screen,
+  systemPreferences,
 } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const log = require("electron-log/main");
 const os = require("os");
+const { execFile } = require("child_process");
 const store = new Store();
 const fs = require("fs");
-const JSZip = require("jszip");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 const packageJson = require("./package.json");
@@ -40,6 +41,315 @@ let dbConnection = {};
 let syncUtilCache = {};
 let pickerUtilCache = {};
 let downloadRequest = null;
+
+const extractClixmlErrors = (text) => {
+  if (!text) return "";
+  const matches = text.match(
+    /<S S="Error">([^<]*(?:<[^/][^>]*>[^<]*<\/[^>]*>)*[^<]*)<\/S>/g
+  );
+  if (!matches) return text;
+  return matches
+    .map((m) =>
+      m
+        .replace(/<\/?S[^>]*>/g, "")
+        .replace(/<[^>]+>/g, "")
+        .replace(/_x000D__x000A_/g, "\n")
+        .trim()
+    )
+    .filter(Boolean)
+    .join("\n");
+};
+
+const runPowerShellScript = (script, timeout = 30000) => {
+  return new Promise((resolve, reject) => {
+    const encodedCommand = Buffer.from(script, "utf16le").toString("base64");
+    execFile(
+      "powershell.exe",
+      [
+        "-NoProfile",
+        "-NonInteractive",
+        "-Sta",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-EncodedCommand",
+        encodedCommand,
+      ],
+      {
+        windowsHide: true,
+        timeout,
+        maxBuffer: 1024 * 1024,
+      },
+      (error, stdout, stderr) => {
+        if (error) {
+          const rawMessage = (stderr || stdout || error.message || "").trim();
+          const cleanMessage = extractClixmlErrors(rawMessage) || rawMessage;
+          reject(new Error(cleanMessage));
+          return;
+        }
+        resolve((stdout || "").trim());
+      }
+    );
+  });
+};
+
+const getWindowHandleValue = (win) => {
+  if (!win || typeof win.getNativeWindowHandle !== "function") {
+    return "";
+  }
+
+  try {
+    const handle = win.getNativeWindowHandle();
+    if (!Buffer.isBuffer(handle) || handle.length === 0) {
+      return "";
+    }
+
+    if (handle.length >= 8 && typeof handle.readBigUInt64LE === "function") {
+      return handle.readBigUInt64LE(0).toString();
+    }
+
+    return handle.readUInt32LE(0).toString();
+  } catch (error) {
+    console.warn("Failed to resolve native window handle:", error);
+    return "";
+  }
+};
+
+const getWindowsHelloScript = (mode, message = "", hwnd = "") => {
+  const escapedMessage = message.replace(/'/g, "''");
+  const escapedHwnd = String(hwnd || "").replace(/'/g, "''");
+  return `
+$ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+Add-Type -AssemblyName System.Runtime.WindowsRuntime
+
+function Invoke-WinRtAsync {
+  param(
+    [Parameter(Mandatory = $true)] $Operation,
+    [Parameter(Mandatory = $true)] [Type[]] $ResultTypes
+  )
+
+  $method = [System.WindowsRuntimeSystemExtensions].GetMethods() |
+    Where-Object {
+      $_.Name -eq 'AsTask' -and
+      $_.IsGenericMethodDefinition -and
+      $_.GetGenericArguments().Count -eq $ResultTypes.Count -and
+      $_.GetParameters().Count -eq 1
+    } |
+    Select-Object -First 1
+
+  if (-not $method) {
+    throw 'Unable to bridge Windows Runtime async operation.'
+  }
+
+  $genericMethod = $method.MakeGenericMethod($ResultTypes)
+  $task = $genericMethod.Invoke($null, @($Operation))
+  return $task.GetAwaiter().GetResult()
+}
+
+function Request-WindowsHelloVerification {
+  param(
+    [Parameter(Mandatory = $true)] [string] $Message,
+    [string] $Hwnd
+  )
+
+  $isWindowInteropSupported = [Environment]::OSVersion.Version.Build -ge 22000 -and -not [string]::IsNullOrWhiteSpace($Hwnd)
+
+  if (-not $isWindowInteropSupported) {
+    return Invoke-WinRtAsync -Operation ($verifier::RequestVerificationAsync($Message)) -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerificationResult])
+  }
+
+  Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+namespace KoodoReaderInterop
+{
+    [ComImport]
+    [Guid("39E050C3-4E74-441A-8DC0-B81104DF949C")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIInspectable)]
+    public interface IUserConsentVerifierInterop
+    {
+        [return: MarshalAs(UnmanagedType.IInspectable)]
+        object RequestVerificationForWindowAsync(
+            IntPtr appWindow,
+            [MarshalAs(UnmanagedType.HString)] string message,
+            [In] ref Guid riid);
+    }
+
+    public static class UserConsentVerifierInteropHelper
+    {
+        public static object RequestVerificationForWindow(object activationFactory, long hwnd, string message, Guid riid)
+        {
+            IntPtr ptr = IntPtr.Zero;
+
+            try
+            {
+                ptr = Marshal.GetIUnknownForObject(activationFactory);
+                var interop = (IUserConsentVerifierInterop)Marshal.GetTypedObjectForIUnknown(ptr, typeof(IUserConsentVerifierInterop));
+                return interop.RequestVerificationForWindowAsync(new IntPtr(hwnd), message, ref riid);
+            }
+            finally
+            {
+                if (ptr != IntPtr.Zero)
+                {
+                    Marshal.Release(ptr);
+                }
+            }
+        }
+    }
+}
+"@
+
+  $activationFactory = [System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeMarshal]::GetActivationFactory($verifier)
+  $asyncOperationGuid = [Guid]::Parse('fd596ffd-2318-558f-9dbe-d21df43764a5')
+  $operation = [KoodoReaderInterop.UserConsentVerifierInteropHelper]::RequestVerificationForWindow($activationFactory, [Int64]::Parse($Hwnd), $Message, $asyncOperationGuid)
+  return Invoke-WinRtAsync -Operation $operation -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerificationResult])
+}
+
+$verifier = [Windows.Security.Credentials.UI.UserConsentVerifier, Windows.Security.Credentials.UI, ContentType = WindowsRuntime]
+$availability = Invoke-WinRtAsync -Operation ($verifier::CheckAvailabilityAsync()) -ResultTypes @([Windows.Security.Credentials.UI.UserConsentVerifierAvailability])
+
+if ('${mode}' -eq 'check') {
+  [Console]::Out.Write((@{
+    available = ($availability.ToString() -eq 'Available')
+    status = $availability.ToString()
+  } | ConvertTo-Json -Compress))
+  exit 0
+}
+
+if ($availability.ToString() -ne 'Available') {
+  [Console]::Out.Write((@{
+    success = $false
+    code = 'Unavailable'
+    status = $availability.ToString()
+  } | ConvertTo-Json -Compress))
+  exit 0
+}
+
+try {
+  $result = Request-WindowsHelloVerification -Message '${escapedMessage}' -Hwnd '${escapedHwnd}'
+  [Console]::Out.Write((@{
+    success = ($result.ToString() -eq 'Verified')
+    code = $result.ToString()
+    status = $availability.ToString()
+  } | ConvertTo-Json -Compress))
+} catch {
+  [Console]::Out.Write((@{
+    success = $false
+    code = 'Error'
+    status = $_.Exception.Message
+  } | ConvertTo-Json -Compress))
+}
+`.trim();
+};
+
+const getBiometricCapability = async () => {
+  if (process.platform === "darwin") {
+    const available =
+      typeof systemPreferences.canPromptTouchID === "function" &&
+      systemPreferences.canPromptTouchID();
+    return {
+      available,
+      provider: "Touch ID",
+      platform: process.platform,
+      status: available ? "Available" : "Unavailable",
+    };
+  }
+
+  if (process.platform === "win32") {
+    try {
+      const output = await runPowerShellScript(getWindowsHelloScript("check"));
+      const result = output ? JSON.parse(output) : {};
+      return {
+        available: !!result.available,
+        provider: "Windows Hello",
+        platform: process.platform,
+        status: result.status || "Unavailable",
+      };
+    } catch (error) {
+      return {
+        available: false,
+        provider: "Windows Hello",
+        platform: process.platform,
+        status: "Error",
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
+  return {
+    available: false,
+    provider: "Biometric",
+    platform: process.platform,
+    status: "Unsupported",
+  };
+};
+
+const promptBiometricAuth = async (
+  promptMessage = "Authenticate",
+  owningWindow = null
+) => {
+  if (process.platform === "darwin") {
+    const available =
+      typeof systemPreferences.canPromptTouchID === "function" &&
+      systemPreferences.canPromptTouchID();
+    if (!available) {
+      return {
+        success: false,
+        code: "Unavailable",
+        provider: "Touch ID",
+      };
+    }
+
+    try {
+      await systemPreferences.promptTouchID(promptMessage);
+      return {
+        success: true,
+        code: "Verified",
+        provider: "Touch ID",
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return {
+        success: false,
+        code: /cancel/i.test(message) ? "Canceled" : "Failed",
+        provider: "Touch ID",
+      };
+    }
+  }
+
+  if (process.platform === "win32") {
+    try {
+      const hwnd = getWindowHandleValue(owningWindow);
+      const output = await runPowerShellScript(
+        getWindowsHelloScript("verify", promptMessage, hwnd),
+        120000
+      );
+      const result = output ? JSON.parse(output) : {};
+      return {
+        success: !!result.success,
+        code:
+          result.code === "Unavailable" && result.status
+            ? result.status
+            : result.code || "Error",
+        provider: "Windows Hello",
+      };
+    } catch (error) {
+      console.error("Biometric verification error:", error.message);
+      return {
+        success: false,
+        code: "Error",
+        provider: "Windows Hello",
+      };
+    }
+  }
+
+  return {
+    success: false,
+    code: "Unsupported",
+    provider: "Biometric",
+  };
+};
 
 // Discord Rich Presence setup
 let discordRPCClient = null;
@@ -198,124 +508,6 @@ const removePickerUtil = (config) => {
   if (pickerUtilCache[config.service]) {
     pickerUtilCache[config.service] = null;
   }
-};
-const addDirectoryToZip = async (zip, sourceDir, zipDir) => {
-  const entries = await fs.promises.readdir(sourceDir, { withFileTypes: true });
-
-  if (entries.length === 0) {
-    zip.file(zipDir, null, { dir: true, createFolders: true });
-    return;
-  }
-
-  for (const entry of entries) {
-    const sourcePath = path.join(sourceDir, entry.name);
-    const zipPath = path.posix.join(zipDir, entry.name);
-
-    if (entry.isDirectory()) {
-      await addDirectoryToZip(zip, sourcePath, zipPath);
-      continue;
-    }
-
-    if (!entry.isFile()) {
-      continue;
-    }
-
-    const stats = await fs.promises.stat(sourcePath);
-    zip.file(zipPath, fs.createReadStream(sourcePath), {
-      binary: true,
-      createFolders: true,
-      date: stats.mtime,
-    });
-  }
-};
-const createBackupArchive = async (config) => {
-  const { dataPath, targetPath, fileName, databaseList = [] } = config;
-  const destinationPath = path.join(targetPath, fileName);
-  const tempPath = destinationPath + ".tmp";
-  const zip = new JSZip();
-
-  await fs.promises.mkdir(targetPath, { recursive: true });
-
-  if (fs.existsSync(tempPath)) {
-    await fs.promises.unlink(tempPath);
-  }
-
-  const directories = [
-    { source: path.join(dataPath, "book"), target: "book" },
-    { source: path.join(dataPath, "cover"), target: "cover" },
-  ];
-  for (const directory of directories) {
-    if (fs.existsSync(directory.source)) {
-      await addDirectoryToZip(zip, directory.source, directory.target);
-    }
-  }
-
-  const configFiles = ["config.json", "sync.json"];
-  for (const configFile of configFiles) {
-    const sourcePath = path.join(dataPath, "config", configFile);
-    if (!fs.existsSync(sourcePath)) {
-      continue;
-    }
-    const stats = await fs.promises.stat(sourcePath);
-    zip.file(
-      path.posix.join("config", configFile),
-      fs.createReadStream(sourcePath),
-      {
-        binary: true,
-        createFolders: true,
-        date: stats.mtime,
-      }
-    );
-  }
-
-  for (const dbName of databaseList) {
-    const sourcePath = path.join(dataPath, "config", `${dbName}.db`);
-    if (!fs.existsSync(sourcePath)) {
-      continue;
-    }
-    const stats = await fs.promises.stat(sourcePath);
-    zip.file(
-      path.posix.join("config", `${dbName}.db`),
-      fs.createReadStream(sourcePath),
-      {
-        binary: true,
-        createFolders: true,
-        date: stats.mtime,
-      }
-    );
-  }
-
-  await new Promise((resolve, reject) => {
-    const output = fs.createWriteStream(tempPath);
-    const stream = zip.generateNodeStream({
-      type: "nodebuffer",
-      streamFiles: true,
-      compression: "DEFLATE",
-      compressionOptions: { level: 6 },
-    });
-
-    const handleError = async (error) => {
-      output.destroy();
-      if (fs.existsSync(tempPath)) {
-        try {
-          await fs.promises.unlink(tempPath);
-        } catch (_) {}
-      }
-      reject(error);
-    };
-
-    output.on("close", resolve);
-    output.on("error", handleError);
-    stream.on("error", handleError);
-    stream.pipe(output);
-  });
-
-  if (fs.existsSync(destinationPath)) {
-    await fs.promises.unlink(destinationPath);
-  }
-
-  await fs.promises.rename(tempPath, destinationPath);
-  return destinationPath;
 };
 // Simple encryption function
 const encrypt = (text, key) => {
@@ -809,23 +1001,13 @@ const createMainWin = () => {
     });
     return path.filePaths[0];
   });
-  ipcMain.handle("select-book-path", async (event) => {
-    var result = await dialog.showOpenDialog({
-      properties: ["openFile"],
-    });
-    return result.filePaths[0];
-  });
-  ipcMain.handle("stream-backup-zip", async (event, config) => {
-    try {
-      await createBackupArchive(config);
-      return { ok: true };
-    } catch (error) {
-      console.error("Failed to create backup archive:", error);
-      return {
-        ok: false,
-        message: error instanceof Error ? error.message : String(error),
-      };
+  ipcMain.handle("select-file", async (event, config) => {
+    const dialogOptions = { properties: ["openFile"] };
+    if (config && config.filters) {
+      dialogOptions.filters = config.filters;
     }
+    var result = await dialog.showOpenDialog(dialogOptions);
+    return result.filePaths[0];
   });
   ipcMain.handle("encrypt-data", async (event, config) => {
     const { TokenService } =
@@ -935,6 +1117,17 @@ const createMainWin = () => {
   ipcMain.handle("get-store-value", async (event, config) => {
     return store.get(config.key);
   });
+  ipcMain.handle("get-biometric-capability", async () => {
+    return await getBiometricCapability();
+  });
+  ipcMain.handle("prompt-biometric-auth", async (event, config) => {
+    const senderWindow =
+      BrowserWindow.fromWebContents(event.sender) ||
+      BrowserWindow.getFocusedWindow() ||
+      mainWin ||
+      null;
+    return await promptBiometricAuth(config?.message, senderWindow);
+  });
 
   ipcMain.handle("reset-reader-position", async (event) => {
     store.delete("windowX");
@@ -949,7 +1142,7 @@ const createMainWin = () => {
     return "success";
   });
 
-  ipcMain.handle("select-file", async (event, config) => {
+  ipcMain.handle("select-zip-file", async (event, config) => {
     const result = await dialog.showOpenDialog({
       properties: ["openFile"],
       filters: [{ name: "Zip Files", extensions: ["zip"] }],
@@ -1216,16 +1409,38 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("exit-tab", (event, message) => {
-    if (mainWin && mainView) {
-      mainWin.contentView.removeChildView(mainView);
-    }
-    if (discordRPCClient) {
-      try {
-        discordRPCClient.clearActivity();
-      } catch (e) {
-        console.warn("Failed to clear Discord activity:", e.message);
+    return new Promise((resolve) => {
+      const doRemoveTab = () => {
+        if (mainWin && mainView) {
+          mainWin.contentView.removeChildView(mainView);
+        }
+        if (discordRPCClient) {
+          try {
+            discordRPCClient.clearActivity();
+          } catch (e) {
+            console.warn("Failed to clear Discord activity:", e.message);
+          }
+        }
+        resolve(undefined);
+      };
+
+      // Ask the tab renderer to flush reading-time data first, then close
+      if (mainView && !mainView.webContents.isDestroyed()) {
+        const timeoutId = setTimeout(() => {
+          // Fallback: if renderer doesn't reply within 3s, close anyway
+          ipcMain.removeListener("tab-close-ready", onTabCloseReady);
+          doRemoveTab();
+        }, 3000);
+        const onTabCloseReady = () => {
+          clearTimeout(timeoutId);
+          doRemoveTab();
+        };
+        ipcMain.once("tab-close-ready", onTabCloseReady);
+        mainView.webContents.send("before-tab-close");
+      } else {
+        doRemoveTab();
       }
-    }
+    });
   });
   ipcMain.handle("enter-tab-fullscreen", () => {
     if (mainWin && mainView) {
@@ -1506,12 +1721,27 @@ const handleCallback = (url) => {
     const state = parsedUrl.searchParams.get("state");
     const pickerData = parsedUrl.searchParams.get("pickerData");
 
+    const bookKey = parsedUrl.searchParams.get("bookKey");
+    const noteKey = parsedUrl.searchParams.get("noteKey");
+
     if (code && mainWin) {
       mainWin.webContents.send("oauth-callback", { code, state });
     }
     if (pickerData && mainWin) {
       let config = JSON.parse(decodeURIComponent(pickerData));
       mainWin.webContents.send("picker-finished", config);
+    }
+    if (bookKey && mainWin) {
+      if (mainWin.isMinimized()) mainWin.restore();
+      mainWin.show();
+      mainWin.focus();
+      mainWin.webContents.send("open-book-from-link", { bookKey });
+    }
+    if (noteKey && mainWin) {
+      if (mainWin.isMinimized()) mainWin.restore();
+      mainWin.show();
+      mainWin.focus();
+      mainWin.webContents.send("open-note-from-link", { noteKey });
     }
   } catch (error) {
     console.error("Error handling callback URL:", error);

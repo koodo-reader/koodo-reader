@@ -130,31 +130,66 @@ export const vexComfirmAsync = (
 export const vexOpenAsync = (
   config: Record<string, any>,
   message: string,
-  labels?: Record<string, string>
+  labels?: Record<string, string>,
+  tutorialUrl?: string
 ) => {
   return new Promise<Record<string, any> | false>((resolve) => {
     window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
     window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    const escapeAttr = (value: string) =>
+      value
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
     const keys = Object.keys(config).filter((k) => k && k.trim());
     const inputHtml = keys
       .map((key) => {
         const raw = config[key] ?? "";
-        const placeholder =
-          typeof raw === "string" && raw.indexOf("[") > -1 ? raw : "";
-        const value =
-          typeof raw === "string" && raw.indexOf("[") === -1 ? raw : "";
+        let placeholder = "";
+        let value = "";
+        let inputType = "text";
+        if (typeof raw === "string") {
+          placeholder = raw.indexOf("[") > -1 ? raw : "";
+          value = raw.indexOf("[") === -1 ? raw : "";
+        } else if (raw && typeof raw === "object") {
+          placeholder = raw.placeholder || "";
+          value = raw.value || "";
+          inputType = raw.type || "text";
+        }
         const displayLabel = labels?.[key] ?? key;
         return [
           `<div style="margin-bottom:10px">`,
           `<label style="display:block;margin-bottom:4px;font-weight:500">${displayLabel}</label>`,
-          `<input name="${key}" type="text" placeholder="${placeholder}" value="${value}" style="width:100%" required />`,
+          `<input name="${key}" type="${escapeAttr(
+            inputType
+          )}" placeholder="${escapeAttr(placeholder)}" value="${escapeAttr(
+            value
+          )}" style="width:100%" required />`,
           `</div>`,
         ].join("");
       })
       .join("");
+    const buttons = [
+      window.vex.dialog.buttons.YES,
+      window.vex.dialog.buttons.NO,
+      ...(tutorialUrl
+        ? [
+            {
+              text: i18n.t("Tutorial"),
+              type: "button",
+              className: "vex-dialog-button-secondary",
+              click: function () {
+                openExternalUrl(tutorialUrl!);
+              },
+            },
+          ]
+        : []),
+    ];
     window.vex.dialog.open({
       unsafeMessage: message ? i18n.t(message).replace(/\n/g, "<br>") : "",
       input: inputHtml,
+      buttons,
       callback: function (data) {
         if (!data) {
           resolve(false);
@@ -164,6 +199,82 @@ export const vexOpenAsync = (
             result[key] = data[key] ?? "";
           }
           resolve(result);
+        }
+      },
+    });
+  });
+};
+
+export const vexPasswordInputAsync = (
+  message: string,
+  confirmMessage?: string,
+  isNoOverlay?: boolean
+) => {
+  return new Promise<string | false>((resolve) => {
+    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    const inputHtml = confirmMessage
+      ? [
+          `<div style="margin-bottom:10px">`,
+          `<label style="display:block;margin-bottom:4px;font-weight:500">${i18n.t(message)}</label>`,
+          `<input name="vex-pwd" type="password" style="width:100%" required />`,
+          `</div>`,
+          `<div style="margin-bottom:10px">`,
+          `<label style="display:block;margin-bottom:4px;font-weight:500">${i18n.t(confirmMessage)}</label>`,
+          `<input name="vex-pwd-confirm" type="password" style="width:100%" required />`,
+          `</div>`,
+        ].join("")
+      : [
+          `<div style="margin-bottom:10px">`,
+          `<label style="display:block;margin-bottom:4px;font-weight:500">${i18n.t(message)}</label>`,
+          `<input name="vex-pwd" type="password" style="width:100%" required />`,
+          `</div>`,
+        ].join("");
+    window.vex.dialog.open({
+      input: inputHtml,
+      overlayClassName: isNoOverlay ? "no-overlay" : "",
+      callback: function (data) {
+        if (!data) {
+          resolve(false);
+          return;
+        }
+        const pwd: string = data["vex-pwd"] ?? "";
+        if (!pwd) {
+          resolve(false);
+          return;
+        }
+        if (confirmMessage) {
+          const confirm: string = data["vex-pwd-confirm"] ?? "";
+          if (pwd !== confirm) {
+            resolve(false);
+            return;
+          }
+        }
+        resolve(pwd);
+      },
+    });
+  });
+};
+
+export const vexSelectAsync = (
+  message: string,
+  options: { value: string; label: string }[]
+) => {
+  return new Promise<string | false>((resolve) => {
+    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    const optionsHtml = options
+      .map((o) => `<option value="${o.value}">${i18n.t(o.label)}</option>`)
+      .join("");
+    const selectHtml = `<select name="vex-select" style="width:100%;padding:6px">${optionsHtml}</select>`;
+    window.vex.dialog.open({
+      unsafeMessage: i18n.t(message),
+      input: selectHtml,
+      callback: function (data) {
+        if (!data) {
+          resolve(false);
+        } else {
+          resolve(data["vex-select"] ?? false);
         }
       },
     });

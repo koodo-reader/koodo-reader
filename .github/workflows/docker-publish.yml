@@ -27,6 +27,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ── Pre-build React app on native runner (eliminates QEMU overhead) ──────
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install JS dependencies
+        run: yarn --ignore-scripts --network-timeout 1000000
+
+      - name: Build React app
+        run: yarn --ignore-scripts && yarn build
+
+      # ── Cross-compile Go binary for both platforms (eliminates QEMU overhead) ─
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: httpserver/go.mod
+          cache-dependency-path: httpserver/go.sum
+
+      - name: Cross-compile Go server (amd64 + arm64)
+        working-directory: httpserver
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o httpserver-linux-amd64 .
+          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -trimpath -ldflags="-s -w" -o httpserver-linux-arm64 .
+
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
@@ -70,6 +96,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker

@@ -6,12 +6,15 @@ import { isElectron } from "react-device-detect";
 
 class TTSUtil {
   static player: any;
-  static currentAudioPath: string = "";
   static audioPaths: { index: number; audioPath: string }[] = [];
   static isPaused: boolean = false;
   static pausedMidSentence: boolean = false;
   static processingIndexes: Set<number> = new Set();
   static async readAloud(currentIndex: number) {
+    // 清理比当前 index 小 10 的已朗读缓存
+    this.audioPaths = this.audioPaths.filter(
+      (item) => item.index >= currentIndex - 10
+    );
     return new Promise<string>(async (resolve) => {
       let audioPath = this.audioPaths.find(
         (item) => item.index === currentIndex

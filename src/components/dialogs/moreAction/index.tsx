@@ -13,7 +13,7 @@ import {
 
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
-import ActionDialog from "./component";
+import MoreAction from "./component";
 
 const mapStateToProps = (state: stateType) => {
   return {
@@ -36,4 +36,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(ActionDialog as any) as any);
+)(withTranslation()(MoreAction as any) as any);

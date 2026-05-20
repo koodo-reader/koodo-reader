@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import DatabaseService from "../../utils/storage/databaseService";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import ConfigUtil from "../../utils/file/configUtil";
+import { book } from "../../store/reducers";
 
 class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   constructor(props: DeleteIconProps) {
@@ -27,6 +28,27 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
       return;
     }
     if (this.props.mode === "bookmarks") {
+      let bookLocation: {
+        text: string;
+        count: string;
+        chapterTitle: string;
+        chapterDocIndex: string;
+        chapterHref: string;
+        percentage: string;
+        cfi: string;
+      } = ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
+      );
+      let bookmark = await DatabaseService.getRecord(
+        this.props.itemKey,
+        "bookmarks"
+      );
+      if (!bookmark) return;
+      if (bookLocation.percentage === bookmark.percentage) {
+        this.props.handleShowBookmark(false);
+      }
       DatabaseService.deleteRecord(this.props.itemKey, "bookmarks").then(() => {
         deleteFunc();
         toast.success(this.props.t("Deletion successful"));

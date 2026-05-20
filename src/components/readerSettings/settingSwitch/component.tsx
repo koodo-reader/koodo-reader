@@ -214,6 +214,9 @@ class SettingSwitch extends React.Component<
                 });
               }
               toast(this.props.t("Change successful"));
+              this.props.handleBackgroundColor(
+                ConfigService.getReaderConfig("backgroundColor") || ""
+              );
               this.props.renderBookFunc();
             }}
             style={this.state.isSeperateStyle ? {} : { opacity: 0.6 }}

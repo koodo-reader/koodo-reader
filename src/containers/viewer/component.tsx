@@ -28,6 +28,7 @@ import { ocrTesseractLangList } from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
 import { getOcrResult } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
+import { isKOReaderSyncEnabled } from "../../utils/file/koReaderSync";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -370,27 +371,32 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       percentage: string;
       cfi: string;
       page: string;
+      xpath: string;
     } = ConfigService.getObjectConfig(
       this.props.currentBook.key,
       "recordLocation",
       {}
     );
     if (chapterDocs.length > 0) {
-      await rendition.goToPosition(
-        JSON.stringify({
-          text: bookLocation.text || "",
-          chapterTitle: bookLocation.chapterTitle || "",
-          page: bookLocation.page || "",
-          chapterDocIndex: bookLocation.chapterDocIndex || 0,
-          chapterHref: bookLocation.chapterHref || "",
-          count: bookLocation.hasOwnProperty("cfi")
-            ? "ignore"
-            : bookLocation.count || 0,
-          percentage: bookLocation.percentage,
-          cfi: bookLocation.cfi,
-          isFirst: true,
-        })
-      );
+      if (isKOReaderSyncEnabled() && bookLocation.xpath) {
+        await rendition.goToXpath(bookLocation.xpath);
+      } else {
+        await rendition.goToPosition(
+          JSON.stringify({
+            text: bookLocation.text || "",
+            chapterTitle: bookLocation.chapterTitle || "",
+            page: bookLocation.page || "",
+            chapterDocIndex: bookLocation.chapterDocIndex || 0,
+            chapterHref: bookLocation.chapterHref || "",
+            count: bookLocation.hasOwnProperty("cfi")
+              ? "ignore"
+              : bookLocation.count || 0,
+            percentage: bookLocation.percentage,
+            cfi: bookLocation.cfi,
+            isFirst: true,
+          })
+        );
+      }
     }
     rendition.on("rendered", async () => {
       this.handleLocation();
@@ -457,12 +463,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.format === "TXT" &&
       rendition.format !== "CACHE"
     ) {
-      if (
-        flattenChapters.length === 1 &&
-        flattenChapters[0].label === "Title"
-      ) {
-        return;
-      }
       if (
         flattenChapters.length > 0 &&
         flattenChapters[0].label === "Chapter 0"

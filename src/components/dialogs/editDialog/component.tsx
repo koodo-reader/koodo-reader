@@ -1,5 +1,6 @@
 import React from "react";
 import "./editDialog.css";
+import "../metadataDialog/metadataDialog.css";
 
 import { Trans } from "react-i18next";
 import { EditDialogProps, EditDialogState } from "./interface";
@@ -7,6 +8,9 @@ import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import CoverUtil from "../../../utils/file/coverUtil";
 import { isElectron } from "react-device-detect";
+import MetadataDialog from "../metadataDialog";
+import { MetadataResult } from "../metadataDialog/interface";
+import { trimSpecialCharacters } from "../../../utils/common";
 declare var window: any;
 
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
@@ -18,7 +22,18 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
 
   constructor(props: EditDialogProps) {
     super(props);
-    this.state = { isCheck: false, coverPreview: "", bookPath: "" };
+    this.state = {
+      isCheck: false,
+      coverPreview: "",
+      bookPath: "",
+      isMetadataDialogOpen: false,
+      pendingName: "",
+      pendingAuthor: "",
+      pendingPublisher: "",
+      pendingDescription: "",
+      pendingPublishedDate: "",
+      pendingCover: "",
+    };
   }
 
   async componentDidMount() {
@@ -42,6 +57,32 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     this.setState({ bookPath: this.props.currentBook.path || "" });
   }
 
+  handleApplyMetadata = (metadata: MetadataResult) => {
+    if (metadata.name !== undefined && this.nameRef.current) {
+      this.nameRef.current.value = metadata.name;
+    }
+    if (metadata.author !== undefined && this.authorRef.current) {
+      this.authorRef.current.value = metadata.author;
+    }
+    if (metadata.publisher !== undefined && this.publisherRef.current) {
+      this.publisherRef.current.value = metadata.publisher;
+    }
+    if (metadata.description !== undefined && this.descriptionRef.current) {
+      this.descriptionRef.current.value = metadata.description;
+    }
+    this.setState({
+      pendingName: metadata.name || "",
+      pendingAuthor: metadata.author || "",
+      pendingPublisher: metadata.publisher || "",
+      pendingDescription: metadata.description || "",
+      pendingPublishedDate: metadata.publishedDate || "",
+      pendingCover: metadata.cover || "",
+      coverPreview: metadata.cover
+        ? metadata.cover.replace(/^http:/, "https:")
+        : this.state.coverPreview,
+    });
+  };
+
   handleCancel = () => {
     this.props.handleEditDialog(false);
   };
@@ -60,7 +101,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
   handleSelectBookPath = async () => {
     if (!isElectron) return;
     const { ipcRenderer } = window.require("electron");
-    const filePath = await ipcRenderer.invoke("select-book-path");
+    const filePath = await ipcRenderer.invoke("select-file");
     if (!filePath) return;
     this.setState({ bookPath: filePath });
   };
@@ -79,10 +120,19 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
       this.props.currentBook.path = this.state.bookPath;
     }
 
-    // Handle cover update: if user picked a new image (base64 data URL)
-    const { coverPreview } = this.state;
+    // Handle cover update: if user picked a new image (base64 data URL) or got cover from metadata
+    let { coverPreview, pendingCover } = this.state;
     if (coverPreview && coverPreview.startsWith("data:")) {
       this.props.currentBook.cover = coverPreview;
+      await CoverUtil.addCover(this.props.currentBook);
+      this.props.handleRefreshBookCover(this.props.currentBook.key);
+    } else if (pendingCover) {
+      if (pendingCover.startsWith("http")) {
+        let response = await fetch(pendingCover);
+        let blob = await response.blob();
+        pendingCover = await CoverUtil.blobToBase64(blob);
+      }
+      this.props.currentBook.cover = pendingCover;
       await CoverUtil.addCover(this.props.currentBook);
       this.props.handleRefreshBookCover(this.props.currentBook.key);
     }
@@ -98,8 +148,39 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     const { coverPreview } = this.state;
     return (
       <div className="edit-dialog-container">
-        <div className="edit-dialog-title">
+        {this.state.isMetadataDialogOpen && (
+          <MetadataDialog
+            {...({
+              currentBookName: trimSpecialCharacters(
+                this.nameRef.current?.value || this.props.currentBook.name || ""
+              ),
+              currentBookAuthor:
+                this.authorRef.current?.value ||
+                this.props.currentBook.author ||
+                "",
+              handleMetadataDialog: (isShow) => {
+                this.setState({ isMetadataDialogOpen: isShow });
+              },
+              handleApplyMetadata: this.handleApplyMetadata,
+            } as any)}
+          />
+        )}
+        <div className="edit-dialog-title" style={{ position: "relative" }}>
           <Trans>Edit Book</Trans>
+          {/* <div
+            style={{
+              fontSize: 16,
+              color: "rgb(231, 69, 69)",
+              position: "absolute",
+              right: 20,
+              top: 23,
+              cursor: "pointer",
+              opacity: 0.8,
+            }}
+            onClick={() => this.setState({ isMetadataDialogOpen: true })}
+          >
+            <Trans>Get metadata</Trans>
+          </div> */}
         </div>
 
         <div className="edit-dialog-body">

@@ -34,4 +34,5 @@ export interface SettingInfoState {
   isDisableAutoSync: boolean;
   autoOffline: boolean;
   driveConfig: any;
+  scheduledSyncInterval: string;
 }
