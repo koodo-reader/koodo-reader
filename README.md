@@ -64,7 +64,6 @@
 - Support reading statistics
 - Built-in **Paddle** and **Tesseract** OCR engines
 - Support library snapshots and version control
-- Full cross-platform support: Windows, macOS, Linux, Android, iOS, and Web version
 - Single-column, two-column or continuous scrolling layouts
 - Text-to-speech, translation, dictionary, touch screen support, and batch import
 - Add bookmarks, notes, and highlights to your books
