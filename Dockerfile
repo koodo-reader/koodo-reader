@@ -3,7 +3,7 @@
 # in CI, so no build stages are needed here. This eliminates all QEMU-emulated
 # build overhead when targeting linux/arm64.
 ### Nginx or Apache can also be used, Caddy is just smaller in size
-FROM caddy:latest
+FROM caddy:alpine
 
 # Copy pre-built website files (built by CI runner, platform-independent)
 COPY build/ /usr/share/caddy
