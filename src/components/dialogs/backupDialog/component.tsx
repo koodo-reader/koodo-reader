@@ -102,7 +102,8 @@ class BackupDialog extends React.Component<
       event.target.value !== "add" &&
       !driveList
         .find((item) => item.value === event.target.value)
-        ?.support.includes("browser")
+        ?.support.includes("browser") &&
+      !isElectron
     ) {
       toast(
         this.props.t(
