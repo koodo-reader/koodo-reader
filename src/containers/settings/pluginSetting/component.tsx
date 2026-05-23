@@ -223,6 +223,7 @@ class SettingDialog extends React.Component<
                   </span>
 
                   {!item.key.startsWith("official") &&
+                    !item.key.startsWith("dict") &&
                     !item.key.startsWith("custom") && (
                       <span
                         className="change-location-button"

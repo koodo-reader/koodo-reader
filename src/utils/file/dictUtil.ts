@@ -61,16 +61,6 @@ class DictUtil {
         const filePath = path.join(dir, file);
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
       }
-    } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-        for (const ext of ["mdx"]) {
-          await LocalFileManager.deleteFile(`${id}.${ext}`, DICT_FOLDER).catch(
-            () => {}
-          );
-        }
-      } else {
-        await localforage.removeItem(`dict_${id}`);
-      }
     }
   }
 

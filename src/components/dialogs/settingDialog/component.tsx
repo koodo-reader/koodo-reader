@@ -118,6 +118,7 @@ class SettingDialog extends React.Component<
               "13px"
             )}
             {this.renderSidebarItem("account", "icon-user", "Account", "18px")}
+            {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>
 
           <hr className="setting-dialog-sidebar-divider" />
@@ -150,7 +151,6 @@ class SettingDialog extends React.Component<
                 "Local dictionary",
                 "18px"
               )}
-            {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>
         </div>
 
