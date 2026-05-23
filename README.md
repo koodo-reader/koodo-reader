@@ -51,10 +51,10 @@
 - Easily import books from **OneDrive**, **Google Drive**, **MEGA**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB**, or **Object Storage**
 - Use your custom AI model to power AI Translation, AI Dictionary, AI Summarization, and AI Encyclopedia
 - Sync reading progress with **KOReader**
-- Sync notes and highlights to thirdparty platforms such as **Readwise**, **Notion**, **Obsidian**, **Joplin**, and more
+- Sync notes and highlights to **Readwise**, **Notion**, **Obsidian**, **Joplin**, and more
 - Support local MDX dictionary lookup
-- Automatically sync new words to **Anki** and **Eudic** Dictionary
-- Protect your library with multiple security options including password, PIN, Windows Hello, Touch ID, and more
+- Automatically sync words to **Anki** and **Eudic**
+- Protect your library with password, PIN, Windows Hello, Touch ID, and more
 - One-click export of all books
 - One-click export of notes and highlights, supporting **CSV**, **Markdown**, **HTML**, **TXT**, and other formats
 - Privacy-first design: no tracking services, and no proactive uploading of your reading data or personal information
