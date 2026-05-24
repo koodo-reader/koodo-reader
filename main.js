@@ -406,8 +406,16 @@ function buildProgressBar(percentage) {
 }
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
+var pendingDeepLink = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
   filePath = process.argv[1];
+  // Check argv for a deep link URL (cold start)
+  for (const arg of process.argv) {
+    if (arg.startsWith("koodo-reader://")) {
+      pendingDeepLink = arg;
+      break;
+    }
+  }
 }
 log.transports.file.fileName = "debug.log";
 log.transports.file.maxSize = 1024 * 1024; // 1MB
@@ -448,6 +456,11 @@ if (!singleInstance) {
     if (mainWin) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();
+    }
+    // Handle deep link passed via second-instance argv
+    const deepLink = argv.find((arg) => arg.startsWith("koodo-reader://"));
+    if (deepLink) {
+      handleCallback(deepLink);
     }
   });
 }
@@ -613,6 +626,15 @@ const createMainWin = () => {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
+  // Handle deep link on cold start: wait for renderer to mount its IPC listeners
+  mainWin.webContents.once("did-finish-load", () => {
+    if (pendingDeepLink) {
+      const link = pendingDeepLink;
+      pendingDeepLink = null;
+      // Give React time to register ipcRenderer listeners before dispatching
+      setTimeout(() => handleCallback(link), 1500);
+    }
+  });
   mainWin.on("close", (event) => {
     if (!isQuitting && store.get("isMinimizeToTray") === "yes") {
       event.preventDefault();
@@ -1663,13 +1685,6 @@ app.on("open-file", (e, pathToFile) => {
 });
 // Register protocol handler
 app.setAsDefaultProtocolClient("koodo-reader");
-// Handle deep linking
-app.on("second-instance", (event, commandLine) => {
-  const url = commandLine.pop();
-  if (url) {
-    handleCallback(url);
-  }
-});
 const serializeArg = (arg) => {
   if (arg === null) return "null";
   if (arg === undefined) return "undefined";
