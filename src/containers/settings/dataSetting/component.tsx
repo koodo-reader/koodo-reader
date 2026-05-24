@@ -237,7 +237,11 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         defaultValues,
         "",
         labelsMap,
-        "https://koodoreader.com/zh/add-thirdparty"
+        getWebsiteUrl() +
+          (ConfigService.getReaderConfig("lang").startsWith("zh")
+            ? "/zh"
+            : "/en") +
+          "/add-thirdparty"
       );
 
       if (!result) {
