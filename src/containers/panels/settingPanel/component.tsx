@@ -35,7 +35,9 @@ class SettingPanel extends React.Component<
       "isSettingLocked",
       !this.props.isSettingLocked ? "yes" : "no"
     );
-    this.props.renderBookFunc();
+    setTimeout(() => {
+      this.props.renderBookFunc();
+    }, 300);
   };
 
   handleClearAllStyle = () => {
