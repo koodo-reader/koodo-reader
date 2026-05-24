@@ -4,6 +4,8 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { LocalFileManager } from "./localFile";
 import localforage from "localforage";
 import { Buffer } from "buffer";
+import toast from "react-hot-toast";
+import i18n from "../../i18n";
 
 declare var window: any;
 
@@ -90,6 +92,7 @@ class DictUtil {
           result.definition === null ||
           result.definition === undefined
         ) {
+          toast.error(i18n.t("Word not found in dictionary"));
           return "";
         }
         return String(result.definition);
