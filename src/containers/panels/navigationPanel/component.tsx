@@ -71,7 +71,9 @@ class NavigationPanel extends React.Component<
       "isNavLocked",
       !this.props.isNavLocked ? "yes" : "no"
     );
-    this.props.renderBookFunc();
+    setTimeout(() => {
+      this.props.renderBookFunc();
+    }, 300);
   };
   renderSearchList = () => {
     if (!this.state.searchList[0]) {
