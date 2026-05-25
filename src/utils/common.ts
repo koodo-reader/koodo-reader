@@ -1398,6 +1398,41 @@ export const splitSentences = (text: string, maxLength?: number) => {
 export const trimSpecialCharacters = (text: string) => {
   return text.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
 };
+export const checkReachPageEnd = (
+  nodeIndex: number,
+  nodeList: {
+    text: string;
+    voiceName: string;
+    voiceEngine: string;
+  }[],
+  visibleTextList: string[]
+) => {
+  if (visibleTextList.length === 0) return true;
+  let nodeTextList = nodeList.map((node) => node.text);
+  let lastMatchIndex = findLastMatchIndex(nodeTextList, visibleTextList);
+  console.log(lastMatchIndex, nodeIndex, "lastMatchIndex");
+  return lastMatchIndex === nodeIndex;
+};
+export const findLastMatchIndex = (a: string[], b: string[]) => {
+  let lastMatchIndex = -1;
+  let aIndex = 0;
+
+  for (let i = 0; i < b.length; i++) {
+    // 从当前 aIndex 开始在 a 中查找 b[i]
+    let found = false;
+    for (let j = aIndex; j < a.length; j++) {
+      if (a[j] === b[i]) {
+        lastMatchIndex = j;
+        aIndex = j + 1;
+        found = true;
+        break;
+      }
+    }
+    // 如果没找到，继续查找下一个 b 元素
+  }
+
+  return lastMatchIndex;
+};
 export const getICloudDrivePath = () => {
   if (!isElectron) return "";
   const fs = window.require("fs");
