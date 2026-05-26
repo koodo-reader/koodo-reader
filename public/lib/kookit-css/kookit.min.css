@@ -4,6 +4,12 @@ body {
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   -webkit-backface-visibility: hidden;
+  font-family:
+    "Times New Roman", "Georgia", "Garamond", Baskerville, "LXGW WenKai",
+    "LXGW WenKai GB", "LXGW WenKai Screen", "LXGW WenKai TC",
+    "LXGW WenKai Lite", SimSun, "宋体", "STSong", "Source Han Serif",
+    "Noto Serif CJK", "FangSong", "KaiTi", "楷体", "Hiragino Sans GB", "冬青黑",
+    "Microsoft YaHei", "微软雅黑", Helvetica, Tahoma, Arial, sans-serif;
 }
 p {
   margin-top: 1em;
@@ -26,7 +32,6 @@ blockquote {
   line-height: 1.6;
   word-spacing: 0px;
   letter-spacing: 0px;
-  text-indent: 2em;
   -webkit-hyphens: auto;
   hyphens: auto;
   -webkit-hyphenate-limit-before: 3;
@@ -54,20 +59,4 @@ title {
   font-size: 16px;
   widows: 1;
   orphans: 1;
-  font-family:
-    "LXGW WenKai", "LXGW WenKai GB", "LXGW WenKai Screen", "LXGW WenKai TC",
-    "LXGW WenKai Lite", SimSun, "宋体", "STSong", "Source Han Serif",
-    "Noto Serif CJK", "FangSong", "KaiTi", "楷体", "Hiragino Sans GB", "冬青黑",
-    "Microsoft YaHei", "微软雅黑", Helvetica, Tahoma, Arial, sans-serif;
-}
-:lang(en),
-:lang(fr),
-:lang(de),
-:lang(es),
-:lang(it),
-:lang(pt),
-:lang(ru) {
-  font-family:
-    "Times New Roman", "Georgia", "Garamond", Baskerville, Helvetica, Tahoma,
-    Arial, sans-serif;
 }
