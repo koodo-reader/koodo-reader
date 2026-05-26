@@ -253,6 +253,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? "sliding"
               : "",
           convertChinese: ConfigService.getReaderConfig("convertChinese"),
+          bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
           parserRegex: getParserRegex(
             this.props.currentBook.format,
             this.props.currentBook.key

@@ -25,6 +25,7 @@ class DropdownList extends React.Component<
       currentTextAlignValue: ConfigService.getReaderConfig("textAlign") || "",
       chineseConversionValue:
         ConfigService.getReaderConfig("convertChinese") || "",
+      currentBookLayoutValue: ConfigService.getReaderConfig("bookLayout") || "",
       fullTranslationModeValue: ConfigService.getAllListConfig(
         "fullTranslationBooks"
       ).includes(props.currentBook?.key)
@@ -157,6 +158,11 @@ class DropdownList extends React.Component<
         });
 
         break;
+      case "bookLayout":
+        this.setState({
+          currentBookLayoutValue: arr[0],
+        });
+        break;
       case "fullTranslationMode":
         this.setState({
           fullTranslationModeValue: arr[0],
@@ -239,15 +245,17 @@ class DropdownList extends React.Component<
                   ? this.state.currentTextAlignValue
                   : item.value === "convertChinese"
                     ? this.state.chineseConversionValue
-                    : item.value === "fullTranslationMode"
-                      ? this.state.fullTranslationModeValue
-                      : item.value === "textOrientation"
-                        ? this.state.currentTextOrientationValue
-                        : item.value === "fontFamily"
-                          ? this.state.currentFontFamilyValue
-                          : item.value === "selectAction"
-                            ? this.state.currentSelectActionValue
-                            : this.state.currentSubFontFamilyValue
+                    : item.value === "bookLayout"
+                      ? this.state.currentBookLayoutValue
+                      : item.value === "fullTranslationMode"
+                        ? this.state.fullTranslationModeValue
+                        : item.value === "textOrientation"
+                          ? this.state.currentTextOrientationValue
+                          : item.value === "fontFamily"
+                            ? this.state.currentFontFamilyValue
+                            : item.value === "selectAction"
+                              ? this.state.currentSelectActionValue
+                              : this.state.currentSubFontFamilyValue
             }
             onChange={(event) => {
               this.handleView(event, item.value);
