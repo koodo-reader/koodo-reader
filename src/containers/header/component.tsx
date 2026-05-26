@@ -589,16 +589,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.history.push("/manager/home");
         if (
           ConfigService.getReaderConfig("isFirstSync") !== "no" &&
-          ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes" &&
-          this.props.defaultSyncOption !== "webdav" &&
-          this.props.defaultSyncOption !== "ftp" &&
-          this.props.defaultSyncOption !== "sftp" &&
-          this.props.defaultSyncOption !== "smb" &&
-          this.props.defaultSyncOption !== "s3compatible" &&
-          this.props.defaultSyncOption !== "icloud" &&
-          this.props.defaultSyncOption !== "docker"
+          ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes"
         ) {
           ConfigService.setReaderConfig("isFirstSync", "no");
+          let config = await getCloudConfig(
+            ConfigService.getItem("defaultSyncOption") || ""
+          );
+          if (
+            config.url &&
+            (config.url.includes("192.168.") ||
+              config.url.includes("127.0.0.1") ||
+              config.url.includes("localhost"))
+          ) {
+            return;
+          }
           let result = await vexComfirmAsync(
             `<h3>${this.props.t("Enable Koodo Sync")}</h3><p>${
               this.props.t(
