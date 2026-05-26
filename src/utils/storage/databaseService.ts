@@ -291,7 +291,29 @@ class DatabaseService {
       return records;
     } else {
       let records = await this.getAllRecords(dbName);
+      console.log(records, dbName, "records");
       return records.filter((record) => bookKeys.includes(record.bookKey));
+    }
+  }
+  static async getRecordsByKeys(
+    keys: string[],
+    dbName: string
+  ): Promise<any[]> {
+    if (isElectron) {
+      let records = await window
+        .require("electron")
+        .ipcRenderer.invoke("database-command", {
+          statement: "getByKeysStatement",
+          statementType: "function",
+          executeType: "all",
+          dbName: dbName,
+          data: keys,
+          storagePath: getStorageLocation(),
+        });
+      return records;
+    } else {
+      let records = await this.getAllRecords(dbName);
+      return records.filter((record) => keys.includes(record.key));
     }
   }
   static async updateAllRecords(
