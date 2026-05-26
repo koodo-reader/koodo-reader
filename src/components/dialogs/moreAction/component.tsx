@@ -277,6 +277,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                           : "",
                       convertChinese:
                         ConfigService.getReaderConfig("convertChinese"),
+                      bookLayout: ConfigService.getReaderConfig("bookLayout"),
                       fullTranslationMode: "no",
                       textOrientation:
                         ConfigService.getReaderConfig("textOrientation"),
