@@ -635,6 +635,53 @@ const escapeHTML = (str: string): string => {
     .replace(/\n/g, "<br />");
 };
 
+const preparePDFExportFrame = async (
+  htmlContent: string
+): Promise<HTMLIFrameElement> => {
+  const iframe = document.createElement("iframe");
+  iframe.setAttribute("aria-hidden", "true");
+  iframe.style.cssText = [
+    "position:fixed",
+    "left:-10000px",
+    "top:0",
+    "width:940px",
+    "height:1px",
+    "border:0",
+    "opacity:0",
+    "pointer-events:none",
+    "background:#fff",
+  ].join(";");
+  document.body.appendChild(iframe);
+
+  const iframeDoc = iframe.contentDocument;
+  const iframeWin = iframe.contentWindow;
+
+  if (!iframeDoc || !iframeWin) {
+    document.body.removeChild(iframe);
+    throw new Error("Failed to create PDF export frame");
+  }
+
+  iframeDoc.open();
+  iframeDoc.write(htmlContent);
+  iframeDoc.close();
+
+  if (iframeDoc.fonts?.ready) {
+    await iframeDoc.fonts.ready;
+  }
+
+  await new Promise<void>((resolve) => {
+    iframeWin.requestAnimationFrame(() => resolve());
+  });
+
+  const frameHeight = Math.max(
+    iframeDoc.documentElement.scrollHeight,
+    iframeDoc.body.scrollHeight
+  );
+  iframe.style.height = `${Math.max(frameHeight, 1)}px`;
+
+  return iframe;
+};
+
 // 将 HTML 内容渲染为 PDF 并返回 Blob；库不可用时 fallback 为 HTML Blob
 const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
   const jsPDFLib = (window as any).jspdf;
@@ -644,21 +691,13 @@ const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
     return new Blob([htmlContent], { type: "text/html,charset=UTF-8" });
   }
 
-  const container = document.createElement("div");
-  container.style.cssText = [
-    "position:fixed",
-    "left:-9999px",
-    "top:0",
-    "width:860px",
-    "background:#fff",
-    "padding:40px",
-    "box-sizing:border-box",
-    "font-family:Georgia,serif",
-    "color:#222",
-    "line-height:1.7",
-  ].join(";");
-  container.innerHTML = htmlContent;
-  document.body.appendChild(container);
+  const iframe = await preparePDFExportFrame(htmlContent);
+  const iframeDoc = iframe.contentDocument;
+
+  if (!iframeDoc) {
+    document.body.removeChild(iframe);
+    throw new Error("Failed to access PDF export frame");
+  }
 
   try {
     const { jsPDF } = jsPDFLib;
@@ -666,11 +705,23 @@ const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
     const a4HeightMm = 297;
     const margin = 10;
 
-    const canvas = await html2canvas(container, {
+    const captureTarget = iframeDoc.body;
+    const captureWidth = Math.max(
+      iframeDoc.documentElement.scrollWidth,
+      captureTarget.scrollWidth,
+      940
+    );
+    const captureHeight = Math.max(
+      iframeDoc.documentElement.scrollHeight,
+      captureTarget.scrollHeight
+    );
+
+    const canvas = await html2canvas(captureTarget, {
       scale: 2,
       useCORS: true,
       backgroundColor: "#ffffff",
-      windowWidth: 860 + 80,
+      windowWidth: captureWidth,
+      windowHeight: captureHeight,
     });
 
     const imgWidthMm = a4WidthMm - margin * 2;
@@ -723,7 +774,7 @@ const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
 
     return doc.output("blob");
   } finally {
-    document.body.removeChild(container);
+    document.body.removeChild(iframe);
   }
 };
 
