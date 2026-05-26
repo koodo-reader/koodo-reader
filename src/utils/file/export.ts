@@ -249,6 +249,7 @@ export const exportHighlights = async (
   books: Book[],
   format: "csv" | "md" | "txt" | "html" | "pdf" = "csv"
 ) => {
+  console.log(highlights, books, format);
   let data = highlights.map((item) => {
     let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
     let bookName = book ? book.name : "Unknown book";
@@ -295,11 +296,15 @@ export const exportHighlights = async (
 
   if (bookNames.length > 1 && format === "pdf") {
     const zip = new JSZip();
-    const allPdfBlob = await generateHTMLAsPDFBlob(convertHighlightsToHTML(data));
+    const allPdfBlob = await generateHTMLAsPDFBlob(
+      convertHighlightsToHTML(data)
+    );
     zip.file("all.pdf", allPdfBlob);
     const bookMap = groupByBook(data);
     for (const [bookName, bookData] of Object.entries(bookMap)) {
-      const blob = await generateHTMLAsPDFBlob(convertHighlightsToHTML(bookData));
+      const blob = await generateHTMLAsPDFBlob(
+        convertHighlightsToHTML(bookData)
+      );
       zip.file(`${sanitizeFileName(bookName)}.pdf`, blob);
     }
     saveAs(
@@ -671,7 +676,11 @@ const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
     const imgWidthMm = a4WidthMm - margin * 2;
     const imgHeightMm = (canvas.height * imgWidthMm) / canvas.width;
 
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
     const pageContentHeight = a4HeightMm - margin * 2;
     let remainingHeight = imgHeightMm;
     let sourceY = 0;
@@ -688,13 +697,23 @@ const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
       if (ctx) {
         ctx.drawImage(
           canvas,
-          0, Math.round(srcYpx), canvas.width, Math.round(srcHpx),
-          0, 0, canvas.width, Math.round(srcHpx)
+          0,
+          Math.round(srcYpx),
+          canvas.width,
+          Math.round(srcHpx),
+          0,
+          0,
+          canvas.width,
+          Math.round(srcHpx)
         );
       }
       doc.addImage(
         pageCanvas.toDataURL("image/jpeg", 0.92),
-        "JPEG", margin, margin, imgWidthMm, sliceHeight
+        "JPEG",
+        margin,
+        margin,
+        imgWidthMm,
+        sliceHeight
       );
 
       remainingHeight -= sliceHeight;
