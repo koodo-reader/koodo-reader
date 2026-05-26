@@ -887,6 +887,7 @@
   "Custom book style (CSS)": "自定义图书样式（CSS）",
   "Auto sync notes and highlights to local markdown files": "自动将新添加的笔记和高亮同步到本地 Markdown 文件",
   "Book layout": "图书排版",
+  "Recommended layout": "推荐排版",
   "Suitable for Obsidian, Siyuan, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ": "适用于 Obsidian、思源、Joplin 等基于 Markdown 的笔记应用。每本书将单独保存为一个 Markdown 文件，文件名为《书名.md》，存放在指定文件夹中。",
   "Markdown Sync Folder": "Markdown 同步文件夹",
   "Enter the folder path to save markdown files": "请输入用于保存 Markdown 文件的文件夹路径",

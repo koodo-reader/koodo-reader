@@ -6,6 +6,7 @@ export const dropdownList = [
     value: "bookLayout",
     option: [
       { label: "Default", value: "" },
+      { label: "Recommended layout", value: "kookit" },
       {
         label: "赫蹏",
         value: "heti",
