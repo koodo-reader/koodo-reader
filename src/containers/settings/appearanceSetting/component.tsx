@@ -86,8 +86,18 @@ class AppearanceSetting extends React.Component<
     this.handleRest(nextValue);
   };
 
+  syncNativeThemeSource = (skin: string) => {
+    if (!isElectron) {
+      return;
+    }
+    window
+      .require("electron")
+      .ipcRenderer.invoke("set-native-theme-source", skin || "system");
+  };
+
   changeSkin = (skin: string) => {
     ConfigService.setReaderConfig("appSkin", skin);
+    this.syncNativeThemeSource(skin);
 
     if (
       skin === "night" ||
