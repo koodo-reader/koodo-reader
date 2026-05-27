@@ -921,7 +921,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.userInfo.type === "trial" &&
         this.props.userInfo.valid_until >
           new Date().getTime() / 1000 + 3 * 24 * 3600 ? (
-          <div className="header-report-container">
+          <div className="header-report-container" style={{ right: "200px" }}>
             <span
               data-tooltip-id="my-tooltip"
               data-tooltip-content={i18n.t("Your trial will expire in", {
