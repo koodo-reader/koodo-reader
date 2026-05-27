@@ -522,6 +522,21 @@ const removePickerUtil = (config) => {
     pickerUtilCache[config.service] = null;
   }
 };
+const getNativeThemeSource = (appSkin) => {
+  if (appSkin === "night") {
+    return "dark";
+  }
+  if (appSkin === "light") {
+    return "light";
+  }
+  return "system";
+};
+const applyNativeThemeSource = (appSkin) => {
+  nativeTheme.themeSource = getNativeThemeSource(appSkin);
+  store.set("appSkin", appSkin || "system");
+  return nativeTheme.shouldUseDarkColors;
+};
+applyNativeThemeSource(store.get("appSkin"));
 // Simple encryption function
 const encrypt = (text, key) => {
   let result = "";
@@ -1626,7 +1641,13 @@ const createMainWin = () => {
     event.returnValue = __dirname;
   });
   ipcMain.on("system-color", (event, arg) => {
-    event.returnValue = nativeTheme.shouldUseDarkColors || false;
+    event.returnValue =
+      (nativeTheme.shouldUseDarkColorsForSystemIntegratedUI ??
+        nativeTheme.shouldUseDarkColors) ||
+      false;
+  });
+  ipcMain.handle("set-native-theme-source", (event, appSkin) => {
+    return applyNativeThemeSource(appSkin);
   });
   ipcMain.on("check-main-open", (event, arg) => {
     event.returnValue = mainWin ? true : false;
