@@ -915,7 +915,7 @@
   "Enter your Readwise access token": "Enter your Readwise access token",
   "Custom book style (CSS)": "Custom book style (CSS)",
   "Auto sync notes and highlights to local markdown files": "Auto sync notes and highlights to local markdown files",
-  "Suitable for Obsidian, Siyuan, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ": "Suitable for Obsidian, Siyuan, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ",
+  "Suitable for Obsidian, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ": "Suitable for Obsidian, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ",
   "Markdown Sync Folder": "Markdown Sync Folder",
   "Enter the folder path to save markdown files": "Enter the folder path to save markdown files",
   "Current version": "Current version",

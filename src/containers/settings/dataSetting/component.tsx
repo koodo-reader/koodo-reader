@@ -59,6 +59,8 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         ConfigService.getReaderConfig("isEnableAnkiSync") === "yes",
       isEnableImaSync:
         ConfigService.getReaderConfig("isEnableImaSync") === "yes",
+      isEnableSiYuanSync:
+        ConfigService.getReaderConfig("isEnableSiYuanSync") === "yes",
     };
   }
   async componentDidMount() {
