@@ -1,6 +1,6 @@
 ﻿import Plugin from "../models/Plugin";
 import { isElectron } from "react-device-detect";
-import SparkMD5 from "spark-md5";
+import CryptoJS from "crypto-js";
 import {
   CommonTool,
   ConfigService,
@@ -54,19 +54,29 @@ export const supportedFormats = [
 ];
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      const arrayBuffer = event.target?.result as ArrayBuffer;
-      const md5Hash = SparkMD5.ArrayBuffer.hash(arrayBuffer);
-      resolve(md5Hash);
-    };
-
-    reader.onerror = (error) => {
-      reject(error);
-    };
-
-    reader.readAsArrayBuffer(file);
+    if (isElectron) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const arrayBuffer = event.target?.result as ArrayBuffer;
+        const crypto = window.require("crypto");
+        const hash = crypto.createHash("md5");
+        hash.update(Buffer.from(arrayBuffer));
+        resolve(hash.digest("hex"));
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsArrayBuffer(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const arrayBuffer = event.target?.result as ArrayBuffer;
+        const wordArray = CryptoJS.lib.WordArray.create(
+          new Uint8Array(arrayBuffer) as any
+        );
+        resolve(CryptoJS.MD5(wordArray).toString());
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsArrayBuffer(file);
+    }
   });
 };
 export const vexPromptAsync = (message, placeholder = "", value = "") => {

@@ -1,4 +1,3 @@
-import SparkMD5 from "spark-md5";
 import {
   ConfigService,
   TokenService,
@@ -300,7 +299,7 @@ export const verifyAndBuildKOReaderSyncConfig = async (params: {
     serverUrl: normalizeServerUrl(params.serverUrl),
     username: (params.username || "").trim(),
     passwordHash: (params.password || "").trim()
-      ? SparkMD5.hash((params.password || "").trim())
+      ? CryptoJS.MD5((params.password || "").trim()).toString()
       : (params.passwordHash || "").trim(),
   };
   if (!config.serverUrl || !config.username || !config.passwordHash) {
