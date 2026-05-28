@@ -15,10 +15,13 @@ import {
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 import { LocalFileManager } from "../../../utils/file/localFile";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  TokenService,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import { changeLibrary, changePath } from "../../../utils/file/common";
 import { getSnapshots } from "../../../utils/file/backup";
-import { verifyAndBuildKOReaderSyncConfig } from "../../../utils/file/koReaderSync";
+import KOReaderUtil from "../../../utils/file/koReaderSync";
 import { restoreFromSnapshot } from "../../../utils/file/restore";
 import {
   exportBooks,
@@ -155,15 +158,21 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       toast.loading(this.props.t("Validating server info..."), {
         id: "ko-reader-sync",
       });
-      const verifiedConfig = await verifyAndBuildKOReaderSyncConfig({
-        serverUrl: result.serverUrl,
-        username: result.username,
-        password: result.password,
-        passwordHash:
-          !result.password && savedConfig.username === result.username
-            ? savedConfig.passwordHash
-            : "",
-      });
+      const koReaderUtil = new KOReaderUtil(
+        ConfigService,
+        TokenService,
+        DatabaseService
+      );
+      const verifiedConfig =
+        await koReaderUtil.verifyAndBuildKOReaderSyncConfig({
+          serverUrl: result.serverUrl,
+          username: result.username,
+          password: result.password,
+          passwordHash:
+            !result.password && savedConfig.username === result.username
+              ? savedConfig.passwordHash
+              : "",
+        });
       ConfigService.setObjectConfig(
         "koReaderSyncConfig",
         verifiedConfig,

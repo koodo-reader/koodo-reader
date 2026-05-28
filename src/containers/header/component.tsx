@@ -26,10 +26,7 @@ import ConfigUtil from "../../utils/file/configUtil";
 import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
-import {
-  isKOReaderSyncEnabled,
-  syncKOReaderProgress,
-} from "../../utils/file/koReaderSync";
+import KOReaderUtil from "../../utils/file/koReaderSync";
 import {
   addChatBox,
   checkBrokenDatabase,
@@ -371,7 +368,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.setState({ isSync: false });
   };
   handleKOReaderSync = async () => {
-    if (!isKOReaderSyncEnabled()) {
+    if (ConfigService.getReaderConfig("isEnableKoReaderSync") !== "yes") {
       return;
     }
 
@@ -380,7 +377,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       position: "bottom-center",
     });
     try {
-      const summary = await syncKOReaderProgress();
+      const koReaderUtil = new KOReaderUtil(
+        ConfigService,
+        TokenService,
+        DatabaseService
+      );
+      const summary = await koReaderUtil.syncKOReaderProgress();
       if (summary.pulledBooks > 0 || summary.pushedBooks > 0) {
         this.props.handleFetchBooks();
       }
