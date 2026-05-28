@@ -1620,3 +1620,85 @@ export const langToName = (lang: string) => {
     );
   }
 };
+export const getBookPartialMd5 = async (book: Book) => {
+  if (isElectron) {
+    const fs = window.require("fs");
+    const crypto = window.require("crypto");
+    function partialMD5(filepath) {
+      if (!filepath) return;
+
+      try {
+        const fd = fs.openSync(filepath, "r");
+        const step = 1024;
+        const size = 1024;
+        const hash = crypto.createHash("md5");
+        const buffer = Buffer.alloc(size);
+
+        for (let i = -1; i <= 10; i++) {
+          const position = step << (2 * i);
+
+          try {
+            const bytesRead = fs.readSync(fd, buffer, 0, size, position);
+            if (bytesRead > 0) {
+              hash.update(buffer.slice(0, bytesRead));
+            } else {
+              break;
+            }
+          } catch (err) {
+            break;
+          }
+        }
+
+        fs.closeSync(fd);
+        return hash.digest("hex");
+      } catch (err) {
+        return;
+      }
+    }
+    let filePath = BookUtil.getBookPath(book);
+    if (!filePath) {
+      return null;
+    }
+    return partialMD5(filePath);
+  } else {
+    function partialMD5(arrayBuffer) {
+      if (!arrayBuffer) return;
+
+      const step = 1024;
+      const size = 1024;
+      const fileSize = arrayBuffer.byteLength;
+      const hash = CryptoJS.algo.MD5.create();
+
+      for (let i = -1; i <= 10; i++) {
+        const position = step << (2 * i);
+
+        if (position >= fileSize) {
+          break;
+        }
+
+        const endPosition = Math.min(position + size, fileSize);
+        const chunk = arrayBuffer.slice(position, endPosition);
+
+        if (chunk.byteLength > 0) {
+          // 将 ArrayBuffer 转换为 WordArray
+          const wordArray = CryptoJS.lib.WordArray.create(
+            new Uint8Array(chunk)
+          );
+          hash.update(wordArray);
+        } else {
+          break;
+        }
+      }
+
+      return hash.finalize().toString();
+    }
+    let bookBuffer = await BookUtil.fetchBook(
+      book.key,
+      book.format.toLowerCase(),
+      true,
+      book.path
+    );
+    const md5 = partialMD5(bookBuffer);
+    return md5;
+  }
+};
