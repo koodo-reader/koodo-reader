@@ -7,6 +7,7 @@ import {
   ConfigService,
   KookitConfig,
   TokenService,
+  KOReaderUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restoreFromConfigJson } from "../../utils/file/restore";
@@ -26,12 +27,12 @@ import ConfigUtil from "../../utils/file/configUtil";
 import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
-import KOReaderUtil from "../../utils/file/koReaderSync";
 import {
   addChatBox,
   checkBrokenDatabase,
   checkMissingBook,
   generateSyncRecord,
+  getBookPartialMd5,
   getChatLocale,
   getTaskStats,
   getWebsiteUrl,
@@ -382,7 +383,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         TokenService,
         DatabaseService
       );
-      const summary = await koReaderUtil.syncKOReaderProgress();
+      const summary =
+        await koReaderUtil.syncKOReaderProgress(getBookPartialMd5);
       if (summary.pulledBooks > 0 || summary.pushedBooks > 0) {
         this.props.handleFetchBooks();
       }
