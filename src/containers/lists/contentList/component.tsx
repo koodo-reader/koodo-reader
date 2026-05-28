@@ -125,6 +125,12 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     );
   }
   async handleJump(item: any) {
+    const prevPosition = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
+    );
+    this.props.handleJumpPosition(prevPosition);
     await this.props.htmlBook.rendition.goToChapter(
       item.index,
       item.href,

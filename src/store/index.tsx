@@ -125,6 +125,7 @@ export type stateType = {
     quoteText: string;
     htmlBook: HtmlBookModel;
     readerBackgroundImage: string;
+    jumpPosition: object | null;
   };
   sidebar: {
     mode: string;
