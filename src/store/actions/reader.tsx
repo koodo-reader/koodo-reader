@@ -49,6 +49,9 @@ export function handleCurrentChapter(currentChapter: string) {
 export function handleCurrentChapterIndex(currentChapterIndex: number) {
   return { type: "HANDLE_CURRENT_CHAPTER_INDEX", payload: currentChapterIndex };
 }
+export function handleJumpPosition(jumpPosition: object | null) {
+  return { type: "HANDLE_JUMP_POSITION", payload: jumpPosition };
+}
 export function handleChapters(chapters: any) {
   return { type: "HANDLE_CHAPTERS", payload: chapters };
 }

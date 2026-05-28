@@ -9,6 +9,7 @@ export interface ContentListProps {
   renderBookFunc: (id: string) => void;
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
+  handleJumpPosition: (jumpPosition: object | null) => void;
 }
 export interface ContentListState {
   chapters: any;

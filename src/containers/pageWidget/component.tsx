@@ -1,6 +1,6 @@
 import React from "react";
-import "./background.css";
-import { BackgroundProps, BackgroundState } from "./interface";
+import "./pageWidget.css";
+import { PageWidgetProps, PageWidgetState } from "./interface";
 import {
   ConfigService,
   KookitConfig,
@@ -9,7 +9,7 @@ import { Trans } from "react-i18next";
 import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
 import { detectLocalLanguage } from "../../utils/common";
 import toast from "react-hot-toast";
-class Background extends React.Component<BackgroundProps, BackgroundState> {
+class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
   isFirst: Boolean;
   timeInterval: any;
   lastBatchTranslationTriggerAt: number;
@@ -22,6 +22,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       nextPage: 0,
       currentTime: this.getFormattedTime(),
       percentage: "",
+      ignoreNextPageChange: false,
     };
     this.isFirst = true;
     this.lastBatchTranslationTriggerAt = 0;
@@ -49,12 +50,17 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     }
   }
 
-  async UNSAFE_componentWillReceiveProps(nextProps: BackgroundProps) {
+  async UNSAFE_componentWillReceiveProps(nextProps: PageWidgetProps) {
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
         await this.handleBatchTranslation(nextProps.htmlBook.rendition);
+        if (this.state.ignoreNextPageChange) {
+          this.setState({ ignoreNextPageChange: false });
+        } else {
+          this.props.handleJumpPosition(null);
+        }
       });
       nextProps.htmlBook.rendition.on("rendered", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
@@ -64,6 +70,12 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
     }
     if (nextProps.readerMode !== this.props.readerMode) {
       this.setState({ isSingle: nextProps.readerMode !== "double" });
+    }
+    if (
+      nextProps.jumpPosition !== this.props.jumpPosition &&
+      nextProps.jumpPosition !== null
+    ) {
+      this.setState({ ignoreNextPageChange: true });
     }
   }
   async handleBatchTranslation(rendition) {
@@ -296,9 +308,27 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
             )}
           </>
         )}
+        {this.props.jumpPosition && (
+          <div className="jump-return-button-container">
+            <button
+              className="jump-return-button"
+              onClick={async () => {
+                if (this.props.jumpPosition && this.props.htmlBook) {
+                  this.setState({ ignoreNextPageChange: true });
+                  await this.props.htmlBook.rendition.goToPosition(
+                    JSON.stringify(this.props.jumpPosition)
+                  );
+                  this.props.handleJumpPosition(null);
+                }
+              }}
+            >
+              {this.props.t("Return")}
+            </button>
+          </div>
+        )}
       </div>
     );
   }
 }
 
-export default Background;
+export default PageWidget;
