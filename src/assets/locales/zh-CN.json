@@ -889,7 +889,7 @@
   "Enter your IMA API key": "请输入您的 IMA API Key",
   "IMA Client ID": "IMA Client ID",
   "Enter your IMA Client ID": "请输入您的 IMA Client ID",
-  "Auto sync notes and highlights to SiYuan": "自动同步笔记和高亮到思源",
+  "Auto sync notes and highlights to SiYuan": "自动将新添加的笔记和高亮同步到思源笔记",
   "Please enable network serving in SiYuan - Settings - About, and make sure SiYuan is running when syncing": "请在思源笔记中设置-关于-启用网络伺服，并确保同步时思源正在运行",
   "SiYuan Server URL": "思源服务器URL",
   "e.g. http://127.0.0.1:6806": "例如 http://127.0.0.1:6806",
