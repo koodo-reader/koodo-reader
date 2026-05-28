@@ -904,7 +904,7 @@
   "Enter your Readwise access token": "Wpisz swój Readwise access token",
   "Custom book style (CSS)": "Własny styl książki (CSS)",
   "Auto sync notes and highlights to local markdown files": "Auto synchronizacja notatek i podświetleń do lokalnych plików markdown",
-  "Suitable for Obsidian, Siyuan, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ": "Odpowiedni dla Obsidian, Siyuan, Joplin i innych aplikacji do tworzenia notatek opartych na markdown. Każda książka będzie osobnym plikiem markdown o nazwie 'Book Name.md' w określonym folderze. ",
+  "Suitable for Obsidian, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ": "Odpowiedni dla Obsidian, Siyuan, Joplin i innych aplikacji do tworzenia notatek opartych na markdown. Każda książka będzie osobnym plikiem markdown o nazwie 'Book Name.md' w określonym folderze. ",
   "Markdown Sync Folder": "Folder synchronizacji Markdown",
   "Enter the folder path to save markdown files": "Wpisz ścieżkę folderu do zapisywania plików markdown",
   "Current version": "Obecna wersja",
