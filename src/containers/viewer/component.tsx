@@ -28,7 +28,6 @@ import { ocrTesseractLangList } from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
 import { getOcrResult } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
-import { isKOReaderSyncEnabled } from "../../utils/file/koReaderSync";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -379,7 +378,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       {}
     );
     if (chapterDocs.length > 0) {
-      if (isKOReaderSyncEnabled() && bookLocation.xpath) {
+      if (
+        ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes" &&
+        bookLocation.xpath
+      ) {
         await rendition.goToXpath(bookLocation.xpath);
       } else {
         await rendition.goToPosition(
