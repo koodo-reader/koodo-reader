@@ -185,6 +185,26 @@ export const noteSyncSettingList = [
     authConfigKey: "readwiseSyncConfig",
   },
   {
+    isElectron: false,
+    title: "Auto sync notes and highlights to IMA",
+    desc: "",
+    propName: "isEnableImaSync",
+    requiresAuth: true,
+    authFields: [
+      {
+        key: "apiKey",
+        label: "IMA API Key",
+        placeholder: "Enter your IMA API key",
+      },
+      {
+        key: "clientId",
+        label: "IMA Client ID",
+        placeholder: "Enter your IMA Client ID",
+      },
+    ],
+    authConfigKey: "imaSyncConfig",
+  },
+  {
     isElectron: true,
     title: "Auto sync notes and highlights to local markdown files",
     desc: "Suitable for Obsidian, Siyuan, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ",
