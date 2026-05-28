@@ -17,11 +17,11 @@ import { isElectron } from "react-device-detect";
 import { LocalFileManager } from "../../../utils/file/localFile";
 import {
   ConfigService,
+  KOReaderUtil,
   TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { changeLibrary, changePath } from "../../../utils/file/common";
 import { getSnapshots } from "../../../utils/file/backup";
-import KOReaderUtil from "../../../utils/file/koReaderSync";
 import { restoreFromSnapshot } from "../../../utils/file/restore";
 import {
   exportBooks,
