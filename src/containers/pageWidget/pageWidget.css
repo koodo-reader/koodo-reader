@@ -140,11 +140,11 @@
   z-index: 1;
 }
 .jump-return-button-container {
-  position: absolute;
+  position: fixed;
   bottom: 45px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100;
+  z-index: 10;
   pointer-events: all;
 }
 .jump-return-button {
