@@ -17,7 +17,10 @@ import {
   vexComfirmAsync,
   parseColorInput,
 } from "../../../utils/common";
-import { applyCustomSystemCSS } from "../../../utils/reader/launchUtil";
+import {
+  applyCustomSystemCSS,
+  syncNativeThemeSource,
+} from "../../../utils/reader/launchUtil";
 
 class AppearanceSetting extends React.Component<
   SettingInfoProps,
@@ -88,6 +91,7 @@ class AppearanceSetting extends React.Component<
 
   changeSkin = (skin: string) => {
     ConfigService.setReaderConfig("appSkin", skin);
+    syncNativeThemeSource(skin);
 
     if (
       skin === "night" ||

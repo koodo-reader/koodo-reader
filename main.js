@@ -8,7 +8,7 @@ const {
   ipcMain,
   dialog,
   powerSaveBlocker,
-  nativeTheme,
+  nativeTheme: electronNativeTheme,
   protocol,
   screen,
   systemPreferences,
@@ -522,6 +522,33 @@ const removePickerUtil = (config) => {
     pickerUtilCache[config.service] = null;
   }
 };
+const getNativeThemeSource = (appSkin) => {
+  if (appSkin === "night") {
+    return "dark";
+  }
+  if (appSkin === "light") {
+    return "light";
+  }
+  return "system";
+};
+const getNativeDarkColorStatus = () => {
+  if (
+    typeof electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI !==
+    "undefined"
+  ) {
+    return electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI;
+  }
+  return electronNativeTheme.shouldUseDarkColors;
+};
+const applyNativeThemeSource = (appSkin) => {
+  if (process.type !== "browser") {
+    return false;
+  }
+  electronNativeTheme.themeSource = getNativeThemeSource(appSkin);
+  store.set("appSkin", appSkin || "system");
+  return getNativeDarkColorStatus();
+};
+applyNativeThemeSource(store.get("appSkin"));
 // Simple encryption function
 const encrypt = (text, key) => {
   let result = "";
@@ -1626,7 +1653,10 @@ const createMainWin = () => {
     event.returnValue = __dirname;
   });
   ipcMain.on("system-color", (event, arg) => {
-    event.returnValue = nativeTheme.shouldUseDarkColors || false;
+    event.returnValue = getNativeDarkColorStatus() || false;
+  });
+  ipcMain.handle("set-native-theme-source", (event, appSkin) => {
+    return applyNativeThemeSource(appSkin);
   });
   ipcMain.on("check-main-open", (event, arg) => {
     event.returnValue = mainWin ? true : false;

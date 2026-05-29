@@ -8,6 +8,15 @@ import {
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../package.json";
 import BackgroundUtil from "../file/backgroundUtil";
+
+export const syncNativeThemeSource = (appSkin: string) => {
+  if (!isElectron) {
+    return;
+  }
+  const { ipcRenderer } = window.require("electron");
+  ipcRenderer.invoke("set-native-theme-source", appSkin || "system");
+};
+
 export const initTheme = () => {
   const style = document.createElement("link");
   style.rel = "stylesheet";
@@ -34,6 +43,7 @@ export const initTheme = () => {
     if (isNight) {
     }
   }
+  syncNativeThemeSource(ConfigService.getReaderConfig("appSkin"));
 
   if (
     ConfigService.getReaderConfig("appSkin") === "night" ||
