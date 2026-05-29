@@ -63,10 +63,12 @@ class CoverUtil {
     } else {
       if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
         let coverList = await this.getLocalCoverList();
+        console.log(coverList, "coverList");
         if (!coverList || coverList.length === 0) {
           return book.cover;
         }
         let cover = coverList.find((item) => item.startsWith(book.key));
+        console.log(cover, "cover", book);
         if (!cover) {
           return book.cover;
         }
