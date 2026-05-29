@@ -8,7 +8,7 @@ const {
   ipcMain,
   dialog,
   powerSaveBlocker,
-  nativeTheme,
+  nativeTheme: electronNativeTheme,
   protocol,
   screen,
   systemPreferences,
@@ -531,10 +531,22 @@ const getNativeThemeSource = (appSkin) => {
   }
   return "system";
 };
+const getNativeDarkColorStatus = () => {
+  if (
+    typeof electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI !==
+    "undefined"
+  ) {
+    return electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI;
+  }
+  return electronNativeTheme.shouldUseDarkColors;
+};
 const applyNativeThemeSource = (appSkin) => {
-  nativeTheme.themeSource = getNativeThemeSource(appSkin);
+  if (process.type !== "browser") {
+    return false;
+  }
+  electronNativeTheme.themeSource = getNativeThemeSource(appSkin);
   store.set("appSkin", appSkin || "system");
-  return nativeTheme.shouldUseDarkColors;
+  return getNativeDarkColorStatus();
 };
 applyNativeThemeSource(store.get("appSkin"));
 // Simple encryption function
@@ -1641,10 +1653,7 @@ const createMainWin = () => {
     event.returnValue = __dirname;
   });
   ipcMain.on("system-color", (event, arg) => {
-    event.returnValue =
-      (nativeTheme.shouldUseDarkColorsForSystemIntegratedUI ??
-        nativeTheme.shouldUseDarkColors) ||
-      false;
+    event.returnValue = getNativeDarkColorStatus() || false;
   });
   ipcMain.handle("set-native-theme-source", (event, appSkin) => {
     return applyNativeThemeSource(appSkin);

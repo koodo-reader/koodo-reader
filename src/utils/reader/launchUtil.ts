@@ -9,7 +9,7 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../package.json";
 import BackgroundUtil from "../file/backgroundUtil";
 
-const syncNativeThemeSource = (appSkin: string) => {
+export const syncNativeThemeSource = (appSkin: string) => {
   if (!isElectron) {
     return;
   }
