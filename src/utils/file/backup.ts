@@ -386,6 +386,9 @@ export const zipCover = async (zip: any) => {
   } else {
     for (let i = 0; i < books.length; i++) {
       let cover = await CoverUtil.getCover(books[i]);
+      if (!cover) {
+        continue;
+      }
       const result = await CoverUtil.convertCoverBase64(cover);
       coverZip.file(`${books[i].key}.${result.extension}`, result.arrayBuffer);
     }

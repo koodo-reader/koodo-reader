@@ -177,16 +177,7 @@ class BackupDialog extends React.Component<
             <div className="backup-page-backup">
               <span
                 className="icon-restore"
-                onClick={(event) => {
-                  if (!isElectron) {
-                    event.preventDefault();
-                    toast(
-                      this.props.t(
-                        "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-                      )
-                    );
-                    return;
-                  }
+                onClick={() => {
                   this.setState({ isBackup: "no" });
                   this.handleRestore();
                 }}
