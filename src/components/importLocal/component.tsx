@@ -19,6 +19,7 @@ import {
   calculateFileMD5,
   fetchFileFromPath,
   supportedFormats,
+  vexPromptAsync,
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit.min";
@@ -358,6 +359,86 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.setState({ isMoreOptionsVisible: false });
     this.props.handleOPDSDialog(true);
   };
+
+  // Handle URL import
+  handleURLImport = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    this.setState({ isMoreOptionsVisible: false });
+    const url = await vexPromptAsync(
+      this.props.t("Enter book download URL (http/https)"),
+      "https://"
+    );
+    if (!url || typeof url !== "string") return;
+    const trimmedUrl = (url as string).trim();
+    if (
+      !trimmedUrl.startsWith("http://") &&
+      !trimmedUrl.startsWith("https://")
+    ) {
+      toast.error(this.props.t("Please enter a valid http or https URL"));
+      return;
+    }
+    let fileName = decodeURIComponent(
+      trimmedUrl.split("?")[0].split("/").pop() || "book"
+    );
+    if (!fileName.includes(".")) {
+      fileName = fileName + ".epub";
+    }
+    const ext = "." + fileName.split(".").pop()?.toLowerCase();
+    if (!supportedFormats.includes(ext)) {
+      toast.error(this.props.t("Unsupported file format") + ": " + ext);
+      return;
+    }
+    const toastId = "url-download";
+    toast.loading(this.props.t("Downloading") + ": 0%", { id: toastId });
+    try {
+      const response = await fetch(trimmedUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const contentLength = response.headers.get("content-length");
+      const total = contentLength ? parseInt(contentLength, 10) : 0;
+      const reader = response.body!.getReader();
+      const chunks: Uint8Array[] = [];
+      let received = 0;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        received += value.length;
+        if (total > 0) {
+          const percent = Math.round((received / total) * 100);
+          toast.loading(this.props.t("Downloading") + ": " + percent + "%", {
+            id: toastId,
+          });
+        } else {
+          toast.loading(
+            this.props.t("Downloading") +
+              ": " +
+              (received / 1024).toFixed(1) +
+              " KB",
+            { id: toastId }
+          );
+        }
+      }
+      toast.dismiss(toastId);
+      const arrayBuffer = new Uint8Array(received);
+      let offset = 0;
+      for (const chunk of chunks) {
+        arrayBuffer.set(chunk, offset);
+        offset += chunk.length;
+      }
+      const blob = new Blob([arrayBuffer.buffer]);
+      const file: any = new File([blob], fileName);
+      await this.getMd5WithBrowser(file);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(this.props.t("Import failed") + ": " + errorMessage, {
+        id: toastId,
+      });
+      console.error("URL import error:", error);
+    }
+  };
   render() {
     return (
       <Dropzone
@@ -567,6 +648,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     >
                       <span className="more-option-text">
                         <Trans>From OPDS</Trans>
+                      </span>
+                    </div>
+                    <div
+                      className="more-option-item"
+                      onClick={this.handleURLImport}
+                    >
+                      <span className="more-option-text">
+                        <Trans>From URL</Trans>
                       </span>
                     </div>
                   </div>
