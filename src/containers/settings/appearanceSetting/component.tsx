@@ -17,7 +17,10 @@ import {
   vexComfirmAsync,
   parseColorInput,
 } from "../../../utils/common";
-import { applyCustomSystemCSS } from "../../../utils/reader/launchUtil";
+import {
+  applyCustomSystemCSS,
+  syncNativeThemeSource,
+} from "../../../utils/reader/launchUtil";
 
 class AppearanceSetting extends React.Component<
   SettingInfoProps,
@@ -86,18 +89,9 @@ class AppearanceSetting extends React.Component<
     this.handleRest(nextValue);
   };
 
-  syncNativeThemeSource = (skin: string) => {
-    if (!isElectron) {
-      return;
-    }
-    window
-      .require("electron")
-      .ipcRenderer.invoke("set-native-theme-source", skin || "system");
-  };
-
   changeSkin = (skin: string) => {
     ConfigService.setReaderConfig("appSkin", skin);
-    this.syncNativeThemeSource(skin);
+    syncNativeThemeSource(skin);
 
     if (
       skin === "night" ||
