@@ -14,6 +14,7 @@ export interface SettingInfoState {
   isEnableNotionSync: boolean;
   isEnableYuqueSync: boolean;
   isEnableReadwiseSync: boolean;
+  isEnableAcornySync: boolean;
   isEnableMarkdownSync: boolean;
   isEnableEudicSync: boolean;
   isEnableAnkiSync: boolean;

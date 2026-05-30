@@ -54,6 +54,8 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         ConfigService.getReaderConfig("isEnableYuqueSync") === "yes",
       isEnableReadwiseSync:
         ConfigService.getReaderConfig("isEnableReadwiseSync") === "yes",
+      isEnableAcornySync:
+        ConfigService.getReaderConfig("isEnableAcornySync") === "yes",
       isEnableMarkdownSync:
         ConfigService.getReaderConfig("isEnableMarkdownSync") === "yes",
       isEnableEudicSync:

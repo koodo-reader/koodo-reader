@@ -186,6 +186,21 @@ export const noteSyncSettingList = [
   },
   {
     isElectron: false,
+    title: "Auto sync notes and highlights to Acorny",
+    desc: "",
+    propName: "isEnableAcornySync",
+    requiresAuth: true,
+    authFields: [
+      {
+        key: "accessToken",
+        label: "Acorny Personal Access Token",
+        placeholder: "Enter your Acorny personal access token",
+      },
+    ],
+    authConfigKey: "acornySyncConfig",
+  },
+  {
+    isElectron: false,
     title: "Auto sync notes and highlights to SiYuan",
     desc: "Please enable network serving in SiYuan - Settings - About, and make sure SiYuan is running when syncing",
     propName: "isEnableSiYuanSync",

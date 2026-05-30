@@ -6,6 +6,7 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getIframeDoc } from "./docUtil";
 import toast from "react-hot-toast";
+import { syncNoteToAcorny } from "./acornySync";
 
 export interface DigestParams {
   currentBook: any;
@@ -87,5 +88,11 @@ export async function createHighlight(params: DigestParams): Promise<void> {
   await htmlBook.rendition.createOneNote(highlight, onNoteClick ?? (() => {}));
   let noteSyncManager = new NoteSyncManager(DatabaseService, ConfigService);
   noteSyncManager.syncNote(highlight, bookKey);
+  syncNoteToAcorny(
+    highlight,
+    currentBook.name || "Unknown Book",
+    currentBook.author || "",
+    ConfigService
+  );
   onSuccess?.();
 }

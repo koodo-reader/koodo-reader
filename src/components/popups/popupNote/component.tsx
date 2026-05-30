@@ -14,6 +14,7 @@ import {
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
+import { syncNoteToAcorny } from "../../../utils/reader/acornySync";
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
     super(props);
@@ -162,6 +163,12 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           ConfigService
         );
         noteSyncManager.syncNote(note, bookKey);
+        syncNoteToAcorny(
+          note,
+          this.props.currentBook.name || "Unknown Book",
+          this.props.currentBook.author || "",
+          ConfigService
+        );
       });
     }
   }
