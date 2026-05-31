@@ -291,7 +291,6 @@ class DatabaseService {
       return records;
     } else {
       let records = await this.getAllRecords(dbName);
-      console.log(records, dbName, "records");
       return records.filter((record) => bookKeys.includes(record.bookKey));
     }
   }
