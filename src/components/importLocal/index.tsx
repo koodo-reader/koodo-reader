@@ -16,7 +16,7 @@ import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
-
+    cloudSyncFunc: state.book.cloudSyncFunc,
     isCollapsed: state.sidebar.isCollapsed,
     deletedBooks: state.manager.deletedBooks,
     mode: state.sidebar.mode,

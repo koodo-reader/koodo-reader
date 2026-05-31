@@ -453,6 +453,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             await this.getMd5WithBrowser(item);
           }
           this.setState({ importingShelfTitle: "" });
+          await this.props.cloudSyncFunc();
         }}
         accept={supportedFormatsAccept}
         multiple={true}
@@ -581,6 +582,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             importingShelfTitle: "",
                             isMoreOptionsVisible: false,
                           });
+                          await this.props.cloudSyncFunc();
                         }
                       }}
                     >
@@ -626,6 +628,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             }
                             this.setState({ importingShelfTitle: "" });
                             this.toggleMoreOptions();
+                            await this.props.cloudSyncFunc();
                           }}
                         ></input>
                       )}
@@ -716,6 +719,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     }
                   }
                   this.setState({ importingShelfTitle: "" });
+                  await this.props.cloudSyncFunc();
                 }}
               ></div>
             )}
