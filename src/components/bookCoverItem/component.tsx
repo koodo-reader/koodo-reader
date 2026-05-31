@@ -8,6 +8,7 @@ import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useBookItem } from "../bookItem/useBookItem";
+import { getFileNameWithoutExtension } from "../../utils/common";
 
 declare var window: any;
 
@@ -140,7 +141,9 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
               <EmptyCover
                 {...{
                   format: props.book.format,
-                  title: props.book.name,
+                  title: ConfigService.getReaderConfig("isUseOriginalName") === "yes"
+                    ? getFileNameWithoutExtension(props.book.path, props.book.name)
+                    : props.book.name,
                   scale: 1.14,
                 }}
               />
@@ -201,7 +204,9 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
               style={{ fontWeight: "bold" }}
             ></span>
           )}
-          {props.book.name}
+          {ConfigService.getReaderConfig("isUseOriginalName") === "yes"
+            ? getFileNameWithoutExtension(props.book.path, props.book.name)
+            : props.book.name}
         </p>
         <p className="book-cover-item-author">
           <Trans>Author</Trans>:&nbsp;

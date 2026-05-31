@@ -295,11 +295,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 file_content,
                 rendition
               );
-              if (
-                ConfigService.getReaderConfig("isUseOriginalName") === "yes"
-              ) {
-                result.name = bookName;
-              }
+
               if (
                 ConfigService.getReaderConfig("isPrecacheBook") === "yes" &&
                 extension !== "pdf"
