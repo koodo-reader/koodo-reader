@@ -47,6 +47,7 @@ export interface ManagerProps extends RouteComponentProps<any> {
   handleMode: (mode: string) => void;
   handleShowPopupNote: (isShowPopupNote: boolean) => void;
   handleSortShelfDialog: (isOpenSortShelfDialog: boolean) => void;
+  cloudSyncFunc: () => Promise<void>;
   t: (title: string) => string;
 }
 

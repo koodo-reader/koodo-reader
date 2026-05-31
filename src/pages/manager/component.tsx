@@ -195,6 +195,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
                 }
                 await this.props.importBookFunc(file);
               }
+              await this.props.cloudSyncFunc();
             }}
             onClick={() => {
               this.props.handleEditDialog(false);
