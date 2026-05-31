@@ -19,6 +19,7 @@ import {
   calculateFileMD5,
   fetchFileFromPath,
   supportedFormats,
+  throttle,
   vexPromptAsync,
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
@@ -40,6 +41,8 @@ declare var window: any;
 let clickFilePath = "";
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
+  private resizeHandler: (() => void) | null = null;
+
   constructor(props: ImportLocalProps) {
     super(props);
     this.state = {
@@ -74,10 +77,18 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         false
       );
     }
-    window.addEventListener("resize", () => {
+    this.resizeHandler = throttle(() => {
+      console.log("resize");
       this.setState({ width: document.body.clientWidth });
     });
+    window.addEventListener("resize", this.resizeHandler);
     this.props.handleImportBookFunc(this.getMd5WithBrowser);
+  }
+  componentWillUnmount() {
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler);
+      this.resizeHandler = null;
+    }
   }
   handleFilePath = async (filePath: string) => {
     clickFilePath = filePath;

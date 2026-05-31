@@ -371,6 +371,41 @@ export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
 
+/** Default interval (ms) for window resize handlers. */
+export const RESIZE_THROTTLE_MS = 300;
+
+export function throttle<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number = RESIZE_THROTTLE_MS
+): (...args: Parameters<T>) => void {
+  let lastCall = 0;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  return function (this: unknown, ...args: Parameters<T>) {
+    const now = Date.now();
+    const invoke = () => {
+      lastCall = Date.now();
+      func.apply(this, args);
+    };
+
+    if (now - lastCall >= wait) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      invoke();
+    } else if (!timeoutId) {
+      timeoutId = setTimeout(
+        () => {
+          timeoutId = null;
+          invoke();
+        },
+        wait - (now - lastCall)
+      );
+    }
+  };
+}
+
 export const scrollContents = (chapterTitle: string, chapterHref: string) => {
   let contentBody = document.getElementsByClassName("navigation-body")[0];
   if (!contentBody) return;

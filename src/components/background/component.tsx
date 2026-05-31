@@ -2,9 +2,10 @@ import React from "react";
 import "./background.css";
 import { BackgroundProps, BackgroundState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import { getPageWidth } from "../../utils/common";
+import { getPageWidth, throttle } from "../../utils/common";
 import BackgroundUtil from "../../utils/file/backgroundUtil";
 class Background extends React.Component<BackgroundProps, BackgroundState> {
+  private resizeHandler: (() => void) | null = null;
   isFirst: Boolean;
   constructor(props: any) {
     super(props);
@@ -39,21 +40,24 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       )
     );
     this.loadReaderBackground();
-    let resizeTimer: NodeJS.Timeout;
-    window.addEventListener("resize", (event) => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        this.setState(
-          getPageWidth(
-            this.props.readerMode,
-            this.props.scale,
-            parseInt(this.props.margin),
-            this.props.isNavLocked,
-            this.props.isSettingLocked
-          )
-        );
-      }, 300); // 300ms 防抖
+    this.resizeHandler = throttle(() => {
+      this.setState(
+        getPageWidth(
+          this.props.readerMode,
+          this.props.scale,
+          parseInt(this.props.margin),
+          this.props.isNavLocked,
+          this.props.isSettingLocked
+        )
+      );
     });
+    window.addEventListener("resize", this.resizeHandler);
+  }
+  componentWillUnmount() {
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler);
+      this.resizeHandler = null;
+    }
   }
   async UNSAFE_componentWillReceiveProps(nextProps: BackgroundProps) {
     if (
