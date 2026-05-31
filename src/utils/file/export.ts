@@ -249,7 +249,6 @@ export const exportHighlights = async (
   books: Book[],
   format: "csv" | "md" | "txt" | "html" | "pdf" = "csv"
 ) => {
-  console.log(highlights, books, format);
   let data = highlights.map((item) => {
     let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
     let bookName = book ? book.name : "Unknown book";

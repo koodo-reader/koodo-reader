@@ -294,10 +294,6 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                                 this.props.selectedBooks,
                                 "books"
                               );
-                            console.log(
-                              this.props.selectedBooks,
-                              selectedBooks
-                            );
                             let highlights = (
                               await DatabaseService.getRecordsByBookKeys(
                                 this.props.selectedBooks,

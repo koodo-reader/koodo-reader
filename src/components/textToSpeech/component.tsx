@@ -709,7 +709,6 @@ class TextToSpeech extends React.Component<
       }
       if (this.state.isPaused || !this.state.isAudioOn) return;
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
-      console.log(visibleTextList, "visibleTextList");
       let lastVisibleTextList = visibleTextList;
       if (
         this.props.currentBook.format === "PDF" &&
@@ -790,7 +789,6 @@ class TextToSpeech extends React.Component<
 
     if (res === "start") {
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
-      console.log(visibleTextList, "visibleTextList");
 
       let lastVisibleTextList = visibleTextList;
       if (

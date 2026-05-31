@@ -1461,7 +1461,6 @@ export const checkReachPageEnd = (
   if (visibleTextList.length === 0) return true;
   let nodeTextList = nodeList.map((node) => node.text);
   let lastMatchIndex = findLastMatchIndex(nodeTextList, visibleTextList);
-  console.log(lastMatchIndex, nodeIndex, "lastMatchIndex");
   return lastMatchIndex === nodeIndex;
 };
 export const findLastMatchIndex = (a: string[], b: string[]) => {

@@ -51,7 +51,6 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
 
   const percentage = getPercentage();
   const actionProps = { left, top };
-
   return (
     <>
       <div
@@ -113,9 +112,13 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
               <EmptyCover
                 {...{
                   format: props.book.format,
-                  title: ConfigService.getReaderConfig("isUseOriginalName") === "yes"
-                    ? getFileNameWithoutExtension(props.book.path, props.book.name)
-                    : props.book.name,
+                  title:
+                    ConfigService.getReaderConfig("isUseOriginalName") === "yes"
+                      ? getFileNameWithoutExtension(
+                          props.book.path,
+                          props.book.name
+                        )
+                      : props.book.name,
                   viewMode: "card",
                   scale:
                     1 *

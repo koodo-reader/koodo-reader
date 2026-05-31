@@ -33,7 +33,6 @@ class MetadataDialog extends React.Component<
   }
 
   handleSearch = async () => {
-    console.log("searchingg");
     const { searchName, searchAuthor } = this.state;
     if (!searchName.trim() && !searchAuthor.trim()) return;
 
@@ -53,7 +52,6 @@ class MetadataDialog extends React.Component<
 
     try {
       const res = await getBookMetadata(searchName, searchAuthor);
-      console.log(res, "res");
       if (res && res.data) {
         const data = res.data as BookResultItem[];
         if (data.length === 0) {
