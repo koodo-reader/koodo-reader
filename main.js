@@ -114,6 +114,37 @@ const getWindowHandleValue = (win) => {
   }
 };
 
+const loadUrlInAuxWindow = async (win, url) => {
+  const wc = win.webContents;
+  let currentUrl = "";
+  try {
+    currentUrl = wc.getURL();
+  } catch (_) {
+    currentUrl = "";
+  }
+  if (currentUrl === url) {
+    wc.reload();
+    return;
+  }
+  let needBlankIntermediate = false;
+  try {
+    const current = new URL(currentUrl);
+    const next = new URL(url);
+    // When only the hash differs, Chromium treats it as a same-page hashchange
+    // and won't reload the page. Navigating through about:blank forces a full reload.
+    needBlankIntermediate =
+      current.origin === next.origin &&
+      current.pathname === next.pathname &&
+      current.search === next.search;
+  } catch (_) {
+    // ignore invalid URLs (e.g. empty string, about:blank)
+  }
+  if (needBlankIntermediate) {
+    await wc.loadURL("about:blank");
+  }
+  await wc.loadURL(url);
+};
+
 const getWindowsHelloScript = (mode, message = "", hwnd = "") => {
   const escapedMessage = message.replace(/'/g, "''");
   const escapedHwnd = String(hwnd || "").replace(/'/g, "''");
@@ -1515,19 +1546,21 @@ const createMainWin = () => {
       console.info("exit full");
     }
   });
-  ipcMain.handle("open-url", (event, config) => {
+  ipcMain.handle("open-url", async (event, config) => {
     if (config.type === "dict") {
       if (!dictWindow || dictWindow.isDestroyed()) {
         dictWindow = new BrowserWindow();
       }
-      dictWindow.loadURL(config.url);
       dictWindow.focus();
+      await loadUrlInAuxWindow(dictWindow, config.url);
+      
     } else if (config.type === "trans") {
       if (!transWindow || transWindow.isDestroyed()) {
         transWindow = new BrowserWindow();
       }
-      transWindow.loadURL(config.url);
       transWindow.focus();
+      await loadUrlInAuxWindow(transWindow, config.url);
+      
     } else {
       if (!linkWindow || linkWindow.isDestroyed()) {
         linkWindow = new BrowserWindow();
