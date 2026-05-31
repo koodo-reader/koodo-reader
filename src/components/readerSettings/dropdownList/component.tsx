@@ -111,7 +111,7 @@ class DropdownList extends React.Component<
         if (arr[0] === "Load local fonts") {
           vexComfirmAsync(
             this.props.t(
-              "Please install local fonts to your machine and then restart the application"
+              "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
             )
           );
           ConfigService.setReaderConfig(option, "");
@@ -130,7 +130,7 @@ class DropdownList extends React.Component<
         if (arr[0] === "Load local fonts") {
           vexComfirmAsync(
             this.props.t(
-              "Please install local fonts to your machine and then restart the application"
+              "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
             )
           );
           ConfigService.setReaderConfig(option, "");

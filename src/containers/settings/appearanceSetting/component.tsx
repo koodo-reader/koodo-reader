@@ -116,7 +116,7 @@ class AppearanceSetting extends React.Component<
     if (font === "Load local fonts") {
       vexComfirmAsync(
         this.props.t(
-          "Please install local fonts to your machine and then restart the application"
+          "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
         )
       );
 

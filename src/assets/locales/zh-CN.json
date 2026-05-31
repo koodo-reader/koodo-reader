@@ -1026,7 +1026,7 @@
   "AI dictionary model": "AI 词典模型",
   "Trial quota": "试用额度",
   "Clear all style": "清除全部样式",
-  "Please install local fonts to your machine and then restart the application": "请将本地字体安装到您的计算机上，然后重启应用程序",
+  "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list.": "请将本地字体安装到您的计算机上，然后重启应用程序。安装的字体将自动出现在下拉列表中。",
   "TXT parser": "TXT 解析器",
   "Default parser": "默认解析器",
   "Add new parser": "添加新解析器",
