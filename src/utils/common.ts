@@ -304,6 +304,46 @@ export const getFormatFromAudioPath = (audioPath: string) => {
   }
   return format;
 };
+/**
+ * Returns the file name (no directory) without the last extension from a path or name.
+ * Normalizes `/` and `\`, strips trailing separators, and leaves leading-dot names
+ * (e.g. `.gitignore`) unchanged when there is no extension segment to remove.
+ */
+export const getFileNameWithoutExtension = (
+  filePathOrName: string,
+  fallback = ""
+): string => {
+  if (filePathOrName == null) {
+    return fallback;
+  }
+  let normalized = String(filePathOrName).trim();
+  if (!normalized) {
+    return fallback;
+  }
+
+  normalized = normalized.replace(/[/\\]+$/, "");
+
+  const lastSlash = Math.max(
+    normalized.lastIndexOf("/"),
+    normalized.lastIndexOf("\\")
+  );
+  const baseName =
+    lastSlash >= 0 ? normalized.slice(lastSlash + 1) : normalized;
+
+  if (!baseName) {
+    return fallback;
+  }
+  if (baseName === "." || baseName === "..") {
+    return baseName;
+  }
+
+  const lastDot = baseName.lastIndexOf(".");
+  if (lastDot > 0) {
+    return baseName.slice(0, lastDot);
+  }
+  return baseName;
+};
+
 export const fetchFileFromPath = (filePath: string) => {
   return new Promise<File>((resolve) => {
     const fs = window.require("fs");

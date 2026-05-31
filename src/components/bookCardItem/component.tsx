@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 import EmptyCover from "../emptyCover";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useBookItem } from "../bookItem/useBookItem";
+import { getFileNameWithoutExtension } from "../../utils/common";
 
 declare var window: any;
 
@@ -112,7 +113,9 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
               <EmptyCover
                 {...{
                   format: props.book.format,
-                  title: props.book.name,
+                  title: ConfigService.getReaderConfig("isUseOriginalName") === "yes"
+                    ? getFileNameWithoutExtension(props.book.path, props.book.name)
+                    : props.book.name,
                   viewMode: "card",
                   scale:
                     1 *
@@ -170,7 +173,9 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
           {!isBookOffline && (
             <span className="icon-cloud book-download-action"></span>
           )}
-          {props.book.name}
+          {ConfigService.getReaderConfig("isUseOriginalName") === "yes"
+            ? getFileNameWithoutExtension(props.book.path, props.book.name)
+            : props.book.name}
         </p>
         <div className="reading-progress-icon">
           <div style={{ position: "relative", left: "4px" }}>

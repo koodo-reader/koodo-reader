@@ -8,6 +8,7 @@ import ActionDialog from "../dialogs/actionDialog";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useBookItem } from "../bookItem/useBookItem";
+import { getFileNameWithoutExtension } from "../../utils/common";
 
 declare var window: any;
 
@@ -90,7 +91,9 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
               <EmptyCover
                 {...{
                   format: props.book.format,
-                  title: props.book.name,
+                  title: ConfigService.getReaderConfig("isUseOriginalName") === "yes"
+                    ? getFileNameWithoutExtension(props.book.path, props.book.name)
+                    : props.book.name,
                   scale: 0.43,
                 }}
               />
@@ -164,7 +167,9 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
                   )}
                 </span>
               )}
-              {props.book.name}
+              {ConfigService.getReaderConfig("isUseOriginalName") === "yes"
+                ? getFileNameWithoutExtension(props.book.path, props.book.name)
+                : props.book.name}
             </div>
           </div>
 
