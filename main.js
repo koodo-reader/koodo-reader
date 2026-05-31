@@ -42,6 +42,32 @@ let syncUtilCache = {};
 let pickerUtilCache = {};
 let downloadRequest = null;
 
+const RESIZE_THROTTLE_MS = 300;
+
+const throttle = (func, wait = RESIZE_THROTTLE_MS) => {
+  let lastCall = 0;
+  let timeoutId = null;
+  return function (...args) {
+    const now = Date.now();
+    const invoke = () => {
+      lastCall = Date.now();
+      func.apply(this, args);
+    };
+    if (now - lastCall >= wait) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      invoke();
+    } else if (!timeoutId) {
+      timeoutId = setTimeout(() => {
+        timeoutId = null;
+        invoke();
+      }, wait - (now - lastCall));
+    }
+  };
+};
+
 const extractClixmlErrors = (text) => {
   if (!text) return "";
   const matches = text.match(
@@ -423,7 +449,7 @@ function destroyDiscordRPC() {
   if (discordRPCClient) {
     try {
       discordRPCClient.destroy();
-    } catch (_) {}
+    } catch (_) { }
     discordRPCClient = null;
   }
   discordRPCReady = false;
@@ -522,7 +548,7 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
       for (let sql of sqlList) {
         try {
           dbConnection[dbName].exec(sql);
-        } catch (error) {}
+        } catch (error) { }
       }
     }
   }
@@ -719,13 +745,14 @@ const createMainWin = () => {
     }
     mainWin = null;
   });
-  mainWin.on("resize", () => {
+  const syncMainViewBounds = () => {
     if (mainView) {
       if (!mainWin) return;
       let { width, height } = mainWin.getContentBounds();
       mainView.setBounds({ x: 0, y: 0, width: width, height: height });
     }
-  });
+  };
+  mainWin.on("resize", throttle(syncMainViewBounds));
   mainWin.on("maximize", () => {
     if (mainView) {
       let { width, height } = mainWin.getContentBounds();
@@ -936,12 +963,12 @@ const createMainWin = () => {
             windowHeight: bounds.height,
             windowX:
               readerWindow.isMaximized() &&
-              currentDisplay.id === primaryDisplay.id
+                currentDisplay.id === primaryDisplay.id
                 ? 0
                 : bounds.x,
             windowY:
               readerWindow.isMaximized() &&
-              currentDisplay.id === primaryDisplay.id
+                currentDisplay.id === primaryDisplay.id
                 ? 0
                 : bounds.y < 0
                   ? 0
@@ -1553,14 +1580,14 @@ const createMainWin = () => {
       }
       dictWindow.focus();
       await loadUrlInAuxWindow(dictWindow, config.url);
-      
+
     } else if (config.type === "trans") {
       if (!transWindow || transWindow.isDestroyed()) {
         transWindow = new BrowserWindow();
       }
       transWindow.focus();
       await loadUrlInAuxWindow(transWindow, config.url);
-      
+
     } else {
       if (!linkWindow || linkWindow.isDestroyed()) {
         linkWindow = new BrowserWindow();
@@ -1630,12 +1657,12 @@ const createMainWin = () => {
               windowHeight: bounds.height,
               windowX:
                 readerWindow.isMaximized() &&
-                currentDisplay.id === primaryDisplay.id
+                  currentDisplay.id === primaryDisplay.id
                   ? 0
                   : bounds.x,
               windowY:
                 readerWindow.isMaximized() &&
-                currentDisplay.id === primaryDisplay.id
+                  currentDisplay.id === primaryDisplay.id
                   ? 0
                   : bounds.y < 0
                     ? 0

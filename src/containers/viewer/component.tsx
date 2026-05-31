@@ -19,6 +19,7 @@ import {
   getPdfPassword,
   getServerRegion,
   showDownloadProgress,
+  throttle,
 } from "../../utils/common";
 import _ from "underscore";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
@@ -32,6 +33,7 @@ declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
+  private resizeHandler: (() => void) | null = null;
   lock: boolean;
   constructor(props: ViewerProps) {
     super(props);
@@ -82,22 +84,25 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       )
     );
     this.props.handleRenderBookFunc(this.handleRenderBook);
-    let resizeTimer: NodeJS.Timeout;
-    window.addEventListener("resize", (event) => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        this.setState(
-          getPageWidth(
-            this.props.readerMode,
-            this.props.scale,
-            parseInt(this.props.margin),
-            this.props.isNavLocked,
-            this.props.isSettingLocked
-          )
-        );
-        this.handleRenderBook();
-      }, 300); // 300ms 防抖
+    this.resizeHandler = throttle(() => {
+      this.setState(
+        getPageWidth(
+          this.props.readerMode,
+          this.props.scale,
+          parseInt(this.props.margin),
+          this.props.isNavLocked,
+          this.props.isSettingLocked
+        )
+      );
+      this.handleRenderBook();
     });
+    window.addEventListener("resize", this.resizeHandler);
+  }
+  componentWillUnmount() {
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler);
+      this.resizeHandler = null;
+    }
   }
   async UNSAFE_componentWillReceiveProps(nextProps: ViewerProps) {
     if (

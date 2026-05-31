@@ -40,6 +40,7 @@ import {
   removeChatBox,
   resetKoodoSync,
   showTaskProgress,
+  throttle,
   vexComfirmAsync,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
@@ -55,6 +56,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   timer: any;
   scheduledSyncTimer: any;
   private isSyncing: boolean = false;
+  private resizeHandler: (() => void) | null = null;
   constructor(props: HeaderProps) {
     super(props);
 
@@ -176,9 +178,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.handleLocalFileDialog(true);
       }
     }
-    window.addEventListener("resize", () => {
+    this.resizeHandler = throttle(() => {
       this.setState({ width: document.body.clientWidth });
     });
+    window.addEventListener("resize", this.resizeHandler);
     this.props.handleCloudSyncFunc(this.handleCloudSync);
     document.addEventListener("visibilitychange", async (event) => {
       if (
@@ -202,6 +205,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (this.scheduledSyncTimer) {
       clearInterval(this.scheduledSyncTimer);
       this.scheduledSyncTimer = null;
+    }
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler);
+      this.resizeHandler = null;
     }
   }
   startScheduledSync = () => {
