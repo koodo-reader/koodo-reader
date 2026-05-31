@@ -946,7 +946,7 @@
   "Action after selecting text": "Acción después de seleccionar texto",
   "Trial quota": "Cuota de prueba",
   "Clear all style": "Limpiar todo el estilo",
-  "Please install local fonts to your machine and then restart the application": "Por favor, instala fuentes locales en tu máquina y luego reinicia la aplicación",
+  "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list.": "Por favor, instala fuentes locales en tu máquina y luego reinicia la aplicación",
   "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice.": "El contenido generado por IA es solo para referencia. Por favor, verificalo cuidadosamente ya que no constituye consejo profesional.",
   "Force path style": "Forzar estilo de ruta",
   "Enter 1 to enable, leave empty to disable. Required for some S3 storage services that are not compatible with virtual host style URL": "Ingresa 1 para habilitar, deja vacío para deshabilitar. Requerido para algunos servicios de almacenamiento S3 que no son compatibles con URLs de estilo anfitrión virtual",
