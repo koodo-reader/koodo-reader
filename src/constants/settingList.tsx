@@ -204,6 +204,7 @@ export const noteSyncSettingList = [
     ],
     authConfigKey: "siyuanSyncConfig",
   },
+  //// due to potential legal issues, we decide to remove the IMA sync for now, we will consider adding it back in the future when this issue is resolved
   // {
   //   isElectron: false,
   //   title: "Auto sync notes and highlights to IMA",
