@@ -60,10 +60,13 @@ const throttle = (func, wait = RESIZE_THROTTLE_MS) => {
       }
       invoke();
     } else if (!timeoutId) {
-      timeoutId = setTimeout(() => {
-        timeoutId = null;
-        invoke();
-      }, wait - (now - lastCall));
+      timeoutId = setTimeout(
+        () => {
+          timeoutId = null;
+          invoke();
+        },
+        wait - (now - lastCall)
+      );
     }
   };
 };
@@ -449,7 +452,7 @@ function destroyDiscordRPC() {
   if (discordRPCClient) {
     try {
       discordRPCClient.destroy();
-    } catch (_) { }
+    } catch (_) {}
     discordRPCClient = null;
   }
   discordRPCReady = false;
@@ -548,7 +551,7 @@ const getDBConnection = (dbName, storagePath, sqlStatement) => {
       for (let sql of sqlList) {
         try {
           dbConnection[dbName].exec(sql);
-        } catch (error) { }
+        } catch (error) {}
       }
     }
   }
@@ -963,12 +966,12 @@ const createMainWin = () => {
             windowHeight: bounds.height,
             windowX:
               readerWindow.isMaximized() &&
-                currentDisplay.id === primaryDisplay.id
+              currentDisplay.id === primaryDisplay.id
                 ? 0
                 : bounds.x,
             windowY:
               readerWindow.isMaximized() &&
-                currentDisplay.id === primaryDisplay.id
+              currentDisplay.id === primaryDisplay.id
                 ? 0
                 : bounds.y < 0
                   ? 0
@@ -1580,14 +1583,12 @@ const createMainWin = () => {
       }
       dictWindow.focus();
       await loadUrlInAuxWindow(dictWindow, config.url);
-
     } else if (config.type === "trans") {
       if (!transWindow || transWindow.isDestroyed()) {
         transWindow = new BrowserWindow();
       }
       transWindow.focus();
       await loadUrlInAuxWindow(transWindow, config.url);
-
     } else {
       if (!linkWindow || linkWindow.isDestroyed()) {
         linkWindow = new BrowserWindow();
@@ -1657,12 +1658,12 @@ const createMainWin = () => {
               windowHeight: bounds.height,
               windowX:
                 readerWindow.isMaximized() &&
-                  currentDisplay.id === primaryDisplay.id
+                currentDisplay.id === primaryDisplay.id
                   ? 0
                   : bounds.x,
               windowY:
                 readerWindow.isMaximized() &&
-                  currentDisplay.id === primaryDisplay.id
+                currentDisplay.id === primaryDisplay.id
                   ? 0
                   : bounds.y < 0
                     ? 0
@@ -1828,6 +1829,7 @@ const handleCallback = (url) => {
 
     const bookKey = parsedUrl.searchParams.get("bookKey");
     const noteKey = parsedUrl.searchParams.get("noteKey");
+    const importUrl = parsedUrl.searchParams.get("importUrl");
 
     if (code && mainWin) {
       mainWin.webContents.send("oauth-callback", { code, state });
@@ -1847,6 +1849,13 @@ const handleCallback = (url) => {
       mainWin.show();
       mainWin.focus();
       mainWin.webContents.send("open-note-from-link", { noteKey });
+    }
+    if (importUrl && mainWin) {
+      const decodedUrl = decodeURIComponent(importUrl);
+      if (mainWin.isMinimized()) mainWin.restore();
+      mainWin.show();
+      mainWin.focus();
+      mainWin.webContents.send("import-url-from-link", { url: decodedUrl });
     }
   } catch (error) {
     console.error("Error handling callback URL:", error);

@@ -44,6 +44,8 @@ let clickFilePath = "";
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   private resizeHandler: (() => void) | null = null;
+  private ipcImportUrlListener: ((event: any, config: any) => void) | null =
+    null;
 
   constructor(props: ImportLocalProps) {
     super(props);
@@ -78,6 +80,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         },
         false
       );
+
+      this.ipcImportUrlListener = async (_event: any, config: any) => {
+        const rawUrl = config?.url;
+        if (!rawUrl || typeof rawUrl !== "string") return;
+        await this.handleURLImport(undefined as any, rawUrl);
+      };
+      ipcRenderer.on("import-url-from-link", this.ipcImportUrlListener);
     }
     this.resizeHandler = throttle(() => {
       console.log("resize");
@@ -87,6 +96,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.props.handleImportBookFunc(this.getMd5WithBrowser);
   }
   componentWillUnmount() {
+    if (isElectron && this.ipcImportUrlListener) {
+      const { ipcRenderer } = window.require("electron");
+      ipcRenderer.removeListener(
+        "import-url-from-link",
+        this.ipcImportUrlListener
+      );
+      this.ipcImportUrlListener = null;
+    }
     if (this.resizeHandler) {
       window.removeEventListener("resize", this.resizeHandler);
       this.resizeHandler = null;
@@ -487,15 +504,21 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
 
   // Handle URL import
-  handleURLImport = async (e: React.MouseEvent) => {
-    e.stopPropagation();
+  handleURLImport = async (
+    e?: React.MouseEvent,
+    externalUrl?: string
+  ) => {
+    e?.stopPropagation();
     this.setState({ isMoreOptionsVisible: false });
-    const url = await vexPromptAsync(
-      this.props.t("Enter book download URL (http/https)"),
-      "https://"
-    );
+    const url =
+      typeof externalUrl === "string"
+        ? externalUrl
+        : await vexPromptAsync(
+            this.props.t("Enter book download URL (http/https)"),
+            "https://"
+          );
     if (!url || typeof url !== "string") return;
-    const trimmedUrl = (url as string).trim();
+    const trimmedUrl = url.trim();
     if (
       !trimmedUrl.startsWith("http://") &&
       !trimmedUrl.startsWith("https://")
