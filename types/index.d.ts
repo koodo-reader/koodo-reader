@@ -8,3 +8,10 @@ declare module "react" {
     webkitdirectory?: string;
   }
 }
+
+declare module "@mozilla/readability" {
+  export class Readability {
+    constructor(document: Document);
+    parse(): any;
+  }
+}

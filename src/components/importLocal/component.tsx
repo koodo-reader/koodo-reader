@@ -10,11 +10,13 @@ import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
+import DOMPurify from "dompurify";
 import {
   CommonTool,
   ConfigService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../utils/file/coverUtil";
+import { Readability } from "@mozilla/readability";
 import {
   calculateFileMD5,
   fetchFileFromPath,
@@ -346,6 +348,123 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       }
     });
   };
+
+  private escapeHtml = (value: string) => {
+    return (value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
+  private makeUrlsAbsolute = (rootDoc: Document, baseUrl: string) => {
+    const toAbs = (value: string | null) => {
+      if (!value) return value;
+      if (value.startsWith("data:")) return value;
+      try {
+        return new URL(value, baseUrl).toString();
+      } catch {
+        return value;
+      }
+    };
+
+    rootDoc.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      const next = toAbs(href);
+      if (next) a.setAttribute("href", next);
+    });
+    rootDoc.querySelectorAll("img[src]").forEach((img) => {
+      const src = img.getAttribute("src");
+      const next = toAbs(src);
+      if (next) img.setAttribute("src", next);
+    });
+    rootDoc.querySelectorAll("link[href]").forEach((l) => {
+      const href = l.getAttribute("href");
+      const next = toAbs(href);
+      if (next) l.setAttribute("href", next);
+    });
+  };
+
+  private importHtmlFromURL = async (
+    url: string,
+    urlFileName: string,
+    toastId: string
+  ) => {
+    toast.loading(this.props.t("Downloading") + ": 0%", { id: toastId });
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const contentType = (
+      response.headers.get("content-type") || ""
+    ).toLowerCase();
+    const looksLikeHtml =
+      contentType.includes("text/html") ||
+      contentType.includes("application/xhtml+xml") ||
+      contentType.includes("text/plain") ||
+      contentType.includes("application/xml") ||
+      contentType.includes("text/xml") ||
+      !contentType;
+
+    if (!looksLikeHtml) {
+      throw new Error(
+        this.props.t("Unsupported file format") +
+          ": " +
+          (contentType || "unknown")
+      );
+    }
+
+    const htmlText = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlText, "text/html");
+
+    // 1) Try better main-content extraction (more aggressive clipping).
+    let extracted: any = null;
+    try {
+      const reader = new Readability(doc as any);
+      extracted = reader.parse();
+    } catch (e) {
+      extracted = null;
+    }
+
+    const rawTitle =
+      extracted?.title ||
+      doc.title ||
+      (urlFileName || "book").replace(/\.[^/.]+$/, "") ||
+      "book";
+
+    // 2) Prefer extracted content; fallback to body html.
+    const extractedContent = extracted?.content || doc.body?.innerHTML || "";
+
+    // 3) Resolve relative links/images to absolute using the original URL.
+    const contentDoc = parser.parseFromString(extractedContent, "text/html");
+    if (contentDoc?.body) {
+      this.makeUrlsAbsolute(contentDoc, url);
+    }
+
+    // 4) Sanitize & rebuild as a standalone html "book" file.
+    const sanitizedBody = DOMPurify.sanitize(
+      contentDoc.body?.innerHTML || extractedContent,
+      {
+        USE_PROFILES: { html: true },
+      }
+    );
+
+    const safeTitle = this.escapeHtml(rawTitle);
+    const finalHtmlFileName = `${safeTitle}.html`;
+    const finalHtml = `<!doctype html><html><head><meta charset="utf-8"/><title>${safeTitle}</title></head><body>${sanitizedBody}</body></html>`;
+
+    const blob = new Blob([new TextEncoder().encode(finalHtml)], {
+      type: "text/html",
+    });
+    const file: any = new File([blob], finalHtmlFileName);
+    file.path = url; // Helps bookkeeping; works in Electron, no harm in browser.
+
+    toast.dismiss(toastId);
+    await this.getMd5WithBrowser(file);
+  };
   toggleMoreOptions = () => {
     this.setState((prevState) => ({
       isMoreOptionsVisible: !prevState.isMoreOptionsVisible,
@@ -387,15 +506,33 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     let fileName = decodeURIComponent(
       trimmedUrl.split("?")[0].split("/").pop() || "book"
     );
-    if (!fileName.includes(".")) {
-      fileName = fileName + ".epub";
-    }
     const ext = "." + fileName.split(".").pop()?.toLowerCase();
-    if (!supportedFormats.includes(ext)) {
-      toast.error(this.props.t("Unsupported file format") + ": " + ext);
+    const toastId = "url-download";
+    if (
+      !supportedFormats
+        .filter(
+          (item) =>
+            item !== ".html" &&
+            item !== ".xml" &&
+            item !== ".htm" &&
+            item !== ".xhtml" &&
+            item !== ".mhtml"
+        )
+        .includes(ext)
+    ) {
+      try {
+        await this.importHtmlFromURL(trimmedUrl, fileName, toastId);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        toast.error(this.props.t("Import failed") + ": " + errorMessage, {
+          id: toastId,
+        });
+        console.error("URL import error:", error);
+      }
       return;
     }
-    const toastId = "url-download";
+
     toast.loading(this.props.t("Downloading") + ": 0%", { id: toastId });
     try {
       const response = await fetch(trimmedUrl);
