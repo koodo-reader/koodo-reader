@@ -366,6 +366,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
 
+  private decodeHtmlEntities = (value: string) => {
+    if (!value) return "";
+    const doc = new DOMParser().parseFromString(value, "text/html");
+    return doc.documentElement.textContent || value;
+  };
+
   private escapeHtml = (value: string) => {
     return (value || "")
       .replace(/&/g, "&amp;")
@@ -451,6 +457,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       doc.title ||
       (urlFileName || "book").replace(/\.[^/.]+$/, "") ||
       "book";
+    const decodedTitle =
+      this.decodeHtmlEntities(rawTitle).trim() || "book";
 
     // 2) Prefer extracted content; fallback to body html.
     const extractedContent = extracted?.content || doc.body?.innerHTML || "";
@@ -469,8 +477,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       }
     );
 
-    const safeTitle = this.escapeHtml(rawTitle);
-    const finalHtmlFileName = `${safeTitle}.html`;
+    const safeTitle = this.escapeHtml(decodedTitle);
+    const finalHtmlFileName = `${decodedTitle.replace(/[/\\?%*:|"<>]/g, "-")}.html`;
     const finalHtml = `<!doctype html><html><head><meta charset="utf-8"/><title>${safeTitle}</title></head><body>${sanitizedBody}</body></html>`;
 
     const blob = new Blob([new TextEncoder().encode(finalHtml)], {

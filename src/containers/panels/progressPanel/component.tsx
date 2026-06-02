@@ -81,6 +81,9 @@ class ProgressPanel extends React.Component<
   };
   async handlePageNum(rendition) {
     let pageInfo = await rendition.getProgress();
+    if (!pageInfo) {
+      return;
+    }
     this.setState({
       currentPage: pageInfo.currentPage,
       totalPage: pageInfo.totalPage,
