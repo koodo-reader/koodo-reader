@@ -650,16 +650,13 @@ const isWindowPartiallyVisible = (bounds) => {
   return false;
 };
 const createTray = () => {
-  const iconPath = isDev
+  let iconPath = isDev
     ? path.join(__dirname, "./public/assets/icon.png")
     : path.join(__dirname, "./build/assets/icon.png");
   let trayIcon = nativeImage.createFromPath(iconPath);
   if (os.platform() === "darwin") {
-    // macOS status bar icons should be small, and template images must be
-    // monochrome with transparent background. Our app icon is a full-color
-    // square (opaque background), which renders as a solid block when marked
-    // as a template. Resize and keep it non-template to avoid mask rendering.
-    trayIcon = trayIcon.resize({ width: 16, height: 16, quality: "best" });
+    iconPath = path.join(__dirname, "./build/assets/trayTemplate@2x.png");
+    let trayIcon = nativeImage.createFromPath(iconPath);
     trayIcon.setTemplateImage(false);
   }
   tray = new Tray(trayIcon);
