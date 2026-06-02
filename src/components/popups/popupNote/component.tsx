@@ -213,7 +213,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
               position: "absolute",
               bottom: "35px",
               height: "40px",
-              width: "460px",
+              width: "calc(100% - 60px)",
             }}
           >
             <NoteTag

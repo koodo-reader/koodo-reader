@@ -153,6 +153,9 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
   }
   async handlePageNum(rendition) {
     let pageInfo = await rendition.getProgress();
+    if (!pageInfo) {
+      return;
+    }
     if (
       this.props.currentBook.format === "PDF" &&
       !ConfigService.getAllListConfig("convertPDFBooks").includes(

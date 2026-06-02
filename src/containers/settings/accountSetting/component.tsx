@@ -478,19 +478,6 @@ class AccountSetting extends React.Component<
                 </div>
               </div>
             </div>
-            {/* <div
-              style={{
-                fontSize: "13px",
-                lineHeight: "20px",
-                marginTop: "-15px",
-                opacity: 0.6,
-                color: "rgb(231, 69, 69)",
-              }}
-            >
-              {this.props.t(
-                "Due to the limited number of emails we can send each day, to prevent login issues after reaching the sending limit, please make sure to add additional login options as backups after logging in."
-              )}
-            </div> */}
             <div
               style={{
                 fontSize: "13px",
