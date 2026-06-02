@@ -124,6 +124,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
   }
   handleHighlight = async (rendition: any) => {
+    console.log("handleHighlight", rendition);
+    if (!rendition) return;
     let highlighters: any = await DatabaseService.getRecordsByBookKey(
       this.props.currentBook.key,
       "notes"
@@ -157,7 +159,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         return item;
       });
     }
-    await this.props.htmlBook.rendition.renderHighlighters(
+    await rendition.renderHighlighters(
       highlightersByChapter,
       this.handleNoteClick
     );
@@ -191,7 +193,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           return item;
         });
       }
-      await this.props.htmlBook.rendition.renderHighlighters(
+      await rendition.renderHighlighters(
         highlightersByChapter,
         this.handleNoteClick
       );

@@ -537,14 +537,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     const toastId = "url-download";
     if (
       !supportedFormats
-        .filter(
-          (item) =>
-            item !== ".html" &&
-            item !== ".xml" &&
-            item !== ".htm" &&
-            item !== ".xhtml" &&
-            item !== ".mhtml"
-        )
+        .filter((item) => item !== ".html" && item !== ".htm")
         .includes(ext)
     ) {
       try {

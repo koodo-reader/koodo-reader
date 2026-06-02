@@ -557,6 +557,7 @@ class TextToSpeech extends React.Component<
     let nodeTextList = (await this.props.htmlBook.rendition.audioText()).filter(
       (item: string) => item && item.trim()
     );
+    console.log("nodeTextList", nodeTextList);
     let rawNodeList: string[][] = [];
     if (
       this.props.currentBook.format === "PDF" &&
