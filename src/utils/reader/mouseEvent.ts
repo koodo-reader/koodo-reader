@@ -170,18 +170,11 @@ const handleShortcut = (event: any) => {
     }
   }
   if (event.keyCode === 122) {
-    if (isElectron) {
-      event.preventDefault();
-      ConfigService.getReaderConfig("isFullscreen") !== "yes"
-        ? handleFullScreen()
-        : handleExitFullScreen();
-
-      if (ConfigService.getReaderConfig("isFullscreen") === "yes") {
-        ConfigService.setReaderConfig("isFullscreen", "no");
-      } else {
-        ConfigService.setReaderConfig("isFullscreen", "yes");
-      }
-    }
+    event.preventDefault();
+    const entering =
+      ConfigService.getReaderConfig("isFullscreen") !== "yes";
+    entering ? handleFullScreen() : handleExitFullScreen();
+    ConfigService.setReaderConfig("isFullscreen", entering ? "yes" : "no");
   }
   if (event.keyCode === 123) {
     if (isElectron && ConfigService.getReaderConfig("isMergeWord")) {
