@@ -655,8 +655,12 @@ const createTray = () => {
     : path.join(__dirname, "./build/assets/icon.png");
   let trayIcon = nativeImage.createFromPath(iconPath);
   if (os.platform() === "darwin") {
-    trayIcon = trayIcon.resize({ width: 16 });
-    trayIcon.setTemplateImage(true);
+    // macOS status bar icons should be small, and template images must be
+    // monochrome with transparent background. Our app icon is a full-color
+    // square (opaque background), which renders as a solid block when marked
+    // as a template. Resize and keep it non-template to avoid mask rendering.
+    trayIcon = trayIcon.resize({ width: 16, height: 16, quality: "best" });
+    trayIcon.setTemplateImage(false);
   }
   tray = new Tray(trayIcon);
   const contextMenu = Menu.buildFromTemplate([
