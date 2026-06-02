@@ -26,4 +26,5 @@ export interface OperationPanelState {
   time: number;
   currentPercentage: number;
   timeLeft: number;
+  isFullscreen: boolean;
 }

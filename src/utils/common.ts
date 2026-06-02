@@ -437,6 +437,14 @@ export const handleFullScreen = () => {
     } else {
       window.require("electron").ipcRenderer.invoke("enter-fullscreen", "ping");
     }
+  } else {
+    const el = document.documentElement as any;
+    const requestFS =
+      el.requestFullscreen ||
+      el.webkitRequestFullscreen ||
+      el.mozRequestFullScreen ||
+      el.msRequestFullscreen;
+    requestFS && requestFS.call(el);
   }
 };
 export const handleExitFullScreen = () => {
@@ -447,6 +455,16 @@ export const handleExitFullScreen = () => {
         .ipcRenderer.invoke("exit-tab-fullscreen", "ping");
     } else {
       window.require("electron").ipcRenderer.invoke("exit-fullscreen", "ping");
+    }
+  } else {
+    const doc = document as any;
+    const exitFS =
+      doc.exitFullscreen ||
+      doc.webkitExitFullscreen ||
+      doc.mozCancelFullScreen ||
+      doc.msExitFullscreen;
+    if (exitFS && doc.fullscreenElement) {
+      exitFS.call(doc);
     }
   }
 };
