@@ -12,9 +12,12 @@ body {
     "Microsoft YaHei", "微软雅黑", Helvetica, Tahoma, Arial, sans-serif;
 }
 p {
-  padding-bottom: 1em;
-  margin-left: unset;
-  margin-right: unset;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: unset !important;
+  margin-right: unset !important;
 }
 p,
 div,
