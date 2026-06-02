@@ -457,8 +457,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       doc.title ||
       (urlFileName || "book").replace(/\.[^/.]+$/, "") ||
       "book";
-    const decodedTitle =
-      this.decodeHtmlEntities(rawTitle).trim() || "book";
+    const decodedTitle = this.decodeHtmlEntities(rawTitle).trim() || "book";
 
     // 2) Prefer extracted content; fallback to body html.
     const extractedContent = extracted?.content || doc.body?.innerHTML || "";
@@ -512,10 +511,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
 
   // Handle URL import
-  handleURLImport = async (
-    e?: React.MouseEvent,
-    externalUrl?: string
-  ) => {
+  handleURLImport = async (e?: React.MouseEvent, externalUrl?: string) => {
     e?.stopPropagation();
     this.setState({ isMoreOptionsVisible: false });
     const url =
@@ -632,7 +628,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             await this.getMd5WithBrowser(item);
           }
           this.setState({ importingShelfTitle: "" });
-          await this.props.cloudSyncFunc();
+          if (ConfigService.getItem("defaultSyncOption")) {
+            await this.props.cloudSyncFunc();
+          }
         }}
         accept={supportedFormatsAccept}
         multiple={true}
@@ -761,7 +759,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             importingShelfTitle: "",
                             isMoreOptionsVisible: false,
                           });
-                          await this.props.cloudSyncFunc();
+                          if (ConfigService.getItem("defaultSyncOption")) {
+                            await this.props.cloudSyncFunc();
+                          }
                         }
                       }}
                     >
@@ -807,7 +807,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             }
                             this.setState({ importingShelfTitle: "" });
                             this.toggleMoreOptions();
-                            await this.props.cloudSyncFunc();
+                            if (ConfigService.getItem("defaultSyncOption")) {
+                              await this.props.cloudSyncFunc();
+                            }
                           }}
                         ></input>
                       )}
@@ -898,7 +900,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     }
                   }
                   this.setState({ importingShelfTitle: "" });
-                  await this.props.cloudSyncFunc();
+                  if (ConfigService.getItem("defaultSyncOption")) {
+                    await this.props.cloudSyncFunc();
+                  }
                 }}
               ></div>
             )}
