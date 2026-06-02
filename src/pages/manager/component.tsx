@@ -195,7 +195,10 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
                 }
                 await this.props.importBookFunc(file);
               }
-              if (ConfigService.getItem("defaultSyncOption")) {
+              if (
+                ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
+                ConfigService.getItem("defaultSyncOption")
+              ) {
                 await this.props.cloudSyncFunc();
               }
             }}

@@ -628,7 +628,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             await this.getMd5WithBrowser(item);
           }
           this.setState({ importingShelfTitle: "" });
-          if (ConfigService.getItem("defaultSyncOption")) {
+          if (
+            ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
+            ConfigService.getItem("defaultSyncOption")
+          ) {
             await this.props.cloudSyncFunc();
           }
         }}
@@ -759,7 +762,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             importingShelfTitle: "",
                             isMoreOptionsVisible: false,
                           });
-                          if (ConfigService.getItem("defaultSyncOption")) {
+                          if (
+                            ConfigService.getReaderConfig(
+                              "isDisableAutoSync"
+                            ) !== "yes" &&
+                            ConfigService.getItem("defaultSyncOption")
+                          ) {
                             await this.props.cloudSyncFunc();
                           }
                         }
@@ -807,7 +815,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             }
                             this.setState({ importingShelfTitle: "" });
                             this.toggleMoreOptions();
-                            if (ConfigService.getItem("defaultSyncOption")) {
+                            if (
+                              ConfigService.getReaderConfig(
+                                "isDisableAutoSync"
+                              ) !== "yes" &&
+                              ConfigService.getItem("defaultSyncOption")
+                            ) {
                               await this.props.cloudSyncFunc();
                             }
                           }}
@@ -900,7 +913,11 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     }
                   }
                   this.setState({ importingShelfTitle: "" });
-                  if (ConfigService.getItem("defaultSyncOption")) {
+                  if (
+                    ConfigService.getReaderConfig("isDisableAutoSync") !==
+                      "yes" &&
+                    ConfigService.getItem("defaultSyncOption")
+                  ) {
                     await this.props.cloudSyncFunc();
                   }
                 }}
