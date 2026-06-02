@@ -655,9 +655,6 @@ const createTray = () => {
     : path.join(__dirname, "./build/assets/icon.png");
   let trayIcon = nativeImage.createFromPath(iconPath);
   if (os.platform() === "darwin") {
-    // iconPath = path.join(__dirname, "./build/assets/trayTemplate@2x.png");
-    // let trayIcon = nativeImage.createFromPath(iconPath);
-    // trayIcon.setTemplateImage(false);
     trayIcon = trayIcon.resize({ width: 16, height: 16, quality: "best" });
     trayIcon.setTemplateImage(false);
   }
