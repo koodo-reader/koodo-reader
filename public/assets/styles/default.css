@@ -177,11 +177,12 @@ a {
 .book-operation-panel,
 .progress-panel,
 .setting-panel-parent,
-.protection-overlay,
-.pin-keypad-container,
 .biometric-auth-container {
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+}
+.protection-overlay {
+  background: #f5f5f5;
 }
 .setting-dialog-sidebar {
   border-right: 1px solid rgba(0, 0, 0, 0.07);
@@ -189,7 +190,8 @@ a {
 .setting-dialog-sidebar-item.active {
   background: rgba(75, 75, 75, 1);
 }
-.plugin-tab-bar {
+.plugin-tab-bar,
+.pin-keypad-container {
   background: rgba(255, 255, 255, 1);
 }
 .plugin-tab-item-active {
