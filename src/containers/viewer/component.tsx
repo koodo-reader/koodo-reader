@@ -124,7 +124,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
   }
   handleHighlight = async (rendition: any) => {
-    console.log("handleHighlight", rendition);
     if (!rendition) return;
     let highlighters: any = await DatabaseService.getRecordsByBookKey(
       this.props.currentBook.key,

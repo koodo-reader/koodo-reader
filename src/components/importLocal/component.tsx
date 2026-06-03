@@ -89,7 +89,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       ipcRenderer.on("import-url-from-link", this.ipcImportUrlListener);
     }
     this.resizeHandler = throttle(() => {
-      console.log("resize");
       this.setState({ width: document.body.clientWidth });
     });
     window.addEventListener("resize", this.resizeHandler);
