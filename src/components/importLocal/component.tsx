@@ -365,13 +365,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
 
-  private decodeHtmlEntities = (value: string) => {
+  decodeHtmlEntities = (value: string) => {
     if (!value) return "";
     const doc = new DOMParser().parseFromString(value, "text/html");
     return doc.documentElement.textContent || value;
   };
 
-  private escapeHtml = (value: string) => {
+  escapeHtml = (value: string) => {
     return (value || "")
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
@@ -380,7 +380,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       .replace(/'/g, "&#039;");
   };
 
-  private makeUrlsAbsolute = (rootDoc: Document, baseUrl: string) => {
+  makeUrlsAbsolute = (rootDoc: Document, baseUrl: string) => {
     const toAbs = (value: string | null) => {
       if (!value) return value;
       if (value.startsWith("data:")) return value;
@@ -408,7 +408,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
 
-  private importHtmlFromURL = async (
+  importHtmlFromURL = async (
     url: string,
     urlFileName: string,
     toastId: string
