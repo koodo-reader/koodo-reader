@@ -170,7 +170,9 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
 
 export const restore = async (service: string): Promise<Boolean> => {
   if (service === "local" && !isElectron) {
-    return await restoreFromBrowser();
+    let restoreRes = await restoreFromBrowser();
+    await generateSyncRecord();
+    return restoreRes;
   }
   const { ipcRenderer } = window.require("electron");
   if (service === "local") {

@@ -1,7 +1,6 @@
 import React from "react";
 import "./importLocal.css";
 import BookModel from "../../models/Book";
-
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import * as Kookit from "../../assets/lib/kookit.min";
@@ -43,9 +42,7 @@ declare var window: any;
 let clickFilePath = "";
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
-  private resizeHandler: (() => void) | null = null;
-  private ipcImportUrlListener: ((event: any, config: any) => void) | null =
-    null;
+  resizeHandler: (() => void) | null = null;
 
   constructor(props: ImportLocalProps) {
     super(props);
@@ -81,12 +78,11 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         false
       );
 
-      this.ipcImportUrlListener = async (_event: any, config: any) => {
+      ipcRenderer.on("import-url-from-link", (_event: any, config: any) => {
         const rawUrl = config?.url;
         if (!rawUrl || typeof rawUrl !== "string") return;
-        await this.handleURLImport(undefined as any, rawUrl);
-      };
-      ipcRenderer.on("import-url-from-link", this.ipcImportUrlListener);
+        this.handleURLImport(undefined as any, rawUrl);
+      });
     }
     this.resizeHandler = throttle(() => {
       this.setState({ width: document.body.clientWidth });
@@ -95,14 +91,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.props.handleImportBookFunc(this.getMd5WithBrowser);
   }
   componentWillUnmount() {
-    if (isElectron && this.ipcImportUrlListener) {
-      const { ipcRenderer } = window.require("electron");
-      ipcRenderer.removeListener(
-        "import-url-from-link",
-        this.ipcImportUrlListener
-      );
-      this.ipcImportUrlListener = null;
-    }
     if (this.resizeHandler) {
       window.removeEventListener("resize", this.resizeHandler);
       this.resizeHandler = null;
