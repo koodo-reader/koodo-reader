@@ -5,6 +5,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "downlevelIteration": true,
+    "ignoreDeprecations": "6.0",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
