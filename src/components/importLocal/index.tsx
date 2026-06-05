@@ -1,4 +1,3 @@
-import "./importLocal.css";
 import { connect } from "react-redux";
 import {
   handleFetchBooks,
