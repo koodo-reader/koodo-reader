@@ -1,92 +1,60 @@
-# Koodo Reader – Copilot Instructions
+# Koodo Reader – Code Review Standards
 
-## Architecture Overview
+## Security Critical Issues
+
+- Validate all IPC arguments from the renderer before filesystem, DB, or shell operations
+- Never log tokens, passwords, or full book-file paths at info level (use `electron-log` at debug)
+- Flag any new `eval()` call; existing plugin TTS/dictionary paths in the main process are intentional
+- Sanitize HTML injected into reader iframes (style/note utilities in `src/utils/reader/`)
+- Check for hardcoded credentials, API keys, or secrets in code and config files
+- Review authentication and authorization on any new OPDS or cloud-sync endpoints
+
+## Performance Red Flags
+
+- Flag synchronous file I/O on the Electron main thread (`fs.readFileSync` / `fs.writeFileSync`)
+- Identify N+1 database query patterns or missing batch operations
+- Ensure resize/scroll event handlers are throttled (see existing `RESIZE_THROTTLE_MS` pattern)
+- Verify resource cleanup on window close and reader exit (downloads, DB connections, temp files)
+
+## Code Quality Essentials
+
+- All user-visible strings must use `react-i18next` (`t("key")`) — never hardcode English text
+- Never open SQLite directly from the renderer — all DB work goes through the `database-command` IPC channel
+- Avoid `any` in TypeScript; define interfaces in co-located `interface.tsx` files
+- Remove dead code, commented-out blocks, and unused imports before merging
+
+## Review Style
+
+- Be specific and actionable; explain the "why" behind each recommendation
+- Prioritize security vulnerabilities and main-thread-blocking issues above style comments
+- Ask a clarifying question when intent around IPC channels or window lifecycle is ambiguous
+- Acknowledge good patterns when you see them
+
+## Testing Standards
+
+- Changes to `src/utils/reader/` (live iframe rendering) require manual verification for layout regressions
+- New IPC handlers must handle error paths; do not silently swallow failures
+- New i18n keys in `en.json` must have corresponding `t()` call sites in `src/`
+
+---
+
+## Architecture Context
 
 Koodo Reader is an **Electron + React (CRA) + Redux** cross-platform ebook reader.
 
-| Layer                 | Location                              | Role                                                                           |
-| --------------------- | ------------------------------------- | ------------------------------------------------------------------------------ |
-| Electron main process | `main.js`                             | Window management, IPC handlers, SQLite via `better-sqlite3`, sync/cloud utils |
-| React renderer        | `src/`                                | UI, Redux state, book rendering                                                |
-| Reader engine         | `src/assets/lib/kookit-extra.min.mjs` | Closed-source ESM module – book parsing, SQL statements, sync utilities        |
-| HTTP server           | `httpserver/`                         | Optional Go server for KOReader/OPDS integration                               |
+| Layer | Location | Role |
+| ----- | -------- | ---- |
+| Electron main | `main.js` | IPC handlers, SQLite via `better-sqlite3`, cloud sync, native integrations |
+| React renderer | `src/` | UI, Redux state, book rendering |
+| Reader engine | `src/assets/lib/kookit-extra.min.mjs` | Closed-source ESM — book parsing, SQL statements, sync utilities |
+| HTTP server | `httpserver/` | Optional Go server for KOReader / OPDS integration |
 
-## IPC Communication Pattern
+**Key IPC channels:** `open-book`, `new-tab`, `exit-tab`, `database-command`, `cloud-upload/download`, `discord-rpc-update`, `prompt-biometric-auth`
 
-All renderer↔main communication uses Electron IPC. Main handlers are registered inside `createMainWin()` in `main.js`.
+**Redux slices:** `book`, `reader`, `manager`, `viewArea`, `backupPage`, `sidebar`, `progressPanel`
 
-- **Renderer → Main (async):** `ipcRenderer.invoke("channel-name", config)` / `ipcMain.handle(...)`
-- **Renderer → Main (sync):** `ipcRenderer.sendSync("channel-name")` / `ipcMain.on(...)` with `event.returnValue`
-- **Main → Renderer (push):** `mainWin.webContents.send("event-name", payload)`
+**Container pattern:** `index.tsx` (Redux connect) → `component.tsx` → `interface.tsx` in `src/containers/`
 
-Key channels: `open-book`, `new-tab`, `exit-tab`, `database-command`, `cloud-upload/download`, `discord-rpc-update`, `prompt-biometric-auth`.
+**Window modes:** `new-tab` → `WebContentsView` overlay (in-app); `open-book` → separate `BrowserWindow`. Reader close is two-phase: `before-reader-close` → flush data → `reader-close-ready`.
 
-## Redux State Structure
-
-State slices in `src/store/reducers/` — connected via `src/store/index.tsx`:
-
-- `book` – current book, notes, bookmarks, render functions
-- `reader` – reader UI state (mode, scale, theme, nav lock)
-- `manager` – library, plugins, auth, dialogs
-- `viewArea` – menu open/mode state
-- `backupPage` – sync/drive config
-- `sidebar`, `progressPanel` – UI panels
-
-Containers follow the `index.tsx` (connect) → `component.tsx` (React class/func) → `interface.tsx` (prop types) pattern in `src/containers/`.
-
-## Database Access
-
-All DB operations go through the main process via the `database-command` IPC channel. SQL statements and schema are defined in `kookit-extra.min.mjs` (`SqlStatement`). Never open SQLite directly from the renderer.
-
-```ts
-// Renderer example
-ipcRenderer.invoke("database-command", {
-  statement: "saveBook",
-  statementType: "function",
-  executeType: "run",
-  dbName: "book",
-  data: bookObj,
-  storagePath: dirPath,
-});
-```
-
-## Reader Tab vs. Reader Window
-
-- **`new-tab`** – opens a `WebContentsView` overlaid on `mainWin` (in-app tab, used for book reading within the main window).
-- **`open-book`** – opens a separate `BrowserWindow` (`readerWindow`). Supports fullscreen, merge-word (frameless transparent), and always-on-top.
-- Reader close is two-phase: main sends `before-reader-close` → renderer flushes reading-time data → renderer replies `reader-close-ready` → main closes window.
-
-## Reader Utilities (`src/utils/reader/`)
-
-| File            | Purpose                                      |
-| --------------- | -------------------------------------------- |
-| `styleUtil.ts`  | Font, layout, CSS injection into book iframe |
-| `themeUtil.ts`  | Background/text color themes                 |
-| `noteUtil.ts`   | Highlight/note rendering in book content     |
-| `ttsUtil.ts`    | Text-to-speech coordination                  |
-| `mouseEvent.ts` | Touch/mouse event handling in reader         |
-| `discordRPC.ts` | Discord Rich Presence update calls           |
-| `launchUtil.ts` | Book launch/open coordination                |
-
-## Developer Workflows
-
-```bash
-npm run dev          # Start React dev server + Electron with hot reload (nodemon)
-npm start            # React dev server only (port 3000)
-npm run ele          # Electron only (needs built or running React server)
-npm run build        # Production React build → build/
-npm run release      # Build + package Electron app (electron-builder)
-npm run rebuild      # Rebuild native modules (better-sqlite3) for current Electron
-```
-
-- Dev mode uses `http://localhost:3000`; production uses `file://build/index.html`.
-- `electron-store` persists window positions, user preferences, and encrypted tokens between sessions.
-- Logs go to `userData/debug.log` via `electron-log`; accessible via **Settings → Debug Logs**.
-
-## Key Conventions
-
-- **i18n:** All UI strings use `react-i18next`. Translation files are in `src/assets/locales/`. Run `node scripts/i18n-script.js` to manage translations.
-- **Plugins:** Loaded as `PluginModel` objects from DB; plugin scripts are `eval()`'d in the main process for TTS (`generate-tts` IPC handler).
-- **Cloud sync:** Instantiated lazily via `getSyncUtil(config)` in `main.js`; cached per service in `syncUtilCache`. Services: OneDrive, Google Drive, Dropbox, WebDAV, S3, SFTP, FTP, SMB, MEGA, etc.
-- **Biometric auth:** macOS uses Touch ID (`systemPreferences.promptTouchID`); Windows uses Windows Hello via PowerShell WinRT bridging.
-- **Book cover/style assets:** Stored under `userData/uploads/`; path exposed to renderer via `user-data` IPC sync channel.
+Path-specific review rules are in `.github/instructions/` for `main.js`, `src/**/*.{ts,tsx}`, `httpserver/**`, and `src/assets/locales/**`.
