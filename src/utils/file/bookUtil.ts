@@ -404,7 +404,11 @@ class BookUtil {
       if (!bookBuffer) {
         return false;
       }
-      await this.addBook(key, format, bookBuffer);
+      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        await LocalFileManager.saveFile(key + "." + format, bookBuffer, "book");
+      } else {
+        await localforage.setItem(key, bookBuffer);
+      }
       toast.dismiss("add-book");
       return true;
     }
