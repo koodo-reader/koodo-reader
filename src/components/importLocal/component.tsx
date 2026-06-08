@@ -505,7 +505,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       typeof externalUrl === "string"
         ? externalUrl
         : await vexPromptAsync(
-            this.props.t("Enter book download URL (http/https)"),
+            this.props.t("Enter book download URL or article URL"),
             "https://"
           );
     if (!url || typeof url !== "string") return;
