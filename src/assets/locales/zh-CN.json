@@ -520,7 +520,7 @@
   "From cloud storage": "从云端导入",
   "From OPDS": "从 OPDS 导入",
   "From URL": "从 URL 导入",
-  "Enter book download URL (http/https)": "请输入图书下载链接（http/https）",
+  "Enter book download URL or article URL": "请输入图书下载链接或网页文章链接",
   "Please enter a valid http or https URL": "请输入有效的 http 或 https 链接",
   "Popular OPDS Catalogs": "热门 OPDS 目录",
   "My OPDS Catalogs": "我的 OPDS 目录",

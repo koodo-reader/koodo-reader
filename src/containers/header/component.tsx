@@ -48,11 +48,7 @@ import SupportDialog from "../../components/dialogs/supportDialog";
 import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
-import {
-  getDeviceName,
-  getTempToken,
-  updateUserConfig,
-} from "../../utils/request/user";
+import { getTempToken, updateUserConfig } from "../../utils/request/user";
 import i18n from "../../i18n";
 declare var window: any;
 
@@ -75,7 +71,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     };
   }
   async componentDidMount() {
-    console.log(await getDeviceName());
     if (isElectron) {
       try {
         await generateSnapshot();
