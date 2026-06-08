@@ -488,7 +488,8 @@ let options = {
   height: parseInt(store.get("mainWinHeight") || 660) / mainWinDisplayScale,
   x: parseInt(store.get("mainWinX")),
   y: parseInt(store.get("mainWinY")),
-  backgroundColor: "#fff",
+  backgroundColor:
+    store.get("appSkin") === "night" ? "rgba(47, 52, 55, 1)" : "#fff",
   minWidth: 300,
   minHeight: 100,
   webPreferences: {
