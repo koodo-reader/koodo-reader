@@ -1225,6 +1225,9 @@ const createMainWin = () => {
     const { machineIdSync } = require("node-machine-id");
     return machineIdSync();
   });
+  ipcMain.handle("get-device-name", async () => {
+    return os.hostname() || "";
+  });
   ipcMain.handle("get-store-value", async (event, config) => {
     return store.get(config.key);
   });
