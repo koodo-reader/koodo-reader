@@ -804,6 +804,8 @@ class TextToSpeech extends React.Component<
 
         lastVisibleTextList = rawNodeList.flat();
       }
+      console.log("visibleTextList", lastVisibleTextList, this.nodeList);
+
       let isReachPageEnd = checkReachPageEnd(
         index,
         this.nodeList,

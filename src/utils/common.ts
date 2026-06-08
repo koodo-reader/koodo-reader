@@ -1524,7 +1524,7 @@ export const findLastMatchIndex = (a: string[], b: string[]) => {
     // 从当前 aIndex 开始在 a 中查找 b[i]
     let found = false;
     for (let j = aIndex; j < a.length; j++) {
-      if (a[j] === b[i]) {
+      if (a[j].trim() === b[i].trim()) {
         lastMatchIndex = j;
         aIndex = j + 1;
         found = true;
