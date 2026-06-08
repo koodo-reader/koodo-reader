@@ -52,16 +52,16 @@ class MetadataDialog extends React.Component<
 
     try {
       const res = await getBookMetadata(searchName, searchAuthor);
-      if (res && res.data) {
+      console.log("Metadata search result:", res);
+      if (res && res.code === 200 && res.data) {
         const data = res.data as BookResultItem[];
-        if (data.length === 0) {
-          this.setState({
-            isLoading: false,
-            error: this.props.t("No metadata found"),
-          });
-        } else {
-          this.setState({ results: data, isLoading: false });
-        }
+
+        this.setState({ results: data, isLoading: false });
+      } else if (res && res.code === 200 && !res.data) {
+        this.setState({
+          isLoading: false,
+          error: this.props.t("No metadata found"),
+        });
       } else {
         this.setState({
           isLoading: false,
