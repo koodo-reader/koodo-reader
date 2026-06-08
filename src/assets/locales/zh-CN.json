@@ -1106,5 +1106,6 @@
   "Get more results": "获取更多结果",
   "Validation successful": "验证成功",
   "Validation failed": "验证失败",
-  "Please configure the KOReader sync server first": "请先配置 KOReader 同步服务器"
+  "Please configure the KOReader sync server first": "请先配置 KOReader 同步服务器",
+  "Jump to furthest read page": "跳转到最远阅读位置"
 }

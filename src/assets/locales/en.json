@@ -873,7 +873,6 @@
   "Voice type": "Voice type",
   "System voice": "System voice",
   "Purchase the code": "Purchase the code",
-
   "Please upgrade to Pro to use this feature": "Please upgrade to Pro to use this feature",
   "Query redemption code": "Query redemption code",
   "Custom voice": "Custom voice",
@@ -971,5 +970,6 @@
   "Show number of books in each shelf": "Show number of books in each shelf",
   "Custom AI Translation": "Custom AI Translation",
   "Custom AI Dictionary": "Custom AI Dictionary",
-  "Custom AI Assistance": "Custom AI Assistance"
+  "Custom AI Assistance": "Custom AI Assistance",
+  "Jump to furthest read page": "Jump to furthest read page"
 }

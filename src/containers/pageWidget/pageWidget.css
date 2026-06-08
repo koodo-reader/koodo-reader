@@ -40,13 +40,35 @@
   opacity: 0.3;
   float: left;
 }
-.footer-time {
-  letter-spacing: 0.5px;
+.reading-status-bar {
   position: absolute;
   top: 6px;
   left: 20px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+.footer-time {
+  letter-spacing: 0.5px;
   font-size: 13px;
   opacity: 0.5;
+}
+.furthest-read-button {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  cursor: pointer;
+  opacity: 0.5;
+  pointer-events: all;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.furthest-read-button:hover {
+  opacity: 1;
+}
+.furthest-read-button .icon-pin {
+  font-size: 15px;
 }
 .bookmark {
   height: 40px;

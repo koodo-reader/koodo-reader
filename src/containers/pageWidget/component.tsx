@@ -9,6 +9,10 @@ import { Trans } from "react-i18next";
 import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
 import { detectLocalLanguage } from "../../utils/common";
 import toast from "react-hot-toast";
+import {
+  getFurthestLocation,
+  recordFurthestLocation,
+} from "../../utils/reader/furthestLocationUtil";
 class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
   isFirst: Boolean;
   timeInterval: any;
@@ -22,6 +26,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
       nextPage: 0,
       currentTime: this.getFormattedTime(),
       percentage: "",
+      showFurthest: false,
       ignoreNextPageChange: false,
     };
     this.isFirst = true;
@@ -156,6 +161,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
     if (!pageInfo) {
       return;
     }
+    this.handleFurthest(rendition);
     if (
       this.props.currentBook.format === "PDF" &&
       !ConfigService.getAllListConfig("convertPDFBooks").includes(
@@ -179,6 +185,38 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
       percentage: pageInfo.percentage,
     });
   }
+  handleFurthest = (rendition) => {
+    let position = rendition.getPosition();
+    recordFurthestLocation(this.props.currentBook.key, position);
+    let furthest = getFurthestLocation(this.props.currentBook.key);
+    // Compare against the same percentage source we just recorded. The small
+    // tolerance absorbs cross-session pagination drift: a furthest mark stored
+    // in a previous session can be marginally ahead of the freshly computed
+    // reopen position, which would otherwise show the button even when we are
+    // already at the furthest point.
+    let current = parseFloat((position && position.percentage) || "0");
+    this.setState({
+      showFurthest:
+        !!furthest &&
+        parseFloat(furthest.percentage as string) - current > 0.001,
+    });
+  };
+  handleJumpToFurthest = async () => {
+    let furthest = getFurthestLocation(this.props.currentBook.key);
+    if (!furthest || !this.props.htmlBook) return;
+    this.setState({ ignoreNextPageChange: true });
+    await this.props.htmlBook.rendition.goToPosition(
+      JSON.stringify({
+        text: furthest.text,
+        chapterTitle: furthest.chapterTitle,
+        chapterDocIndex: furthest.chapterDocIndex,
+        chapterHref: furthest.chapterHref,
+        count: furthest.hasOwnProperty("cfi") ? "ignore" : furthest.count,
+        percentage: furthest.percentage,
+        cfi: furthest.cfi,
+      })
+    );
+  };
 
   render() {
     return (
@@ -238,18 +276,6 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
                   {this.props.currentBook.name}
                 </p>
               )}
-            {!this.props.isHideHeader && (
-              <>
-                <span className="footer-time">
-                  {this.state.currentTime}
-                  {this.state.percentage
-                    ? "  " +
-                      (parseFloat(this.state.percentage) * 100).toFixed(2) +
-                      "%"
-                    : ""}
-                </span>
-              </>
-            )}
           </div>
           <div className="footer-container">
             {!this.props.isHideFooter && this.state.prevPage > 0 && (
@@ -315,6 +341,29 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
             </>
           )}
         </div>
+        {!this.props.isHideHeader && (
+          <div className="reading-status-bar">
+            <span className="footer-time">
+              {this.state.currentTime}
+              {this.state.percentage
+                ? "  " +
+                  (parseFloat(this.state.percentage) * 100).toFixed(2) +
+                  "%"
+                : ""}
+            </span>
+            {this.state.showFurthest && (
+              <span
+                className="furthest-read-button"
+                title={this.props.t("Jump to furthest read page")}
+                onClick={() => {
+                  this.handleJumpToFurthest();
+                }}
+              >
+                <span className="icon-pin"></span>
+              </span>
+            )}
+          </div>
+        )}
         {this.props.jumpPosition && (
           <div className="jump-return-button-container">
             <button
