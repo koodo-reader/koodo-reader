@@ -52,7 +52,6 @@ class MetadataDialog extends React.Component<
 
     try {
       const res = await getBookMetadata(searchName, searchAuthor);
-      console.log("Metadata search result:", res);
       if (res && res.code === 200 && res.data) {
         const data = res.data as BookResultItem[];
 
