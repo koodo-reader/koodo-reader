@@ -1513,16 +1513,6 @@ export const checkReachPageEnd = (
   currentBook: Book
 ) => {
   if (visibleTextList.length === 0) return true;
-  console.log("Checking page end:", {
-    nodeIndex,
-    nodeText: nodeList[nodeIndex].text,
-    lastVisibleText: visibleTextList[visibleTextList.length - 1],
-    nodeList,
-    visibleTextList,
-    multiRoleBooks: ConfigService.getAllListConfig(
-      "multiRoleVoiceBooks"
-    ).includes(currentBook?.key),
-  });
   if (
     ConfigService.getAllListConfig("multiRoleVoiceBooks").includes(
       currentBook?.key
