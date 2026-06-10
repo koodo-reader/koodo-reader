@@ -726,7 +726,8 @@ class TextToSpeech extends React.Component<
       let isReachPageEnd = checkReachPageEnd(
         index,
         this.nodeList,
-        lastVisibleTextList
+        lastVisibleTextList,
+        this.props.currentBook
       );
       if (index === this.nodeList.length - 1) {
         isReachPageEnd = true;
@@ -808,7 +809,8 @@ class TextToSpeech extends React.Component<
       let isReachPageEnd = checkReachPageEnd(
         index,
         this.nodeList,
-        lastVisibleTextList
+        lastVisibleTextList,
+        this.props.currentBook
       );
       if (index === this.nodeList.length - 1) {
         isReachPageEnd = true;
