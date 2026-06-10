@@ -1509,9 +1509,38 @@ export const checkReachPageEnd = (
     voiceName: string;
     voiceEngine: string;
   }[],
-  visibleTextList: string[]
+  visibleTextList: string[],
+  currentBook: Book
 ) => {
   if (visibleTextList.length === 0) return true;
+  console.log("Checking page end:", {
+    nodeIndex,
+    nodeText: nodeList[nodeIndex].text,
+    lastVisibleText: visibleTextList[visibleTextList.length - 1],
+    nodeList,
+    visibleTextList,
+    multiRoleBooks: ConfigService.getAllListConfig(
+      "multiRoleVoiceBooks"
+    ).includes(currentBook?.key),
+  });
+  if (
+    ConfigService.getAllListConfig("multiRoleVoiceBooks").includes(
+      currentBook?.key
+    )
+  ) {
+    if (
+      visibleTextList[visibleTextList.length - 1].indexOf("“") > -1 ||
+      visibleTextList[visibleTextList.length - 1].indexOf('"') > -1
+    ) {
+      return visibleTextList[visibleTextList.length - 1].endsWith(
+        nodeList[nodeIndex].text
+      );
+    } else {
+      return (
+        visibleTextList[visibleTextList.length - 1] === nodeList[nodeIndex].text
+      );
+    }
+  }
   let nodeTextList = nodeList.map((node) => node.text);
   let lastMatchIndex = findLastMatchIndex(nodeTextList, visibleTextList);
   return lastMatchIndex === nodeIndex;
