@@ -1,0 +1,64 @@
+body {
+  line-height: 1.6;
+  word-wrap: break-word;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -webkit-backface-visibility: hidden;
+  font-family:
+    "Times New Roman", "Georgia", "Garamond", Baskerville, "LXGW WenKai",
+    "LXGW WenKai GB", "LXGW WenKai Screen", "LXGW WenKai TC",
+    "LXGW WenKai Lite", SimSun, "宋体", "STSong", "Source Han Serif",
+    "Noto Serif CJK", "FangSong", "KaiTi", "楷体", "Hiragino Sans GB", "冬青黑",
+    "Microsoft YaHei", "微软雅黑", Helvetica, Tahoma, Arial, sans-serif;
+}
+p {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: unset !important;
+  margin-right: unset !important;
+}
+p,
+div,
+article,
+cite,
+div,
+li,
+p,
+pre,
+dt,
+dd,
+table,
+blockquote {
+  line-height: 1.6;
+  word-spacing: 0px;
+  letter-spacing: 0px;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  -webkit-hyphenate-limit-before: 3;
+  -webkit-hyphenate-limit-after: 2;
+  -webkit-hyphenate-limit-lines: 2;
+  hanging-punctuation: allow-end last;
+  widows: 2;
+  orphans: 2;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+title {
+  line-height: 1.6;
+  word-spacing: 0px;
+  letter-spacing: 0px;
+  text-indent: 0;
+}
+:lang(zh),
+:lang(ja),
+:lang(ko) {
+  font-size: 16px;
+  widows: 1;
+  orphans: 1;
+}

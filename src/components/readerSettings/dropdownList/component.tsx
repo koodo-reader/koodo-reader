@@ -25,6 +25,7 @@ class DropdownList extends React.Component<
       currentTextAlignValue: ConfigService.getReaderConfig("textAlign") || "",
       chineseConversionValue:
         ConfigService.getReaderConfig("convertChinese") || "",
+      currentBookLayoutValue: ConfigService.getReaderConfig("bookLayout") || "",
       fullTranslationModeValue: ConfigService.getAllListConfig(
         "fullTranslationBooks"
       ).includes(props.currentBook?.key)
@@ -110,7 +111,7 @@ class DropdownList extends React.Component<
         if (arr[0] === "Load local fonts") {
           vexComfirmAsync(
             this.props.t(
-              "Please install local fonts to your machine and then restart the application"
+              "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
             )
           );
           ConfigService.setReaderConfig(option, "");
@@ -129,7 +130,7 @@ class DropdownList extends React.Component<
         if (arr[0] === "Load local fonts") {
           vexComfirmAsync(
             this.props.t(
-              "Please install local fonts to your machine and then restart the application"
+              "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
             )
           );
           ConfigService.setReaderConfig(option, "");
@@ -156,6 +157,11 @@ class DropdownList extends React.Component<
           chineseConversionValue: arr[0],
         });
 
+        break;
+      case "bookLayout":
+        this.setState({
+          currentBookLayoutValue: arr[0],
+        });
         break;
       case "fullTranslationMode":
         this.setState({
@@ -239,15 +245,17 @@ class DropdownList extends React.Component<
                   ? this.state.currentTextAlignValue
                   : item.value === "convertChinese"
                     ? this.state.chineseConversionValue
-                    : item.value === "fullTranslationMode"
-                      ? this.state.fullTranslationModeValue
-                      : item.value === "textOrientation"
-                        ? this.state.currentTextOrientationValue
-                        : item.value === "fontFamily"
-                          ? this.state.currentFontFamilyValue
-                          : item.value === "selectAction"
-                            ? this.state.currentSelectActionValue
-                            : this.state.currentSubFontFamilyValue
+                    : item.value === "bookLayout"
+                      ? this.state.currentBookLayoutValue
+                      : item.value === "fullTranslationMode"
+                        ? this.state.fullTranslationModeValue
+                        : item.value === "textOrientation"
+                          ? this.state.currentTextOrientationValue
+                          : item.value === "fontFamily"
+                            ? this.state.currentFontFamilyValue
+                            : item.value === "selectAction"
+                              ? this.state.currentSelectActionValue
+                              : this.state.currentSubFontFamilyValue
             }
             onChange={(event) => {
               this.handleView(event, item.value);

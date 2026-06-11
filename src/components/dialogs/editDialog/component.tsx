@@ -167,7 +167,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
         )}
         <div className="edit-dialog-title" style={{ position: "relative" }}>
           <Trans>Edit Book</Trans>
-          {/* <div
+          <div
             style={{
               fontSize: 16,
               color: "rgb(231, 69, 69)",
@@ -180,7 +180,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
             onClick={() => this.setState({ isMetadataDialogOpen: true })}
           >
             <Trans>Get metadata</Trans>
-          </div> */}
+          </div>
         </div>
 
         <div className="edit-dialog-body">

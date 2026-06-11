@@ -9,7 +9,7 @@ export interface ImportLocalProps extends RouteComponentProps<any> {
   isAuthed: boolean;
   mode: string;
   shelfTitle: string;
-
+  cloudSyncFunc: () => Promise<void>;
   handleFetchBooks: () => void;
   handleDrag: (isDrag: boolean) => void;
   handleImportDialog: (isOpenImportDialog: boolean) => void;

@@ -2,6 +2,23 @@ import i18n from "../i18n";
 
 export const dropdownList = [
   {
+    title: "Book layout",
+    value: "bookLayout",
+    option: [
+      { label: "Default", value: "" },
+      { label: "Recommended layout", value: "kookit" },
+      {
+        label: "赫蹏",
+        value: "heti",
+      },
+      { label: "漢字標準格式", value: "han" },
+      { label: "中文网页重设与排版", value: "typo" },
+      { label: "Tufte CSS", value: "tufte" },
+      { label: "Typebase CSS", value: "typebase" },
+    ],
+    isPDF: false,
+  },
+  {
     title: "Default font family",
     value: "fontFamily",
     option: [

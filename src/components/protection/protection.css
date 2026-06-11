@@ -4,7 +4,6 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #f5f5f5;
   z-index: 10;
   display: flex;
   align-items: center;
@@ -25,7 +24,6 @@
 }
 
 .pin-keypad-container {
-  background: var(--background-color-1, #fff);
   border-radius: 16px;
   padding: 32px 28px 24px;
   display: flex;
@@ -35,21 +33,18 @@
 }
 
 .biometric-auth-container {
-  background: var(--background-color-1, #fff);
   border-radius: 16px;
   padding: 32px 28px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 320px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
 .pin-keypad-title {
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 20px;
-  color: var(--text-color, rgba(75, 75, 75, 1));
   text-align: center;
 }
 
@@ -63,14 +58,8 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid var(--text-color-2, #999);
   background: transparent;
   transition: background 0.15s;
-}
-
-.pin-dot.pin-dot-filled {
-  background: var(--primary-color, rgba(75, 75, 75, 1));
-  border-color: var(--primary-color, rgba(75, 75, 75, 1));
 }
 
 .pin-error-msg {
@@ -92,11 +81,9 @@
   height: 64px;
   border-radius: 50%;
   border: none;
-  background: var(--background-color-2, #f0f0f0);
   font-size: 22px;
   font-weight: 500;
   cursor: pointer;
-  color: var(--text-color, #333);
   transition:
     background 0.12s,
     opacity 0.12s;
@@ -118,6 +105,15 @@
   height: 64px;
 }
 
+span.pin-key-empty {
+  background: transparent;
+  pointer-events: none;
+}
+
+button.pin-key-empty {
+  background: transparent;
+}
+
 .pin-key-del {
   background: transparent;
   font-size: 20px;
@@ -127,7 +123,6 @@
   margin-top: 4px;
   background: none;
   border: none;
-  color: var(--text-color-2, #999);
   font-size: 14px;
   cursor: pointer;
   padding: 6px 16px;
@@ -143,8 +138,6 @@
   min-height: 44px;
   border: none;
   border-radius: 999px;
-  background: var(--primary-color, rgba(75, 75, 75, 1));
-  color: #fff;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;

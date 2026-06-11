@@ -5,11 +5,8 @@ import {
   MetadataDialogProps,
   MetadataDialogState,
   MetadataResult,
-  AppleBookItem,
-  OpenLibraryBookItem,
   BookResultItem,
 } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { getBookMetadata } from "../../../utils/request/reader";
 
@@ -25,7 +22,6 @@ class MetadataDialog extends React.Component<
       results: [],
       selectedId: null,
       isLoading: false,
-      isCloudSearch: false,
       error: "",
     };
   }
@@ -38,8 +34,14 @@ class MetadataDialog extends React.Component<
 
   handleSearch = async () => {
     const { searchName, searchAuthor } = this.state;
-    const query = [searchName, searchAuthor].filter(Boolean).join(" ");
-    if (!query.trim()) return;
+    if (!searchName.trim() && !searchAuthor.trim()) return;
+
+    if (!this.props.isAuthed) {
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
+      return;
+    }
 
     this.setState({
       isLoading: true,
@@ -48,54 +50,28 @@ class MetadataDialog extends React.Component<
       selectedId: null,
     });
 
-    const fetchItunes = async (): Promise<BookResultItem[]> => {
-      const encoded = encodeURIComponent(query);
-      const url = `https://itunes.apple.com/search?term=${encoded}&media=ebook&entity=ebook&limit=3`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("iTunes network error");
-      const data = await res.json();
-      return ((data.results || []) as AppleBookItem[]).map((item) => ({
-        ...item,
-        source: "itunes" as const,
-      }));
-    };
+    try {
+      const res = await getBookMetadata(searchName, searchAuthor);
+      if (res && res.code === 200 && res.data) {
+        const data = res.data as BookResultItem[];
 
-    const fetchOpenLibrary = async (): Promise<BookResultItem[]> => {
-      const parts: string[] = [];
-      if (searchName) parts.push(`title=${encodeURIComponent(searchName)}`);
-      if (searchAuthor)
-        parts.push(`author=${encodeURIComponent(searchAuthor)}`);
-      if (!parts.length) parts.push(`q=${encodeURIComponent(query)}`);
-      const url = `https://openlibrary.org/search.json?${parts.join("&")}&fields=key,title,author_name,publisher,first_publish_year,cover_i&limit=3`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Open Library network error");
-      const data = await res.json();
-      return ((data.docs || []) as Omit<OpenLibraryBookItem, "source">[]).map(
-        (item) => ({ ...item, source: "openlibrary" as const })
-      );
-    };
-
-    const results = await Promise.allSettled([
-      fetchItunes(),
-      fetchOpenLibrary(),
-    ]);
-    const merged: BookResultItem[] = [];
-    let hasError = false;
-    for (const r of results) {
-      if (r.status === "fulfilled") {
-        merged.push(...r.value);
+        this.setState({ results: data, isLoading: false });
+      } else if (res && res.code === 200 && !res.data) {
+        this.setState({
+          isLoading: false,
+          error: this.props.t("No metadata found"),
+        });
       } else {
-        hasError = true;
+        this.setState({
+          isLoading: false,
+          error: this.props.t("Failed to fetch metadata"),
+        });
       }
-    }
-
-    if (merged.length === 0 && hasError) {
+    } catch {
       this.setState({
         isLoading: false,
         error: this.props.t("Failed to fetch metadata"),
       });
-    } else {
-      this.setState({ results: merged, isLoading: false });
     }
   };
 
@@ -106,48 +82,20 @@ class MetadataDialog extends React.Component<
   };
 
   getItemId = (item: BookResultItem): string => {
-    if (item.source === "itunes") return item.trackId + "";
     return item.key;
   };
 
   handleApply = () => {
     const { results, selectedId } = this.state;
-    const item = results.find((r) => {
-      if (r.source === "itunes") return r.trackId + "" === selectedId;
-      return r.key === selectedId;
-    });
+    const item = results.find((r) => r.key === selectedId);
     if (!item) return;
-    let metadata: MetadataResult;
-    if (item.source === "itunes") {
-      metadata = {
-        name: item.trackName || "",
-        author: item.artistName || "",
-        publisher: "",
-        description: item.description || "",
-        cover: item.artworkUrl100
-          ? item.artworkUrl100.replace("100x100", "600x600")
-          : "",
-      };
-    } else if (item.source === "cloud") {
-      metadata = {
-        name: item.name || "",
-        author: item.author || "",
-        publisher: item.publisher || "",
-        description: item.description || "",
-        cover: item.cover || "",
-      };
-    } else {
-      const coverUrl = item.cover_i
-        ? `https://covers.openlibrary.org/b/id/${item.cover_i}-L.jpg`
-        : "";
-      metadata = {
-        name: item.title || "",
-        author: (item.author_name || []).join(", "),
-        publisher: (item.publisher || [])[0] || "",
-        description: item.description || "",
-        cover: coverUrl,
-      };
-    }
+    const metadata: MetadataResult = {
+      name: item.name || "",
+      author: item.author || "",
+      publisher: item.publisher || "",
+      description: item.description || "",
+      cover: item.cover || "",
+    };
     this.props.handleApplyMetadata(metadata);
     this.props.handleMetadataDialog(false);
   };
@@ -214,35 +162,12 @@ class MetadataDialog extends React.Component<
             results.map((item) => {
               const id = this.getItemId(item);
               const isSelected = selectedId === id;
-              let thumb = "";
-              let title = "";
-              let author = "";
-              let publisher = "";
-              let description = "";
-              let source = "";
-              if (item.source === "itunes") {
-                thumb = item.artworkUrl100 || item.artworkUrl60 || "";
-                title = item.trackName;
-                author = item.artistName;
-                description = item.description || "";
-                source = "iTunes";
-              } else if (item.source === "cloud") {
-                thumb = item.cover || "";
-                title = item.name;
-                author = item.author;
-                publisher = item.publisher || "";
-                description = item.description || "";
-                source = "Cloud";
-              } else {
-                thumb = item.cover_i
-                  ? `https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg`
-                  : "";
-                title = item.title;
-                author = (item.author_name || []).join(", ");
-                publisher = (item.publisher || [])[0] || "";
-                description = item.description || "";
-                source = "Open Library";
-              }
+              const thumb = item.cover || "";
+              const title = item.name;
+              const author = item.author;
+              const publisher = item.publisher || "";
+              const description = item.description || "";
+              const source = "Cloud";
               return (
                 <div
                   key={id}
@@ -309,61 +234,6 @@ class MetadataDialog extends React.Component<
                 </div>
               );
             })}
-          {!this.state.isCloudSearch && (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: 10,
-              }}
-            >
-              <div
-                onClick={async () => {
-                  if (!this.props.isAuthed) {
-                    toast(
-                      this.props.t("Please upgrade to Pro to use this feature")
-                    );
-                    this.props.handleSetting(true);
-                    this.props.handleSettingMode("account");
-                    ConfigService.setReaderConfig("fullTranslationMode", "no");
-                    return;
-                  }
-                  toast.loading(this.props.t("Fetching metadata from cloud"));
-                  let res = await getBookMetadata(
-                    this.props.currentBookName,
-                    this.props.currentBookAuthor
-                  );
-                  toast.dismiss();
-                  if (res && res.data) {
-                    const data = res.data as BookResultItem[];
-                    if (data.length === 0) {
-                      toast(this.props.t("No metadata found"));
-                    } else {
-                      this.setState({
-                        results: [...this.state.results, ...data],
-                        selectedId: null,
-                        isCloudSearch: true,
-                      });
-                    }
-                  } else {
-                    toast(this.props.t("Failed to fetch metadata from cloud"));
-                  }
-                }}
-                style={{
-                  marginTop: "10px",
-                  cursor: "pointer",
-                  textAlign: "center",
-                  height: "40px",
-                  borderRadius: "20px",
-                  lineHeight: "40px",
-                  width: "140px",
-                }}
-                className="token-dialog-token-text"
-              >
-                <Trans>Get more results</Trans>
-              </div>
-            </div>
-          )}
         </div>
 
         <div className="metadata-dialog-footer">

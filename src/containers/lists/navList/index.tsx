@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
-import { handleShowBookmark } from "../../../store/actions";
+import { handleShowBookmark, handleJumpPosition } from "../../../store/actions";
 import NavList from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
@@ -12,7 +12,7 @@ const mapStateToProps = (state: stateType) => {
     notes: state.reader.notes,
   };
 };
-const actionCreator = { handleShowBookmark };
+const actionCreator = { handleShowBookmark, handleJumpPosition };
 export default connect(
   mapStateToProps,
   actionCreator

@@ -101,6 +101,43 @@ export const getBookName = (item: Book) => {
   }
   return item.name + `.${item.format.toLocaleLowerCase()}`;
 };
+// 将内容字符串转为 Blob
+const toBlob = (content: string, format: string): Blob => {
+  const mimeMap: Record<string, string> = {
+    md: "text/markdown,charset=UTF-8",
+    txt: "text/plain,charset=UTF-8",
+    html: "text/html,charset=UTF-8",
+    csv: "text/csv,charset=UTF-8",
+  };
+  return new Blob([content], { type: mimeMap[format] || "text/plain" });
+};
+
+// 按书名分组数据，返回 { bookName -> items[] } 映射
+const groupByBook = (data: any[]): Record<string, any[]> => {
+  const map: Record<string, any[]> = {};
+  data.forEach((item) => {
+    const key = item.bookName || "Unknown book";
+    if (!map[key]) map[key] = [];
+    map[key].push(item);
+  });
+  return map;
+};
+
+// 将文件名中不合法的字符替换为下划线
+const sanitizeFileName = (name: string): string =>
+  name.replace(/[\\/:*?"<>|]/g, "_");
+
+// 根据 format 将 data 转为文本内容
+const convertNotesData = (
+  data: any[],
+  format: "csv" | "md" | "txt" | "html"
+): string => {
+  if (format === "md") return convertNotesToMarkdown(data);
+  if (format === "txt") return convertNotesToTxt(data);
+  if (format === "html") return convertNotesToHTML(data);
+  return convertArrayToCSV(data);
+};
+
 export const exportNotes = async (
   notes: Note[],
   books: Book[],
@@ -128,21 +165,59 @@ export const exportNotes = async (
   const fileDate = `${year}-${month <= 9 ? "0" + month : month}-${
     day <= 9 ? "0" + day : day
   }`;
+
+  // 涉及多本书时导出压缩包
+  const bookNames = Object.keys(groupByBook(data));
+  if (bookNames.length > 1 && format !== "pdf") {
+    const zip = new JSZip();
+    // 全量文件
+    zip.file(`all.${format}`, convertNotesData(data, format));
+    // 每本书单独文件
+    const bookMap = groupByBook(data);
+    Object.entries(bookMap).forEach(([bookName, bookData]) => {
+      zip.file(
+        `${sanitizeFileName(bookName)}.${format}`,
+        convertNotesData(bookData, format)
+      );
+    });
+    saveAs(
+      await zip.generateAsync({ type: "blob" }),
+      `KoodoReader-Note-${fileDate}.zip`
+    );
+    return;
+  }
+
+  if (bookNames.length > 1 && format === "pdf") {
+    const zip = new JSZip();
+    // 全量 PDF
+    const allPdfBlob = await generateHTMLAsPDFBlob(convertNotesToHTML(data));
+    zip.file("all.pdf", allPdfBlob);
+    // 每本书单独 PDF
+    const bookMap = groupByBook(data);
+    for (const [bookName, bookData] of Object.entries(bookMap)) {
+      const blob = await generateHTMLAsPDFBlob(convertNotesToHTML(bookData));
+      zip.file(`${sanitizeFileName(bookName)}.pdf`, blob);
+    }
+    saveAs(
+      await zip.generateAsync({ type: "blob" }),
+      `KoodoReader-Note-${fileDate}.zip`
+    );
+    return;
+  }
+
   if (format === "md") {
     saveAs(
-      new Blob([convertNotesToMarkdown(data)], {
-        type: "text/markdown,charset=UTF-8",
-      }),
+      toBlob(convertNotesToMarkdown(data), "md"),
       `KoodoReader-Note-${fileDate}.md`
     );
   } else if (format === "txt") {
     saveAs(
-      new Blob([convertNotesToTxt(data)], { type: "text/plain,charset=UTF-8" }),
+      toBlob(convertNotesToTxt(data), "txt"),
       `KoodoReader-Note-${fileDate}.txt`
     );
   } else if (format === "html") {
     saveAs(
-      new Blob([convertNotesToHTML(data)], { type: "text/html,charset=UTF-8" }),
+      toBlob(convertNotesToHTML(data), "html"),
       `KoodoReader-Note-${fileDate}.html`
     );
   } else if (format === "pdf") {
@@ -152,10 +227,21 @@ export const exportNotes = async (
     );
   } else {
     saveAs(
-      new Blob([convertArrayToCSV(data)], { type: "text/csv,charset=UTF-8" }),
+      toBlob(convertArrayToCSV(data), "csv"),
       `KoodoReader-Note-${fileDate}.csv`
     );
   }
+};
+
+// 根据 format 将 data 转为文本内容
+const convertHighlightsData = (
+  data: any[],
+  format: "csv" | "md" | "txt" | "html"
+): string => {
+  if (format === "md") return convertHighlightsToMarkdown(data);
+  if (format === "txt") return convertHighlightsToTxt(data);
+  if (format === "html") return convertHighlightsToHTML(data);
+  return convertArrayToCSV(data);
 };
 
 export const exportHighlights = async (
@@ -187,25 +273,59 @@ export const exportHighlights = async (
   const fileDate = `${year}-${month <= 9 ? "0" + month : month}-${
     day <= 9 ? "0" + day : day
   }`;
+
+  // 涉及多本书时导出压缩包
+  const bookNames = Object.keys(groupByBook(data));
+  if (bookNames.length > 1 && format !== "pdf") {
+    const zip = new JSZip();
+    zip.file(`all.${format}`, convertHighlightsData(data, format));
+    const bookMap = groupByBook(data);
+    Object.entries(bookMap).forEach(([bookName, bookData]) => {
+      zip.file(
+        `${sanitizeFileName(bookName)}.${format}`,
+        convertHighlightsData(bookData, format)
+      );
+    });
+    saveAs(
+      await zip.generateAsync({ type: "blob" }),
+      `KoodoReader-Highlight-${fileDate}.zip`
+    );
+    return;
+  }
+
+  if (bookNames.length > 1 && format === "pdf") {
+    const zip = new JSZip();
+    const allPdfBlob = await generateHTMLAsPDFBlob(
+      convertHighlightsToHTML(data)
+    );
+    zip.file("all.pdf", allPdfBlob);
+    const bookMap = groupByBook(data);
+    for (const [bookName, bookData] of Object.entries(bookMap)) {
+      const blob = await generateHTMLAsPDFBlob(
+        convertHighlightsToHTML(bookData)
+      );
+      zip.file(`${sanitizeFileName(bookName)}.pdf`, blob);
+    }
+    saveAs(
+      await zip.generateAsync({ type: "blob" }),
+      `KoodoReader-Highlight-${fileDate}.zip`
+    );
+    return;
+  }
+
   if (format === "md") {
     saveAs(
-      new Blob([convertHighlightsToMarkdown(data)], {
-        type: "text/markdown,charset=UTF-8",
-      }),
+      toBlob(convertHighlightsToMarkdown(data), "md"),
       `KoodoReader-Highlight-${fileDate}.md`
     );
   } else if (format === "txt") {
     saveAs(
-      new Blob([convertHighlightsToTxt(data)], {
-        type: "text/plain,charset=UTF-8",
-      }),
+      toBlob(convertHighlightsToTxt(data), "txt"),
       `KoodoReader-Highlight-${fileDate}.txt`
     );
   } else if (format === "html") {
     saveAs(
-      new Blob([convertHighlightsToHTML(data)], {
-        type: "text/html,charset=UTF-8",
-      }),
+      toBlob(convertHighlightsToHTML(data), "html"),
       `KoodoReader-Highlight-${fileDate}.html`
     );
   } else if (format === "pdf") {
@@ -215,7 +335,7 @@ export const exportHighlights = async (
     );
   } else {
     saveAs(
-      new Blob([convertArrayToCSV(data)], { type: "text/csv,charset=UTF-8" }),
+      toBlob(convertArrayToCSV(data), "csv"),
       `KoodoReader-Highlight-${fileDate}.csv`
     );
   }
@@ -514,56 +634,96 @@ const escapeHTML = (str: string): string => {
     .replace(/\n/g, "<br />");
 };
 
-export const exportHTMLAsPDF = async (
-  htmlContent: string,
-  fileName: string
-): Promise<void> => {
+const preparePDFExportFrame = async (
+  htmlContent: string
+): Promise<HTMLIFrameElement> => {
+  const iframe = document.createElement("iframe");
+  iframe.setAttribute("aria-hidden", "true");
+  iframe.style.cssText = [
+    "position:fixed",
+    "left:-10000px",
+    "top:0",
+    "width:940px",
+    "height:1px",
+    "border:0",
+    "opacity:0",
+    "pointer-events:none",
+    "background:#fff",
+  ].join(";");
+  document.body.appendChild(iframe);
+
+  const iframeDoc = iframe.contentDocument;
+  const iframeWin = iframe.contentWindow;
+
+  if (!iframeDoc || !iframeWin) {
+    document.body.removeChild(iframe);
+    throw new Error("Failed to create PDF export frame");
+  }
+
+  iframeDoc.open();
+  iframeDoc.write(htmlContent);
+  iframeDoc.close();
+
+  if (iframeDoc.fonts?.ready) {
+    await iframeDoc.fonts.ready;
+  }
+
+  await new Promise<void>((resolve) => {
+    iframeWin.requestAnimationFrame(() => resolve());
+  });
+
+  const frameHeight = Math.max(
+    iframeDoc.documentElement.scrollHeight,
+    iframeDoc.body.scrollHeight
+  );
+  iframe.style.height = `${Math.max(frameHeight, 1)}px`;
+
+  return iframe;
+};
+
+// 将 HTML 内容渲染为 PDF 并返回 Blob；库不可用时 fallback 为 HTML Blob
+const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
   const jsPDFLib = (window as any).jspdf;
   const html2canvas = (window as any).html2canvas;
 
   if (!jsPDFLib || !jsPDFLib.jsPDF || !html2canvas) {
-    // Fallback: save as HTML if libraries are not loaded
-    saveAs(
-      new Blob([htmlContent], { type: "text/html,charset=UTF-8" }),
-      fileName.replace(/\.pdf$/, ".html")
-    );
-    return;
+    return new Blob([htmlContent], { type: "text/html,charset=UTF-8" });
   }
 
-  // Create a hidden off-screen container to render the HTML
-  const container = document.createElement("div");
-  container.style.cssText = [
-    "position:fixed",
-    "left:-9999px",
-    "top:0",
-    "width:860px",
-    "background:#fff",
-    "padding:40px",
-    "box-sizing:border-box",
-    "font-family:Georgia,serif",
-    "color:#222",
-    "line-height:1.7",
-  ].join(";");
-  container.innerHTML = htmlContent;
-  document.body.appendChild(container);
+  const iframe = await preparePDFExportFrame(htmlContent);
+  const iframeDoc = iframe.contentDocument;
+
+  if (!iframeDoc) {
+    document.body.removeChild(iframe);
+    throw new Error("Failed to access PDF export frame");
+  }
 
   try {
     const { jsPDF } = jsPDFLib;
     const a4WidthMm = 210;
     const a4HeightMm = 297;
-    const margin = 10; // mm
+    const margin = 10;
 
-    // Render the full container to a canvas
-    const canvas = await html2canvas(container, {
+    const captureTarget = iframeDoc.body;
+    const captureWidth = Math.max(
+      iframeDoc.documentElement.scrollWidth,
+      captureTarget.scrollWidth,
+      940
+    );
+    const captureHeight = Math.max(
+      iframeDoc.documentElement.scrollHeight,
+      captureTarget.scrollHeight
+    );
+
+    const canvas = await html2canvas(captureTarget, {
       scale: 2,
       useCORS: true,
       backgroundColor: "#ffffff",
-      windowWidth: 860 + 80, // container width + padding*2
+      windowWidth: captureWidth,
+      windowHeight: captureHeight,
     });
 
-    const imgData = canvas.toDataURL("image/jpeg", 0.92);
     const imgWidthMm = a4WidthMm - margin * 2;
-    // Calculate the total height in mm proportionally
     const imgHeightMm = (canvas.height * imgWidthMm) / canvas.width;
 
     const doc = new jsPDF({
@@ -571,19 +731,15 @@ export const exportHTMLAsPDF = async (
       unit: "mm",
       format: "a4",
     });
-
     const pageContentHeight = a4HeightMm - margin * 2;
     let remainingHeight = imgHeightMm;
-    let sourceY = 0; // current top position in the image (in mm)
+    let sourceY = 0;
 
     while (remainingHeight > 0) {
       const sliceHeight = Math.min(remainingHeight, pageContentHeight);
-
-      // Convert mm back to pixels for the source slice
       const srcYpx = (sourceY / imgHeightMm) * canvas.height;
       const srcHpx = (sliceHeight / imgHeightMm) * canvas.height;
 
-      // Create a temporary canvas for this page slice
       const pageCanvas = document.createElement("canvas");
       pageCanvas.width = canvas.width;
       pageCanvas.height = Math.round(srcHpx);
@@ -601,18 +757,32 @@ export const exportHTMLAsPDF = async (
           Math.round(srcHpx)
         );
       }
-      const sliceData = pageCanvas.toDataURL("image/jpeg", 0.92);
-      doc.addImage(sliceData, "JPEG", margin, margin, imgWidthMm, sliceHeight);
+      doc.addImage(
+        pageCanvas.toDataURL("image/jpeg", 0.92),
+        "JPEG",
+        margin,
+        margin,
+        imgWidthMm,
+        sliceHeight
+      );
 
       remainingHeight -= sliceHeight;
       sourceY += sliceHeight;
-      if (remainingHeight > 0) {
-        doc.addPage();
-      }
+      if (remainingHeight > 0) doc.addPage();
     }
 
-    doc.save(fileName);
+    return doc.output("blob");
   } finally {
-    document.body.removeChild(container);
+    document.body.removeChild(iframe);
   }
+};
+
+export const exportHTMLAsPDF = async (
+  htmlContent: string,
+  fileName: string
+): Promise<void> => {
+  const blob = await generateHTMLAsPDFBlob(htmlContent);
+  // generateHTMLAsPDFBlob fallback 时返回 HTML Blob，调整文件名后缀
+  const isHTML = blob.type.startsWith("text/html");
+  saveAs(blob, isHTML ? fileName.replace(/\.pdf$/, ".html") : fileName);
 };

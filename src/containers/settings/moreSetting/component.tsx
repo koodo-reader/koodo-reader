@@ -248,11 +248,7 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
             {digits.map((d, idx) => {
               if (d === null) {
                 return (
-                  <span
-                    key={idx}
-                    className="pin-key pin-key-empty"
-                    style={{ backgroundColor: "#fff" }}
-                  />
+                  <span key={idx} className="pin-key pin-key-empty" />
                 );
               }
               if (d === "del") {

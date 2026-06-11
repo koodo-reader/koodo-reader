@@ -15,10 +15,13 @@ import {
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 import { LocalFileManager } from "../../../utils/file/localFile";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KOReaderUtil,
+  TokenService,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import { changeLibrary, changePath } from "../../../utils/file/common";
 import { getSnapshots } from "../../../utils/file/backup";
-import { verifyAndBuildKOReaderSyncConfig } from "../../../utils/file/koReaderSync";
 import { restoreFromSnapshot } from "../../../utils/file/restore";
 import {
   exportBooks,
@@ -57,6 +60,10 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         ConfigService.getReaderConfig("isEnableEudicSync") === "yes",
       isEnableAnkiSync:
         ConfigService.getReaderConfig("isEnableAnkiSync") === "yes",
+      isEnableImaSync:
+        ConfigService.getReaderConfig("isEnableImaSync") === "yes",
+      isEnableSiYuanSync:
+        ConfigService.getReaderConfig("isEnableSiYuanSync") === "yes",
     };
   }
   async componentDidMount() {
@@ -151,15 +158,21 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       toast.loading(this.props.t("Validating server info..."), {
         id: "ko-reader-sync",
       });
-      const verifiedConfig = await verifyAndBuildKOReaderSyncConfig({
-        serverUrl: result.serverUrl,
-        username: result.username,
-        password: result.password,
-        passwordHash:
-          !result.password && savedConfig.username === result.username
-            ? savedConfig.passwordHash
-            : "",
-      });
+      const koReaderUtil = new KOReaderUtil(
+        ConfigService,
+        TokenService,
+        DatabaseService
+      );
+      const verifiedConfig =
+        await koReaderUtil.verifyAndBuildKOReaderSyncConfig({
+          serverUrl: result.serverUrl,
+          username: result.username,
+          password: result.password,
+          passwordHash:
+            !result.password && savedConfig.username === result.username
+              ? savedConfig.passwordHash
+              : "",
+        });
       ConfigService.setObjectConfig(
         "koReaderSyncConfig",
         verifiedConfig,
@@ -237,7 +250,11 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         defaultValues,
         "",
         labelsMap,
-        "https://koodoreader.com/zh/add-thirdparty"
+        getWebsiteUrl() +
+          (ConfigService.getReaderConfig("lang").startsWith("zh")
+            ? "/zh"
+            : "/en") +
+          "/add-thirdparty"
       );
 
       if (!result) {

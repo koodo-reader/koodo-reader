@@ -7,6 +7,7 @@ import {
   ConfigService,
   KookitConfig,
   TokenService,
+  KOReaderUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { restoreFromConfigJson } from "../../utils/file/restore";
@@ -27,14 +28,11 @@ import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import {
-  isKOReaderSyncEnabled,
-  syncKOReaderProgress,
-} from "../../utils/file/koReaderSync";
-import {
   addChatBox,
   checkBrokenDatabase,
   checkMissingBook,
   generateSyncRecord,
+  getBookPartialMd5,
   getChatLocale,
   getTaskStats,
   getWebsiteUrl,
@@ -42,6 +40,7 @@ import {
   removeChatBox,
   resetKoodoSync,
   showTaskProgress,
+  throttle,
   vexComfirmAsync,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
@@ -57,6 +56,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   timer: any;
   scheduledSyncTimer: any;
   private isSyncing: boolean = false;
+  private resizeHandler: (() => void) | null = null;
   constructor(props: HeaderProps) {
     super(props);
 
@@ -178,9 +178,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.handleLocalFileDialog(true);
       }
     }
-    window.addEventListener("resize", () => {
+    this.resizeHandler = throttle(() => {
       this.setState({ width: document.body.clientWidth });
     });
+    window.addEventListener("resize", this.resizeHandler);
     this.props.handleCloudSyncFunc(this.handleCloudSync);
     document.addEventListener("visibilitychange", async (event) => {
       if (
@@ -204,6 +205,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (this.scheduledSyncTimer) {
       clearInterval(this.scheduledSyncTimer);
       this.scheduledSyncTimer = null;
+    }
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler);
+      this.resizeHandler = null;
     }
   }
   startScheduledSync = () => {
@@ -371,7 +376,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.setState({ isSync: false });
   };
   handleKOReaderSync = async () => {
-    if (!isKOReaderSyncEnabled()) {
+    if (ConfigService.getReaderConfig("isEnableKoReaderSync") !== "yes") {
       return;
     }
 
@@ -380,7 +385,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       position: "bottom-center",
     });
     try {
-      const summary = await syncKOReaderProgress();
+      const koReaderUtil = new KOReaderUtil(
+        ConfigService,
+        TokenService,
+        DatabaseService
+      );
+      const summary =
+        await koReaderUtil.syncKOReaderProgress(getBookPartialMd5);
       if (summary.pulledBooks > 0 || summary.pushedBooks > 0) {
         this.props.handleFetchBooks();
       }
@@ -589,16 +600,27 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.history.push("/manager/home");
         if (
           ConfigService.getReaderConfig("isFirstSync") !== "no" &&
-          ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes" &&
-          this.props.defaultSyncOption !== "webdav" &&
-          this.props.defaultSyncOption !== "ftp" &&
-          this.props.defaultSyncOption !== "sftp" &&
-          this.props.defaultSyncOption !== "smb" &&
-          this.props.defaultSyncOption !== "s3compatible" &&
-          this.props.defaultSyncOption !== "icloud" &&
-          this.props.defaultSyncOption !== "docker"
+          ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes"
         ) {
           ConfigService.setReaderConfig("isFirstSync", "no");
+          let config = await getCloudConfig(
+            ConfigService.getItem("defaultSyncOption") || ""
+          );
+          if (
+            config.url &&
+            (config.url.includes("192.168.") ||
+              config.url.includes("127.0.0.1") ||
+              config.url.includes("localhost"))
+          ) {
+            return;
+          }
+          if (
+            this.props.userInfo &&
+            this.props.userInfo.time_created &&
+            this.props.userInfo.time_created < 1769875200
+          ) {
+            return;
+          }
           let result = await vexComfirmAsync(
             `<h3>${this.props.t("Enable Koodo Sync")}</h3><p>${
               this.props.t(
@@ -917,7 +939,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.userInfo.type === "trial" &&
         this.props.userInfo.valid_until >
           new Date().getTime() / 1000 + 3 * 24 * 3600 ? (
-          <div className="header-report-container">
+          <div className="header-report-container" style={{ right: "200px" }}>
             <span
               data-tooltip-id="my-tooltip"
               data-tooltip-content={i18n.t("Your trial will expire in", {

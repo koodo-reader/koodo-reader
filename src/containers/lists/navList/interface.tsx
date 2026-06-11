@@ -11,6 +11,7 @@ export interface NavListProps {
   currentTab: string;
   t: (title: string) => string;
   handleShowBookmark: (isShowBookmark: boolean) => void;
+  handleJumpPosition: (jumpPosition: object | null) => void;
 }
 export interface NavListState {
   deleteIndex: number;

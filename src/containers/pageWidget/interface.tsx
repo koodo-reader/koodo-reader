@@ -1,6 +1,6 @@
 import BookModel from "../../models/Book";
 import HtmlBookModel from "../../models/HtmlBook";
-export interface BackgroundProps {
+export interface PageWidgetProps {
   currentBook: BookModel;
   currentChapter: string;
   readerMode: string;
@@ -18,11 +18,14 @@ export interface BackgroundProps {
   t: (title: string) => string;
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
+  jumpPosition: object | null;
+  handleJumpPosition: (jumpPosition: object | null) => void;
 }
-export interface BackgroundState {
+export interface PageWidgetState {
   isSingle: boolean;
   prevPage: number;
   nextPage: number;
   currentTime: string;
   percentage: string;
+  ignoreNextPageChange: boolean;
 }

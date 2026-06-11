@@ -21,6 +21,9 @@ interface ProtectionOverlayState {
   isAuthenticating: boolean;
 }
 
+// Track whether the startup auth check has already been performed in this session
+let _hasCheckedOnStartup = false;
+
 class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
   private pinResolve: ((pin: string) => void) | null = null;
 
@@ -37,6 +40,8 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
   }
 
   async componentDidMount() {
+    if (_hasCheckedOnStartup) return;
+    _hasCheckedOnStartup = true;
     const method = (await TokenService.getToken("protection_method")) || "";
     if (method) {
       this.setState({ isVisible: true, method }, () => {
@@ -173,11 +178,7 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
               {digits.map((d, idx) => {
                 if (d === null) {
                   return (
-                    <span
-                      key={idx}
-                      className="pin-key pin-key-empty"
-                      style={{ backgroundColor: "#fff" }}
-                    />
+                    <span key={idx} className="pin-key pin-key-empty" />
                   );
                 }
                 if (d === "del") {

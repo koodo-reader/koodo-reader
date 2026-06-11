@@ -19,6 +19,7 @@ import {
   getPdfPassword,
   getServerRegion,
   showDownloadProgress,
+  throttle,
 } from "../../utils/common";
 import _ from "underscore";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
@@ -28,11 +29,11 @@ import { ocrTesseractLangList } from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
 import { getOcrResult } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
-import { isKOReaderSyncEnabled } from "../../utils/file/koReaderSync";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
+  private resizeHandler: (() => void) | null = null;
   lock: boolean;
   constructor(props: ViewerProps) {
     super(props);
@@ -83,22 +84,25 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       )
     );
     this.props.handleRenderBookFunc(this.handleRenderBook);
-    let resizeTimer: NodeJS.Timeout;
-    window.addEventListener("resize", (event) => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        this.setState(
-          getPageWidth(
-            this.props.readerMode,
-            this.props.scale,
-            parseInt(this.props.margin),
-            this.props.isNavLocked,
-            this.props.isSettingLocked
-          )
-        );
-        this.handleRenderBook();
-      }, 300); // 300ms 防抖
+    this.resizeHandler = throttle(() => {
+      this.setState(
+        getPageWidth(
+          this.props.readerMode,
+          this.props.scale,
+          parseInt(this.props.margin),
+          this.props.isNavLocked,
+          this.props.isSettingLocked
+        )
+      );
+      this.handleRenderBook();
     });
+    window.addEventListener("resize", this.resizeHandler);
+  }
+  componentWillUnmount() {
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler);
+      this.resizeHandler = null;
+    }
   }
   async UNSAFE_componentWillReceiveProps(nextProps: ViewerProps) {
     if (
@@ -120,6 +124,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
   }
   handleHighlight = async (rendition: any) => {
+    if (!rendition) return;
     let highlighters: any = await DatabaseService.getRecordsByBookKey(
       this.props.currentBook.key,
       "notes"
@@ -153,7 +158,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         return item;
       });
     }
-    await this.props.htmlBook.rendition.renderHighlighters(
+    await rendition.renderHighlighters(
       highlightersByChapter,
       this.handleNoteClick
     );
@@ -187,7 +192,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           return item;
         });
       }
-      await this.props.htmlBook.rendition.renderHighlighters(
+      await rendition.renderHighlighters(
         highlightersByChapter,
         this.handleNoteClick
       );
@@ -253,6 +258,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? "sliding"
               : "",
           convertChinese: ConfigService.getReaderConfig("convertChinese"),
+          bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
           parserRegex: getParserRegex(
             this.props.currentBook.format,
             this.props.currentBook.key
@@ -378,7 +384,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       {}
     );
     if (chapterDocs.length > 0) {
-      if (isKOReaderSyncEnabled() && bookLocation.xpath) {
+      if (
+        ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes" &&
+        bookLocation.xpath
+      ) {
         await rendition.goToXpath(bookLocation.xpath);
       } else {
         await rendition.goToPosition(

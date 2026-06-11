@@ -9,6 +9,10 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
+import { isElectron } from "react-device-detect";
+import JSZip from "jszip";
+import { LocalFileManager } from "./localFile";
+import CoverUtil from "./coverUtil";
 declare var window: any;
 let oldConfigArr = [
   "notes.json",
@@ -28,7 +32,148 @@ let oldConfigArr = [
   "pdfjs.history.json",
   "recordLocation.json",
 ];
+export const restoreFromBrowser = async (): Promise<Boolean> => {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".zip";
+    input.onchange = async (e: any) => {
+      const file: File = e.target.files[0];
+      if (!file) {
+        resolve(false);
+        return;
+      }
+      toast.loading(i18n.t("Restoring..."), { id: "backup" });
+      await new Promise((r) => setTimeout(r, 100));
+      try {
+        const fileBuffer = await file.arrayBuffer();
+        const zip = await JSZip.loadAsync(fileBuffer);
+        const isNewBackup = zip.file("config/config.json") !== null;
+        if (!isNewBackup) {
+          resolve(false);
+          return;
+        }
+        let failed = false;
+        let processedCount = 0;
+        const allFiles = Object.keys(zip.files).filter(
+          (name) => !zip.files[name].dir
+        );
+        const totalFiles = allFiles.length;
+        const updateProgress = () => {
+          processedCount++;
+          const percent = Math.round(
+            (processedCount / Math.max(totalFiles, 1)) * 100
+          );
+          toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, {
+            id: "backup",
+          });
+        };
+        const configFiles = Object.keys(zip.files).filter(
+          (name) => name.startsWith("config/") && !zip.files[name].dir
+        );
+        for (const fileName of configFiles) {
+          try {
+            const entryName = fileName.split("/").pop() || "";
+            if (entryName === "config.json") {
+              const text = await zip.file(fileName)!.async("string");
+              if (!text) {
+                failed = true;
+                break;
+              }
+              const config = JSON.parse(text);
+              for (const key in config) ConfigService.setItem(key, config[key]);
+            } else if (entryName === "sync.json") {
+              const text = await zip.file(fileName)!.async("string");
+              if (!text) {
+                failed = true;
+                break;
+              }
+              ConfigService.setItem("syncRecord", text);
+            } else if (entryName.endsWith(".db")) {
+              const buf: ArrayBuffer = await zip
+                .file(fileName)!
+                .async("arraybuffer");
+              const sqlUtil = new SqlUtil();
+              const dbName = entryName.split(".")[0];
+              const cloudRecords = await sqlUtil.dbBufferToJson(buf, dbName);
+              await DatabaseService.saveAllRecords(cloudRecords, dbName);
+            }
+            updateProgress();
+          } catch {
+            failed = true;
+            break;
+          }
+        }
+        if (failed) {
+          resolve(false);
+          return;
+        }
+        const isUseLocal =
+          ConfigService.getReaderConfig("isUseLocal") === "yes";
+        // Restore book files
+        const bookFiles = Object.keys(zip.files).filter(
+          (name) => !zip.files[name].dir && name.startsWith("book/")
+        );
+        await Promise.all(
+          bookFiles.map(async (fileName) => {
+            try {
+              const entryName = fileName.split("/").pop() || "";
+              const buf: ArrayBuffer = await zip
+                .file(fileName)!
+                .async("arraybuffer");
+              if (isUseLocal) {
+                await LocalFileManager.saveFile(entryName, buf, "book");
+              } else {
+                const key = entryName.substring(0, entryName.lastIndexOf("."));
+                await localforage.setItem(key, buf);
+              }
+              updateProgress();
+            } catch {
+              failed = true;
+            }
+          })
+        );
+        // Restore cover files
+        const coverFiles = Object.keys(zip.files).filter(
+          (name) => !zip.files[name].dir && name.startsWith("cover/")
+        );
+        await Promise.all(
+          coverFiles.map(async (fileName) => {
+            try {
+              const entryName = fileName.split("/").pop() || "";
+              const buf: ArrayBuffer = await zip
+                .file(fileName)!
+                .async("arraybuffer");
+              if (isUseLocal) {
+                await LocalFileManager.saveFile(entryName, buf, "cover");
+              } else {
+                const ext = entryName.split(".").reverse()[0];
+                const base64Str = CommonTool.arrayBufferToBase64(buf);
+                const base64 = `data:image/${ext};base64,${base64Str}`;
+                await CoverUtil.saveCover(entryName, base64);
+              }
+              updateProgress();
+            } catch {
+              failed = true;
+            }
+          })
+        );
+        resolve(!failed);
+      } catch (error) {
+        console.error("restoreFromBrowser error:", error);
+        resolve(false);
+      }
+    };
+    input.click();
+  });
+};
+
 export const restore = async (service: string): Promise<Boolean> => {
+  if (service === "local" && !isElectron) {
+    let restoreRes = await restoreFromBrowser();
+    await generateSyncRecord();
+    return restoreRes;
+  }
   const { ipcRenderer } = window.require("electron");
   if (service === "local") {
     let filePath = await ipcRenderer.invoke("select-zip-file", "ping");

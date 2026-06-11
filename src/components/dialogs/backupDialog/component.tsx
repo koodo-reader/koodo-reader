@@ -102,7 +102,8 @@ class BackupDialog extends React.Component<
       event.target.value !== "add" &&
       !driveList
         .find((item) => item.value === event.target.value)
-        ?.support.includes("browser")
+        ?.support.includes("browser") &&
+      !isElectron
     ) {
       toast(
         this.props.t(
@@ -176,16 +177,7 @@ class BackupDialog extends React.Component<
             <div className="backup-page-backup">
               <span
                 className="icon-restore"
-                onClick={(event) => {
-                  if (!isElectron) {
-                    event.preventDefault();
-                    toast(
-                      this.props.t(
-                        "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-                      )
-                    );
-                    return;
-                  }
+                onClick={() => {
                   this.setState({ isBackup: "no" });
                   this.handleRestore();
                 }}

@@ -185,9 +185,50 @@ export const noteSyncSettingList = [
     authConfigKey: "readwiseSyncConfig",
   },
   {
+    isElectron: false,
+    title: "Auto sync notes and highlights to SiYuan",
+    desc: "Please enable network serving in SiYuan - Settings - About, and make sure SiYuan is running when syncing",
+    propName: "isEnableSiYuanSync",
+    requiresAuth: true,
+    authFields: [
+      {
+        key: "serverUrl",
+        label: "SiYuan Server URL",
+        placeholder: "e.g. http://127.0.0.1:6806",
+      },
+      {
+        key: "token",
+        label: "SiYuan API Token",
+        placeholder: "Enter your SiYuan API token",
+      },
+    ],
+    authConfigKey: "siyuanSyncConfig",
+  },
+  //// due to potential legal issues, we decide to remove the IMA sync for now, we will consider adding it back in the future when this issue is resolved
+  // {
+  //   isElectron: false,
+  //   title: "Auto sync notes and highlights to IMA",
+  //   desc: "",
+  //   propName: "isEnableImaSync",
+  //   requiresAuth: true,
+  //   authFields: [
+  //     {
+  //       key: "apiKey",
+  //       label: "IMA API Key",
+  //       placeholder: "Enter your IMA API key",
+  //     },
+  //     {
+  //       key: "clientId",
+  //       label: "IMA Client ID",
+  //       placeholder: "Enter your IMA Client ID",
+  //     },
+  //   ],
+  //   authConfigKey: "imaSyncConfig",
+  // },
+  {
     isElectron: true,
     title: "Auto sync notes and highlights to local markdown files",
-    desc: "Suitable for Obsidian, Siyuan, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ",
+    desc: "Suitable for Obsidian, Joplin and other markdown-based note-taking apps. Each book will be a separate markdown file named 'Book Name.md' in the specified folder. ",
     propName: "isEnableMarkdownSync",
     requiresAuth: true,
     authFields: [

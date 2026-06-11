@@ -306,7 +306,7 @@ export function handleFetchPlugins() {
           const meta = DictUtil.getDictMeta(dictId);
           if (meta) {
             let localDictPlugin = new PluginModel(
-              `dict_${dictId}`,
+              `dict-${dictId}`,
               "dictionary",
               meta.name,
               "dict",

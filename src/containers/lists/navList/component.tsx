@@ -65,7 +65,12 @@ class NavList extends React.Component<NavListProps, NavListState> {
         cfi: cfi,
       };
     }
-
+    const prevPosition = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "recordLocation",
+      {}
+    );
+    this.props.handleJumpPosition(prevPosition);
     await this.props.htmlBook.rendition.goToPosition(
       JSON.stringify({
         text: bookLocation.text,

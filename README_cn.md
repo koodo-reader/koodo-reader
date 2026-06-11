@@ -59,6 +59,7 @@
 - 一键导出笔记与高亮，支持 **CSV**、**Markdown**、**HTML**、**TXT** 等格式
 - 隐私优先，不使用任何追踪服务，不主动上传您的阅读数据与隐私信息
 - 支持 **OPDS** 协议，并可将您的书库以 **OPDS** 形式分享
+- 支持浏览器扩展用于将网页文章剪藏到您的书库
 - 内置 50+ 翻译、词典及听书插件，并支持自定义插件
 - 支持竖排图书阅读
 - 支持阅读统计功能
@@ -79,6 +80,8 @@
 ### 安卓版：[下载](https://koodoreader.com/zh/download)
 
 ### iOS 版：[下载](https://koodoreader.com/zh/download)
+
+### 浏览器拓展：[下载](https://www.koodoreader.com/zh/use-extension)
 
 ### 使用 Scoop 安装：
 

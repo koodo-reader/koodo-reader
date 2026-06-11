@@ -1,7 +1,6 @@
 import React from "react";
 import "./importLocal.css";
 import BookModel from "../../models/Book";
-
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import * as Kookit from "../../assets/lib/kookit.min";
@@ -10,15 +9,19 @@ import { isElectron } from "react-device-detect";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
+import DOMPurify from "dompurify";
 import {
   CommonTool,
   ConfigService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../utils/file/coverUtil";
+import { Readability } from "@mozilla/readability";
 import {
   calculateFileMD5,
   fetchFileFromPath,
   supportedFormats,
+  throttle,
+  vexPromptAsync,
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit.min";
@@ -39,6 +42,8 @@ declare var window: any;
 let clickFilePath = "";
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
+  resizeHandler: (() => void) | null = null;
+
   constructor(props: ImportLocalProps) {
     super(props);
     this.state = {
@@ -72,11 +77,24 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         },
         false
       );
+
+      ipcRenderer.on("import-url-from-link", (_event: any, config: any) => {
+        const rawUrl = config?.url;
+        if (!rawUrl || typeof rawUrl !== "string") return;
+        this.handleURLImport(undefined as any, rawUrl);
+      });
     }
-    window.addEventListener("resize", () => {
+    this.resizeHandler = throttle(() => {
       this.setState({ width: document.body.clientWidth });
     });
+    window.addEventListener("resize", this.resizeHandler);
     this.props.handleImportBookFunc(this.getMd5WithBrowser);
+  }
+  componentWillUnmount() {
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler);
+      this.resizeHandler = null;
+    }
   }
   handleFilePath = async (filePath: string) => {
     clickFilePath = filePath;
@@ -273,6 +291,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                       : "",
                   convertChinese:
                     ConfigService.getReaderConfig("convertChinese"),
+                  bookLayout: ConfigService.getReaderConfig("bookLayout"),
                   fullTranslationMode: "no",
                   textOrientation:
                     ConfigService.getReaderConfig("textOrientation"),
@@ -293,11 +312,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                 file_content,
                 rendition
               );
-              if (
-                ConfigService.getReaderConfig("isUseOriginalName") === "yes"
-              ) {
-                result.name = bookName;
-              }
+
               if (
                 ConfigService.getReaderConfig("isPrecacheBook") === "yes" &&
                 extension !== "pdf"
@@ -337,6 +352,130 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       }
     });
   };
+
+  decodeHtmlEntities = (value: string) => {
+    if (!value) return "";
+    const doc = new DOMParser().parseFromString(value, "text/html");
+    return doc.documentElement.textContent || value;
+  };
+
+  escapeHtml = (value: string) => {
+    return (value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
+  makeUrlsAbsolute = (rootDoc: Document, baseUrl: string) => {
+    const toAbs = (value: string | null) => {
+      if (!value) return value;
+      if (value.startsWith("data:")) return value;
+      try {
+        return new URL(value, baseUrl).toString();
+      } catch {
+        return value;
+      }
+    };
+
+    rootDoc.querySelectorAll("a[href]").forEach((a) => {
+      const href = a.getAttribute("href");
+      const next = toAbs(href);
+      if (next) a.setAttribute("href", next);
+    });
+    rootDoc.querySelectorAll("img[src]").forEach((img) => {
+      const src = img.getAttribute("src");
+      const next = toAbs(src);
+      if (next) img.setAttribute("src", next);
+    });
+    rootDoc.querySelectorAll("link[href]").forEach((l) => {
+      const href = l.getAttribute("href");
+      const next = toAbs(href);
+      if (next) l.setAttribute("href", next);
+    });
+  };
+
+  importHtmlFromURL = async (
+    url: string,
+    urlFileName: string,
+    toastId: string
+  ) => {
+    toast.loading(this.props.t("Downloading") + ": 0%", { id: toastId });
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const contentType = (
+      response.headers.get("content-type") || ""
+    ).toLowerCase();
+    const looksLikeHtml =
+      contentType.includes("text/html") ||
+      contentType.includes("application/xhtml+xml") ||
+      contentType.includes("text/plain") ||
+      contentType.includes("application/xml") ||
+      contentType.includes("text/xml") ||
+      !contentType;
+
+    if (!looksLikeHtml) {
+      throw new Error(
+        this.props.t("Unsupported file format") +
+          ": " +
+          (contentType || "unknown")
+      );
+    }
+
+    const htmlText = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlText, "text/html");
+
+    // 1) Try better main-content extraction (more aggressive clipping).
+    let extracted: any = null;
+    try {
+      const reader = new Readability(doc as any);
+      extracted = reader.parse();
+    } catch (e) {
+      extracted = null;
+    }
+
+    const rawTitle =
+      extracted?.title ||
+      doc.title ||
+      (urlFileName || "book").replace(/\.[^/.]+$/, "") ||
+      "book";
+    const decodedTitle = this.decodeHtmlEntities(rawTitle).trim() || "book";
+
+    // 2) Prefer extracted content; fallback to body html.
+    const extractedContent = extracted?.content || doc.body?.innerHTML || "";
+
+    // 3) Resolve relative links/images to absolute using the original URL.
+    const contentDoc = parser.parseFromString(extractedContent, "text/html");
+    if (contentDoc?.body) {
+      this.makeUrlsAbsolute(contentDoc, url);
+    }
+
+    // 4) Sanitize & rebuild as a standalone html "book" file.
+    const sanitizedBody = DOMPurify.sanitize(
+      contentDoc.body?.innerHTML || extractedContent,
+      {
+        USE_PROFILES: { html: true },
+      }
+    );
+
+    const safeTitle = this.escapeHtml(decodedTitle);
+    const finalHtmlFileName = `${decodedTitle.replace(/[/\\?%*:|"<>]/g, "-")}.html`;
+    const finalHtml = `<!doctype html><html><head><meta charset="utf-8"/><title>${safeTitle}</title></head><body>${sanitizedBody}</body></html>`;
+
+    const blob = new Blob([new TextEncoder().encode(finalHtml)], {
+      type: "text/html",
+    });
+    const file: any = new File([blob], finalHtmlFileName);
+    file.path = url; // Helps bookkeeping; works in Electron, no harm in browser.
+
+    toast.dismiss(toastId);
+    await this.getMd5WithBrowser(file);
+  };
   toggleMoreOptions = () => {
     this.setState((prevState) => ({
       isMoreOptionsVisible: !prevState.isMoreOptionsVisible,
@@ -357,6 +496,100 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.setState({ isMoreOptionsVisible: false });
     this.props.handleOPDSDialog(true);
   };
+
+  // Handle URL import
+  handleURLImport = async (e?: React.MouseEvent, externalUrl?: string) => {
+    e?.stopPropagation();
+    this.setState({ isMoreOptionsVisible: false });
+    const url =
+      typeof externalUrl === "string"
+        ? externalUrl
+        : await vexPromptAsync(
+            this.props.t("Enter book download URL or article URL"),
+            "https://"
+          );
+    if (!url || typeof url !== "string") return;
+    const trimmedUrl = url.trim();
+    if (
+      !trimmedUrl.startsWith("http://") &&
+      !trimmedUrl.startsWith("https://")
+    ) {
+      toast.error(this.props.t("Please enter a valid http or https URL"));
+      return;
+    }
+    let fileName = decodeURIComponent(
+      trimmedUrl.split("?")[0].split("/").pop() || "book"
+    );
+    const ext = "." + fileName.split(".").pop()?.toLowerCase();
+    const toastId = "url-download";
+    if (
+      !supportedFormats
+        .filter((item) => item !== ".html" && item !== ".htm")
+        .includes(ext)
+    ) {
+      try {
+        await this.importHtmlFromURL(trimmedUrl, fileName, toastId);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        toast.error(this.props.t("Import failed") + ": " + errorMessage, {
+          id: toastId,
+        });
+        console.error("URL import error:", error);
+      }
+      return;
+    }
+
+    toast.loading(this.props.t("Downloading") + ": 0%", { id: toastId });
+    try {
+      const response = await fetch(trimmedUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const contentLength = response.headers.get("content-length");
+      const total = contentLength ? parseInt(contentLength, 10) : 0;
+      const reader = response.body!.getReader();
+      const chunks: Uint8Array[] = [];
+      let received = 0;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        received += value.length;
+        if (total > 0) {
+          const percent = Math.round((received / total) * 100);
+          toast.loading(this.props.t("Downloading") + ": " + percent + "%", {
+            id: toastId,
+          });
+        } else {
+          toast.loading(
+            this.props.t("Downloading") +
+              ": " +
+              (received / 1024).toFixed(1) +
+              " KB",
+            { id: toastId }
+          );
+        }
+      }
+      toast.dismiss(toastId);
+      const arrayBuffer = new Uint8Array(received);
+      let offset = 0;
+      for (const chunk of chunks) {
+        arrayBuffer.set(chunk, offset);
+        offset += chunk.length;
+      }
+      const blob = new Blob([arrayBuffer.buffer]);
+      const file: any = new File([blob], fileName);
+      await this.getMd5WithBrowser(file);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(this.props.t("Import failed") + ": " + errorMessage, {
+        id: toastId,
+      });
+      console.error("URL import error:", error);
+    }
+  };
   render() {
     return (
       <Dropzone
@@ -375,6 +608,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             await this.getMd5WithBrowser(item);
           }
           this.setState({ importingShelfTitle: "" });
+          if (
+            ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
+            ConfigService.getItem("defaultSyncOption")
+          ) {
+            await this.props.cloudSyncFunc();
+          }
         }}
         accept={supportedFormatsAccept}
         multiple={true}
@@ -503,6 +742,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             importingShelfTitle: "",
                             isMoreOptionsVisible: false,
                           });
+                          if (
+                            ConfigService.getReaderConfig(
+                              "isDisableAutoSync"
+                            ) !== "yes" &&
+                            ConfigService.getItem("defaultSyncOption")
+                          ) {
+                            await this.props.cloudSyncFunc();
+                          }
                         }
                       }}
                     >
@@ -548,6 +795,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             }
                             this.setState({ importingShelfTitle: "" });
                             this.toggleMoreOptions();
+                            if (
+                              ConfigService.getReaderConfig(
+                                "isDisableAutoSync"
+                              ) !== "yes" &&
+                              ConfigService.getItem("defaultSyncOption")
+                            ) {
+                              await this.props.cloudSyncFunc();
+                            }
                           }}
                         ></input>
                       )}
@@ -566,6 +821,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     >
                       <span className="more-option-text">
                         <Trans>From OPDS</Trans>
+                      </span>
+                    </div>
+                    <div
+                      className="more-option-item"
+                      onClick={this.handleURLImport}
+                    >
+                      <span className="more-option-text">
+                        <Trans>From URL</Trans>
                       </span>
                     </div>
                   </div>
@@ -630,6 +893,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     }
                   }
                   this.setState({ importingShelfTitle: "" });
+                  if (
+                    ConfigService.getReaderConfig("isDisableAutoSync") !==
+                      "yes" &&
+                    ConfigService.getItem("defaultSyncOption")
+                  ) {
+                    await this.props.cloudSyncFunc();
+                  }
                 }}
               ></div>
             )}

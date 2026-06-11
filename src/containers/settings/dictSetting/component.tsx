@@ -4,6 +4,7 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import DictUtil, { DictMeta } from "../../../utils/file/dictUtil";
+import { getFileNameWithoutExtension } from "../../../utils/common";
 
 class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -38,13 +39,11 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     );
     if (!filePath) return;
 
-    const fileName = path.basename(filePath);
-    const ext = fileName.split(".").pop()?.toLowerCase() || "";
-    const fileNameWithoutExt = fileName.replace(/\.[^/.]+$/, "");
+    const ext = path.extname(filePath).replace(/^\./, "").toLowerCase();
 
     const id = Date.now().toString();
     const meta: Omit<DictMeta, "id"> = {
-      name: fileNameWithoutExt,
+      name: getFileNameWithoutExtension(filePath),
       extension: ext,
     };
 
@@ -138,6 +137,7 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         >
           <span style={{ fontWeight: "bold" }}>
             <Trans>Import dictionary</Trans>
+            <span>{"(MDX)"}</span>
           </span>
         </div>
       </>

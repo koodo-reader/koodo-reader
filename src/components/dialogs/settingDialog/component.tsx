@@ -20,6 +20,8 @@ class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
 > {
+  contentRef = React.createRef<HTMLDivElement>();
+
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {};
@@ -28,6 +30,12 @@ class SettingDialog extends React.Component<
     this.props.handleFetchPlugins();
     this.props.handleFetchDataSourceList();
     this.props.handleFetchDefaultSyncOption();
+  }
+
+  componentDidUpdate(prevProps: SettingInfoProps): void {
+    if (prevProps.settingMode !== this.props.settingMode) {
+      this.contentRef.current?.scrollTo(0, 0);
+    }
   }
 
   renderSidebarItem = (
@@ -118,6 +126,7 @@ class SettingDialog extends React.Component<
               "13px"
             )}
             {this.renderSidebarItem("account", "icon-user", "Account", "18px")}
+            {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>
 
           <hr className="setting-dialog-sidebar-divider" />
@@ -150,7 +159,6 @@ class SettingDialog extends React.Component<
                 "Local dictionary",
                 "18px"
               )}
-            {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>
         </div>
 
@@ -170,7 +178,7 @@ class SettingDialog extends React.Component<
             <span className="icon-close setting-close"></span>
           </div>
 
-          <div className="setting-dialog-info">
+          <div className="setting-dialog-info" ref={this.contentRef}>
             {this.props.settingMode === "general" ? (
               <GeneralSetting />
             ) : this.props.settingMode === "reading" ? (

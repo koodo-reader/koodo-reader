@@ -2,7 +2,7 @@ import React from "react";
 import "./opdsDialog.css";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import SparkMD5 from "spark-md5";
+import CryptoJS from "crypto-js";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   OPDSCatalog,
@@ -106,7 +106,7 @@ function buildDigestAuthHeader(
   const qop = qopList.includes("auth") ? "auth" : qopList[0] || "";
   const nc = "00000001";
   const cnonce = randomString();
-  const hash = (value: string) => SparkMD5.hash(value);
+  const hash = (value: string) => CryptoJS.MD5(value.trim()).toString();
 
   let ha1 = hash(`${username}:${realm}:${password}`);
   if (algorithm === "MD5-SESS") {

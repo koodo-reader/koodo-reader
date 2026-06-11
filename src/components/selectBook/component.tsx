@@ -161,7 +161,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let books = await DatabaseService.getRecordsByBookKeys(
+                    let books = await DatabaseService.getRecordsByKeys(
                       this.props.selectedBooks,
                       "books"
                     );
@@ -214,7 +214,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                           className="book-manage-title select-book-action"
                           onClick={async () => {
                             let selectedBooks =
-                              await DatabaseService.getRecordsByBookKeys(
+                              await DatabaseService.getRecordsByKeys(
                                 this.props.selectedBooks,
                                 "books"
                               );
@@ -290,7 +290,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                           className="book-manage-title select-book-action"
                           onClick={async () => {
                             let selectedBooks =
-                              await DatabaseService.getRecordsByBookKeys(
+                              await DatabaseService.getRecordsByKeys(
                                 this.props.selectedBooks,
                                 "books"
                               );
@@ -329,11 +329,10 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks =
-                      await DatabaseService.getRecordsByBookKeys(
-                        this.props.selectedBooks,
-                        "books"
-                      );
+                    let selectedBooks = await DatabaseService.getRecordsByKeys(
+                      this.props.selectedBooks,
+                      "books"
+                    );
                     let dictHistory =
                       await DatabaseService.getRecordsByBookKeys(
                         this.props.selectedBooks,
@@ -352,11 +351,10 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks =
-                      await DatabaseService.getRecordsByBookKeys(
-                        this.props.selectedBooks,
-                        "books"
-                      );
+                    let selectedBooks = await DatabaseService.getRecordsByKeys(
+                      this.props.selectedBooks,
+                      "books"
+                    );
                     if (selectedBooks.length > 0) {
                       await preCacheAllBooks(selectedBooks);
                       toast.success(this.props.t("Pre-caching successful"));
@@ -370,11 +368,10 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {
-                    let selectedBooks =
-                      await DatabaseService.getRecordsByBookKeys(
-                        this.props.selectedBooks,
-                        "books"
-                      );
+                    let selectedBooks = await DatabaseService.getRecordsByKeys(
+                      this.props.selectedBooks,
+                      "books"
+                    );
                     if (selectedBooks.length === 0) {
                       toast(this.props.t("Nothing to delete"));
                       return;

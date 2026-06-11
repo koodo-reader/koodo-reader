@@ -1,6 +1,6 @@
 ﻿import Plugin from "../models/Plugin";
 import { isElectron } from "react-device-detect";
-import SparkMD5 from "spark-md5";
+import CryptoJS from "crypto-js";
 import {
   CommonTool,
   ConfigService,
@@ -54,19 +54,29 @@ export const supportedFormats = [
 ];
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      const arrayBuffer = event.target?.result as ArrayBuffer;
-      const md5Hash = SparkMD5.ArrayBuffer.hash(arrayBuffer);
-      resolve(md5Hash);
-    };
-
-    reader.onerror = (error) => {
-      reject(error);
-    };
-
-    reader.readAsArrayBuffer(file);
+    if (isElectron) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const arrayBuffer = event.target?.result as ArrayBuffer;
+        const crypto = window.require("crypto");
+        const hash = crypto.createHash("md5");
+        hash.update(Buffer.from(arrayBuffer));
+        resolve(hash.digest("hex"));
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsArrayBuffer(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const arrayBuffer = event.target?.result as ArrayBuffer;
+        const wordArray = CryptoJS.lib.WordArray.create(
+          new Uint8Array(arrayBuffer) as any
+        );
+        resolve(CryptoJS.MD5(wordArray).toString());
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsArrayBuffer(file);
+    }
   });
 };
 export const vexPromptAsync = (message, placeholder = "", value = "") => {
@@ -294,6 +304,46 @@ export const getFormatFromAudioPath = (audioPath: string) => {
   }
   return format;
 };
+/**
+ * Returns the file name (no directory) without the last extension from a path or name.
+ * Normalizes `/` and `\`, strips trailing separators, and leaves leading-dot names
+ * (e.g. `.gitignore`) unchanged when there is no extension segment to remove.
+ */
+export const getFileNameWithoutExtension = (
+  filePathOrName: string,
+  fallback = ""
+): string => {
+  if (filePathOrName == null) {
+    return fallback;
+  }
+  let normalized = String(filePathOrName).trim();
+  if (!normalized) {
+    return fallback;
+  }
+
+  normalized = normalized.replace(/[/\\]+$/, "");
+
+  const lastSlash = Math.max(
+    normalized.lastIndexOf("/"),
+    normalized.lastIndexOf("\\")
+  );
+  const baseName =
+    lastSlash >= 0 ? normalized.slice(lastSlash + 1) : normalized;
+
+  if (!baseName) {
+    return fallback;
+  }
+  if (baseName === "." || baseName === "..") {
+    return baseName;
+  }
+
+  const lastDot = baseName.lastIndexOf(".");
+  if (lastDot > 0) {
+    return baseName.slice(0, lastDot);
+  }
+  return baseName;
+};
+
 export const fetchFileFromPath = (filePath: string) => {
   return new Promise<File>((resolve) => {
     const fs = window.require("fs");
@@ -320,6 +370,41 @@ export const fetchFileFromPath = (filePath: string) => {
 export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
+
+/** Default interval (ms) for window resize handlers. */
+export const RESIZE_THROTTLE_MS = 300;
+
+export function throttle<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number = RESIZE_THROTTLE_MS
+): (...args: Parameters<T>) => void {
+  let lastCall = 0;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  return function (this: unknown, ...args: Parameters<T>) {
+    const now = Date.now();
+    const invoke = () => {
+      lastCall = Date.now();
+      func.apply(this, args);
+    };
+
+    if (now - lastCall >= wait) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      invoke();
+    } else if (!timeoutId) {
+      timeoutId = setTimeout(
+        () => {
+          timeoutId = null;
+          invoke();
+        },
+        wait - (now - lastCall)
+      );
+    }
+  };
+}
 
 export const scrollContents = (chapterTitle: string, chapterHref: string) => {
   let contentBody = document.getElementsByClassName("navigation-body")[0];
@@ -352,6 +437,14 @@ export const handleFullScreen = () => {
     } else {
       window.require("electron").ipcRenderer.invoke("enter-fullscreen", "ping");
     }
+  } else {
+    const el = document.documentElement as any;
+    const requestFS =
+      el.requestFullscreen ||
+      el.webkitRequestFullscreen ||
+      el.mozRequestFullScreen ||
+      el.msRequestFullscreen;
+    requestFS && requestFS.call(el);
   }
 };
 export const handleExitFullScreen = () => {
@@ -362,6 +455,16 @@ export const handleExitFullScreen = () => {
         .ipcRenderer.invoke("exit-tab-fullscreen", "ping");
     } else {
       window.require("electron").ipcRenderer.invoke("exit-fullscreen", "ping");
+    }
+  } else {
+    const doc = document as any;
+    const exitFS =
+      doc.exitFullscreen ||
+      doc.webkitExitFullscreen ||
+      doc.mozCancelFullScreen ||
+      doc.msExitFullscreen;
+    if (exitFS && doc.fullscreenElement) {
+      exitFS.call(doc);
     }
   }
 };
@@ -593,6 +696,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         animation:
           ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
         convertChinese: ConfigService.getReaderConfig("convertChinese"),
+        bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
         fullTranslationMode: "no",
         textOrientation: ConfigService.getReaderConfig("textOrientation"),
         parserRegex: "",
@@ -1398,6 +1502,59 @@ export const splitSentences = (text: string, maxLength?: number) => {
 export const trimSpecialCharacters = (text: string) => {
   return text.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
 };
+export const checkReachPageEnd = (
+  nodeIndex: number,
+  nodeList: {
+    text: string;
+    voiceName: string;
+    voiceEngine: string;
+  }[],
+  visibleTextList: string[],
+  currentBook: Book
+) => {
+  if (visibleTextList.length === 0) return true;
+  if (
+    ConfigService.getAllListConfig("multiRoleVoiceBooks").includes(
+      currentBook?.key
+    )
+  ) {
+    if (
+      visibleTextList[visibleTextList.length - 1].indexOf("“") > -1 ||
+      visibleTextList[visibleTextList.length - 1].indexOf('"') > -1
+    ) {
+      return visibleTextList[visibleTextList.length - 1].endsWith(
+        nodeList[nodeIndex].text
+      );
+    } else {
+      return (
+        visibleTextList[visibleTextList.length - 1] === nodeList[nodeIndex].text
+      );
+    }
+  }
+  let nodeTextList = nodeList.map((node) => node.text);
+  let lastMatchIndex = findLastMatchIndex(nodeTextList, visibleTextList);
+  return lastMatchIndex === nodeIndex;
+};
+export const findLastMatchIndex = (a: string[], b: string[]) => {
+  let lastMatchIndex = -1;
+  let aIndex = 0;
+
+  for (let i = 0; i < b.length; i++) {
+    // 从当前 aIndex 开始在 a 中查找 b[i]
+    let found = false;
+    for (let j = aIndex; j < a.length; j++) {
+      if (a[j].trim() === b[i].trim()) {
+        lastMatchIndex = j;
+        aIndex = j + 1;
+        found = true;
+        break;
+      }
+    }
+    // 如果没找到，继续查找下一个 b 元素
+  }
+
+  return lastMatchIndex;
+};
 export const getICloudDrivePath = () => {
   if (!isElectron) return "";
   const fs = window.require("fs");
@@ -1572,5 +1729,87 @@ export const langToName = (lang: string) => {
         ? " (" + languageENMap["territories"][regionCode] + ")"
         : "")
     );
+  }
+};
+export const getBookPartialMd5 = async (book: Book) => {
+  if (isElectron) {
+    const fs = window.require("fs");
+    const crypto = window.require("crypto");
+    function partialMD5(filepath) {
+      if (!filepath) return;
+
+      try {
+        const fd = fs.openSync(filepath, "r");
+        const step = 1024;
+        const size = 1024;
+        const hash = crypto.createHash("md5");
+        const buffer = Buffer.alloc(size);
+
+        for (let i = -1; i <= 10; i++) {
+          const position = step << (2 * i);
+
+          try {
+            const bytesRead = fs.readSync(fd, buffer, 0, size, position);
+            if (bytesRead > 0) {
+              hash.update(buffer.slice(0, bytesRead));
+            } else {
+              break;
+            }
+          } catch (err) {
+            break;
+          }
+        }
+
+        fs.closeSync(fd);
+        return hash.digest("hex");
+      } catch (err) {
+        return;
+      }
+    }
+    let filePath = BookUtil.getBookPath(book);
+    if (!filePath) {
+      return null;
+    }
+    return partialMD5(filePath);
+  } else {
+    function partialMD5(arrayBuffer) {
+      if (!arrayBuffer) return;
+
+      const step = 1024;
+      const size = 1024;
+      const fileSize = arrayBuffer.byteLength;
+      const hash = CryptoJS.algo.MD5.create();
+
+      for (let i = -1; i <= 10; i++) {
+        const position = step << (2 * i);
+
+        if (position >= fileSize) {
+          break;
+        }
+
+        const endPosition = Math.min(position + size, fileSize);
+        const chunk = arrayBuffer.slice(position, endPosition);
+
+        if (chunk.byteLength > 0) {
+          // 将 ArrayBuffer 转换为 WordArray
+          const wordArray = CryptoJS.lib.WordArray.create(
+            new Uint8Array(chunk)
+          );
+          hash.update(wordArray);
+        } else {
+          break;
+        }
+      }
+
+      return hash.finalize().toString();
+    }
+    let bookBuffer = await BookUtil.fetchBook(
+      book.key,
+      book.format.toLowerCase(),
+      true,
+      book.path
+    );
+    const md5 = partialMD5(bookBuffer);
+    return md5;
   }
 };
