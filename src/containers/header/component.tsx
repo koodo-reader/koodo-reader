@@ -614,6 +614,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           ) {
             return;
           }
+          if (
+            this.props.userInfo &&
+            this.props.userInfo.time_created &&
+            this.props.userInfo.time_created < 1769875200
+          ) {
+            return;
+          }
           let result = await vexComfirmAsync(
             `<h3>${this.props.t("Enable Koodo Sync")}</h3><p>${
               this.props.t(
