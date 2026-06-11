@@ -58,7 +58,7 @@ class TTSUtil {
         audioNodeList.length - startIndex
       );
       // 并发执行，并发数量为3，但保证添加顺序
-      const CONCURRENT_LIMIT = 5;
+      const CONCURRENT_LIMIT = 10;
       //删除index小于startIndex的缓存
       this.audioPaths = this.audioPaths.filter(
         (item) => item.index >= startIndex - 5
