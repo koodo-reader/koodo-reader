@@ -52,6 +52,7 @@ const initState = {
     ConfigService.getReaderConfig("isHidePDFConvertButton") === "yes",
   isShowPageBorder: ConfigService.getReaderConfig("isShowPageBorder") === "yes",
   textOrientation: ConfigService.getReaderConfig("textOrientation") || "",
+  jumpPosition: null as object | null,
   readerBackgroundImage:
     ConfigService.getReaderConfig("readerBackgroundImage") || "",
 };
@@ -220,6 +221,11 @@ export function reader(
       return {
         ...state,
         chapters: action.payload,
+      };
+    case "HANDLE_JUMP_POSITION":
+      return {
+        ...state,
+        jumpPosition: action.payload,
       };
     case "HANDLE_READER_MODE":
       return {

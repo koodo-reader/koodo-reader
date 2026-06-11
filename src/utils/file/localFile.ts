@@ -47,6 +47,24 @@ declare global {
 export class LocalFileManager {
   private static directoryHandle: FileSystemDirectoryHandle | null = null;
   private static readonly STORAGE_KEY = "koodo_directory_handle";
+  private static async verifyDirectoryHandleUsable(
+    handle: FileSystemDirectoryHandle
+  ): Promise<boolean> {
+    try {
+      // Permission can still be "granted" even if the directory
+      // was moved/renamed/deleted. Touch the handle to verify it's usable.
+      const iter = (handle.entries() as any);
+      if (iter && typeof iter.next === "function") {
+        await iter.next();
+      } else {
+        // Fallback: try to read a property; may still throw for invalid handle
+        void handle.name;
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
   // 检查浏览器是否支持 File System Access API
   static isSupported(): boolean {
@@ -92,6 +110,14 @@ export class LocalFileManager {
         mode: "readwrite",
       });
 
+      if (permission === "granted") {
+        const usable = await this.verifyDirectoryHandleUsable(storedHandle);
+        if (!usable) {
+          await this.clearStoredAccess();
+          return { hasAccess: false, needsReauthorization: false };
+        }
+      }
+
       return {
         hasAccess: permission === "granted",
         needsReauthorization: permission === "prompt",
@@ -113,17 +139,29 @@ export class LocalFileManager {
         });
 
         if (permission === "granted") {
-          this.directoryHandle = storedHandle;
-          return storedHandle;
+          const usable = await this.verifyDirectoryHandleUsable(storedHandle);
+          if (!usable) {
+            await this.clearStoredAccess();
+          } else {
+            this.directoryHandle = storedHandle;
+            return storedHandle;
+          }
         } else if (permission === "prompt") {
           // 只有在用户直接交互中才能请求权限
           const newPermission = await (storedHandle as any).requestPermission({
             mode: "readwrite",
           });
           if (newPermission === "granted") {
-            this.directoryHandle = storedHandle;
-            return storedHandle;
+            const usable = await this.verifyDirectoryHandleUsable(storedHandle);
+            if (!usable) {
+              await this.clearStoredAccess();
+            } else {
+              this.directoryHandle = storedHandle;
+              return storedHandle;
+            }
           }
+        } else if (permission === "denied") {
+          await this.clearStoredAccess();
         }
       }
 
@@ -144,6 +182,13 @@ export class LocalFileManager {
           mode: "readwrite",
         });
         if (permission === "granted") {
+          const usable = await this.verifyDirectoryHandleUsable(
+            this.directoryHandle
+          );
+          if (!usable) {
+            await this.clearStoredAccess();
+            return null;
+          }
           return this.directoryHandle;
         }
       }
@@ -156,6 +201,11 @@ export class LocalFileManager {
           mode: "readwrite",
         });
         if (permission === "granted") {
+          const usable = await this.verifyDirectoryHandleUsable(storedHandle);
+          if (!usable) {
+            await this.clearStoredAccess();
+            return null;
+          }
           this.directoryHandle = storedHandle;
           return storedHandle;
         }

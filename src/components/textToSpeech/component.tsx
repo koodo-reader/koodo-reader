@@ -7,6 +7,7 @@ import {
   KookitConfig,
 } from "../../assets/lib/kookit-extra-browser.min";
 import {
+  checkReachPageEnd,
   getAllVoices,
   getFormatFromAudioPath,
   langToName,
@@ -673,7 +674,7 @@ class TextToSpeech extends React.Component<
           speed * 100 - 100,
           this.props.plugins,
           this.nodeList,
-          5,
+          10,
           true,
           node.voiceEngine === "official-ai-voice-plugin"
         );
@@ -695,7 +696,7 @@ class TextToSpeech extends React.Component<
         speed * 100 - 100,
         this.props.plugins,
         this.nodeList,
-        10,
+        20,
         false,
         node.voiceEngine === "official-ai-voice-plugin"
       );
@@ -722,20 +723,12 @@ class TextToSpeech extends React.Component<
 
         lastVisibleTextList = rawNodeList.flat();
       }
-      let isReachPageEnd =
-        this.nodeList[index].text ===
-        lastVisibleTextList[lastVisibleTextList.length - 1];
-      if (
-        this.state.multiRoleEnabled &&
-        lastVisibleTextList[lastVisibleTextList.length - 1] &&
-        (lastVisibleTextList[lastVisibleTextList.length - 1].indexOf("“") >
-          -1 ||
-          lastVisibleTextList[lastVisibleTextList.length - 1].indexOf('"') > -1)
-      ) {
-        isReachPageEnd = lastVisibleTextList[
-          lastVisibleTextList.length - 1
-        ].endsWith(this.nodeList[index].text);
-      }
+      let isReachPageEnd = checkReachPageEnd(
+        index,
+        this.nodeList,
+        lastVisibleTextList,
+        this.props.currentBook
+      );
       if (index === this.nodeList.length - 1) {
         isReachPageEnd = true;
       }
@@ -797,6 +790,7 @@ class TextToSpeech extends React.Component<
 
     if (res === "start") {
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
+
       let lastVisibleTextList = visibleTextList;
       if (
         this.props.currentBook.format === "PDF" &&
@@ -811,20 +805,13 @@ class TextToSpeech extends React.Component<
 
         lastVisibleTextList = rawNodeList.flat();
       }
-      let isReachPageEnd =
-        this.nodeList[index].text ===
-        lastVisibleTextList[lastVisibleTextList.length - 1];
-      if (
-        this.state.multiRoleEnabled &&
-        lastVisibleTextList[lastVisibleTextList.length - 1] &&
-        (lastVisibleTextList[lastVisibleTextList.length - 1].indexOf("“") >
-          -1 ||
-          lastVisibleTextList[lastVisibleTextList.length - 1].indexOf('"') > -1)
-      ) {
-        isReachPageEnd = lastVisibleTextList[
-          lastVisibleTextList.length - 1
-        ].includes(this.nodeList[index].text);
-      }
+
+      let isReachPageEnd = checkReachPageEnd(
+        index,
+        this.nodeList,
+        lastVisibleTextList,
+        this.props.currentBook
+      );
       if (index === this.nodeList.length - 1) {
         isReachPageEnd = true;
       }

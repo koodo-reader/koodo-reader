@@ -4,6 +4,7 @@ import Background from "./component";
 import {
   handleCurrentChapter,
   handleCurrentChapterIndex,
+  handleJumpPosition,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 const mapStateToProps = (state: stateType) => {
@@ -22,9 +23,14 @@ const mapStateToProps = (state: stateType) => {
     htmlBook: state.reader.htmlBook,
     isShowBookmark: state.viewArea.isShowBookmark,
     isAuthed: state.manager.isAuthed,
+    jumpPosition: state.reader.jumpPosition,
   };
 };
-const actionCreator = { handleCurrentChapter, handleCurrentChapterIndex };
+const actionCreator = {
+  handleCurrentChapter,
+  handleCurrentChapterIndex,
+  handleJumpPosition,
+};
 export default connect(
   mapStateToProps,
   actionCreator

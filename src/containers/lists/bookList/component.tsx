@@ -13,6 +13,7 @@ import { Trans } from "react-i18next";
 import Book from "../../../models/Book";
 import { isElectron } from "react-device-detect";
 import DatabaseService from "../../../utils/storage/databaseService";
+import { throttle } from "../../../utils/common";
 declare var window: any;
 let currentBookMode = "home";
 function getBookCountPerPage() {
@@ -62,11 +63,11 @@ class BookList extends React.Component<BookListProps, BookListState> {
       displayedBooksCount: getBookCountPerPage(),
     });
 
-    // 保存 resize 监听器引用
-    this.resizeHandler = () => {
+    // 保存 resize 监听器引用（节流，避免拖拽窗口时频繁触发）
+    this.resizeHandler = throttle(() => {
       //recount the book count per page when the window is resized
       this.props.handleFetchBooks();
-    };
+    });
     window.addEventListener("resize", this.resizeHandler);
 
     // 设置滚动监听器

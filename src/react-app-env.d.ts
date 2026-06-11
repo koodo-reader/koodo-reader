@@ -48,6 +48,11 @@ declare module "*.svg" {
   export default src;
 }
 
+// Side-effect imports (import "./foo.css") — required when noUncheckedSideEffectImports is on (TS 6+)
+declare module "*.css";
+declare module "*.scss";
+declare module "*.sass";
+
 declare module "*.module.css" {
   const classes: { [key: string]: string };
   export default classes;
@@ -61,4 +66,11 @@ declare module "*.module.scss" {
 declare module "*.module.sass" {
   const classes: { [key: string]: string };
   export default classes;
+}
+
+declare module "@mozilla/readability" {
+  export class Readability {
+    constructor(document: Document);
+    parse(): any;
+  }
 }

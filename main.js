@@ -8,7 +8,7 @@ const {
   ipcMain,
   dialog,
   powerSaveBlocker,
-  nativeTheme,
+  nativeTheme: electronNativeTheme,
   protocol,
   screen,
   systemPreferences,
@@ -41,6 +41,35 @@ let dbConnection = {};
 let syncUtilCache = {};
 let pickerUtilCache = {};
 let downloadRequest = null;
+
+const RESIZE_THROTTLE_MS = 300;
+
+const throttle = (func, wait = RESIZE_THROTTLE_MS) => {
+  let lastCall = 0;
+  let timeoutId = null;
+  return function (...args) {
+    const now = Date.now();
+    const invoke = () => {
+      lastCall = Date.now();
+      func.apply(this, args);
+    };
+    if (now - lastCall >= wait) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      invoke();
+    } else if (!timeoutId) {
+      timeoutId = setTimeout(
+        () => {
+          timeoutId = null;
+          invoke();
+        },
+        wait - (now - lastCall)
+      );
+    }
+  };
+};
 
 const extractClixmlErrors = (text) => {
   if (!text) return "";
@@ -112,6 +141,37 @@ const getWindowHandleValue = (win) => {
     console.warn("Failed to resolve native window handle:", error);
     return "";
   }
+};
+
+const loadUrlInAuxWindow = async (win, url) => {
+  const wc = win.webContents;
+  let currentUrl = "";
+  try {
+    currentUrl = wc.getURL();
+  } catch (_) {
+    currentUrl = "";
+  }
+  if (currentUrl === url) {
+    wc.reload();
+    return;
+  }
+  let needBlankIntermediate = false;
+  try {
+    const current = new URL(currentUrl);
+    const next = new URL(url);
+    // When only the hash differs, Chromium treats it as a same-page hashchange
+    // and won't reload the page. Navigating through about:blank forces a full reload.
+    needBlankIntermediate =
+      current.origin === next.origin &&
+      current.pathname === next.pathname &&
+      current.search === next.search;
+  } catch (_) {
+    // ignore invalid URLs (e.g. empty string, about:blank)
+  }
+  if (needBlankIntermediate) {
+    await wc.loadURL("about:blank");
+  }
+  await wc.loadURL(url);
 };
 
 const getWindowsHelloScript = (mode, message = "", hwnd = "") => {
@@ -406,8 +466,16 @@ function buildProgressBar(percentage) {
 }
 const singleInstance = app.requestSingleInstanceLock();
 var filePath = null;
+var pendingDeepLink = null;
 if (process.platform != "darwin" && process.argv.length >= 2) {
   filePath = process.argv[1];
+  // Check argv for a deep link URL (cold start)
+  for (const arg of process.argv) {
+    if (arg.startsWith("koodo-reader://")) {
+      pendingDeepLink = arg;
+      break;
+    }
+  }
 }
 log.transports.file.fileName = "debug.log";
 log.transports.file.maxSize = 1024 * 1024; // 1MB
@@ -420,7 +488,8 @@ let options = {
   height: parseInt(store.get("mainWinHeight") || 660) / mainWinDisplayScale,
   x: parseInt(store.get("mainWinX")),
   y: parseInt(store.get("mainWinY")),
-  backgroundColor: "#fff",
+  backgroundColor:
+    store.get("appSkin") === "night" ? "rgba(47, 52, 55, 1)" : "#fff",
   minWidth: 300,
   minHeight: 100,
   webPreferences: {
@@ -448,6 +517,11 @@ if (!singleInstance) {
     if (mainWin) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();
+    }
+    // Handle deep link passed via second-instance argv
+    const deepLink = argv.find((arg) => arg.startsWith("koodo-reader://"));
+    if (deepLink) {
+      handleCallback(deepLink);
     }
   });
 }
@@ -509,6 +583,33 @@ const removePickerUtil = (config) => {
     pickerUtilCache[config.service] = null;
   }
 };
+const getNativeThemeSource = (appSkin) => {
+  if (appSkin === "night") {
+    return "dark";
+  }
+  if (appSkin === "light") {
+    return "light";
+  }
+  return "system";
+};
+const getNativeDarkColorStatus = () => {
+  if (
+    typeof electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI !==
+    "undefined"
+  ) {
+    return electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI;
+  }
+  return electronNativeTheme.shouldUseDarkColors;
+};
+const applyNativeThemeSource = (appSkin) => {
+  if (process.type !== "browser") {
+    return false;
+  }
+  electronNativeTheme.themeSource = getNativeThemeSource(appSkin);
+  store.set("appSkin", appSkin || "system");
+  return getNativeDarkColorStatus();
+};
+applyNativeThemeSource(store.get("appSkin"));
 // Simple encryption function
 const encrypt = (text, key) => {
   let result = "";
@@ -550,13 +651,13 @@ const isWindowPartiallyVisible = (bounds) => {
   return false;
 };
 const createTray = () => {
-  const iconPath = isDev
+  let iconPath = isDev
     ? path.join(__dirname, "./public/assets/icon.png")
     : path.join(__dirname, "./build/assets/icon.png");
   let trayIcon = nativeImage.createFromPath(iconPath);
   if (os.platform() === "darwin") {
-    trayIcon = trayIcon.resize({ width: 16 });
-    trayIcon.setTemplateImage(true);
+    trayIcon = trayIcon.resize({ width: 16, height: 16, quality: "best" });
+    trayIcon.setTemplateImage(false);
   }
   tray = new Tray(trayIcon);
   const contextMenu = Menu.buildFromTemplate([
@@ -613,6 +714,15 @@ const createMainWin = () => {
     ? "http://localhost:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
+  // Handle deep link on cold start: wait for renderer to mount its IPC listeners
+  mainWin.webContents.once("did-finish-load", () => {
+    if (pendingDeepLink) {
+      const link = pendingDeepLink;
+      pendingDeepLink = null;
+      // Give React time to register ipcRenderer listeners before dispatching
+      setTimeout(() => handleCallback(link), 1500);
+    }
+  });
   mainWin.on("close", (event) => {
     if (!isQuitting && store.get("isMinimizeToTray") === "yes") {
       event.preventDefault();
@@ -639,13 +749,14 @@ const createMainWin = () => {
     }
     mainWin = null;
   });
-  mainWin.on("resize", () => {
+  const syncMainViewBounds = () => {
     if (mainView) {
       if (!mainWin) return;
       let { width, height } = mainWin.getContentBounds();
       mainView.setBounds({ x: 0, y: 0, width: width, height: height });
     }
-  });
+  };
+  mainWin.on("resize", throttle(syncMainViewBounds));
   mainWin.on("maximize", () => {
     if (mainView) {
       let { width, height } = mainWin.getContentBounds();
@@ -1114,6 +1225,9 @@ const createMainWin = () => {
     const { machineIdSync } = require("node-machine-id");
     return machineIdSync();
   });
+  ipcMain.handle("get-device-name", async () => {
+    return os.hostname() || "";
+  });
   ipcMain.handle("get-store-value", async (event, config) => {
     return store.get(config.key);
   });
@@ -1466,19 +1580,19 @@ const createMainWin = () => {
       console.info("exit full");
     }
   });
-  ipcMain.handle("open-url", (event, config) => {
+  ipcMain.handle("open-url", async (event, config) => {
     if (config.type === "dict") {
       if (!dictWindow || dictWindow.isDestroyed()) {
         dictWindow = new BrowserWindow();
       }
-      dictWindow.loadURL(config.url);
       dictWindow.focus();
+      await loadUrlInAuxWindow(dictWindow, config.url);
     } else if (config.type === "trans") {
       if (!transWindow || transWindow.isDestroyed()) {
         transWindow = new BrowserWindow();
       }
-      transWindow.loadURL(config.url);
       transWindow.focus();
+      await loadUrlInAuxWindow(transWindow, config.url);
     } else {
       if (!linkWindow || linkWindow.isDestroyed()) {
         linkWindow = new BrowserWindow();
@@ -1604,7 +1718,10 @@ const createMainWin = () => {
     event.returnValue = __dirname;
   });
   ipcMain.on("system-color", (event, arg) => {
-    event.returnValue = nativeTheme.shouldUseDarkColors || false;
+    event.returnValue = getNativeDarkColorStatus() || false;
+  });
+  ipcMain.handle("set-native-theme-source", (event, appSkin) => {
+    return applyNativeThemeSource(appSkin);
   });
   ipcMain.on("check-main-open", (event, arg) => {
     event.returnValue = mainWin ? true : false;
@@ -1663,13 +1780,6 @@ app.on("open-file", (e, pathToFile) => {
 });
 // Register protocol handler
 app.setAsDefaultProtocolClient("koodo-reader");
-// Handle deep linking
-app.on("second-instance", (event, commandLine) => {
-  const url = commandLine.pop();
-  if (url) {
-    handleCallback(url);
-  }
-});
 const serializeArg = (arg) => {
   if (arg === null) return "null";
   if (arg === undefined) return "undefined";
@@ -1723,6 +1833,7 @@ const handleCallback = (url) => {
 
     const bookKey = parsedUrl.searchParams.get("bookKey");
     const noteKey = parsedUrl.searchParams.get("noteKey");
+    const importUrl = parsedUrl.searchParams.get("importUrl");
 
     if (code && mainWin) {
       mainWin.webContents.send("oauth-callback", { code, state });
@@ -1742,6 +1853,13 @@ const handleCallback = (url) => {
       mainWin.show();
       mainWin.focus();
       mainWin.webContents.send("open-note-from-link", { noteKey });
+    }
+    if (importUrl && mainWin) {
+      const decodedUrl = decodeURIComponent(importUrl);
+      if (mainWin.isMinimized()) mainWin.restore();
+      mainWin.show();
+      mainWin.focus();
+      mainWin.webContents.send("import-url-from-link", { url: decodedUrl });
     }
   } catch (error) {
     console.error("Error handling callback URL:", error);

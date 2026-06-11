@@ -470,7 +470,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 style={
                   this.props.isCollapsed
                     ? { display: "none", width: "70%" }
-                    : { width: "60%" }
+                    : { width: "61%" }
                 }
               >
                 {this.props.t("Reading Stats")}

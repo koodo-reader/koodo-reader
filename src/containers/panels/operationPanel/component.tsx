@@ -38,12 +38,22 @@ class OperationPanel extends React.Component<
           ).percentage
         : 0,
       timeLeft: 0,
+      isFullscreen: ConfigService.getReaderConfig("isFullscreen") === "yes",
     };
     this.timeStamp = Date.now();
     this.speed = 30000;
   }
 
+  handleFullscreenChange = () => {
+    const isNowFullscreen = !!document.fullscreenElement;
+    if (!isNowFullscreen) {
+      ConfigService.setReaderConfig("isFullscreen", "no");
+    }
+    this.setState({ isFullscreen: isNowFullscreen });
+  };
+
   componentDidMount() {
+    document.addEventListener("fullscreenchange", this.handleFullscreenChange);
     this.props.htmlBook.rendition.on("page-changed", async () => {
       this.speed = Date.now() - this.timeStamp;
       this.timeStamp = Date.now();
@@ -57,15 +67,23 @@ class OperationPanel extends React.Component<
     });
   }
 
+  componentWillUnmount() {
+    document.removeEventListener(
+      "fullscreenchange",
+      this.handleFullscreenChange
+    );
+  }
+
   handleShortcut() {}
   handleScreen() {
-    ConfigService.getReaderConfig("isFullscreen") !== "yes"
-      ? handleFullScreen()
-      : handleExitFullScreen();
-    if (ConfigService.getReaderConfig("isFullscreen") === "yes") {
-      ConfigService.setReaderConfig("isFullscreen", "no");
-    } else {
+    const entering = ConfigService.getReaderConfig("isFullscreen") !== "yes";
+    entering ? handleFullScreen() : handleExitFullScreen();
+    if (entering) {
       ConfigService.setReaderConfig("isFullscreen", "yes");
+      this.setState({ isFullscreen: true });
+    } else {
+      ConfigService.setReaderConfig("isFullscreen", "no");
+      this.setState({ isFullscreen: false });
     }
   }
   async handleExit() {
@@ -229,22 +247,20 @@ class OperationPanel extends React.Component<
         <div
           className="enter-fullscreen-button"
           onClick={() => {
-            if (isElectron) {
-              this.handleScreen();
-            } else {
-              toast(
-                this.props.t(
-                  "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
-                )
-              );
-            }
+            this.handleScreen();
           }}
         >
           <div className="operation-button-container">
             <div style={{ display: "flex", alignItems: "center" }}>
-              <span className="icon-fullscreen enter-fullscreen-icon"></span>
+              <span
+                className={`${this.state.isFullscreen ? "icon-collapse" : "icon-fullscreen"} enter-fullscreen-icon`}
+              ></span>
               <span className="enter-fullscreen-text">
-                <Trans>Full screen</Trans>
+                {this.state.isFullscreen ? (
+                  <Trans>Exit full screen</Trans>
+                ) : (
+                  <Trans>Full screen</Trans>
+                )}
               </span>
             </div>
           </div>

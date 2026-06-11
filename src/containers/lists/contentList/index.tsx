@@ -4,6 +4,7 @@ import ContentList from "./component";
 import {
   handleCurrentChapter,
   handleCurrentChapterIndex,
+  handleJumpPosition,
 } from "../../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
@@ -15,5 +16,9 @@ const mapStateToProps = (state: stateType) => {
     currentChapterIndex: state.reader.currentChapterIndex,
   };
 };
-const actionCreator = { handleCurrentChapter, handleCurrentChapterIndex };
+const actionCreator = {
+  handleCurrentChapter,
+  handleCurrentChapterIndex,
+  handleJumpPosition,
+};
 export default connect(mapStateToProps, actionCreator)(ContentList as any);

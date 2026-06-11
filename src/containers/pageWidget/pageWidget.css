@@ -139,3 +139,26 @@
   pointer-events: none;
   z-index: 1;
 }
+.jump-return-button-container {
+  position: fixed;
+  bottom: 45px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: all;
+}
+.jump-return-button {
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.jump-return-button:hover {
+  opacity: 1;
+}

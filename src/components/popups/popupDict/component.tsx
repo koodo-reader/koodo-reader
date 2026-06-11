@@ -4,6 +4,7 @@ import { PopupDictProps, PopupDictState } from "./interface";
 import {
   ConfigService,
   KookitConfig,
+  WordSyncManager,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
@@ -112,150 +113,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     let bookName = this.props.currentBook.name || "";
     let word = new DictHistory(bookKey, text, chapter, sentence);
     await DatabaseService.saveRecord(word, "words");
-    this.syncWordToEudic(text, sentence);
-    this.syncWordToAnki(text, sentence, bookName, chapter, dictText);
-  };
-
-  syncWordToEudic = async (text: string, sentence: string) => {
-    if (ConfigService.getReaderConfig("isEnableEudicSync") !== "yes") return;
-    try {
-      const config = ConfigService.getObjectConfig(
-        "eudicSyncConfig",
-        "thirdpartyToken",
-        {}
-      ) as any;
-      if (!config || !config.accessToken) return;
-      const language = config.language || "en";
-      const headers = {
-        Authorization: `NIS ${config.accessToken}`,
-        "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0",
-      };
-
-      // Resolve categoryId from name, use cached value if available
-      let categoryId: string = "0";
-      const categoryName: string = (config.categoryName || "").trim();
-      if (categoryName) {
-        if (config.categoryId !== undefined) {
-          // Use cached id
-          categoryId = config.categoryId;
-        } else {
-          // Fetch all study lists and find matching one
-          const listRes = await axios.get(
-            `https://api.frdic.com/api/open/v1/studylist/category?language=${language}`,
-            { headers }
-          );
-          const lists: { id: string; name: string }[] =
-            listRes.data?.data || [];
-          const matched = lists.find((item) => item.name === categoryName);
-          if (matched) {
-            categoryId = matched.id || "0";
-          }
-          // Cache the resolved id alongside the name it was resolved from
-          const updatedConfig = {
-            ...config,
-            categoryId: categoryId,
-          };
-          ConfigService.setObjectConfig(
-            "eudicSyncConfig",
-            updatedConfig,
-            "thirdpartyToken"
-          );
-        }
-      }
-
-      await axios.post(
-        "https://api.frdic.com/api/open/v1/studylist/word",
-        {
-          language,
-          word: text,
-          context_line: sentence || "",
-          category_ids: [categoryId],
-        },
-        { headers }
-      );
-    } catch (error) {
-      console.error("Eudic sync error:", error);
-    }
-  };
-
-  syncWordToAnki = async (
-    text: string,
-    sentence: string,
-    bookName: string,
-    chapter: string,
-    dictText: string = ""
-  ) => {
-    if (ConfigService.getReaderConfig("isEnableAnkiSync") !== "yes") return;
-    try {
-      const config = ConfigService.getObjectConfig(
-        "ankiSyncConfig",
-        "thirdpartyToken",
-        {}
-      ) as any;
-      if (!config || !config.deckName) return;
-      const host = config.host || "127.0.0.1";
-      const port = config.port || "8765";
-      const endpoint = `http://${host}:${port}`;
-      const deckName = config.deckName;
-      const MODEL_NAME = "Koodo Reader Word";
-
-      const ankiRequest = (action: string, params: any = {}) => {
-        const body: any = { action, version: 6, params };
-        if (config.apiKey) body.key = config.apiKey;
-        return axios.post(endpoint, body);
-      };
-
-      // Ensure model exists; create once and cache in config
-      if (!config.modelName) {
-        const namesRes = await ankiRequest("modelNames");
-        const existingModels: string[] = namesRes.data?.result || [];
-        if (!existingModels.includes(MODEL_NAME)) {
-          await ankiRequest("createModel", {
-            modelName: MODEL_NAME,
-            inOrderFields: [
-              "Word",
-              "Sentence",
-              "Book",
-              "Chapter",
-              "Definition",
-            ],
-            cardTemplates: [
-              {
-                Name: "Card 1",
-                Front:
-                  "<b>{{Word}}</b><br><br>{{Sentence}}<br><br><i>{{Book}}</i><br>{{Chapter}}",
-                Back: "{{Definition}}",
-              },
-            ],
-          });
-        }
-        // Cache so we skip this check next time
-        ConfigService.setObjectConfig(
-          "ankiSyncConfig",
-          { ...config, modelName: MODEL_NAME },
-          "thirdpartyToken"
-        );
-      }
-
-      await ankiRequest("addNote", {
-        note: {
-          deckName,
-          modelName: MODEL_NAME,
-          fields: {
-            Word: text,
-            Sentence: sentence || "",
-            Book: bookName || "",
-            Chapter: chapter || "",
-            Definition: dictText || "",
-          },
-          options: { allowDuplicate: false },
-          tags: [],
-        },
-      });
-    } catch (error) {
-      console.error("AnkiConnect sync error:", error);
-    }
+    let wordSyncManager = new WordSyncManager(ConfigService);
+    wordSyncManager.syncWordToEudic(text, sentence);
+    wordSyncManager.syncWordToAnki(text, sentence, bookName, chapter, dictText);
   };
 
   handleDict = async (text: string): Promise<string> => {
@@ -308,7 +168,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         return "";
       } else if (
         this.state.dictService &&
-        this.state.dictService.startsWith("dict_")
+        this.state.dictService.startsWith("dict")
       ) {
         this.setState({ isAddNew: false });
         const plugin = this.props.plugins.find(

@@ -4,6 +4,8 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { LocalFileManager } from "./localFile";
 import localforage from "localforage";
 import { Buffer } from "buffer";
+import toast from "react-hot-toast";
+import i18n from "../../i18n";
 
 declare var window: any;
 
@@ -61,16 +63,6 @@ class DictUtil {
         const filePath = path.join(dir, file);
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
       }
-    } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-        for (const ext of ["mdx"]) {
-          await LocalFileManager.deleteFile(`${id}.${ext}`, DICT_FOLDER).catch(
-            () => {}
-          );
-        }
-      } else {
-        await localforage.removeItem(`dict_${id}`);
-      }
     }
   }
 
@@ -100,6 +92,7 @@ class DictUtil {
           result.definition === null ||
           result.definition === undefined
         ) {
+          toast.error(i18n.t("Word not found in dictionary"));
           return "";
         }
         return String(result.definition);

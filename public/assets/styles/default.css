@@ -12,7 +12,9 @@ a {
 .book-more-action,
 .reading-progress-icon,
 .more-option-text,
-.book-subcontent-name {
+.book-subcontent-name,
+.pin-keypad-title,
+.pin-key {
   color: rgba(75, 75, 75, 1);
 }
 .book-love-icon,
@@ -60,7 +62,8 @@ a {
 .line-option,
 .token-dialog-link-text,
 .token-dialog-token-text,
-.nav-search-page-item {
+.nav-search-page-item,
+.pin-dot {
   border: 2px solid rgba(75, 75, 75, 1);
 }
 .header-search-box,
@@ -69,7 +72,8 @@ a {
 .header-search-text,
 .card-list-item-show-more,
 .token-dialog-link-text,
-.token-dialog-token-text {
+.token-dialog-token-text,
+.pin-key-cancel {
   color: rgba(75, 75, 75, 0.8);
 }
 ::-webkit-scrollbar-thumb,
@@ -101,7 +105,9 @@ a {
 .only-local-icon,
 .popup-close,
 .active-page,
-.sk-chase-dot:before {
+.sk-chase-dot:before,
+.biometric-auth-button,
+.pin-dot.pin-dot-filled {
   background-color: rgba(75, 75, 75, 1) !important;
   color: rgba(255, 255, 255, 1) !important;
 }
@@ -109,7 +115,8 @@ a {
 .header-search-box,
 #jumpPage,
 #jumpChapter,
-#newTag {
+#newTag,
+.pin-key {
   background-color: rgba(75, 75, 75, 0.1);
 }
 .backup-page-close-icon:hover,
@@ -169,9 +176,13 @@ a {
 .navigation-panel,
 .book-operation-panel,
 .progress-panel,
-.setting-panel-parent {
+.setting-panel-parent,
+.biometric-auth-container {
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+}
+.protection-overlay {
+  background: #f5f5f5;
 }
 .setting-dialog-sidebar {
   border-right: 1px solid rgba(0, 0, 0, 0.07);
@@ -179,7 +190,8 @@ a {
 .setting-dialog-sidebar-item.active {
   background: rgba(75, 75, 75, 1);
 }
-.plugin-tab-bar {
+.plugin-tab-bar,
+.pin-keypad-container {
   background: rgba(255, 255, 255, 1);
 }
 .plugin-tab-item-active {

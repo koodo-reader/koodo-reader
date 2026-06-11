@@ -51,8 +51,21 @@ const checkCloudUrlViaElectron = async (
   }
 };
 
+export const getDeviceName = async (): Promise<string> => {
+  if (isElectron) {
+    try {
+      const { ipcRenderer } = window.require("electron");
+      const name = await ipcRenderer.invoke("get-device-name");
+      return name?.trim() || "Desktop";
+    } catch (e) {
+      return "Desktop";
+    }
+  }
+  return detectBrowser();
+};
+
 export const loginRegister = async (service: string, code: string) => {
-  let deviceName = detectBrowser();
+  let deviceName = await getDeviceName();
   let userRequest = await getUserRequest();
   let response = await userRequest.loginRegister({
     code,

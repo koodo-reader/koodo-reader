@@ -22,13 +22,13 @@ const emptyCover = (props) => (
                       : props.format === "FB2"
                         ? "#0063b1"
                         : props.format === "DOCX"
-                          ? " #6867d1"
+                          ? " #118CD9"
                           : props.format === "CBT" ||
                               props.format === "CBZ" ||
                               props.format === "CB7" ||
                               props.format === "CBR"
                             ? "#00b6c2"
-                            : "rgba(104, 103, 209, 1)",
+                            : "#118CD9",
       }}
     >
       {props.format || "BOOK"}

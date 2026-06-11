@@ -17,7 +17,10 @@ import {
   vexComfirmAsync,
   parseColorInput,
 } from "../../../utils/common";
-import { applyCustomSystemCSS } from "../../../utils/reader/launchUtil";
+import {
+  applyCustomSystemCSS,
+  syncNativeThemeSource,
+} from "../../../utils/reader/launchUtil";
 
 class AppearanceSetting extends React.Component<
   SettingInfoProps,
@@ -88,6 +91,7 @@ class AppearanceSetting extends React.Component<
 
   changeSkin = (skin: string) => {
     ConfigService.setReaderConfig("appSkin", skin);
+    syncNativeThemeSource(skin);
 
     if (
       skin === "night" ||
@@ -112,7 +116,7 @@ class AppearanceSetting extends React.Component<
     if (font === "Load local fonts") {
       vexComfirmAsync(
         this.props.t(
-          "Please install local fonts to your machine and then restart the application"
+          "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
         )
       );
 
