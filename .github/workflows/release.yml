@@ -6,6 +6,9 @@ jobs:
   release:
     runs-on: ${{ matrix.os }}
 
+    env:
+      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
+
     # Platforms to build on/for
     strategy:
       matrix:
@@ -21,12 +24,9 @@ jobs:
           node-version: 22
 
       - name: Install Snapcraft
-        uses: samuelmeuli/action-snapcraft@v1.2.0
+        uses: samuelmeuli/action-snapcraft@v3
         # Only install Snapcraft on Ubuntu
         if: startsWith(matrix.os, 'ubuntu-22.04')
-        with:
-          # Log in to Snap Store
-          snapcraft_token: ${{ secrets.snapcraft_token }}
       - name: Install Gcc
         if: startsWith(matrix.os, 'ubuntu-22.04')
         run: |
