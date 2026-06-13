@@ -6,17 +6,17 @@ const folders = fs.readdirSync(localesPath);
 let resources = [];
 for (let index = 0; index < folders.length; index++) {
   const folder = folders[index];
-  resources.push(`../src/assets/locales/${folder}/translation.json`);
+  resources.push(`../src/assets/locales/${folder}`);
 }
 console.info(resources);
 
 // find the missing terms in the english
 const zhdataRaw = fs.readFileSync(
-  path.join(__dirname, "../src/assets/locales/zh-CN/translation.json"),
+  path.join(__dirname, "../src/assets/locales/zh-CN.json"),
   "utf-8"
 );
 const enDataRaw = fs.readFileSync(
-  path.join(__dirname, "../src/assets/locales/en/translation.json"),
+  path.join(__dirname, "../src/assets/locales/en.json"),
   "utf-8"
 );
 //find the missing terms in the target language
@@ -37,14 +37,14 @@ console.info(Object.keys(zhData).length, Object.keys(enData).length);
 // Step2: copy the missing terms to the english file
 const mergedObj = Object.assign({}, enData, missingTerms);
 fs.writeFileSync(
-  path.join(__dirname, "../src/assets/locales/en/translation.json"),
+  path.join(__dirname, "../src/assets/locales/en.json"),
   JSON.stringify(mergedObj, null, 2)
 );
 
 // Step3:
 // fill out the rest of the terms in the target language
 const data = fs.readFileSync(
-  path.join(__dirname, "../src/assets/locales/en/translation.json"),
+  path.join(__dirname, "../src/assets/locales/en.json"),
   "utf-8"
 );
 const referData = JSON.parse(data);
