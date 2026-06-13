@@ -807,10 +807,6 @@
   "Added AI models": "Προστεθέντα μοντέλα AI",
   "No AI models added yet": "Δεν έχουν προστεθεί ακόμη μοντέλα AI",
   "Add new model": "Προσθήκη νέου μοντέλου",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Προσανατολισμός κειμένου",
   "Horizontal": "Οριζόντια",
   "Vertical": "Κάθετα",
@@ -1109,5 +1105,9 @@
   "Get more results": "Λήψη περισσότερων αποτελεσμάτων",
   "Validation successful": "Επιτυχής επαλήθευση",
   "Validation failed": "Αποτυχία επαλήθευσης",
-  "Please configure the KOReader sync server first": "Παρακαλώ ρυθμίστε πρώτα τον διακομιστή συγχρονισμού KOReader"
+  "Please configure the KOReader sync server first": "Παρακαλώ ρυθμίστε πρώτα τον διακομιστή συγχρονισμού KOReader",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

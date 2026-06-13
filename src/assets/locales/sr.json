@@ -805,10 +805,6 @@
   "Added AI models": "Dodati AI modeli",
   "No AI models added yet": "AI modeli još nisu dodati",
   "Add new model": "Dodaj novi model",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Orijentacija teksta",
   "Horizontal": "Horizontalno",
   "Vertical": "Vertikalno",
@@ -1107,5 +1103,9 @@
   "Get more results": "Dobij više rezultata",
   "Validation successful": "Provera uspešna",
   "Validation failed": "Provera nije uspela",
-  "Please configure the KOReader sync server first": "Prvo podesite KOReader server za sinhronizaciju"
+  "Please configure the KOReader sync server first": "Prvo podesite KOReader server za sinhronizaciju",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

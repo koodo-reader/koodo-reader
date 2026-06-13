@@ -807,10 +807,6 @@
   "Added AI models": "Добавленные модели AI",
   "No AI models added yet": "Модели AI еще не добавлены",
   "Add new model": "Добавить новую модель",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Ориентация текста",
   "Horizontal": "Горизонтально",
   "Vertical": "Вертикально",
@@ -1109,5 +1105,9 @@
   "Get more results": "Получить больше результатов",
   "Validation successful": "Проверка успешна",
   "Validation failed": "Проверка не удалась",
-  "Please configure the KOReader sync server first": "Сначала настройте сервер синхронизации KOReader"
+  "Please configure the KOReader sync server first": "Сначала настройте сервер синхронизации KOReader",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

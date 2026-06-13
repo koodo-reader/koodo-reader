@@ -809,10 +809,6 @@
   "Added AI models": "Tilføjede AI-modeller",
   "No AI models added yet": "Ingen AI-modeller tilføjet endnu",
   "Add new model": "Tilføj ny model",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Tekstretning",
   "Horizontal": "Vandret",
   "Vertical": "Lodret",
@@ -1111,5 +1107,9 @@
   "Get more results": "Få flere resultater",
   "Validation successful": "Validering lykkedes",
   "Validation failed": "Validering mislykkedes",
-  "Please configure the KOReader sync server first": "Konfigurer venligst KOReader-synkroniseringsserveren først"
+  "Please configure the KOReader sync server first": "Konfigurer venligst KOReader-synkroniseringsserveren først",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

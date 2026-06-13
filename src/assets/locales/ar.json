@@ -807,10 +807,6 @@
   "Added AI models": "نماذج الذكاء الاصطناعي المضافة",
   "No AI models added yet": "لم تتم إضافة نماذج ذكاء اصطناعي بعد",
   "Add new model": "إضافة نموذج جديد",
-  "AllStatus": "الكل",
-  "UnreadStatus": "غير مقروء",
-  "ReadingStatus": "يُقرأ",
-  "FinishedStatus": "منتهي",
   "Text orientation": "اتجاه النص",
   "Horizontal": "أفقي",
   "Vertical": "عمودي",
@@ -1109,5 +1105,9 @@
   "Get more results": "الحصول على المزيد من النتائج",
   "Validation successful": "التحقق ناجح",
   "Validation failed": "فشل التحقق",
-  "Please configure the KOReader sync server first": "يرجى تكوين خادم مزامنة KOReader أولاً"
+  "Please configure the KOReader sync server first": "يرجى تكوين خادم مزامنة KOReader أولاً",
+  "All": "الكل",
+  "Unread": "غير مقروء",
+  "CurrentlyReading": "يُقرأ",
+  "Finished": "منتهي"
 }

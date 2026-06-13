@@ -804,10 +804,6 @@
   "Added AI models": "Mga modelong AI na naidagdag",
   "No AI models added yet": "Wala pang idinagdag na modelo ng AI",
   "Add new model": "Magdagdag ng bagong modelo",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Orientasyon ng teksto",
   "Horizontal": "Pahalang",
   "Vertical": "Patayo",
@@ -1106,5 +1102,9 @@
   "Get more results": "Kumuha ng higit pang mga resulta",
   "Validation successful": "Matagumpay ang pag-validate",
   "Validation failed": "Nabigo ang pag-validate",
-  "Please configure the KOReader sync server first": "Mangyaring i-configure muna ang KOReader sync server"
+  "Please configure the KOReader sync server first": "Mangyaring i-configure muna ang KOReader sync server",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

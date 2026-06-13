@@ -806,10 +806,6 @@
   "Added AI models": "Přidané AI modely",
   "No AI models added yet": "Zatím nebyly přidány žádné AI modely",
   "Add new model": "Přidat nový model",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Orientace textu",
   "Horizontal": "Horizontální",
   "Vertical": "Vertikální",
@@ -1108,5 +1104,9 @@
   "Get more results": "Získat více výsledků",
   "Validation successful": "Ověření úspěšné",
   "Validation failed": "Ověření selhalo",
-  "Please configure the KOReader sync server first": "Nejprve nakonfigurujte KOReader synchronizační server"
+  "Please configure the KOReader sync server first": "Nejprve nakonfigurujte KOReader synchronizační server",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

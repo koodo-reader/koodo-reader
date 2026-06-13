@@ -806,10 +806,6 @@
   "Added AI models": "추가된 AI 모델",
   "No AI models added yet": "아직 추가된 AI 모델이 없습니다",
   "Add new model": "새 모델 추가",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "텍스트 방향",
   "Horizontal": "가로",
   "Vertical": "세로",
@@ -1108,5 +1104,9 @@
   "Get more results": "더 많은 결과 가져오기",
   "Validation successful": "확인 성공",
   "Validation failed": "확인 실패",
-  "Please configure the KOReader sync server first": "먼저 KOReader 동기화 서버를 설정하세요"
+  "Please configure the KOReader sync server first": "먼저 KOReader 동기화 서버를 설정하세요",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

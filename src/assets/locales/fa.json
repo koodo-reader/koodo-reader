@@ -806,10 +806,6 @@
   "Added AI models": "مدل‌های هوش مصنوعی اضافه شده",
   "No AI models added yet": "هنوز هیچ مدل هوش مصنوعی اضافه نشده است",
   "Add new model": "افزودن مدل جدید",
-  "AllStatus": "همه",
-  "UnreadStatus": "نخوانده",
-  "ReadingStatus": "در حال خواندن",
-  "FinishedStatus": "تمام شده",
   "Text orientation": "جهت متن",
   "Horizontal": "افقی",
   "Vertical": "عمودی",
@@ -1108,5 +1104,9 @@
   "Get more results": "دریافت نتایج بیشتر",
   "Validation successful": "اعتبارسنجی موفق",
   "Validation failed": "اعتبارسنجی ناموفق",
-  "Please configure the KOReader sync server first": "لطفاً ابتدا سرور همگام‌سازی KOReader را پیکربندی کنید"
+  "Please configure the KOReader sync server first": "لطفاً ابتدا سرور همگام‌سازی KOReader را پیکربندی کنید",
+  "All": "همه",
+  "Unread": "نخوانده",
+  "CurrentlyReading": "در حال خواندن",
+  "Finished": "تمام شده"
 }

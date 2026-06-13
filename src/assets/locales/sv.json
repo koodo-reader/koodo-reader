@@ -811,10 +811,6 @@
   "Added AI models": "Tillagda AI-modeller",
   "No AI models added yet": "Inga AI-modeller tillagda än",
   "Add new model": "Lägg till ny modell",
-  "AllStatus": "Alla",
-  "UnreadStatus": "Olästa",
-  "ReadingStatus": "Läser",
-  "FinishedStatus": "Avslutade",
   "Text orientation": "Textriktning",
   "Horizontal": "Vågrät",
   "Vertical": "Lodrät",
@@ -1113,5 +1109,9 @@
   "Get more results": "Få fler resultat",
   "Validation successful": "Validering lyckades",
   "Validation failed": "Validering misslyckades",
-  "Please configure the KOReader sync server first": "Konfigurera KOReader-synkroniseringsservern först"
+  "Please configure the KOReader sync server first": "Konfigurera KOReader-synkroniseringsservern först",
+  "All": "Alla",
+  "Unread": "Olästa",
+  "CurrentlyReading": "Läser",
+  "Finished": "Avslutade"
 }

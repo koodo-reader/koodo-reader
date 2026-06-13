@@ -807,10 +807,6 @@
   "Added AI models": "已添加的 AI 模型",
   "No AI models added yet": "尚未添加任何 AI 模型",
   "Add new model": "添加新模型",
-  "AllStatus": "全部",
-  "UnreadStatus": "未讀",
-  "ReadingStatus": "閱讀中",
-  "FinishedStatus": "已讀完",
   "Text orientation": "文字方向",
   "Horizontal": "橫排",
   "Vertical": "豎排",
@@ -1109,5 +1105,9 @@
   "Get more results": "獲取更多結果",
   "Validation successful": "驗證成功",
   "Validation failed": "驗證失敗",
-  "Please configure the KOReader sync server first": "請先配置 KOReader 同步伺服器"
+  "Please configure the KOReader sync server first": "請先配置 KOReader 同步伺服器",
+  "All": "全部",
+  "Unread": "未讀",
+  "CurrentlyReading": "閱讀中",
+  "Finished": "已讀完"
 }

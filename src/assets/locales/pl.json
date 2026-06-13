@@ -806,10 +806,6 @@
   "Added AI models": "Dodano modele AI",
   "No AI models added yet": "Nie dodano jeszcze żadnych modeli AI",
   "Add new model": "Dodaj nowy model",
-  "AllStatus": "Wszystkie",
-  "UnreadStatus": "Nieprzeczytane",
-  "ReadingStatus": "Czytanie",
-  "FinishedStatus": "Zakończone",
   "Text orientation": "Orientacja tekstu",
   "Horizontal": "Poziomo",
   "Vertical": "Pionowo",
@@ -1108,5 +1104,9 @@
   "Get more results": "Uzyskaj więcej wyników",
   "Validation successful": "Walidacja powiodła się",
   "Validation failed": "Walidacja nie powiodła się",
-  "Please configure the KOReader sync server first": "Najpierw skonfiguruj serwer synchronizacji KOReader"
+  "Please configure the KOReader sync server first": "Najpierw skonfiguruj serwer synchronizacji KOReader",
+  "All": "Wszystkie",
+  "Unread": "Nieprzeczytane",
+  "CurrentlyReading": "Czytanie",
+  "Finished": "Zakończone"
 }

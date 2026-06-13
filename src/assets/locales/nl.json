@@ -807,10 +807,6 @@
   "Added AI models": "Toegevoegde AI-modellen",
   "No AI models added yet": "Nog geen AI-modellen toegevoegd",
   "Add new model": "Nieuw model toevoegen",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Tekstoriëntatie",
   "Horizontal": "Horizontaal",
   "Vertical": "Verticaal",
@@ -1109,5 +1105,9 @@
   "Get more results": "Meer resultaten",
   "Validation successful": "Validatie geslaagd",
   "Validation failed": "Validatie mislukt",
-  "Please configure the KOReader sync server first": "Configureer eerst de KOReader-synchronisatieserver"
+  "Please configure the KOReader sync server first": "Configureer eerst de KOReader-synchronisatieserver",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

@@ -804,10 +804,6 @@
   "Added AI models": "जोड़े गए AI मॉडल",
   "No AI models added yet": "अभी तक कोई AI मॉडल नहीं जोड़ा गया",
   "Add new model": "नया मॉडल जोड़ें",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "टेक्स्ट ओरिएंटेशन",
   "Horizontal": "क्षैतिज",
   "Vertical": "लंबवत",
@@ -1106,5 +1102,9 @@
   "Get more results": "अधिक परिणाम प्राप्त करें",
   "Validation successful": "सत्यापन सफल",
   "Validation failed": "सत्यापन विफल",
-  "Please configure the KOReader sync server first": "कृपया पहले KOReader सिंक सर्वर कॉन्फ़िगर करें"
+  "Please configure the KOReader sync server first": "कृपया पहले KOReader सिंक सर्वर कॉन्फ़िगर करें",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }
