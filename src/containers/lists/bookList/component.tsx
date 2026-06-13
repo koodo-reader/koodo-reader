@@ -446,16 +446,16 @@ class BookList extends React.Component<BookListProps, BookListState> {
               style={{ marginRight: "10px", width: "70px", borderWidth: "0px" }}
             >
               <option value="" className="lang-setting-option">
-                {this.props.t("AllStatus")}
+                {this.props.t("All")}
               </option>
               <option value="unread" className="lang-setting-option">
-                {this.props.t("UnreadStatus")}
+                {this.props.t("Unread")}
               </option>
               <option value="reading" className="lang-setting-option">
-                {this.props.t("ReadingStatus")}
+                {this.props.t("CurrentlyReading")}
               </option>
               <option value="finished" className="lang-setting-option">
-                {this.props.t("FinishedStatus")}
+                {this.props.t("Finished")}
               </option>
             </select>
             <ViewMode />
