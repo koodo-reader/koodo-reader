@@ -258,7 +258,7 @@
   "Move your mouse on top of any book, then click the more icon to add the book to the shelf": "Bewegen Sie die Maus über ein beliebiges Buch und klicken Sie dann auf das Symbol \"Mehr\", um das Buch dem Regal hinzuzufügen",
   "Download failed, network problem or no backup": "Download fehlgeschlagen, Netzwerkproblem oder keine Sicherungsdatei",
   "Upload failed, check your connection": "Hochladen fehlgeschlagen, bitte Verbindung checken",
-  "Version": "Version: ",
+  "Version": "Version:",
   "Not supported yet": "Derzeit nicht unterstützt",
   "Update to": "Aktualisieren auf",
   "Date": "Datum: ",
@@ -1105,8 +1105,8 @@
   "Validation successful": "Validierung erfolgreich",
   "Validation failed": "Validierung fehlgeschlagen",
   "Please configure the KOReader sync server first": "Bitte konfigurieren Sie zuerst den KOReader-Synchronisationsserver",
-  "All": "All",
-  "Unread": "Unread",
-  "CurrentlyReading": "Reading",
-  "Finished": "Finished"
+  "All": "Alle",
+  "Unread": "Ungelesen",
+  "CurrentlyReading": "Wird gelesen",
+  "Finished": "Fertig"
 }
