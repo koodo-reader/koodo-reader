@@ -1105,8 +1105,8 @@
   "Validation successful": "驗證成功",
   "Validation failed": "驗證失敗",
   "Please configure the KOReader sync server first": "請先配置 KOReader 同步伺服器",
-  "All": "All",
-  "Unread": "Unread",
-  "CurrentlyReading": "Reading",
-  "Finished": "Finished"
+  "All": "全部",
+  "Unread": "未閱讀",
+  "CurrentlyReading": "閱讀中",
+  "Finished": "已讀完"
 }

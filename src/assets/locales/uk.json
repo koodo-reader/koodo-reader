@@ -1116,8 +1116,8 @@
   "Validation successful": "Перевірка успішна",
   "Validation failed": "Перевірка не вдалася",
   "Please configure the KOReader sync server first": "Спочатку налаштуйте сервер синхронізації KOReader",
-  "All": "All",
-  "Unread": "Unread",
-  "CurrentlyReading": "Reading",
-  "Finished": "Finished"
+  "All": "Всі",
+  "Unread": "Непрочитане",
+  "CurrentlyReading": "Читаю",
+  "Finished": "Завершено"
 }

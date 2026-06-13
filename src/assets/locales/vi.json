@@ -1109,8 +1109,8 @@
   "Validation successful": "Xác thực thành công",
   "Validation failed": "Xác thực thất bại",
   "Please configure the KOReader sync server first": "Vui lòng cấu hình máy chủ đồng bộ KOReader trước",
-  "All": "All",
-  "Unread": "Unread",
-  "CurrentlyReading": "Reading",
-  "Finished": "Finished"
+  "All": "Tất cả",
+  "Unread": "Chưa đọc",
+  "CurrentlyReading": "Đang đọc",
+  "Finished": "Đã đọc xong"
 }
