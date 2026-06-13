@@ -804,10 +804,6 @@
   "Added AI models": "Múnlaí AI curtha leis",
   "No AI models added yet": "Níl aon mhúnlaí AI curtha leis go fóill",
   "Add new model": "Cuir múnla nua leis",
-  "AllStatus": "Go léir",
-  "UnreadStatus": "Gan léamh",
-  "ReadingStatus": "Ag léamh",
-  "FinishedStatus": "Críochnaithe",
   "Text orientation": "Treoshuíomh téacs",
   "Horizontal": "Cothrománach",
   "Vertical": "Ingearach",
@@ -1106,5 +1102,9 @@
   "Get more results": "Faigh tuilleadh torthaí",
   "Validation successful": "Bailíochtú rathúil",
   "Validation failed": "Theip ar bhailíochtú",
-  "Please configure the KOReader sync server first": "Cumraigh freastalaí sioncronaithe KOReader ar dtús le do thoil"
+  "Please configure the KOReader sync server first": "Cumraigh freastalaí sioncronaithe KOReader ar dtús le do thoil",
+  "All": "Go léir",
+  "Unread": "Gan léamh",
+  "CurrentlyReading": "Ag léamh",
+  "Finished": "Críochnaithe"
 }

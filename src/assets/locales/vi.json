@@ -810,10 +810,6 @@
   "Added AI models": "Các mô hình AI đã thêm",
   "No AI models added yet": "Chưa thêm mô hình AI nào",
   "Add new model": "Thêm mô hình mới",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Hướng văn bản",
   "Horizontal": "Ngang",
   "Vertical": "Dọc",
@@ -1112,5 +1108,9 @@
   "Get more results": "Lấy thêm kết quả",
   "Validation successful": "Xác thực thành công",
   "Validation failed": "Xác thực thất bại",
-  "Please configure the KOReader sync server first": "Vui lòng cấu hình máy chủ đồng bộ KOReader trước"
+  "Please configure the KOReader sync server first": "Vui lòng cấu hình máy chủ đồng bộ KOReader trước",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

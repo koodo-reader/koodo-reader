@@ -804,10 +804,6 @@
   "Added AI models": "Hozzáadott AI modellek",
   "No AI models added yet": "Még nincsenek hozzáadott AI modellek",
   "Add new model": "Új modell hozzáadása",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Szöveg tájolása",
   "Horizontal": "Vízszintes",
   "Vertical": "Függőleges",
@@ -1106,5 +1102,9 @@
   "Get more results": "További eredmények",
   "Validation successful": "Ellenőrzés sikeres",
   "Validation failed": "Ellenőrzés sikertelen",
-  "Please configure the KOReader sync server first": "Kérjük, először konfigurálja a KOReader szinkronszervert"
+  "Please configure the KOReader sync server first": "Kérjük, először konfigurálja a KOReader szinkronszervert",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

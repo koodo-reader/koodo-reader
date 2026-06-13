@@ -806,10 +806,6 @@
   "Added AI models": "โมเดล AI ที่เพิ่มแล้ว",
   "No AI models added yet": "ยังไม่ได้เพิ่มโมเดล AI",
   "Add new model": "เพิ่มโมเดลใหม่",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "การวางแนวข้อความ",
   "Horizontal": "แนวนอน",
   "Vertical": "แนวตั้ง",
@@ -1108,5 +1104,9 @@
   "Get more results": "รับผลลัพธ์เพิ่มเติม",
   "Validation successful": "ตรวจสอบสำเร็จ",
   "Validation failed": "ตรวจสอบล้มเหลว",
-  "Please configure the KOReader sync server first": "โปรดกำหนดค่าเซิร์ฟเวอร์ซิงค์ KOReader ก่อน"
+  "Please configure the KOReader sync server first": "โปรดกำหนดค่าเซิร์ฟเวอร์ซิงค์ KOReader ก่อน",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

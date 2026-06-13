@@ -806,10 +806,6 @@
   "Added AI models": "Modele AI adăugate",
   "No AI models added yet": "Nu s-au adăugat încă modele AI",
   "Add new model": "Adăugați model nou",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Orientarea textului",
   "Horizontal": "Orizontal",
   "Vertical": "Vertical",
@@ -1108,5 +1104,9 @@
   "Get more results": "Obțineți mai multe rezultate",
   "Validation successful": "Validare reușită",
   "Validation failed": "Validare eșuată",
-  "Please configure the KOReader sync server first": "Configurați mai întâi serverul de sincronizare KOReader"
+  "Please configure the KOReader sync server first": "Configurați mai întâi serverul de sincronizare KOReader",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

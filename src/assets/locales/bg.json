@@ -807,10 +807,6 @@
   "Added AI models": "Добавени AI модели",
   "No AI models added yet": "Все още няма добавени AI модели",
   "Add new model": "Добавяне на нов модел",
-  "AllStatus": "Всички",
-  "UnreadStatus": "Непрочетени",
-  "ReadingStatus": "Четат се",
-  "FinishedStatus": "Завършени",
   "Text orientation": "Ориентация на текста",
   "Horizontal": "Хоризонтално",
   "Vertical": "Вертикално",
@@ -1109,5 +1105,9 @@
   "Get more results": "Получаване на повече резултати",
   "Validation successful": "Проверката е успешна",
   "Validation failed": "Проверката не бе успешна",
-  "Please configure the KOReader sync server first": "Първо конфигурирайте сървъра за синхронизация KOReader"
+  "Please configure the KOReader sync server first": "Първо конфигурирайте сървъра за синхронизация KOReader",
+  "All": "Всички",
+  "Unread": "Непрочетени",
+  "CurrentlyReading": "Четат се",
+  "Finished": "Завършени"
 }

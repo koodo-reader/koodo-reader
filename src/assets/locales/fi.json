@@ -813,10 +813,6 @@
   "Added AI models": "Lisätyt tekoälymallit",
   "No AI models added yet": "Ei vielä lisättyjä tekoälymalleja",
   "Add new model": "Lisää uusi malli",
-  "AllStatus": "Kaikki",
-  "UnreadStatus": "Lukematon",
-  "ReadingStatus": "Lukemassa",
-  "FinishedStatus": "Valmis",
   "Text orientation": "Tekstin suunta",
   "Horizontal": "Vaaka",
   "Vertical": "Pysty",
@@ -1115,5 +1111,9 @@
   "Get more results": "Hae lisää tuloksia",
   "Validation successful": "Vahvistus onnistui",
   "Validation failed": "Vahvistus epäonnistui",
-  "Please configure the KOReader sync server first": "Määritä KOReader-synkronointipalvelin ensin"
+  "Please configure the KOReader sync server first": "Määritä KOReader-synkronointipalvelin ensin",
+  "All": "Kaikki",
+  "Unread": "Lukematon",
+  "CurrentlyReading": "Lukemassa",
+  "Finished": "Valmis"
 }

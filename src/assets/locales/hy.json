@@ -807,10 +807,6 @@
   "Added AI models": "Ավելացված AI մոդելներ",
   "No AI models added yet": "Դեռևս AI մոդելներ ավելացված չեն",
   "Add new model": "Ավելացնել նոր մոդել",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Տեքստի կողմնորոշում",
   "Horizontal": "Հորիզոնական",
   "Vertical": "Ուղղահայաց",
@@ -1109,5 +1105,9 @@
   "Get more results": "Ստանալ ավելի շատ արդյունքներ",
   "Validation successful": "Վավերացումը հաջողվեց",
   "Validation failed": "Վավերացումը ձախողվեց",
-  "Please configure the KOReader sync server first": "Խնդրում ենք նախ կարգավորել KOReader սինխրոնիզացիայի սերվերը"
+  "Please configure the KOReader sync server first": "Խնդրում ենք նախ կարգավորել KOReader սինխրոնիզացիայի սերվերը",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

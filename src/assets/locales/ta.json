@@ -805,10 +805,6 @@
   "Added AI models": "சேர்க்கப்பட்ட AI மாதிரிகள்",
   "No AI models added yet": "இதுவரை AI மாதிரிகள் எதுவும் சேர்க்கப்படவில்லை",
   "Add new model": "புதிய மாதிரியைச் சேர்",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "உரை நோக்குநிலை",
   "Horizontal": "கிடைமட்ட",
   "Vertical": "செங்குத்து",
@@ -1107,5 +1103,9 @@
   "Get more results": "மேலும் முடிவுகளைப் பெறுக",
   "Validation successful": "சரிபார்ப்பு வெற்றி",
   "Validation failed": "சரிபார்ப்பு தோல்வி",
-  "Please configure the KOReader sync server first": "முதலில் KOReader ஒத்திசைவு சர்வரை கட்டமைக்கவும்"
+  "Please configure the KOReader sync server first": "முதலில் KOReader ஒத்திசைவு சர்வரை கட்டமைக்கவும்",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

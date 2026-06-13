@@ -804,10 +804,6 @@
   "Added AI models": "የተጨመሩ የAI ሞዴሎች",
   "No AI models added yet": "ገና ምንም የAI ሞዴሎች አልተጨመሩም",
   "Add new model": "አዲስ ሞዴል አክል",
-  "AllStatus": "ሁሉም",
-  "UnreadStatus": "ያልተነበበ",
-  "ReadingStatus": "በማንበብ ላይ",
-  "FinishedStatus": "ተጠናቋል",
   "Text orientation": "የጽሑፍ አቅጣጫ",
   "Horizontal": "አግድም",
   "Vertical": "ቀጥ ያለ",
@@ -1106,5 +1102,9 @@
   "Get more results": "ተጨማሪ ውጤቶችን አግኝ",
   "Validation successful": "ማረጋገጫ ተሳክቷል",
   "Validation failed": "ማረጋገጫ አልተሳካም",
-  "Please configure the KOReader sync server first": "እባክዎ መጀመሪያ የKOReader ማመሳሰያ አገልጋይን ያዋቅሩ"
+  "Please configure the KOReader sync server first": "እባክዎ መጀመሪያ የKOReader ማመሳሰያ አገልጋይን ያዋቅሩ",
+  "All": "ሁሉም",
+  "Unread": "ያልተነበበ",
+  "CurrentlyReading": "በማንበብ ላይ",
+  "Finished": "ተጠናቋል"
 }

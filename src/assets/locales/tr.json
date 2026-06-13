@@ -807,10 +807,6 @@
   "Added AI models": "Eklenen AI modelleri",
   "No AI models added yet": "Henüz AI modeli eklenmemiş",
   "Add new model": "Yeni model ekle",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Metin yönü",
   "Horizontal": "Yatay",
   "Vertical": "Dikey",
@@ -1109,5 +1105,9 @@
   "Get more results": "Daha fazla sonuç al",
   "Validation successful": "Doğrulama başarılı",
   "Validation failed": "Doğrulama başarısız",
-  "Please configure the KOReader sync server first": "请先配置 KOReader 同步服务器"
+  "Please configure the KOReader sync server first": "请先配置 KOReader 同步服务器",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

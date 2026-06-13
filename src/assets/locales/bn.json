@@ -807,10 +807,6 @@
   "Added AI models": "যোগ করা AI মডেল",
   "No AI models added yet": "কোনো AI মডেল যোগ করা হয়নি",
   "Add new model": "নতুন মডেল যোগ করুন",
-  "AllStatus": "সব",
-  "UnreadStatus": "অপঠিত",
-  "ReadingStatus": "পড়ছি",
-  "FinishedStatus": "শেষ",
   "Text orientation": "টেক্সট ওরিয়েন্টেশন",
   "Horizontal": "অনুভূমিক",
   "Vertical": "উল্লম্ব",
@@ -1109,5 +1105,9 @@
   "Get more results": "আরও ফলাফল পান",
   "Validation successful": "যাচাই সফল হয়েছে",
   "Validation failed": "যাচাই ব্যর্থ হয়েছে",
-  "Please configure the KOReader sync server first": "প্রথমে KOReader সিঙ্ক সার্ভার কনফিগার করুন"
+  "Please configure the KOReader sync server first": "প্রথমে KOReader সিঙ্ক সার্ভার কনফিগার করুন",
+  "All": "সব",
+  "Unread": "অপঠিত",
+  "CurrentlyReading": "পড়ছি",
+  "Finished": "শেষ"
 }

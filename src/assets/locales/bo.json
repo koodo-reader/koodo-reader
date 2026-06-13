@@ -806,10 +806,6 @@
   "Added AI models": "སྣོན་པའི་AI རྟེན།",
   "No AI models added yet": "AI རྟེན་ད་དུང་སྣོན་མེད།",
   "Add new model": "རྟེན་གསར་པ་སྣོན།",
-  "AllStatus": "ཚང་མ།",
-  "UnreadStatus": "མ་ཀློག",
-  "ReadingStatus": "ཀློག་བཞིན་པ།",
-  "FinishedStatus": "རྫོགས་ཟིན།",
   "Text orientation": "ཡིག་ཕྱོགས།",
   "Horizontal": "ཞེང་འཕྲེད།",
   "Vertical": "སྒང་འཕྲེད།",
@@ -1108,5 +1104,9 @@
   "Get more results": "གྲུབ་འབྲས་ལྷག་མ་ལེན།",
   "Validation successful": "བདེན་དཔྱད་ལེགས་སྒྲུབ།",
   "Validation failed": "བདེན་དཔྱད་མ་སྒྲུབ།",
-  "Please configure the KOReader sync server first": "སྔོན་ལ་ KOReader མཉམ་སྒྲིག་སར་ཝར་སྒྲིག་རོགས།"
+  "Please configure the KOReader sync server first": "སྔོན་ལ་ KOReader མཉམ་སྒྲིག་སར་ཝར་སྒྲིག་རོགས།",
+  "All": "ཚང་མ།",
+  "Unread": "མ་ཀློག",
+  "CurrentlyReading": "ཀློག་བཞིན་པ།",
+  "Finished": "རྫོགས་ཟིན།"
 }

@@ -817,10 +817,6 @@
   "Added AI models": "追加済みのAIモデル",
   "No AI models added yet": "AIモデルがまだ追加されていません",
   "Add new model": "新しいモデルを追加",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "文字方向",
   "Horizontal": "横書き",
   "Vertical": "縦書き",
@@ -1119,5 +1115,9 @@
   "Get more results": "さらに結果を取得",
   "Validation successful": "検証成功",
   "Validation failed": "検証失敗",
-  "Please configure the KOReader sync server first": "先にKOReader同期サーバーを設定してください"
+  "Please configure the KOReader sync server first": "先にKOReader同期サーバーを設定してください",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }

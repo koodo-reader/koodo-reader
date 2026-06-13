@@ -821,10 +821,6 @@
   "Added AI models": "Model AI yang ditambahkan",
   "No AI models added yet": "Belum ada model AI yang ditambahkan",
   "Add new model": "Tambah model baru",
-  "AllStatus": "All",
-  "UnreadStatus": "Unread",
-  "ReadingStatus": "Reading",
-  "FinishedStatus": "Finished",
   "Text orientation": "Orientasi teks",
   "Horizontal": "Horizontal",
   "Vertical": "Vertikal",
@@ -1123,5 +1119,9 @@
   "Get more results": "Dapatkan lebih banyak hasil",
   "Validation successful": "Validasi berhasil",
   "Validation failed": "Validasi gagal",
-  "Please configure the KOReader sync server first": "Harap konfigurasi server sinkronisasi KOReader terlebih dahulu"
+  "Please configure the KOReader sync server first": "Harap konfigurasi server sinkronisasi KOReader terlebih dahulu",
+  "All": "All",
+  "Unread": "Unread",
+  "CurrentlyReading": "Reading",
+  "Finished": "Finished"
 }
