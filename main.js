@@ -660,7 +660,6 @@ const createTray = () => {
       path.join(__dirname, "./build/assets/trayTemplate.png")
     );
     trayIcon = trayIcon.resize({ width: 16, height: 16, quality: "best" });
-    trayIcon.setTemplateImage(true);
   }
   tray = new Tray(trayIcon);
   const contextMenu = Menu.buildFromTemplate([
