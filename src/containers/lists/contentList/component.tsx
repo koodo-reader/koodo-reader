@@ -258,9 +258,9 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
               >
                 <span className="icon-collapse"></span>
                 {this.state.isExpandContent ? (
-                  <Trans>Collapse chapters</Trans>
+                  <Trans>Collapse</Trans>
                 ) : (
-                  <Trans>Expand chapters</Trans>
+                  <Trans>Expand</Trans>
                 )}
               </div>
             </div>
