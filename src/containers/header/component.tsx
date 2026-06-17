@@ -859,7 +859,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           </div>
         </div>
 
-        {!this.props.isAuthed && !this.state.isHidePro ? (
+        {!this.props.isAuthed &&
+        !this.state.isHidePro &&
+        window.location.hostname !== "web.koodoreader.cn" ? (
           <div className="header-report-container">
             <span
               style={{ textDecoration: "underline" }}
