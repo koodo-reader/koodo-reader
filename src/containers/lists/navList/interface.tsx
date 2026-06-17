@@ -19,4 +19,5 @@ export interface NavListState {
   isSearchOpen: boolean;
   searchKeyword: string;
   searchResults: (BookmarkModel | NoteModel)[];
+  isComposing: boolean;
 }

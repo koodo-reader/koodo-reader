@@ -20,4 +20,5 @@ export interface ContentListState {
   expandedItems: Set<string>;
   isSearchOpen: boolean;
   searchKeyword: string;
+  isComposing: boolean;
 }

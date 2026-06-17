@@ -28,6 +28,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         ConfigService.getReaderConfig("isExpandContent") === "yes",
       isSearchOpen: false,
       searchKeyword: "",
+      isComposing: false,
     };
     this.handleJump = this.handleJump.bind(this);
     this.searchInputRef = React.createRef<HTMLInputElement>();
@@ -138,6 +139,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       {
         isSearchOpen,
         searchKeyword: isSearchOpen ? this.state.searchKeyword : "",
+        isComposing: false,
       },
       () => {
         if (isSearchOpen) {
@@ -149,6 +151,19 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
 
   handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ searchKeyword: event.target.value });
+  };
+
+  handleCompositionStart = () => {
+    this.setState({ isComposing: true });
+  };
+
+  handleCompositionEnd = (
+    event: React.CompositionEvent<HTMLInputElement>
+  ) => {
+    this.setState({
+      isComposing: false,
+      searchKeyword: event.currentTarget.value,
+    });
   };
 
   handleSearchJump = async (item: any) => {
@@ -300,7 +315,8 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       });
     };
     const searchResults = this.getSearchResults();
-    const isSearching = this.state.searchKeyword.trim().length > 0;
+    const isSearching =
+      this.state.searchKeyword.trim().length > 0 && !this.state.isComposing;
 
     const renderSearchResults = () => {
       if (searchResults.length === 0) {
@@ -374,6 +390,8 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
               className="book-content-search-input"
               value={this.state.searchKeyword}
               onChange={this.handleSearchChange}
+              onCompositionStart={this.handleCompositionStart}
+              onCompositionEnd={this.handleCompositionEnd}
               placeholder={i18n.t("Search chapters...")}
             />
           </div>
