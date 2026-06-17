@@ -389,11 +389,92 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       const next = toAbs(src);
       if (next) img.setAttribute("src", next);
     });
+    ["data-src", "data-original", "data-lazy-src"].forEach((attr) => {
+      rootDoc.querySelectorAll(`img[${attr}]`).forEach((img) => {
+        const value = img.getAttribute(attr);
+        const next = toAbs(value);
+        if (next) img.setAttribute(attr, next);
+      });
+    });
     rootDoc.querySelectorAll("link[href]").forEach((l) => {
       const href = l.getAttribute("href");
       const next = toAbs(href);
       if (next) l.setAttribute("href", next);
     });
+  };
+
+  fetchImageAsDataUrl = async (imageUrl: string): Promise<string | null> => {
+    if (!imageUrl || imageUrl.startsWith("data:")) {
+      return imageUrl || null;
+    }
+    if (imageUrl.startsWith("blob:")) {
+      return null;
+    }
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) return null;
+      const blob = await response.blob();
+      const contentType = (
+        response.headers.get("content-type") ||
+        blob.type ||
+        ""
+      ).toLowerCase();
+      if (contentType && !contentType.startsWith("image/")) {
+        return null;
+      }
+      return await CoverUtil.blobToBase64(blob);
+    } catch {
+      return null;
+    }
+  };
+
+  resolveImageUrl = (img: Element): string | null => {
+    const candidates = [
+      img.getAttribute("src"),
+      img.getAttribute("data-src"),
+      img.getAttribute("data-original"),
+      img.getAttribute("data-lazy-src"),
+    ].filter(Boolean) as string[];
+
+    for (const value of candidates) {
+      if (value.startsWith("data:")) {
+        if (value.length > 200) return value;
+        continue;
+      }
+      if (!value.startsWith("blob:")) return value;
+    }
+    return null;
+  };
+
+  embedImagesAsBase64 = async (rootDoc: Document, toastId: string) => {
+    const images = Array.from(rootDoc.querySelectorAll("img"));
+    const total = images.length;
+    if (total === 0) return;
+
+    for (let i = 0; i < images.length; i++) {
+      const img = images[i];
+      const imageUrl = this.resolveImageUrl(img);
+      if (!imageUrl) continue;
+
+      if (imageUrl.startsWith("data:")) {
+        img.setAttribute("src", imageUrl);
+        continue;
+      }
+
+      const dataUrl = await this.fetchImageAsDataUrl(imageUrl);
+      if (dataUrl) {
+        img.setAttribute("src", dataUrl);
+        img.removeAttribute("data-src");
+        img.removeAttribute("data-original");
+        img.removeAttribute("data-lazy-src");
+        img.removeAttribute("srcset");
+      }
+
+      const pct = Math.round(((i + 1) / total) * 100);
+      toast.loading(this.props.t("Downloading") + ": " + pct + "%", {
+        id: toastId,
+      });
+    }
   };
 
   importHtmlFromURL = async (
@@ -453,6 +534,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     const contentDoc = parser.parseFromString(extractedContent, "text/html");
     if (contentDoc?.body) {
       this.makeUrlsAbsolute(contentDoc, url);
+      await this.embedImagesAsBase64(contentDoc, toastId);
     }
 
     // 4) Sanitize & rebuild as a standalone html "book" file.
