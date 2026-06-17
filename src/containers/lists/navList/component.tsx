@@ -23,6 +23,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
       isSearchOpen: false,
       searchKeyword: "",
       searchResults: [],
+      isComposing: false,
     };
     this.searchInputRef = React.createRef<HTMLInputElement>();
   }
@@ -51,6 +52,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
         isSearchOpen: false,
         searchKeyword: "",
         searchResults: [],
+        isComposing: false,
       });
     }
 
@@ -77,6 +79,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
         isSearchOpen,
         searchKeyword: isSearchOpen ? this.state.searchKeyword : "",
         searchResults: isSearchOpen ? this.state.searchResults : [],
+        isComposing: false,
       },
       () => {
         if (isSearchOpen) {
@@ -128,6 +131,21 @@ class NavList extends React.Component<NavListProps, NavListState> {
   handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const keyword = event.target.value;
     this.setState({ searchKeyword: keyword }, () => {
+      if (!this.state.isComposing) {
+        this.handleSearch(keyword);
+      }
+    });
+  };
+
+  handleCompositionStart = () => {
+    this.setState({ isComposing: true });
+  };
+
+  handleCompositionEnd = (
+    event: React.CompositionEvent<HTMLInputElement>
+  ) => {
+    const keyword = event.currentTarget.value;
+    this.setState({ isComposing: false, searchKeyword: keyword }, () => {
       this.handleSearch(keyword);
     });
   };
@@ -325,7 +343,8 @@ class NavList extends React.Component<NavListProps, NavListState> {
     });
   };
   render() {
-    const isSearching = this.state.searchKeyword.trim().length > 0;
+    const isSearching =
+      this.state.searchKeyword.trim().length > 0 && !this.state.isComposing;
     const displayData = isSearching
       ? this.state.searchResults
       : this.state.currentData;
@@ -351,6 +370,8 @@ class NavList extends React.Component<NavListProps, NavListState> {
               className="book-nav-search-input"
               value={this.state.searchKeyword}
               onChange={this.handleSearchChange}
+              onCompositionStart={this.handleCompositionStart}
+              onCompositionEnd={this.handleCompositionEnd}
               placeholder={this.getSearchPlaceholder()}
             />
           </div>
