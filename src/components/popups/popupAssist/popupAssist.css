@@ -52,6 +52,20 @@
   display: inline-block;
   animation: spin 1s linear infinite;
 }
+.popup-assist-export-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  color: #f16464;
+  font-size: 14px;
+  opacity: 0.8;
+}
+.popup-assist-export-button:hover {
+  opacity: 1;
+}
 .popup-assistant-send-button {
   border: 2px solid #f16464;
   color: #f16464;

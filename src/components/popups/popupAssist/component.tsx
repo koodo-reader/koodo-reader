@@ -11,6 +11,7 @@ import DOMPurify from "dompurify";
 import { Trans } from "react-i18next";
 import { handleContextMenu } from "../../../utils/common";
 import toast from "react-hot-toast";
+import { saveAs } from "file-saver";
 import { getAnswerStream } from "../../../utils/request/reader";
 import { chatStream } from "../../../utils/request/common";
 import { marked } from "marked";
@@ -401,6 +402,38 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       );
     });
   };
+  handleExportChatHistory = () => {
+    const messages =
+      this.state.mode === "ask"
+        ? this.state.askHistory
+        : this.state.chatHistory;
+    if (messages.length === 0) {
+      toast(this.props.t("Nothing to export"));
+      return;
+    }
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const dateStr = `${year}-${month <= 9 ? "0" + month : month}-${
+      day <= 9 ? "0" + day : day
+    }`;
+    const modeLabel = this.state.mode === "ask" ? "Reading" : "Chat";
+    const bookName = this.props.currentBook?.name || "Unknown";
+    const exportData = {
+      bookName,
+      mode: this.state.mode,
+      exportedAt: now.toISOString(),
+      messages,
+    };
+    saveAs(
+      new Blob([JSON.stringify(exportData, null, 2)], {
+        type: "application/json;charset=UTF-8",
+      }),
+      `KoodoReader-${modeLabel}-Assistant-${bookName}-${dateStr}.json`
+    );
+    toast.success(this.props.t("Export successful"));
+  };
   handleNewQuestion = (question: string) => {
     if (this.state.mode === "ask") {
       this.setState(
@@ -493,49 +526,64 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             </div>
           </div>
 
-          <select
-            className="dict-service-selector"
-            style={{ margin: 0, color: "#f16464" }}
-            value={this.state.aiService}
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-              if (event.target.value === "add-new") {
-                this.props.handleOpenMenu(false);
-                this.props.handleMenuMode("");
-                this.props.handleSetting(true);
-                this.props.handleSettingMode("ai");
-                return;
-              }
-              this.handleChangeAiService(event.target.value);
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
             }}
           >
-            <option
-              value={""}
-              key={"select"}
-              className="add-dialog-shelf-list-option"
+            <div
+              className="popup-assist-export-button"
+              title={this.props.t("Export")}
+              onClick={this.handleExportChatHistory}
             >
-              {this.props.t("Please select")}
-            </option>
-            {this.props.plugins
-              .filter((item) => item.type === "assistant")
-              .map((item) => {
-                return (
-                  <option
-                    value={item.key}
-                    key={item.key}
-                    className="add-dialog-shelf-list-option"
-                  >
-                    {this.props.t(item.displayName)}
-                  </option>
-                );
-              })}
-            <option
-              value={"add-new"}
-              key={"add-new"}
-              className="add-dialog-shelf-list-option"
+              <span className="icon-share"></span>
+            </div>
+            <select
+              className="dict-service-selector"
+              style={{ margin: 0, color: "#f16464" }}
+              value={this.state.aiService}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                if (event.target.value === "add-new") {
+                  this.props.handleOpenMenu(false);
+                  this.props.handleMenuMode("");
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("ai");
+                  return;
+                }
+                this.handleChangeAiService(event.target.value);
+              }}
             >
-              {this.props.t("Add new plugin")}
-            </option>
-          </select>
+              <option
+                value={""}
+                key={"select"}
+                className="add-dialog-shelf-list-option"
+              >
+                {this.props.t("Please select")}
+              </option>
+              {this.props.plugins
+                .filter((item) => item.type === "assistant")
+                .map((item) => {
+                  return (
+                    <option
+                      value={item.key}
+                      key={item.key}
+                      className="add-dialog-shelf-list-option"
+                    >
+                      {this.props.t(item.displayName)}
+                    </option>
+                  );
+                })}
+              <option
+                value={"add-new"}
+                key={"add-new"}
+                className="add-dialog-shelf-list-option"
+              >
+                {this.props.t("Add new plugin")}
+              </option>
+            </select>
+          </div>
         </div>
 
         {this.state.isAddNew && (
