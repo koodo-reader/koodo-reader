@@ -638,6 +638,8 @@
   "Get metadata": "获取元数据",
   "Data source": "数据来源",
   "Search": "搜索",
+  "Search chapters...": "搜索章节...",
+  "No results found": "未找到匹配结果",
   "Apply": "应用",
   "Auto sync new words to Eudic": "自动同步新添加的生词到欧路词典",
   "When you look up a word, it will be automatically synced to your Eudic study list": "查词之后，将自动同步到欧路词典生词本中",

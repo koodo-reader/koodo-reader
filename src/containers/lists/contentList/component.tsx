@@ -4,9 +4,18 @@ import { ContentListProps, ContentListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { scrollContents } from "../../../utils/common";
 import { Trans } from "react-i18next";
+import i18n from "../../../i18n";
 import _ from "underscore";
 
+interface FlatChapterItem {
+  item: any;
+  level: number;
+  path: string;
+}
+
 class ContentList extends React.Component<ContentListProps, ContentListState> {
+  private searchInputRef: React.RefObject<HTMLInputElement>;
+
   constructor(props: ContentListProps) {
     super(props);
     this.state = {
@@ -17,8 +26,11 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       expandedItems: new Set<string>(), // 存储展开的项目路径
       isExpandContent:
         ConfigService.getReaderConfig("isExpandContent") === "yes",
+      isSearchOpen: false,
+      searchKeyword: "",
     };
     this.handleJump = this.handleJump.bind(this);
+    this.searchInputRef = React.createRef<HTMLInputElement>();
   }
 
   // 查找包含当前章节的路径并自动展开
@@ -86,6 +98,61 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     }
 
     return false;
+  };
+
+  flattenChaptersWithLevel = (
+    items: any[],
+    level: number = 1,
+    parentPath: string = ""
+  ): FlatChapterItem[] => {
+    const result: FlatChapterItem[] = [];
+    items.forEach((item, index) => {
+      const currentPath = parentPath ? `${parentPath}-${index}` : `${index}`;
+      result.push({ item, level, path: currentPath });
+      if (item.subitems && item.subitems.length > 0) {
+        result.push(
+          ...this.flattenChaptersWithLevel(
+            item.subitems,
+            level + 1,
+            currentPath
+          )
+        );
+      }
+    });
+    return result;
+  };
+
+  getSearchResults = (): FlatChapterItem[] => {
+    const keyword = this.state.searchKeyword.trim().toLowerCase();
+    if (!keyword) {
+      return [];
+    }
+    return this.flattenChaptersWithLevel(this.state.chapters).filter(
+      ({ item }) => item.label.toLowerCase().includes(keyword)
+    );
+  };
+
+  toggleSearch = () => {
+    const isSearchOpen = !this.state.isSearchOpen;
+    this.setState(
+      {
+        isSearchOpen,
+        searchKeyword: isSearchOpen ? this.state.searchKeyword : "",
+      },
+      () => {
+        if (isSearchOpen) {
+          this.searchInputRef.current?.focus();
+        }
+      }
+    );
+  };
+
+  handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ searchKeyword: event.target.value });
+  };
+
+  handleSearchJump = async (item: any) => {
+    await this.handleJump(item);
   };
 
   async handleScrollToChapter(htmlBook: any) {
@@ -232,6 +299,36 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
         );
       });
     };
+    const searchResults = this.getSearchResults();
+    const isSearching = this.state.searchKeyword.trim().length > 0;
+
+    const renderSearchResults = () => {
+      if (searchResults.length === 0) {
+        return (
+          <li className="book-content-list book-content-search-empty">
+            <Trans>No results found</Trans>
+          </li>
+        );
+      }
+      return searchResults.map(({ item, level, path }) => (
+        <li
+          key={path}
+          className="book-content-list"
+          style={{ marginLeft: `${level * 15}px` }}
+        >
+          <span
+            onClick={() => {
+              this.handleSearchJump(item);
+            }}
+            className="book-content-name"
+            data-href={item.href}
+          >
+            {item.label}
+          </span>
+        </li>
+      ));
+    };
+
     return (
       <div className="book-content-container">
         {this.props.htmlBook && (
@@ -241,9 +338,13 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
               {this.props.htmlBook.flattenChapters.length}
             </div>
             <div style={{ display: "flex", gap: "0px" }}>
-              {/* <div onClick={() => {}} className="book-content-expand">
-                <Trans>Edit</Trans>
-              </div> */}
+              <div onClick={this.toggleSearch} className="book-content-expand">
+                <span
+                  className="icon-search"
+                  style={{ paddingRight: "5px" }}
+                ></span>
+                <Trans>{this.state.isSearchOpen ? "Cancel" : "Search"}</Trans>
+              </div>
               <div
                 onClick={() => {
                   ConfigService.setReaderConfig(
@@ -266,8 +367,22 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             </div>
           </div>
         )}
+        {this.state.isSearchOpen && (
+          <div className="book-content-search">
+            <input
+              ref={this.searchInputRef}
+              className="book-content-search-input"
+              value={this.state.searchKeyword}
+              onChange={this.handleSearchChange}
+              placeholder={i18n.t("Search chapters...")}
+            />
+          </div>
+        )}
         <ul className="book-content">
-          {this.state.chapters && renderContentList(this.state.chapters, 1, "")}
+          {isSearching
+            ? renderSearchResults()
+            : this.state.chapters &&
+              renderContentList(this.state.chapters, 1, "")}
         </ul>
       </div>
     );

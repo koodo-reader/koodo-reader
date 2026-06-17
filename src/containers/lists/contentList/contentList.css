@@ -59,3 +59,19 @@
   padding: 5px;
   border-radius: 10px;
 }
+.book-content-search {
+  padding: 0 15px 10px 15px;
+}
+.book-content-search-input {
+  width: calc(100% - 20px);
+  height: 32px;
+  border-radius: 16px;
+  border: none;
+  outline: none;
+  font-size: 15px;
+}
+.book-content-search-empty {
+  padding: 10px 0;
+  font-size: 15px;
+  opacity: 0.64;
+}
