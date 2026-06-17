@@ -370,6 +370,41 @@ class ConfigUtil {
       return filteredNotes;
     }
   }
+  static async searchBookmarksByKeyword(keyword: string, bookKey: string) {
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      let queryString = "";
+      let data: any[] = [];
+      if (bookKey) {
+        queryString = `SELECT * FROM bookmarks WHERE bookKey = ? AND (label LIKE ? OR chapter LIKE ?) ORDER BY key DESC`;
+        data = [
+          bookKey,
+          `%${keyword.toLowerCase()}%`,
+          `%${keyword.toLowerCase()}%`,
+        ];
+      } else {
+        queryString = `SELECT * FROM bookmarks WHERE (label LIKE ? OR chapter LIKE ?) ORDER BY key DESC`;
+        data = [`%${keyword.toLowerCase()}%`, `%${keyword.toLowerCase()}%`];
+      }
+      return await ipcRenderer.invoke("custom-database-command", {
+        dbName: "bookmarks",
+        storagePath: getStorageLocation(),
+        query: queryString,
+        data: data,
+        executeType: "all",
+      });
+    } else {
+      let bookmarks = await DatabaseService.getAllRecords("bookmarks");
+      let filteredBookmarks = bookmarks.filter(
+        (bookmark) =>
+          (bookmark.bookKey === bookKey || !bookKey) &&
+          (bookmark.label.toLowerCase().includes(keyword.toLowerCase()) ||
+            bookmark.chapter.toLowerCase().includes(keyword.toLowerCase()))
+      );
+      filteredBookmarks.sort((a, b) => b.key - a.key);
+      return filteredBookmarks;
+    }
+  }
   static async getNoteWithTags(tags: string[]) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
