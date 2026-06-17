@@ -4,6 +4,7 @@ import { PopupAssistProps, PopupAssistState } from "./interface";
 import {
   ConfigService,
   KookitConfig,
+  AiChatManager,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
@@ -19,6 +20,8 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
   private textareaRef: React.RefObject<HTMLTextAreaElement>;
   private answerTextAccumulator: string = "";
   private updateInterval: ReturnType<typeof setInterval> | null = null;
+  private isHydrating = false;
+  private aiChatManager: any = null;
 
   constructor(props: PopupAssistProps) {
     super(props);
@@ -35,6 +38,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     };
     this.chatBoxRef = React.createRef();
     this.textareaRef = React.createRef();
+    this.aiChatManager = new AiChatManager(ConfigService);
   }
 
   private startUpdateInterval() {
@@ -60,7 +64,35 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       this.setState({ answer: finalAnswer });
     }
   }
+  private loadChatHistory() {
+    const bookKey = this.props.currentBook?.key;
+    if (!bookKey) {
+      return;
+    }
+    this.isHydrating = true;
+    this.setState(
+      {
+        askHistory: this.aiChatManager.loadHistory(bookKey, "ask"),
+        chatHistory: this.aiChatManager.loadHistory(bookKey, "chat"),
+      },
+      () => {
+        this.isHydrating = false;
+        if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
+          this.scrollToBottom();
+        }
+      }
+    );
+  }
+  private saveChatHistory() {
+    const bookKey = this.props.currentBook?.key;
+    if (!bookKey || this.isHydrating) {
+      return;
+    }
+    this.aiChatManager.saveHistory(bookKey, "ask", this.state.askHistory);
+    this.aiChatManager.saveHistory(bookKey, "chat", this.state.chatHistory);
+  }
   componentDidMount(): void {
+    this.loadChatHistory();
     if (this.props.quoteText) {
       this.setState({ inputQuestion: this.props.quoteText + "\n" }, () => {
         this.autoResizeTextarea();
@@ -87,6 +119,35 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
           isAddNew: true,
         });
       }
+    }
+  }
+  componentDidUpdate(
+    prevProps: PopupAssistProps,
+    prevState: PopupAssistState
+  ): void {
+    if (prevProps.currentBook?.key !== this.props.currentBook?.key) {
+      this.loadChatHistory();
+      return;
+    }
+    if (this.isHydrating) {
+      return;
+    }
+    const bookKey = this.props.currentBook?.key;
+    if (!bookKey) {
+      return;
+    }
+    if (prevState.askHistory !== this.state.askHistory) {
+      this.aiChatManager.saveHistory(bookKey, "ask", this.state.askHistory);
+    }
+    if (prevState.chatHistory !== this.state.chatHistory) {
+      this.aiChatManager.saveHistory(bookKey, "chat", this.state.chatHistory);
+    }
+  }
+  componentWillUnmount(): void {
+    this.saveChatHistory();
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
     }
   }
   autoResizeTextarea = () => {
