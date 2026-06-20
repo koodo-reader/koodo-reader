@@ -371,10 +371,18 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
               marginLeft: "20px",
               display: "flex",
               flexDirection: "column",
+              lineHeight: 1.25,
+              marginTop: "10px",
             }}
           >
-            <p style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>
+            <p
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <p>
                 <span className="setting-plugin-name">{rule.pattern}</span>
                 <span
                   style={{
@@ -385,8 +393,8 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                 >
                   ({this.renderMatchTypeLabel(rule.matchType)})
                 </span>
-              </span>
-              <span
+              </p>
+              <p
                 style={{
                   display: "flex",
                   gap: "10px",
@@ -405,7 +413,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                 >
                   <Trans>Delete</Trans>
                 </span>
-              </span>
+              </p>
             </p>
             <p
               style={{
@@ -413,7 +421,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
-                marginTop: "-10px",
+                marginTop: "5px",
                 opacity: 0.7,
                 zIndex: -1,
               }}
@@ -430,7 +438,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
-                marginTop: "-10px",
+                marginTop: "5px",
                 opacity: 0.7,
                 zIndex: -1,
               }}
