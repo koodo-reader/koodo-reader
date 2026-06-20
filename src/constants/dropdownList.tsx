@@ -1,4 +1,17 @@
 import i18n from "../i18n";
+import { KookitConfig } from "../assets/lib/kookit-extra-browser.min";
+
+export const fullTranslationLangList = (() => {
+  const seen = new Set<string>();
+  const options: { code: string; label: string }[] = [];
+  for (const [code, label] of Object.entries(KookitConfig.ConvertLangMap)) {
+    if (!seen.has(label)) {
+      seen.add(label);
+      options.push({ code, label });
+    }
+  }
+  return options;
+})();
 
 export const dropdownList = [
   {
