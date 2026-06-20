@@ -18,6 +18,7 @@ import {
   getParserRegex,
   getPdfPassword,
   getServerRegion,
+  getTextRules,
   showDownloadProgress,
   throttle,
 } from "../../utils/common";
@@ -259,6 +260,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               : "",
           convertChinese: ConfigService.getReaderConfig("convertChinese"),
           bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
+          textRules: getTextRules(this.props.currentBook.key),
           codeHighlighter:
             ConfigService.getReaderConfig("codeHighlighter") || "",
           parserRegex: getParserRegex(

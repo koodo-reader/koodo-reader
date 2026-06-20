@@ -19,6 +19,7 @@ import { Readability } from "@mozilla/readability";
 import {
   calculateFileMD5,
   fetchFileFromPath,
+  getTextRules,
   supportedFormats,
   throttle,
   vexPromptAsync,
@@ -300,6 +301,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   convertChinese:
                     ConfigService.getReaderConfig("convertChinese"),
                   bookLayout: ConfigService.getReaderConfig("bookLayout"),
+                  textRules: getTextRules(),
                   codeHighlighter:
                     ConfigService.getReaderConfig("codeHighlighter") || "",
                   fullTranslationMode: "no",
