@@ -1,4 +1,4 @@
-import Plugin from "../models/Plugin";
+﻿import Plugin from "../models/Plugin";
 import { isElectron } from "react-device-detect";
 import CryptoJS from "crypto-js";
 import {
@@ -713,6 +713,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
           ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
         convertChinese: ConfigService.getReaderConfig("convertChinese"),
         bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
+        textRules: getTextRules(selectedBook.key),
         codeHighlighter:
           ConfigService.getReaderConfig("codeHighlighter") || "",
         fullTranslationMode: "no",
