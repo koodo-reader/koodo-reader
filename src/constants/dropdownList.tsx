@@ -48,7 +48,6 @@ export const codeHighlightLangList = [
   { label: "INI", value: "ini" },
   { label: "VB.NET", value: "vbnet" },
   { label: "WebAssembly", value: "wasm" },
-  { label: "Plain text", value: "plaintext" },
 ];
 
 export const dropdownList = [
