@@ -92,10 +92,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.tickTimer = setInterval(() => {
       if (!this.props.currentBook.key) return;
       this.setState((prev) => ({
-        totalDuration: prev.totalDuration + 1,
-        currentDuration: prev.currentDuration + 1,
+        totalDuration: prev.totalDuration + 60,
+        currentDuration: prev.currentDuration + 60,
       }));
-    }, 1000);
+    }, 60000);
 
     window.addEventListener("beforeunload", function (event) {
       if (!isElectron) {
