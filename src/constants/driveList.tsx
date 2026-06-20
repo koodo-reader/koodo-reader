@@ -21,7 +21,7 @@ export const driveList = [
     label: "Docker",
     value: "docker",
     icon: "icon-docker",
-    isPro: true,
+    isPro: false,
     support: ["desktop", "browser", "phone"],
     scoped: true,
   },
