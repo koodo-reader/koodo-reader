@@ -423,6 +423,18 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                   {this.props.t("Replacement")}: {rule.replacement} ·{" "}
                 </span>
               )}
+            </p>
+            <p
+              style={{
+                fontSize: "11px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                marginTop: "-10px",
+                opacity: 0.7,
+                zIndex: -1,
+              }}
+            >
               {this.props.t("Scope")}: {this.renderScopeLabel(rule)}
             </p>
           </div>
