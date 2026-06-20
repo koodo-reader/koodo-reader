@@ -295,7 +295,9 @@ class SettingSwitch extends React.Component<
                 });
               }
               toast(this.props.t("Change successful"));
-              this.props.renderBookFunc();
+              setTimeout(async () => {
+                this.props.renderBookFunc();
+              }, 500);
             }}
             style={this.state.isWordDefinition ? {} : { opacity: 0.6 }}
           >
