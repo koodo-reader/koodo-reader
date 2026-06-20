@@ -9,6 +9,7 @@ import { syncSettingList } from "../../../constants/settingList";
 
 import toast from "react-hot-toast";
 import {
+  confirmBrowserExtensionAsync,
   generateSyncRecord,
   getICloudDrivePath,
   getServerRegion,
@@ -99,20 +100,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       !isElectron &&
       driveList.find((item) => item.value === targetDrive)?.needExtension
     ) {
-      let result = await vexComfirmAsync(
-        "Due to browser security restrictions, you may not be able to use this data source properly. If you encounter any issues, you can resolve them by installing our browser extension.",
-        "Confirm",
-        "Install extension"
-      );
-      if (!result) {
-        if (
-          ConfigService.getReaderConfig("lang") &&
-          ConfigService.getReaderConfig("lang").startsWith("zh")
-        ) {
-          openExternalUrl(getWebsiteUrl() + "/zh/use-extension");
-        } else {
-          openExternalUrl(getWebsiteUrl() + "/en/use-extension");
-        }
+      if (!(await confirmBrowserExtensionAsync())) {
         return;
       }
     }
