@@ -41,7 +41,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
   async componentDidMount() {
     this.timeInterval = setInterval(() => {
       this.setState({ currentTime: this.getFormattedTime() });
-    }, 10000);
+    }, 60000);
   }
 
   componentWillUnmount() {
