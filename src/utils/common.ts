@@ -858,6 +858,13 @@ function triggerReactChange(id: string, value: string) {
     reactInstance.onChange(syntheticEvent);
   }
 }
+export const getFullTranslationTarget = (): string => {
+  const langCode =
+    ConfigService.getReaderConfig("fullTranslationTarget") ||
+    ConfigService.getReaderConfig("lang") ||
+    "zhCN";
+  return KookitConfig.ConvertLangMap[langCode];
+};
 export const getDefaultTransTarget = (langList) => {
   //reverse key and value
   let langMap = {};
