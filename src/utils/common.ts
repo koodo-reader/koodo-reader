@@ -1,4 +1,4 @@
-﻿import Plugin from "../models/Plugin";
+import Plugin from "../models/Plugin";
 import { isElectron } from "react-device-detect";
 import CryptoJS from "crypto-js";
 import {
@@ -1379,6 +1379,31 @@ export const detectLocalLanguage = (text: string): string => {
     return "ja";
   return "ko";
 };
+export interface TextRule {
+  id: string;
+  type: "replace" | "delete";
+  pattern: string;
+  replacement?: string;
+  matchType: "regex" | "plain";
+  scope: "all" | "book";
+  bookKey?: string;
+  bookName?: string;
+}
+
+export const getTextRules = (bookKey?: string): TextRule[] => {
+  const ruleList: string[] =
+    ConfigService.getAllListConfig("textRuleList") || [];
+  return ruleList
+    .map((id) =>
+      ConfigService.getObjectConfig(id, "textRules", null)
+    )
+    .filter((rule): rule is TextRule => {
+      if (!rule) return false;
+      if (rule.scope === "all") return true;
+      return !!bookKey && rule.bookKey === bookKey;
+    });
+};
+
 export const getParserRegex = (extension: string, bookKey?: string) => {
   let parserRegex = "";
   if (extension.toLowerCase().endsWith("txt")) {

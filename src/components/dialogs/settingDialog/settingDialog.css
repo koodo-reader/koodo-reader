@@ -226,6 +226,9 @@
   top: 4px;
 }
 .setting-plugin-name {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
 }
 .lang-setting-dropdown {
   width: 100px;
