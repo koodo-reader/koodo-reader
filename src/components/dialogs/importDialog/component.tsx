@@ -388,7 +388,7 @@ class ImportDialog extends React.Component<
                     key={item.value}
                     className={`cloud-drive-item `}
                     onClick={() => {
-                      if (!this.props.isAuthed) {
+                      if (item.isPro && !this.props.isAuthed) {
                         toast(
                           this.props.t(
                             "Please upgrade to Pro to use this feature"

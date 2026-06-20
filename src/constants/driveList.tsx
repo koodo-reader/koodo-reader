@@ -12,7 +12,7 @@ export const driveList = [
     label: "S3 Compatible",
     value: "s3compatible",
     icon: "icon-s3compatible",
-    isPro: true,
+    isPro: false,
     support: ["desktop", "browser", "phone"],
     scoped: false,
     needExtension: true,
