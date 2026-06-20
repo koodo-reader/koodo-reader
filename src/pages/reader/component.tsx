@@ -28,8 +28,41 @@ import SupportDialog from "../../components/dialogs/supportDialog";
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
   ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 200;
-let isHovering = false;
 let isMouseMoving = false;
+const PANEL_POSITIONS = ["left", "right", "top", "bottom"] as const;
+type PanelPosition = (typeof PANEL_POSITIONS)[number];
+const PANEL_ENTER_DELAY = 500;
+const PANEL_LEAVE_DELAY = 500;
+const enterTimers: Record<string, NodeJS.Timeout | null> = {
+  left: null,
+  right: null,
+  top: null,
+  bottom: null,
+};
+const leaveTimers: Record<string, NodeJS.Timeout | null> = {
+  left: null,
+  right: null,
+  top: null,
+  bottom: null,
+};
+const isEdgeHovering: Record<string, boolean> = {
+  left: false,
+  right: false,
+  top: false,
+  bottom: false,
+};
+const PANEL_OPEN_STATE: Record<
+  PanelPosition,
+  | "isOpenLeftPanel"
+  | "isOpenRightPanel"
+  | "isOpenTopPanel"
+  | "isOpenBottomPanel"
+> = {
+  left: "isOpenLeftPanel",
+  right: "isOpenRightPanel",
+  top: "isOpenTopPanel",
+  bottom: "isOpenBottomPanel",
+};
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
@@ -154,11 +187,69 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       clearDiscordPresence();
     }
     clearInterval(this.tickTimer);
+    PANEL_POSITIONS.forEach((position) => {
+      this.cancelEnterReader(position);
+      this.cancelLeaveReader(position);
+    });
     // Flush any in-flight session time before the component tears down
     this.readingTimeUtil.stop();
   }
 
+  cancelEnterReader = (position: string) => {
+    isEdgeHovering[position] = false;
+    if (enterTimers[position]) {
+      clearTimeout(enterTimers[position]!);
+      enterTimers[position] = null;
+    }
+  };
+
+  scheduleEnterReader = (position: string) => {
+    this.cancelEnterReader(position);
+    isEdgeHovering[position] = true;
+    const delay = this.state.isPreventTrigger ? 0 : PANEL_ENTER_DELAY;
+    enterTimers[position] = setTimeout(() => {
+      enterTimers[position] = null;
+      if (!isEdgeHovering[position] || isMouseMoving) return;
+      this.handleEnterReader(position);
+    }, delay);
+  };
+
+  cancelLeaveReader = (position: string) => {
+    if (leaveTimers[position]) {
+      clearTimeout(leaveTimers[position]!);
+      leaveTimers[position] = null;
+    }
+  };
+
+  scheduleLeaveReader = (position: string) => {
+    this.cancelLeaveReader(position);
+    leaveTimers[position] = setTimeout(() => {
+      leaveTimers[position] = null;
+      this.handleLeaveReader(position);
+    }, PANEL_LEAVE_DELAY);
+  };
+
+  handleEdgeMouseEnter = (position: PanelPosition) => {
+    if (
+      this.state.isTouch ||
+      this.state[PANEL_OPEN_STATE[position]] ||
+      this.state.isPreventTrigger
+    ) {
+      this.cancelLeaveReader(position);
+      this.setState({ hoverPanel: position });
+      return;
+    }
+    this.scheduleEnterReader(position);
+  };
+
+  handleEdgeMouseLeave = (position: PanelPosition) => {
+    this.cancelEnterReader(position);
+    this.setState({ hoverPanel: "" });
+  };
+
   handleEnterReader = (position: string) => {
+    this.cancelEnterReader(position);
+    this.cancelLeaveReader(position);
     switch (position) {
       case "right":
         this.setState({
@@ -185,6 +276,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     }
   };
   handleLeaveReader = (position: string) => {
+    this.cancelLeaveReader(position);
     switch (position) {
       case "right":
         if (this.props.isSettingLocked) {
@@ -476,28 +568,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
         <div
           className="left-panel"
-          onMouseEnter={() => {
-            if (
-              this.state.isTouch ||
-              this.state.isOpenLeftPanel ||
-              this.state.isPreventTrigger
-            ) {
-              this.setState({ hoverPanel: "left" });
-              return;
-            }
-            isHovering = true;
-            setTimeout(
-              () => {
-                if (!isHovering || isMouseMoving) return;
-                this.handleEnterReader("left");
-              },
-              this.state.isPreventTrigger ? 0 : 500
-            );
-          }}
-          onMouseLeave={() => {
-            isHovering = false;
-            this.setState({ hoverPanel: "" });
-          }}
+          onMouseEnter={() => this.handleEdgeMouseEnter("left")}
+          onMouseLeave={() => this.handleEdgeMouseLeave("left")}
           style={this.state.hoverPanel === "left" ? { opacity: 0.5 } : {}}
           onClick={() => {
             this.handleEnterReader("left");
@@ -507,29 +579,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
         <div
           className="right-panel"
-          onMouseEnter={() => {
-            if (
-              this.state.isTouch ||
-              this.state.isOpenRightPanel ||
-              this.state.isPreventTrigger
-            ) {
-              this.setState({ hoverPanel: "right" });
-              return;
-            }
-            isHovering = true;
-            setTimeout(
-              () => {
-                if (!isHovering || isMouseMoving) return;
-
-                this.handleEnterReader("right");
-              },
-              this.state.isPreventTrigger ? 0 : 500
-            );
-          }}
-          onMouseLeave={() => {
-            isHovering = false;
-            this.setState({ hoverPanel: "" });
-          }}
+          onMouseEnter={() => this.handleEdgeMouseEnter("right")}
+          onMouseLeave={() => this.handleEdgeMouseLeave("right")}
           style={this.state.hoverPanel === "right" ? { opacity: 0.5 } : {}}
           onClick={() => {
             this.handleEnterReader("right");
@@ -539,25 +590,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
         <div
           className="top-panel"
-          onMouseEnter={() => {
-            if (
-              this.state.isTouch ||
-              this.state.isOpenTopPanel ||
-              this.state.isPreventTrigger
-            ) {
-              this.setState({ hoverPanel: "top" });
-              return;
-            }
-            isHovering = true;
-            setTimeout(
-              () => {
-                if (!isHovering || isMouseMoving) return;
-
-                this.handleEnterReader("top");
-              },
-              this.state.isPreventTrigger ? 0 : 500
-            );
-          }}
+          onMouseEnter={() => this.handleEdgeMouseEnter("top")}
           style={
             this.state.hoverPanel === "top"
               ? {
@@ -574,10 +607,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                       : 0,
                 }
           }
-          onMouseLeave={() => {
-            isHovering = false;
-            this.setState({ hoverPanel: "" });
-          }}
+          onMouseLeave={() => this.handleEdgeMouseLeave("top")}
           onClick={() => {
             this.handleEnterReader("top");
           }}
@@ -586,29 +616,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
         <div
           className="bottom-panel"
-          onMouseEnter={() => {
-            if (
-              this.state.isTouch ||
-              this.state.isOpenBottomPanel ||
-              this.state.isPreventTrigger
-            ) {
-              this.setState({ hoverPanel: "bottom" });
-              return;
-            }
-            isHovering = true;
-            setTimeout(
-              () => {
-                if (!isHovering || isMouseMoving) return;
-
-                this.handleEnterReader("bottom");
-              },
-              this.state.isPreventTrigger ? 0 : 500
-            );
-          }}
-          onMouseLeave={() => {
-            isHovering = false;
-            this.setState({ hoverPanel: "" });
-          }}
+          onMouseEnter={() => this.handleEdgeMouseEnter("bottom")}
+          onMouseLeave={() => this.handleEdgeMouseLeave("bottom")}
           onClick={() => {
             this.handleEnterReader("bottom");
           }}
@@ -634,8 +643,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
         <div
           className="setting-panel-container"
+          onMouseEnter={() => {
+            this.cancelLeaveReader("right");
+          }}
           onMouseLeave={() => {
-            this.handleLeaveReader("right");
+            this.scheduleLeaveReader("right");
           }}
           style={
             this.state.isOpenRightPanel
@@ -649,8 +661,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
         <div
           className="navigation-panel-container"
+          onMouseEnter={() => {
+            this.cancelLeaveReader("left");
+          }}
           onMouseLeave={() => {
-            this.handleLeaveReader("left");
+            this.scheduleLeaveReader("left");
           }}
           style={
             this.state.isOpenLeftPanel
@@ -668,8 +683,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
         <div
           className="progress-panel-container"
+          onMouseEnter={() => {
+            this.cancelLeaveReader("bottom");
+          }}
           onMouseLeave={() => {
-            this.handleLeaveReader("bottom");
+            this.scheduleLeaveReader("bottom");
           }}
           style={
             this.state.isOpenBottomPanel
@@ -696,8 +714,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
         <div
           className="operation-panel-container"
+          onMouseEnter={() => {
+            this.cancelLeaveReader("top");
+          }}
           onMouseLeave={() => {
-            this.handleLeaveReader("top");
+            this.scheduleLeaveReader("top");
           }}
           style={
             this.state.isOpenTopPanel
