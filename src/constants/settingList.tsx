@@ -1,12 +1,5 @@
 export const generalSettingList = [
   {
-    isElectron: true,
-    title: "Import books as link",
-    desc: "The imported books will not be copied to library, only linked to the original book path",
-    propName: "isImportPath",
-  },
-
-  {
     isElectron: false,
     title: "Disable trash bin",
     desc: "When deleting books, they will be deleted permanently instead of sending to trash bin",
@@ -94,6 +87,12 @@ export const generalSettingList = [
     isElectron: true,
     title: "Open url with built-in browser",
     propName: "isUseBuiltIn",
+  },
+  {
+    isElectron: true,
+    title: "Import books as link",
+    desc: "The imported books will not be copied to library, only linked to the original book path",
+    propName: "isImportPath",
   },
 ];
 export const appearanceSettingList = [

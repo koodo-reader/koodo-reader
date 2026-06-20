@@ -125,6 +125,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           id: "add-book",
         }
       );
+      let isImportPath =
+        ConfigService.getReaderConfig("isImportPath") === "yes";
+      if (isElectron && isImportPath) {
+        const fs = window.require("fs");
+        if (!book.path || !fs.existsSync(book.path)) {
+          isImportPath = false;
+        }
+      }
       if (this.state.isOpenFile) {
         if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           //ignore
@@ -134,7 +142,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         ) {
           await BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
           await CoverUtil.addCover(book);
-        } else if (ConfigService.getReaderConfig("isImportPath") === "yes") {
+        } else if (isImportPath) {
           await CoverUtil.addCover(book);
           //ignore
         } else {
@@ -149,7 +157,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         }
       } else {
         if (
-          ConfigService.getReaderConfig("isImportPath") !== "yes" ||
+          !isImportPath ||
           (this.props.isAuthed && ConfigService.getItem("defaultSyncOption"))
         ) {
           await BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
@@ -677,12 +685,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       <Dropzone
         onDrop={async (acceptedFiles) => {
           this.props.handleDrag(false);
-          if (ConfigService.getReaderConfig("isImportPath") === "yes") {
-            toast.error(
-              this.props.t("Please turn off import books as link first")
-            );
-            return;
-          }
           if (this.props.mode === "shelf") {
             this.setState({ importingShelfTitle: this.props.shelfTitle });
           }
