@@ -16,6 +16,7 @@ export interface DropdownListState {
   currentLineHeightValue: string;
   currentTextAlignValue: string;
   currentBookLayoutValue: string;
+  currentCodeHighlighterValue: string;
   chineseConversionValue: string;
   fullTranslationModeValue: string;
   fullTranslationTargetValue: string;

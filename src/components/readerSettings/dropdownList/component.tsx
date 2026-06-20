@@ -26,6 +26,8 @@ class DropdownList extends React.Component<
       chineseConversionValue:
         ConfigService.getReaderConfig("convertChinese") || "",
       currentBookLayoutValue: ConfigService.getReaderConfig("bookLayout") || "",
+      currentCodeHighlighterValue:
+        ConfigService.getReaderConfig("codeHighlighter") || "",
       fullTranslationModeValue: ConfigService.getAllListConfig(
         "fullTranslationBooks"
       ).includes(props.currentBook?.key)
@@ -167,6 +169,11 @@ class DropdownList extends React.Component<
           currentBookLayoutValue: arr[0],
         });
         break;
+      case "codeHighlighter":
+        this.setState({
+          currentCodeHighlighterValue: arr[0],
+        });
+        break;
       case "fullTranslationMode":
         this.setState({
           fullTranslationModeValue: arr[0],
@@ -252,7 +259,9 @@ class DropdownList extends React.Component<
                       ? this.state.chineseConversionValue
                       : item.value === "bookLayout"
                         ? this.state.currentBookLayoutValue
-                        : item.value === "fullTranslationMode"
+                        : item.value === "codeHighlighter"
+                          ? this.state.currentCodeHighlighterValue
+                          : item.value === "fullTranslationMode"
                           ? this.state.fullTranslationModeValue
                           : item.value === "textOrientation"
                             ? this.state.currentTextOrientationValue
@@ -279,7 +288,11 @@ class DropdownList extends React.Component<
                     key={index}
                     className="general-setting-option"
                   >
-                    {this.props.t(subItem.label)}
+                    {item.value === "codeHighlighter"
+                      ? subItem.value === ""
+                        ? this.props.t("Disable")
+                        : subItem.label
+                      : this.props.t(subItem.label)}
                   </option>
                 )
               )}

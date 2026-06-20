@@ -13,6 +13,44 @@ export const fullTranslationLangList = (() => {
   return options;
 })();
 
+export const codeHighlightLangList = [
+  { label: "Disable", value: "" },
+  { label: "JavaScript", value: "javascript" },
+  { label: "TypeScript", value: "typescript" },
+  { label: "Python", value: "python" },
+  { label: "Go", value: "go" },
+  { label: "Java", value: "java" },
+  { label: "C", value: "c" },
+  { label: "C++", value: "cpp" },
+  { label: "C#", value: "csharp" },
+  { label: "Rust", value: "rust" },
+  { label: "Ruby", value: "ruby" },
+  { label: "PHP", value: "php" },
+  { label: "Swift", value: "swift" },
+  { label: "Kotlin", value: "kotlin" },
+  { label: "Bash", value: "bash" },
+  { label: "Shell", value: "shell" },
+  { label: "SQL", value: "sql" },
+  { label: "JSON", value: "json" },
+  { label: "YAML", value: "yaml" },
+  { label: "Markdown", value: "markdown" },
+  { label: "CSS", value: "css" },
+  { label: "SCSS", value: "scss" },
+  { label: "Less", value: "less" },
+  { label: "XML", value: "xml" },
+  { label: "GraphQL", value: "graphql" },
+  { label: "Lua", value: "lua" },
+  { label: "Perl", value: "perl" },
+  { label: "R", value: "r" },
+  { label: "Objective-C", value: "objectivec" },
+  { label: "Makefile", value: "makefile" },
+  { label: "Diff", value: "diff" },
+  { label: "INI", value: "ini" },
+  { label: "VB.NET", value: "vbnet" },
+  { label: "WebAssembly", value: "wasm" },
+  { label: "Plain text", value: "plaintext" },
+];
+
 export const dropdownList = [
   {
     title: "Book layout",
@@ -29,6 +67,12 @@ export const dropdownList = [
       { label: "Tufte CSS", value: "tufte" },
       { label: "Typebase CSS", value: "typebase" },
     ],
+    isPDF: false,
+  },
+  {
+    title: "Code highlighting",
+    value: "codeHighlighter",
+    option: codeHighlightLangList,
     isPDF: false,
   },
   {
