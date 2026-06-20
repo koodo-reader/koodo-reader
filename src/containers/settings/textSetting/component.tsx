@@ -415,6 +415,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                 whiteSpace: "nowrap",
                 marginTop: "-10px",
                 opacity: 0.7,
+                zIndex: -1,
               }}
             >
               {type === "replace" && rule.replacement !== undefined && (
