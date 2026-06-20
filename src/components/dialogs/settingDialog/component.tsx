@@ -13,6 +13,7 @@ import DataSetting from "../../../containers/settings/dataSetting";
 import AISetting from "../../../containers/settings/aiSetting";
 import BackgroundSetting from "../../../containers/settings/backgroundSetting";
 import ChapterSetting from "../../../containers/settings/chapterSetting";
+import TextSetting from "../../../containers/settings/textSetting";
 import DictSetting from "../../../containers/settings/dictSetting";
 import MoreSetting from "../../../containers/settings/moreSetting";
 import { isElectron } from "react-device-detect";
@@ -83,6 +84,8 @@ class SettingDialog extends React.Component<
         return "Background";
       case "chapter":
         return "TXT parser";
+      case "text":
+        return "Text rules";
       case "dict":
         return "Local dictionary";
       case "more":
@@ -152,6 +155,12 @@ class SettingDialog extends React.Component<
               "TXT parser",
               "19px"
             )}
+            {this.renderSidebarItem(
+              "text",
+              "icon-edit-line",
+              "Text rules",
+              "18px"
+            )}
             {isElectron &&
               this.renderSidebarItem(
                 "dict",
@@ -199,6 +208,8 @@ class SettingDialog extends React.Component<
               <BackgroundSetting />
             ) : this.props.settingMode === "chapter" ? (
               <ChapterSetting />
+            ) : this.props.settingMode === "text" ? (
+              <TextSetting />
             ) : this.props.settingMode === "dict" ? (
               <DictSetting />
             ) : this.props.settingMode === "more" ? (
