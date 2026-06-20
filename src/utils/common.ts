@@ -137,6 +137,22 @@ export const vexComfirmAsync = (
     });
   });
 };
+export const confirmBrowserExtensionAsync = async (): Promise<boolean> => {
+  const result = await vexComfirmAsync(
+    "Due to browser security restrictions, you may not be able to use this data source properly. If you encounter any issues, you can resolve them by installing our browser extension.",
+    "Confirm",
+    "Install extension"
+  );
+  if (!result) {
+    const lang = ConfigService.getReaderConfig("lang");
+    openExternalUrl(
+      getWebsiteUrl() +
+        (lang?.startsWith("zh") ? "/zh/use-extension" : "/en/use-extension")
+    );
+    return false;
+  }
+  return true;
+};
 export const vexOpenAsync = (
   config: Record<string, any>,
   message: string,
