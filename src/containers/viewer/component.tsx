@@ -318,6 +318,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             this.props.currentBook.description.indexOf("scanned") > -1
               ? "yes"
               : "no",
+          isKeepPDFBackground: ConfigService.getReaderConfig(
+            "isKeepPDFBackground"
+          ),
         },
         Kookit
       );

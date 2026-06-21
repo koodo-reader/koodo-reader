@@ -36,6 +36,7 @@ export interface SettingSwitchState {
   isAllowScript: boolean;
   isHyphenation: boolean;
   isOrphanWidow: boolean;
+  isKeepPDFBackground: boolean;
   isBionic: boolean;
   isHideHeader: boolean;
   isHidePageButton: boolean;
