@@ -101,6 +101,10 @@ a {
   background-color: rgba(71, 76, 80, 1);
   color: rgba(235, 235, 235, 1);
 }
+.previous-chapter-single-container,
+.next-chapter-single-container {
+  opacity: 0.7;
+}
 .pin-dot.pin-dot-filled {
   background-color: rgba(235, 235, 235, 1);
   color: rgba(47, 52, 55, 1);
