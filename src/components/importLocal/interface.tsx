@@ -3,7 +3,6 @@ import { RouteComponentProps } from "react-router";
 export interface ImportLocalProps extends RouteComponentProps<any> {
   books: BookModel[];
   deletedBooks: BookModel[];
-  dragItem: string;
 
   isCollapsed: boolean;
   isAuthed: boolean;

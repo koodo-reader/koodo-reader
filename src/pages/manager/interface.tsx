@@ -21,7 +21,6 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isOpenSortShelfDialog: boolean;
   isOpenLocalFileDialog: boolean;
   isOpenOPDSDialog: boolean;
-  dragItem: string;
   importBookFunc: (file: any) => Promise<void>;
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
