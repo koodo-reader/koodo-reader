@@ -173,8 +173,7 @@ const handleShortcut = (event: any) => {
   }
   if (event.keyCode === 122) {
     event.preventDefault();
-    const entering =
-      ConfigService.getReaderConfig("isFullscreen") !== "yes";
+    const entering = ConfigService.getReaderConfig("isFullscreen") !== "yes";
     entering ? handleFullScreen() : handleExitFullScreen();
     ConfigService.setReaderConfig("isFullscreen", entering ? "yes" : "no");
   }
