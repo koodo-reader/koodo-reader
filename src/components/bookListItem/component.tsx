@@ -115,6 +115,7 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
             <img
               src={cover}
               alt=""
+              draggable={false}
               className="book-item-image"
               style={{ width: "100%" }}
               onLoad={(res: any) => {
