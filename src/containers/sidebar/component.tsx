@@ -11,7 +11,7 @@ import {
   addBooksToShelf,
   isBookDragEvent,
   parseBookDragData,
-} from "../../utils/bookDrag";
+} from "../../utils/reader/bookDrag";
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   private newShelfInput = React.createRef<HTMLInputElement>();
   constructor(props: SidebarProps) {
