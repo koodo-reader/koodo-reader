@@ -5,7 +5,6 @@ export interface BookItemProps extends RouteComponentProps<any> {
   book: BookModel;
   percentage: number;
   currentBook: BookModel;
-  dragItem: string;
   isOpenActionDialog: boolean;
   isSelectBook: boolean;
   isSelected: boolean;
@@ -22,7 +21,6 @@ export interface BookItemProps extends RouteComponentProps<any> {
   handleActionDialog: (isShowActionDialog: boolean) => void;
 
   t: (title: string) => string;
-  handleDragItem: (key: string) => void;
   handleFetchBooks: () => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
 }

@@ -105,7 +105,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       <div
         className="manager"
         onDragEnter={() => {
-          !this.props.dragItem && this.handleDrag(true);
+          this.handleDrag(true);
         }}
       >
         <ProtectionOverlay />
@@ -122,8 +122,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           </div>
         )}
 
-        {!this.props.dragItem && (
-          <div
+        <div
             className={`drag-background${this.state.isDrag ? " drag-active" : ""}`}
             onDragOver={(e) => {
               e.preventDefault();
@@ -250,7 +249,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               </div>
             )}
           </div>
-        )}
         <Sidebar />
         <Toaster
           toastOptions={{

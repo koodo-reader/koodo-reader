@@ -35,7 +35,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     books: state.manager.books,
     mode: state.sidebar.mode,
-    dragItem: state.book.dragItem,
     cloudSyncFunc: state.book.cloudSyncFunc,
     importBookFunc: state.book.importBookFunc,
     shelfTitle: state.sidebar.shelfTitle,
