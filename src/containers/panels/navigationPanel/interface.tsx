@@ -18,8 +18,6 @@ export interface NavigationPanelProps {
 export interface NavigationPanelState {
   currentTab: string;
   chapters: any;
-  startIndex: number;
-  currentIndex: number;
   searchState: string;
   searchList: any;
   cover: string;
