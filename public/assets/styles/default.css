@@ -207,6 +207,9 @@ a {
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);
 }
+.book-item-image {
+  -webkit-user-drag: none;
+}
 .book-item-list {
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);
 }

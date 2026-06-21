@@ -133,6 +133,7 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
             <img
               src={cover}
               alt=""
+              draggable={false}
               className="book-item-image"
               style={
                 direction === "horizontal" ||

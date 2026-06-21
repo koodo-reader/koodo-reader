@@ -28,6 +28,7 @@ import Footer from "../../components/footer";
 import ProtectionOverlay from "../../components/protection";
 class Manager extends React.Component<ManagerProps, ManagerState> {
   timer!: NodeJS.Timeout;
+  private isDraggingFromApp = false;
   constructor(props: ManagerProps) {
     super(props);
     this.state = {
@@ -80,6 +81,8 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   }
   componentDidMount() {
     this.props.handleReadingState(false);
+    document.addEventListener("dragstart", this.handleDocumentDragStart, true);
+    document.addEventListener("dragend", this.handleDocumentDragEnd, true);
     // Auto switch to configured startup shelf
     const startupShelf = ConfigService.getReaderConfig("startupShelf");
     if (startupShelf) {
@@ -91,6 +94,23 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       }
     }
   }
+  componentWillUnmount() {
+    document.removeEventListener("dragstart", this.handleDocumentDragStart, true);
+    document.removeEventListener("dragend", this.handleDocumentDragEnd, true);
+  }
+
+  handleDocumentDragStart = (e: DragEvent) => {
+    const target = e.target as HTMLElement | null;
+    if (target?.closest(".manager")) {
+      this.isDraggingFromApp = true;
+    }
+  };
+  handleDocumentDragEnd = () => {
+    if (this.isDraggingFromApp) {
+      this.handleDrag(false);
+    }
+    this.isDraggingFromApp = false;
+  };
 
   handleDrag = (isDrag: boolean) => {
     this.setState({ isDrag });
@@ -104,8 +124,13 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     return (
       <div
         className="manager"
-        onDragEnter={() => {
-          this.handleDrag(true);
+        onDragEnter={(e) => {
+          if (
+            !this.isDraggingFromApp &&
+            e.dataTransfer.types.includes("Files")
+          ) {
+            this.handleDrag(true);
+          }
         }}
       >
         <ProtectionOverlay />

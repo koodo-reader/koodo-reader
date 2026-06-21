@@ -152,6 +152,7 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
             <img
               src={cover}
               alt=""
+              draggable={false}
               style={
                 direction === "horizontal" ||
                 ConfigService.getReaderConfig("isDisableCrop") === "yes"
