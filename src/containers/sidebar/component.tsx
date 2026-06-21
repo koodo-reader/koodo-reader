@@ -7,6 +7,11 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { getWebsiteUrl, openInBrowser } from "../../utils/common";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
+import {
+  addBooksToShelf,
+  isBookDragEvent,
+  parseBookDragData,
+} from "../../utils/bookDrag";
 class Sidebar extends React.Component<SidebarProps, SidebarState> {
   private newShelfInput = React.createRef<HTMLInputElement>();
   constructor(props: SidebarProps) {
@@ -22,6 +27,7 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         ConfigService.getReaderConfig("isCollapsed") === "yes" || false,
       isCreateShelf: false,
       newShelfName: "",
+      dropTargetShelf: "",
     };
   }
   componentDidMount() {
@@ -30,7 +36,14 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
         ? "home"
         : document.URL.split("/").reverse()[0]
     );
+    document.addEventListener("dragend", this.handleDocumentDragEnd);
   }
+  componentWillUnmount() {
+    document.removeEventListener("dragend", this.handleDocumentDragEnd);
+  }
+  handleDocumentDragEnd = () => {
+    this.setState({ dropTargetShelf: "" });
+  };
   componentDidUpdate(prevProps: SidebarProps, prevState: SidebarState) {
     // Focus the input when isCreateShelf changes from false to true
     if (
@@ -84,6 +97,27 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     ConfigService.setOneMapConfig(this.state.newShelfName, [], "shelfList");
     toast.success(this.props.t("Created successfully"));
     this.setState({ isCreateShelf: false, newShelfName: "" });
+  };
+  handleBookDrop = (shelfTitle: string, event: React.DragEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    this.setState({ dropTargetShelf: "" });
+    if (!isBookDragEvent(event)) return;
+
+    const bookKeys = parseBookDragData(event);
+    if (bookKeys.length === 0) return;
+
+    const added = addBooksToShelf(bookKeys, shelfTitle);
+    if (added === 0) {
+      toast(this.props.t("Duplicate book"));
+      return;
+    }
+    toast.success(this.props.t("Addition successful"));
+    this.props.handleFetchBooks();
+    this.props.handleShelf(shelfTitle);
+    this.props.handleMode("shelf");
+    this.setState({ mode: "" });
+    this.props.history.push("/manager/shelf");
   };
   render() {
     const renderSideMenu = () => {
@@ -170,9 +204,12 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
             <li
               key={item}
               className={
-                this.props.shelfTitle === item
+                (this.props.shelfTitle === item
                   ? "active side-menu-item"
-                  : "side-menu-item"
+                  : "side-menu-item") +
+                (this.state.dropTargetShelf === item
+                  ? " shelf-drop-target"
+                  : "")
               }
               id={`sidebar-${index}`}
               onClick={() => {
@@ -180,6 +217,30 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
                 this.props.handleMode("shelf");
                 this.setState({ mode: "" });
                 this.props.history.push("/manager/shelf");
+              }}
+              onDragEnter={(event) => {
+                if (isBookDragEvent(event)) {
+                  event.preventDefault();
+                  this.setState({ dropTargetShelf: item });
+                }
+              }}
+              onDragLeave={(event) => {
+                if (
+                  !event.currentTarget.contains(
+                    event.relatedTarget as Node | null
+                  )
+                ) {
+                  this.setState({ dropTargetShelf: "" });
+                }
+              }}
+              onDragOver={(event) => {
+                if (isBookDragEvent(event)) {
+                  event.preventDefault();
+                  event.dataTransfer.dropEffect = "copy";
+                }
+              }}
+              onDrop={(event) => {
+                this.handleBookDrop(item, event);
               }}
               onMouseEnter={() => {
                 this.handleShelfHover(item);

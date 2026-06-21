@@ -25,6 +25,7 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
     isBookOffline,
     handleJump,
     handleSelectIconClick,
+    handleBookDragStart,
     getPercentage,
     isFavoriteBook,
     isTopBook,
@@ -55,6 +56,8 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
     <>
       <div
         className="book-list-item"
+        draggable
+        onDragStart={handleBookDragStart}
         onContextMenu={(event) => {
           handleMoreAction(event);
         }}
