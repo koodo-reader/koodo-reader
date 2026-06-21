@@ -502,6 +502,11 @@ export const readerSettingList = [
     isPDF: false,
   },
   {
+    title: "Keep the original background in PDFs",
+    propName: "isKeepPDFBackground",
+    isPDF: true,
+  },
+  {
     title: "Allow orphan and widow lines",
     propName: "isOrphanWidow",
     isPDF: false,

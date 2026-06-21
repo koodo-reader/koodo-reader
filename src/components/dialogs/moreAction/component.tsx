@@ -16,7 +16,11 @@ import { isElectron } from "react-device-detect";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../../assets/lib/kookit.min";
-import { getPdfPassword, getStorageLocation, getTextRules } from "../../../utils/common";
+import {
+  getPdfPassword,
+  getStorageLocation,
+  getTextRules,
+} from "../../../utils/common";
 import { BookHelper } from "../../../assets/lib/kookit.min";
 declare var window: any;
 class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
@@ -280,8 +284,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                       bookLayout: ConfigService.getReaderConfig("bookLayout"),
                       textRules: getTextRules(this.props.currentBook.key),
                       codeHighlighter:
-                        ConfigService.getReaderConfig("codeHighlighter") ||
-                        "",
+                        ConfigService.getReaderConfig("codeHighlighter") || "",
                       fullTranslationMode: "no",
                       textOrientation:
                         ConfigService.getReaderConfig("textOrientation"),
@@ -290,6 +293,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                       isMobile: "no",
                       password: getPdfPassword(this.props.currentBook),
                       isScannedPDF: "no",
+                      isKeepPDFBackground: "no",
                     },
                     Kookit
                   );

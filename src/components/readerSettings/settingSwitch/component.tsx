@@ -24,6 +24,8 @@ class SettingSwitch extends React.Component<
       isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
       isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
       isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
+      isKeepPDFBackground:
+        ConfigService.getReaderConfig("isKeepPDFBackground") === "yes",
       isAllowScript: ConfigService.getReaderConfig("isAllowScript") === "yes",
       isStartFromEven:
         ConfigService.getReaderConfig("isStartFromEven") === "yes",

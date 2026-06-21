@@ -714,8 +714,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         convertChinese: ConfigService.getReaderConfig("convertChinese"),
         bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
         textRules: getTextRules(selectedBook.key),
-        codeHighlighter:
-          ConfigService.getReaderConfig("codeHighlighter") || "",
+        codeHighlighter: ConfigService.getReaderConfig("codeHighlighter") || "",
         fullTranslationMode: "no",
         textOrientation: ConfigService.getReaderConfig("textOrientation"),
         parserRegex: "",
@@ -724,6 +723,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         password: getPdfPassword(selectedBook),
         isScannedPDF:
           selectedBook.description.indexOf("scanned") > -1 ? "yes" : "no",
+        isKeepPDFBackground: "no",
       },
       Kookit
     );
@@ -1395,9 +1395,7 @@ export const getTextRules = (bookKey?: string): TextRule[] => {
   const ruleList: string[] =
     ConfigService.getAllListConfig("textRuleList") || [];
   return ruleList
-    .map((id) =>
-      ConfigService.getObjectConfig(id, "textRules", null)
-    )
+    .map((id) => ConfigService.getObjectConfig(id, "textRules", null))
     .filter((rule): rule is TextRule => {
       if (!rule) return false;
       if (rule.scope === "all") return true;
