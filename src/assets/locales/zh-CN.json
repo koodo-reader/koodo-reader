@@ -526,6 +526,7 @@
   "OPDS Catalog URL": "OPDS 目录链接",
   "Catalog Name": "目录名称",
   "Full text translation": "全文翻译",
+  "Overwrite the default background style in the book": "覆盖图书中的默认背景样式",
   "Target translation language": "目标翻译语言",
   "Bilingual translation": "双语对照翻译",
   "Use AI to analyze books, with different characters reading aloud in different voices": "使用AI分析图书，不同角色使用不同的声音朗读",

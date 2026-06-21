@@ -394,6 +394,11 @@ export const readingSettingList = [
     title: "Overwrite the default text style in the book",
     propName: "isOverwriteText",
   },
+  {
+    isElectron: false,
+    title: "Overwrite the default background style in the book",
+    propName: "isOverwriteBackground",
+  },
   // {
   //   isElectron: false,
   //   title: "Lemmatize words when looking up in a dictionary",
