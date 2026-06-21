@@ -18,4 +18,6 @@ export interface SearchBoxProps {
 }
 export interface SearchBoxState {
   isFocused: boolean;
+  caseSensitive: boolean;
+  exactMatch: boolean;
 }

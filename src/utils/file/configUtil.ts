@@ -311,42 +311,43 @@ class ConfigUtil {
   static async searchNotesByKeyword(
     keyword: string,
     bookKey: string,
-    type: string
+    type: string,
+    options: {
+      caseSensitive: boolean;
+      exactMatch: boolean;
+    }
   ) {
+    if (!options) {
+      options = { caseSensitive: false, exactMatch: false };
+    }
+    if (!options.caseSensitive) {
+      keyword = keyword.toLowerCase();
+    }
+    if (options.exactMatch) {
+      keyword = ` ${keyword} `;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       let queryString = "";
       let data: any[] = [];
       if (type === "note" && bookKey) {
         queryString = `SELECT * FROM notes WHERE bookKey = ? AND (notes LIKE ? OR text LIKE ?) ORDER BY key DESC`;
-        data = [
-          bookKey,
-          `%${keyword.toLowerCase()}%`,
-          `%${keyword.toLowerCase()}%`,
-        ];
+        data = [bookKey, `%${keyword}%`, `%${keyword}%`];
       } else if (type === "highlight" && bookKey) {
         queryString = `SELECT * FROM notes WHERE bookKey = ? AND (notes = '' AND (notes LIKE ? OR text LIKE ?)) ORDER BY key DESC`;
-        data = [
-          bookKey,
-          `%${keyword.toLowerCase()}%`,
-          `%${keyword.toLowerCase()}%`,
-        ];
+        data = [bookKey, `%${keyword}%`, `%${keyword}%`];
       } else if (type === "note" && !bookKey) {
         queryString = `SELECT * FROM notes WHERE (notes != '' AND (notes LIKE ? OR text LIKE ?)) ORDER BY key DESC`;
-        data = [`%${keyword.toLowerCase()}%`, `%${keyword.toLowerCase()}%`];
+        data = [`%${keyword}%`, `%${keyword}%`];
       } else if (type === "highlight" && !bookKey) {
         queryString = `SELECT * FROM notes WHERE (notes = '' AND (notes LIKE ? OR text LIKE ?)) ORDER BY key DESC`;
-        data = [`%${keyword.toLowerCase()}%`, `%${keyword.toLowerCase()}%`];
+        data = [`%${keyword}%`, `%${keyword}%`];
       } else if (!type && bookKey) {
         queryString = `SELECT * FROM notes WHERE bookKey = ? AND (notes LIKE ? OR text LIKE ?) ORDER BY key DESC`;
-        data = [
-          bookKey,
-          `%${keyword.toLowerCase()}%`,
-          `%${keyword.toLowerCase()}%`,
-        ];
+        data = [bookKey, `%${keyword}%`, `%${keyword}%`];
       } else {
         queryString = `SELECT * FROM notes WHERE (notes LIKE ? OR text LIKE ?) ORDER BY key DESC`;
-        data = [`%${keyword.toLowerCase()}%`, `%${keyword.toLowerCase()}%`];
+        data = [`%${keyword}%`, `%${keyword}%`];
       }
       return await ipcRenderer.invoke("custom-database-command", {
         dbName: "notes",
@@ -363,28 +364,36 @@ class ConfigUtil {
             (type === "highlight" && note.notes === "") ||
             !type) &&
           (note.bookKey === bookKey || !bookKey) &&
-          (note.notes.toLowerCase().includes(keyword.toLowerCase()) ||
-            note.text.toLowerCase().includes(keyword.toLowerCase()))
+          (note.notes.includes(keyword) || note.text.includes(keyword))
       );
       filteredNotes.sort((a, b) => b.key - a.key);
       return filteredNotes;
     }
   }
-  static async searchBookmarksByKeyword(keyword: string, bookKey: string) {
+  static async searchBookmarksByKeyword(
+    keyword: string,
+    bookKey: string,
+    options: { caseSensitive: boolean; exactMatch: boolean }
+  ) {
+    if (!options) {
+      options = { caseSensitive: false, exactMatch: false };
+    }
+    if (!options.caseSensitive) {
+      keyword = keyword.toLowerCase();
+    }
+    if (options.exactMatch) {
+      keyword = ` ${keyword} `;
+    }
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
       let queryString = "";
       let data: any[] = [];
       if (bookKey) {
         queryString = `SELECT * FROM bookmarks WHERE bookKey = ? AND (label LIKE ? OR chapter LIKE ?) ORDER BY key DESC`;
-        data = [
-          bookKey,
-          `%${keyword.toLowerCase()}%`,
-          `%${keyword.toLowerCase()}%`,
-        ];
+        data = [bookKey, `%${keyword}%`, `%${keyword}%`];
       } else {
         queryString = `SELECT * FROM bookmarks WHERE (label LIKE ? OR chapter LIKE ?) ORDER BY key DESC`;
-        data = [`%${keyword.toLowerCase()}%`, `%${keyword.toLowerCase()}%`];
+        data = [`%${keyword}%`, `%${keyword}%`];
       }
       return await ipcRenderer.invoke("custom-database-command", {
         dbName: "bookmarks",
@@ -398,8 +407,8 @@ class ConfigUtil {
       let filteredBookmarks = bookmarks.filter(
         (bookmark) =>
           (bookmark.bookKey === bookKey || !bookKey) &&
-          (bookmark.label.toLowerCase().includes(keyword.toLowerCase()) ||
-            bookmark.chapter.toLowerCase().includes(keyword.toLowerCase()))
+          (bookmark.label.includes(keyword) ||
+            bookmark.chapter.includes(keyword))
       );
       filteredBookmarks.sort((a, b) => b.key - a.key);
       return filteredBookmarks;

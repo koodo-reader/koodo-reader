@@ -11,6 +11,8 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     super(props);
     this.state = {
       isFocused: false,
+      caseSensitive: false,
+      exactMatch: false,
     };
     this.searchBoxRef = React.createRef<HTMLInputElement>();
   }
@@ -31,7 +33,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     }
     let keyword = (
       document.querySelector(".header-search-box") as HTMLInputElement
-    ).value.toLowerCase();
+    ).value;
     let results = await this.handleGetSearchResults(keyword);
     if (results) {
       this.props.handleSearchResults(results);
@@ -44,10 +46,19 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
   handleGetSearchResults = async (keyword: string) => {
     let results =
       this.props.tabMode === "note"
-        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
+        ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note", {
+            caseSensitive: this.state.caseSensitive,
+            exactMatch: this.state.exactMatch,
+          })
         : this.props.tabMode === "highlight"
-          ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
-          : await BookUtil.searchBooksByKeyword(keyword);
+          ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight", {
+              caseSensitive: this.state.caseSensitive,
+              exactMatch: this.state.exactMatch,
+            })
+          : await BookUtil.searchBooksByKeyword(keyword, {
+              caseSensitive: this.state.caseSensitive,
+              exactMatch: this.state.exactMatch,
+            });
     let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
     results = results.filter((result: any) => {
       return !deletedBookKeys.includes(
@@ -71,7 +82,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     }
     this.setState({ isFocused: false });
     if (event && event.keyCode === 13) {
-      let keyword = event.target.value.toLowerCase();
+      let keyword = event.target.value;
       let results = await this.handleGetSearchResults(keyword);
       if (results) {
         this.props.handleSearchResults(results);
