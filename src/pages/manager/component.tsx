@@ -24,7 +24,7 @@ import SortShelfDialog from "../../components/dialogs/sortShelfDialog";
 import PopupNote from "../../components/popups/popupNote";
 import toast from "react-hot-toast";
 import { supportedFormats } from "../../utils/common";
-import { isBookDragEvent } from "../../utils/bookDrag";
+import { isBookDragEvent, isExternalFileDragEvent } from "../../utils/bookDrag";
 import Footer from "../../components/footer";
 import ProtectionOverlay from "../../components/protection";
 class Manager extends React.Component<ManagerProps, ManagerState> {
@@ -84,6 +84,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     this.props.handleReadingState(false);
     document.addEventListener("dragstart", this.handleDocumentDragStart, true);
     document.addEventListener("dragend", this.handleDocumentDragEnd, true);
+    document.addEventListener("dragenter", this.handleExternalDragEnter, true);
     // Auto switch to configured startup shelf
     const startupShelf = ConfigService.getReaderConfig("startupShelf");
     if (startupShelf) {
@@ -98,11 +99,11 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
   componentWillUnmount() {
     document.removeEventListener("dragstart", this.handleDocumentDragStart, true);
     document.removeEventListener("dragend", this.handleDocumentDragEnd, true);
+    document.removeEventListener("dragenter", this.handleExternalDragEnter, true);
   }
 
   handleDocumentDragStart = (e: DragEvent) => {
-    const target = e.target as HTMLElement | null;
-    if (target?.closest(".manager")) {
+    if (isBookDragEvent(e)) {
       this.isDraggingFromApp = true;
     }
   };
@@ -111,6 +112,11 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       this.handleDrag(false);
     }
     this.isDraggingFromApp = false;
+  };
+  handleExternalDragEnter = (e: DragEvent) => {
+    if (isExternalFileDragEvent(e)) {
+      this.handleDrag(true);
+    }
   };
 
   handleDrag = (isDrag: boolean) => {
@@ -126,11 +132,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
       <div
         className="manager"
         onDragEnter={(e) => {
-          if (
-            !this.isDraggingFromApp &&
-            !isBookDragEvent(e) &&
-            e.dataTransfer.types.includes("Files")
-          ) {
+          if (isExternalFileDragEvent(e)) {
             this.handleDrag(true);
           }
         }}
