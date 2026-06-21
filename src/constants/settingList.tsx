@@ -482,11 +482,6 @@ export const skinList = [
 
 export const readerSettingList = [
   {
-    title: "Sliding animation",
-    propName: "isSliding",
-    isPDF: true,
-  },
-  {
     title: "Render PDF from even page",
     propName: "isStartFromEven",
     isPDF: true,

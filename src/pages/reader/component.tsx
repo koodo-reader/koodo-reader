@@ -27,7 +27,9 @@ import SupportDialog from "../../components/dialogs/supportDialog";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime =
-  ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 200;
+  (ConfigService.getReaderConfig("animation") || "none") !== "none"
+    ? 1000
+    : 200;
 let isMouseMoving = false;
 const PANEL_POSITIONS = ["left", "right", "top", "bottom"] as const;
 type PanelPosition = (typeof PANEL_POSITIONS)[number];

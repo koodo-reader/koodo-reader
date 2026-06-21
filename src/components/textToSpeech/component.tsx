@@ -550,7 +550,7 @@ class TextToSpeech extends React.Component<
     }
   };
   handleGetText = async () => {
-    if (ConfigService.getReaderConfig("isSliding") === "yes") {
+    if ((ConfigService.getReaderConfig("animation") || "none") !== "none") {
       await sleep(1000);
     }
     let nodeList = [];

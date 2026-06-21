@@ -294,10 +294,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   format: extension.toUpperCase(),
                   readerMode: "",
                   charset: "",
-                  animation:
-                    ConfigService.getReaderConfig("isSliding") === "yes"
-                      ? "sliding"
-                      : "",
+                  animation: ConfigService.getReaderConfig("animation") || "none",
                   convertChinese:
                     ConfigService.getReaderConfig("convertChinese"),
                   bookLayout: ConfigService.getReaderConfig("bookLayout"),

@@ -276,9 +276,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                       readerMode: "",
                       charset: this.props.currentBook.charset,
                       animation:
-                        ConfigService.getReaderConfig("isSliding") === "yes"
-                          ? "sliding"
-                          : "",
+                        ConfigService.getReaderConfig("animation") || "none",
                       convertChinese:
                         ConfigService.getReaderConfig("convertChinese"),
                       bookLayout: ConfigService.getReaderConfig("bookLayout"),
