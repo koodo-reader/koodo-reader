@@ -110,31 +110,19 @@ class NavList extends React.Component<NavListProps, NavListState> {
     if (currentTab === "bookmarks") {
       results = await ConfigUtil.searchBookmarksByKeyword(
         trimmedKeyword,
-        currentBook.key,
-        {
-          caseSensitive: false,
-          exactMatch: false,
-        }
+        currentBook.key
       );
     } else if (currentTab === "notes") {
       results = await ConfigUtil.searchNotesByKeyword(
         trimmedKeyword,
         currentBook.key,
-        "note",
-        {
-          caseSensitive: false,
-          exactMatch: false,
-        }
+        "note"
       );
     } else {
       results = await ConfigUtil.searchNotesByKeyword(
         trimmedKeyword,
         currentBook.key,
-        "highlight",
-        {
-          caseSensitive: false,
-          exactMatch: false,
-        }
+        "highlight"
       );
     }
     this.setState({ searchResults: results || [] });
@@ -153,7 +141,9 @@ class NavList extends React.Component<NavListProps, NavListState> {
     this.setState({ isComposing: true });
   };
 
-  handleCompositionEnd = (event: React.CompositionEvent<HTMLInputElement>) => {
+  handleCompositionEnd = (
+    event: React.CompositionEvent<HTMLInputElement>
+  ) => {
     const keyword = event.currentTarget.value;
     this.setState({ isComposing: false, searchKeyword: keyword }, () => {
       this.handleSearch(keyword);
@@ -395,9 +385,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
             <Trans>Empty</Trans>
           </div>
         ) : (
-          <ul className="book-bookmark">
-            {this.renderBookNavList(displayData)}
-          </ul>
+          <ul className="book-bookmark">{this.renderBookNavList(displayData)}</ul>
         )}
       </div>
     );

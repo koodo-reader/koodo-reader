@@ -16,11 +16,6 @@ import i18n from "../../i18n";
 import { getCloudConfig } from "./common";
 import CoverUtil from "./coverUtil";
 import { LocalFileManager } from "./localFile";
-import {
-  buildFieldMatchSql,
-  fieldsMatch,
-  SearchMatchOptions,
-} from "../common/searchMatch";
 declare var window: any;
 
 class BookUtil {
@@ -677,42 +672,30 @@ class BookUtil {
       return null;
     }
   }
-  static async searchBooksByKeyword(
-    keyword: string,
-    options: SearchMatchOptions = {}
-  ) {
-    const matchOptions: SearchMatchOptions = {
-      caseSensitive: false,
-      exactMatch: false,
-      ...options,
-    };
-    const trimmedKeyword = keyword.trim();
-    if (!trimmedKeyword) {
-      return [];
-    }
-
-    let books: Book[] = [];
+  static async searchBooksByKeyword(keyword: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      const { condition, data } = buildFieldMatchSql(
-        ["name", "author"],
-        trimmedKeyword,
-        matchOptions
-      );
-      books = await ipcRenderer.invoke("custom-database-command", {
-        query: `SELECT * FROM books WHERE ${condition}`,
-        data,
+      return await ipcRenderer.invoke("custom-database-command", {
+        query: `SELECT * FROM books WHERE name LIKE ? OR author LIKE ?`,
+        data: [`%${keyword}%`, `%${keyword}%`],
         dbName: "books",
         storagePath: getStorageLocation(),
         executeType: "all",
       });
     } else {
-      books = (await DatabaseService.getAllRecords("books")) || [];
+      let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
+      let results: Book[] = [];
+      const lowerKeyword = keyword.toLowerCase();
+      for (let book of books) {
+        if (
+          book.name.toLowerCase().includes(lowerKeyword) ||
+          book.author.toLowerCase().includes(lowerKeyword)
+        ) {
+          results.push(book);
+        }
+      }
+      return results;
     }
-
-    return books.filter((book) =>
-      fieldsMatch([book.name, book.author], trimmedKeyword, matchOptions)
-    );
   }
   static async getBookList() {
     if (isElectron) {
