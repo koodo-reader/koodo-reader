@@ -709,8 +709,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         format: selectedBook.format,
         readerMode: "",
         charset: selectedBook.charset,
-        animation:
-          ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
+        animation: ConfigService.getReaderConfig("animation") || "none",
         convertChinese: ConfigService.getReaderConfig("convertChinese"),
         bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
         textRules: getTextRules(selectedBook.key),

@@ -7,7 +7,9 @@ import TTSUtil from "./ttsUtil";
 declare var window: any;
 
 let throttleTime =
-  ConfigService.getReaderConfig("isSliding") === "yes" ? 1000 : 100;
+  (ConfigService.getReaderConfig("animation") || "none") !== "none"
+    ? 1000
+    : 100;
 
 export const getSelection = (format: string, bookKey?: string) => {
   let docs = getIframeDoc(format, bookKey);

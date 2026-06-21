@@ -16,7 +16,6 @@ class SettingSwitch extends React.Component<
     this.state = {
       isBold: ConfigService.getReaderConfig("isBold") === "yes",
       isIndent: ConfigService.getReaderConfig("isIndent") === "yes",
-      isSliding: ConfigService.getReaderConfig("isSliding") === "yes",
       isUnderline: ConfigService.getReaderConfig("isUnderline") === "yes",
       isShadow: ConfigService.getReaderConfig("isShadow") === "yes",
       isItalic: ConfigService.getReaderConfig("isItalic") === "yes",

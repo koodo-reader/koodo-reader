@@ -149,6 +149,16 @@ export const dropdownList = [
     isPDF: false,
   },
   {
+    title: "Page turning animation",
+    value: "animation",
+    option: [
+      { label: "None", value: "none" },
+      { label: "Slide", value: "sliding" },
+      { label: "Flip", value: "mimical" },
+    ],
+    isPDF: true,
+  },
+  {
     title: "Action after selecting text",
     value: "selectAction",
     option: [

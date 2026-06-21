@@ -107,12 +107,9 @@ class SettingPanel extends React.Component<
             .map((item) => (
               <SliderList key={item.mode} {...{ item }} />
             ))}
-          {this.props.currentBook.format === "PDF" &&
-          !ConfigService.getAllListConfig("convertPDFBooks").includes(
-            this.props.currentBook.key
-          ) ? null : (
-            <DropdownList />
-          )}
+
+          <DropdownList />
+
           <SettingSwitch />
           <div className="setting-panel-menu" style={{ marginTop: "5px" }}>
             <span

@@ -1,5 +1,8 @@
 import React from "react";
-import { dropdownList, fullTranslationLangList } from "../../../constants/dropdownList";
+import {
+  dropdownList,
+  fullTranslationLangList,
+} from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
@@ -25,6 +28,8 @@ class DropdownList extends React.Component<
       currentTextAlignValue: ConfigService.getReaderConfig("textAlign") || "",
       chineseConversionValue:
         ConfigService.getReaderConfig("convertChinese") || "",
+      currentAnimationValue:
+        ConfigService.getReaderConfig("animation") || "none",
       currentBookLayoutValue: ConfigService.getReaderConfig("bookLayout") || "",
       currentCodeHighlighterValue:
         ConfigService.getReaderConfig("codeHighlighter") || "",
@@ -164,6 +169,12 @@ class DropdownList extends React.Component<
         });
 
         break;
+      case "animation":
+        this.setState({
+          currentAnimationValue: arr[0],
+        });
+
+        break;
       case "bookLayout":
         this.setState({
           currentBookLayoutValue: arr[0],
@@ -240,109 +251,120 @@ class DropdownList extends React.Component<
     this.props.renderBookFunc();
   }
   render() {
+    const isTxt = this.props.currentBook?.format?.toUpperCase() === "TXT";
+    const isPDF = this.props.currentBook?.format?.toUpperCase() === "PDF";
     const renderParagraphCharacter = () => {
-      return dropdownList.map((item) => (
-        <React.Fragment key={item.value}>
-          <li className="paragraph-character-container">
-            <p className="general-setting-title">
-              <Trans>{item.title}</Trans>
-            </p>
-            <select
-              name=""
-              className="general-setting-dropdown"
-              value={
-                item.value === "lineHeight"
-                  ? this.state.currentLineHeightValue
-                  : item.value === "textAlign"
-                    ? this.state.currentTextAlignValue
-                    : item.value === "convertChinese"
-                      ? this.state.chineseConversionValue
-                      : item.value === "bookLayout"
-                        ? this.state.currentBookLayoutValue
-                        : item.value === "codeHighlighter"
-                          ? this.state.currentCodeHighlighterValue
-                          : item.value === "fullTranslationMode"
-                          ? this.state.fullTranslationModeValue
-                          : item.value === "textOrientation"
-                            ? this.state.currentTextOrientationValue
-                            : item.value === "fontFamily"
-                              ? this.state.currentFontFamilyValue
-                              : item.value === "selectAction"
-                                ? this.state.currentSelectActionValue
-                                : this.state.currentSubFontFamilyValue
-              }
-              onChange={(event) => {
-                this.handleView(event, item.value);
-              }}
-            >
-              {item.option.map(
-                (
-                  subItem: {
-                    label: string;
-                    value: string;
-                  },
-                  index: number
-                ) => (
-                  <option
-                    value={subItem.value}
-                    key={index}
-                    className="general-setting-option"
-                  >
-                    {item.value === "codeHighlighter"
-                      ? subItem.value === ""
-                        ? this.props.t("Disable")
-                        : subItem.label
-                      : this.props.t(subItem.label)}
-                  </option>
-                )
-              )}
-            </select>
-          </li>
-          {item.value === "fullTranslationMode" &&
-            (this.state.fullTranslationModeValue === "both" ||
-              this.state.fullTranslationModeValue === "target") && (
-              <li className="paragraph-character-container">
-                <p className="general-setting-title">
-                  <Trans>Target translation language</Trans>
-                </p>
-                <select
-                  className="general-setting-dropdown"
-                  value={
-                    fullTranslationLangList.find(
-                      (opt) =>
-                        opt.code === this.state.fullTranslationTargetValue ||
-                        KookitConfig.ConvertLangMap[opt.code] ===
-                          KookitConfig.ConvertLangMap[
-                            this.state.fullTranslationTargetValue
-                          ]
-                    )?.code || this.state.fullTranslationTargetValue
-                  }
-                  onChange={(event) => {
-                    const val = event.target.value;
-                    this.setState({ fullTranslationTargetValue: val });
-                    ConfigService.setReaderConfig("fullTranslationTarget", val);
-                    toast(this.props.t("Change successful"));
-                    this.props.renderBookFunc();
-                  }}
-                >
-                  {fullTranslationLangList.map((opt) => (
+      return dropdownList
+        .filter((item) => {
+          if (isPDF) {
+            return item.isPDF;
+          }
+          return true;
+        })
+        .map((item) => (
+          <React.Fragment key={item.value}>
+            <li className="paragraph-character-container">
+              <p className="general-setting-title">
+                <Trans>{item.title}</Trans>
+              </p>
+              <select
+                name=""
+                className="general-setting-dropdown"
+                value={
+                  item.value === "lineHeight"
+                    ? this.state.currentLineHeightValue
+                    : item.value === "textAlign"
+                      ? this.state.currentTextAlignValue
+                      : item.value === "convertChinese"
+                        ? this.state.chineseConversionValue
+                        : item.value === "animation"
+                          ? this.state.currentAnimationValue
+                          : item.value === "bookLayout"
+                            ? this.state.currentBookLayoutValue
+                            : item.value === "codeHighlighter"
+                              ? this.state.currentCodeHighlighterValue
+                              : item.value === "fullTranslationMode"
+                                ? this.state.fullTranslationModeValue
+                                : item.value === "textOrientation"
+                                  ? this.state.currentTextOrientationValue
+                                  : item.value === "fontFamily"
+                                    ? this.state.currentFontFamilyValue
+                                    : item.value === "selectAction"
+                                      ? this.state.currentSelectActionValue
+                                      : this.state.currentSubFontFamilyValue
+                }
+                onChange={(event) => {
+                  this.handleView(event, item.value);
+                }}
+              >
+                {item.option.map(
+                  (
+                    subItem: {
+                      label: string;
+                      value: string;
+                    },
+                    index: number
+                  ) => (
                     <option
-                      key={opt.code}
-                      value={opt.code}
+                      value={subItem.value}
+                      key={index}
                       className="general-setting-option"
                     >
-                      {this.props.t(opt.label)}
+                      {item.value === "codeHighlighter"
+                        ? subItem.value === ""
+                          ? this.props.t("Disable")
+                          : subItem.label
+                        : this.props.t(subItem.label)}
                     </option>
-                  ))}
-                </select>
-              </li>
-            )}
-        </React.Fragment>
-      ));
+                  )
+                )}
+              </select>
+            </li>
+            {item.value === "fullTranslationMode" &&
+              (this.state.fullTranslationModeValue === "both" ||
+                this.state.fullTranslationModeValue === "target") && (
+                <li className="paragraph-character-container">
+                  <p className="general-setting-title">
+                    <Trans>Target translation language</Trans>
+                  </p>
+                  <select
+                    className="general-setting-dropdown"
+                    value={
+                      fullTranslationLangList.find(
+                        (opt) =>
+                          opt.code === this.state.fullTranslationTargetValue ||
+                          KookitConfig.ConvertLangMap[opt.code] ===
+                            KookitConfig.ConvertLangMap[
+                              this.state.fullTranslationTargetValue
+                            ]
+                      )?.code || this.state.fullTranslationTargetValue
+                    }
+                    onChange={(event) => {
+                      const val = event.target.value;
+                      this.setState({ fullTranslationTargetValue: val });
+                      ConfigService.setReaderConfig(
+                        "fullTranslationTarget",
+                        val
+                      );
+                      toast(this.props.t("Change successful"));
+                      this.props.renderBookFunc();
+                    }}
+                  >
+                    {fullTranslationLangList.map((opt) => (
+                      <option
+                        key={opt.code}
+                        value={opt.code}
+                        className="general-setting-option"
+                      >
+                        {this.props.t(opt.label)}
+                      </option>
+                    ))}
+                  </select>
+                </li>
+              )}
+          </React.Fragment>
+        ));
     };
-
-    const isTxt = this.props.currentBook?.format?.toUpperCase() === "TXT";
-
     return (
       <ul className="paragraph-character-setting">
         {renderParagraphCharacter()}
