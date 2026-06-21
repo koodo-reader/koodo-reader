@@ -27,6 +27,7 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     isBookOffline,
     handleJump,
     handleSelectIconClick,
+    handleBookDragStart,
     getPercentage,
     isFavoriteBook,
     isTopBook,
@@ -67,6 +68,8 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     <>
       <div
         className="book-list-cover-item"
+        draggable
+        onDragStart={handleBookDragStart}
         onContextMenu={(event) => {
           handleMoreAction(event);
         }}

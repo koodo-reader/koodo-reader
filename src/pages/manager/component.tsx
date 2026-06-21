@@ -24,6 +24,7 @@ import SortShelfDialog from "../../components/dialogs/sortShelfDialog";
 import PopupNote from "../../components/popups/popupNote";
 import toast from "react-hot-toast";
 import { supportedFormats } from "../../utils/common";
+import { isBookDragEvent } from "../../utils/bookDrag";
 import Footer from "../../components/footer";
 import ProtectionOverlay from "../../components/protection";
 class Manager extends React.Component<ManagerProps, ManagerState> {
@@ -127,6 +128,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         onDragEnter={(e) => {
           if (
             !this.isDraggingFromApp &&
+            !isBookDragEvent(e) &&
             e.dataTransfer.types.includes("Files")
           ) {
             this.handleDrag(true);
