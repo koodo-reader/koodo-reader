@@ -204,9 +204,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
         <div
           className="image-background"
           style={
-            this.state.isShowImage
-              ? { backgroundColor: "rgba(75,75,75,0.3)" }
-              : {}
+            this.state.isShowImage ? { backgroundColor: "rgba(0,0,0,0.8)" } : {}
           }
           onClick={(event) => {
             this.hideImage(event);
