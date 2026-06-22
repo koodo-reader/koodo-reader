@@ -380,15 +380,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
     this.setState({ rendition });
 
-    if (
-      this.props.currentBook.format === "PDF" &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      )
-    ) {
-    } else {
-      StyleUtil.addDefaultCss(this.props.currentBook.key);
-    }
+    StyleUtil.addDefaultCss(this.props.currentBook.key);
     let bookLocation: {
       text: string;
       count: string;
@@ -471,15 +463,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapter,
         chapterDocIndex,
       });
-      if (
-        this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        )
-      ) {
-      } else {
-        StyleUtil.addDefaultCss(this.props.currentBook.key);
-      }
+      StyleUtil.addDefaultCss(this.props.currentBook.key);
       // rendition.tranformText();
       this.handleBindGesture();
       await this.handleHighlight(rendition);

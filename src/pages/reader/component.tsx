@@ -521,7 +521,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               </div>
             )}
 
-          {this.props.currentBook.format === "PDF" && (
+          {this.props.currentBook.format === "PDF" &&
+            this.props.readerMode === "scroll" && (
               <div
                 className="reader-setting-icon-container"
                 onClick={() => {
@@ -529,8 +530,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 }}
               >
                 <span
-                  className="icon-cover reader-setting-icon"
-                  style={{ fontSize: 26 }}
+                  className="icon-crop reader-setting-icon"
+                  style={{ fontSize: 24 }}
                 ></span>
               </div>
             )}
