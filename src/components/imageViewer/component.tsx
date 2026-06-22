@@ -13,7 +13,10 @@ const isPrevKey = (code: number, readerMode: string) =>
   code === 33 || code === 37 || (code === 38 && readerMode !== "scroll");
 
 const isNextKey = (code: number, readerMode: string) =>
-  code === 32 || code === 34 || code === 39 || (code === 40 && readerMode !== "scroll");
+  code === 32 ||
+  code === 34 ||
+  code === 39 ||
+  (code === 40 && readerMode !== "scroll");
 
 const findImageIndex = (href: string, list: string[]) => {
   if (!href || !list.length) return 0;
@@ -100,7 +103,8 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     while (true) {
       const prevHref = rendition.getPosition()?.chapterHref || "";
       await rendition[direction === "next" ? "nextChapter" : "prevChapter"]();
-      if ((rendition.getPosition()?.chapterHref || "") === prevHref) return null;
+      if ((rendition.getPosition()?.chapterHref || "") === prevHref)
+        return null;
       const list = rendition.getImageList?.() || [];
       if (list.length) return list;
     }
