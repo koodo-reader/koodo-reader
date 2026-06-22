@@ -15,6 +15,7 @@ import "./index.css";
 import Book from "../../models/Book";
 import DatabaseService from "../../utils/storage/databaseService";
 import ConvertDialog from "../../components/dialogs/convertDialog";
+import PdfCropDialog from "../../components/dialogs/pdfCropDialog";
 import { isElectron } from "react-device-detect";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import SpeechDialog from "../../components/dialogs/speechDialog";
@@ -520,6 +521,20 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               </div>
             )}
 
+          {this.props.currentBook.format === "PDF" && (
+              <div
+                className="reader-setting-icon-container"
+                onClick={() => {
+                  this.props.handlePdfCropDialog(!this.props.isPdfCropOpen);
+                }}
+              >
+                <span
+                  className="icon-cover reader-setting-icon"
+                  style={{ fontSize: 26 }}
+                ></span>
+              </div>
+            )}
+
           {this.props.currentBook.format === "PDF" &&
             !this.props.isHidePDFConvertButton && (
               <div
@@ -751,6 +766,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
         {this.props.currentBook.key && <Viewer {...(renditionProps as any)} />}
         {this.props.isConvertOpen && <ConvertDialog />}
+        {this.props.isPdfCropOpen && <PdfCropDialog />}
         <SupportDialog />
         {this.props.isOpenPopupOptionDialog && (
           <>

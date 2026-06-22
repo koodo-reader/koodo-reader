@@ -772,7 +772,7 @@ export const generateSyncRecord = async () => {
         );
       }
     }
-    if (config === "readingTime" || config === "recordLocation") {
+    if (config === "readingTime" || config === "recordLocation" || config === "pdfCrop") {
       let configItems: string[] = Object.keys(
         ConfigService.getAllObjectConfig(config)
       );

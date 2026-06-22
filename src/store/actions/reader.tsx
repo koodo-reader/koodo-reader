@@ -28,6 +28,9 @@ export function handleColor(color: number) {
 export function handleConvertDialog(isConvertOpen: boolean) {
   return { type: "HANDLE_CONVERT_DIALOG", payload: isConvertOpen };
 }
+export function handlePdfCropDialog(isPdfCropOpen: boolean) {
+  return { type: "HANDLE_PDF_CROP_DIALOG", payload: isPdfCropOpen };
+}
 export function handleSpeechDialog(isSpeechOpen: boolean) {
   return { type: "HANDLE_SPEECH_DIALOG", payload: isSpeechOpen };
 }

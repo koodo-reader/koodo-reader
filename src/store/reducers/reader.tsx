@@ -33,6 +33,7 @@ const initState = {
   section: null,
   readerMode: "double",
   isConvertOpen: false,
+  isPdfCropOpen: false,
   isSpeechOpen: false,
   speechStartText: "",
   isSpeechAutoStart: false,
@@ -86,6 +87,11 @@ export function reader(
       return {
         ...state,
         isConvertOpen: action.payload,
+      };
+    case "HANDLE_PDF_CROP_DIALOG":
+      return {
+        ...state,
+        isPdfCropOpen: action.payload,
       };
     case "HANDLE_SPEECH_DIALOG":
       return {
