@@ -104,6 +104,7 @@ export type stateType = {
     isNavLocked: boolean;
     isSettingLocked: boolean;
     isConvertOpen: boolean;
+    isPdfCropOpen: boolean;
     isSpeechOpen: boolean;
     isHideFooter: boolean;
     isHideHeader: boolean;
