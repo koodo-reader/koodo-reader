@@ -5,14 +5,20 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  overflow: scroll;
+  overflow: auto;
+  z-index: 50;
+}
+.image-content {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  z-index: 50;
+  align-items: center;
+  min-width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
 }
 .image {
   z-index: 5;
+  flex-shrink: 0;
 }
 .image-operation {
   position: fixed;
