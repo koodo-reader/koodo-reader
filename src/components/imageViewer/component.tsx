@@ -212,17 +212,19 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
             this.hideImage(event);
           }}
         ></div>
-        <img
-          src=""
-          alt={this.state.imageName}
-          className="image"
-          id="selectedImage"
-          style={
-            this.state.imageRatio === "horizontal"
-              ? { width: "60vw" }
-              : { height: "100vh" }
-          }
-        />
+        <div className="image-content">
+          <img
+            src=""
+            alt={this.state.imageName}
+            className="image"
+            id="selectedImage"
+            style={
+              this.state.imageRatio === "horizontal"
+                ? { width: "60vw" }
+                : { height: "100vh" }
+            }
+          />
+        </div>
         <div className="image-operation">
           <span
             className="icon-zoom-in zoom-in-icon"
