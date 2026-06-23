@@ -274,8 +274,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           convertChinese: ConfigService.getReaderConfig("convertChinese"),
           bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
           textRules: getTextRules(this.props.currentBook.key),
-          codeHighlighter:
-            ConfigService.getReaderConfig("codeHighlighter") || "",
+          codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
           parserRegex: getParserRegex(
             this.props.currentBook.format,
             this.props.currentBook.key

@@ -294,13 +294,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   format: extension.toUpperCase(),
                   readerMode: "",
                   charset: "",
-                  animation: ConfigService.getReaderConfig("animation") || "none",
+                  animation:
+                    ConfigService.getReaderConfig("animation") || "none",
                   convertChinese:
                     ConfigService.getReaderConfig("convertChinese"),
                   bookLayout: ConfigService.getReaderConfig("bookLayout"),
                   textRules: getTextRules(),
-                  codeHighlighter:
-                    ConfigService.getReaderConfig("codeHighlighter") || "",
+                  codeHighlight:
+                    ConfigService.getReaderConfig("codeHighlight") || "",
                   fullTranslationMode: "no",
                   textOrientation:
                     ConfigService.getReaderConfig("textOrientation"),

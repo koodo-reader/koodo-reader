@@ -32,7 +32,7 @@ class DropdownList extends React.Component<
         ConfigService.getReaderConfig("animation") || "none",
       currentBookLayoutValue: ConfigService.getReaderConfig("bookLayout") || "",
       currentCodeHighlighterValue:
-        ConfigService.getReaderConfig("codeHighlighter") || "",
+        ConfigService.getReaderConfig("codeHighlight") || "",
       fullTranslationModeValue: ConfigService.getAllListConfig(
         "fullTranslationBooks"
       ).includes(props.currentBook?.key)
@@ -180,7 +180,7 @@ class DropdownList extends React.Component<
           currentBookLayoutValue: arr[0],
         });
         break;
-      case "codeHighlighter":
+      case "codeHighlight":
         this.setState({
           currentCodeHighlighterValue: arr[0],
         });
@@ -281,7 +281,7 @@ class DropdownList extends React.Component<
                           ? this.state.currentAnimationValue
                           : item.value === "bookLayout"
                             ? this.state.currentBookLayoutValue
-                            : item.value === "codeHighlighter"
+                            : item.value === "codeHighlight"
                               ? this.state.currentCodeHighlighterValue
                               : item.value === "fullTranslationMode"
                                 ? this.state.fullTranslationModeValue
@@ -310,7 +310,7 @@ class DropdownList extends React.Component<
                       key={index}
                       className="general-setting-option"
                     >
-                      {item.value === "codeHighlighter"
+                      {item.value === "codeHighlight"
                         ? subItem.value === ""
                           ? this.props.t("Disable")
                           : subItem.label

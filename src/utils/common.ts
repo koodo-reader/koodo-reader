@@ -713,7 +713,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         convertChinese: ConfigService.getReaderConfig("convertChinese"),
         bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
         textRules: getTextRules(selectedBook.key),
-        codeHighlighter: ConfigService.getReaderConfig("codeHighlighter") || "",
+        codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
         fullTranslationMode: "no",
         textOrientation: ConfigService.getReaderConfig("textOrientation"),
         parserRegex: "",
@@ -772,7 +772,11 @@ export const generateSyncRecord = async () => {
         );
       }
     }
-    if (config === "readingTime" || config === "recordLocation" || config === "pdfCrop") {
+    if (
+      config === "readingTime" ||
+      config === "recordLocation" ||
+      config === "pdfCrop"
+    ) {
       let configItems: string[] = Object.keys(
         ConfigService.getAllObjectConfig(config)
       );
