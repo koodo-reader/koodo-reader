@@ -16,6 +16,7 @@ import {
   openReadingPanel,
   READING_PANEL_TOGGLE_EVENT,
 } from "../../../utils/reader/mouseEvent";
+import { buildSearchHighlightStyle } from "../../../utils/reader/searchHighlightUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
@@ -140,7 +141,7 @@ class NavigationPanel extends React.Component<
                 page: bookLocation.page,
               })
             );
-            let style = "background: #f3a6a68c;";
+            let style = buildSearchHighlightStyle();
             this.props.htmlBook.rendition.highlightSearchNode(
               bookLocation.keyword,
               style

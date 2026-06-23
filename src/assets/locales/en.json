@@ -1201,5 +1201,7 @@
   "Strikethrough": "Strikethrough",
   "Highlight border": "Highlight border",
   "Preview": "Preview",
-  "Sample text for audiobook highlight": "Sample text for audiobook highlight"
+  "Sample text for audiobook highlight": "Sample text for audiobook highlight",
+  "Search highlight style": "Search highlight style",
+  "Customize the highlight style when searching in books": "Customize the highlight style when searching in books"
 }
