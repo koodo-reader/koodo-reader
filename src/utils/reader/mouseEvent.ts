@@ -9,6 +9,7 @@ import {
   isNextPageKey,
   isPrevPageKey,
   matchShortcut,
+  ShortcutAction,
 } from "./shortcutUtil";
 declare var window: any;
 
@@ -70,19 +71,22 @@ export const getSelectionSentence = (
   }
   return "";
 };
+
+const clickEvent = () =>
+  new MouseEvent("click", {
+    view: window,
+    bubbles: true,
+    cancelable: true,
+  });
+
 export const searchInTheBook = (
   keyword: string,
   format: string,
   isSearch: boolean
 ) => {
   let leftPanel = document.querySelector(".left-panel");
-  const clickEvent = new MouseEvent("click", {
-    view: window,
-    bubbles: true,
-    cancelable: true,
-  });
   if (!leftPanel) return;
-  leftPanel.dispatchEvent(clickEvent);
+  leftPanel.dispatchEvent(clickEvent());
   const focusEvent = new MouseEvent("focus", {
     view: window,
     bubbles: true,
@@ -91,7 +95,7 @@ export const searchInTheBook = (
   let searchBox: any = document.querySelector(".header-search-box");
   searchBox.dispatchEvent(focusEvent);
   let searchIcon = document.querySelector(".header-search-icon");
-  searchIcon?.dispatchEvent(clickEvent);
+  searchIcon?.dispatchEvent(clickEvent());
   if (isSearch) {
     searchBox.value = getSelection(format) || keyword;
   }
@@ -102,21 +106,36 @@ export const searchInTheBook = (
   } as any);
   searchBox.dispatchEvent(keyEvent);
 };
+
+export const triggerPopupOptionClick = (optionName: string) => {
+  const option = document.querySelector(`.${optionName}-option`);
+  if (!option) return;
+  option.dispatchEvent(clickEvent());
+};
+
+const SELECTION_SHORTCUT_OPTIONS: Array<{
+  shortcut: ShortcutAction;
+  optionName: string;
+}> = [
+  { shortcut: "selectionTranslate", optionName: "translation" },
+  { shortcut: "selectionDict", optionName: "dict" },
+  { shortcut: "selectionNote", optionName: "note" },
+  { shortcut: "selectionHighlight", optionName: "highlight" },
+  { shortcut: "selectionSpeak", optionName: "speaker" },
+];
+
 export const openTableOfContents = () => {
   let leftPanel = document.querySelector(".left-panel");
-  const clickEvent = new MouseEvent("click", {
-    view: window,
-    bubbles: true,
-    cancelable: true,
-  });
   if (!leftPanel) return;
-  leftPanel.dispatchEvent(clickEvent);
+  leftPanel.dispatchEvent(clickEvent());
 };
 let lock = false; //prevent from clicking too fasts
 const arrowKeys = async (
   rendition: any,
   event: any,
-  readerMode: string
+  readerMode: string,
+  format: string,
+  bookKey: string
 ) => {
   if (
     event.target.tagName.toLowerCase() === "textarea" ||
@@ -131,7 +150,7 @@ const arrowKeys = async (
     event.preventDefault();
     await rendition.next();
   }
-  handleShortcut(event);
+  handleShortcut(event, format, bookKey);
 };
 
 const mouseChrome = async (rendition: any, deltaY: number) => {
@@ -143,7 +162,7 @@ const mouseChrome = async (rendition: any, deltaY: number) => {
   }
 };
 
-const handleShortcut = (event: any) => {
+const handleShortcut = (event: any, format: string, bookKey: string) => {
   const shortcuts = getShortcutConfig();
   if (matchShortcut(event, shortcuts.bossKey)) {
     if (isElectron) {
@@ -195,6 +214,23 @@ const handleShortcut = (event: any) => {
     event.preventDefault();
     openTableOfContents();
   }
+  if (
+    matchShortcut(event, shortcuts.searchSelectedInBook) &&
+    getSelection(format, bookKey)
+  ) {
+    event.preventDefault();
+    searchInTheBook("", format, true);
+    return;
+  }
+  for (const { shortcut, optionName } of SELECTION_SHORTCUT_OPTIONS) {
+    if (matchShortcut(event, shortcuts[shortcut])) {
+      if (getSelection(format, bookKey)) {
+        event.preventDefault();
+        triggerPopupOptionClick(optionName);
+      }
+      break;
+    }
+  }
 };
 
 const gesture = async (rendition: any, type: string) => {
@@ -235,6 +271,7 @@ export const bindHtmlEvent = (
   doc: any,
   key: string = "",
   readerMode: string = "",
+  format: string = "",
   handleScale: (scale: string) => void,
   renderBookFunc: () => void
 ) => {
@@ -243,7 +280,7 @@ export const bindHtmlEvent = (
     async (event) => {
       if (lock) return;
       lock = true;
-      await arrowKeys(rendition, event, readerMode);
+      await arrowKeys(rendition, event, readerMode, format, key);
       handleLocation(key, rendition);
       setTimeout(() => (lock = false), throttleTime);
     },
@@ -298,7 +335,7 @@ export const bindHtmlEvent = (
     async (event) => {
       if (lock) return;
       lock = true;
-      await arrowKeys(rendition, event, readerMode);
+      await arrowKeys(rendition, event, readerMode, format, key);
       handleLocation(key, rendition);
       setTimeout(() => (lock = false), throttleTime);
     },
@@ -355,6 +392,7 @@ export const htmlMouseEvent = (
         doc,
         key,
         readerMode,
+        format,
         handleScale,
         renderBookFunc
       );

@@ -50,4 +50,34 @@ export const shortcutList: ShortcutListItem[] = [
     title: "Open table of contents",
     desc: "Open the navigation panel",
   },
+  {
+    action: "selectionTranslate",
+    title: "Translate selection",
+    desc: "Translate the currently selected text",
+  },
+  {
+    action: "selectionDict",
+    title: "Dictionary lookup",
+    desc: "Look up the selected text in dictionary",
+  },
+  {
+    action: "selectionNote",
+    title: "Take note on selection",
+    desc: "Create a note for the selected text",
+  },
+  {
+    action: "selectionHighlight",
+    title: "Highlight selection",
+    desc: "Highlight the selected text",
+  },
+  {
+    action: "selectionSpeak",
+    title: "Speak selection",
+    desc: "Read the selected text aloud",
+  },
+  {
+    action: "searchSelectedInBook",
+    title: "Search selection in book",
+    desc: "Search the book using the selected text",
+  },
 ];
