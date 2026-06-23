@@ -17,7 +17,7 @@ import {
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import TTSUtil from "../../utils/reader/ttsUtil";
-import { buildTtsHighlightStyle } from "../../utils/reader/ttsHighlightUtil";
+import { buildTtsHighlightStyle } from "../../utils/reader/highlightUtil";
 import "./textToSpeech.css";
 import { fetchUserInfo } from "../../utils/request/user";
 import { getSplitSentence } from "../../utils/request/reader";

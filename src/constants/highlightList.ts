@@ -1,21 +1,21 @@
-export type TtsHighlightStyleType =
+export type HighlightStyleType =
   | "background"
   | "underline"
   | "strikethrough"
   | "border";
 
-export interface TtsHighlightStyleEntry {
+export interface HighlightStyleEntry {
   presetIndex: number;
   customColor: string;
 }
 
-export interface TtsHighlightConfig {
-  styleType: TtsHighlightStyleType;
-  styles: Record<TtsHighlightStyleType, TtsHighlightStyleEntry>;
+export interface HighlightConfig {
+  styleType: HighlightStyleType;
+  styles: Record<HighlightStyleType, HighlightStyleEntry>;
 }
 
-export const ttsHighlightStyleTypes: {
-  value: TtsHighlightStyleType;
+export const highlightStyleTypes: {
+  value: HighlightStyleType;
   label: string;
 }[] = [
   { value: "background", label: "Highlight background" },
@@ -24,10 +24,7 @@ export const ttsHighlightStyleTypes: {
   { value: "border", label: "Highlight border" },
 ];
 
-export const ttsHighlightPresetColors: Record<
-  TtsHighlightStyleType,
-  string[]
-> = {
+export const highlightPresetColors: Record<HighlightStyleType, string[]> = {
   background: [
     "#f3a6a68c",
     "#FBF1D1CC",
@@ -40,7 +37,7 @@ export const ttsHighlightPresetColors: Record<
   border: ["#F16464", "#0179CA", "#008F91", "#6867D1", "#F97316"],
 };
 
-export const defaultTtsHighlightConfig: TtsHighlightConfig = {
+export const defaultHighlightConfig: HighlightConfig = {
   styleType: "background",
   styles: {
     background: { presetIndex: 0, customColor: "#f3a6a68c" },

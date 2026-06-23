@@ -16,7 +16,7 @@ import {
   openReadingPanel,
   READING_PANEL_TOGGLE_EVENT,
 } from "../../../utils/reader/mouseEvent";
-import { buildSearchHighlightStyle } from "../../../utils/reader/searchHighlightUtil";
+import { buildSearchHighlightStyle } from "../../../utils/reader/highlightUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,

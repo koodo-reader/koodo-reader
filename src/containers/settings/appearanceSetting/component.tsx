@@ -22,27 +22,20 @@ import {
   syncNativeThemeSource,
 } from "../../../utils/reader/launchUtil";
 import {
-  searchHighlightPresetColors,
-  searchHighlightStyleTypes,
-  SearchHighlightStyleType,
-} from "../../../constants/searchHighlightList";
-import {
-  ttsHighlightPresetColors,
-  ttsHighlightStyleTypes,
-  TtsHighlightStyleType,
-} from "../../../constants/ttsHighlightList";
+  highlightPresetColors,
+  highlightStyleTypes,
+  HighlightStyleType,
+} from "../../../constants/highlightList";
 import {
   buildSearchHighlightPreviewStyle,
+  buildTtsHighlightPreviewStyle,
   getSearchHighlightColor,
   getSearchHighlightConfig,
-  saveSearchHighlightConfig,
-} from "../../../utils/reader/searchHighlightUtil";
-import {
-  buildTtsHighlightPreviewStyle,
   getTtsHighlightColor,
   getTtsHighlightConfig,
+  saveSearchHighlightConfig,
   saveTtsHighlightConfig,
-} from "../../../utils/reader/ttsHighlightUtil";
+} from "../../../utils/reader/highlightUtil";
 
 class AppearanceSetting extends React.Component<
   SettingInfoProps,
@@ -184,7 +177,7 @@ class AppearanceSetting extends React.Component<
     reloadManager();
   };
 
-  handleTtsStyleType = (styleType: TtsHighlightStyleType) => {
+  handleTtsStyleType = (styleType: HighlightStyleType) => {
     const config = {
       ...this.state.ttsHighlightConfig,
       styleType,
@@ -241,7 +234,7 @@ class AppearanceSetting extends React.Component<
     this.handleRest(true);
   };
 
-  handleSearchStyleType = (styleType: SearchHighlightStyleType) => {
+  handleSearchStyleType = (styleType: HighlightStyleType) => {
     const config = {
       ...this.state.searchHighlightConfig,
       styleType,
@@ -303,7 +296,7 @@ class AppearanceSetting extends React.Component<
     const styleType = ttsHighlightConfig.styleType;
     const currentEntry = ttsHighlightConfig.styles[styleType];
     const currentColor = getTtsHighlightColor(styleType, ttsHighlightConfig);
-    const presetColors = ttsHighlightPresetColors[styleType];
+    const presetColors = highlightPresetColors[styleType];
     const isCustomSelected = currentEntry.presetIndex === -1;
 
     return (
@@ -317,7 +310,7 @@ class AppearanceSetting extends React.Component<
           </Trans>
         </p>
         <ul className="tts-highlight-style-tabs">
-          {ttsHighlightStyleTypes.map((item) => {
+          {highlightStyleTypes.map((item) => {
             const previewColor = getTtsHighlightColor(
               item.value,
               ttsHighlightConfig
@@ -450,7 +443,7 @@ class AppearanceSetting extends React.Component<
       styleType,
       searchHighlightConfig
     );
-    const presetColors = searchHighlightPresetColors[styleType];
+    const presetColors = highlightPresetColors[styleType];
     const isCustomSelected = currentEntry.presetIndex === -1;
 
     return (
@@ -464,7 +457,7 @@ class AppearanceSetting extends React.Component<
           </Trans>
         </p>
         <ul className="tts-highlight-style-tabs">
-          {searchHighlightStyleTypes.map((item) => {
+          {highlightStyleTypes.map((item) => {
             const previewColor = getSearchHighlightColor(
               item.value,
               searchHighlightConfig
