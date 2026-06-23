@@ -33,7 +33,13 @@ export const SHORTCUT_ACTIONS: ShortcutAction[] = [
 const KEY_LABELS: Record<number, string> = {
   8: "Backspace",
   9: "Tab",
+  12: "Clear",
   13: "Enter",
+  16: "Shift",
+  17: "Ctrl",
+  18: "Alt",
+  19: "Pause",
+  20: "CapsLock",
   27: "Esc",
   32: "Space",
   33: "PageUp",
@@ -44,8 +50,17 @@ const KEY_LABELS: Record<number, string> = {
   38: "↑",
   39: "→",
   40: "↓",
+  44: "PrintScreen",
   45: "Insert",
   46: "Delete",
+  91: "Win",
+  92: "Win",
+  93: "Menu",
+  106: "Num *",
+  107: "Num +",
+  109: "Num -",
+  110: "Num .",
+  111: "Num /",
   112: "F1",
   113: "F2",
   114: "F3",
@@ -58,6 +73,59 @@ const KEY_LABELS: Record<number, string> = {
   121: "F10",
   122: "F11",
   123: "F12",
+  124: "F13",
+  125: "F14",
+  126: "F15",
+  127: "F16",
+  128: "F17",
+  129: "F18",
+  130: "F19",
+  131: "F20",
+  132: "F21",
+  133: "F22",
+  134: "F23",
+  135: "F24",
+  144: "NumLock",
+  145: "ScrollLock",
+  173: "-",
+  174: "VolumeDown",
+  175: "VolumeUp",
+  176: "MediaNext",
+  177: "MediaPrev",
+  178: "MediaStop",
+  179: "MediaPlay",
+  181: "VolumeMute",
+  182: "LaunchMail",
+  183: "LaunchMedia",
+  186: ";",
+  187: "=",
+  188: ",",
+  189: "-",
+  190: ".",
+  191: "/",
+  192: "`",
+  219: "[",
+  220: "\\",
+  221: "]",
+  222: "'",
+  224: "Meta",
+  225: "AltGraph",
+};
+
+const getKeyLabel = (keyCode: number): string => {
+  if (KEY_LABELS[keyCode]) {
+    return KEY_LABELS[keyCode];
+  }
+  if (keyCode >= 48 && keyCode <= 57) {
+    return String.fromCharCode(keyCode);
+  }
+  if (keyCode >= 65 && keyCode <= 90) {
+    return String.fromCharCode(keyCode);
+  }
+  if (keyCode >= 96 && keyCode <= 105) {
+    return `Num ${keyCode - 96}`;
+  }
+  return `Key${keyCode}`;
 };
 
 const MODIFIER_KEY_CODES = [16, 17, 18, 91, 92, 93, 224];
@@ -128,11 +196,7 @@ export const formatShortcut = (binding: ShortcutBinding): string => {
   if (binding.ctrl) parts.push("Ctrl");
   if (binding.alt) parts.push("Alt");
   if (binding.shift) parts.push("Shift");
-  const keyLabel =
-    KEY_LABELS[binding.keyCode] ||
-    (binding.keyCode >= 65 && binding.keyCode <= 90
-      ? String.fromCharCode(binding.keyCode)
-      : `Key${binding.keyCode}`);
+  const keyLabel = getKeyLabel(binding.keyCode);
   parts.push(keyLabel);
   return parts.join(" + ");
 };
