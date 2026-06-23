@@ -16,6 +16,7 @@ import ChapterSetting from "../../../containers/settings/chapterSetting";
 import TextSetting from "../../../containers/settings/textSetting";
 import DictSetting from "../../../containers/settings/dictSetting";
 import MoreSetting from "../../../containers/settings/moreSetting";
+import ShortcutSetting from "../../../containers/settings/shortcutSetting";
 import { isElectron } from "react-device-detect";
 class SettingDialog extends React.Component<
   SettingInfoProps,
@@ -68,6 +69,8 @@ class SettingDialog extends React.Component<
         return "General";
       case "reading":
         return "Reading";
+      case "shortcut":
+        return "Shortcuts";
       case "appearance":
         return "Appearance";
       case "plugins":
@@ -112,6 +115,12 @@ class SettingDialog extends React.Component<
               "reading",
               "icon-bookshelf-line",
               "Reading",
+              ""
+            )}
+            {this.renderSidebarItem(
+              "shortcut",
+              "icon-select",
+              "Shortcuts",
               ""
             )}
             {this.renderSidebarItem(
@@ -192,6 +201,8 @@ class SettingDialog extends React.Component<
               <GeneralSetting />
             ) : this.props.settingMode === "reading" ? (
               <ReadingSetting />
+            ) : this.props.settingMode === "shortcut" ? (
+              <ShortcutSetting />
             ) : this.props.settingMode === "appearance" ? (
               <AppearanceSetting />
             ) : this.props.settingMode === "sync" ? (

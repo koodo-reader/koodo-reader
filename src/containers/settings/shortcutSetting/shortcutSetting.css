@@ -1,0 +1,74 @@
+.shortcut-setting-row {
+  margin-bottom: 16px;
+}
+
+.shortcut-setting-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.shortcut-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 4px 0;
+}
+
+.shortcut-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+}
+
+.shortcut-chip.recording {
+  border-style: dashed;
+  animation: shortcut-pulse 1s ease-in-out infinite;
+}
+
+.shortcut-chip-remove {
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.shortcut-chip-remove:hover {
+  opacity: 1;
+}
+
+.shortcut-add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  padding: 0 10px;
+  height: 22px;
+  border-radius: 11px;
+  cursor: pointer;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.shortcut-recording-hint {
+  font-size: 12px;
+  opacity: 0.75;
+  margin: 4px 0;
+}
+
+@keyframes shortcut-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
