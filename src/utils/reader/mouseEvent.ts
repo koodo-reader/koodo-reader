@@ -199,7 +199,7 @@ const arrowKeys = async (
     event.preventDefault();
     await rendition.next();
   }
-  handleShortcut(event, format, bookKey);
+  handleShortcut(event, format, bookKey, rendition);
 };
 
 const mouseChrome = async (rendition: any, deltaY: number) => {
@@ -211,7 +211,12 @@ const mouseChrome = async (rendition: any, deltaY: number) => {
   }
 };
 
-const handleShortcut = (event: any, format: string, bookKey: string) => {
+const handleShortcut = (
+  event: any,
+  format: string,
+  bookKey: string,
+  rendition?: any
+) => {
   const shortcuts = getShortcutConfig();
   if (matchShortcut(event, shortcuts.bossKey)) {
     if (isElectron) {
@@ -276,6 +281,19 @@ const handleShortcut = (event: any, format: string, bookKey: string) => {
       toggleNavTab(tab);
       break;
     }
+  }
+  if (matchShortcut(event, shortcuts.createBookmark)) {
+    event.preventDefault();
+    const bookmarkBtn = document.querySelector(".add-bookmark-button");
+    bookmarkBtn?.dispatchEvent(clickEvent());
+  }
+  if (rendition && matchShortcut(event, shortcuts.prevChapter)) {
+    event.preventDefault();
+    rendition.prevChapter();
+  }
+  if (rendition && matchShortcut(event, shortcuts.nextChapter)) {
+    event.preventDefault();
+    rendition.nextChapter();
   }
   if (
     matchShortcut(event, shortcuts.searchSelectedInBook) &&

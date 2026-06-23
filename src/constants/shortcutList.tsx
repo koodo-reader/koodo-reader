@@ -19,6 +19,16 @@ export const shortcutList: ShortcutListItem[] = [
     desc: "Go to the previous page while reading",
   },
   {
+    action: "prevChapter",
+    title: "Previous chapter",
+    desc: "Go to the previous chapter while reading",
+  },
+  {
+    action: "nextChapter",
+    title: "Next chapter",
+    desc: "Go to the next chapter while reading",
+  },
+  {
     action: "bossKey",
     title: "Hide reader (Boss key)",
     desc: "Quickly hide the reader window",
@@ -69,6 +79,11 @@ export const shortcutList: ShortcutListItem[] = [
     action: "openBottomPanel",
     title: "Open bottom reading panel",
     desc: "Open or close the bottom reading panel",
+  },
+  {
+    action: "createBookmark",
+    title: "Create bookmark",
+    desc: "Add a bookmark at the current reading position",
   },
   {
     action: "openBookmarkList",
