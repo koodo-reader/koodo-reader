@@ -22,10 +22,21 @@ import {
   syncNativeThemeSource,
 } from "../../../utils/reader/launchUtil";
 import {
+  searchHighlightPresetColors,
+  searchHighlightStyleTypes,
+  SearchHighlightStyleType,
+} from "../../../constants/searchHighlightList";
+import {
   ttsHighlightPresetColors,
   ttsHighlightStyleTypes,
   TtsHighlightStyleType,
 } from "../../../constants/ttsHighlightList";
+import {
+  buildSearchHighlightPreviewStyle,
+  getSearchHighlightColor,
+  getSearchHighlightConfig,
+  saveSearchHighlightConfig,
+} from "../../../utils/reader/searchHighlightUtil";
 import {
   buildTtsHighlightPreviewStyle,
   getTtsHighlightColor,
@@ -63,6 +74,11 @@ class AppearanceSetting extends React.Component<
       isShowTtsCustomColorPicker: false,
       pendingTtsCustomColor: getTtsHighlightColor(
         getTtsHighlightConfig().styleType
+      ),
+      searchHighlightConfig: getSearchHighlightConfig(),
+      isShowSearchCustomColorPicker: false,
+      pendingSearchCustomColor: getSearchHighlightColor(
+        getSearchHighlightConfig().styleType
       ),
     };
   }
@@ -225,6 +241,63 @@ class AppearanceSetting extends React.Component<
     this.handleRest(true);
   };
 
+  handleSearchStyleType = (styleType: SearchHighlightStyleType) => {
+    const config = {
+      ...this.state.searchHighlightConfig,
+      styleType,
+    };
+    this.setState({
+      searchHighlightConfig: config,
+      isShowSearchCustomColorPicker: false,
+      pendingSearchCustomColor: getSearchHighlightColor(styleType, config),
+    });
+    saveSearchHighlightConfig(config);
+  };
+
+  handleSearchPresetColor = (index: number) => {
+    const styleType = this.state.searchHighlightConfig.styleType;
+    const config = {
+      ...this.state.searchHighlightConfig,
+      styles: {
+        ...this.state.searchHighlightConfig.styles,
+        [styleType]: {
+          ...this.state.searchHighlightConfig.styles[styleType],
+          presetIndex: index,
+        },
+      },
+    };
+    this.setState({
+      searchHighlightConfig: config,
+      isShowSearchCustomColorPicker: false,
+    });
+    saveSearchHighlightConfig(config);
+  };
+
+  handleSearchCustomColor = (color: string) => {
+    this.setState({ pendingSearchCustomColor: color });
+  };
+
+  handleConfirmSearchCustomColor = () => {
+    const styleType = this.state.searchHighlightConfig.styleType;
+    const color = this.state.pendingSearchCustomColor;
+    const config = {
+      ...this.state.searchHighlightConfig,
+      styles: {
+        ...this.state.searchHighlightConfig.styles,
+        [styleType]: {
+          presetIndex: -1,
+          customColor: color,
+        },
+      },
+    };
+    this.setState({
+      searchHighlightConfig: config,
+      isShowSearchCustomColorPicker: false,
+    });
+    saveSearchHighlightConfig(config);
+    this.handleRest(true);
+  };
+
   renderTtsHighlightSetting = () => {
     const { ttsHighlightConfig } = this.state;
     const styleType = ttsHighlightConfig.styleType;
@@ -358,6 +431,155 @@ class AppearanceSetting extends React.Component<
               <span
                 className="change-location-button"
                 onClick={this.handleConfirmTtsCustomColor}
+                style={{ marginBottom: "10px" }}
+              >
+                <Trans>Confirm</Trans>
+              </span>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  };
+
+  renderSearchHighlightSetting = () => {
+    const { searchHighlightConfig } = this.state;
+    const styleType = searchHighlightConfig.styleType;
+    const currentEntry = searchHighlightConfig.styles[styleType];
+    const currentColor = getSearchHighlightColor(
+      styleType,
+      searchHighlightConfig
+    );
+    const presetColors = searchHighlightPresetColors[styleType];
+    const isCustomSelected = currentEntry.presetIndex === -1;
+
+    return (
+      <>
+        <div className="setting-dialog-new-title">
+          <Trans>Search highlight style</Trans>
+        </div>
+        <p className="setting-option-subtitle">
+          <Trans>
+            Customize the highlight style when searching in books
+          </Trans>
+        </p>
+        <ul className="tts-highlight-style-tabs">
+          {searchHighlightStyleTypes.map((item) => {
+            const previewColor = getSearchHighlightColor(
+              item.value,
+              searchHighlightConfig
+            );
+            return (
+              <li
+                key={item.value}
+                className={
+                  styleType === item.value
+                    ? "tts-highlight-style-tab active-tts-highlight-tab"
+                    : "tts-highlight-style-tab"
+                }
+                onClick={() => this.handleSearchStyleType(item.value)}
+              >
+                <span
+                  className="tts-highlight-style-preview"
+                  style={buildSearchHighlightPreviewStyle(
+                    item.value,
+                    previewColor
+                  )}
+                >
+                  Aa
+                </span>
+                <span className="tts-highlight-style-label">
+                  <Trans>{item.label}</Trans>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        <ul className="tts-highlight-color-container">
+          {presetColors.map((color, index) => (
+            <li
+              key={color}
+              className={
+                !isCustomSelected && currentEntry.presetIndex === index
+                  ? "tts-highlight-color-item active-tts-highlight-color"
+                  : "tts-highlight-color-item"
+              }
+              style={{ backgroundColor: color }}
+              onClick={() => this.handleSearchPresetColor(index)}
+            />
+          ))}
+          <li
+            className={
+              isCustomSelected
+                ? "tts-highlight-color-item tts-highlight-custom-color active-tts-highlight-color"
+                : "tts-highlight-color-item tts-highlight-custom-color"
+            }
+            style={
+              isCustomSelected ? { backgroundColor: currentColor } : undefined
+            }
+            onClick={() => {
+              this.setState({
+                isShowSearchCustomColorPicker:
+                  !this.state.isShowSearchCustomColorPicker,
+                pendingSearchCustomColor: isCustomSelected
+                  ? currentColor
+                  : currentEntry.customColor,
+              });
+            }}
+          >
+            <span
+              className={
+                this.state.isShowSearchCustomColorPicker
+                  ? "icon-check"
+                  : "icon-more"
+              }
+              style={{ fontSize: "18px" }}
+            />
+          </li>
+        </ul>
+        {this.state.isShowSearchCustomColorPicker && (
+          <div className="custom-color-picker-container">
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <HexColorPicker
+                color={this.state.pendingSearchCustomColor}
+                onChange={this.handleSearchCustomColor}
+                style={{
+                  margin: "10px 0",
+                  animation: "fade-in 0.2s ease-in-out 0s 1",
+                }}
+              />
+              <input
+                className="color-input-box"
+                style={{ marginBottom: 8 }}
+                value={this.state.pendingSearchCustomColor}
+                placeholder="#rrggbb / rgba(r,g,b,a)"
+                onChange={(e) =>
+                  this.setState({ pendingSearchCustomColor: e.target.value })
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const hex = parseColorInput(
+                      this.state.pendingSearchCustomColor
+                    );
+                    if (hex) this.setState({ pendingSearchCustomColor: hex });
+                  }
+                }}
+                onBlur={() => {
+                  const hex = parseColorInput(
+                    this.state.pendingSearchCustomColor
+                  );
+                  if (hex) this.setState({ pendingSearchCustomColor: hex });
+                }}
+              />
+              <span
+                className="change-location-button"
+                onClick={this.handleConfirmSearchCustomColor}
                 style={{ marginBottom: "10px" }}
               >
                 <Trans>Confirm</Trans>
@@ -562,6 +784,7 @@ class AppearanceSetting extends React.Component<
           </div>
         )}
         {this.renderTtsHighlightSetting()}
+        {this.renderSearchHighlightSetting()}
         <div className="setting-dialog-new-title">
           <Trans>Appearance</Trans>
         </div>

@@ -1206,5 +1206,7 @@
   "Strikethrough": "删除线",
   "Highlight border": "边框高亮",
   "Preview": "预览",
-  "Sample text for audiobook highlight": "听书高亮示例文字"
+  "Sample text for audiobook highlight": "听书高亮示例文字",
+  "Search highlight style": "搜索高亮样式",
+  "Customize the highlight style when searching in books": "自定义书中搜索文字的高亮样式"
 }

@@ -1,4 +1,5 @@
 import { RouteComponentProps } from "react-router-dom";
+import { SearchHighlightConfig } from "../../../constants/searchHighlightList";
 import { TtsHighlightConfig } from "../../../constants/ttsHighlightList";
 
 export interface SettingInfoProps extends RouteComponentProps<any> {
@@ -19,4 +20,7 @@ export interface SettingInfoState {
   ttsHighlightConfig: TtsHighlightConfig;
   isShowTtsCustomColorPicker: boolean;
   pendingTtsCustomColor: string;
+  searchHighlightConfig: SearchHighlightConfig;
+  isShowSearchCustomColorPicker: boolean;
+  pendingSearchCustomColor: string;
 }
