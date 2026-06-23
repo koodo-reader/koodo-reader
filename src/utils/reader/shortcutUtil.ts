@@ -20,6 +20,9 @@ export type ShortcutAction =
   | "openRightPanel"
   | "openTopPanel"
   | "openBottomPanel"
+  | "openBookmarkList"
+  | "openNoteList"
+  | "openHighlightList"
   | "selectionTranslate"
   | "selectionDict"
   | "selectionNote"
@@ -42,6 +45,9 @@ export const SHORTCUT_ACTIONS: ShortcutAction[] = [
   "openRightPanel",
   "openTopPanel",
   "openBottomPanel",
+  "openBookmarkList",
+  "openNoteList",
+  "openHighlightList",
   "selectionTranslate",
   "selectionDict",
   "selectionNote",
@@ -168,6 +174,9 @@ export const DEFAULT_SHORTCUT_CONFIG: ShortcutConfig = {
   openRightPanel: [{ keyCode: 118 }],
   openTopPanel: [{ keyCode: 119 }],
   openBottomPanel: [{ keyCode: 120 }],
+  openBookmarkList: [{ keyCode: 66, ctrl: true, alt: true }],
+  openNoteList: [{ keyCode: 78, ctrl: true, alt: true }],
+  openHighlightList: [{ keyCode: 72, ctrl: true, alt: true }],
   selectionTranslate: [{ keyCode: 84, ctrl: true, shift: true }],
   selectionDict: [{ keyCode: 68, ctrl: true, shift: true }],
   selectionNote: [{ keyCode: 78, ctrl: true, shift: true }],

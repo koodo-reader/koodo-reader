@@ -71,6 +71,21 @@ export const shortcutList: ShortcutListItem[] = [
     desc: "Open or close the bottom reading panel",
   },
   {
+    action: "openBookmarkList",
+    title: "Toggle bookmark list",
+    desc: "Open or close the bookmark list in the left reading panel",
+  },
+  {
+    action: "openNoteList",
+    title: "Toggle note list",
+    desc: "Open or close the note list in the left reading panel",
+  },
+  {
+    action: "openHighlightList",
+    title: "Toggle highlight list",
+    desc: "Open or close the highlight list in the left reading panel",
+  },
+  {
     action: "selectionTranslate",
     title: "Translate selection",
     desc: "Translate the currently selected text",
