@@ -237,10 +237,11 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           className="popup-menu-container"
           style={this.props.isOpenMenu ? {} : { display: "none" }}
         >
-          <div className="popup-menu-box">
-            {this.props.menuMode === "menu" ? (
-              <PopupOption {...(PopupProps as any)} />
-            ) : null}
+          <div
+            className="popup-menu-box"
+            style={this.props.menuMode === "menu" ? {} : { display: "none" }}
+          >
+            <PopupOption {...(PopupProps as any)} />
           </div>
           {this.props.menuMode === "menu" &&
             (this.props.isChangeDirection ? (

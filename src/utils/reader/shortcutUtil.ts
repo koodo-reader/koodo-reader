@@ -15,7 +15,13 @@ export type ShortcutAction =
   | "toggleFullscreen"
   | "exitReader"
   | "searchInBook"
-  | "openToc";
+  | "openToc"
+  | "selectionTranslate"
+  | "selectionDict"
+  | "selectionNote"
+  | "selectionHighlight"
+  | "selectionSpeak"
+  | "searchSelectedInBook";
 
 export type ShortcutConfig = Record<ShortcutAction, ShortcutBinding[]>;
 
@@ -28,6 +34,12 @@ export const SHORTCUT_ACTIONS: ShortcutAction[] = [
   "exitReader",
   "searchInBook",
   "openToc",
+  "selectionTranslate",
+  "selectionDict",
+  "selectionNote",
+  "selectionHighlight",
+  "selectionSpeak",
+  "searchSelectedInBook",
 ];
 
 const KEY_LABELS: Record<number, string> = {
@@ -144,6 +156,12 @@ export const DEFAULT_SHORTCUT_CONFIG: ShortcutConfig = {
   exitReader: [{ keyCode: 27 }],
   searchInBook: [{ keyCode: 70, ctrl: true }],
   openToc: [{ keyCode: 66, ctrl: true }],
+  selectionTranslate: [{ keyCode: 84, ctrl: true, shift: true }],
+  selectionDict: [{ keyCode: 68, ctrl: true, shift: true }],
+  selectionNote: [{ keyCode: 78, ctrl: true, shift: true }],
+  selectionHighlight: [{ keyCode: 72, ctrl: true, shift: true }],
+  selectionSpeak: [{ keyCode: 82, ctrl: true, shift: true }],
+  searchSelectedInBook: [{ keyCode: 70, ctrl: true, shift: true }],
 };
 
 const cloneBindings = (bindings: ShortcutBinding[]): ShortcutBinding[] =>

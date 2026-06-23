@@ -24,8 +24,8 @@ declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
   handleNote = () => {
-    // this.props.handleChangeDirection(false);
     this.props.handleMenuMode("note");
+    this.props.handleOpenMenu(true);
   };
   handleCopy = () => {
     let text = getSelection(this.props.currentBook.format);
@@ -51,6 +51,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleTrans = () => {
     this.props.handleMenuMode("trans");
     this.props.handleOriginalText(getSelection(this.props.currentBook.format));
+    this.props.handleOpenMenu(true);
   };
   handleDict = () => {
     this.props.handleMenuMode("dict");
@@ -58,6 +59,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleOriginalSentence(
       getSelectionSentence(this.props.currentBook.format)
     );
+    this.props.handleOpenMenu(true);
   };
   handleDigest = async () => {
     await createHighlight({
