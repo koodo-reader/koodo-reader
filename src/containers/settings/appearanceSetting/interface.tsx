@@ -1,4 +1,6 @@
 import { RouteComponentProps } from "react-router-dom";
+import { TtsHighlightConfig } from "../../../constants/ttsHighlightList";
+
 export interface SettingInfoProps extends RouteComponentProps<any> {
   t: (title: string) => string;
 }
@@ -14,4 +16,7 @@ export interface SettingInfoState {
   isShowShelfBookCount: boolean;
   isCustomSystemCSS: boolean;
   customSystemCSS: string;
+  ttsHighlightConfig: TtsHighlightConfig;
+  isShowTtsCustomColorPicker: boolean;
+  pendingTtsCustomColor: string;
 }

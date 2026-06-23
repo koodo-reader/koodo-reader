@@ -1194,5 +1194,12 @@
   "All": "All",
   "Unread": "Unread",
   "CurrentlyReading": "Reading",
-  "Finished": "Finished"
+  "Finished": "Finished",
+  "TTS highlight style": "TTS highlight style",
+  "Customize the highlight style when listening to audiobooks": "Customize the highlight style when listening to audiobooks",
+  "Highlight background": "Highlight background",
+  "Strikethrough": "Strikethrough",
+  "Highlight border": "Highlight border",
+  "Preview": "Preview",
+  "Sample text for audiobook highlight": "Sample text for audiobook highlight"
 }
