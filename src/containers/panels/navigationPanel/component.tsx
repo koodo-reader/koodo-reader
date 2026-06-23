@@ -10,6 +10,12 @@ import DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../../utils/file/coverUtil";
+import {
+  NAV_TAB_TOGGLE_EVENT,
+  NavTab,
+  openReadingPanel,
+  READING_PANEL_TOGGLE_EVENT,
+} from "../../../utils/reader/mouseEvent";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
@@ -56,7 +62,41 @@ class NavigationPanel extends React.Component<
   }
   componentDidMount() {
     this.props.handleFetchBookmarks();
+    window.addEventListener(NAV_TAB_TOGGLE_EVENT, this.handleNavTabToggle);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener(NAV_TAB_TOGGLE_EVENT, this.handleNavTabToggle);
+  }
+
+  isLeftPanelOpen = () => {
+    const el = document.querySelector(
+      ".navigation-panel-container"
+    ) as HTMLElement | null;
+    return !!el && !el.style.transform;
+  };
+
+  handleNavTabToggle = (event: Event) => {
+    const tab = (event as CustomEvent<{ tab: NavTab }>).detail?.tab;
+    if (!tab) return;
+    if (this.state.searchState) {
+      this.handleNavSearchState("");
+      this.props.handleSearch(false);
+      this.setState({ searchList: null });
+    }
+    if (this.isLeftPanelOpen() && this.state.currentTab === tab) {
+      window.dispatchEvent(
+        new CustomEvent(READING_PANEL_TOGGLE_EVENT, {
+          detail: { position: "left" },
+        })
+      );
+      return;
+    }
+    if (!this.isLeftPanelOpen()) {
+      openReadingPanel("left");
+    }
+    this.handleChangeTab(tab);
+  };
 
   handleChangeTab = (currentTab: string) => {
     this.setState({ currentTab });
@@ -239,6 +279,7 @@ class NavigationPanel extends React.Component<
                 </span>
                 <span
                   className="book-bookmark-title"
+                  data-nav-tab="bookmarks"
                   style={
                     this.state.currentTab === "bookmarks"
                       ? {}
@@ -252,6 +293,7 @@ class NavigationPanel extends React.Component<
                 </span>
                 <span
                   className="book-bookmark-title"
+                  data-nav-tab="notes"
                   style={
                     this.state.currentTab === "notes" ? {} : { opacity: 0.5 }
                   }
@@ -263,6 +305,7 @@ class NavigationPanel extends React.Component<
                 </span>
                 <span
                   className="book-bookmark-title"
+                  data-nav-tab="highlights"
                   style={
                     this.state.currentTab === "highlights"
                       ? {}

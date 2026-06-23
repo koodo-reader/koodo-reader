@@ -157,6 +157,27 @@ const READING_PANEL_SHORTCUTS: Array<{
   { shortcut: "openTopPanel", position: "top" },
   { shortcut: "openBottomPanel", position: "bottom" },
 ];
+
+export type NavTab = "bookmarks" | "notes" | "highlights";
+
+export const NAV_TAB_TOGGLE_EVENT = "koodo-nav-tab-toggle";
+
+export const toggleNavTab = (tab: NavTab) => {
+  window.dispatchEvent(
+    new CustomEvent(NAV_TAB_TOGGLE_EVENT, {
+      detail: { tab },
+    })
+  );
+};
+
+const NAV_TAB_SHORTCUTS: Array<{
+  shortcut: ShortcutAction;
+  tab: NavTab;
+}> = [
+  { shortcut: "openBookmarkList", tab: "bookmarks" },
+  { shortcut: "openNoteList", tab: "notes" },
+  { shortcut: "openHighlightList", tab: "highlights" },
+];
 let lock = false; //prevent from clicking too fasts
 const arrowKeys = async (
   rendition: any,
@@ -246,6 +267,13 @@ const handleShortcut = (event: any, format: string, bookKey: string) => {
     if (matchShortcut(event, shortcuts[shortcut])) {
       event.preventDefault();
       toggleReadingPanel(position);
+      break;
+    }
+  }
+  for (const { shortcut, tab } of NAV_TAB_SHORTCUTS) {
+    if (matchShortcut(event, shortcuts[shortcut])) {
+      event.preventDefault();
+      toggleNavTab(tab);
       break;
     }
   }
