@@ -357,6 +357,78 @@
   align-items: center;
   flex-shrink: 0;
 }
+.tts-highlight-style-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 25px 10px;
+  padding: 0;
+  list-style: none;
+  margin-left: 15px;
+}
+.tts-highlight-style-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  opacity: 0.5;
+  transition:
+    border-color 0.15s,
+    opacity 0.15s;
+}
+.tts-highlight-style-tab.active-tts-highlight-tab {
+  opacity: 1;
+}
+.tts-highlight-style-preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+.tts-highlight-style-label {
+  font-size: 11px;
+  white-space: nowrap;
+}
+.tts-highlight-color-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 0 25px 10px;
+  padding: 0;
+  list-style: none;
+}
+.tts-highlight-color-item {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+.tts-highlight-color-item.active-tts-highlight-color {
+  border-color: currentColor;
+}
+.tts-highlight-custom-color {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  font-size: 12px;
+}
+.tts-highlight-custom-color.active-tts-highlight-color {
+  border-style: solid;
+  opacity: 1;
+}
 .setting-option-subtitle {
   font-size: 12px;
   opacity: 0.8;

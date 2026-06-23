@@ -17,6 +17,7 @@ import {
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import TTSUtil from "../../utils/reader/ttsUtil";
+import { buildTtsHighlightStyle } from "../../utils/reader/ttsHighlightUtil";
 import "./textToSpeech.css";
 import { fetchUserInfo } from "../../utils/request/user";
 import { getSplitSentence } from "../../utils/request/reader";
@@ -666,7 +667,7 @@ class TextToSpeech extends React.Component<
       if (this.state.isPaused || !this.state.isAudioOn) return;
       this.setState({ currentIndex: index });
       let node = this.nodeList[index];
-      let style = "background: #f3a6a68c;";
+      let style = buildTtsHighlightStyle();
       this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
       if (index === nodeIndex) {
         let result = await TTSUtil.cacheAudio(
@@ -779,7 +780,7 @@ class TextToSpeech extends React.Component<
     }
     this.setState({ currentIndex: index });
     let node = this.nodeList[index];
-    let style = "background: #f3a6a68c;";
+    let style = buildTtsHighlightStyle();
     this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
     toast.dismiss("tts-load");
     let res = await this.handleSystemSpeech(

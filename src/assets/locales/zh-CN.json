@@ -1199,5 +1199,12 @@
   "All": "全部",
   "Unread": "未阅读",
   "CurrentlyReading": "阅读中",
-  "Finished": "已读完"
+  "Finished": "已读完",
+  "TTS highlight style": "听书高亮样式",
+  "Customize the highlight style when listening to audiobooks": "自定义听书时朗读文字的高亮样式",
+  "Highlight background": "背景高亮",
+  "Strikethrough": "删除线",
+  "Highlight border": "边框高亮",
+  "Preview": "预览",
+  "Sample text for audiobook highlight": "听书高亮示例文字"
 }
