@@ -1,5 +1,5 @@
 .shortcut-setting-row {
-  margin-bottom: 16px;
+  margin-bottom: 6px;
 }
 
 .shortcut-setting-header {
@@ -13,19 +13,21 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 8px 0 4px 0;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .shortcut-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  padding: 4px 4px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 15px;
   cursor: pointer;
   user-select: none;
   border: 1px solid transparent;
+  font-weight: 600;
 }
 
 .shortcut-chip.recording {

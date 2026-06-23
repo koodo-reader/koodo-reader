@@ -157,6 +157,16 @@ class ShortcutSetting extends React.Component<
               <div className="shortcut-setting-header setting-dialog-new-title">
                 <span style={{ width: "calc(100% - 80px)" }}>
                   <Trans>{item.title}</Trans>
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      opacity: "0.75",
+                      margin: "4px 0",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    <Trans>{item.desc}</Trans>
+                  </span>
                 </span>
                 <span
                   className="shortcut-add-button change-location-button"
@@ -168,18 +178,12 @@ class ShortcutSetting extends React.Component<
               <div className="shortcut-chip-list">
                 {this.renderChips(item.action)}
               </div>
-              <p className="setting-option-subtitle">
-                <Trans>{item.desc}</Trans>
-              </p>
             </div>
           );
         })}
         <div className="setting-dialog-new-title">
           <Trans>Reset shortcuts to default</Trans>
-          <span
-            className="change-location-button"
-            onClick={this.handleReset}
-          >
+          <span className="change-location-button" onClick={this.handleReset}>
             <Trans>Reset</Trans>
           </span>
         </div>
