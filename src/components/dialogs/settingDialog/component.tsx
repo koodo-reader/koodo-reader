@@ -119,7 +119,7 @@ class SettingDialog extends React.Component<
             )}
             {this.renderSidebarItem(
               "shortcut",
-              "icon-select",
+              "icon-keyboard",
               "Shortcuts",
               ""
             )}
