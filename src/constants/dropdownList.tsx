@@ -70,7 +70,7 @@ export const dropdownList = [
   },
   {
     title: "Code highlighting",
-    value: "codeHighlighter",
+    value: "codeHighlight",
     option: codeHighlightLangList,
     isPDF: false,
   },

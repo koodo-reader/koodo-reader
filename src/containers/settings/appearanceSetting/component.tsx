@@ -29,12 +29,10 @@ import {
 import {
   buildSearchHighlightPreviewStyle,
   buildTtsHighlightPreviewStyle,
-  getSearchHighlightColor,
-  getSearchHighlightConfig,
-  getTtsHighlightColor,
-  getTtsHighlightConfig,
-  saveSearchHighlightConfig,
-  saveTtsHighlightConfig,
+  getSearchHighlightValue,
+  getTtsHighlightValue,
+  saveSearchHighlightValue,
+  saveTtsHighlightValue,
 } from "../../../utils/reader/highlightUtil";
 
 class AppearanceSetting extends React.Component<
@@ -43,6 +41,8 @@ class AppearanceSetting extends React.Component<
 > {
   constructor(props: SettingInfoProps) {
     super(props);
+    const ttsHighlight = getTtsHighlightValue();
+    const searchHighlight = getSearchHighlightValue();
     this.state = {
       appSkin: ConfigService.getReaderConfig("appSkin"),
       currentThemeIndex: themeList.findIndex(
@@ -63,16 +63,14 @@ class AppearanceSetting extends React.Component<
       isCustomSystemCSS:
         ConfigService.getReaderConfig("isCustomSystemCSS") === "yes",
       customSystemCSS: ConfigService.getReaderConfig("customSystemCSS") || "",
-      ttsHighlightConfig: getTtsHighlightConfig(),
+      ttsHighlightStyleType: ttsHighlight.styleType,
+      ttsHighlightColor: ttsHighlight.color,
       isShowTtsCustomColorPicker: false,
-      pendingTtsCustomColor: getTtsHighlightColor(
-        getTtsHighlightConfig().styleType
-      ),
-      searchHighlightConfig: getSearchHighlightConfig(),
+      pendingTtsCustomColor: ttsHighlight.color,
+      searchHighlightStyleType: searchHighlight.styleType,
+      searchHighlightColor: searchHighlight.color,
       isShowSearchCustomColorPicker: false,
-      pendingSearchCustomColor: getSearchHighlightColor(
-        getSearchHighlightConfig().styleType
-      ),
+      pendingSearchCustomColor: searchHighlight.color,
     };
   }
 
@@ -178,35 +176,24 @@ class AppearanceSetting extends React.Component<
   };
 
   handleTtsStyleType = (styleType: HighlightStyleType) => {
-    const config = {
-      ...this.state.ttsHighlightConfig,
-      styleType,
-    };
+    const color = highlightPresetColors[styleType][0];
     this.setState({
-      ttsHighlightConfig: config,
+      ttsHighlightStyleType: styleType,
+      ttsHighlightColor: color,
       isShowTtsCustomColorPicker: false,
-      pendingTtsCustomColor: getTtsHighlightColor(styleType, config),
+      pendingTtsCustomColor: color,
     });
-    saveTtsHighlightConfig(config);
+    saveTtsHighlightValue({ styleType, color });
   };
 
   handleTtsPresetColor = (index: number) => {
-    const styleType = this.state.ttsHighlightConfig.styleType;
-    const config = {
-      ...this.state.ttsHighlightConfig,
-      styles: {
-        ...this.state.ttsHighlightConfig.styles,
-        [styleType]: {
-          ...this.state.ttsHighlightConfig.styles[styleType],
-          presetIndex: index,
-        },
-      },
-    };
+    const styleType = this.state.ttsHighlightStyleType;
+    const color = highlightPresetColors[styleType][index];
     this.setState({
-      ttsHighlightConfig: config,
+      ttsHighlightColor: color,
       isShowTtsCustomColorPicker: false,
     });
-    saveTtsHighlightConfig(config);
+    saveTtsHighlightValue({ styleType, color });
   };
 
   handleTtsCustomColor = (color: string) => {
@@ -214,56 +201,35 @@ class AppearanceSetting extends React.Component<
   };
 
   handleConfirmTtsCustomColor = () => {
-    const styleType = this.state.ttsHighlightConfig.styleType;
+    const styleType = this.state.ttsHighlightStyleType;
     const color = this.state.pendingTtsCustomColor;
-    const config = {
-      ...this.state.ttsHighlightConfig,
-      styles: {
-        ...this.state.ttsHighlightConfig.styles,
-        [styleType]: {
-          presetIndex: -1,
-          customColor: color,
-        },
-      },
-    };
     this.setState({
-      ttsHighlightConfig: config,
+      ttsHighlightColor: color,
       isShowTtsCustomColorPicker: false,
     });
-    saveTtsHighlightConfig(config);
+    saveTtsHighlightValue({ styleType, color });
     this.handleRest(true);
   };
 
   handleSearchStyleType = (styleType: HighlightStyleType) => {
-    const config = {
-      ...this.state.searchHighlightConfig,
-      styleType,
-    };
+    const color = highlightPresetColors[styleType][0];
     this.setState({
-      searchHighlightConfig: config,
+      searchHighlightStyleType: styleType,
+      searchHighlightColor: color,
       isShowSearchCustomColorPicker: false,
-      pendingSearchCustomColor: getSearchHighlightColor(styleType, config),
+      pendingSearchCustomColor: color,
     });
-    saveSearchHighlightConfig(config);
+    saveSearchHighlightValue({ styleType, color });
   };
 
   handleSearchPresetColor = (index: number) => {
-    const styleType = this.state.searchHighlightConfig.styleType;
-    const config = {
-      ...this.state.searchHighlightConfig,
-      styles: {
-        ...this.state.searchHighlightConfig.styles,
-        [styleType]: {
-          ...this.state.searchHighlightConfig.styles[styleType],
-          presetIndex: index,
-        },
-      },
-    };
+    const styleType = this.state.searchHighlightStyleType;
+    const color = highlightPresetColors[styleType][index];
     this.setState({
-      searchHighlightConfig: config,
+      searchHighlightColor: color,
       isShowSearchCustomColorPicker: false,
     });
-    saveSearchHighlightConfig(config);
+    saveSearchHighlightValue({ styleType, color });
   };
 
   handleSearchCustomColor = (color: string) => {
@@ -271,33 +237,21 @@ class AppearanceSetting extends React.Component<
   };
 
   handleConfirmSearchCustomColor = () => {
-    const styleType = this.state.searchHighlightConfig.styleType;
+    const styleType = this.state.searchHighlightStyleType;
     const color = this.state.pendingSearchCustomColor;
-    const config = {
-      ...this.state.searchHighlightConfig,
-      styles: {
-        ...this.state.searchHighlightConfig.styles,
-        [styleType]: {
-          presetIndex: -1,
-          customColor: color,
-        },
-      },
-    };
     this.setState({
-      searchHighlightConfig: config,
+      searchHighlightColor: color,
       isShowSearchCustomColorPicker: false,
     });
-    saveSearchHighlightConfig(config);
+    saveSearchHighlightValue({ styleType, color });
     this.handleRest(true);
   };
 
   renderTtsHighlightSetting = () => {
-    const { ttsHighlightConfig } = this.state;
-    const styleType = ttsHighlightConfig.styleType;
-    const currentEntry = ttsHighlightConfig.styles[styleType];
-    const currentColor = getTtsHighlightColor(styleType, ttsHighlightConfig);
+    const styleType = this.state.ttsHighlightStyleType;
+    const currentColor = this.state.ttsHighlightColor;
     const presetColors = highlightPresetColors[styleType];
-    const isCustomSelected = currentEntry.presetIndex === -1;
+    const isCustomSelected = !presetColors.includes(currentColor);
 
     return (
       <>
@@ -311,10 +265,10 @@ class AppearanceSetting extends React.Component<
         </p>
         <ul className="tts-highlight-style-tabs">
           {highlightStyleTypes.map((item) => {
-            const previewColor = getTtsHighlightColor(
-              item.value,
-              ttsHighlightConfig
-            );
+            const previewColor =
+              item.value === styleType
+                ? currentColor
+                : highlightPresetColors[item.value][0];
             return (
               <li
                 key={item.value}
@@ -346,7 +300,7 @@ class AppearanceSetting extends React.Component<
             <li
               key={color}
               className={
-                !isCustomSelected && currentEntry.presetIndex === index
+                !isCustomSelected && presetColors.indexOf(currentColor) === index
                   ? "tts-highlight-color-item active-tts-highlight-color"
                   : "tts-highlight-color-item"
               }
@@ -367,9 +321,7 @@ class AppearanceSetting extends React.Component<
               this.setState({
                 isShowTtsCustomColorPicker:
                   !this.state.isShowTtsCustomColorPicker,
-                pendingTtsCustomColor: isCustomSelected
-                  ? currentColor
-                  : currentEntry.customColor,
+                pendingTtsCustomColor: currentColor,
               });
             }}
           >
@@ -436,15 +388,10 @@ class AppearanceSetting extends React.Component<
   };
 
   renderSearchHighlightSetting = () => {
-    const { searchHighlightConfig } = this.state;
-    const styleType = searchHighlightConfig.styleType;
-    const currentEntry = searchHighlightConfig.styles[styleType];
-    const currentColor = getSearchHighlightColor(
-      styleType,
-      searchHighlightConfig
-    );
+    const styleType = this.state.searchHighlightStyleType;
+    const currentColor = this.state.searchHighlightColor;
     const presetColors = highlightPresetColors[styleType];
-    const isCustomSelected = currentEntry.presetIndex === -1;
+    const isCustomSelected = !presetColors.includes(currentColor);
 
     return (
       <>
@@ -458,10 +405,10 @@ class AppearanceSetting extends React.Component<
         </p>
         <ul className="tts-highlight-style-tabs">
           {highlightStyleTypes.map((item) => {
-            const previewColor = getSearchHighlightColor(
-              item.value,
-              searchHighlightConfig
-            );
+            const previewColor =
+              item.value === styleType
+                ? currentColor
+                : highlightPresetColors[item.value][0];
             return (
               <li
                 key={item.value}
@@ -493,7 +440,7 @@ class AppearanceSetting extends React.Component<
             <li
               key={color}
               className={
-                !isCustomSelected && currentEntry.presetIndex === index
+                !isCustomSelected && presetColors.indexOf(currentColor) === index
                   ? "tts-highlight-color-item active-tts-highlight-color"
                   : "tts-highlight-color-item"
               }
@@ -514,9 +461,7 @@ class AppearanceSetting extends React.Component<
               this.setState({
                 isShowSearchCustomColorPicker:
                   !this.state.isShowSearchCustomColorPicker,
-                pendingSearchCustomColor: isCustomSelected
-                  ? currentColor
-                  : currentEntry.customColor,
+                pendingSearchCustomColor: currentColor,
               });
             }}
           >

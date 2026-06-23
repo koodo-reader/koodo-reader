@@ -1,65 +1,80 @@
 import type { CSSProperties } from "react";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import {
-  defaultHighlightConfig,
-  HighlightConfig,
+  DEFAULT_HIGHLIGHT_VALUE,
   HighlightStyleType,
-  highlightPresetColors,
+  SEARCH_HIGHLIGHT_CONFIG_KEY,
+  TTS_HIGHLIGHT_CONFIG_KEY,
 } from "../../constants/highlightList";
 
-const HIGHLIGHT_KEY = "global";
-export const TTS_HIGHLIGHT_STORE = "ttsHighlightConfig";
-export const SEARCH_HIGHLIGHT_STORE = "searchHighlightConfig";
+const VALID_STYLE_TYPES = new Set<HighlightStyleType>([
+  "background",
+  "underline",
+  "strikethrough",
+  "border",
+]);
 
-export function getHighlightConfig(
-  storeKey: string,
-  storeName: string,
-  defaults: HighlightConfig
-): HighlightConfig {
-  const stored = ConfigService.getObjectConfig(
-    storeKey,
-    storeName,
-    null
-  ) as Partial<HighlightConfig> | null;
+export interface HighlightValue {
+  styleType: HighlightStyleType;
+  color: string;
+}
 
-  if (!stored) {
-    return { ...defaults };
+export function parseHighlightValue(raw?: string | null): HighlightValue {
+  if (!raw) {
+    return parseHighlightValue(DEFAULT_HIGHLIGHT_VALUE);
   }
 
-  const styles = { ...defaults.styles };
-  (Object.keys(styles) as HighlightStyleType[]).forEach((type) => {
-    if (stored.styles?.[type]) {
-      styles[type] = {
-        ...styles[type],
-        ...stored.styles[type],
-      };
-    }
-  });
+  const dashIndex = raw.indexOf("-");
+  if (dashIndex <= 0) {
+    return parseHighlightValue(DEFAULT_HIGHLIGHT_VALUE);
+  }
 
-  return {
-    styleType: stored.styleType || defaults.styleType,
-    styles,
-  };
+  const styleType = raw.slice(0, dashIndex) as HighlightStyleType;
+  const color = raw.slice(dashIndex + 1);
+
+  if (!VALID_STYLE_TYPES.has(styleType) || !color) {
+    return parseHighlightValue(DEFAULT_HIGHLIGHT_VALUE);
+  }
+
+  return { styleType, color };
 }
 
-export function saveHighlightConfig(
-  storeKey: string,
-  storeName: string,
-  config: HighlightConfig
-): void {
-  ConfigService.setObjectConfig(storeKey, config, storeName);
-}
-
-export function getHighlightColor(
+export function formatHighlightValue(
   styleType: HighlightStyleType,
-  config: HighlightConfig,
-  presetColors: Record<HighlightStyleType, string[]> = highlightPresetColors
+  color: string
 ): string {
-  const entry = config.styles[styleType];
-  if (entry.presetIndex >= 0) {
-    return presetColors[styleType][entry.presetIndex];
-  }
-  return entry.customColor;
+  return `${styleType}-${color}`;
+}
+
+function loadHighlightValue(configKey: string): HighlightValue {
+  const raw = ConfigService.getReaderConfig(configKey);
+  return parseHighlightValue(raw || DEFAULT_HIGHLIGHT_VALUE);
+}
+
+function saveHighlightValue(
+  configKey: string,
+  value: HighlightValue
+): void {
+  ConfigService.setReaderConfig(
+    configKey,
+    formatHighlightValue(value.styleType, value.color)
+  );
+}
+
+export function getTtsHighlightValue(): HighlightValue {
+  return loadHighlightValue(TTS_HIGHLIGHT_CONFIG_KEY);
+}
+
+export function saveTtsHighlightValue(value: HighlightValue): void {
+  saveHighlightValue(TTS_HIGHLIGHT_CONFIG_KEY, value);
+}
+
+export function getSearchHighlightValue(): HighlightValue {
+  return loadHighlightValue(SEARCH_HIGHLIGHT_CONFIG_KEY);
+}
+
+export function saveSearchHighlightValue(value: HighlightValue): void {
+  saveHighlightValue(SEARCH_HIGHLIGHT_CONFIG_KEY, value);
 }
 
 export function buildHighlightStyleForType(
@@ -101,68 +116,16 @@ export function buildHighlightPreviewStyle(
   }
 }
 
-export function buildHighlightStyle(
-  config: HighlightConfig | undefined,
-  getConfig: () => HighlightConfig,
-  presetColors: Record<HighlightStyleType, string[]> = highlightPresetColors
-): string {
-  const resolved = config || getConfig();
-  const color = getHighlightColor(resolved.styleType, resolved, presetColors);
-  return buildHighlightStyleForType(resolved.styleType, color);
-}
-
-export function getTtsHighlightConfig(): HighlightConfig {
-  return getHighlightConfig(
-    HIGHLIGHT_KEY,
-    TTS_HIGHLIGHT_STORE,
-    defaultHighlightConfig
-  );
-}
-
-export function saveTtsHighlightConfig(config: HighlightConfig): void {
-  saveHighlightConfig(HIGHLIGHT_KEY, TTS_HIGHLIGHT_STORE, config);
-}
-
-export function getTtsHighlightColor(
-  styleType: HighlightStyleType,
-  config?: HighlightConfig
-): string {
-  const resolved = config || getTtsHighlightConfig();
-  return getHighlightColor(styleType, resolved, highlightPresetColors);
-}
-
-export function buildTtsHighlightStyle(config?: HighlightConfig): string {
-  return buildHighlightStyle(config, getTtsHighlightConfig, highlightPresetColors);
+export function buildTtsHighlightStyle(): string {
+  const { styleType, color } = getTtsHighlightValue();
+  return buildHighlightStyleForType(styleType, color);
 }
 
 export const buildTtsHighlightPreviewStyle = buildHighlightPreviewStyle;
 
-export function getSearchHighlightConfig(): HighlightConfig {
-  return getHighlightConfig(
-    HIGHLIGHT_KEY,
-    SEARCH_HIGHLIGHT_STORE,
-    defaultHighlightConfig
-  );
-}
-
-export function saveSearchHighlightConfig(config: HighlightConfig): void {
-  saveHighlightConfig(HIGHLIGHT_KEY, SEARCH_HIGHLIGHT_STORE, config);
-}
-
-export function getSearchHighlightColor(
-  styleType: HighlightStyleType,
-  config?: HighlightConfig
-): string {
-  const resolved = config || getSearchHighlightConfig();
-  return getHighlightColor(styleType, resolved, highlightPresetColors);
-}
-
-export function buildSearchHighlightStyle(config?: HighlightConfig): string {
-  return buildHighlightStyle(
-    config,
-    getSearchHighlightConfig,
-    highlightPresetColors
-  );
+export function buildSearchHighlightStyle(): string {
+  const { styleType, color } = getSearchHighlightValue();
+  return buildHighlightStyleForType(styleType, color);
 }
 
 export const buildSearchHighlightPreviewStyle = buildHighlightPreviewStyle;

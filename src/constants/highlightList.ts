@@ -4,16 +4,6 @@ export type HighlightStyleType =
   | "strikethrough"
   | "border";
 
-export interface HighlightStyleEntry {
-  presetIndex: number;
-  customColor: string;
-}
-
-export interface HighlightConfig {
-  styleType: HighlightStyleType;
-  styles: Record<HighlightStyleType, HighlightStyleEntry>;
-}
-
 export const highlightStyleTypes: {
   value: HighlightStyleType;
   label: string;
@@ -37,12 +27,6 @@ export const highlightPresetColors: Record<HighlightStyleType, string[]> = {
   border: ["#F16464", "#0179CA", "#008F91", "#6867D1", "#F97316"],
 };
 
-export const defaultHighlightConfig: HighlightConfig = {
-  styleType: "background",
-  styles: {
-    background: { presetIndex: 0, customColor: "#f3a6a68c" },
-    underline: { presetIndex: 0, customColor: "#F16464" },
-    strikethrough: { presetIndex: 0, customColor: "#F16464" },
-    border: { presetIndex: 0, customColor: "#F16464" },
-  },
-};
+export const DEFAULT_HIGHLIGHT_VALUE = "background-#f3a6a68c";
+export const TTS_HIGHLIGHT_CONFIG_KEY = "ttsHighlight";
+export const SEARCH_HIGHLIGHT_CONFIG_KEY = "searchHighlight";
