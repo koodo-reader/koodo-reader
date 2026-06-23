@@ -367,10 +367,10 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             </select>
           </div>
 
-          <div className="dict-service-container" style={{ right: 150 }}>
+          <div className="dict-service-container" style={{ right: 130 }}>
             <select
               className="dict-service-selector"
-              style={{ margin: 0 }}
+              style={{ margin: 0, width: "80px" }}
               value={this.state.dictTarget}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 this.setState(
@@ -400,6 +400,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       value={item.code}
                       key={item.code}
                       className="add-dialog-shelf-list-option"
+                      style={{ width: "80px" }}
                     >
                       {this.props.t(item["nativeLang"])}
                     </option>
