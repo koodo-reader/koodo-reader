@@ -25,6 +25,7 @@ import {
   clearDiscordPresence,
 } from "../../utils/reader/discordRPC";
 import SupportDialog from "../../components/dialogs/supportDialog";
+import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
 
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
@@ -141,6 +142,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         isMouseMoving = false;
       }, 100);
     });
+    window.addEventListener(
+      READING_PANEL_TOGGLE_EVENT,
+      this.handleReadingPanelToggle
+    );
   }
   async UNSAFE_componentWillMount() {
     let url = document.location.href;
@@ -183,6 +188,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   }
 
   componentWillUnmount() {
+    window.removeEventListener(
+      READING_PANEL_TOGGLE_EVENT,
+      this.handleReadingPanelToggle
+    );
     if (isElectron) {
       clearDiscordPresence();
     }
@@ -304,6 +313,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         break;
       default:
         break;
+    }
+  };
+  handleReadingPanelToggle = (event: Event) => {
+    const position = (event as CustomEvent<{ position: string }>).detail
+      ?.position;
+    if (!PANEL_POSITIONS.includes(position as PanelPosition)) return;
+    const stateKey = PANEL_OPEN_STATE[position as PanelPosition];
+    if (this.state[stateKey]) {
+      this.handleLeaveReader(position);
+    } else {
+      this.handleEnterReader(position);
     }
   };
   handleLocation = () => {
