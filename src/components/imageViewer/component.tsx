@@ -105,7 +105,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
       await rendition[direction === "next" ? "nextChapter" : "prevChapter"]();
       if ((rendition.getPosition()?.chapterHref || "") === prevHref)
         return null;
-      const list = rendition.getImageList?.() || [];
+      const list = (await rendition.getImageList?.()) || [];
       if (list.length) return list;
     }
   };
@@ -157,7 +157,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     await this.shiftImage(isPrevKey(keyCode, readerMode) ? -1 : 1);
   };
 
-  showImage = (event: any) => {
+  showImage = async (event: any) => {
     event.preventDefault();
     if (this.props.isShow) {
       ["left", "right", "top", "bottom"].forEach((pos) =>
@@ -203,7 +203,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     }
     if (!href) return;
 
-    const list = this.props.rendition.getImageList?.() || [];
+    const list = (await this.props.rendition.getImageList?.()) || [];
     const images = list.length ? list : [href];
     this.setState({ isShowImage: true });
     this.showAt(findImageIndex(href, images), images);
