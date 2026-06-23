@@ -54,3 +54,38 @@ export function addBooksToShelf(
   }
   return added;
 }
+
+export function addBooksToFavorite(bookKeys: string[]): number {
+  const existing = new Set<string>(
+    ConfigService.getAllListConfig("favoriteBooks")
+  );
+  const deleted = new Set<string>(
+    ConfigService.getAllListConfig("deletedBooks")
+  );
+  let added = 0;
+  for (const key of bookKeys) {
+    if (existing.has(key)) continue;
+    ConfigService.setListConfig(key, "favoriteBooks");
+    if (deleted.has(key)) {
+      ConfigService.deleteListConfig(key, "deletedBooks");
+    }
+    existing.add(key);
+    added++;
+  }
+  return added;
+}
+
+export function moveBooksToTrash(bookKeys: string[]): number {
+  const existing = new Set<string>(
+    ConfigService.getAllListConfig("deletedBooks")
+  );
+  let moved = 0;
+  for (const key of bookKeys) {
+    if (existing.has(key)) continue;
+    ConfigService.setListConfig(key, "deletedBooks");
+    ConfigService.deleteListConfig(key, "favoriteBooks");
+    existing.add(key);
+    moved++;
+  }
+  return moved;
+}
