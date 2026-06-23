@@ -51,6 +51,26 @@ export const shortcutList: ShortcutListItem[] = [
     desc: "Open the navigation panel",
   },
   {
+    action: "openLeftPanel",
+    title: "Open left reading panel",
+    desc: "Open or close the left reading panel",
+  },
+  {
+    action: "openRightPanel",
+    title: "Open right reading panel",
+    desc: "Open or close the right reading panel",
+  },
+  {
+    action: "openTopPanel",
+    title: "Open top reading panel",
+    desc: "Open or close the top reading panel",
+  },
+  {
+    action: "openBottomPanel",
+    title: "Open bottom reading panel",
+    desc: "Open or close the bottom reading panel",
+  },
+  {
     action: "selectionTranslate",
     title: "Translate selection",
     desc: "Translate the currently selected text",

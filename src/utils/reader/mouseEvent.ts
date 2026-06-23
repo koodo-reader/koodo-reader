@@ -124,11 +124,39 @@ const SELECTION_SHORTCUT_OPTIONS: Array<{
   { shortcut: "selectionSpeak", optionName: "speaker" },
 ];
 
-export const openTableOfContents = () => {
-  let leftPanel = document.querySelector(".left-panel");
-  if (!leftPanel) return;
-  leftPanel.dispatchEvent(clickEvent());
+export const READING_PANEL_TOGGLE_EVENT = "koodo-reading-panel-toggle";
+
+export const openReadingPanel = (
+  position: "left" | "right" | "top" | "bottom"
+) => {
+  const panel = document.querySelector(`.${position}-panel`);
+  if (!panel) return;
+  panel.dispatchEvent(clickEvent());
 };
+
+export const toggleReadingPanel = (
+  position: "left" | "right" | "top" | "bottom"
+) => {
+  window.dispatchEvent(
+    new CustomEvent(READING_PANEL_TOGGLE_EVENT, {
+      detail: { position },
+    })
+  );
+};
+
+export const openTableOfContents = () => {
+  openReadingPanel("left");
+};
+
+const READING_PANEL_SHORTCUTS: Array<{
+  shortcut: ShortcutAction;
+  position: "left" | "right" | "top" | "bottom";
+}> = [
+  { shortcut: "openLeftPanel", position: "left" },
+  { shortcut: "openRightPanel", position: "right" },
+  { shortcut: "openTopPanel", position: "top" },
+  { shortcut: "openBottomPanel", position: "bottom" },
+];
 let lock = false; //prevent from clicking too fasts
 const arrowKeys = async (
   rendition: any,
@@ -213,6 +241,13 @@ const handleShortcut = (event: any, format: string, bookKey: string) => {
   if (matchShortcut(event, shortcuts.openToc)) {
     event.preventDefault();
     openTableOfContents();
+  }
+  for (const { shortcut, position } of READING_PANEL_SHORTCUTS) {
+    if (matchShortcut(event, shortcuts[shortcut])) {
+      event.preventDefault();
+      toggleReadingPanel(position);
+      break;
+    }
   }
   if (
     matchShortcut(event, shortcuts.searchSelectedInBook) &&

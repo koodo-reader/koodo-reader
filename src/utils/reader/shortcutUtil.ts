@@ -16,6 +16,10 @@ export type ShortcutAction =
   | "exitReader"
   | "searchInBook"
   | "openToc"
+  | "openLeftPanel"
+  | "openRightPanel"
+  | "openTopPanel"
+  | "openBottomPanel"
   | "selectionTranslate"
   | "selectionDict"
   | "selectionNote"
@@ -34,6 +38,10 @@ export const SHORTCUT_ACTIONS: ShortcutAction[] = [
   "exitReader",
   "searchInBook",
   "openToc",
+  "openLeftPanel",
+  "openRightPanel",
+  "openTopPanel",
+  "openBottomPanel",
   "selectionTranslate",
   "selectionDict",
   "selectionNote",
@@ -156,6 +164,10 @@ export const DEFAULT_SHORTCUT_CONFIG: ShortcutConfig = {
   exitReader: [{ keyCode: 27 }],
   searchInBook: [{ keyCode: 70, ctrl: true }],
   openToc: [{ keyCode: 66, ctrl: true }],
+  openLeftPanel: [{ keyCode: 117 }],
+  openRightPanel: [{ keyCode: 118 }],
+  openTopPanel: [{ keyCode: 119 }],
+  openBottomPanel: [{ keyCode: 120 }],
   selectionTranslate: [{ keyCode: 84, ctrl: true, shift: true }],
   selectionDict: [{ keyCode: 68, ctrl: true, shift: true }],
   selectionNote: [{ keyCode: 78, ctrl: true, shift: true }],
