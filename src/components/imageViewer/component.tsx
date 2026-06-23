@@ -3,20 +3,17 @@ import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
 import { saveAs } from "file-saver";
 import { getIframeDoc } from "../../utils/reader/docUtil";
+import {
+  getShortcutConfig,
+  isNextPageKey,
+  isPrevPageKey,
+  matchShortcut,
+} from "../../utils/reader/shortcutUtil";
 import toast from "react-hot-toast";
 declare var window: any;
 declare var ClipboardItem: any;
 
 const NAV_LOCK_MS = 100;
-
-const isPrevKey = (code: number, readerMode: string) =>
-  code === 33 || code === 37 || (code === 38 && readerMode !== "scroll");
-
-const isNextKey = (code: number, readerMode: string) =>
-  code === 32 ||
-  code === 34 ||
-  code === 39 ||
-  (code === 40 && readerMode !== "scroll");
 
 const findImageIndex = (href: string, list: string[]) => {
   if (!href || !list.length) return 0;
@@ -137,24 +134,27 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     const tag = (keyEvent.target as HTMLElement)?.tagName?.toLowerCase();
     if (tag === "textarea" || tag === "input") return;
 
-    const { keyCode } = keyEvent;
     const { readerMode } = this.props;
+    const shortcuts = getShortcutConfig();
 
-    if (keyCode === 27) {
+    if (matchShortcut(keyEvent, shortcuts.exitReader)) {
       keyEvent.preventDefault();
       keyEvent.stopPropagation();
       this.hideImage(keyEvent);
       return;
     }
 
-    if (!isPrevKey(keyCode, readerMode) && !isNextKey(keyCode, readerMode)) {
+    if (
+      !isPrevPageKey(keyEvent, readerMode) &&
+      !isNextPageKey(keyEvent, readerMode)
+    ) {
       return;
     }
 
     keyEvent.preventDefault();
     keyEvent.stopPropagation();
     keyEvent.stopImmediatePropagation();
-    await this.shiftImage(isPrevKey(keyCode, readerMode) ? -1 : 1);
+    await this.shiftImage(isPrevPageKey(keyEvent, readerMode) ? -1 : 1);
   };
 
   showImage = async (event: any) => {

@@ -4,6 +4,12 @@ import { getIframeDoc, getIframeWin } from "./docUtil";
 import { handleExitFullScreen, handleFullScreen, sleep } from "../common";
 import Hammer from "hammerjs";
 import TTSUtil from "./ttsUtil";
+import {
+  getShortcutConfig,
+  isNextPageKey,
+  isPrevPageKey,
+  matchShortcut,
+} from "./shortcutUtil";
 declare var window: any;
 
 let throttleTime =
@@ -109,7 +115,6 @@ export const openTableOfContents = () => {
 let lock = false; //prevent from clicking too fasts
 const arrowKeys = async (
   rendition: any,
-  keyCode: number,
   event: any,
   readerMode: string
 ) => {
@@ -119,16 +124,10 @@ const arrowKeys = async (
   ) {
     return;
   }
-  if (readerMode === "scroll" && (keyCode === 38 || keyCode === 40)) {
-  } else if (keyCode === 33 || keyCode === 37 || keyCode === 38) {
+  if (isPrevPageKey(event, readerMode)) {
     event.preventDefault();
     await rendition.prev();
-  } else if (
-    keyCode === 32 ||
-    keyCode === 34 ||
-    keyCode === 39 ||
-    keyCode === 40
-  ) {
+  } else if (isNextPageKey(event, readerMode)) {
     event.preventDefault();
     await rendition.next();
   }
@@ -145,13 +144,14 @@ const mouseChrome = async (rendition: any, deltaY: number) => {
 };
 
 const handleShortcut = (event: any) => {
-  if (event.keyCode === 9) {
+  const shortcuts = getShortcutConfig();
+  if (matchShortcut(event, shortcuts.bossKey)) {
     if (isElectron) {
       event.preventDefault();
       window.require("electron").ipcRenderer.invoke("hide-reader", "ping");
     }
   }
-  if (event.keyCode === 27) {
+  if (matchShortcut(event, shortcuts.exitReader)) {
     if (ConfigService.getReaderConfig("isFullscreen") === "yes") {
       ConfigService.setReaderConfig("isFullscreen", "no");
       handleExitFullScreen();
@@ -171,13 +171,13 @@ const handleShortcut = (event: any) => {
       }
     }
   }
-  if (event.keyCode === 122) {
+  if (matchShortcut(event, shortcuts.toggleFullscreen)) {
     event.preventDefault();
     const entering = ConfigService.getReaderConfig("isFullscreen") !== "yes";
     entering ? handleFullScreen() : handleExitFullScreen();
     ConfigService.setReaderConfig("isFullscreen", entering ? "yes" : "no");
   }
-  if (event.keyCode === 123) {
+  if (matchShortcut(event, shortcuts.toggleFishMode)) {
     if (isElectron && ConfigService.getReaderConfig("isMergeWord")) {
       event.preventDefault();
       ConfigService.setReaderConfig(
@@ -187,11 +187,11 @@ const handleShortcut = (event: any) => {
       window.require("electron").ipcRenderer.invoke("switch-moyu", "ping");
     }
   }
-  if (event.keyCode === 70 && event.ctrlKey) {
+  if (matchShortcut(event, shortcuts.searchInBook)) {
     event.preventDefault();
     searchInTheBook("", "", false);
   }
-  if (event.keyCode === 66 && event.ctrlKey) {
+  if (matchShortcut(event, shortcuts.openToc)) {
     event.preventDefault();
     openTableOfContents();
   }
@@ -243,7 +243,7 @@ export const bindHtmlEvent = (
     async (event) => {
       if (lock) return;
       lock = true;
-      await arrowKeys(rendition, event.keyCode, event, readerMode);
+      await arrowKeys(rendition, event, readerMode);
       handleLocation(key, rendition);
       setTimeout(() => (lock = false), throttleTime);
     },
@@ -298,7 +298,7 @@ export const bindHtmlEvent = (
     async (event) => {
       if (lock) return;
       lock = true;
-      await arrowKeys(rendition, event.keyCode, event, readerMode);
+      await arrowKeys(rendition, event, readerMode);
       handleLocation(key, rendition);
       setTimeout(() => (lock = false), throttleTime);
     },
