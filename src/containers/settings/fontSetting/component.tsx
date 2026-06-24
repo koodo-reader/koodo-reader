@@ -26,6 +26,7 @@ class FontSetting extends React.Component<
       loadedUrls: {},
       isLoading: true,
       previewFont: null,
+      previewLoading: false,
       appFontKey: ConfigService.getReaderConfig("systemFont") || "",
       readerFontKey: ConfigService.getReaderConfig("fontFamily") || "",
       showFeatured: false,
@@ -51,21 +52,15 @@ class FontSetting extends React.Component<
     this.setState({ isLoading: true });
     const ids = FontUtil.getFontIds();
     const fonts: InstalledFont[] = [];
-    const loadedUrls: Record<string, string> = { ...this.state.loadedUrls };
 
     for (const id of ids) {
       const meta = FontUtil.getFontMeta(id);
       if (!meta) continue;
       fonts.push({ key: id, ...meta });
-      if (!loadedUrls[id]) {
-        const url = await FontUtil.getFontUrl(id);
-        if (url) loadedUrls[id] = url;
-      }
     }
 
     this.setState({
       fonts,
-      loadedUrls,
       isLoading: false,
       appFontKey: ConfigService.getReaderConfig("systemFont") || "",
       readerFontKey: ConfigService.getReaderConfig("fontFamily") || "",
@@ -100,7 +95,6 @@ class FontSetting extends React.Component<
       const label = file.name.replace(/\.[^.]+$/, "");
       FontUtil.saveFontMeta(fontKey, { label, value: fontKey, type: ext });
       FontUtil.addFontId(fontKey);
-      const url = await FontUtil.getFontUrl(fontKey);
       const newFont: InstalledFont = {
         key: fontKey,
         label,
@@ -109,7 +103,6 @@ class FontSetting extends React.Component<
       };
       this.setState((prev) => ({
         fonts: [...prev.fonts, newFont],
-        loadedUrls: url ? { ...prev.loadedUrls, [fontKey]: url } : prev.loadedUrls,
       }));
       FontUtil.notifyFontListChanged();
       toast.success(this.props.t("Font added successfully"));
@@ -138,6 +131,8 @@ class FontSetting extends React.Component<
         loadedUrls: updatedUrls,
         previewFont:
           prev.previewFont?.key === font.key ? null : prev.previewFont,
+        previewLoading:
+          prev.previewFont?.key === font.key ? false : prev.previewLoading,
         appFontKey: prev.appFontKey === font.key ? "" : prev.appFontKey,
         readerFontKey:
           prev.readerFontKey === font.key ? "" : prev.readerFontKey,
@@ -150,12 +145,35 @@ class FontSetting extends React.Component<
     }
   };
 
-  handlePreview = (font: InstalledFont) => {
-    this.setState({ previewFont: font });
+  handlePreview = async (font: InstalledFont) => {
+    this.setState({ previewFont: font, previewLoading: true });
+    let url = this.state.loadedUrls[font.key];
+    if (!url) {
+      url = await FontUtil.getFontUrl(font.key);
+      if (!url) {
+        toast.error(this.props.t("Import failed"));
+        this.setState({ previewFont: null, previewLoading: false });
+        return;
+      }
+      await new Promise<void>((resolve) => {
+        this.setState(
+          (prev) => ({
+            loadedUrls: { ...prev.loadedUrls, [font.key]: url },
+          }),
+          resolve
+        );
+      });
+    }
+    try {
+      await document.fonts.load(`16px "${font.key}"`);
+    } catch {
+      // font may still render via @font-face injection
+    }
+    this.setState({ previewLoading: false });
   };
 
   handleClosePreview = () => {
-    this.setState({ previewFont: null });
+    this.setState({ previewFont: null, previewLoading: false });
   };
 
   handleSetAppFont = async (font: InstalledFont) => {
@@ -433,12 +451,22 @@ class FontSetting extends React.Component<
   };
 
   render() {
-    const { fonts, loadedUrls, isLoading, showFeatured, previewFont } =
-      this.state;
+    const {
+      fonts,
+      loadedUrls,
+      isLoading,
+      showFeatured,
+      previewFont,
+      previewLoading,
+    } = this.state;
 
     return (
       <>
-        {fonts.map((font) => this.injectFontFace(font.key, loadedUrls[font.key]))}
+        {previewFont &&
+          this.injectFontFace(
+            previewFont.key,
+            loadedUrls[previewFont.key]
+          )}
 
         <div className="font-setting-grid">
           {isLoading ? (
@@ -463,15 +491,6 @@ class FontSetting extends React.Component<
                 onClick={() => this.handlePreview(font)}
                 title={font.label}
               >
-                <div
-                  className="font-setting-preview"
-                  style={this.renderFontPreviewStyle(
-                    font.key,
-                    loadedUrls[font.key]
-                  )}
-                >
-                  Aa 字体 123
-                </div>
                 <div className="font-setting-label" title={font.label}>
                   {font.label}
                 </div>
@@ -524,23 +543,34 @@ class FontSetting extends React.Component<
               className="font-preview-close icon-close"
               onClick={this.handleClosePreview}
             />
-            <div
-              className="font-preview-content"
-              style={this.renderFontPreviewStyle(
-                previewFont.key,
-                loadedUrls[previewFont.key]
-              )}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="font-preview-sample">Aa 字体 123</div>
-              <div className="font-preview-paragraph">
-                <Trans>
-                  The quick brown fox jumps over the lazy dog. 天地玄黄，宇宙洪荒。
-                </Trans>
+            {previewLoading ? (
+              <div
+                className="font-preview-content font-preview-loading"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Trans>Loading...</Trans>
               </div>
-              <div className="font-preview-name">{previewFont.label}</div>
-            </div>
-            {this.renderPreviewActions(previewFont)}
+            ) : (
+              <>
+                <div
+                  className="font-preview-content"
+                  style={this.renderFontPreviewStyle(
+                    previewFont.key,
+                    loadedUrls[previewFont.key]
+                  )}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="font-preview-sample">Aa 字体 123</div>
+                  <div className="font-preview-paragraph">
+                    <Trans>
+                      The quick brown fox jumps over the lazy dog. 天地玄黄，宇宙洪荒。
+                    </Trans>
+                  </div>
+                  <div className="font-preview-name">{previewFont.label}</div>
+                </div>
+                {this.renderPreviewActions(previewFont)}
+              </>
+            )}
           </div>
         )}
       </>

@@ -7,7 +7,7 @@
 
 .font-setting-item {
   width: 140px;
-  height: 90px;
+  height: 64px;
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
@@ -47,20 +47,9 @@
   pointer-events: none;
 }
 
-.font-setting-preview {
-  font-size: 22px;
-  line-height: 1.2;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-}
-
 .font-setting-label {
-  font-size: 11px;
-  opacity: 0.65;
-  margin-top: 6px;
+  font-size: 13px;
+  opacity: 0.85;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -275,4 +264,9 @@
   display: flex;
   gap: 14px;
   margin-top: 20px;
+}
+
+.font-preview-loading {
+  min-width: 200px;
+  opacity: 0.7;
 }

@@ -15,6 +15,7 @@ export interface SettingInfoState {
   loadedUrls: Record<string, string>;
   isLoading: boolean;
   previewFont: InstalledFont | null;
+  previewLoading: boolean;
   appFontKey: string;
   readerFontKey: string;
   showFeatured: boolean;
