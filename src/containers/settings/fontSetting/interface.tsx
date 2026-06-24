@@ -3,6 +3,7 @@ import { FontItem } from "../../../utils/file/fontUtil";
 
 export interface SettingInfoProps extends RouteComponentProps<any> {
   t: (title: string) => string;
+  renderBookFunc?: () => void;
 }
 
 export interface InstalledFont extends FontItem {
@@ -13,6 +14,9 @@ export interface SettingInfoState {
   fonts: InstalledFont[];
   loadedUrls: Record<string, string>;
   isLoading: boolean;
+  previewFont: InstalledFont | null;
+  appFontKey: string;
+  readerFontKey: string;
   showFeatured: boolean;
   expandedFamily: string;
   downloadingId: string;

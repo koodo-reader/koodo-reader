@@ -10,6 +10,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import FontUtil from "../../../utils/file/fontUtil";
 import { ChineseFonts, NonChineseFonts } from "../../../constants/fontConfig";
+import { applyCustomSystemFont } from "../../../utils/reader/launchUtil";
 
 class FontSetting extends React.Component<
   SettingInfoProps,
@@ -24,6 +25,9 @@ class FontSetting extends React.Component<
       fonts: [],
       loadedUrls: {},
       isLoading: true,
+      previewFont: null,
+      appFontKey: ConfigService.getReaderConfig("systemFont") || "",
+      readerFontKey: ConfigService.getReaderConfig("fontFamily") || "",
       showFeatured: false,
       expandedFamily: "",
       downloadingId: "",
@@ -59,7 +63,13 @@ class FontSetting extends React.Component<
       }
     }
 
-    this.setState({ fonts, loadedUrls, isLoading: false });
+    this.setState({
+      fonts,
+      loadedUrls,
+      isLoading: false,
+      appFontKey: ConfigService.getReaderConfig("systemFont") || "",
+      readerFontKey: ConfigService.getReaderConfig("fontFamily") || "",
+    });
   };
 
   handleImportClick = () => {
@@ -126,6 +136,11 @@ class FontSetting extends React.Component<
       this.setState((prev) => ({
         fonts: prev.fonts.filter((f) => f.key !== font.key),
         loadedUrls: updatedUrls,
+        previewFont:
+          prev.previewFont?.key === font.key ? null : prev.previewFont,
+        appFontKey: prev.appFontKey === font.key ? "" : prev.appFontKey,
+        readerFontKey:
+          prev.readerFontKey === font.key ? "" : prev.readerFontKey,
       }));
       FontUtil.notifyFontListChanged();
       toast.success(this.props.t("Deletion successful"));
@@ -133,6 +148,105 @@ class FontSetting extends React.Component<
       console.error(err);
       toast.error(this.props.t("Deletion failed"));
     }
+  };
+
+  handlePreview = (font: InstalledFont) => {
+    this.setState({ previewFont: font });
+  };
+
+  handleClosePreview = () => {
+    this.setState({ previewFont: null });
+  };
+
+  handleSetAppFont = async (font: InstalledFont) => {
+    ConfigService.setReaderConfig("systemFont", font.key);
+    await applyCustomSystemFont();
+    this.setState({ appFontKey: font.key });
+    FontUtil.notifyFontListChanged();
+    toast.success(this.props.t("Change successful"));
+  };
+
+  handleClearAppFont = async () => {
+    ConfigService.setReaderConfig("systemFont", "");
+    await applyCustomSystemFont();
+    this.setState({ appFontKey: "" });
+    FontUtil.notifyFontListChanged();
+    toast.success(this.props.t("Change successful"));
+  };
+
+  handleSetReaderFont = (font: InstalledFont) => {
+    ConfigService.setReaderConfig("fontFamily", font.key);
+    this.setState({ readerFontKey: font.key });
+    FontUtil.notifyFontListChanged();
+    this.props.renderBookFunc?.();
+    toast.success(this.props.t("Change successful"));
+  };
+
+  handleClearReaderFont = () => {
+    ConfigService.setReaderConfig("fontFamily", "");
+    this.setState({ readerFontKey: "" });
+    FontUtil.notifyFontListChanged();
+    this.props.renderBookFunc?.();
+    toast.success(this.props.t("Change successful"));
+  };
+
+  renderBadge = (font: InstalledFont) => {
+    const isApp = this.state.appFontKey === font.key;
+    const isReader = this.state.readerFontKey === font.key;
+    if (!isApp && !isReader) return null;
+    return (
+      <span className="font-setting-badge">
+        {isApp && <Trans>App</Trans>}
+        {isApp && isReader && " · "}
+        {isReader && <Trans>Reader</Trans>}
+      </span>
+    );
+  };
+
+  renderPreviewActions = (previewFont: InstalledFont) => {
+    const isApp = this.state.appFontKey === previewFont.key;
+    const isReader = this.state.readerFontKey === previewFont.key;
+    return (
+      <div
+        className="font-preview-actions"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {isApp ? (
+          <span
+            className="change-location-button"
+            style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
+            onClick={this.handleClearAppFont}
+          >
+            <Trans>Clear app font</Trans>
+          </span>
+        ) : (
+          <span
+            className="change-location-button"
+            style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
+            onClick={() => this.handleSetAppFont(previewFont)}
+          >
+            <Trans>Set as app font</Trans>
+          </span>
+        )}
+        {isReader ? (
+          <span
+            className="change-location-button"
+            style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
+            onClick={this.handleClearReaderFont}
+          >
+            <Trans>Clear book font</Trans>
+          </span>
+        ) : (
+          <span
+            className="change-location-button"
+            style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
+            onClick={() => this.handleSetReaderFont(previewFont)}
+          >
+            <Trans>Set as book font</Trans>
+          </span>
+        )}
+      </div>
+    );
   };
 
   getFeaturedFontList = () => {
@@ -319,7 +433,8 @@ class FontSetting extends React.Component<
   };
 
   render() {
-    const { fonts, loadedUrls, isLoading, showFeatured } = this.state;
+    const { fonts, loadedUrls, isLoading, showFeatured, previewFont } =
+      this.state;
 
     return (
       <>
@@ -336,7 +451,18 @@ class FontSetting extends React.Component<
             </div>
           ) : (
             fonts.map((font) => (
-              <div key={font.key} className="font-setting-item">
+              <div
+                key={font.key}
+                className={
+                  "font-setting-item" +
+                  (this.state.appFontKey === font.key ||
+                  this.state.readerFontKey === font.key
+                    ? " active-font-item"
+                    : "")
+                }
+                onClick={() => this.handlePreview(font)}
+                title={font.label}
+              >
                 <div
                   className="font-setting-preview"
                   style={this.renderFontPreviewStyle(
@@ -350,6 +476,7 @@ class FontSetting extends React.Component<
                   {font.label}
                 </div>
                 <div className="font-setting-type">{font.type}</div>
+                {this.renderBadge(font)}
                 <span
                   className="font-setting-delete icon-close"
                   onClick={(e) => this.handleDelete(e, font)}
@@ -387,6 +514,35 @@ class FontSetting extends React.Component<
         </div>
 
         {showFeatured && this.renderFeaturedPanel()}
+
+        {previewFont && (
+          <div
+            className="font-preview-overlay"
+            onClick={this.handleClosePreview}
+          >
+            <span
+              className="font-preview-close icon-close"
+              onClick={this.handleClosePreview}
+            />
+            <div
+              className="font-preview-content"
+              style={this.renderFontPreviewStyle(
+                previewFont.key,
+                loadedUrls[previewFont.key]
+              )}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="font-preview-sample">Aa 字体 123</div>
+              <div className="font-preview-paragraph">
+                <Trans>
+                  The quick brown fox jumps over the lazy dog. 天地玄黄，宇宙洪荒。
+                </Trans>
+              </div>
+              <div className="font-preview-name">{previewFont.label}</div>
+            </div>
+            {this.renderPreviewActions(previewFont)}
+          </div>
+        )}
       </>
     );
   }
