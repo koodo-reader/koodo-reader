@@ -83,38 +83,67 @@ export function saveSearchHighlightValue(value: HighlightValue): void {
     `${value.styleType}-${value.color}`
   );
 }
-
-export function buildHighlightStyleForType(colorCode: string | number): string {
-  console.log("buildHighlightStyleForType", colorCode);
+const hexToRgba = (hexColor: string, alpha: number): string => {
+  const hex = hexColor.replace("#", "");
+  const isShort = hex.length === 3;
+  const normalized = isShort
+    ? hex
+        .split("")
+        .map((ch) => ch + ch)
+        .join("")
+    : hex;
+  if (normalized.length !== 6) return hexColor;
+  const r = parseInt(normalized.slice(0, 2), 16);
+  const g = parseInt(normalized.slice(2, 4), 16);
+  const b = parseInt(normalized.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+export function buildHighlightStyleForType(
+  colorCode: string | number,
+  forPDFOverlay: boolean
+): string {
   let styleType: string = "background";
-  let color: string = "#FEF3CD";
-  console.log(
-    "colorCode",
-    colorCode,
-    typeof colorCode,
-    typeof colorCode === "number"
-  );
+  let rawColor: string = "#FEF3CD";
   if (typeof colorCode === "number") {
     if (colorCode >= 0 && colorCode < classes.length) {
       const isBackground = classes[colorCode].indexOf("color") > -1;
       const colorIdx = classes[colorCode].split("-")[1];
       styleType = isBackground ? "background" : "underline";
-      color = isBackground ? colors[colorIdx] : lines[colorIdx];
-      console.log("styleType", styleType, "color", color);
+      rawColor = isBackground ? colors[colorIdx] : lines[colorIdx];
     }
   } else {
     styleType = colorCode.split("-")[0];
-    color = colorCode.split("-")[1];
+    rawColor = colorCode.split("-")[1];
   }
+  // color is the processed value used for non-overlay cases
+  const color =
+    styleType === "background" ? hexToRgba(rawColor, 0.8) : rawColor;
 
   switch (styleType) {
     case "background":
+      if (forPDFOverlay) {
+        // Use multiply blend mode so the highlight tints the text area without
+        // covering it — the same visual effect as a physical highlighter pen.
+        // Fully opaque color is intentional: mix-blend-mode: multiply handles
+        // the visual blending; alpha transparency is not needed and would fight it.
+        return `background: ${rawColor}; mix-blend-mode: multiply;`;
+      }
       return `background: ${color};`;
     case "underline":
       return `border-bottom: 2px solid ${color};`;
     case "strikethrough":
+      if (forPDFOverlay) {
+        // text-decoration doesn't render on empty divs; simulate with a gradient line through the middle
+        return `background: linear-gradient(transparent calc(50% - 1px), ${color} calc(50% - 1px), ${color} calc(50% + 1px), transparent calc(50% + 1px));`;
+      }
       return `text-decoration: line-through; text-decoration-color: ${color};`;
     case "wavy":
+      if (forPDFOverlay) {
+        // text-decoration doesn't render on empty divs; simulate with a repeating SVG wavy line at the bottom
+        const encodedColor = rawColor.replace("#", "%23");
+        const svgWavy = `url("data:image/svg+xml,%3Csvg xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width='6' height='3'%3E%3Cpath d='M0 2 Q1.5 0 3 2 Q4.5 4 6 2' fill='none' stroke='${encodedColor}' stroke-width='1.5'%2F%3E%3C%2Fsvg%3E")`;
+        return `background-image: ${svgWavy}; background-repeat: repeat-x; background-position: bottom; background-size: 6px 3px;`;
+      }
       return `text-decoration-line: underline; text-decoration-style: wavy; text-decoration-color: ${color}; text-decoration-thickness: 2px; text-decoration-skip-ink: none;`;
     default:
       return `background: ${color};`;
@@ -147,14 +176,14 @@ export function buildHighlightPreviewStyle(
   }
 }
 
-export function buildTtsHighlightStyle(): string {
-  return buildHighlightStyleForType(getTtsHighlightString());
+export function buildTtsHighlightStyle(forPDFOverlay: boolean): string {
+  return buildHighlightStyleForType(getTtsHighlightString(), forPDFOverlay);
 }
 
 export const buildTtsHighlightPreviewStyle = buildHighlightPreviewStyle;
 
-export function buildSearchHighlightStyle(): string {
-  return buildHighlightStyleForType(getSearchHighlightString());
+export function buildSearchHighlightStyle(forPDFOverlay: boolean): string {
+  return buildHighlightStyleForType(getSearchHighlightString(), forPDFOverlay);
 }
 
 export const buildSearchHighlightPreviewStyle = buildHighlightPreviewStyle;

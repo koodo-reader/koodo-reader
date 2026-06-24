@@ -4,6 +4,7 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { LocalFileManager } from "./localFile";
 import localforage from "localforage";
 import { Buffer } from "buffer";
+import i18n from "../../i18n";
 
 declare var window: any;
 
@@ -149,9 +150,7 @@ class FontUtil {
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
       }
     } else if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
-      const extensions = ext
-        ? [ext]
-        : ["ttf", "otf", "woff", "woff2"];
+      const extensions = ext ? [ext] : ["ttf", "otf", "woff", "woff2"];
       for (const type of extensions) {
         await LocalFileManager.deleteFile(
           `${fontKey}.${type}`,
@@ -230,9 +229,9 @@ class FontUtil {
     window.dispatchEvent(new Event("font-list-changed"));
   }
 
-  static getFeaturedFontUrl(fontPath: string): string {
+  static getFeaturedFontUrl(fontPath: string, isAuthed: boolean): string {
     const base =
-      getServerRegion() === "china"
+      getServerRegion() === "china" && isAuthed
         ? "https://storage.koodoreader.cn"
         : "https://storage.koodoreader.com";
     return `${base}/fonts${fontPath}`;
@@ -245,9 +244,10 @@ class FontUtil {
       style: string;
       url: string;
     },
+    isAuthed: boolean,
     onProgress?: (progress: number) => void
   ): Promise<boolean> {
-    const url = this.getFeaturedFontUrl(font.url);
+    const url = this.getFeaturedFontUrl(font.url, isAuthed);
     const response = await fetch(url, {
       headers: {
         "Cache-Control": "no-transform",
@@ -261,7 +261,13 @@ class FontUtil {
     if (!reader) {
       const buffer = await response.arrayBuffer();
       await this.saveFont(font.id, buffer, "ttf");
-      const label = `${font.fontName} ${font.style}`;
+      const label =
+        i18n.t(font.fontName) +
+        " " +
+        font.style
+          .split(" ")
+          .map((subStyle) => i18n.t(subStyle))
+          .join(" ");
       this.saveFontMeta(font.id, { label, value: font.id, type: "ttf" });
       this.addFontId(font.id);
       this.notifyFontListChanged();
@@ -290,7 +296,13 @@ class FontUtil {
     }
 
     await this.saveFont(font.id, buffer.buffer, "ttf");
-    const label = `${font.fontName} ${font.style}`;
+    const label =
+      i18n.t(font.fontName) +
+      " " +
+      font.style
+        .split(" ")
+        .map((subStyle) => i18n.t(subStyle))
+        .join(" ");
     this.saveFontMeta(font.id, { label, value: font.id, type: "ttf" });
     this.addFontId(font.id);
     this.notifyFontListChanged();

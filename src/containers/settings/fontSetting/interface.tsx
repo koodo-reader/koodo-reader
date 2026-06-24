@@ -3,6 +3,7 @@ import { FontItem } from "../../../utils/file/fontUtil";
 
 export interface SettingInfoProps extends RouteComponentProps<any> {
   t: (title: string) => string;
+  isAuthed: boolean;
   renderBookFunc?: () => void;
 }
 
