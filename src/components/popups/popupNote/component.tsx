@@ -15,10 +15,7 @@ import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
 import { formatHighlightValue } from "../../../utils/reader/highlightUtil";
-import {
-  DEFAULT_NOTE_HIGHLIGHT_STRING,
-  HighlightStyleType,
-} from "../../../constants/highlightList";
+import { DEFAULT_NOTE_HIGHLIGHT_STRING } from "../../../constants/highlightList";
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
     super(props);
@@ -41,7 +38,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           note.color || DEFAULT_NOTE_HIGHLIGHT_STRING
         ).split("-");
         this.props.handleHighlight({
-          styleType: styleType as HighlightStyleType,
+          styleType: styleType,
           color,
         });
       }
@@ -208,6 +205,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     const PopupProps = {
       handleDigest: this.handleUpdateHighlight,
       isEdit: true,
+      noteItem: this.state.note,
     };
     let note = this.state.note;
 
@@ -221,6 +219,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
               style={{ height: "calc(100% - 90px)" }}
             />
           </div>
+          <ColorOption {...(PopupProps as any)} />
           <div
             className="note-tags"
             style={{
@@ -237,7 +236,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
               } as any)}
             />
           </div>
-          <ColorOption {...(PopupProps as any)} />
+
           <div className="note-button-container">
             <span
               className="book-manage-title"

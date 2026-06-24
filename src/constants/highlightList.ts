@@ -1,13 +1,7 @@
 import { HighlightValue } from "../utils/reader/highlightUtil";
 
-export type HighlightStyleType =
-  | "background"
-  | "underline"
-  | "strikethrough"
-  | "wavy";
-
 export const highlightStyleTypes: {
-  value: HighlightStyleType;
+  value: string;
   label: string;
 }[] = [
   { value: "background", label: "Highlight background" },
@@ -16,7 +10,7 @@ export const highlightStyleTypes: {
   { value: "wavy", label: "Wavy underline" },
 ];
 
-export const highlightPresetColors: Record<HighlightStyleType, string[]> = {
+export const highlightPresetColors: Record<string, string[]> = {
   background: ["#f3a6a68c", "#FEF3CD", "#CEFACD", "#CDE9FA"],
   underline: ["#FF0000", "#60A5FA", "#FF9900", "#2EFF2E"],
   strikethrough: ["#FF0000", "#60A5FA", "#FF9900", "#2EFF2E"],

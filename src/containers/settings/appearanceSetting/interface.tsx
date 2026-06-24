@@ -1,5 +1,4 @@
 import { RouteComponentProps } from "react-router-dom";
-import { HighlightStyleType } from "../../../constants/highlightList";
 
 export interface SettingInfoProps extends RouteComponentProps<any> {
   t: (title: string) => string;
@@ -16,11 +15,11 @@ export interface SettingInfoState {
   isShowShelfBookCount: boolean;
   isCustomSystemCSS: boolean;
   customSystemCSS: string;
-  ttsHighlightStyleType: HighlightStyleType;
+  ttsHighlightStyleType: string;
   ttsHighlightColor: string;
   isShowTtsCustomColorPicker: boolean;
   pendingTtsCustomColor: string;
-  searchHighlightStyleType: HighlightStyleType;
+  searchHighlightStyleType: string;
   searchHighlightColor: string;
   isShowSearchCustomColorPicker: boolean;
   pendingSearchCustomColor: string;

@@ -4,7 +4,6 @@ import { ColorProps } from "./interface";
 import {
   highlightPresetColors,
   highlightStyleTypes,
-  HighlightStyleType,
 } from "../../constants/highlightList";
 import {
   buildHighlightPreviewStyle,
@@ -12,7 +11,7 @@ import {
 } from "../../utils/reader/highlightUtil";
 
 class ColorOption extends React.Component<ColorProps> {
-  handleStyleType = (styleType: HighlightStyleType) => {
+  handleStyleType = (styleType: string) => {
     const color = highlightPresetColors[styleType][0];
     const value = { styleType, color };
     this.props.handleHighlight(value);
@@ -33,7 +32,10 @@ class ColorOption extends React.Component<ColorProps> {
   };
 
   render() {
-    const { styleType, color } = this.props.highlight;
+    let { styleType, color } = this.props.highlight;
+    if (this.props.isEdit && this.props.noteItem?.color) {
+      [styleType, color] = this.props.noteItem.color.split("-");
+    }
     const presetColors = highlightPresetColors[styleType];
 
     return (
@@ -43,7 +45,7 @@ class ColorOption extends React.Component<ColorProps> {
           this.props.isEdit
             ? {
                 position: "absolute",
-                top: "calc(100% - 130px)",
+                top: "calc(100% - 110px)",
                 width: "70%",
                 marginLeft: 0,
               }
@@ -68,10 +70,7 @@ class ColorOption extends React.Component<ColorProps> {
               >
                 <span
                   className="note-highlight-style-preview"
-                  style={buildHighlightPreviewStyle(
-                    item.value,
-                    previewColor
-                  )}
+                  style={buildHighlightPreviewStyle(item.value, previewColor)}
                 >
                   Aa
                 </span>

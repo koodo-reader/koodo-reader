@@ -3,22 +3,14 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import {
   DEFAULT_HIGHLIGHT_VALUE,
   DEFAULT_NOTE_HIGHLIGHT_VALUE,
-  HighlightStyleType,
   NOTE_HIGHLIGHT_CONFIG_KEY,
   SEARCH_HIGHLIGHT_CONFIG_KEY,
   TTS_HIGHLIGHT_CONFIG_KEY,
 } from "../../constants/highlightList";
 import { classes, colors, lines } from "../../constants/themeList";
 
-const VALID_STYLE_TYPES = new Set<HighlightStyleType>([
-  "background",
-  "underline",
-  "strikethrough",
-  "wavy",
-]);
-
 export interface HighlightValue {
-  styleType: HighlightStyleType;
+  styleType: string;
   color: string;
 }
 
@@ -36,11 +28,8 @@ export function getNoteHighlightValue(): HighlightValue {
     return DEFAULT_NOTE_HIGHLIGHT_VALUE;
   }
   const [styleType, color] = value.split("-");
-  if (!VALID_STYLE_TYPES.has(styleType as HighlightStyleType)) {
-    return DEFAULT_NOTE_HIGHLIGHT_VALUE;
-  }
   return {
-    styleType: styleType as HighlightStyleType,
+    styleType: styleType,
     color,
   };
 }
@@ -61,11 +50,8 @@ export function getTtsHighlightValue(): HighlightValue {
     return DEFAULT_HIGHLIGHT_VALUE;
   }
   const [styleType, color] = value.split("-");
-  if (!VALID_STYLE_TYPES.has(styleType as HighlightStyleType)) {
-    return DEFAULT_HIGHLIGHT_VALUE;
-  }
   return {
-    styleType: styleType as HighlightStyleType,
+    styleType: styleType,
     color,
   };
 }
@@ -85,11 +71,8 @@ export function getSearchHighlightValue(): HighlightValue {
     return DEFAULT_HIGHLIGHT_VALUE;
   }
   const [styleType, color] = colorCode.split("-");
-  if (!VALID_STYLE_TYPES.has(styleType as HighlightStyleType)) {
-    return DEFAULT_HIGHLIGHT_VALUE;
-  }
   return {
-    styleType: styleType as HighlightStyleType,
+    styleType: styleType,
     color,
   };
 }
@@ -138,7 +121,7 @@ export function buildHighlightStyleForType(colorCode: string | number): string {
   }
 }
 export function buildHighlightPreviewStyle(
-  styleType: HighlightStyleType,
+  styleType: string,
   color: string
 ): CSSProperties {
   switch (styleType) {
