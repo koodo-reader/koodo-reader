@@ -10,6 +10,7 @@ export interface SettingInfoState {
   customColor: string;
   pendingCustomColor: string;
   fontListVersion: number;
+  fontOptions: { label: string; value: string }[];
   isDisablePDFCover: boolean;
   isDisableCrop: boolean;
   isShowShelfBookCount: boolean;

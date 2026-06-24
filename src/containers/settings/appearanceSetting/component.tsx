@@ -10,15 +10,14 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import { HexColorPicker } from "react-colorful";
-import { dropdownList } from "../../../constants/dropdownList";
 import {
-  loadFontData,
   reloadManager,
-  vexComfirmAsync,
   parseColorInput,
 } from "../../../utils/common";
+import FontUtil from "../../../utils/file/fontUtil";
 import {
   applyCustomSystemCSS,
+  applyCustomSystemFont,
   syncNativeThemeSource,
 } from "../../../utils/reader/launchUtil";
 import {
@@ -54,6 +53,7 @@ class AppearanceSetting extends React.Component<
       pendingCustomColor:
         ConfigService.getReaderConfig("themeColor") || "#0179CA",
       fontListVersion: 0,
+      fontOptions: [] as { label: string; value: string }[],
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
@@ -75,29 +75,19 @@ class AppearanceSetting extends React.Component<
 
   componentDidMount(): void {
     this.loadFont();
+    window.addEventListener("font-list-changed", this.loadFont);
   }
 
-  loadFont = () => {
-    const fontFamilyItem = dropdownList.find(
-      (item) => item.value === "fontFamily"
-    );
-    const subFontFamilyItem = dropdownList.find(
-      (item) => item.value === "subFontFamily"
-    );
+  componentWillUnmount(): void {
+    window.removeEventListener("font-list-changed", this.loadFont);
+  }
 
-    loadFontData().then((result) => {
-      if (fontFamilyItem && fontFamilyItem.option.length <= 2) {
-        fontFamilyItem.option = fontFamilyItem.option.concat(result || []);
-      }
-      if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
-        subFontFamilyItem.option = subFontFamilyItem.option.concat(
-          result || []
-        );
-      }
-      this.setState((prevState) => ({
-        fontListVersion: prevState.fontListVersion + 1,
-      }));
-    });
+  loadFont = async () => {
+    const options = await FontUtil.getMergedFontOptions();
+    this.setState((prevState) => ({
+      fontOptions: options,
+      fontListVersion: prevState.fontListVersion + 1,
+    }));
   };
 
   handleRest = (_bool: boolean) => {
@@ -134,19 +124,9 @@ class AppearanceSetting extends React.Component<
     reloadManager();
   };
 
-  changeFont = (font: string) => {
-    if (font === "Load local fonts") {
-      vexComfirmAsync(
-        this.props.t(
-          "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
-        )
-      );
-
-      return;
-    }
-    let body = document.getElementsByTagName("body")[0];
-    body?.setAttribute("style", "font-family:" + font + "!important");
-    ConfigService.setReaderConfig("systemFont", font);
+  changeFont = async (font: string) => {
+    ConfigService.setReaderConfig("systemFont", font === "Built-in font" ? "" : font);
+    await applyCustomSystemFont();
     this.forceUpdate();
   };
 
@@ -580,22 +560,24 @@ class AppearanceSetting extends React.Component<
           <select
             name=""
             className="lang-setting-dropdown"
-            value={ConfigService.getReaderConfig("systemFont")}
+            value={
+              ConfigService.getReaderConfig("systemFont") || "Built-in font"
+            }
             onChange={(event) => {
               this.changeFont(event.target.value);
             }}
           >
-            {dropdownList
-              .find((item) => item.value === "fontFamily")
-              ?.option.map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {this.props.t(item.label)}
-                </option>
-              ))}
+            {this.state.fontOptions.map((item) => (
+              <option
+                value={item.value}
+                key={item.value}
+                className="lang-setting-option"
+              >
+                {item.value === "Built-in font"
+                  ? this.props.t(item.label)
+                  : item.label}
+              </option>
+            ))}
           </select>
         </div>
         <div className="setting-dialog-new-title">

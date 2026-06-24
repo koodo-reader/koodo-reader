@@ -77,25 +77,13 @@ export const dropdownList = [
   {
     title: "Default font family",
     value: "fontFamily",
-    option: [
-      { label: "Built-in font", value: "Built-in font" },
-      {
-        label: "Load local fonts",
-        value: "Load local fonts",
-      },
-    ],
+    option: [{ label: "Built-in font", value: "Built-in font" }],
     isPDF: false,
   },
   {
     title: "CJK font family",
     value: "subFontFamily",
-    option: [
-      { label: "Built-in font", value: "Built-in font" },
-      {
-        label: "Load local fonts",
-        value: "Load local fonts",
-      },
-    ],
+    option: [{ label: "Built-in font", value: "Built-in font" }],
     isPDF: false,
   },
   {

@@ -509,8 +509,10 @@ class ConfigUtil {
         ...configList,
         "dictList",
         "backgroundList",
+        "fontList",
         "readerConfig",
         "customBackgrounds",
+        "customFonts",
         "customDicts",
       ];
       for (let i = 0; i < configList.length; i++) {

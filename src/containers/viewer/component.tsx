@@ -380,6 +380,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.setState({ rendition });
 
     StyleUtil.addDefaultCss(this.props.currentBook.key);
+    await StyleUtil.applyReaderFonts(rendition);
     let bookLocation: {
       text: string;
       count: string;
@@ -463,6 +464,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapterDocIndex,
       });
       StyleUtil.addDefaultCss(this.props.currentBook.key);
+      await StyleUtil.applyReaderFonts(rendition);
       // rendition.tranformText();
       this.handleBindGesture();
       await this.handleHighlight(rendition);

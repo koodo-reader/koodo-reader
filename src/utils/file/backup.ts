@@ -13,6 +13,7 @@ import JSZip from "jszip";
 import ConfigUtil from "./configUtil";
 import SyncService from "../storage/syncService";
 import BackgroundUtil from "./backgroundUtil";
+import FontUtil from "./fontUtil";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
 
@@ -302,6 +303,7 @@ export const backupFromStorage = async () => {
   await zipCover(zip);
   await zipBook(zip);
   await zipBackground(zip);
+  await zipFont(zip);
   let result = await zipConfig(
     zip,
     books,
@@ -408,6 +410,22 @@ export const zipBackground = async (zip: any) => {
       bgZip.file(`${id}.${extension}`, arrayBuffer);
     } catch (error) {
       console.error(`Failed to backup background ${id}:`, error);
+    }
+  }
+};
+
+export const zipFont = async (zip: any) => {
+  const fontIds = ConfigService.getAllListConfig("fontList") || [];
+  const fontZip = zip.folder("font");
+  for (const id of fontIds) {
+    const meta = FontUtil.getFontMeta(id);
+    if (!meta) continue;
+    try {
+      const buffer = await FontUtil.loadFontArrayBuffer(id, meta.type);
+      if (!buffer) continue;
+      fontZip.file(`${id}.${meta.type}`, buffer);
+    } catch (error) {
+      console.error(`Failed to backup font ${id}:`, error);
     }
   }
 };
