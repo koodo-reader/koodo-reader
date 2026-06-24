@@ -1,10 +1,6 @@
 import React from "react";
 import "./fontSetting.css";
-import {
-  SettingInfoProps,
-  SettingInfoState,
-  InstalledFont,
-} from "./interface";
+import { SettingInfoProps, SettingInfoState, InstalledFont } from "./interface";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
@@ -15,10 +11,7 @@ import FontUtil, {
 import { ChineseFonts, NonChineseFonts } from "../../../constants/fontConfig";
 import { applyCustomSystemFont } from "../../../utils/reader/launchUtil";
 
-class FontSetting extends React.Component<
-  SettingInfoProps,
-  SettingInfoState
-> {
+class FontSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   fileInputRef = React.createRef<HTMLInputElement>();
 
   constructor(props: SettingInfoProps) {
@@ -357,7 +350,7 @@ class FontSetting extends React.Component<
     return (
       <div className="font-featured-section">
         <div className="font-featured-section-title">
-          <Trans>Featured fonts</Trans>
+          <Trans>Download featured fonts</Trans>
         </div>
         <div className="font-featured-list">
           {families.map((family) => (
@@ -367,7 +360,15 @@ class FontSetting extends React.Component<
                 onClick={() => this.handleToggleFamily(family)}
               >
                 <span>{translateFontName(family, this.props.t)}</span>
-                <span>{expandedFamily === family ? "▲" : "▼"}</span>
+                <span
+                  className="icon-dropdown font-featured-family-icon"
+                  style={
+                    expandedFamily === family
+                      ? { transform: "rotate(180deg)" }
+                      : {}
+                  }
+                ></span>
+                {/* <span>{expandedFamily === family ? "▲" : "▼"}</span> */}
               </div>
               {expandedFamily === family &&
                 allFonts
@@ -390,7 +391,15 @@ class FontSetting extends React.Component<
                             {translateFontStyle(font.style, this.props.t)}
                           </span>
                           {installed ? (
-                            <span style={{ opacity: 0.5, fontSize: 13 }}>
+                            <span
+                              style={{
+                                opacity: 0.5,
+                                fontSize: 13,
+                                padding: "4px 10px",
+                                borderRadius: 6,
+                                background: "transparent",
+                              }}
+                            >
                               <Trans>Installed</Trans>
                             </span>
                           ) : (
@@ -428,21 +437,13 @@ class FontSetting extends React.Component<
   };
 
   render() {
-    const {
-      fonts,
-      loadedUrls,
-      isLoading,
-      previewFont,
-      previewLoading,
-    } = this.state;
+    const { fonts, loadedUrls, isLoading, previewFont, previewLoading } =
+      this.state;
 
     return (
       <>
         {previewFont &&
-          this.injectFontFace(
-            previewFont.key,
-            loadedUrls[previewFont.key]
-          )}
+          this.injectFontFace(previewFont.key, loadedUrls[previewFont.key])}
 
         <div className="font-setting-grid">
           {isLoading ? (
@@ -497,7 +498,7 @@ class FontSetting extends React.Component<
             onClick={this.handleImportClick}
           >
             <span style={{ fontWeight: "bold" }}>
-              <Trans>Import font</Trans>
+              <Trans>Import local font</Trans>
             </span>
           </div>
         </div>
@@ -531,7 +532,8 @@ class FontSetting extends React.Component<
                   <div className="font-preview-sample">Aa 字体 123</div>
                   <div className="font-preview-paragraph">
                     <Trans>
-                      The quick brown fox jumps over the lazy dog. 天地玄黄，宇宙洪荒。
+                      The quick brown fox jumps over the lazy dog.
+                      天地玄黄，宇宙洪荒。
                     </Trans>
                   </div>
                   <div className="font-preview-name">{previewFont.label}</div>

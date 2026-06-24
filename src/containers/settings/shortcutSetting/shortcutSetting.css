@@ -7,6 +7,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  margin-bottom: 0px !important;
 }
 
 .shortcut-chip-list {

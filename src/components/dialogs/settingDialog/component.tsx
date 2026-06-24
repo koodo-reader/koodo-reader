@@ -163,8 +163,8 @@ class SettingDialog extends React.Component<
             )}
             {this.renderSidebarItem(
               "font",
-              "icon-convert-text",
-              "Font",
+              "icon-font",
+              "Font management",
               "18px"
             )}
             {this.renderSidebarItem(
