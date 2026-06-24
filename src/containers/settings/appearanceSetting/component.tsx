@@ -24,7 +24,6 @@ import {
 import {
   highlightPresetColors,
   highlightStyleTypes,
-  HighlightStyleType,
 } from "../../../constants/highlightList";
 import {
   buildSearchHighlightPreviewStyle,
@@ -175,7 +174,7 @@ class AppearanceSetting extends React.Component<
     reloadManager();
   };
 
-  handleTtsStyleType = (styleType: HighlightStyleType) => {
+  handleTtsStyleType = (styleType: string) => {
     const color = highlightPresetColors[styleType][0];
     this.setState({
       ttsHighlightStyleType: styleType,
@@ -211,7 +210,7 @@ class AppearanceSetting extends React.Component<
     this.handleRest(true);
   };
 
-  handleSearchStyleType = (styleType: HighlightStyleType) => {
+  handleSearchStyleType = (styleType: string) => {
     const color = highlightPresetColors[styleType][0];
     this.setState({
       searchHighlightStyleType: styleType,
@@ -300,7 +299,8 @@ class AppearanceSetting extends React.Component<
             <li
               key={color}
               className={
-                !isCustomSelected && presetColors.indexOf(currentColor) === index
+                !isCustomSelected &&
+                presetColors.indexOf(currentColor) === index
                   ? "tts-highlight-color-item active-tts-highlight-color"
                   : "tts-highlight-color-item"
               }
@@ -399,9 +399,7 @@ class AppearanceSetting extends React.Component<
           <Trans>Search highlight style</Trans>
         </div>
         <p className="setting-option-subtitle">
-          <Trans>
-            Customize the highlight style when searching in books
-          </Trans>
+          <Trans>Customize the highlight style when searching in books</Trans>
         </p>
         <ul className="tts-highlight-style-tabs">
           {highlightStyleTypes.map((item) => {
@@ -440,7 +438,8 @@ class AppearanceSetting extends React.Component<
             <li
               key={color}
               className={
-                !isCustomSelected && presetColors.indexOf(currentColor) === index
+                !isCustomSelected &&
+                presetColors.indexOf(currentColor) === index
                   ? "tts-highlight-color-item active-tts-highlight-color"
                   : "tts-highlight-color-item"
               }

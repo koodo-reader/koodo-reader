@@ -10,10 +10,7 @@ import ConfigUtil from "../../../utils/file/configUtil";
 import Book from "../../../models/Book";
 import Bookmark from "../../../models/Bookmark";
 import Note from "../../../models/Note";
-import {
-  buildHighlightPreviewStyle,
-} from "../../../utils/reader/highlightUtil";
-import { HighlightStyleType } from "../../../constants/highlightList";
+import { buildHighlightPreviewStyle } from "../../../utils/reader/highlightUtil";
 
 class NavList extends React.Component<NavListProps, NavListState> {
   private searchInputRef: React.RefObject<HTMLInputElement>;
@@ -144,9 +141,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
     this.setState({ isComposing: true });
   };
 
-  handleCompositionEnd = (
-    event: React.CompositionEvent<HTMLInputElement>
-  ) => {
+  handleCompositionEnd = (event: React.CompositionEvent<HTMLInputElement>) => {
     const keyword = event.currentTarget.value;
     this.setState({ isComposing: false, searchKeyword: keyword }, () => {
       this.handleSearch(keyword);
@@ -273,10 +268,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
   };
   getHighlightPreviewStyle = (colorCode: string) => {
     const [styleType, color] = colorCode.split("-");
-    return buildHighlightPreviewStyle(
-      styleType as HighlightStyleType,
-      color
-    );
+    return buildHighlightPreviewStyle(styleType, color);
   };
   renderBookNavList = (displayData: (Bookmark | Note)[]) => {
     return displayData.map((item: any, index: number) => {
@@ -308,9 +300,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
             <p
               className="book-bookmark-digest"
               style={
-                item.color
-                  ? this.getHighlightPreviewStyle(item.color)
-                  : {}
+                item.color ? this.getHighlightPreviewStyle(item.color) : {}
               }
             >
               {this.props.currentTab === "bookmarks"
@@ -385,7 +375,9 @@ class NavList extends React.Component<NavListProps, NavListState> {
             <Trans>Empty</Trans>
           </div>
         ) : (
-          <ul className="book-bookmark">{this.renderBookNavList(displayData)}</ul>
+          <ul className="book-bookmark">
+            {this.renderBookNavList(displayData)}
+          </ul>
         )}
       </div>
     );
