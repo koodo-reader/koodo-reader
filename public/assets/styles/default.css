@@ -50,6 +50,7 @@ a {
 .token-dialog-url-box,
 .token-dialog-username-box,
 .account-login-option,
+.font-featured-download-btn,
 .token-dialog-password-box,
 .general-setting-dropdown,
 .delete-dialog-uncheck-icon,
@@ -107,6 +108,7 @@ a {
 .active-page,
 .sk-chase-dot:before,
 .biometric-auth-button,
+.font-featured-progress-bar,
 .pin-dot.pin-dot-filled {
   background-color: rgba(75, 75, 75, 1) !important;
   color: rgba(255, 255, 255, 1) !important;

@@ -6,8 +6,7 @@
 }
 
 .font-setting-item {
-  width: 140px;
-  height: 64px;
+  width: 120px;
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
@@ -20,7 +19,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px;
+  padding: 20px 5px;
   transition:
     border-color 0.15s,
     transform 0.1s;
@@ -55,11 +54,13 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
 .font-setting-type {
-  font-size: 10px;
-  opacity: 0.45;
+  font-size: 12px;
+  opacity: 0.6;
   text-transform: uppercase;
 }
 
@@ -130,7 +131,11 @@
   margin-bottom: 10px;
   overflow: hidden;
 }
-
+.font-featured-family-icon {
+  font-size: 12px;
+  opacity: 1;
+  transition: transform 0.15s;
+}
 .font-featured-family-header {
   padding: 12px 14px;
   cursor: pointer;
@@ -144,7 +149,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 10px 14px 10px 24px;
+  padding: 10px 14px 10px 14px;
   border-top: 1px solid rgba(128, 128, 128, 0.12);
   font-size: 14px;
 }
@@ -154,8 +159,6 @@
   font-size: 13px;
   padding: 4px 12px;
   border-radius: 6px;
-  border: 1px solid var(--color-theme-color, #0179ca);
-  color: var(--color-theme-color, #0179ca);
   background: transparent;
   white-space: nowrap;
 }
@@ -175,7 +178,6 @@
 
 .font-featured-progress-bar {
   height: 100%;
-  background: var(--color-theme-color, #0179ca);
   transition: width 0.15s;
 }
 

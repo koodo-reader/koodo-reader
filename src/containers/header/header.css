@@ -145,7 +145,7 @@
 }
 .setting-icon {
   float: left;
-  font-size: 25px;
+  font-size: 25px !important;
 }
 .header-report-container {
   text-align: right;
