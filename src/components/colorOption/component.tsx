@@ -58,6 +58,11 @@ class ColorOption extends React.Component<ColorProps> {
                     : "note-highlight-style-tab"
                 }
                 onClick={() => this.handleStyleType(item.value)}
+                style={
+                  styleType === item.value
+                    ? { borderColor: "currentColor" }
+                    : {}
+                }
               >
                 <span
                   className="note-highlight-style-preview"
