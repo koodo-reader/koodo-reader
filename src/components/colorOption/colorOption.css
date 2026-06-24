@@ -21,13 +21,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px 4px;
-  border-radius: 6px;
+  border-radius: 50%;
   cursor: pointer;
+  padding: 2px;
   opacity: 0.5;
   transition:
     border-color 0.15s,
     opacity 0.15s;
+  box-sizing: border-box;
+  border: 2px solid transparent;
 }
 .note-highlight-style-tab.active-note-highlight-tab {
   opacity: 1;
@@ -40,7 +42,9 @@
   height: 22px;
   font-size: 10px;
   font-weight: 600;
-  border-radius: 3px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  border: 2px solid transparent;
 }
 .note-highlight-color-container {
   display: flex;
@@ -60,6 +64,8 @@
   box-sizing: border-box;
   border: 2px solid transparent;
   transition: border-color 0.15s;
+  padding: 2px;
+  background-clip: content-box;
 }
 .note-highlight-color-item.active-note-highlight-color {
   border-color: currentColor;
