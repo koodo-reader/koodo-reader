@@ -23,7 +23,6 @@
   justify-content: center;
   padding: 2px 4px;
   border-radius: 6px;
-  border: 2px solid transparent;
   cursor: pointer;
   opacity: 0.5;
   transition:
@@ -37,8 +36,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   font-size: 10px;
   font-weight: 600;
   border-radius: 3px;
@@ -46,7 +45,7 @@
 .note-highlight-color-container {
   display: flex;
   flex-wrap: nowrap;
-  gap: 4px;
+  gap: 8px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -54,8 +53,8 @@
   justify-content: flex-end;
 }
 .note-highlight-color-item {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   cursor: pointer;
   box-sizing: border-box;

@@ -6,12 +6,12 @@
 .popup-menu-box,
 .popup-color-box {
   opacity: 1;
-  border-radius: 19px;
+  border-radius: 10px;
   position: relative;
   z-index: -1;
 }
 .popup-color-box {
-  padding: 8px 6px;
+  padding: 10px 6px;
   width: 252px;
   box-sizing: border-box;
 }
