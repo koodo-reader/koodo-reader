@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 10px 25px 80px 25px;
+  margin: 10px 25px 20px 25px;
 }
 
 .font-setting-item {
@@ -109,46 +109,19 @@
   position: static;
 }
 
-.font-featured-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fade-in 0.15s ease;
+.font-featured-section {
+  margin: 0 25px 80px 25px;
 }
 
-.font-featured-panel {
-  width: min(560px, 92vw);
-  max-height: 80vh;
-  background: var(--color-card-bg, #fff);
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-}
-
-.font-featured-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+.font-featured-section-title {
   font-weight: 600;
-}
-
-.font-featured-close {
-  cursor: pointer;
-  font-size: 18px;
-  opacity: 0.7;
+  font-size: 15px;
+  margin-bottom: 12px;
+  opacity: 0.9;
 }
 
 .font-featured-list {
-  overflow-y: auto;
-  padding: 12px 16px 20px;
+  padding: 0;
 }
 
 .font-featured-family {

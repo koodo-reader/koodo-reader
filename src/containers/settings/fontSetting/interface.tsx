@@ -18,7 +18,6 @@ export interface SettingInfoState {
   previewLoading: boolean;
   appFontKey: string;
   readerFontKey: string;
-  showFeatured: boolean;
   expandedFamily: string;
   downloadingId: string;
   downloadProgress: number;
