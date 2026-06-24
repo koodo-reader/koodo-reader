@@ -15,6 +15,23 @@ export interface FontItem {
   type: string;
 }
 
+export function translateFontStyle(
+  style: string,
+  t: (key: string) => string
+): string {
+  return style
+    .split(" ")
+    .map((part) => t(part))
+    .join(" ");
+}
+
+export function translateFontName(
+  name: string,
+  t: (key: string) => string
+): string {
+  return t(name);
+}
+
 const FONT_MIME: Record<string, string> = {
   ttf: "font/ttf",
   otf: "font/otf",

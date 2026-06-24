@@ -8,7 +8,10 @@ import {
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
-import FontUtil from "../../../utils/file/fontUtil";
+import FontUtil, {
+  translateFontName,
+  translateFontStyle,
+} from "../../../utils/file/fontUtil";
 import { ChineseFonts, NonChineseFonts } from "../../../constants/fontConfig";
 import { applyCustomSystemFont } from "../../../utils/reader/launchUtil";
 
@@ -17,7 +20,6 @@ class FontSetting extends React.Component<
   SettingInfoState
 > {
   fileInputRef = React.createRef<HTMLInputElement>();
-  abortController: AbortController | null = null;
 
   constructor(props: SettingInfoProps) {
     super(props);
@@ -29,7 +31,6 @@ class FontSetting extends React.Component<
       previewLoading: false,
       appFontKey: ConfigService.getReaderConfig("systemFont") || "",
       readerFontKey: ConfigService.getReaderConfig("fontFamily") || "",
-      showFeatured: false,
       expandedFamily: "",
       downloadingId: "",
       downloadProgress: 0,
@@ -285,22 +286,6 @@ class FontSetting extends React.Component<
     return families;
   };
 
-  handleOpenFeatured = () => {
-    this.setState({ showFeatured: true, expandedFamily: "" });
-  };
-
-  handleCloseFeatured = () => {
-    if (this.abortController) {
-      this.abortController.abort();
-      this.abortController = null;
-    }
-    this.setState({
-      showFeatured: false,
-      downloadingId: "",
-      downloadProgress: 0,
-    });
-  };
-
   handleToggleFamily = (family: string) => {
     this.setState((prev) => ({
       expandedFamily: prev.expandedFamily === family ? "" : family,
@@ -364,87 +349,79 @@ class FontSetting extends React.Component<
     );
   };
 
-  renderFeaturedPanel = () => {
+  renderFeaturedSection = () => {
     const families = this.getFeaturedFamilies();
     const allFonts = this.getFeaturedFontList();
     const { expandedFamily, downloadingId, downloadProgress } = this.state;
 
     return (
-      <div className="font-featured-overlay" onClick={this.handleCloseFeatured}>
-        <div
-          className="font-featured-panel"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="font-featured-header">
-            <Trans>Featured fonts</Trans>
-            <span
-              className="font-featured-close icon-close"
-              onClick={this.handleCloseFeatured}
-            />
-          </div>
-          <div className="font-featured-list">
-            {families.map((family) => (
-              <div key={family} className="font-featured-family">
-                <div
-                  className="font-featured-family-header"
-                  onClick={() => this.handleToggleFamily(family)}
-                >
-                  <span>{family}</span>
-                  <span>{expandedFamily === family ? "▲" : "▼"}</span>
-                </div>
-                {expandedFamily === family &&
-                  allFonts
-                    .filter((f) => f.fontFamily === family)
-                    .map((font) => {
-                      const installed = this.isFontInstalled(font.id);
-                      const isDownloading = downloadingId === font.id;
-                      return (
-                        <div key={font.id} className="font-featured-variant">
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              width: "100%",
-                            }}
-                          >
-                            <span>
-                              {font.fontName} {font.style}
+      <div className="font-featured-section">
+        <div className="font-featured-section-title">
+          <Trans>Featured fonts</Trans>
+        </div>
+        <div className="font-featured-list">
+          {families.map((family) => (
+            <div key={family} className="font-featured-family">
+              <div
+                className="font-featured-family-header"
+                onClick={() => this.handleToggleFamily(family)}
+              >
+                <span>{translateFontName(family, this.props.t)}</span>
+                <span>{expandedFamily === family ? "▲" : "▼"}</span>
+              </div>
+              {expandedFamily === family &&
+                allFonts
+                  .filter((f) => f.fontFamily === family)
+                  .map((font) => {
+                    const installed = this.isFontInstalled(font.id);
+                    const isDownloading = downloadingId === font.id;
+                    return (
+                      <div key={font.id} className="font-featured-variant">
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            width: "100%",
+                          }}
+                        >
+                          <span>
+                            {translateFontName(font.fontName, this.props.t)}{" "}
+                            {translateFontStyle(font.style, this.props.t)}
+                          </span>
+                          {installed ? (
+                            <span style={{ opacity: 0.5, fontSize: 13 }}>
+                              <Trans>Installed</Trans>
                             </span>
-                            {installed ? (
-                              <span style={{ opacity: 0.5, fontSize: 13 }}>
-                                <Trans>Installed</Trans>
-                              </span>
-                            ) : (
-                              <button
-                                className="font-featured-download-btn"
-                                disabled={!!downloadingId && !isDownloading}
-                                onClick={() => this.handleDownloadFeatured(font)}
-                              >
-                                {isDownloading ? (
-                                  <Trans>Downloading</Trans>
-                                ) : (
-                                  <Trans>Download</Trans>
-                                )}
-                              </button>
-                            )}
-                          </div>
-                          {isDownloading && (
-                            <div className="font-featured-progress">
-                              <div
-                                className="font-featured-progress-bar"
-                                style={{
-                                  width: `${Math.round(downloadProgress * 100)}%`,
-                                }}
-                              />
-                            </div>
+                          ) : (
+                            <button
+                              className="font-featured-download-btn"
+                              disabled={!!downloadingId && !isDownloading}
+                              onClick={() => this.handleDownloadFeatured(font)}
+                            >
+                              {isDownloading ? (
+                                <Trans>Downloading</Trans>
+                              ) : (
+                                <Trans>Download</Trans>
+                              )}
+                            </button>
                           )}
                         </div>
-                      );
-                    })}
-              </div>
-            ))}
-          </div>
+                        {isDownloading && (
+                          <div className="font-featured-progress">
+                            <div
+                              className="font-featured-progress-bar"
+                              style={{
+                                width: `${Math.round(downloadProgress * 100)}%`,
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -455,7 +432,6 @@ class FontSetting extends React.Component<
       fonts,
       loadedUrls,
       isLoading,
-      showFeatured,
       previewFont,
       previewLoading,
     } = this.state;
@@ -505,6 +481,8 @@ class FontSetting extends React.Component<
           )}
         </div>
 
+        {this.renderFeaturedSection()}
+
         <input
           ref={this.fileInputRef}
           type="file"
@@ -516,14 +494,6 @@ class FontSetting extends React.Component<
         <div className="font-setting-actions">
           <div
             className="setting-dialog-new-plugin font-setting-action-btn"
-            onClick={this.handleOpenFeatured}
-          >
-            <span style={{ fontWeight: "bold" }}>
-              <Trans>Download featured fonts</Trans>
-            </span>
-          </div>
-          <div
-            className="setting-dialog-new-plugin font-setting-action-btn"
             onClick={this.handleImportClick}
           >
             <span style={{ fontWeight: "bold" }}>
@@ -531,8 +501,6 @@ class FontSetting extends React.Component<
             </span>
           </div>
         </div>
-
-        {showFeatured && this.renderFeaturedPanel()}
 
         {previewFont && (
           <div
