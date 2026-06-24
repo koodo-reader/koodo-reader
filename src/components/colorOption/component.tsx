@@ -32,24 +32,15 @@ class ColorOption extends React.Component<ColorProps> {
   };
 
   render() {
-    let { styleType, color } = this.props.highlight;
-    if (this.props.isEdit && this.props.noteItem?.color) {
-      [styleType, color] = this.props.noteItem.color.split("-");
-    }
+    const { styleType, color } = this.props.highlight;
     const presetColors = highlightPresetColors[styleType];
 
     return (
       <div
-        className="color-option-container"
-        style={
+        className={
           this.props.isEdit
-            ? {
-                position: "absolute",
-                top: "calc(100% - 110px)",
-                width: "70%",
-                marginLeft: 0,
-              }
-            : {}
+            ? "color-option-container color-option-container-edit"
+            : "color-option-container"
         }
       >
         <ul className="note-highlight-style-tabs">

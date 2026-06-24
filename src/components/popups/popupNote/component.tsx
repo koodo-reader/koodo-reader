@@ -32,16 +32,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         note: note,
       });
       textArea.value = note.notes;
-      if (this.props.htmlBook && this.props.htmlBook.rendition) {
-      } else {
-        const [styleType, color] = (
-          note.color || DEFAULT_NOTE_HIGHLIGHT_STRING
-        ).split("-");
-        this.props.handleHighlight({
-          styleType: styleType,
-          color,
-        });
-      }
+      const [styleType, color] = (
+        note.color || DEFAULT_NOTE_HIGHLIGHT_STRING
+      ).split("-");
+      this.props.handleHighlight({
+        styleType,
+        color,
+      });
     } else {
       let docs = getIframeDoc(this.props.currentBook.format);
       let text = "";
@@ -202,7 +199,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   };
 
   render() {
-    const PopupProps = {
+    const colorOptionProps = {
       handleDigest: this.handleUpdateHighlight,
       isEdit: true,
       noteItem: this.state.note,
@@ -219,7 +216,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
               style={{ height: "calc(100% - 90px)" }}
             />
           </div>
-          <ColorOption {...(PopupProps as any)} />
+          <ColorOption {...(colorOptionProps as any)} />
           <div
             className="note-tags"
             style={{
