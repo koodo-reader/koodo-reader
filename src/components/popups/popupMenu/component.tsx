@@ -1,6 +1,7 @@
 import React from "react";
 import "./popupMenu.css";
 import PopupOption from "../popupOption";
+import ColorOption from "../../colorOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -177,6 +178,27 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.props.handleMenuMode("menu");
   };
 
+  handleDigest = async () => {
+    await createHighlight({
+      currentBook: this.props.currentBook,
+      htmlBook: this.props.htmlBook,
+      chapterDocIndex: this.props.chapterDocIndex,
+      chapter: this.props.chapter,
+      color: formatHighlightValue(this.props.highlight),
+      t: this.props.t,
+      onNoteClick: (event: Event) => {
+        this.props.handleNoteKey((event.target as any).dataset.key);
+        this.props.handleMenuMode("note");
+        this.props.handleOpenMenu(true);
+      },
+      onSuccess: () => {
+        this.props.handleOpenMenu(false);
+        this.props.handleFetchNotes();
+        this.props.handleMenuMode("");
+      },
+    });
+  };
+
   handleSelectAction = async (action: string, sel: Selection) => {
     const format = this.props.currentBook.format;
     const text = getSelection(format);
@@ -232,6 +254,9 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
     };
+    const ColorProps = {
+      handleDigest: this.handleDigest,
+    };
     return (
       <div>
         <div
@@ -243,6 +268,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
             style={this.props.menuMode === "menu" ? {} : { display: "none" }}
           >
             <PopupOption {...(PopupProps as any)} />
+          </div>
+          <div
+            className="popup-color-box"
+            style={this.props.menuMode === "menu" ? {} : { display: "none" }}
+          >
+            <ColorOption {...(ColorProps as any)} />
           </div>
         </div>
       </div>
