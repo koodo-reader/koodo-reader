@@ -1,5 +1,6 @@
 import BookModel from "../../../models/Book";
 import HtmlBook from "../../../models/HtmlBook";
+import { HighlightValue } from "../../../utils/reader/highlightUtil";
 
 export interface PopupMenuProps {
   currentBook: BookModel;
@@ -7,7 +8,7 @@ export interface PopupMenuProps {
   isChangeDirection: boolean;
   menuMode: string;
 
-  color: number;
+  highlight: HighlightValue;
   rendition: any;
   htmlBook: HtmlBook;
   // cfiRange: any;

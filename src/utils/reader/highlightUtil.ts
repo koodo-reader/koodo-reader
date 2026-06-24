@@ -2,7 +2,9 @@ import type { CSSProperties } from "react";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import {
   DEFAULT_HIGHLIGHT_VALUE,
+  DEFAULT_NOTE_HIGHLIGHT_VALUE,
   HighlightStyleType,
+  NOTE_HIGHLIGHT_CONFIG_KEY,
   SEARCH_HIGHLIGHT_CONFIG_KEY,
   TTS_HIGHLIGHT_CONFIG_KEY,
 } from "../../constants/highlightList";
@@ -18,6 +20,36 @@ const VALID_STYLE_TYPES = new Set<HighlightStyleType>([
 export interface HighlightValue {
   styleType: HighlightStyleType;
   color: string;
+}
+
+export function formatHighlightValue(value: HighlightValue): string {
+  return `${value.styleType}-${value.color}`;
+}
+
+export function getNoteHighlightString(): string {
+  return ConfigService.getReaderConfig(NOTE_HIGHLIGHT_CONFIG_KEY);
+}
+
+export function getNoteHighlightValue(): HighlightValue {
+  const value = getNoteHighlightString();
+  if (!value) {
+    return DEFAULT_NOTE_HIGHLIGHT_VALUE;
+  }
+  const [styleType, color] = value.split("-");
+  if (!VALID_STYLE_TYPES.has(styleType as HighlightStyleType)) {
+    return DEFAULT_NOTE_HIGHLIGHT_VALUE;
+  }
+  return {
+    styleType: styleType as HighlightStyleType,
+    color,
+  };
+}
+
+export function saveNoteHighlightValue(value: HighlightValue): void {
+  ConfigService.setReaderConfig(
+    NOTE_HIGHLIGHT_CONFIG_KEY,
+    `${value.styleType}-${value.color}`
+  );
 }
 
 export function getTtsHighlightString(): string {

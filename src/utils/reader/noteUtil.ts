@@ -12,7 +12,7 @@ export interface DigestParams {
   htmlBook: any;
   chapterDocIndex: number;
   chapter: string;
-  color: number;
+  color: string;
   t: (key: string) => string;
   onNoteClick?: (event: Event) => void;
   onSuccess?: () => void;

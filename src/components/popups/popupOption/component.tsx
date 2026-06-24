@@ -19,6 +19,7 @@ import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { openExternalUrl } from "../../../utils/common";
 import { createHighlight } from "../../../utils/reader/noteUtil";
+import { formatHighlightValue } from "../../../utils/reader/highlightUtil";
 
 declare var window: any;
 
@@ -67,7 +68,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       htmlBook: this.props.htmlBook,
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
-      color: this.props.color,
+      color: formatHighlightValue(this.props.highlight),
       t: this.props.t,
       onNoteClick: this.handleNoteClick,
       onSuccess: () => {
@@ -282,7 +283,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
               </span>
             </div>
           </div>
-          <ColorOption {...(PopupProps as any)} />
+          <div className="color-option-box">
+            <ColorOption {...(PopupProps as any)} />
+          </div>
         </>
       );
     };

@@ -12,6 +12,7 @@ import NoteModel from "../models/Note";
 import BookmarkModel from "../models/Bookmark";
 import HtmlBookModel from "../models/HtmlBook";
 import PluginModel from "../models/Plugin";
+import { HighlightValue } from "../utils/reader/highlightUtil";
 const rootReducer = combineReducers({
   book,
   manager,
@@ -92,7 +93,7 @@ export type stateType = {
     bookmarks: BookmarkModel[];
     notes: NoteModel[];
     highlights: NoteModel[];
-    color: number;
+    highlight: HighlightValue;
     chapters: any[];
     readerMode: string;
     scale: string;

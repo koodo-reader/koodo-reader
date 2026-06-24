@@ -1,4 +1,5 @@
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { getNoteHighlightValue } from "../../utils/reader/highlightUtil";
 const initState = {
   bookmarks: [],
   notes: [],
@@ -6,13 +7,7 @@ const initState = {
   chapters: null,
   currentChapter: "",
   currentChapterIndex: 0,
-  color: parseInt(ConfigService.getReaderConfig("highlightIndex"))
-    ? parseInt(ConfigService.getReaderConfig("highlightIndex"))
-    : ConfigService.getReaderConfig("appSkin") === "night" ||
-        (ConfigService.getReaderConfig("appSkin") === "system" &&
-          ConfigService.getReaderConfig("isOSNight") === "yes")
-      ? 3
-      : 0,
+  highlight: getNoteHighlightValue(),
   backgroundColor:
     ConfigService.getReaderConfig("isMergeWord") === "yes"
       ? "rgba(0,0,0,0)"
@@ -198,10 +193,10 @@ export function reader(
         ...state,
         htmlBook: action.payload,
       };
-    case "HANDLE_COLOR":
+    case "HANDLE_HIGHLIGHT":
       return {
         ...state,
-        color: action.payload,
+        highlight: action.payload,
       };
     case "HANDLE_BACKGROUND_COLOR":
       return {

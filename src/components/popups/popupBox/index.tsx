@@ -19,7 +19,7 @@ const mapStateToProps = (state: stateType) => {
     menuMode: state.viewArea.menuMode,
     isNavLocked: state.reader.isNavLocked,
     isSettingLocked: state.reader.isSettingLocked,
-    color: state.reader.color,
+    highlight: state.reader.highlight,
     isChangeDirection: state.viewArea.isChangeDirection,
   };
 };

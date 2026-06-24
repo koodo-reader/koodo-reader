@@ -3,7 +3,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   width: 158px;
-  height: 147px;
+  height: 175px;
   padding-left: 1px;
 }
 .note-option,
@@ -112,4 +112,6 @@
 }
 .bing-icon {
   color: rgb(252, 204, 136);
+}
+.color-option-box {
 }

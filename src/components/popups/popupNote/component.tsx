@@ -14,6 +14,11 @@ import {
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
+import { formatHighlightValue } from "../../../utils/reader/highlightUtil";
+import {
+  DEFAULT_NOTE_HIGHLIGHT_STRING,
+  HighlightStyleType,
+} from "../../../constants/highlightList";
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
     super(props);
@@ -32,7 +37,13 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       textArea.value = note.notes;
       if (this.props.htmlBook && this.props.htmlBook.rendition) {
       } else {
-        this.props.handleColor(note.color);
+        const [styleType, color] = (
+          note.color || DEFAULT_NOTE_HIGHLIGHT_STRING
+        ).split("-");
+        this.props.handleHighlight({
+          styleType: styleType as HighlightStyleType,
+          color,
+        });
       }
     } else {
       let docs = getIframeDoc(this.props.currentBook.format);
@@ -75,7 +86,8 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       );
       newNote.notes = notes;
       newNote.tag = this.state.tag;
-      newNote.color = this.props.color || newNote.color;
+      newNote.color =
+        formatHighlightValue(this.props.highlight) || newNote.color;
       DatabaseService.updateRecord(newNote, "notes").then(() => {
         this.props.handleOpenMenu(false);
         toast.success(this.props.t("Addition successful"));
@@ -132,7 +144,9 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           ).percentage
         : "0";
 
-      let color = this.props.color || 0;
+      let color =
+        formatHighlightValue(this.props.highlight) ||
+        DEFAULT_NOTE_HIGHLIGHT_STRING;
       let tag = this.state.tag;
 
       let note = new Note(
@@ -165,7 +179,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       });
     }
   }
-  handleUpdateHighlight = (color: number) => {};
+  handleUpdateHighlight = () => {};
   handleClose = () => {
     if (this.props.noteKey) {
       DatabaseService.deleteRecord(this.props.noteKey, "notes").then(() => {

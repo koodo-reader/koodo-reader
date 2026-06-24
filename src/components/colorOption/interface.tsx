@@ -1,10 +1,8 @@
+import { HighlightValue } from "../../utils/reader/highlightUtil";
+
 export interface ColorProps {
-  color: number;
-  targetColor: number;
+  highlight: HighlightValue;
   isEdit: boolean;
-  handleColor: (color: number) => void;
+  handleHighlight: (value: HighlightValue) => void;
   handleDigest: () => void;
-}
-export interface ColorStates {
-  isLine: boolean;
 }

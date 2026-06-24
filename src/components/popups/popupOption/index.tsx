@@ -25,7 +25,7 @@ const mapStateToProps = (state: stateType) => {
     selection: state.viewArea.selection,
     popupOptionUpdateIndex: state.backupPage.popupOptionUpdateIndex,
 
-    color: state.reader.color,
+    highlight: state.reader.highlight,
     htmlBook: state.reader.htmlBook,
   };
 };
