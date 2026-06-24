@@ -565,7 +565,7 @@
   "File not found": "File not found",
   "Drag to sort": "Drag to sort",
   "Customize popup menu": "Customize popup menu",
-  "You can enable up to 8 options": "You can enable up to 8 options",
+  "You can enable up to {{count}} options": "You can enable up to {{count}} options",
   "Renamed successfully": "Renamed successfully",
   "Some S3 services are not compatible with browser environments. If you encounter connection issues, please refer to the service provider's official documentation for instructions on enabling CORS. Also due to browser's security restrictions, the S3 service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocol.": "Some S3 services are not compatible with browser environments. If you encounter connection issues, please refer to the service provider's official documentation for instructions on enabling CORS. Also due to browser's security restrictions, the S3 service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocol.",
   "Generated with AI": "Generated with AI",

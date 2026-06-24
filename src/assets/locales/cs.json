@@ -964,7 +964,7 @@
   "Bar Chart": "Sloupcový graf",
   "Line Chart": "Spojnicový graf",
   "Customize popup menu": "Přizpůsobit vyskakovací nabídku",
-  "You can enable up to 8 options": "Můžete povolit až 8 možností",
+  "You can enable up to {{count}} options": "Můžete povolit až {{count}} možností",
   "From URL": "Z URL",
   "Enter book download URL or article URL": "Zadejte URL pro stažení knihy nebo URL článku",
   "Please enter a valid http or https URL": "Zadejte platnou http nebo https URL",

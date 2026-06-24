@@ -964,7 +964,7 @@
   "Bar Chart": "نمودار میله‌ای",
   "Line Chart": "نمودار خطی",
   "Customize popup menu": "سفارشی‌سازی منوی بازشو",
-  "You can enable up to 8 options": "می‌توانید تا ۸ گزینه را فعال کنید",
+  "You can enable up to {{count}} options": "می‌توانید تا {{count}} گزینه را فعال کنید",
   "From URL": "از طریق URL",
   "Enter book download URL or article URL": "URL دانلود کتاب یا URL مقاله را وارد کنید",
   "Please enter a valid http or https URL": "لطفاً یک URL معتبر http یا https وارد کنید",

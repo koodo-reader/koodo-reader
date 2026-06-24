@@ -965,7 +965,7 @@
   "Bar Chart": "বার চার্ট",
   "Line Chart": "লাইন চার্ট",
   "Customize popup menu": "পপআপ মেনু কাস্টমাইজ করুন",
-  "You can enable up to 8 options": "আপনি সর্বোচ্চ ৮টি অপশন সক্রিয় করতে পারেন",
+  "You can enable up to {{count}} options": "আপনি সর্বোচ্চ {{count}}টি অপশন সক্রিয় করতে পারেন",
   "From URL": "URL থেকে",
   "Enter book download URL or article URL": "বই ডাউনলোড URL বা নিবন্ধ URL লিখুন",
   "Please enter a valid http or https URL": "একটি বৈধ http বা https URL লিখুন",

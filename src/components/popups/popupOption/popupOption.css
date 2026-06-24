@@ -1,11 +1,13 @@
 .menu-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 158px;
-  padding-left: 1px;
-  padding-top: 5px;
-  padding-bottom: 10px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, auto);
+  width: 252px;
+  padding: 6px 8px 10px;
+  gap: 4px;
+  box-sizing: border-box;
+  justify-items: center;
+  align-items: center;
 }
 .note-option,
 .highlight-option,
@@ -19,8 +21,8 @@
 .dict-option,
 .wikipedia-option,
 .copy-option {
-  height: 42px;
-  width: 42px;
+  height: 36px;
+  width: 36px;
   font-size: 14px !important;
   line-height: 15px !important;
   opacity: 1;
@@ -29,12 +31,10 @@
   box-sizing: border-box;
   cursor: pointer;
   transition: 0.1s;
-  /* align-items: center; */
   justify-content: center;
+  align-items: center;
   font-weight: 500;
-  margin: 5px;
-  margin-bottom: 0px;
-  margin-top: 1px;
+  margin: 0;
 }
 .note-option:hover,
 .highlight-option:hover,
@@ -65,8 +65,8 @@
 .copy-icon,
 .wikipedia-icon,
 .highlight-icon {
-  line-height: 45px !important;
-  font-size: 27px;
+  line-height: 1 !important;
+  font-size: 22px;
 }
 .translation-icon {
   color: #f16464;
@@ -82,30 +82,30 @@
 }
 .speaker-icon {
   color: #b266cb;
-  font-size: 30px;
-  margin-left: 5px;
+  font-size: 24px;
+  margin-left: 0;
 }
 .speech-start-icon {
   color: #f16464;
-  font-size: 26px;
+  font-size: 22px;
 }
 .search-book-icon {
   color: #6867d1;
 }
 .browser-icon {
   color: #01b7bc;
-  font-size: 27px;
+  font-size: 22px;
 }
 .dict-icon {
   color: #2084e8;
-  font-size: 25px;
+  font-size: 21px;
 }
 .assistant-icon {
   color: #0aa89e;
-  font-size: 24px;
+  font-size: 20px;
 }
 .wikipedia-icon {
-  font-size: 22px;
+  font-size: 18px;
   opacity: 0.83;
 }
 .baidu-icon {

@@ -965,7 +965,7 @@
   "Bar Chart": "柱狀圖",
   "Line Chart": "折線圖",
   "Customize popup menu": "自定義劃詞菜單",
-  "You can enable up to 8 options": "最多只能開啟 8 個選項",
+  "You can enable up to {{count}} options": "最多只能開啟 {{count}} 個選項",
   "From URL": "從 URL 導入",
   "Enter book download URL or article URL": "請輸入圖書下載連結或網頁文章連結",
   "Please enter a valid http or https URL": "請輸入有效的 http 或 https 連結",

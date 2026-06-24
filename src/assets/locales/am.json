@@ -962,7 +962,7 @@
   "Bar Chart": "አምድ ገበታ",
   "Line Chart": "መስመር ገበታ",
   "Customize popup menu": "ብቅ ባይ ሜኑ ያበጁ",
-  "You can enable up to 8 options": "እስከ 8 አማራጮችን ማንቃት ይችላሉ",
+  "You can enable up to {{count}} options": "እስከ {{count}} አማራጮችን ማንቃት ይችላሉ",
   "From URL": "ከዩአርኤል",
   "Enter book download URL or article URL": "የመጽሐፍ ማውረጃ ዩአርኤል ወይም የጽሑፍ ዩአርኤል ያስገቡ",
   "Please enter a valid http or https URL": "እባክዎ የሚሰራ http ወይም https ዩአርኤል ያስገቡ",

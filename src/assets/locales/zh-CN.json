@@ -184,7 +184,7 @@
   "File not found": "文件未找到",
   "Drag to sort": "拖动进行排序",
   "Customize popup menu": "自定义划词菜单",
-  "You can enable up to 8 options": "最多只能开启 8 个选项",
+  "You can enable up to {{count}} options": "最多只能开启 {{count}} 个选项",
   "Renamed successfully": "重命名成功",
   "New": "新建",
   "Cancel": "取消",

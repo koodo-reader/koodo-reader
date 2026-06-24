@@ -979,7 +979,7 @@
   "Bar Chart": "Diagram Batang",
   "Line Chart": "Diagram Garis",
   "Customize popup menu": "Kustomisasi menu popup",
-  "You can enable up to 8 options": "Anda dapat mengaktifkan hingga 8 opsi",
+  "You can enable up to {{count}} options": "Anda dapat mengaktifkan hingga {{count}} opsi",
   "From URL": "Dari URL",
   "Enter book download URL or article URL": "Masukkan URL unduhan buku atau URL artikel",
   "Please enter a valid http or https URL": "Harap masukkan URL http atau https yang valid",

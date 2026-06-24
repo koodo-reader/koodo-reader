@@ -967,7 +967,7 @@
   "Bar Chart": "Søjlediagram",
   "Line Chart": "Linjediagram",
   "Customize popup menu": "Tilpas popup-menu",
-  "You can enable up to 8 options": "Du kan aktivere op til 8 muligheder",
+  "You can enable up to {{count}} options": "Du kan aktivere op til {{count}} muligheder",
   "From URL": "Fra URL",
   "Enter book download URL or article URL": "Indtast download-URL for bog eller artikel-URL",
   "Please enter a valid http or https URL": "Indtast venligst en gyldig http- eller https-URL",

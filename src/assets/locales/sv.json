@@ -969,7 +969,7 @@
   "Bar Chart": "Stapeldiagram",
   "Line Chart": "Linjediagram",
   "Customize popup menu": "Anpassa popup-meny",
-  "You can enable up to 8 options": "Du kan aktivera upp till 8 alternativ",
+  "You can enable up to {{count}} options": "Du kan aktivera upp till {{count}} alternativ",
   "From URL": "Från URL",
   "Enter book download URL or article URL": "Ange nedladdnings-URL för bok eller artikel-URL",
   "Please enter a valid http or https URL": "Ange en giltig http- eller https-URL",

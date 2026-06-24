@@ -962,7 +962,7 @@
   "Bar Chart": "Oszlopdiagram",
   "Line Chart": "Vonaldiagram",
   "Customize popup menu": "Felugró menü testreszabása",
-  "You can enable up to 8 options": "Legfeljebb 8 opciót engedélyezhet",
+  "You can enable up to {{count}} options": "Legfeljebb {{count}} opciót engedélyezhet",
   "From URL": "URL-ből",
   "Enter book download URL or article URL": "Adja meg a könyv letöltési URL-jét vagy cikk URL-t",
   "Please enter a valid http or https URL": "Kérjük, adjon meg egy érvényes http vagy https URL-t",

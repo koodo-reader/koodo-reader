@@ -272,7 +272,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
           >
             <span
               className="icon-setting setting-icon"
-              style={{ color: "#8a8f9f", fontSize: "24px" }}
+              style={{ color: "#8a8f9f", fontSize: "20px" }}
             ></span>
           </span>
         </div>

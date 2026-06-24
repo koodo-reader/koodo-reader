@@ -966,7 +966,7 @@
   "Bar Chart": "Barre Diagramme",
   "Line Chart": "Lineal Diagramme",
   "Customize popup menu": "Customisar menu popup",
-  "You can enable up to 8 options": "Tu posse activar til 8 options",
+  "You can enable up to {{count}} options": "Tu posse activar til {{count}} options",
   "From URL": "De URL",
   "Enter book download URL or article URL": "Intra libre download URL o articul URL",
   "Please enter a valid http or https URL": "Ples intra un valid http o https URL",

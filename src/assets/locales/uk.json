@@ -975,7 +975,7 @@
   "Bar Chart": "Гістограма",
   "Line Chart": "Лінійний графік",
   "Customize popup menu": "Налаштувати спливаюче меню",
-  "You can enable up to 8 options": "Можна ввімкнути до 8 опцій",
+  "You can enable up to {{count}} options": "Можна ввімкнути до {{count}} опцій",
   "From URL": "З URL",
   "Enter book download URL or article URL": "Введіть URL завантаження книги або URL статті",
   "Please enter a valid http or https URL": "Введіть дійсний http або https URL",

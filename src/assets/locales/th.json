@@ -964,7 +964,7 @@
   "Bar Chart": "แผนภูมิแท่ง",
   "Line Chart": "แผนภูมิเส้น",
   "Customize popup menu": "ปรับแต่งเมนูป๊อปอัป",
-  "You can enable up to 8 options": "คุณสามารถเปิดใช้งานได้สูงสุด 8 ตัวเลือก",
+  "You can enable up to {{count}} options": "คุณสามารถเปิดใช้งานได้สูงสุด {{count}} ตัวเลือก",
   "From URL": "จาก URL",
   "Enter book download URL or article URL": "ป้อน URL ดาวน์โหลดหนังสือหรือ URL บทความ",
   "Please enter a valid http or https URL": "โปรดป้อน URL http หรือ https ที่ถูกต้อง",

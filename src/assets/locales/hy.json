@@ -965,7 +965,7 @@
   "Bar Chart": "Սյունակային դիագրամ",
   "Line Chart": "Գծային դիագրամ",
   "Customize popup menu": "Հարմարեցնել թռուցիկ ընտրացանկը",
-  "You can enable up to 8 options": "Կարող եք միացնել մինչև 8 տարբերակ",
+  "You can enable up to {{count}} options": "Կարող եք միացնել մինչև {{count}} տարբերակ",
   "From URL": "URL-ից",
   "Enter book download URL or article URL": "Մուտքագրեք գրքի ներբեռնման URL կամ հոդվածի URL",
   "Please enter a valid http or https URL": "Խնդրում ենք մուտքագրել վավեր http կամ https URL",

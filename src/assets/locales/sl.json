@@ -962,7 +962,7 @@
   "Bar Chart": "Stolpčni diagram",
   "Line Chart": "Črtni diagram",
   "Customize popup menu": "Prilagodi pojavni meni",
-  "You can enable up to 8 options": "Omogočite lahko do 8 možnosti",
+  "You can enable up to {{count}} options": "Omogočite lahko do {{count}} možnosti",
   "From URL": "Iz URL",
   "Enter book download URL or article URL": "Vnesite URL za prenos knjige ali URL članka",
   "Please enter a valid http or https URL": "Prosimo, vnesite veljaven http ali https URL",

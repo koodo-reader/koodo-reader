@@ -963,7 +963,7 @@
   "Bar Chart": "Graphique à barres",
   "Line Chart": "Graphique linéaire",
   "Customize popup menu": "Personnaliser le menu contextuel",
-  "You can enable up to 8 options": "Vous pouvez activer jusqu'à 8 options",
+  "You can enable up to {{count}} options": "Vous pouvez activer jusqu'à {{count}} options",
   "From URL": "Depuis une URL",
   "Enter book download URL or article URL": "Entrez l'URL de téléchargement du livre ou l'URL de l'article",
   "Please enter a valid http or https URL": "Veuillez entrer une URL http ou https valide",

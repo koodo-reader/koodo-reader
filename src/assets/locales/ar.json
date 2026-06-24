@@ -965,7 +965,7 @@
   "Bar Chart": "مخطط عمودي",
   "Line Chart": "مخطط خطي",
   "Customize popup menu": "تخصيص القائمة المنبثقة",
-  "You can enable up to 8 options": "يمكنك تفعيل ما يصل إلى 8 خيارات",
+  "You can enable up to {{count}} options": "يمكنك تفعيل ما يصل إلى {{count}} خيارات",
   "From URL": "من رابط",
   "Enter book download URL or article URL": "أدخل رابط تنزيل الكتاب أو رابط المقال",
   "Please enter a valid http or https URL": "يرجى إدخال رابط http أو https صالح",

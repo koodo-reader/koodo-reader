@@ -962,7 +962,7 @@
   "Bar Chart": "स्तंभ चार्ट",
   "Line Chart": "रेखा चार्ट",
   "Customize popup menu": "पॉपअप मेनू अनुकूलित करें",
-  "You can enable up to 8 options": "आप अधिकतम 8 विकल्प सक्षम कर सकते हैं",
+  "You can enable up to {{count}} options": "आप अधिकतम {{count}} विकल्प सक्षम कर सकते हैं",
   "From URL": "URL से",
   "Enter book download URL or article URL": "पुस्तक डाउनलोड URL या लेख URL दर्ज करें",
   "Please enter a valid http or https URL": "कृपया एक मान्य http या https URL दर्ज करें",

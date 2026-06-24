@@ -968,7 +968,7 @@
   "Bar Chart": "Biểu đồ cột",
   "Line Chart": "Biểu đồ đường",
   "Customize popup menu": "Tùy chỉnh menu bật lên",
-  "You can enable up to 8 options": "Bạn có thể bật tối đa 8 tùy chọn",
+  "You can enable up to {{count}} options": "Bạn có thể bật tối đa {{count}} tùy chọn",
   "From URL": "Từ URL",
   "Enter book download URL or article URL": "Nhập URL tải sách hoặc URL bài viết",
   "Please enter a valid http or https URL": "Vui lòng nhập URL http hoặc https hợp lệ",
