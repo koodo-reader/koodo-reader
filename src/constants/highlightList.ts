@@ -4,7 +4,7 @@ export type HighlightStyleType =
   | "background"
   | "underline"
   | "strikethrough"
-  | "border";
+  | "wavy";
 
 export const highlightStyleTypes: {
   value: HighlightStyleType;
@@ -13,14 +13,14 @@ export const highlightStyleTypes: {
   { value: "background", label: "Highlight background" },
   { value: "underline", label: "Underline" },
   { value: "strikethrough", label: "Strikethrough" },
-  { value: "border", label: "Highlight border" },
+  { value: "wavy", label: "Wavy underline" },
 ];
 
 export const highlightPresetColors: Record<HighlightStyleType, string[]> = {
   background: ["#f3a6a68c", "#FEF3CD", "#CEFACD", "#CDE9FA"],
   underline: ["#FF0000", "#60A5FA", "#FF9900", "#2EFF2E"],
   strikethrough: ["#FF0000", "#60A5FA", "#FF9900", "#2EFF2E"],
-  border: ["#FF0000", "#60A5FA", "#FF9900", "#2EFF2E"],
+  wavy: ["#FF0000", "#60A5FA", "#FF9900", "#2EFF2E"],
 };
 
 export const DEFAULT_HIGHLIGHT_STRING = "background-#f3a6a68c";

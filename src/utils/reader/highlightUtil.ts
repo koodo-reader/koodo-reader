@@ -14,7 +14,7 @@ const VALID_STYLE_TYPES = new Set<HighlightStyleType>([
   "background",
   "underline",
   "strikethrough",
-  "border",
+  "wavy",
 ]);
 
 export interface HighlightValue {
@@ -131,8 +131,8 @@ export function buildHighlightStyleForType(colorCode: string | number): string {
       return `border-bottom: 2px solid ${color};`;
     case "strikethrough":
       return `text-decoration: line-through; text-decoration-color: ${color};`;
-    case "border":
-      return `box-shadow: inset 0 0 0 2px ${color};`;
+    case "wavy":
+      return `text-decoration-line: underline; text-decoration-style: wavy; text-decoration-color: ${color}; text-decoration-thickness: 2px; text-decoration-skip-ink: none;`;
     default:
       return `background: ${color};`;
   }
@@ -151,8 +151,14 @@ export function buildHighlightPreviewStyle(
         textDecoration: "line-through",
         textDecorationColor: color,
       };
-    case "border":
-      return { boxShadow: `inset 0 0 0 2px ${color}` };
+    case "wavy":
+      return {
+        textDecorationLine: "underline",
+        textDecorationStyle: "wavy",
+        textDecorationColor: color,
+        textDecorationThickness: "2px",
+        textDecorationSkipInk: "none",
+      };
     default:
       return { background: color };
   }
