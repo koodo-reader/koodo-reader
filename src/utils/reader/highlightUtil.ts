@@ -6,6 +6,7 @@ import {
   SEARCH_HIGHLIGHT_CONFIG_KEY,
   TTS_HIGHLIGHT_CONFIG_KEY,
 } from "../../constants/highlightList";
+import { classes, colors, lines } from "../../constants/themeList";
 
 const VALID_STYLE_TYPES = new Set<HighlightStyleType>([
   "background",
@@ -19,68 +20,78 @@ export interface HighlightValue {
   color: string;
 }
 
-export function parseHighlightValue(raw?: string | null): HighlightValue {
-  if (!raw) {
-    return parseHighlightValue(DEFAULT_HIGHLIGHT_VALUE);
-  }
-
-  const dashIndex = raw.indexOf("-");
-  if (dashIndex <= 0) {
-    return parseHighlightValue(DEFAULT_HIGHLIGHT_VALUE);
-  }
-
-  const styleType = raw.slice(0, dashIndex) as HighlightStyleType;
-  const color = raw.slice(dashIndex + 1);
-
-  if (!VALID_STYLE_TYPES.has(styleType) || !color) {
-    return parseHighlightValue(DEFAULT_HIGHLIGHT_VALUE);
-  }
-
-  return { styleType, color };
+export function getTtsHighlightString(): string {
+  return ConfigService.getReaderConfig(TTS_HIGHLIGHT_CONFIG_KEY);
 }
-
-export function formatHighlightValue(
-  styleType: HighlightStyleType,
-  color: string
-): string {
-  return `${styleType}-${color}`;
-}
-
-function loadHighlightValue(configKey: string): HighlightValue {
-  const raw = ConfigService.getReaderConfig(configKey);
-  return parseHighlightValue(raw || DEFAULT_HIGHLIGHT_VALUE);
-}
-
-function saveHighlightValue(
-  configKey: string,
-  value: HighlightValue
-): void {
-  ConfigService.setReaderConfig(
-    configKey,
-    formatHighlightValue(value.styleType, value.color)
-  );
-}
-
 export function getTtsHighlightValue(): HighlightValue {
-  return loadHighlightValue(TTS_HIGHLIGHT_CONFIG_KEY);
+  const value = getTtsHighlightString();
+  if (!value) {
+    return DEFAULT_HIGHLIGHT_VALUE;
+  }
+  const [styleType, color] = value.split("-");
+  if (!VALID_STYLE_TYPES.has(styleType as HighlightStyleType)) {
+    return DEFAULT_HIGHLIGHT_VALUE;
+  }
+  return {
+    styleType: styleType as HighlightStyleType,
+    color,
+  };
 }
 
 export function saveTtsHighlightValue(value: HighlightValue): void {
-  saveHighlightValue(TTS_HIGHLIGHT_CONFIG_KEY, value);
+  ConfigService.setReaderConfig(
+    TTS_HIGHLIGHT_CONFIG_KEY,
+    `${value.styleType}-${value.color}`
+  );
 }
-
+export function getSearchHighlightString(): string {
+  return ConfigService.getReaderConfig(SEARCH_HIGHLIGHT_CONFIG_KEY);
+}
 export function getSearchHighlightValue(): HighlightValue {
-  return loadHighlightValue(SEARCH_HIGHLIGHT_CONFIG_KEY);
+  const colorCode = ConfigService.getReaderConfig(SEARCH_HIGHLIGHT_CONFIG_KEY);
+  if (!colorCode) {
+    return DEFAULT_HIGHLIGHT_VALUE;
+  }
+  const [styleType, color] = colorCode.split("-");
+  if (!VALID_STYLE_TYPES.has(styleType as HighlightStyleType)) {
+    return DEFAULT_HIGHLIGHT_VALUE;
+  }
+  return {
+    styleType: styleType as HighlightStyleType,
+    color,
+  };
 }
 
 export function saveSearchHighlightValue(value: HighlightValue): void {
-  saveHighlightValue(SEARCH_HIGHLIGHT_CONFIG_KEY, value);
+  ConfigService.setReaderConfig(
+    SEARCH_HIGHLIGHT_CONFIG_KEY,
+    `${value.styleType}-${value.color}`
+  );
 }
 
-export function buildHighlightStyleForType(
-  styleType: HighlightStyleType,
-  color: string
-): string {
+export function buildHighlightStyleForType(colorCode: string | number): string {
+  console.log("buildHighlightStyleForType", colorCode);
+  let styleType: string = "background";
+  let color: string = "#FEF3CD";
+  console.log(
+    "colorCode",
+    colorCode,
+    typeof colorCode,
+    typeof colorCode === "number"
+  );
+  if (typeof colorCode === "number") {
+    if (colorCode >= 0 && colorCode < classes.length) {
+      const isBackground = classes[colorCode].indexOf("color") > -1;
+      const colorIdx = classes[colorCode].split("-")[1];
+      styleType = isBackground ? "background" : "underline";
+      color = isBackground ? colors[colorIdx] : lines[colorIdx];
+      console.log("styleType", styleType, "color", color);
+    }
+  } else {
+    styleType = colorCode.split("-")[0];
+    color = colorCode.split("-")[1];
+  }
+
   switch (styleType) {
     case "background":
       return `background: ${color};`;
@@ -94,7 +105,6 @@ export function buildHighlightStyleForType(
       return `background: ${color};`;
   }
 }
-
 export function buildHighlightPreviewStyle(
   styleType: HighlightStyleType,
   color: string
@@ -117,15 +127,13 @@ export function buildHighlightPreviewStyle(
 }
 
 export function buildTtsHighlightStyle(): string {
-  const { styleType, color } = getTtsHighlightValue();
-  return buildHighlightStyleForType(styleType, color);
+  return buildHighlightStyleForType(getTtsHighlightString());
 }
 
 export const buildTtsHighlightPreviewStyle = buildHighlightPreviewStyle;
 
 export function buildSearchHighlightStyle(): string {
-  const { styleType, color } = getSearchHighlightValue();
-  return buildHighlightStyleForType(styleType, color);
+  return buildHighlightStyleForType(getSearchHighlightString());
 }
 
 export const buildSearchHighlightPreviewStyle = buildHighlightPreviewStyle;
