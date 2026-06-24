@@ -172,7 +172,7 @@ class ShortcutSetting extends React.Component<
                   className="shortcut-add-button change-location-button"
                   onClick={() => this.addBinding(item.action)}
                 >
-                  <Trans>Add</Trans>
+                  <Trans>Customize</Trans>
                 </span>
               </div>
               <div className="shortcut-chip-list">
