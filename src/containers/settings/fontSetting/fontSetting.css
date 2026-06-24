@@ -10,7 +10,7 @@
   height: 90px;
   border-radius: 8px;
   overflow: hidden;
-  cursor: default;
+  cursor: pointer;
   border: 2px solid transparent;
   position: relative;
   flex-shrink: 0;
@@ -21,6 +21,30 @@
   align-items: center;
   justify-content: center;
   padding: 8px;
+  transition:
+    border-color 0.15s,
+    transform 0.1s;
+}
+
+.font-setting-item:hover {
+  transform: scale(1.04);
+}
+
+.font-setting-item.active-font-item {
+  border-color: var(--color-theme-color, #0179ca);
+}
+
+.font-setting-badge {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 10px;
+  padding: 2px 5px;
+  line-height: 1.4;
+  pointer-events: none;
 }
 
 .font-setting-preview {
@@ -191,4 +215,64 @@
   height: 100%;
   background: var(--color-theme-color, #0179ca);
   transition: width 0.15s;
+}
+
+.font-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.15s ease;
+}
+
+.font-preview-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+
+.font-preview-close:hover {
+  opacity: 1;
+}
+
+.font-preview-content {
+  max-width: min(640px, 88vw);
+  padding: 32px 40px;
+  border-radius: 12px;
+  background: var(--color-card-bg, #fff);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.font-preview-sample {
+  font-size: 48px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.font-preview-paragraph {
+  font-size: 18px;
+  line-height: 1.6;
+  opacity: 0.85;
+  margin-bottom: 12px;
+}
+
+.font-preview-name {
+  font-size: 13px;
+  opacity: 0.55;
+}
+
+.font-preview-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 20px;
 }
