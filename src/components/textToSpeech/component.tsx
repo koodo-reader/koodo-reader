@@ -667,7 +667,12 @@ class TextToSpeech extends React.Component<
       if (this.state.isPaused || !this.state.isAudioOn) return;
       this.setState({ currentIndex: index });
       let node = this.nodeList[index];
-      let style = buildTtsHighlightStyle();
+      let style = buildTtsHighlightStyle(
+        this.props.currentBook.format === "PDF" &&
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          )
+      );
       this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
       if (index === nodeIndex) {
         let result = await TTSUtil.cacheAudio(
@@ -780,7 +785,12 @@ class TextToSpeech extends React.Component<
     }
     this.setState({ currentIndex: index });
     let node = this.nodeList[index];
-    let style = buildTtsHighlightStyle();
+    let style = buildTtsHighlightStyle(
+      this.props.currentBook.format === "PDF" &&
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
+    );
     this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
     toast.dismiss("tts-load");
     let res = await this.handleSystemSpeech(

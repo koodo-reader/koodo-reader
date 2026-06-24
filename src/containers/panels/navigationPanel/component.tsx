@@ -141,7 +141,12 @@ class NavigationPanel extends React.Component<
                 page: bookLocation.page,
               })
             );
-            let style = buildSearchHighlightStyle();
+            let style = buildSearchHighlightStyle(
+              this.props.currentBook.format === "PDF" &&
+                !ConfigService.getAllListConfig("convertPDFBooks").includes(
+                  this.props.currentBook.key
+                )
+            );
             this.props.htmlBook.rendition.highlightSearchNode(
               bookLocation.keyword,
               style

@@ -303,9 +303,13 @@ class FontSetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
     this.setState({ downloadingId: font.id, downloadProgress: 0 });
     try {
-      const success = await FontUtil.downloadFeaturedFont(font, (progress) => {
-        this.setState({ downloadProgress: progress });
-      });
+      const success = await FontUtil.downloadFeaturedFont(
+        font,
+        this.props.isAuthed,
+        (progress) => {
+          this.setState({ downloadProgress: progress });
+        }
+      );
       if (success) {
         await this.loadAllFonts();
         toast.success(this.props.t("Download successful"));
