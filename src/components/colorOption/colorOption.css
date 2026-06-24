@@ -64,3 +64,14 @@
 .note-highlight-color-item.active-note-highlight-color {
   border-color: currentColor;
 }
+.color-option-container-edit {
+  position: absolute;
+  top: calc(100% - 110px);
+  width: calc(100% - 60px);
+  margin-left: 0;
+  justify-content: flex-start;
+}
+.color-option-container-edit .note-highlight-color-container {
+  justify-content: flex-start;
+  flex: 0 1 auto;
+}
