@@ -1,70 +1,41 @@
 import React from "react";
 import "./colorOption.css";
-import { ColorProps, ColorStates } from "./interface";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { ColorProps } from "./interface";
+import {
+  highlightPresetColors,
+  highlightStyleTypes,
+  HighlightStyleType,
+} from "../../constants/highlightList";
+import {
+  buildHighlightPreviewStyle,
+  saveNoteHighlightValue,
+} from "../../utils/reader/highlightUtil";
 
-class ColorOption extends React.Component<ColorProps, ColorStates> {
-  constructor(props: ColorProps) {
-    super(props);
-    this.state = {
-      isLine: this.props.color > 3 ? true : false,
-    };
-  }
-  handleChangeOption = () => {
-    this.setState({ isLine: !this.state.isLine });
+class ColorOption extends React.Component<ColorProps> {
+  handleStyleType = (styleType: HighlightStyleType) => {
+    const color = highlightPresetColors[styleType][0];
+    const value = { styleType, color };
+    this.props.handleHighlight(value);
+    saveNoteHighlightValue(value);
   };
+
+  handlePresetColor = (index: number) => {
+    const styleType = this.props.highlight.styleType;
+    const color = highlightPresetColors[styleType][index];
+    const value = { styleType, color };
+    this.props.handleHighlight(value);
+    saveNoteHighlightValue(value);
+    if (!this.props.isEdit) {
+      setTimeout(() => {
+        this.props.handleDigest();
+      }, 100);
+    }
+  };
+
   render() {
-    const renderLine = () => {
-      return ["#FF0000", "#000080", "#0000FF", "#2EFF2E"].map((item, index) => {
-        return (
-          <div
-            className="line-option"
-            style={{
-              border: `${this.props.color === index + 4 ? "" : "2px"}`,
-              animation: `${this.props.isEdit ? undefined : ""}`,
-            }}
-            key={item}
-            onClick={() => {
-              this.props.handleColor(index + 4);
-              ConfigService.setReaderConfig(
-                "highlightIndex",
-                (index + 4).toString()
-              );
-              setTimeout(() => {
-                this.props.handleDigest();
-              }, 100);
-            }}
-          >
-            <div
-              className="demo-line"
-              style={{ borderBottom: `solid 2px ${item}` }}
-            ></div>
-          </div>
-        );
-      });
-    };
-    const renderColor = () => {
-      return ["#FBF1D1", "#EFEEB0", "#CAEFC9", "#76BEE9"].map((item, index) => {
-        return (
-          <div
-            className="color-option"
-            style={{
-              backgroundColor: item,
-              border: `${this.props.color === index ? "" : "0px"}`,
-              animation: `${this.props.isEdit ? undefined : ""}`,
-            }}
-            key={item}
-            onClick={() => {
-              this.props.handleColor(index);
-              ConfigService.setReaderConfig("highlightIndex", index.toString());
-              setTimeout(() => {
-                this.props.handleDigest();
-              }, 100);
-            }}
-          ></div>
-        );
-      });
-    };
+    const { styleType, color } = this.props.highlight;
+    const presetColors = highlightPresetColors[styleType];
+
     return (
       <div
         className="color-option-container"
@@ -72,30 +43,56 @@ class ColorOption extends React.Component<ColorProps, ColorStates> {
           this.props.isEdit
             ? {
                 position: "absolute",
-                top: "calc(100% - 105px)",
+                top: "calc(100% - 130px)",
                 width: "70%",
                 marginLeft: 0,
               }
             : {}
         }
       >
-        {this.props.isEdit ? (
-          <>
-            {renderColor()}
-            {renderLine()}
-          </>
-        ) : (
-          <>
-            {!this.state.isLine && renderColor()}
-            <span
-              className="icon-sort popup-color-more"
-              onClick={() => {
-                this.handleChangeOption();
-              }}
-            ></span>
-            {this.state.isLine && renderLine()}
-          </>
-        )}
+        <ul className="note-highlight-style-tabs">
+          {highlightStyleTypes.map((item) => {
+            const previewColor =
+              item.value === styleType
+                ? color
+                : highlightPresetColors[item.value][0];
+            return (
+              <li
+                key={item.value}
+                className={
+                  styleType === item.value
+                    ? "note-highlight-style-tab active-note-highlight-tab"
+                    : "note-highlight-style-tab"
+                }
+                onClick={() => this.handleStyleType(item.value)}
+              >
+                <span
+                  className="note-highlight-style-preview"
+                  style={buildHighlightPreviewStyle(
+                    item.value,
+                    previewColor
+                  )}
+                >
+                  Aa
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        <ul className="note-highlight-color-container">
+          {presetColors.map((presetColor, index) => (
+            <li
+              key={presetColor}
+              className={
+                presetColors.indexOf(color) === index
+                  ? "note-highlight-color-item active-note-highlight-color"
+                  : "note-highlight-color-item"
+              }
+              style={{ backgroundColor: presetColor }}
+              onClick={() => this.handlePresetColor(index)}
+            />
+          ))}
+        </ul>
       </div>
     );
   }

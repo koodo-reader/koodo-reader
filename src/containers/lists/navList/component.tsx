@@ -5,12 +5,15 @@ import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { classes, colors, lines } from "../../../constants/themeList";
 import DatabaseService from "../../../utils/storage/databaseService";
 import ConfigUtil from "../../../utils/file/configUtil";
 import Book from "../../../models/Book";
 import Bookmark from "../../../models/Bookmark";
 import Note from "../../../models/Note";
+import {
+  buildHighlightPreviewStyle,
+} from "../../../utils/reader/highlightUtil";
+import { HighlightStyleType } from "../../../constants/highlightList";
 
 class NavList extends React.Component<NavListProps, NavListState> {
   private searchInputRef: React.RefObject<HTMLInputElement>;
@@ -268,15 +271,12 @@ class NavList extends React.Component<NavListProps, NavListState> {
   handleShowDelete = (index: number) => {
     this.setState({ deleteIndex: index });
   };
-  convertColorCode = (color: string) => {
-    let colorType = color.split("-")[0];
-    let colorIndex = parseInt(color.split("-")[1]);
-    return colorType === "color"
-      ? { backgroundColor: colors[colorIndex], color: "#000" }
-      : {
-          borderBottom: `2px solid ${lines[colorIndex]}`,
-          display: "inline",
-        };
+  getHighlightPreviewStyle = (colorCode: string) => {
+    const [styleType, color] = colorCode.split("-");
+    return buildHighlightPreviewStyle(
+      styleType as HighlightStyleType,
+      color
+    );
   };
   renderBookNavList = (displayData: (Bookmark | Note)[]) => {
     return displayData.map((item: any, index: number) => {
@@ -308,8 +308,8 @@ class NavList extends React.Component<NavListProps, NavListState> {
             <p
               className="book-bookmark-digest"
               style={
-                item.color !== undefined && item.color !== null
-                  ? this.convertColorCode(classes[item.color])
+                item.color
+                  ? this.getHighlightPreviewStyle(item.color)
                   : {}
               }
             >

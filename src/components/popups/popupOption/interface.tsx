@@ -1,11 +1,12 @@
 import BookModel from "../../../models/Book";
 import HtmlBook from "../../../models/HtmlBook";
+import { HighlightValue } from "../../../utils/reader/highlightUtil";
 export interface PopupOptionProps {
   currentBook: BookModel;
   selection: string;
   popupOptionUpdateIndex: number;
 
-  color: number;
+  highlight: HighlightValue;
   noteKey: string;
   rect: DOMRect;
   cfiRange: string;

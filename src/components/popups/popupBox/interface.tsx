@@ -1,4 +1,5 @@
 import BookModel from "../../../models/Book";
+import { HighlightValue } from "../../../utils/reader/highlightUtil";
 
 export interface PopupBoxProps {
   currentBook: BookModel;
@@ -6,7 +7,7 @@ export interface PopupBoxProps {
   isChangeDirection: boolean;
   menuMode: string;
 
-  color: number;
+  highlight: HighlightValue;
   isNavLocked: boolean;
   isSettingLocked: boolean;
   rendition: any;

@@ -1,67 +1,65 @@
 .color-option-container {
   width: 90%;
-  height: 25px;
   margin-left: 5%;
   padding-bottom: 5px;
   flex-shrink: 0;
   display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.note-highlight-style-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   justify-content: space-around;
 }
-.color-option {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  opacity: 1;
-  box-sizing: border-box;
-  cursor: pointer;
-  animation: slide-left 0.2s ease-in-out 0s 1;
-}
-.popup-color-more {
-  display: inline-block;
-  width: 10px;
-  position: relative;
-  right: 3px;
-  top: 4px;
-  opacity: 0.7;
-  cursor: pointer;
-}
-.line-option {
-  width: 25px;
-  margin-right: 5px;
-  margin-top: 5px;
-  height: 25px;
-  border-radius: 50%;
-  opacity: 1;
-  box-sizing: border-box;
-  position: relative;
-  bottom: 5px;
+.note-highlight-style-tab {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 2px 4px;
+  border-radius: 6px;
+  border: 2px solid transparent;
   cursor: pointer;
-  animation: slide-right 0.2s ease-in-out 0s 1;
+  opacity: 0.5;
+  transition:
+    border-color 0.15s,
+    opacity 0.15s;
 }
-@keyframes slide-right {
-  0% {
-    transform: translateX(30px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0px);
-    opacity: 1;
-  }
+.note-highlight-style-tab.active-note-highlight-tab {
+  opacity: 1;
 }
-@keyframes slide-left {
-  0% {
-    transform: translateX(-50px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0px);
-    opacity: 1;
-  }
+.note-highlight-style-preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 3px;
 }
-.demo-line {
-  width: 80%;
-  height: 0px;
+.note-highlight-color-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-content: space-around;
+}
+.note-highlight-color-item {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  transition: border-color 0.15s;
+}
+.note-highlight-color-item.active-note-highlight-color {
+  border-color: currentColor;
 }
