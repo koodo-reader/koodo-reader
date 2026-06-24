@@ -8,6 +8,7 @@
   box-sizing: border-box;
   justify-items: center;
   align-items: center;
+  padding-bottom: 5px;
 }
 .note-option,
 .highlight-option,

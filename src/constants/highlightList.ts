@@ -17,10 +17,10 @@ export const highlightStyleTypes: {
 ];
 
 export const highlightPresetColors: Record<HighlightStyleType, string[]> = {
-  background: ["#f3a6a68c", "#FEF3CD", "#FBFACC", "#CEFACD", "#CDE9FA"],
-  underline: ["#FF0000", "#60A5FA", "#FACC15", "#0000FF", "#2EFF2E"],
-  strikethrough: ["#FF0000", "#60A5FA", "#FACC15", "#0000FF", "#2EFF2E"],
-  border: ["#FF0000", "#60A5FA", "#FACC15", "#0000FF", "#2EFF2E"],
+  background: ["#f3a6a68c", "#FEF3CD", "#CEFACD", "#CDE9FA"],
+  underline: ["#FF0000", "#60A5FA", "#FF9900", "#2EFF2E"],
+  strikethrough: ["#FF0000", "#60A5FA", "#FF9900", "#2EFF2E"],
+  border: ["#FF0000", "#60A5FA", "#FF9900", "#2EFF2E"],
 };
 
 export const DEFAULT_HIGHLIGHT_STRING = "background-#f3a6a68c";
