@@ -965,7 +965,7 @@
   "Bar Chart": "Çubuk Grafik",
   "Line Chart": "Çizgi Grafik",
   "Customize popup menu": "Açılır menüyü özelleştir",
-  "You can enable up to 8 options": "En fazla 8 seçenek etkinleştirebilirsiniz",
+  "You can enable up to {{count}} options": "En fazla {{count}} seçenek etkinleştirebilirsiniz",
   "From URL": "URL'den",
   "Enter book download URL or article URL": "Kitap indirme URL'si veya makale URL'si girin",
   "Please enter a valid http or https URL": "Lütfen geçerli bir http veya https URL'si girin",

@@ -963,7 +963,7 @@
   "Bar Chart": "பார் விளக்கப்படம்",
   "Line Chart": "வரி விளக்கப்படம்",
   "Customize popup menu": "பாப்அப் மெனுவை தனிப்பயனாக்கு",
-  "You can enable up to 8 options": "நீங்கள் 8 விருப்பங்கள் வரை இயக்கலாம்",
+  "You can enable up to {{count}} options": "நீங்கள் {{count}} விருப்பங்கள் வரை இயக்கலாம்",
   "From URL": "URL இலிருந்து",
   "Enter book download URL or article URL": "புத்தக பதிவிறக்க URL அல்லது கட்டுரை URL ஐ உள்ளிடவும்",
   "Please enter a valid http or https URL": "செல்லுபடியாகும் http அல்லது https URL ஐ உள்ளிடவும்",

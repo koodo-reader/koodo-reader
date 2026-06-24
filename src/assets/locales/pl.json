@@ -964,7 +964,7 @@
   "Bar Chart": "Wykres słupkowy",
   "Line Chart": "Wykres liniowy",
   "Customize popup menu": "Dostosuj menu wyskakujące",
-  "You can enable up to 8 options": "Możesz włączyć do 8 opcji",
+  "You can enable up to {{count}} options": "Możesz włączyć do {{count}} opcji",
   "From URL": "Z URL",
   "Enter book download URL or article URL": "Wprowadź URL pobierania książki lub URL artykułu",
   "Please enter a valid http or https URL": "Wprowadź prawidłowy URL http lub https",

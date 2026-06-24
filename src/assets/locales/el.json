@@ -965,7 +965,7 @@
   "Bar Chart": "Ραβδόγραμμα",
   "Line Chart": "Γραμμικό διάγραμμα",
   "Customize popup menu": "Προσαρμογή αναδυόμενου μενού",
-  "You can enable up to 8 options": "Μπορείτε να ενεργοποιήσετε έως 8 επιλογές",
+  "You can enable up to {{count}} options": "Μπορείτε να ενεργοποιήσετε έως {{count}} επιλογές",
   "From URL": "Από URL",
   "Enter book download URL or article URL": "Εισαγάγετε URL λήψης βιβλίου ή URL άρθρου",
   "Please enter a valid http or https URL": "Εισαγάγετε ένα έγκυρο URL http ή https",

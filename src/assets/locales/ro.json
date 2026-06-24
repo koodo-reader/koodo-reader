@@ -964,7 +964,7 @@
   "Bar Chart": "Grafic cu Bare",
   "Line Chart": "Grafic Liniar",
   "Customize popup menu": "Personalizați meniul pop-up",
-  "You can enable up to 8 options": "Puteți activa până la 8 opțiuni",
+  "You can enable up to {{count}} options": "Puteți activa până la {{count}} opțiuni",
   "From URL": "Din URL",
   "Enter book download URL or article URL": "Introduceți URL-ul de descărcare a cărții sau URL-ul articolului",
   "Please enter a valid http or https URL": "Introduceți un URL http sau https valid",

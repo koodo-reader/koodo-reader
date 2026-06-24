@@ -962,7 +962,7 @@
   "Bar Chart": "Tsart ng Bar",
   "Line Chart": "Tsart ng Linya",
   "Customize popup menu": "I-customize ang popup menu",
-  "You can enable up to 8 options": "Maaari kang mag-enable ng hanggang 8 opsyon",
+  "You can enable up to {{count}} options": "Maaari kang mag-enable ng hanggang {{count}} opsyon",
   "From URL": "Mula sa URL",
   "Enter book download URL or article URL": "Ilagay ang URL ng pag-download ng aklat o URL ng artikulo",
   "Please enter a valid http or https URL": "Mangyaring magpasok ng wastong http o https URL",

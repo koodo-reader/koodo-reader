@@ -965,7 +965,7 @@
   "Bar Chart": "Staafdiagram",
   "Line Chart": "Lijndiagram",
   "Customize popup menu": "Popupmenu aanpassen",
-  "You can enable up to 8 options": "U kunt maximaal 8 opties inschakelen",
+  "You can enable up to {{count}} options": "U kunt maximaal {{count}} opties inschakelen",
   "From URL": "Van URL",
   "Enter book download URL or article URL": "Voer boekdownload-URL of artikel-URL in",
   "Please enter a valid http or https URL": "Voer een geldige http- of https-URL in",

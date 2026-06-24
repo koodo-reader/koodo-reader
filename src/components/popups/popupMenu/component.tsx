@@ -92,7 +92,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     } else {
       posY = posY - rect.height - 188 + pageSize.top;
     }
-    posX = posX - 80 + pageSize.left;
+    posX = posX - 126 + pageSize.left;
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&

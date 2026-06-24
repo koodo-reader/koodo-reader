@@ -964,7 +964,7 @@
   "Bar Chart": "ཀ་བའི་རིས་མོ།",
   "Line Chart": "ཐིག་རིས།",
   "Customize popup menu": "ལྡེབ་ཐེར་ཐོ་ཡིག་སྒེར་གཤིས་བཟོ།",
-  "You can enable up to 8 options": "མང་མཐར་གདམ་ཀ་8 སྤྱོད་ཐུབ།",
+  "You can enable up to {{count}} options": "མང་མཐར་གདམ་ཀ་{{count}} སྤྱོད་ཐུབ།",
   "From URL": "URL ནས།",
   "Enter book download URL or article URL": "དཔེ་དེབ་ཕབ་ལེན་ URL ཡང་ན་དཔེ་སྐྱེལ་ཡིག་ URL འཇུག",
   "Please enter a valid http or https URL": "ནུས་པ་ལྡན་པའི་ http ཡང་ན་ https URL ཞིག་འཇུག་རོགས།",

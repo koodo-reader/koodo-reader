@@ -963,7 +963,7 @@
   "Bar Chart": "Trakasti grafikon",
   "Line Chart": "Linijski grafikon",
   "Customize popup menu": "Prilagodi iskačući meni",
-  "You can enable up to 8 options": "Možete omogućiti do 8 opcija",
+  "You can enable up to {{count}} options": "Možete omogućiti do {{count}} opcija",
   "From URL": "Iz URL",
   "Enter book download URL or article URL": "Unesite URL za preuzimanje knjige ili URL članka",
   "Please enter a valid http or https URL": "Molimo unesite važeći http ili https URL",

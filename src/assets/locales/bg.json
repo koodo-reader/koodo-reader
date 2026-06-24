@@ -965,7 +965,7 @@
   "Bar Chart": "Стълбовидна диаграма",
   "Line Chart": "Линейна диаграма",
   "Customize popup menu": "Персонализиране на изскачащото меню",
-  "You can enable up to 8 options": "Можете да активирате до 8 опции",
+  "You can enable up to {{count}} options": "Можете да активирате до {{count}} опции",
   "From URL": "От URL",
   "Enter book download URL or article URL": "Въведете URL за изтегляне на книга или URL на статия",
   "Please enter a valid http or https URL": "Моля, въведете валиден http или https URL",

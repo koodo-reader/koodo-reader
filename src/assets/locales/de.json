@@ -964,7 +964,7 @@
   "Bar Chart": "Balkendiagramm",
   "Line Chart": "Liniendiagramm",
   "Customize popup menu": "Popup-Menü anpassen",
-  "You can enable up to 8 options": "Sie können bis zu 8 Optionen aktivieren",
+  "You can enable up to {{count}} options": "Sie können bis zu {{count}} Optionen aktivieren",
   "From URL": "Von URL",
   "Enter book download URL or article URL": "Geben Sie die Buch-Download-URL oder Artikel-URL ein",
   "Please enter a valid http or https URL": "Bitte geben Sie eine gültige http- oder https-URL ein",

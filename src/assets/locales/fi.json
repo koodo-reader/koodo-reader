@@ -971,7 +971,7 @@
   "Bar Chart": "Pylväsdiagrammi",
   "Line Chart": "Viivadiagrammi",
   "Customize popup menu": "Mukauta ponnahdusvalikko",
-  "You can enable up to 8 options": "Voit ottaa käyttöön enintään 8 vaihtoehtoa",
+  "You can enable up to {{count}} options": "Voit ottaa käyttöön enintään {{count}} vaihtoehtoa",
   "From URL": "URL-osoitteesta",
   "Enter book download URL or article URL": "Anna kirjan lataus-URL tai artikkeli-URL",
   "Please enter a valid http or https URL": "Anna kelvollinen http- tai https-URL",

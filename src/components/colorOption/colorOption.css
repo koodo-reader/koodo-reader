@@ -4,17 +4,18 @@
   padding-bottom: 0;
   flex-shrink: 0;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
 }
 .note-highlight-style-tabs {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0px;
+  flex-wrap: nowrap;
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
-  justify-content: space-around;
+  flex-shrink: 0;
 }
 .note-highlight-style-tab {
   display: flex;
@@ -36,24 +37,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  font-size: 11px;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
   font-weight: 600;
   border-radius: 3px;
 }
 .note-highlight-color-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  flex-wrap: nowrap;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
-  justify-content: space-around;
+  flex: 1;
+  justify-content: flex-end;
 }
 .note-highlight-color-item {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   cursor: pointer;
   box-sizing: border-box;

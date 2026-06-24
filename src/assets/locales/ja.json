@@ -975,7 +975,7 @@
   "Bar Chart": "棒グラフ",
   "Line Chart": "折れ線グラフ",
   "Customize popup menu": "ポップアップメニューをカスタマイズ",
-  "You can enable up to 8 options": "最大8個のオプションを有効にできます",
+  "You can enable up to {{count}} options": "最大{{count}}個のオプションを有効にできます",
   "From URL": "URLからインポート",
   "Enter book download URL or article URL": "書籍のダウンロードURLまたは記事URLを入力",
   "Please enter a valid http or https URL": "有効なhttpまたはhttps URLを入力してください",
