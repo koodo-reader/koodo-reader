@@ -155,7 +155,7 @@ export function buildHighlightPreviewStyle(
 ): CSSProperties {
   switch (styleType) {
     case "background":
-      return { background: color };
+      return { background: color, borderRadius: "50%" };
     case "underline":
       return { borderBottom: `2px solid ${color}` };
     case "strikethrough":
