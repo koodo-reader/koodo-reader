@@ -2,6 +2,7 @@ import { getIframeDoc } from "./docUtil";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { applyThemeColor, removeThemeColor } from "./themeUtil";
 import { StyleHelper } from "../../assets/lib/kookit.min";
+import FontUtil from "../file/fontUtil";
 
 class styleUtil {
   // add default css for iframe
@@ -43,6 +44,23 @@ class styleUtil {
   // get default css for iframe
   static getDefaultCss(bookKey: string) {
     return StyleHelper.getDefaultCss(ConfigService, bookKey);
+  }
+
+  static async applyReaderFonts(rendition: any): Promise<void> {
+    if (!rendition?.displayFontUrl) return;
+
+    const fontName = ConfigService.getReaderConfig("fontFamily");
+    const subFontName = ConfigService.getReaderConfig("subFontFamily");
+
+    if (fontName && FontUtil.isCustomFont(fontName)) {
+      const url = await FontUtil.getFontUrl(fontName);
+      if (url) await rendition.displayFontUrl(fontName, url);
+    }
+
+    if (subFontName && FontUtil.isCustomFont(subFontName)) {
+      const url = await FontUtil.getFontUrl(subFontName);
+      if (url) await rendition.displayFontUrl(subFontName, url);
+    }
   }
 
   static applyTheme() {

@@ -12,6 +12,7 @@ import AboutSetting from "../../../containers/settings/aboutSetting";
 import DataSetting from "../../../containers/settings/dataSetting";
 import AISetting from "../../../containers/settings/aiSetting";
 import BackgroundSetting from "../../../containers/settings/backgroundSetting";
+import FontSetting from "../../../containers/settings/fontSetting";
 import ChapterSetting from "../../../containers/settings/chapterSetting";
 import TextSetting from "../../../containers/settings/textSetting";
 import DictSetting from "../../../containers/settings/dictSetting";
@@ -85,6 +86,8 @@ class SettingDialog extends React.Component<
         return "AI service";
       case "background":
         return "Background";
+      case "font":
+        return "Font";
       case "chapter":
         return "TXT parser";
       case "text":
@@ -159,6 +162,12 @@ class SettingDialog extends React.Component<
               "18px"
             )}
             {this.renderSidebarItem(
+              "font",
+              "icon-convert-text",
+              "Font",
+              "18px"
+            )}
+            {this.renderSidebarItem(
               "chapter",
               "icon-convert-text",
               "TXT parser",
@@ -217,6 +226,8 @@ class SettingDialog extends React.Component<
               <AISetting />
             ) : this.props.settingMode === "background" ? (
               <BackgroundSetting />
+            ) : this.props.settingMode === "font" ? (
+              <FontSetting />
             ) : this.props.settingMode === "chapter" ? (
               <ChapterSetting />
             ) : this.props.settingMode === "text" ? (

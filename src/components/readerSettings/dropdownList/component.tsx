@@ -10,7 +10,7 @@ import {
   ConfigService,
   KookitConfig,
 } from "../../../assets/lib/kookit-extra-browser.min";
-import { loadFontData, vexComfirmAsync } from "../../../utils/common";
+import FontUtil from "../../../utils/file/fontUtil";
 import toast from "react-hot-toast";
 declare var window: any;
 class DropdownList extends React.Component<
@@ -42,6 +42,7 @@ class DropdownList extends React.Component<
         ConfigService.getReaderConfig("fullTranslationTarget") ||
         ConfigService.getReaderConfig("lang") ||
         "zhCN",
+      fontOptions: [],
       currentTextOrientationValue:
         ConfigService.getReaderConfig("textOrientation") || "",
       currentSelectActionValue:
@@ -82,30 +83,24 @@ class DropdownList extends React.Component<
         ...customParserOptions,
       ],
     });
-    loadFontData().then((result) => {
-      if (!result || result.length === 0) return;
-      let fontFamilyItem = dropdownList.find(
-        (item) => item.value === "fontFamily"
-      );
-      let subFontFamilyItem = dropdownList.find(
-        (item) => item.value === "subFontFamily"
-      );
-      if (fontFamilyItem && fontFamilyItem.option.length <= 2) {
-        fontFamilyItem.option = fontFamilyItem.option.concat(result);
-      }
-      if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
-        subFontFamilyItem.option = subFontFamilyItem.option.concat(result);
-      }
-      if (fontFamilyItem && subFontFamilyItem) {
-        this.setState({
-          currentFontFamilyValue:
-            ConfigService.getReaderConfig("fontFamily") || "Built-in font",
-          currentSubFontFamilyValue:
-            ConfigService.getReaderConfig("subFontFamily") || "Built-in font",
-        });
-      }
-    });
+    this.loadMergedFonts();
+    window.addEventListener("font-list-changed", this.loadMergedFonts);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener("font-list-changed", this.loadMergedFonts);
+  }
+
+  loadMergedFonts = async () => {
+    const options = await FontUtil.getMergedFontOptions();
+    this.setState({
+      fontOptions: options,
+      currentFontFamilyValue:
+        ConfigService.getReaderConfig("fontFamily") || "Built-in font",
+      currentSubFontFamilyValue:
+        ConfigService.getReaderConfig("subFontFamily") || "Built-in font",
+    });
+  };
 
   handleView(event: any, option: string) {
     const value = event.target.value;
@@ -119,17 +114,6 @@ class DropdownList extends React.Component<
         if (arr[0] === "Built-in font") {
           ConfigService.setReaderConfig(option, "");
         }
-        if (arr[0] === "Load local fonts") {
-          vexComfirmAsync(
-            this.props.t(
-              "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
-            )
-          );
-          ConfigService.setReaderConfig(option, "");
-
-          return;
-        }
-
         break;
       case "subFontFamily":
         this.setState({
@@ -138,17 +122,6 @@ class DropdownList extends React.Component<
         if (arr[0] === "Built-in font") {
           ConfigService.setReaderConfig(option, "");
         }
-        if (arr[0] === "Load local fonts") {
-          vexComfirmAsync(
-            this.props.t(
-              "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
-            )
-          );
-          ConfigService.setReaderConfig(option, "");
-
-          return;
-        }
-
         break;
 
       case "lineHeight":
@@ -297,7 +270,10 @@ class DropdownList extends React.Component<
                   this.handleView(event, item.value);
                 }}
               >
-                {item.option.map(
+                {(item.value === "fontFamily" || item.value === "subFontFamily"
+                  ? this.state.fontOptions
+                  : item.option
+                ).map(
                   (
                     subItem: {
                       label: string;
@@ -314,7 +290,12 @@ class DropdownList extends React.Component<
                         ? subItem.value === ""
                           ? this.props.t("Disable")
                           : subItem.label
-                        : this.props.t(subItem.label)}
+                        : item.value === "fontFamily" ||
+                            item.value === "subFontFamily"
+                          ? subItem.value === "Built-in font"
+                            ? this.props.t(subItem.label)
+                            : subItem.label
+                          : this.props.t(subItem.label)}
                     </option>
                   )
                 )}

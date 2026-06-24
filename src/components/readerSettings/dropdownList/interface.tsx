@@ -25,4 +25,5 @@ export interface DropdownListState {
   currentSelectActionValue: string;
   currentTxtParserValue: string;
   txtParserOptions: { label: string; value: string }[];
+  fontOptions: { label: string; value: string }[];
 }

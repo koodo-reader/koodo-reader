@@ -391,6 +391,7 @@ export const restoreFromfilePath = async (filePath: string) => {
         name.startsWith("cover/") ||
         name.startsWith("dict/") ||
         name.startsWith("background/") ||
+        name.startsWith("font/") ||
         name.startsWith("snapshot/"))
   );
   await Promise.all(
