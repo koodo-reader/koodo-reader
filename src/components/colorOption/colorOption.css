@@ -38,11 +38,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   font-size: 10px;
   font-weight: 600;
-  border-radius: 50%;
   box-sizing: border-box;
   border: 2px solid transparent;
 }

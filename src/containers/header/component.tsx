@@ -797,7 +797,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               data-tooltip-content={this.props.t("Setting")}
               data-tooltip-place="left"
             >
-              <span className="icon-setting setting-icon"></span>
+              <span
+                className="icon-setting setting-icon"
+                style={{ fontSize: "25px" }}
+              ></span>
             </span>
           </div>
           <div
@@ -852,7 +855,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   (this.state.isSync ? " icon-rotate" : "")
                 }
                 style={
-                  this.state.isDataChange ? { color: "rgb(35, 170, 242)" } : {}
+                  this.state.isDataChange
+                    ? { color: "rgb(35, 170, 242)", fontSize: "25px" }
+                    : { fontSize: "25px" }
                 }
               ></span>
             </span>
