@@ -25,6 +25,7 @@ export interface PopupMenuProps {
   handleRenderNoteFunc: (renderNoteFunc: () => void) => void;
   handleOriginalText: (originalText: string) => void;
   handleOriginalSentence: (originalSentence: string) => void;
+  handleFetchNotes: () => void;
 }
 export interface PopupMenuStates {
   deleteKey: string;

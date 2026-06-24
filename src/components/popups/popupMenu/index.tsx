@@ -7,6 +7,7 @@ import {
   handleRenderNoteFunc,
   handleOriginalText,
   handleOriginalSentence,
+  handleFetchNotes,
 } from "../../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
@@ -34,6 +35,7 @@ const actionCreator = {
   handleRenderNoteFunc,
   handleOriginalText,
   handleOriginalSentence,
+  handleFetchNotes,
 };
 export default connect(
   mapStateToProps,
