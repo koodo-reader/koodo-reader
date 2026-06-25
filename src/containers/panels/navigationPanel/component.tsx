@@ -17,6 +17,10 @@ import {
   READING_PANEL_TOGGLE_EVENT,
 } from "../../../utils/reader/mouseEvent";
 import { buildSearchHighlightStyle } from "../../../utils/reader/highlightUtil";
+import {
+  groupSearchResults,
+  type SearchResultGroup,
+} from "../../../utils/reader/searchResultUtil";
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
@@ -119,6 +123,44 @@ class NavigationPanel extends React.Component<
       this.props.renderBookFunc();
     }, 300);
   };
+  toggleChapter = (docIndex: number) => {
+    this.setState((prevState) => {
+      const next = new Set(prevState.collapsedChapters);
+      if (next.has(docIndex)) {
+        next.delete(docIndex);
+      } else {
+        next.add(docIndex);
+      }
+      return { collapsedChapters: next };
+    });
+  };
+  handleSearchItemClick = async (item: any) => {
+    let bookLocation = JSON.parse(item.cfi) || {};
+    await this.props.htmlBook.rendition.goToPosition(
+      JSON.stringify({
+        text: bookLocation.text,
+        chapterTitle: bookLocation.chapterTitle,
+        chapterDocIndex: bookLocation.chapterDocIndex,
+        chapterHref: bookLocation.chapterHref,
+        count: bookLocation.hasOwnProperty("cfi")
+          ? "ignore"
+          : bookLocation.count,
+        percentage: bookLocation.percentage,
+        cfi: bookLocation.cfi,
+        page: bookLocation.page,
+      })
+    );
+    let style = buildSearchHighlightStyle(
+      this.props.currentBook.format === "PDF" &&
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
+    );
+    this.props.htmlBook.rendition.highlightSearchNode(
+      bookLocation.keyword,
+      style
+    );
+  };
   renderSearchList = () => {
     if (!this.state.searchList[0]) {
       return (
@@ -127,50 +169,55 @@ class NavigationPanel extends React.Component<
         </div>
       );
     }
-    return this.state.searchList.map((item: any) => {
+    const groups: SearchResultGroup[] = groupSearchResults(
+      this.state.searchList
+    );
+    return groups.map((group: SearchResultGroup) => {
+      const collapsed = this.state.collapsedChapters.has(group.docIndex);
       return (
-        <li
-          className="nav-search-list-item"
-          key={item.text}
-          onClick={async () => {
-            let bookLocation = JSON.parse(item.cfi) || {};
-            await this.props.htmlBook.rendition.goToPosition(
-              JSON.stringify({
-                text: bookLocation.text,
-                chapterTitle: bookLocation.chapterTitle,
-                chapterDocIndex: bookLocation.chapterDocIndex,
-                chapterHref: bookLocation.chapterHref,
-                count: bookLocation.hasOwnProperty("cfi")
-                  ? "ignore"
-                  : bookLocation.count,
-                percentage: bookLocation.percentage,
-                cfi: bookLocation.cfi,
-                page: bookLocation.page,
-              })
-            );
-            let style = buildSearchHighlightStyle(
-              this.props.currentBook.format === "PDF" &&
-                !ConfigService.getAllListConfig("convertPDFBooks").includes(
-                  this.props.currentBook.key
-                )
-            );
-            this.props.htmlBook.rendition.highlightSearchNode(
-              bookLocation.keyword,
-              style
-            );
-          }}
-        >
-          <div>{Parser(DOMPurify.sanitize(item.excerpt))}</div>
+        <li className="nav-search-group" key={`group-${group.docIndex}`}>
           <div
-            style={{
-              textAlign: "right",
-              fontSize: "15px",
-              marginTop: "5px",
-              opacity: 0.7,
+            className="nav-search-group-title"
+            onClick={() => {
+              this.toggleChapter(group.docIndex);
             }}
           >
-            {JSON.parse(item.cfi).chapterTitle}
+            <span
+              className={
+                collapsed
+                  ? "nav-search-group-arrow nav-search-group-arrow-collapsed"
+                  : "nav-search-group-arrow"
+              }
+            ></span>
+            <span className="nav-search-group-name">{group.title}</span>
+            <span className="nav-search-group-count">
+              ({group.items.length})
+            </span>
           </div>
+          {!collapsed && (
+            <ul className="nav-search-group-items">
+              {group.items.map((entry) => {
+                const isActive =
+                  this.state.activeSearchKey === entry.key;
+                return (
+                  <li
+                    className={
+                      isActive
+                        ? "nav-search-list-item nav-search-list-item-active"
+                        : "nav-search-list-item"
+                    }
+                    key={entry.key}
+                    onClick={() => {
+                      this.setState({ activeSearchKey: entry.key });
+                      this.handleSearchItemClick(entry.item);
+                    }}
+                  >
+                    <div>{Parser(DOMPurify.sanitize(entry.item.excerpt))}</div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </li>
       );
     });
