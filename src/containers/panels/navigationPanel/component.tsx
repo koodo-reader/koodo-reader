@@ -42,10 +42,7 @@ class NavigationPanel extends React.Component<
   handleNavSearchState = (state: string) => {
     this.setState({ searchState: state });
     if (state === "searching") {
-      this.setState({
-        searchList: null,
-        activeSearchKey: null,
-      });
+      this.resetSearchState();
     }
     if (state) {
       this.props.handleSearch(true);
@@ -56,7 +53,18 @@ class NavigationPanel extends React.Component<
     }
   };
   handleSearchList = (searchList: any) => {
-    this.setState({ searchList });
+    if (searchList === null) {
+      this.resetSearchState();
+    } else {
+      this.setState({ searchList });
+    }
+  };
+  resetSearchState = () => {
+    this.setState({
+      searchList: null,
+      activeSearchKey: null,
+      collapsedChapters: new Set<number>(),
+    });
   };
   async UNSAFE_componentWillReceiveProps(nextProps: NavigationPanelProps) {
     if (nextProps.currentBook.key !== this.props.currentBook.key) {
@@ -90,11 +98,7 @@ class NavigationPanel extends React.Component<
     if (this.state.searchState) {
       this.handleNavSearchState("");
       this.props.handleSearch(false);
-      this.setState({
-        searchList: null,
-        activeSearchKey: null,
-        collapsedChapters: new Set<number>(),
-      });
+      this.resetSearchState();
     }
     if (this.isLeftPanelOpen() && this.state.currentTab === tab) {
       window.dispatchEvent(
@@ -256,11 +260,7 @@ class NavigationPanel extends React.Component<
               onClick={() => {
                 this.handleNavSearchState("");
                 this.props.handleSearch(false);
-                this.setState({
-                  searchList: null,
-                  activeSearchKey: null,
-                  collapsedChapters: new Set<number>(),
-                });
+                this.resetSearchState();
               }}
             >
               <span className="icon-close theme-color-delete"></span>
