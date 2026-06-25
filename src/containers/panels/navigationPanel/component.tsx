@@ -31,6 +31,8 @@ class NavigationPanel extends React.Component<
       searchList: null,
       cover: "",
       isCoverExist: false,
+      activeSearchKey: null,
+      collapsedChapters: new Set<number>(),
     };
   }
   handleNavSearchState = (state: string) => {
@@ -38,6 +40,7 @@ class NavigationPanel extends React.Component<
     if (state === "searching") {
       this.setState({
         searchList: null,
+        activeSearchKey: null,
       });
     }
     if (state) {
@@ -83,7 +86,11 @@ class NavigationPanel extends React.Component<
     if (this.state.searchState) {
       this.handleNavSearchState("");
       this.props.handleSearch(false);
-      this.setState({ searchList: null });
+      this.setState({
+        searchList: null,
+        activeSearchKey: null,
+        collapsedChapters: new Set<number>(),
+      });
     }
     if (this.isLeftPanelOpen() && this.state.currentTab === tab) {
       window.dispatchEvent(
@@ -202,7 +209,11 @@ class NavigationPanel extends React.Component<
               onClick={() => {
                 this.handleNavSearchState("");
                 this.props.handleSearch(false);
-                this.setState({ searchList: null });
+                this.setState({
+                  searchList: null,
+                  activeSearchKey: null,
+                  collapsedChapters: new Set<number>(),
+                });
               }}
             >
               <span className="icon-close theme-color-delete"></span>
