@@ -22,4 +22,6 @@ export interface NavigationPanelState {
   searchList: any;
   cover: string;
   isCoverExist: boolean;
+  activeSearchKey: string | null;
+  collapsedChapters: Set<number>;
 }
