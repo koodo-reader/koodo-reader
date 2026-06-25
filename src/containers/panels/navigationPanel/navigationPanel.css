@@ -223,26 +223,11 @@
   align-items: center;
   padding: 6px 4px;
   cursor: pointer;
-  font-size: 13px;
-  opacity: 0.7;
   border-radius: 4px;
   transition: background 0.15s ease;
 }
 .nav-search-group-title:hover {
   background: var(--color-hover, rgba(128, 128, 128, 0.12));
-}
-.nav-search-group-arrow {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  margin-right: 6px;
-  border-left: 5px solid currentColor;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
-  transition: transform 0.15s ease;
-}
-.nav-search-group-arrow-collapsed {
-  transform: rotate(-90deg);
 }
 .nav-search-group-name {
   flex: 1;
@@ -250,6 +235,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 600;
+  font-size: 15px;
+  margin-left: 10px;
+  line-height: 20px;
 }
 .nav-search-group-count {
   margin-left: 6px;
@@ -261,7 +249,7 @@
   margin: 2px 0 0;
 }
 .nav-search-list-item-active {
-  background: var(--color-hover, rgba(128, 128, 128, 0.12));
+  background: var(--color-hover, rgba(128, 128, 128, 0.05));
   border-left: 3px solid var(--color-theme-color, #0179ca);
   padding-left: 5px;
 }
