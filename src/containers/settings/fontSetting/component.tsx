@@ -372,7 +372,6 @@ class FontSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                       : {}
                   }
                 ></span>
-                {/* <span>{expandedFamily === family ? "▲" : "▼"}</span> */}
               </div>
               {expandedFamily === family &&
                 allFonts
