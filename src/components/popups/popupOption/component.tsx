@@ -19,6 +19,7 @@ import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { openExternalUrl } from "../../../utils/common";
 import { createHighlight } from "../../../utils/reader/noteUtil";
 import { formatHighlightValue } from "../../../utils/reader/highlightUtil";
+import { Tooltip } from "react-tooltip";
 
 declare var window: any;
 
@@ -239,6 +240,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     });
     return (
       <div className="menu-list">
+        <Tooltip id="option-tooltip" style={{ zIndex: 25 }} />
         {popupOptionKeys.map((itemKey) => {
           const item = popupOptionMap[itemKey];
           return (
@@ -250,10 +252,13 @@ class PopupOption extends React.Component<PopupOptionProps> {
               }}
             >
               <span
-                data-tooltip-id="my-tooltip"
+                data-tooltip-id="option-tooltip"
                 data-tooltip-content={this.props.t(item.title)}
               >
-                <span className={`icon-${item.icon} ${item.name}-icon`}></span>
+                <span
+                  className={`icon-${item.icon} ${item.name}-icon`}
+                  style={{ pointerEvents: "none" }}
+                ></span>
               </span>
             </div>
           );
@@ -265,7 +270,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
           }}
         >
           <span
-            data-tooltip-id="my-tooltip"
+            data-tooltip-id="option-tooltip"
             data-tooltip-content={this.props.t("Customize popup menu")}
           >
             <span
