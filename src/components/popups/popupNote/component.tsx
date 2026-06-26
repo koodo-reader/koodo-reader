@@ -91,7 +91,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         formatHighlightValue(this.props.highlight) || newNote.color;
       DatabaseService.updateRecord(newNote, "notes").then(() => {
         this.props.handleOpenMenu(false);
-        toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
         this.props.handleNoteKey("");
@@ -164,7 +163,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       );
       DatabaseService.saveRecord(note, "notes").then(async () => {
         this.props.handleOpenMenu(false);
-        toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
         await this.props.htmlBook.rendition.createOneNote(
