@@ -49,18 +49,6 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
     props.handleReadingBook(props.book);
   };
 
-  const handleLoveBook = () => {
-    ConfigService.setListConfig(props.book.key, "favoriteBooks");
-    setIsFavorite(true);
-    toast.success(props.t("Addition successful"));
-  };
-
-  const handleRestoreBook = () => {
-    ConfigService.deleteListConfig(props.book.key, "deletedBooks");
-    toast.success(props.t("Restore successful"));
-    props.handleFetchBooks();
-  };
-
   const percentage = getPercentage();
   const actionProps = { left, top };
 
@@ -94,9 +82,13 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
               <EmptyCover
                 {...{
                   format: props.book.format,
-                  title: ConfigService.getReaderConfig("isUseOriginalName") === "yes"
-                    ? getFileNameWithoutExtension(props.book.path, props.book.name)
-                    : props.book.name,
+                  title:
+                    ConfigService.getReaderConfig("isUseOriginalName") === "yes"
+                      ? getFileNameWithoutExtension(
+                          props.book.path,
+                          props.book.name
+                        )
+                      : props.book.name,
                   scale: 0.43,
                 }}
               />
