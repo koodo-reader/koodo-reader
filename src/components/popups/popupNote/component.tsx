@@ -14,7 +14,10 @@ import {
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
-import { formatHighlightValue } from "../../../utils/reader/highlightUtil";
+import {
+  formatHighlightValue,
+  getHighlightValue,
+} from "../../../utils/reader/highlightUtil";
 import { DEFAULT_NOTE_HIGHLIGHT_STRING } from "../../../constants/highlightList";
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   constructor(props: PopupNoteProps) {
@@ -25,16 +28,20 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
     if (this.props.noteKey) {
-      let note = await DatabaseService.getRecord(this.props.noteKey, "notes");
+      let note: Note = await DatabaseService.getRecord(
+        this.props.noteKey,
+        "notes"
+      );
       this.setState({
         text: note.text,
         tag: note.tag,
         note: note,
       });
+      console.log("note", note);
       textArea.value = note.notes;
-      const [styleType, color] = (
+      let { styleType, color } = getHighlightValue(
         note.color || DEFAULT_NOTE_HIGHLIGHT_STRING
-      ).split("-");
+      );
       this.props.handleHighlight({
         styleType,
         color,
