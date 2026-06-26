@@ -154,7 +154,6 @@ class OperationPanel extends React.Component<
     await DatabaseService.saveRecord(bookmark, "bookmarks");
     this.props.handleFetchBookmarks();
     this.setState({ isBookmark: true });
-    toast.success(this.props.t("Addition successful"));
     this.props.handleShowBookmark(true);
   };
   async handleDisplayBookmark() {

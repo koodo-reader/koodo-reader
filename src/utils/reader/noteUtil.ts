@@ -5,7 +5,6 @@ import {
   NoteSyncManager,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getIframeDoc } from "./docUtil";
-import toast from "react-hot-toast";
 
 export interface DigestParams {
   currentBook: any;
@@ -25,7 +24,6 @@ export async function createHighlight(params: DigestParams): Promise<void> {
     chapterDocIndex,
     chapter,
     color,
-    t,
     onNoteClick,
     onSuccess,
   } = params;
@@ -83,7 +81,6 @@ export async function createHighlight(params: DigestParams): Promise<void> {
   );
 
   await DatabaseService.saveRecord(highlight, "notes");
-  toast.success(t("Addition successful"));
   await htmlBook.rendition.createOneNote(highlight, onNoteClick ?? (() => {}));
   let noteSyncManager = new NoteSyncManager(DatabaseService, ConfigService);
   noteSyncManager.syncNote(highlight, bookKey);
