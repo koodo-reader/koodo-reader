@@ -95,7 +95,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.isSettingLocked
         )
       );
-      this.handleRenderBook();
+      if (ConfigService.getReaderConfig("isFullscreen") !== "yes") {
+        this.handleRenderBook();
+      }
     });
     window.addEventListener("resize", this.resizeHandler);
   }
