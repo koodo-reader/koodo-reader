@@ -88,9 +88,14 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
   };
   render() {
     const renderShelfList = () => {
+      let sortedShelfList =
+        ConfigService.getAllListConfig("sortedShelfList") || [];
+      let shelfTitleList = Object.keys(
+        ConfigService.getAllMapConfig("shelfList")
+      );
       let shelfTitle = [
         "New shelf",
-        ...Object.keys(ConfigService.getAllMapConfig("shelfList")),
+        ...Array.from(new Set([...sortedShelfList, ...shelfTitleList])),
       ];
       return shelfTitle.map((item) => {
         return (
