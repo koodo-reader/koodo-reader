@@ -13,6 +13,28 @@ export interface HighlightValue {
   styleType: string;
   color: string;
 }
+export const getHighlightValue = (color: string | number) => {
+  if (typeof color === "number") {
+    if (color >= 0 && color < classes.length) {
+      const isBackground = classes[color].indexOf("color") > -1;
+      const colorIdx = classes[color].split("-")[1];
+      return {
+        styleType: isBackground ? "background" : "underline",
+        color: isBackground ? colors[colorIdx] : lines[colorIdx],
+      };
+    }
+  } else {
+    const [styleType, colorValue] = color.split("-");
+    return {
+      styleType: styleType,
+      color: colorValue,
+    };
+  }
+  return {
+    styleType: "background",
+    color: "#FEF3CD",
+  };
+};
 
 export function formatHighlightValue(value: HighlightValue): string {
   return `${value.styleType}-${value.color}`;

@@ -32,6 +32,7 @@ class ColorOption extends React.Component<ColorProps> {
   };
 
   render() {
+    console.log("this.props.highlight", this.props.highlight);
     const { styleType, color } = this.props.highlight;
     const presetColors = highlightPresetColors[styleType];
 
