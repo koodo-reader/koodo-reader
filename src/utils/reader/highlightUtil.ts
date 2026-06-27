@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import {
+  DEFAULT_HIGHLIGHT_STRING,
   DEFAULT_HIGHLIGHT_VALUE,
   DEFAULT_NOTE_HIGHLIGHT_VALUE,
   NOTE_HIGHLIGHT_CONFIG_KEY,
@@ -41,7 +42,10 @@ export function formatHighlightValue(value: HighlightValue): string {
 }
 
 export function getNoteHighlightString(): string {
-  return ConfigService.getReaderConfig(NOTE_HIGHLIGHT_CONFIG_KEY);
+  return (
+    ConfigService.getReaderConfig(NOTE_HIGHLIGHT_CONFIG_KEY) ||
+    DEFAULT_HIGHLIGHT_STRING
+  );
 }
 
 export function getNoteHighlightValue(): HighlightValue {
@@ -64,7 +68,10 @@ export function saveNoteHighlightValue(value: HighlightValue): void {
 }
 
 export function getTtsHighlightString(): string {
-  return ConfigService.getReaderConfig(TTS_HIGHLIGHT_CONFIG_KEY);
+  return (
+    ConfigService.getReaderConfig(TTS_HIGHLIGHT_CONFIG_KEY) ||
+    DEFAULT_HIGHLIGHT_STRING
+  );
 }
 export function getTtsHighlightValue(): HighlightValue {
   const value = getTtsHighlightString();
@@ -85,7 +92,10 @@ export function saveTtsHighlightValue(value: HighlightValue): void {
   );
 }
 export function getSearchHighlightString(): string {
-  return ConfigService.getReaderConfig(SEARCH_HIGHLIGHT_CONFIG_KEY);
+  return (
+    ConfigService.getReaderConfig(SEARCH_HIGHLIGHT_CONFIG_KEY) ||
+    DEFAULT_HIGHLIGHT_STRING
+  );
 }
 export function getSearchHighlightValue(): HighlightValue {
   const colorCode = ConfigService.getReaderConfig(SEARCH_HIGHLIGHT_CONFIG_KEY);
@@ -126,7 +136,9 @@ export function buildHighlightStyleForType(
 ): string {
   let styleType: string = "background";
   let rawColor: string = "#FEF3CD";
+  console.log("colorCode", colorCode, classes.length);
   if (typeof colorCode === "number") {
+    console.log("colorCode", colorCode, classes.length);
     if (colorCode >= 0 && colorCode < classes.length) {
       const isBackground = classes[colorCode].indexOf("color") > -1;
       const colorIdx = classes[colorCode].split("-")[1];
