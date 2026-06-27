@@ -14,6 +14,9 @@ import { formatHighlightValue } from "../../../utils/reader/highlightUtil";
 
 declare var window: any;
 
+const MENU_WIDTH = 252;
+const MENU_HEIGHT = 141;
+
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;
   timer!: NodeJS.Timeout;
@@ -55,6 +58,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (!rect) return;
     this.setState({ isRightEdge: false }, () => {
       let { posX, posY } = this.getHtmlPosition(rect);
+      console.log(posX, posY, rect);
       this.props.handleOpenMenu(true);
       let popupMenu = document.querySelector(".popup-menu-container");
       popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
@@ -69,14 +73,14 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posX = rect.left + rect.width;
     }
     if (
-      rect.top < 188 &&
-      pageSize.height - rect.top - rect.height < 188 &&
+      rect.top < MENU_HEIGHT &&
+      pageSize.height - rect.top - rect.height < MENU_HEIGHT &&
       this.props.readerMode !== "scroll"
     ) {
       this.props.handleChangeDirection(true);
       posY = rect.top + 16 + pageSize.top;
     } else if (
-      pageSize.height - rect.height < 188 &&
+      pageSize.height - rect.height < MENU_HEIGHT &&
       pageSize.height - rect.height > -10
     ) {
       this.props.handleChangeDirection(true);
@@ -86,13 +90,15 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.props.readerMode === "scroll"
     ) {
       posY = 40;
-    } else if (posY < pageSize.height - 188 + pageSize.top) {
+    } else if (posY < pageSize.height - MENU_HEIGHT + pageSize.top) {
       this.props.handleChangeDirection(true);
       posY = posY + 16 + pageSize.top;
     } else {
-      posY = posY - rect.height - 188 + pageSize.top;
+      posY = posY - rect.height - MENU_HEIGHT + pageSize.top;
     }
-    posX = posX - 126 + pageSize.left;
+    console.log(posX, posY, rect, pageSize);
+    posX = posX - MENU_WIDTH / 2 + pageSize.left;
+    console.log(posX, posY, rect, pageSize);
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&
@@ -116,8 +122,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (posY < 0) {
       posY = 16;
     }
-    if (posY > pageSize.height - 188) {
-      posY = pageSize.height - 188;
+    if (posY > pageSize.height - MENU_HEIGHT) {
+      posY = pageSize.height - MENU_HEIGHT;
     }
     if (
       this.props.readerMode === "scroll" &&
@@ -125,7 +131,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     ) {
       posX = posX - pageSize.scrollLeft;
     }
-    return { posX, posY } as any;
+    return { posX: Math.max(12, posX), posY } as any;
   }
 
   openMenu = () => {
