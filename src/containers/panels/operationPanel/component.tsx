@@ -123,7 +123,10 @@ class OperationPanel extends React.Component<
       "bookmarks"
     );
     for (let i = 0; i < bookmarks.length; i++) {
-      if (bookmarks[i].percentage === bookLocation.percentage) {
+      if (
+        bookmarks[i].percentage === bookLocation.percentage &&
+        bookmarks[i].page === bookLocation.page
+      ) {
         isDuplicate = true;
         break;
       }
