@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import {
   DEFAULT_HIGHLIGHT_STRING,
@@ -183,10 +182,7 @@ export function buildHighlightStyleForType(
       return `background: ${color};`;
   }
 }
-export function buildHighlightPreviewStyle(
-  styleType: string,
-  color: string
-): CSSProperties {
+export function buildHighlightPreviewStyle(styleType: string, color: string) {
   switch (styleType) {
     case "background":
       return { background: color, borderRadius: "50%" };
