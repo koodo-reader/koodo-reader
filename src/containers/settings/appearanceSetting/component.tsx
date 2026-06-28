@@ -3,7 +3,11 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
-import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  HighlightUtil,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import {
   appearanceSettingList,
   skinList,
@@ -17,10 +21,6 @@ import {
   applyCustomSystemFont,
   syncNativeThemeSource,
 } from "../../../utils/reader/launchUtil";
-import {
-  highlightPresetColors,
-  highlightStyleTypes,
-} from "../../../constants/highlightList";
 
 class AppearanceSetting extends React.Component<
   SettingInfoProps,
@@ -149,7 +149,7 @@ class AppearanceSetting extends React.Component<
   };
 
   handleTtsStyleType = (styleType: string) => {
-    const color = highlightPresetColors[styleType][0];
+    const color = KookitConfig.KookitConfig.HighlightPresetColors[styleType][0];
     this.setState({
       ttsHighlightStyleType: styleType,
       ttsHighlightColor: color,
@@ -161,7 +161,8 @@ class AppearanceSetting extends React.Component<
 
   handleTtsPresetColor = (index: number) => {
     const styleType = this.state.ttsHighlightStyleType;
-    const color = highlightPresetColors[styleType][index];
+    const color =
+      KookitConfig.KookitConfig.HighlightPresetColors[styleType][index];
     this.setState({
       ttsHighlightColor: color,
       isShowTtsCustomColorPicker: false,
@@ -185,7 +186,7 @@ class AppearanceSetting extends React.Component<
   };
 
   handleSearchStyleType = (styleType: string) => {
-    const color = highlightPresetColors[styleType][0];
+    const color = KookitConfig.HighlightPresetColors[styleType][0];
     this.setState({
       searchHighlightStyleType: styleType,
       searchHighlightColor: color,
@@ -197,7 +198,7 @@ class AppearanceSetting extends React.Component<
 
   handleSearchPresetColor = (index: number) => {
     const styleType = this.state.searchHighlightStyleType;
-    const color = highlightPresetColors[styleType][index];
+    const color = KookitConfig.HighlightPresetColors[styleType][index];
     this.setState({
       searchHighlightColor: color,
       isShowSearchCustomColorPicker: false,
@@ -223,7 +224,7 @@ class AppearanceSetting extends React.Component<
   renderTtsHighlightSetting = () => {
     const styleType = this.state.ttsHighlightStyleType;
     const currentColor = this.state.ttsHighlightColor;
-    const presetColors = highlightPresetColors[styleType];
+    const presetColors = KookitConfig.HighlightPresetColors[styleType];
     const isCustomSelected = !presetColors.includes(currentColor);
 
     return (
@@ -237,11 +238,11 @@ class AppearanceSetting extends React.Component<
           </Trans>
         </p>
         <ul className="tts-highlight-style-tabs">
-          {highlightStyleTypes.map((item) => {
+          {KookitConfig.HighlightStyleTypes.map((item) => {
             const previewColor =
               item.value === styleType
                 ? currentColor
-                : highlightPresetColors[item.value][0];
+                : KookitConfig.HighlightPresetColors[item.value][0];
             return (
               <li
                 key={item.value}
@@ -364,7 +365,7 @@ class AppearanceSetting extends React.Component<
   renderSearchHighlightSetting = () => {
     const styleType = this.state.searchHighlightStyleType;
     const currentColor = this.state.searchHighlightColor;
-    const presetColors = highlightPresetColors[styleType];
+    const presetColors = KookitConfig.HighlightPresetColors[styleType];
     const isCustomSelected = !presetColors.includes(currentColor);
 
     return (
@@ -376,11 +377,11 @@ class AppearanceSetting extends React.Component<
           <Trans>Customize the highlight style when searching in books</Trans>
         </p>
         <ul className="tts-highlight-style-tabs">
-          {highlightStyleTypes.map((item) => {
+          {KookitConfig.HighlightStyleTypes.map((item) => {
             const previewColor =
               item.value === styleType
                 ? currentColor
-                : highlightPresetColors[item.value][0];
+                : KookitConfig.HighlightPresetColors[item.value][0];
             return (
               <li
                 key={item.value}
