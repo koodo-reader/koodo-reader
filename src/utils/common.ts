@@ -52,6 +52,10 @@ export const supportedFormats = [
   ".cbr",
   ".cb7",
 ];
+export interface HighlightValue {
+  styleType: string;
+  color: string;
+}
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     if (isElectron) {

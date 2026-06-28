@@ -1,5 +1,5 @@
 import BookModel from "../../../models/Book";
-import { HighlightValue } from "../../../utils/reader/highlightUtil";
+import { HighlightValue } from "../../../utils/common";
 
 export interface PopupBoxProps {
   currentBook: BookModel;

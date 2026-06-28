@@ -10,10 +10,7 @@ import {
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import { HexColorPicker } from "react-colorful";
-import {
-  reloadManager,
-  parseColorInput,
-} from "../../../utils/common";
+import { reloadManager, parseColorInput } from "../../../utils/common";
 import FontUtil from "../../../utils/file/fontUtil";
 import {
   applyCustomSystemCSS,
@@ -125,7 +122,10 @@ class AppearanceSetting extends React.Component<
   };
 
   changeFont = async (font: string) => {
-    ConfigService.setReaderConfig("systemFont", font === "Built-in font" ? "" : font);
+    ConfigService.setReaderConfig(
+      "systemFont",
+      font === "Built-in font" ? "" : font
+    );
     await applyCustomSystemFont();
     this.forceUpdate();
   };

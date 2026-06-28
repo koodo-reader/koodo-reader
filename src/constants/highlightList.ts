@@ -1,4 +1,4 @@
-import { HighlightValue } from "../utils/reader/highlightUtil";
+import { HighlightValue } from "../utils/common";
 
 export const highlightStyleTypes: {
   value: string;

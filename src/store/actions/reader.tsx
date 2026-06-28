@@ -6,7 +6,7 @@ import DatabaseService from "../../utils/storage/databaseService";
 import ConfigUtil from "../../utils/file/configUtil";
 import Note from "../../models/Note";
 import Bookmark from "../../models/Bookmark";
-import { HighlightValue } from "../../utils/reader/highlightUtil";
+import { HighlightValue } from "../../utils/common";
 
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
