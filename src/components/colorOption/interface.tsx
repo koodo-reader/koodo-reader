@@ -1,5 +1,5 @@
 import Note from "../../models/Note";
-import { HighlightValue } from "../../utils/reader/highlightUtil";
+import { HighlightValue } from "../../utils/common";
 
 export interface ColorProps {
   highlight: HighlightValue;

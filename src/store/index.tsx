@@ -12,7 +12,7 @@ import NoteModel from "../models/Note";
 import BookmarkModel from "../models/Bookmark";
 import HtmlBookModel from "../models/HtmlBook";
 import PluginModel from "../models/Plugin";
-import { HighlightValue } from "../utils/reader/highlightUtil";
+import { HighlightValue } from "../utils/common";
 const rootReducer = combineReducers({
   book,
   manager,

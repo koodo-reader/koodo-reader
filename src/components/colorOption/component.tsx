@@ -6,16 +6,21 @@ import {
   highlightStyleTypes,
 } from "../../constants/highlightList";
 import {
-  buildHighlightPreviewStyle,
-  saveNoteHighlightValue,
-} from "../../utils/reader/highlightUtil";
+  ConfigService,
+  HighlightUtil,
+} from "../../assets/lib/kookit-extra-browser.min";
 
 class ColorOption extends React.Component<ColorProps> {
+  highlightUtil: any;
+  constructor(props: ColorProps) {
+    super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
+  }
   handleStyleType = (styleType: string) => {
     const color = highlightPresetColors[styleType][0];
     const value = { styleType, color };
     this.props.handleHighlight(value);
-    saveNoteHighlightValue(value);
+    this.highlightUtil.saveNoteHighlightValue(value);
   };
 
   handlePresetColor = (index: number) => {
@@ -23,7 +28,7 @@ class ColorOption extends React.Component<ColorProps> {
     const color = highlightPresetColors[styleType][index];
     const value = { styleType, color };
     this.props.handleHighlight(value);
-    saveNoteHighlightValue(value);
+    this.highlightUtil.saveNoteHighlightValue(value);
     if (!this.props.isEdit) {
       setTimeout(() => {
         this.props.handleDigest();
@@ -67,7 +72,10 @@ class ColorOption extends React.Component<ColorProps> {
               >
                 <span
                   className="note-highlight-style-preview"
-                  style={buildHighlightPreviewStyle(item.value, previewColor)}
+                  style={this.highlightUtil.buildHighlightPreviewStyle(
+                    item.value,
+                    previewColor
+                  )}
                 >
                   Aa
                 </span>
