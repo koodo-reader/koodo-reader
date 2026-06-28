@@ -4,6 +4,7 @@ import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
 import {
   ConfigService,
+  HighlightUtil,
   KookitConfig,
 } from "../../assets/lib/kookit-extra-browser.min";
 import {
@@ -17,7 +18,6 @@ import {
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import TTSUtil from "../../utils/reader/ttsUtil";
-import { buildTtsHighlightStyle } from "../../utils/reader/highlightUtil";
 import "./textToSpeech.css";
 import { fetchUserInfo } from "../../utils/request/user";
 import { getSplitSentence } from "../../utils/request/reader";
@@ -36,8 +36,10 @@ class TextToSpeech extends React.Component<
   voices: any;
   nativeVoices: any;
   previewPlayer: Howl | null;
+  highlightUtil: any;
   constructor(props: TextToSpeechProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
     this.state = {
       isSupported: false,
       isAudioOn: false,
@@ -667,7 +669,7 @@ class TextToSpeech extends React.Component<
       if (this.state.isPaused || !this.state.isAudioOn) return;
       this.setState({ currentIndex: index });
       let node = this.nodeList[index];
-      let style = buildTtsHighlightStyle(
+      let style = this.highlightUtil.buildTtsHighlightStyle(
         this.props.currentBook.format === "PDF" &&
           !ConfigService.getAllListConfig("convertPDFBooks").includes(
             this.props.currentBook.key
@@ -785,7 +787,7 @@ class TextToSpeech extends React.Component<
     }
     this.setState({ currentIndex: index });
     let node = this.nodeList[index];
-    let style = buildTtsHighlightStyle(
+    let style = this.highlightUtil.buildTtsHighlightStyle(
       this.props.currentBook.format === "PDF" &&
         !ConfigService.getAllListConfig("convertPDFBooks").includes(
           this.props.currentBook.key

@@ -3,7 +3,7 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   appearanceSettingList,
   skinList,
@@ -21,23 +21,17 @@ import {
   highlightPresetColors,
   highlightStyleTypes,
 } from "../../../constants/highlightList";
-import {
-  buildSearchHighlightPreviewStyle,
-  buildTtsHighlightPreviewStyle,
-  getSearchHighlightValue,
-  getTtsHighlightValue,
-  saveSearchHighlightValue,
-  saveTtsHighlightValue,
-} from "../../../utils/reader/highlightUtil";
 
 class AppearanceSetting extends React.Component<
   SettingInfoProps,
   SettingInfoState
 > {
+  highlightUtil: any;
   constructor(props: SettingInfoProps) {
     super(props);
-    const ttsHighlight = getTtsHighlightValue();
-    const searchHighlight = getSearchHighlightValue();
+    this.highlightUtil = new HighlightUtil(ConfigService);
+    const ttsHighlight = this.highlightUtil.getTtsHighlightValue();
+    const searchHighlight = this.highlightUtil.getSearchHighlightValue();
     this.state = {
       appSkin: ConfigService.getReaderConfig("appSkin"),
       currentThemeIndex: themeList.findIndex(
@@ -162,7 +156,7 @@ class AppearanceSetting extends React.Component<
       isShowTtsCustomColorPicker: false,
       pendingTtsCustomColor: color,
     });
-    saveTtsHighlightValue({ styleType, color });
+    this.highlightUtil.saveTtsHighlightValue({ styleType, color });
   };
 
   handleTtsPresetColor = (index: number) => {
@@ -172,7 +166,7 @@ class AppearanceSetting extends React.Component<
       ttsHighlightColor: color,
       isShowTtsCustomColorPicker: false,
     });
-    saveTtsHighlightValue({ styleType, color });
+    this.highlightUtil.saveTtsHighlightValue({ styleType, color });
   };
 
   handleTtsCustomColor = (color: string) => {
@@ -186,7 +180,7 @@ class AppearanceSetting extends React.Component<
       ttsHighlightColor: color,
       isShowTtsCustomColorPicker: false,
     });
-    saveTtsHighlightValue({ styleType, color });
+    this.highlightUtil.saveTtsHighlightValue({ styleType, color });
     this.handleRest(true);
   };
 
@@ -198,7 +192,7 @@ class AppearanceSetting extends React.Component<
       isShowSearchCustomColorPicker: false,
       pendingSearchCustomColor: color,
     });
-    saveSearchHighlightValue({ styleType, color });
+    this.highlightUtil.saveSearchHighlightValue({ styleType, color });
   };
 
   handleSearchPresetColor = (index: number) => {
@@ -208,7 +202,7 @@ class AppearanceSetting extends React.Component<
       searchHighlightColor: color,
       isShowSearchCustomColorPicker: false,
     });
-    saveSearchHighlightValue({ styleType, color });
+    this.highlightUtil.saveSearchHighlightValue({ styleType, color });
   };
 
   handleSearchCustomColor = (color: string) => {
@@ -222,7 +216,7 @@ class AppearanceSetting extends React.Component<
       searchHighlightColor: color,
       isShowSearchCustomColorPicker: false,
     });
-    saveSearchHighlightValue({ styleType, color });
+    this.highlightUtil.saveSearchHighlightValue({ styleType, color });
     this.handleRest(true);
   };
 
@@ -260,7 +254,7 @@ class AppearanceSetting extends React.Component<
               >
                 <span
                   className="tts-highlight-style-preview"
-                  style={buildTtsHighlightPreviewStyle(
+                  style={this.highlightUtil.buildTtsHighlightPreviewStyle(
                     item.value,
                     previewColor
                   )}
@@ -399,7 +393,7 @@ class AppearanceSetting extends React.Component<
               >
                 <span
                   className="tts-highlight-style-preview"
-                  style={buildSearchHighlightPreviewStyle(
+                  style={this.highlightUtil.buildSearchHighlightPreviewStyle(
                     item.value,
                     previewColor
                   )}

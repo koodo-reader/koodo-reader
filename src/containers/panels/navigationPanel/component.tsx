@@ -8,7 +8,7 @@ import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../../utils/file/coverUtil";
 import {
   NAV_TAB_TOGGLE_EVENT,
@@ -16,7 +16,6 @@ import {
   openReadingPanel,
   READING_PANEL_TOGGLE_EVENT,
 } from "../../../utils/reader/mouseEvent";
-import { buildSearchHighlightStyle } from "../../../utils/reader/highlightUtil";
 
 export interface SearchItemWithKey {
   key: string;
@@ -83,8 +82,10 @@ class NavigationPanel extends React.Component<
   NavigationPanelProps,
   NavigationPanelState
 > {
+  highlightUtil: any;
   constructor(props: NavigationPanelProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
     this.state = {
       currentTab: "contents",
       chapters: [],
@@ -211,7 +212,7 @@ class NavigationPanel extends React.Component<
         page: bookLocation.page,
       })
     );
-    let style = buildSearchHighlightStyle(
+    let style = this.highlightUtil.buildSearchHighlightStyle(
       this.props.currentBook.format === "PDF" &&
         !ConfigService.getAllListConfig("convertPDFBooks").includes(
           this.props.currentBook.key

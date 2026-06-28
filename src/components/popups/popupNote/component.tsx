@@ -9,19 +9,18 @@ import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import {
   ConfigService,
+  HighlightUtil,
   NoteSyncManager,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
-import {
-  formatHighlightValue,
-  getHighlightValue,
-} from "../../../utils/reader/highlightUtil";
 import { DEFAULT_NOTE_HIGHLIGHT_STRING } from "../../../constants/highlightList";
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
+  highlightUtil: any;
   constructor(props: PopupNoteProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
     this.state = { tag: [], text: "", note: null };
   }
   async componentDidMount() {
@@ -39,7 +38,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       });
       console.log("note", note);
       textArea.value = note.notes;
-      let { styleType, color } = getHighlightValue(
+      let { styleType, color } = this.highlightUtil.getHighlightValue(
         note.color || DEFAULT_NOTE_HIGHLIGHT_STRING
       );
       this.props.handleHighlight({
@@ -88,7 +87,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       newNote.notes = notes;
       newNote.tag = this.state.tag;
       newNote.color =
-        formatHighlightValue(this.props.highlight) || newNote.color;
+        this.highlightUtil.formatHighlightValue(this.props.highlight) || newNote.color;
       DatabaseService.updateRecord(newNote, "notes").then(() => {
         this.props.handleOpenMenu(false);
         this.props.handleFetchNotes();
@@ -145,7 +144,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         : "0";
 
       let color =
-        formatHighlightValue(this.props.highlight) ||
+        this.highlightUtil.formatHighlightValue(this.props.highlight) ||
         DEFAULT_NOTE_HIGHLIGHT_STRING;
       let tag = this.state.tag;
 

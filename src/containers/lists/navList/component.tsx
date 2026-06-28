@@ -4,19 +4,20 @@ import { Trans } from "react-i18next";
 import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import ConfigUtil from "../../../utils/file/configUtil";
 import Book from "../../../models/Book";
 import Bookmark from "../../../models/Bookmark";
 import Note from "../../../models/Note";
-import { buildHighlightPreviewStyle } from "../../../utils/reader/highlightUtil";
 
 class NavList extends React.Component<NavListProps, NavListState> {
   private searchInputRef: React.RefObject<HTMLInputElement>;
+  highlightUtil: any;
 
   constructor(props: NavListProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
     this.state = {
       deleteIndex: -1,
       currentData: [],
@@ -268,7 +269,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
   };
   getHighlightPreviewStyle = (colorCode: string) => {
     const [styleType, color] = colorCode.split("-");
-    return buildHighlightPreviewStyle(styleType, color);
+    return this.highlightUtil.buildHighlightPreviewStyle(styleType, color);
   };
   renderBookNavList = (displayData: (Bookmark | Note)[]) => {
     return displayData.map((item: any, index: number) => {

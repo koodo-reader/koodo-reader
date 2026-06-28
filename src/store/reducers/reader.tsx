@@ -1,5 +1,5 @@
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import { getNoteHighlightValue } from "../../utils/reader/highlightUtil";
+import { ConfigService, HighlightUtil } from "../../assets/lib/kookit-extra-browser.min";
+const highlightUtil = new HighlightUtil(ConfigService);
 const initState = {
   bookmarks: [],
   notes: [],
@@ -7,7 +7,7 @@ const initState = {
   chapters: null,
   currentChapter: "",
   currentChapterIndex: 0,
-  highlight: getNoteHighlightValue(),
+  highlight: highlightUtil.getNoteHighlightValue(),
   backgroundColor:
     ConfigService.getReaderConfig("isMergeWord") === "yes"
       ? "rgba(0,0,0,0)"
