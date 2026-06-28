@@ -21,5 +21,4 @@ export interface ImportLocalState {
   isOpenFile: boolean;
   isMoreOptionsVisible: boolean;
   width: number;
-  importingShelfTitle: string;
 }

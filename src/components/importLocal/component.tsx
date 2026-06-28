@@ -51,7 +51,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       isOpenFile: false,
       width: document.body.clientWidth,
       isMoreOptionsVisible: false,
-      importingShelfTitle: "",
     };
   }
   componentDidMount() {
@@ -173,11 +172,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         .then(() => {
           this.props.handleFetchBooks();
           if (this.props.mode === "shelf") {
-            if (!this.state.importingShelfTitle) {
-              this.setState({ importingShelfTitle: this.props.shelfTitle });
-            }
             ConfigService.setMapConfig(
-              this.state.importingShelfTitle || this.props.shelfTitle,
+              this.props.shelfTitle,
               book.key,
               "shelfList"
             );
@@ -688,13 +684,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       <Dropzone
         onDrop={async (acceptedFiles) => {
           this.props.handleDrag(false);
-          if (this.props.mode === "shelf") {
-            this.setState({ importingShelfTitle: this.props.shelfTitle });
-          }
           for (let item of acceptedFiles) {
             await this.getMd5WithBrowser(item);
           }
-          this.setState({ importingShelfTitle: "" });
           if (
             ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
             ConfigService.getItem("defaultSyncOption")
@@ -796,11 +788,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                           // Get all supported book files
                           const allFiles = getAllFiles(newPath);
                           // Process each file
-                          if (this.props.mode === "shelf") {
-                            this.setState({
-                              importingShelfTitle: this.props.shelfTitle,
-                            });
-                          }
                           for (const filePath of allFiles) {
                             try {
                               const buffer =
@@ -826,7 +813,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             }
                           }
                           this.setState({
-                            importingShelfTitle: "",
                             isMoreOptionsVisible: false,
                           });
                           if (
@@ -865,11 +851,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             if (!files || files.length === 0) {
                               return;
                             }
-                            if (this.props.mode === "shelf") {
-                              this.setState({
-                                importingShelfTitle: this.props.shelfTitle,
-                              });
-                            }
                             for (let item of files) {
                               if (
                                 !supportedFormats.find((format) =>
@@ -880,7 +861,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                               }
                               await this.getMd5WithBrowser(item);
                             }
-                            this.setState({ importingShelfTitle: "" });
                             this.toggleMoreOptions();
                             if (
                               ConfigService.getReaderConfig(
@@ -951,11 +931,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     "select-book",
                     "ping"
                   );
-                  if (this.props.mode === "shelf") {
-                    this.setState({
-                      importingShelfTitle: this.props.shelfTitle,
-                    });
-                  }
                   for (let filePath of filePaths) {
                     try {
                       const fs = window.require("fs").promises;
@@ -979,7 +954,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                       );
                     }
                   }
-                  this.setState({ importingShelfTitle: "" });
                   if (
                     ConfigService.getReaderConfig("isDisableAutoSync") !==
                       "yes" &&
