@@ -8,6 +8,7 @@ import {
   TTS_HIGHLIGHT_CONFIG_KEY,
 } from "../../constants/highlightList";
 import { classes, colors, lines } from "../../constants/themeList";
+import type { CSSProperties } from "react";
 
 export interface HighlightValue {
   styleType: string;
@@ -182,7 +183,10 @@ export function buildHighlightStyleForType(
       return `background: ${color};`;
   }
 }
-export function buildHighlightPreviewStyle(styleType: string, color: string) {
+export function buildHighlightPreviewStyle(
+  styleType: string,
+  color: string
+): CSSProperties {
   switch (styleType) {
     case "background":
       return { background: color, borderRadius: "50%" };
