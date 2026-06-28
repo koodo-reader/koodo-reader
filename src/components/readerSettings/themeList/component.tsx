@@ -1,5 +1,9 @@
 import React from "react";
-import { backgroundList, textList, presetThemeList } from "../../../constants/themeList";
+import {
+  backgroundList,
+  textList,
+  presetThemeList,
+} from "../../../constants/themeList";
 import StyleUtil from "../../../utils/reader/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
@@ -132,7 +136,8 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         .indexOf(color),
       textColorInput: color,
       currentPresetIndex: this.getPresetIndex(
-        ConfigService.getReaderConfig("backgroundColor") || "rgba(255,255,255,1)",
+        ConfigService.getReaderConfig("backgroundColor") ||
+          "rgba(255,255,255,1)",
         color
       ),
     });
@@ -146,7 +151,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       );
     });
   };
-  handleChoosePreset = (preset: { textColor: string; backgroundColor: string }, index: number) => {
+  handleChoosePreset = (
+    preset: { textColor: string; backgroundColor: string },
+    index: number
+  ) => {
     ConfigService.setReaderConfig("backgroundColor", preset.backgroundColor);
     ConfigService.setReaderConfig("textColor", preset.textColor);
     this.props.handleBackgroundColor(preset.backgroundColor);
@@ -404,11 +412,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             return (
               <div
                 key={item.key}
-                className={
-                  index === this.state.currentPresetIndex
-                    ? "preset-theme-item active-preset-theme"
-                    : "preset-theme-item"
-                }
+                className={"preset-theme-item"}
                 style={{
                   backgroundColor: item.backgroundColor,
                   color: item.textColor,
