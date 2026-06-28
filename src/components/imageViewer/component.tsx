@@ -76,6 +76,11 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     image.style.removeProperty("width");
     image.style.removeProperty("height");
 
+    if (this.previewRef.current) {
+      this.previewRef.current.scrollTop = 0;
+      this.previewRef.current.scrollLeft = 0;
+    }
+
     const url = list[index];
     const loader = new Image();
     loader.onload = () => {
@@ -87,9 +92,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
         zoomIndex: 0,
         rotateIndex: 0,
       });
-      image.style[horizontal ? "width" : "height"] = horizontal
-        ? "60vw"
-        : "100vh";
+      image.style.width = "60vw";
     };
     loader.src = url;
     image.src = url;
@@ -235,26 +238,18 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   handleZoomIn = () => {
     let image: any = this.imageRef.current;
     if (!image) return;
-    if (image.style.width === "200vw" || image.style.height === "200vh") return;
+    if (image.style.width === "200vw") return;
     this.setState({ zoomIndex: this.state.zoomIndex + 1 }, () => {
-      if (this.state.imageRatio === "horizontal") {
-        image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
-      } else {
-        image.style.height = `${100 + 10 * this.state.zoomIndex}vh`;
-      }
+      image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
     });
   };
 
   handleZoomOut = () => {
     let image: any = this.imageRef.current;
     if (!image) return;
-    if (image.style.width === "10vw" || image.style.height === "10vh") return;
+    if (image.style.width === "10vw") return;
     this.setState({ zoomIndex: this.state.zoomIndex - 1 }, () => {
-      if (this.state.imageRatio === "horizontal") {
-        image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
-      } else {
-        image.style.height = `${100 + 10 * this.state.zoomIndex}vh`;
-      }
+      image.style.width = `${60 + this.state.zoomIndex * 10}vw`;
     });
   };
 
@@ -315,7 +310,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   };
 
   render() {
-    const { isShowImage, imageName, imageRatio } = this.state;
+    const { isShowImage, imageName } = this.state;
     return (
       <div
         className="image-preview"
@@ -356,11 +351,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
             src=""
             alt={imageName}
             className="image"
-            style={
-              imageRatio === "horizontal"
-                ? { width: "60vw" }
-                : { height: "100vh" }
-            }
+            style={{ width: "60vw" }}
           />
         </div>
         <div className="image-operation">
