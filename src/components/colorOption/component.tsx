@@ -2,12 +2,9 @@ import React from "react";
 import "./colorOption.css";
 import { ColorProps } from "./interface";
 import {
-  highlightPresetColors,
-  highlightStyleTypes,
-} from "../../constants/highlightList";
-import {
   ConfigService,
   HighlightUtil,
+  KookitConfig,
 } from "../../assets/lib/kookit-extra-browser.min";
 
 class ColorOption extends React.Component<ColorProps> {
@@ -17,7 +14,7 @@ class ColorOption extends React.Component<ColorProps> {
     this.highlightUtil = new HighlightUtil(ConfigService);
   }
   handleStyleType = (styleType: string) => {
-    const color = highlightPresetColors[styleType][0];
+    const color = KookitConfig.HighlightPresetColors[styleType][0];
     const value = { styleType, color };
     this.props.handleHighlight(value);
     this.highlightUtil.saveNoteHighlightValue(value);
@@ -25,7 +22,7 @@ class ColorOption extends React.Component<ColorProps> {
 
   handlePresetColor = (index: number) => {
     const styleType = this.props.highlight.styleType;
-    const color = highlightPresetColors[styleType][index];
+    const color = KookitConfig.HighlightPresetColors[styleType][index];
     const value = { styleType, color };
     this.props.handleHighlight(value);
     this.highlightUtil.saveNoteHighlightValue(value);
@@ -39,7 +36,7 @@ class ColorOption extends React.Component<ColorProps> {
   render() {
     console.log("this.props.highlight", this.props.highlight);
     const { styleType, color } = this.props.highlight;
-    const presetColors = highlightPresetColors[styleType];
+    const presetColors = KookitConfig.HighlightPresetColors[styleType];
 
     return (
       <div
@@ -50,11 +47,11 @@ class ColorOption extends React.Component<ColorProps> {
         }
       >
         <ul className="note-highlight-style-tabs">
-          {highlightStyleTypes.map((item) => {
+          {KookitConfig.HighlightStyleTypes.map((item) => {
             const previewColor =
               item.value === styleType
                 ? color
-                : highlightPresetColors[item.value][0];
+                : KookitConfig.HighlightPresetColors[item.value][0];
             return (
               <li
                 key={item.value}

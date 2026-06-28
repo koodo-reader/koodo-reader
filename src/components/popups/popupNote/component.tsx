@@ -15,7 +15,6 @@ import {
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
-import { DEFAULT_NOTE_HIGHLIGHT_STRING } from "../../../constants/highlightList";
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   highlightUtil: any;
   constructor(props: PopupNoteProps) {
@@ -39,7 +38,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       console.log("note", note);
       textArea.value = note.notes;
       let { styleType, color } = this.highlightUtil.getHighlightValue(
-        note.color || DEFAULT_NOTE_HIGHLIGHT_STRING
+        note.color || "background-#FEF3CD"
       );
       this.props.handleHighlight({
         styleType,
@@ -87,7 +86,8 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       newNote.notes = notes;
       newNote.tag = this.state.tag;
       newNote.color =
-        this.highlightUtil.formatHighlightValue(this.props.highlight) || newNote.color;
+        this.highlightUtil.formatHighlightValue(this.props.highlight) ||
+        newNote.color;
       DatabaseService.updateRecord(newNote, "notes").then(() => {
         this.props.handleOpenMenu(false);
         this.props.handleFetchNotes();
@@ -145,7 +145,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
 
       let color =
         this.highlightUtil.formatHighlightValue(this.props.highlight) ||
-        DEFAULT_NOTE_HIGHLIGHT_STRING;
+        "background-#FEF3CD";
       let tag = this.state.tag;
 
       let note = new Note(

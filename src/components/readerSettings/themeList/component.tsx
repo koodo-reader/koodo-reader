@@ -1,14 +1,13 @@
 import React from "react";
-import {
-  backgroundList,
-  textList,
-  presetThemeList,
-} from "../../../constants/themeList";
+import { backgroundList, textList } from "../../../constants/themeList";
 import StyleUtil from "../../../utils/reader/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
 import { ThemeListProps, ThemeListState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import { HexColorPicker } from "react-colorful";
 import toast from "react-hot-toast";
 import { normalizePickerColor, parseColorInput } from "../../../utils/common";
@@ -36,7 +35,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         }),
       isShowTextPicker: false,
       isShowBgPicker: false,
-      currentPresetIndex: presetThemeList.findIndex((item) => {
+      currentPresetIndex: KookitConfig.PresetThemeList.findIndex((item) => {
         return (
           item.backgroundColor ===
             (ConfigService.getReaderConfig("backgroundColor") ||
@@ -145,7 +144,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     this.props.renderBookFunc();
   };
   getPresetIndex = (backgroundColor: string, textColor: string) => {
-    return presetThemeList.findIndex((item) => {
+    return KookitConfig.PresetThemeList.findIndex((item) => {
       return (
         item.backgroundColor === backgroundColor && item.textColor === textColor
       );
@@ -408,7 +407,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           <Trans>Theme</Trans>
         </div>
         <div className="preset-theme-list">
-          {presetThemeList.map((item, index) => {
+          {KookitConfig.PresetThemeList.map((item, index) => {
             return (
               <div
                 key={item.key}
