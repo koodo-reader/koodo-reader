@@ -7,7 +7,7 @@ import {
   popupOptionMap,
   PopupOptionKey,
 } from "../../../constants/popupList";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import {
   getSelection,
@@ -18,12 +18,16 @@ import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { openExternalUrl } from "../../../utils/common";
 import { createHighlight } from "../../../utils/reader/noteUtil";
-import { formatHighlightValue } from "../../../utils/reader/highlightUtil";
 import { Tooltip } from "react-tooltip";
 
 declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
+  highlightUtil: any;
+  constructor(props: PopupOptionProps) {
+    super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
+  }
   handleNote = () => {
     this.props.handleMenuMode("note");
     this.props.handleOpenMenu(true);
@@ -68,7 +72,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       htmlBook: this.props.htmlBook,
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
-      color: formatHighlightValue(this.props.highlight),
+      color: this.highlightUtil.formatHighlightValue(this.props.highlight),
       t: this.props.t,
       onNoteClick: this.handleNoteClick,
       onSuccess: () => {

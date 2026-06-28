@@ -4,13 +4,12 @@ import PopupOption from "../popupOption";
 import ColorOption from "../../colorOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   getSelection,
   getSelectionSentence,
 } from "../../../utils/reader/mouseEvent";
 import { createHighlight } from "../../../utils/reader/noteUtil";
-import { formatHighlightValue } from "../../../utils/reader/highlightUtil";
 
 declare var window: any;
 
@@ -19,6 +18,7 @@ const MENU_HEIGHT = 141;
 
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;
+  highlightUtil: any;
   timer!: NodeJS.Timeout;
   key: any;
   mode: string;
@@ -27,6 +27,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   rect: any;
   constructor(props: PopupMenuProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
     this.showNote = false;
     this.isFirstShow = false;
     this.highlighter = null;
@@ -190,7 +191,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       htmlBook: this.props.htmlBook,
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
-      color: formatHighlightValue(this.props.highlight),
+      color: this.highlightUtil.formatHighlightValue(this.props.highlight),
       t: this.props.t,
       onNoteClick: (event: Event) => {
         this.props.handleNoteKey((event.target as any).dataset.key);
@@ -228,7 +229,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           htmlBook: this.props.htmlBook,
           chapterDocIndex: this.props.chapterDocIndex,
           chapter: this.props.chapter,
-          color: formatHighlightValue(this.props.highlight),
+          color: this.highlightUtil.formatHighlightValue(this.props.highlight),
           t: this.props.t,
           onSuccess: () => {
             this.props.handleOpenMenu(false);
