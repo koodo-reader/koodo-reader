@@ -12,7 +12,7 @@
 .image-content {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-width: 100%;
   min-height: 100%;
   box-sizing: border-box;
@@ -23,6 +23,7 @@
 .image {
   z-index: 5;
   flex-shrink: 0;
+  margin-block: auto;
   pointer-events: auto;
 }
 .image-operation {
