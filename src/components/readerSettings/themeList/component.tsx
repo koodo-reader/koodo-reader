@@ -1,5 +1,5 @@
 import React from "react";
-import { backgroundList, textList } from "../../../constants/themeList";
+import { backgroundList, textList, presetThemeList } from "../../../constants/themeList";
 import StyleUtil from "../../../utils/reader/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
@@ -32,6 +32,15 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         }),
       isShowTextPicker: false,
       isShowBgPicker: false,
+      currentPresetIndex: presetThemeList.findIndex((item) => {
+        return (
+          item.backgroundColor ===
+            (ConfigService.getReaderConfig("backgroundColor") ||
+              "rgba(255,255,255,1)") &&
+          item.textColor ===
+            (ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)")
+        );
+      }),
       bgColorInput: normalizePickerColor(
         ConfigService.getReaderConfig("backgroundColor"),
         "#ffffff"
@@ -57,6 +66,12 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       ConfigService.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
     this.props.renderBookFunc();
+    this.setState({
+      currentPresetIndex: this.getPresetIndex(
+        color,
+        ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)"
+      ),
+    });
   };
 
   handleChooseBgColor = (color: string) => {
@@ -64,6 +79,12 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     ConfigService.setReaderConfig("backgroundColor", color);
     this.props.handleBackgroundColor(color);
     StyleUtil.addDefaultCss(this.props.currentBook.key);
+    this.setState({
+      currentPresetIndex: this.getPresetIndex(
+        color,
+        ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)"
+      ),
+    });
   };
   handleColorTextPicker = (isShowTextPicker: boolean) => {
     if (
@@ -110,8 +131,38 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         .concat(ConfigService.getAllListConfig("themeColors"))
         .indexOf(color),
       textColorInput: color,
+      currentPresetIndex: this.getPresetIndex(
+        ConfigService.getReaderConfig("backgroundColor") || "rgba(255,255,255,1)",
+        color
+      ),
     });
     ConfigService.setReaderConfig("textColor", color);
+    this.props.renderBookFunc();
+  };
+  getPresetIndex = (backgroundColor: string, textColor: string) => {
+    return presetThemeList.findIndex((item) => {
+      return (
+        item.backgroundColor === backgroundColor && item.textColor === textColor
+      );
+    });
+  };
+  handleChoosePreset = (preset: { textColor: string; backgroundColor: string }, index: number) => {
+    ConfigService.setReaderConfig("backgroundColor", preset.backgroundColor);
+    ConfigService.setReaderConfig("textColor", preset.textColor);
+    this.props.handleBackgroundColor(preset.backgroundColor);
+    const bgIndex = backgroundList
+      .concat(ConfigService.getAllListConfig("themeColors"))
+      .indexOf(preset.backgroundColor);
+    const textIndex = textList
+      .concat(ConfigService.getAllListConfig("themeColors"))
+      .indexOf(preset.textColor);
+    this.setState({
+      currentBackgroundIndex: bgIndex,
+      currentTextIndex: textIndex,
+      currentPresetIndex: index,
+      bgColorInput: normalizePickerColor(preset.backgroundColor, "#ffffff"),
+      textColorInput: normalizePickerColor(preset.textColor, "#000000"),
+    });
     this.props.renderBookFunc();
   };
   render() {
@@ -338,6 +389,46 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             />
           </div>
         )}
+        <div
+          className="background-color-text"
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
+          <Trans>Theme</Trans>
+        </div>
+        <div className="preset-theme-list">
+          {presetThemeList.map((item, index) => {
+            return (
+              <div
+                key={item.key}
+                className={
+                  index === this.state.currentPresetIndex
+                    ? "preset-theme-item active-preset-theme"
+                    : "preset-theme-item"
+                }
+                style={{
+                  backgroundColor: item.backgroundColor,
+                  color: item.textColor,
+                  borderColor: item.textColor,
+                }}
+                onClick={() => {
+                  this.handleChoosePreset(item, index);
+                }}
+              >
+                <span className="preset-theme-text">
+                  {(ConfigService.getReaderConfig("lang") || "").startsWith(
+                    "zh"
+                  )
+                    ? this.props.t(item.title)
+                    : "A"}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
