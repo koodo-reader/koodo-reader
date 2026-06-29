@@ -11,7 +11,11 @@ import DOMPurify from "dompurify";
 import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
-import { getWebsiteUrl, openExternalUrl } from "../../../utils/common";
+import {
+  getFullTranslationTarget,
+  getWebsiteUrl,
+  openExternalUrl,
+} from "../../../utils/common";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import {
@@ -272,7 +276,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       let res = await getDictionaryStream(
         text,
         "auto",
-        navigator.language,
+        getFullTranslationTarget(),
         this.props.originalSentence,
         isFullAnalysis,
         (result) => {
