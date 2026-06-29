@@ -4,7 +4,10 @@ import PopupOption from "../popupOption";
 import ColorOption from "../../colorOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  HighlightUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import {
   getSelection,
   getSelectionSentence,
@@ -132,7 +135,18 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     ) {
       posX = posX - pageSize.scrollLeft;
     }
-    return { posX: Math.max(12, posX), posY } as any;
+    console.log(
+      window.innerWidth,
+      document.body.clientWidth,
+      posX,
+      posY,
+      rect,
+      pageSize
+    );
+    return {
+      posX: Math.min(Math.max(12, posX), window.innerWidth - 12 - MENU_WIDTH),
+      posY,
+    } as any;
   }
 
   openMenu = () => {
