@@ -45,4 +45,5 @@ export interface HeaderState {
   isDataChange: boolean;
   isHidePro: boolean;
   isSync: boolean;
+  notificationCount: number;
 }

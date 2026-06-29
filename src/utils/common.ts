@@ -648,7 +648,8 @@ export const getChatLocale = () => {
     return "en";
   }
 };
-export function addChatBox() {
+export async function addChatBox() {
+  let deviceUuid = await TokenService.getFingerprint();
   const scriptContent = `
     (function (d, t) {
       var BASE_URL = "https://app.chatwoot.com";
@@ -668,6 +669,7 @@ export function addChatBox() {
           window.$chatwoot.setCustomAttributes({
             version: '${packageJson.version}',
             client: 'web',
+            device: '${deviceUuid}',
           });
         });
       };
