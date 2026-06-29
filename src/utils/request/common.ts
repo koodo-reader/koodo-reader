@@ -132,3 +132,17 @@ export const chatStream = async (
     });
   });
 };
+export const getNotification = async () => {
+  let deviceUuid = await TokenService.getFingerprint();
+  const res = await axios.post(
+    "https://api.koodoreader.com/api/get_notification",
+    {
+      device_uuid: deviceUuid,
+    }
+  );
+  // {
+  // 	"result": "ok",
+  // 	"unread": 0
+  // }
+  return res;
+};

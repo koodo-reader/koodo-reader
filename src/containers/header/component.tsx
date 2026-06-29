@@ -50,6 +50,7 @@ import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
 import { getTempToken, updateUserConfig } from "../../utils/request/user";
 import i18n from "../../i18n";
+import { getNotification } from "../../utils/request/common";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -271,6 +272,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         await this.handleCloudSync(userInfo);
         await this.handleOpenLastReadBook();
       }
+      getNotification().then((res) => {
+        console.log("getNotification", res.data);
+        if (
+          res.data &&
+          res.data.result === "ok" &&
+          res.data.unread &&
+          res.data.unread > 0
+        ) {
+        }
+      });
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       if (isElectron) {
