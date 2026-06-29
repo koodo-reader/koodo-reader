@@ -69,6 +69,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isDataChange: false,
       isHidePro: false,
       isSync: false,
+      notificationCount: 0,
     };
   }
   async componentDidMount() {
@@ -252,6 +253,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   ) {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       if (isElectron) {
+        getNotification().then((res) => {
+          if (
+            res.data &&
+            res.data.result === "ok" &&
+            res.data.unread &&
+            res.data.unread > 0
+          ) {
+            this.setState({ notificationCount: res.data.unread });
+          }
+        });
       } else {
         addChatBox();
       }
@@ -272,16 +283,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         await this.handleCloudSync(userInfo);
         await this.handleOpenLastReadBook();
       }
-      getNotification().then((res) => {
-        console.log("getNotification", res.data);
-        if (
-          res.data &&
-          res.data.result === "ok" &&
-          res.data.unread &&
-          res.data.unread > 0
-        ) {
-        }
-      });
     }
     if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       if (isElectron) {
@@ -739,7 +740,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         {isElectron && this.props.isAuthed && (
           <div
             className="header-chat-widget"
-            onClick={() => {
+            onClick={async () => {
+              this.setState({ notificationCount: 0 });
+              let deviceUuid = await TokenService.getFingerprint();
               window.require("electron").ipcRenderer.invoke("new-chat", {
                 url:
                   getWebsiteUrl() +
@@ -748,7 +751,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                     : "/en/faq") +
                   "?referer=app&version=" +
                   packageJson.version +
-                  "&client=desktop",
+                  "&client=desktop&device=" +
+                  deviceUuid,
                 locale: getChatLocale(),
               });
             }}
@@ -762,6 +766,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 height: "100%",
               }}
             />
+            {this.state.notificationCount > 0 && (
+              <div className="header-chat-widget-badge">
+                {this.state.notificationCount > 99
+                  ? "99+"
+                  : this.state.notificationCount}
+              </div>
+            )}
           </div>
         )}
         <div
