@@ -37,6 +37,7 @@ class AccountSetting extends React.Component<
   SettingInfoProps,
   SettingInfoState
 > {
+  private lastBindClickTime: number = 0;
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
@@ -158,6 +159,14 @@ class AccountSetting extends React.Component<
       toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
       return;
     }
+    const now = Date.now();
+    if (now - this.lastBindClickTime < 3000) {
+      toast.error(
+        this.props.t("You are clicking too fast, please try again later")
+      );
+      return;
+    }
+    this.lastBindClickTime = now;
     toast.loading(this.props.t("Adding"), {
       id: "adding",
     });
@@ -194,6 +203,14 @@ class AccountSetting extends React.Component<
       toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
       return;
     }
+    const now = Date.now();
+    if (now - this.lastBindClickTime < 3000) {
+      toast.error(
+        this.props.t("You are clicking too fast, please try again later")
+      );
+      return;
+    }
+    this.lastBindClickTime = now;
     toast.loading(this.props.t("Logging in"), {
       id: "bind-login-option",
     });
