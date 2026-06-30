@@ -17,12 +17,12 @@ import { chatStream } from "../../../utils/request/common";
 import { marked } from "marked";
 import { sampleQuestion } from "../../../constants/settingList";
 class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
-  private chatBoxRef: React.RefObject<HTMLDivElement>;
-  private textareaRef: React.RefObject<HTMLTextAreaElement>;
-  private answerTextAccumulator: string = "";
-  private updateInterval: ReturnType<typeof setInterval> | null = null;
-  private isHydrating = false;
-  private aiChatManager: any = null;
+  chatBoxRef: React.RefObject<HTMLDivElement>;
+  textareaRef: React.RefObject<HTMLTextAreaElement>;
+  answerTextAccumulator: string = "";
+  updateInterval: ReturnType<typeof setInterval> | null = null;
+  isHydrating = false;
+  aiChatManager: any = null;
 
   constructor(props: PopupAssistProps) {
     super(props);
@@ -42,7 +42,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     this.aiChatManager = new AiChatManager(ConfigService);
   }
 
-  private startUpdateInterval() {
+  startUpdateInterval() {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
     }
@@ -56,7 +56,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     }, 150);
   }
 
-  private stopUpdateInterval(finalAnswer?: string) {
+  stopUpdateInterval(finalAnswer?: string) {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
@@ -65,7 +65,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       this.setState({ answer: finalAnswer });
     }
   }
-  private loadChatHistory() {
+  loadChatHistory() {
     const bookKey = this.props.currentBook?.key;
     if (!bookKey) {
       return;
@@ -84,7 +84,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       }
     );
   }
-  private saveChatHistory() {
+  saveChatHistory() {
     const bookKey = this.props.currentBook?.key;
     if (!bookKey || this.isHydrating) {
       return;

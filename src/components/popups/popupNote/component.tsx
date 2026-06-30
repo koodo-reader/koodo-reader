@@ -35,7 +35,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         tag: note.tag,
         note: note,
       });
-      console.log("note", note);
       textArea.value = note.notes;
       let { styleType, color } = this.highlightUtil.getHighlightValue(
         note.color || "background-#FEF3CD"

@@ -1,13 +1,9 @@
 import BookModel from "../../../models/Book";
-import { HighlightValue } from "../../../utils/common";
-
 export interface PopupBoxProps {
   currentBook: BookModel;
   isOpenMenu: boolean;
   isChangeDirection: boolean;
   menuMode: string;
-
-  highlight: HighlightValue;
   isNavLocked: boolean;
   isSettingLocked: boolean;
   rendition: any;
