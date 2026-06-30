@@ -1060,6 +1060,7 @@
   "S3 Compatible": "S3 兼容",
   "OneDrive (full access)": "OneDrive(完全访问)",
   "Import folder": "导入文件夹",
+  "Please upgrade to Pro to use this feature, or set the default sync option to local in the settings": "请升级到专业版以使用此功能，或者在设置中将默认同步选项设置为本地",
   "Error scanning folder": "扫描文件夹出错",
   "No files found in this folder": "在此文件夹中未找到文件",
   "Scanning folder": "正在扫描文件夹",

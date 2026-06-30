@@ -841,8 +841,22 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 let userInfo = await this.props.handleFetchUserInfo();
                 await this.handleCloudSync(userInfo);
               } else {
-                await this.handleLocalSync();
-                this.handleKOReaderSync();
+                if (ConfigService.getItem("defaultSyncOption") === "local") {
+                  await this.handleLocalSync();
+                  this.handleKOReaderSync();
+                } else {
+                  toast.success(
+                    this.props.t(
+                      "Please upgrade to Pro to use this feature, or set the default sync option to local in the settings"
+                    ),
+                    {
+                      duration: 4000,
+                    }
+                  );
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("sync");
+                  this.setState({ isSync: false });
+                }
               }
             }}
             style={{ marginTop: "2px" }}
