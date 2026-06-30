@@ -1,11 +1,9 @@
 import BookModel from "../../../models/Book";
-import { HighlightValue } from "../../../utils/common";
 
 export interface PopupReferProps {
   currentBook: BookModel;
   isChangeDirection: boolean;
   menuMode: string;
-  highlight: HighlightValue;
   rendition: any;
   chapterDocIndex: number;
   readerMode: string;
