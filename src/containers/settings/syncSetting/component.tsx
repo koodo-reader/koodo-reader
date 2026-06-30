@@ -227,6 +227,20 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     if (!newValue) {
       return;
     }
+    if (
+      !this.props.isAuthed &&
+      (newValue === "webdav" ||
+        newValue === "docker" ||
+        newValue === "ftp" ||
+        newValue === "sftp" ||
+        newValue === "mega" ||
+        newValue === "s3compatible")
+    ) {
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
+      return;
+    }
 
     ConfigService.setItem("defaultSyncOption", newValue);
     if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
@@ -284,7 +298,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       return;
     }
     if (targetDrive === "add") {
-      toast(this.props.t("Please add data source in the setting"));
+      this.setState({ showDefaultSyncAddGrid: true });
       return;
     }
     this.setState({
@@ -376,9 +390,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     } else {
       this.props.handleLoadingDialog(false);
       toast.dismiss("backup");
-      toast.error(
-        this.props.t("Download failed,network problem or no backup")
-      );
+      toast.error(this.props.t("Download failed,network problem or no backup"));
     }
   };
   handleCancelDrive = () => {
@@ -556,13 +568,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               marginLeft: "25px",
               marginRight: "25px",
               fontWeight: 500,
+              marginBottom: "20px",
             }}
           >
             {driveList
-              .filter(
-                (item) =>
-                  !this.props.dataSourceList.includes(item.value)
-              )
+              .filter((item) => !this.props.dataSourceList.includes(item.value))
               .filter((item) => {
                 if (!isElectron) {
                   return item.support.includes("browser");
@@ -588,8 +598,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   }}
                 >
                   <span className="account-login-option-label">
-                    {this.props.t(item.label) +
-                      (item.isPro ? " (Pro)" : "")}
+                    {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                   </span>
                 </div>
               ))}
@@ -879,12 +888,45 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           </div>
         )}
         <div className="setting-dialog-new-title">
-          <Trans>Add data source</Trans>
+          <Trans>Set default sync option</Trans>
           <select
             name=""
             className="lang-setting-dropdown"
-            value={this.props.settingDrive}
-            onChange={this.handleAddDataSource}
+            value={this.props.defaultSyncOption}
+            onChange={async (event) => {
+              event.preventDefault();
+              const newValue = event.target.value;
+              if (newValue === "add") {
+                this.setState({
+                  showDefaultSyncAddGrid: !this.state.showDefaultSyncAddGrid,
+                });
+                event.target.value = this.props.defaultSyncOption;
+                return;
+              }
+              const currentValue = this.props.defaultSyncOption;
+              let onlineBooks: Book[] = [];
+              for (let i = 0; i < this.props.books.length; i++) {
+                if (!(await BookUtil.isBookOffline(this.props.books[i].key))) {
+                  onlineBooks.push(this.props.books[i]);
+                }
+              }
+              if (
+                onlineBooks.length > 0 &&
+                this.props.defaultSyncOption &&
+                newValue !== this.props.defaultSyncOption
+              ) {
+                let result = await vexComfirmAsync(
+                  "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
+                );
+                if (result) {
+                  this.handleSetDefaultSyncOption(newValue);
+                } else {
+                  event.target.value = currentValue;
+                }
+              } else {
+                this.handleSetDefaultSyncOption(newValue);
+              }
+            }}
           >
             {[
               {
@@ -893,19 +935,47 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 isPro: false,
                 support: ["desktop", "browser", "phone"],
               },
+              {
+                label: "Local",
+                value: "local",
+                isPro: false,
+                support: ["desktop", "browser", "phone"],
+              },
               ...driveList,
+              {
+                label: "Add data source",
+                value: "add",
+                isPro: false,
+                support: ["desktop", "browser", "phone"],
+              },
             ]
-              .filter((item) => !this.props.dataSourceList.includes(item.value))
+              .filter(
+                (item) =>
+                  item.value === "add" ||
+                  item.value === "local" ||
+                  item.value === "" ||
+                  this.props.dataSourceList.includes(item.value)
+              )
               .filter((item) => {
-                if (!isElectron) {
-                  return item.support.includes("browser");
-                } else {
+                if (
+                  item.value === "add" ||
+                  item.value === "local" ||
+                  item.value === ""
+                ) {
                   return true;
                 }
+                if (!isElectron) {
+                  return item.support.includes("browser");
+                }
+                return true;
               })
               .filter((item) => {
-                if (isElectron && process.platform !== "darwin") {
-                  return item.value !== "icloud";
+                if (
+                  isElectron &&
+                  process.platform !== "darwin" &&
+                  item.value === "icloud"
+                ) {
+                  return false;
                 }
                 return true;
               })
@@ -974,8 +1044,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   key={item.value}
                   className="lang-setting-option"
                 >
-                  {this.props.t(item.label) +
-                    (item.isPro ? " (Pro)" : "")}
+                  {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                 </option>
               ))}
           </select>
@@ -1010,113 +1079,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   key={item.value}
                   className="lang-setting-option"
                 >
-                  {this.props.t(item.label) +
-                    (item.isPro ? " (Pro)" : "")}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Set default sync option</Trans>
-          <select
-            name=""
-            className="lang-setting-dropdown"
-            value={this.props.defaultSyncOption}
-            onChange={async (event) => {
-              event.preventDefault();
-              const newValue = event.target.value;
-              if (newValue === "add") {
-                this.setState({
-                  showDefaultSyncAddGrid: !this.state.showDefaultSyncAddGrid,
-                });
-                event.target.value = this.props.defaultSyncOption;
-                return;
-              }
-              const currentValue = this.props.defaultSyncOption;
-              let onlineBooks: Book[] = [];
-              for (let i = 0; i < this.props.books.length; i++) {
-                if (
-                  !(await BookUtil.isBookOffline(this.props.books[i].key))
-                ) {
-                  onlineBooks.push(this.props.books[i]);
-                }
-              }
-              if (
-                onlineBooks.length > 0 &&
-                this.props.defaultSyncOption &&
-                newValue !== this.props.defaultSyncOption
-              ) {
-                let result = await vexComfirmAsync(
-                  "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
-                );
-                if (result) {
-                  this.handleSetDefaultSyncOption(newValue);
-                } else {
-                  event.target.value = currentValue;
-                }
-              } else {
-                this.handleSetDefaultSyncOption(newValue);
-              }
-            }}
-          >
-            {[
-              {
-                label: "Please select",
-                value: "",
-                isPro: false,
-                support: ["desktop", "browser", "phone"],
-              },
-              {
-                label: "Local",
-                value: "local",
-                isPro: false,
-                support: ["desktop", "browser", "phone"],
-              },
-              ...driveList,
-              {
-                label: "Add data source",
-                value: "add",
-                isPro: false,
-                support: ["desktop", "browser", "phone"],
-              },
-            ]
-              .filter(
-                (item) =>
-                  item.value === "add" ||
-                  item.value === "local" ||
-                  item.value === "" ||
-                  this.props.dataSourceList.includes(item.value)
-              )
-              .filter((item) => {
-                if (item.value === "add" || item.value === "local" || item.value === "") {
-                  return true;
-                }
-                if (!isElectron) {
-                  return item.support.includes("browser");
-                }
-                return true;
-              })
-              .filter((item) => {
-                if (
-                  isElectron &&
-                  process.platform !== "darwin" &&
-                  item.value === "icloud"
-                ) {
-                  return false;
-                }
-                return true;
-              })
-              .map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
                   {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                 </option>
               ))}
           </select>
         </div>
+
         {this.props.isAuthed && this.renderSwitchOption(syncSettingList)}
         {this.props.isAuthed && (
           <>
