@@ -140,6 +140,36 @@
 .account-login-option-label {
   line-height: 1.2;
 }
+.add-source-card {
+  margin: 5px 25px 20px;
+  padding: 12px 18px;
+  border: 2px solid currentColor;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+  margin-top: 20px;
+  transition:
+    opacity 0.15s,
+    border-color 0.15s;
+}
+.add-source-card:hover {
+  opacity: 0.75;
+}
+.add-source-card-icon {
+  flex-shrink: 0;
+  color: inherit;
+  line-height: 1;
+}
+.add-source-card-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: inherit;
+  line-height: 1.2;
+}
 .setting-dialog-list {
   font-size: 15px;
   line-height: 18px;
