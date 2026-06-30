@@ -14,6 +14,7 @@ a {
 .more-option-text,
 .book-subcontent-name,
 .pin-keypad-title,
+.add-source-card,
 .pin-key {
   color: rgba(235, 235, 235, 1);
 }
@@ -56,6 +57,7 @@ a {
 .token-dialog-link-text,
 .token-dialog-token-text,
 .nav-search-page-item,
+.add-source-card,
 .pin-dot {
   border: 1.5px solid rgba(235, 235, 235, 1);
 }

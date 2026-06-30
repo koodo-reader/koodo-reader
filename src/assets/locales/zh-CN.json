@@ -956,7 +956,7 @@
   "Please select the service": "请选择服务",
   "Delete data source": "删除数据源",
   "Please select": "请选择",
-  "Set default sync option": "设置默认同步选项 (添加数据源)",
+  "Set default sync option": "设置默认同步选项",
   "Default sync option cannot be removed": "默认同步选项不能被删除",
   "This feature is not available in the free version": "免费版不支持此功能",
   "Data": "数据",
