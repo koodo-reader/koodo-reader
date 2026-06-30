@@ -37,4 +37,5 @@ export interface SettingInfoState {
   scheduledSyncInterval: string;
   backupDrive: string;
   restoreDrive: string;
+  showDefaultSyncAddGrid: boolean;
 }
