@@ -721,14 +721,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.t("Local") +
         ")"
     );
-    toast.success(
-      this.props.t(
-        "Your data has been exported to your local folder, learn how to sync your data to your other devices by visiting our documentation, Upgrade to pro to get more advanced features"
-      ),
-      {
-        duration: 4000,
-      }
-    );
   };
 
   render() {
@@ -837,26 +829,26 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 return;
               }
               this.setState({ isSync: true });
+              if (ConfigService.getItem("defaultSyncOption") === "local") {
+                await this.handleLocalSync();
+                this.handleKOReaderSync();
+                return;
+              }
               if (this.props.isAuthed) {
                 let userInfo = await this.props.handleFetchUserInfo();
                 await this.handleCloudSync(userInfo);
               } else {
-                if (ConfigService.getItem("defaultSyncOption") === "local") {
-                  await this.handleLocalSync();
-                  this.handleKOReaderSync();
-                } else {
-                  toast.success(
-                    this.props.t(
-                      "Please upgrade to Pro to use this feature, or set the default sync option to local in the settings"
-                    ),
-                    {
-                      duration: 4000,
-                    }
-                  );
-                  this.props.handleSetting(true);
-                  this.props.handleSettingMode("sync");
-                  this.setState({ isSync: false });
-                }
+                toast.success(
+                  this.props.t(
+                    "Please set the default sync option to local in the settings, or upgrade to Pro to sync with more cloud storage"
+                  ),
+                  {
+                    duration: 4000,
+                  }
+                );
+                this.props.handleSetting(true);
+                this.props.handleSettingMode("sync");
+                this.setState({ isSync: false });
               }
             }}
             style={{ marginTop: "2px" }}
