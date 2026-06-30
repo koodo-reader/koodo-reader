@@ -5,7 +5,6 @@ import DeleteDialog from "../../components/dialogs/deleteDialog";
 import EditDialog from "../../components/dialogs/editDialog";
 import AddDialog from "../../components/dialogs/addDialog";
 import SortDialog from "../../components/dialogs/sortBookDialog";
-import BackupDialog from "../../components/dialogs/backupDialog";
 import LocalFileDialog from "../../components/dialogs/localFileDialog";
 import ImportDialog from "../../components/dialogs/importDialog";
 import OPDSDialog from "../../components/dialogs/opdsDialog";
@@ -249,7 +248,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
               this.props.handleNewDialog(false);
               this.props.handleShowSupport(false);
             }
-            this.props.handleBackupDialog(false);
             this.props.handleLocalFileDialog(false);
             this.props.handleImportDialog(false);
             this.props.handleShowPopupNote(false);
@@ -259,7 +257,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
           }}
           style={
             this.props.isSettingOpen ||
-            this.props.isBackup ||
             this.props.isOpenImportDialog ||
             this.props.isOpenOPDSDialog ||
             this.props.isOpenSortShelfDialog ||
@@ -304,7 +301,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isOpenAddDialog && <AddDialog />}
         {this.props.isShowLoading && <LoadingDialog />}
         {this.props.isSortDisplay && <SortDialog />}
-        {this.props.isBackup && <BackupDialog />}
         {this.props.isOpenLocalFileDialog && <LocalFileDialog />}
         {this.props.isOpenImportDialog && <ImportDialog />}
         {this.props.isOpenOPDSDialog && <OPDSDialog />}

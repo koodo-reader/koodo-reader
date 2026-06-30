@@ -35,4 +35,6 @@ export interface SettingInfoState {
   autoOffline: boolean;
   driveConfig: any;
   scheduledSyncInterval: string;
+  backupDrive: string;
+  restoreDrive: string;
 }

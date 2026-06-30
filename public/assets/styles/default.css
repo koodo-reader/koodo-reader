@@ -282,6 +282,7 @@ a {
 .enter-fullscreen-icon,
 .icon-popup,
 .delete-dialog-uncheck-icon,
+.setting-dialog-sidebar-item.active,
 .book-bookmark-link {
   color: rgba(255, 255, 255, 1);
 }
