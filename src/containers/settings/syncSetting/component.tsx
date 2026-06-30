@@ -961,7 +961,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 label: "Local",
                 value: "local",
                 isPro: false,
-                support: ["desktop", "browser", "phone"],
+                support: ["desktop"],
               },
               ...driveList,
             ]
@@ -972,7 +972,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   this.props.dataSourceList.includes(item.value)
               )
               .filter((item) => {
-                if (item.value === "local" || item.value === "") {
+                if (item.value === "") {
                   return true;
                 }
                 if (!isElectron) {
