@@ -62,7 +62,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (!rect) return;
     this.setState({ isRightEdge: false }, () => {
       let { posX, posY } = this.getHtmlPosition(rect);
-      console.log(posX, posY, rect);
       this.props.handleOpenMenu(true);
       let popupMenu = document.querySelector(".popup-menu-container");
       popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
@@ -100,9 +99,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     } else {
       posY = posY - rect.height - MENU_HEIGHT + pageSize.top;
     }
-    console.log(posX, posY, rect, pageSize);
     posX = posX - MENU_WIDTH / 2 + pageSize.left;
-    console.log(posX, posY, rect, pageSize);
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&
@@ -135,14 +132,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     ) {
       posX = posX - pageSize.scrollLeft;
     }
-    console.log(
-      window.innerWidth,
-      document.body.clientWidth,
-      posX,
-      posY,
-      rect,
-      pageSize
-    );
     return {
       posX: Math.min(Math.max(12, posX), window.innerWidth - 12 - MENU_WIDTH),
       posY,

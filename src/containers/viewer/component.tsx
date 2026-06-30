@@ -265,7 +265,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           pdfCrop = { top, bottom, left, right };
         }
       }
-      console.log(pdfCrop);
       let rendition = BookHelper.getRendition(
         result,
         {
