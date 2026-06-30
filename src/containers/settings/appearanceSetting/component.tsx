@@ -55,12 +55,8 @@ class AppearanceSetting extends React.Component<
       customSystemCSS: ConfigService.getReaderConfig("customSystemCSS") || "",
       ttsHighlightStyleType: ttsHighlight.styleType,
       ttsHighlightColor: ttsHighlight.color,
-      isShowTtsCustomColorPicker: false,
-      pendingTtsCustomColor: ttsHighlight.color,
       searchHighlightStyleType: searchHighlight.styleType,
       searchHighlightColor: searchHighlight.color,
-      isShowSearchCustomColorPicker: false,
-      pendingSearchCustomColor: searchHighlight.color,
     };
   }
 
@@ -153,8 +149,6 @@ class AppearanceSetting extends React.Component<
     this.setState({
       ttsHighlightStyleType: styleType,
       ttsHighlightColor: color,
-      isShowTtsCustomColorPicker: false,
-      pendingTtsCustomColor: color,
     });
     this.highlightUtil.saveTtsHighlightValue({ styleType, color });
   };
@@ -164,24 +158,8 @@ class AppearanceSetting extends React.Component<
     const color = KookitConfig.HighlightPresetColors[styleType][index];
     this.setState({
       ttsHighlightColor: color,
-      isShowTtsCustomColorPicker: false,
     });
     this.highlightUtil.saveTtsHighlightValue({ styleType, color });
-  };
-
-  handleTtsCustomColor = (color: string) => {
-    this.setState({ pendingTtsCustomColor: color });
-  };
-
-  handleConfirmTtsCustomColor = () => {
-    const styleType = this.state.ttsHighlightStyleType;
-    const color = this.state.pendingTtsCustomColor;
-    this.setState({
-      ttsHighlightColor: color,
-      isShowTtsCustomColorPicker: false,
-    });
-    this.highlightUtil.saveTtsHighlightValue({ styleType, color });
-    this.handleRest(true);
   };
 
   handleSearchStyleType = (styleType: string) => {
@@ -189,8 +167,6 @@ class AppearanceSetting extends React.Component<
     this.setState({
       searchHighlightStyleType: styleType,
       searchHighlightColor: color,
-      isShowSearchCustomColorPicker: false,
-      pendingSearchCustomColor: color,
     });
     this.highlightUtil.saveSearchHighlightValue({ styleType, color });
   };
@@ -200,31 +176,14 @@ class AppearanceSetting extends React.Component<
     const color = KookitConfig.HighlightPresetColors[styleType][index];
     this.setState({
       searchHighlightColor: color,
-      isShowSearchCustomColorPicker: false,
     });
     this.highlightUtil.saveSearchHighlightValue({ styleType, color });
-  };
-
-  handleSearchCustomColor = (color: string) => {
-    this.setState({ pendingSearchCustomColor: color });
-  };
-
-  handleConfirmSearchCustomColor = () => {
-    const styleType = this.state.searchHighlightStyleType;
-    const color = this.state.pendingSearchCustomColor;
-    this.setState({
-      searchHighlightColor: color,
-      isShowSearchCustomColorPicker: false,
-    });
-    this.highlightUtil.saveSearchHighlightValue({ styleType, color });
-    this.handleRest(true);
   };
 
   renderTtsHighlightSetting = () => {
     const styleType = this.state.ttsHighlightStyleType;
     const currentColor = this.state.ttsHighlightColor;
     const presetColors = KookitConfig.HighlightPresetColors[styleType];
-    const isCustomSelected = !presetColors.includes(currentColor);
 
     return (
       <>
@@ -273,7 +232,6 @@ class AppearanceSetting extends React.Component<
             <li
               key={color}
               className={
-                !isCustomSelected &&
                 presetColors.indexOf(currentColor) === index
                   ? "tts-highlight-color-item active-tts-highlight-color"
                   : "tts-highlight-color-item"
@@ -282,81 +240,7 @@ class AppearanceSetting extends React.Component<
               onClick={() => this.handleTtsPresetColor(index)}
             />
           ))}
-          <li
-            className={
-              isCustomSelected
-                ? "tts-highlight-color-item tts-highlight-custom-color active-tts-highlight-color"
-                : "tts-highlight-color-item tts-highlight-custom-color"
-            }
-            style={
-              isCustomSelected ? { backgroundColor: currentColor } : undefined
-            }
-            onClick={() => {
-              this.setState({
-                isShowTtsCustomColorPicker:
-                  !this.state.isShowTtsCustomColorPicker,
-                pendingTtsCustomColor: currentColor,
-              });
-            }}
-          >
-            <span
-              className={
-                this.state.isShowTtsCustomColorPicker
-                  ? "icon-check"
-                  : "icon-more"
-              }
-              style={{ fontSize: "18px" }}
-            />
-          </li>
         </ul>
-        {this.state.isShowTtsCustomColorPicker && (
-          <div className="custom-color-picker-container">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <HexColorPicker
-                color={this.state.pendingTtsCustomColor}
-                onChange={this.handleTtsCustomColor}
-                style={{
-                  margin: "10px 0",
-                  animation: "fade-in 0.2s ease-in-out 0s 1",
-                }}
-              />
-              <input
-                className="color-input-box"
-                style={{ marginBottom: 8 }}
-                value={this.state.pendingTtsCustomColor}
-                placeholder="#rrggbb / rgba(r,g,b,a)"
-                onChange={(e) =>
-                  this.setState({ pendingTtsCustomColor: e.target.value })
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const hex = parseColorInput(
-                      this.state.pendingTtsCustomColor
-                    );
-                    if (hex) this.setState({ pendingTtsCustomColor: hex });
-                  }
-                }}
-                onBlur={() => {
-                  const hex = parseColorInput(this.state.pendingTtsCustomColor);
-                  if (hex) this.setState({ pendingTtsCustomColor: hex });
-                }}
-              />
-              <span
-                className="change-location-button"
-                onClick={this.handleConfirmTtsCustomColor}
-                style={{ marginBottom: "10px" }}
-              >
-                <Trans>Confirm</Trans>
-              </span>
-            </div>
-          </div>
-        )}
       </>
     );
   };
@@ -365,7 +249,6 @@ class AppearanceSetting extends React.Component<
     const styleType = this.state.searchHighlightStyleType;
     const currentColor = this.state.searchHighlightColor;
     const presetColors = KookitConfig.HighlightPresetColors[styleType];
-    const isCustomSelected = !presetColors.includes(currentColor);
 
     return (
       <>
@@ -412,7 +295,6 @@ class AppearanceSetting extends React.Component<
             <li
               key={color}
               className={
-                !isCustomSelected &&
                 presetColors.indexOf(currentColor) === index
                   ? "tts-highlight-color-item active-tts-highlight-color"
                   : "tts-highlight-color-item"
@@ -421,83 +303,7 @@ class AppearanceSetting extends React.Component<
               onClick={() => this.handleSearchPresetColor(index)}
             />
           ))}
-          <li
-            className={
-              isCustomSelected
-                ? "tts-highlight-color-item tts-highlight-custom-color active-tts-highlight-color"
-                : "tts-highlight-color-item tts-highlight-custom-color"
-            }
-            style={
-              isCustomSelected ? { backgroundColor: currentColor } : undefined
-            }
-            onClick={() => {
-              this.setState({
-                isShowSearchCustomColorPicker:
-                  !this.state.isShowSearchCustomColorPicker,
-                pendingSearchCustomColor: currentColor,
-              });
-            }}
-          >
-            <span
-              className={
-                this.state.isShowSearchCustomColorPicker
-                  ? "icon-check"
-                  : "icon-more"
-              }
-              style={{ fontSize: "18px" }}
-            />
-          </li>
         </ul>
-        {this.state.isShowSearchCustomColorPicker && (
-          <div className="custom-color-picker-container">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <HexColorPicker
-                color={this.state.pendingSearchCustomColor}
-                onChange={this.handleSearchCustomColor}
-                style={{
-                  margin: "10px 0",
-                  animation: "fade-in 0.2s ease-in-out 0s 1",
-                }}
-              />
-              <input
-                className="color-input-box"
-                style={{ marginBottom: 8 }}
-                value={this.state.pendingSearchCustomColor}
-                placeholder="#rrggbb / rgba(r,g,b,a)"
-                onChange={(e) =>
-                  this.setState({ pendingSearchCustomColor: e.target.value })
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const hex = parseColorInput(
-                      this.state.pendingSearchCustomColor
-                    );
-                    if (hex) this.setState({ pendingSearchCustomColor: hex });
-                  }
-                }}
-                onBlur={() => {
-                  const hex = parseColorInput(
-                    this.state.pendingSearchCustomColor
-                  );
-                  if (hex) this.setState({ pendingSearchCustomColor: hex });
-                }}
-              />
-              <span
-                className="change-location-button"
-                onClick={this.handleConfirmSearchCustomColor}
-                style={{ marginBottom: "10px" }}
-              >
-                <Trans>Confirm</Trans>
-              </span>
-            </div>
-          </div>
-        )}
       </>
     );
   };

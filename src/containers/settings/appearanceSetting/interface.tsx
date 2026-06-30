@@ -18,10 +18,6 @@ export interface SettingInfoState {
   customSystemCSS: string;
   ttsHighlightStyleType: string;
   ttsHighlightColor: string;
-  isShowTtsCustomColorPicker: boolean;
-  pendingTtsCustomColor: string;
   searchHighlightStyleType: string;
   searchHighlightColor: string;
-  isShowSearchCustomColorPicker: boolean;
-  pendingSearchCustomColor: string;
 }
