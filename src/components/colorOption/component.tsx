@@ -68,10 +68,15 @@ class ColorOption extends React.Component<ColorProps> {
               >
                 <span
                   className="note-highlight-style-preview"
-                  style={this.highlightUtil.buildHighlightPreviewStyle(
-                    item.value,
-                    previewColor
-                  )}
+                  style={{
+                    ...this.highlightUtil.buildHighlightPreviewStyle(
+                      item.value,
+                      previewColor
+                    ),
+                    ...(item.value === "background"
+                      ? { borderRadius: "50%" }
+                      : {}),
+                  }}
                 >
                   Aa
                 </span>

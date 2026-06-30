@@ -4,7 +4,10 @@ import { Trans } from "react-i18next";
 import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
-import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  HighlightUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import ConfigUtil from "../../../utils/file/configUtil";
 import Book from "../../../models/Book";
