@@ -149,7 +149,7 @@ class AppearanceSetting extends React.Component<
   };
 
   handleTtsStyleType = (styleType: string) => {
-    const color = KookitConfig.KookitConfig.HighlightPresetColors[styleType][0];
+    const color = KookitConfig.HighlightPresetColors[styleType][0];
     this.setState({
       ttsHighlightStyleType: styleType,
       ttsHighlightColor: color,
@@ -161,8 +161,7 @@ class AppearanceSetting extends React.Component<
 
   handleTtsPresetColor = (index: number) => {
     const styleType = this.state.ttsHighlightStyleType;
-    const color =
-      KookitConfig.KookitConfig.HighlightPresetColors[styleType][index];
+    const color = KookitConfig.HighlightPresetColors[styleType][index];
     this.setState({
       ttsHighlightColor: color,
       isShowTtsCustomColorPicker: false,

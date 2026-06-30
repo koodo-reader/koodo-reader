@@ -46,7 +46,7 @@ export const getAnswerStream = async (
     {
       text,
       question,
-      history: history.slice(-10),
+      history: history.slice(-5),
       mode,
     },
     onMessage
