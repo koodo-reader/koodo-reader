@@ -158,26 +158,8 @@ const READING_PANEL_SHORTCUTS: Array<{
   { shortcut: "openBottomPanel", position: "bottom" },
 ];
 
-export type NavTab = "bookmarks" | "notes" | "highlights";
-
 export const NAV_TAB_TOGGLE_EVENT = "koodo-nav-tab-toggle";
 
-export const toggleNavTab = (tab: NavTab) => {
-  window.dispatchEvent(
-    new CustomEvent(NAV_TAB_TOGGLE_EVENT, {
-      detail: { tab },
-    })
-  );
-};
-
-const NAV_TAB_SHORTCUTS: Array<{
-  shortcut: ShortcutAction;
-  tab: NavTab;
-}> = [
-  { shortcut: "openBookmarkList", tab: "bookmarks" },
-  { shortcut: "openNoteList", tab: "notes" },
-  { shortcut: "openHighlightList", tab: "highlights" },
-];
 let lock = false; //prevent from clicking too fasts
 const arrowKeys = async (
   rendition: any,
@@ -275,12 +257,23 @@ const handleShortcut = (
       break;
     }
   }
-  for (const { shortcut, tab } of NAV_TAB_SHORTCUTS) {
-    if (matchShortcut(event, shortcuts[shortcut])) {
-      event.preventDefault();
-      toggleNavTab(tab);
-      break;
-    }
+  if (matchShortcut(event, shortcuts.openBookmarkList)) {
+    event.preventDefault();
+    window.dispatchEvent(
+      new CustomEvent(NAV_TAB_TOGGLE_EVENT, { detail: { tab: "bookmarks" } })
+    );
+  }
+  if (matchShortcut(event, shortcuts.openNoteList)) {
+    event.preventDefault();
+    window.dispatchEvent(
+      new CustomEvent(NAV_TAB_TOGGLE_EVENT, { detail: { tab: "notes" } })
+    );
+  }
+  if (matchShortcut(event, shortcuts.openHighlightList)) {
+    event.preventDefault();
+    window.dispatchEvent(
+      new CustomEvent(NAV_TAB_TOGGLE_EVENT, { detail: { tab: "highlights" } })
+    );
   }
   if (matchShortcut(event, shortcuts.createBookmark)) {
     event.preventDefault();
