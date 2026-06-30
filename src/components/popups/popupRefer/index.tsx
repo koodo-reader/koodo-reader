@@ -8,7 +8,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     readerMode: state.reader.readerMode,
-    highlight: state.reader.highlight,
     isChangeDirection: state.viewArea.isChangeDirection,
   };
 };
