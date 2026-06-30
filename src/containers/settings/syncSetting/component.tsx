@@ -25,6 +25,8 @@ import {
 } from "../../../utils/common";
 
 import { driveInputConfig, driveList } from "../../../constants/driveList";
+import { backup } from "../../../utils/file/backup";
+import { restore } from "../../../utils/file/restore";
 import {
   ConfigService,
   KookitConfig,
@@ -55,6 +57,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       driveConfig: {},
       scheduledSyncInterval:
         ConfigService.getReaderConfig("scheduledSyncInterval") || "",
+      backupDrive: "",
+      restoreDrive: "",
     };
   }
 
@@ -234,6 +238,139 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         {
           duration: 10000,
         }
+      );
+    }
+  };
+  handleSelectBackupOrRestoreSource = async (
+    event: any,
+    mode: "backup" | "restore"
+  ) => {
+    let targetDrive = event.target.value;
+    if (!targetDrive) {
+      this.setState({
+        backupDrive: mode === "backup" ? "" : this.state.backupDrive,
+        restoreDrive: mode === "restore" ? "" : this.state.restoreDrive,
+      });
+      return;
+    }
+    if (
+      targetDrive !== "add" &&
+      !driveList
+        .find((item) => item.value === targetDrive)
+        ?.support.includes("browser") &&
+      !isElectron
+    ) {
+      toast(
+        this.props.t(
+          "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
+        )
+      );
+      return;
+    }
+    if (
+      driveList.find((item) => item.value === targetDrive)?.isPro &&
+      !this.props.isAuthed
+    ) {
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
+      return;
+    }
+    if (targetDrive === "add") {
+      toast(this.props.t("Please add data source in the setting"));
+      return;
+    }
+    this.setState({
+      backupDrive: mode === "backup" ? targetDrive : this.state.backupDrive,
+      restoreDrive: mode === "restore" ? targetDrive : this.state.restoreDrive,
+    });
+    if (mode === "backup") {
+      this.handleBackupLibrary(targetDrive);
+    } else {
+      this.handleRestoreLibrary(targetDrive);
+    }
+  };
+  handleBackupLibrary = async (name: string) => {
+    if (!name) {
+      return;
+    }
+    if (name === "local") {
+      let result = await backup(name);
+      if (result) {
+        toast.dismiss("backup");
+        toast.success(this.props.t("Execute successful"));
+        this.props.handleFetchBooks();
+        await generateSyncRecord();
+      } else {
+        toast.dismiss("backup");
+        toast.error(this.props.t("Backup failed"));
+      }
+      return;
+    }
+    if (!(await TokenService.getToken(name + "_token"))) {
+      this.props.handleTokenDialog(true);
+      return;
+    }
+    toast.dismiss("backup");
+    toast(this.props.t("Uploading, please wait"));
+    this.props.handleLoadingDialog(true);
+    let result = await backup(name);
+    if (result) {
+      this.props.handleLoadingDialog(false);
+      toast.dismiss("backup");
+      toast.success(this.props.t("Execute successful"));
+      this.props.handleFetchBooks();
+      await generateSyncRecord();
+    } else {
+      this.props.handleLoadingDialog(false);
+      toast.dismiss("backup");
+      toast.error(this.props.t("Upload failed, check your connection"));
+    }
+  };
+  handleRestoreLibrary = async (name: string) => {
+    if (!name) {
+      return;
+    }
+    if (name === "local") {
+      let result = await restore(name);
+      if (result) {
+        toast.dismiss("backup");
+        toast.success(this.props.t("Execute successful"));
+        this.props.handleFetchBooks();
+        await generateSyncRecord();
+        setTimeout(() => {
+          this.props.history.push("/manager/home");
+        }, 2000);
+      } else {
+        toast.dismiss("backup");
+        toast.error(
+          this.props.t("Download failed,network problem or no backup")
+        );
+      }
+      return;
+    }
+    if (!(await TokenService.getToken(name + "_token"))) {
+      this.props.handleTokenDialog(true);
+      return;
+    }
+    this.props.handleLoadingDialog(true);
+    toast.dismiss("backup");
+    toast(this.props.t("Downloading, please wait"));
+    let result = await restore(name);
+    if (result) {
+      this.props.handleLoadingDialog(false);
+      toast.dismiss("backup");
+      toast.success(this.props.t("Execute successful"));
+      this.props.handleFetchBooks();
+      await generateSyncRecord();
+      setTimeout(() => {
+        this.props.history.push("/manager/home");
+      }, 2000);
+    } else {
+      this.props.handleLoadingDialog(false);
+      toast.dismiss("backup");
+      toast.error(
+        this.props.t("Download failed,network problem or no backup")
       );
     }
   };
@@ -749,6 +886,78 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   className="lang-setting-option"
                 >
                   {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+                </option>
+              ))}
+          </select>
+        </div>
+        <div className="setting-dialog-new-title">
+          <Trans>Backup library</Trans>
+          <select
+            name=""
+            className="lang-setting-dropdown"
+            value={this.state.backupDrive}
+            onChange={(event) =>
+              this.handleSelectBackupOrRestoreSource(event, "backup")
+            }
+          >
+            <option value="" className="lang-setting-option">
+              {this.props.t("Please select")}
+            </option>
+            {[
+              { label: "Local", value: "local", isPro: false },
+              ...driveList,
+              { label: "Add data source", value: "add", isPro: false },
+            ]
+              .filter(
+                (item) =>
+                  this.props.dataSourceList.includes(item.value) ||
+                  item.value === "local" ||
+                  item.value === "add"
+              )
+              .map((item) => (
+                <option
+                  value={item.value}
+                  key={item.value}
+                  className="lang-setting-option"
+                >
+                  {this.props.t(item.label) +
+                    (item.isPro ? " (Pro)" : "")}
+                </option>
+              ))}
+          </select>
+        </div>
+        <div className="setting-dialog-new-title">
+          <Trans>Restore library</Trans>
+          <select
+            name=""
+            className="lang-setting-dropdown"
+            value={this.state.restoreDrive}
+            onChange={(event) =>
+              this.handleSelectBackupOrRestoreSource(event, "restore")
+            }
+          >
+            <option value="" className="lang-setting-option">
+              {this.props.t("Please select")}
+            </option>
+            {[
+              { label: "Local", value: "local", isPro: false },
+              ...driveList,
+              { label: "Add data source", value: "add", isPro: false },
+            ]
+              .filter(
+                (item) =>
+                  this.props.dataSourceList.includes(item.value) ||
+                  item.value === "local" ||
+                  item.value === "add"
+              )
+              .map((item) => (
+                <option
+                  value={item.value}
+                  key={item.value}
+                  className="lang-setting-option"
+                >
+                  {this.props.t(item.label) +
+                    (item.isPro ? " (Pro)" : "")}
                 </option>
               ))}
           </select>

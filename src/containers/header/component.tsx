@@ -827,25 +827,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           </div>
           <div
             className="setting-icon-container"
-            onClick={() => {
-              this.props.handleBackupDialog(true);
-            }}
-            onMouseLeave={() => {
-              this.props.handleSortDisplay(false);
-            }}
-            style={{ marginTop: "1px" }}
-          >
-            <span
-              data-tooltip-id="my-tooltip"
-              data-tooltip-content={this.props.t("Backup")}
-              data-tooltip-place="left"
-            >
-              <span className="icon-archive header-archive-icon"></span>
-            </span>
-          </div>
-
-          <div
-            className="setting-icon-container"
             onClick={async () => {
               if (!isElectron && !this.props.isAuthed) {
                 toast(
