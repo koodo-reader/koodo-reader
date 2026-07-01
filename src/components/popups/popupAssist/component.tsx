@@ -1,10 +1,9 @@
 import React from "react";
 import "./popupAssist.css";
-import { PopupAssistProps, PopupAssistState } from "./interface";
+import { PopupAssistProps, PopupAssistState, AiChatMessage } from "./interface";
 import {
   ConfigService,
   KookitConfig,
-  AiChatManager,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
@@ -22,7 +21,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
   answerTextAccumulator: string = "";
   updateInterval: ReturnType<typeof setInterval> | null = null;
   isHydrating = false;
-  aiChatManager: any = null;
 
   constructor(props: PopupAssistProps) {
     super(props);
@@ -39,8 +37,41 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     };
     this.chatBoxRef = React.createRef();
     this.textareaRef = React.createRef();
-    this.aiChatManager = new AiChatManager(ConfigService);
   }
+
+  MAX_HISTORY_LENGTH = 50;
+
+  AI_ASK_HISTORY_KEY = "aiAskHistory";
+  AI_CHAT_HISTORY_KEY = "aiChatHistory";
+
+  HISTORY_KEY_BY_MODE: Record<string, string> = {
+    ask: this.AI_ASK_HISTORY_KEY,
+    chat: this.AI_CHAT_HISTORY_KEY,
+  };
+
+  loadHistory = (bookKey: string, mode: "ask" | "chat"): AiChatMessage[] => {
+    if (!bookKey) {
+      return [];
+    }
+    const key = this.HISTORY_KEY_BY_MODE[mode];
+    return ConfigService.getObjectConfig(bookKey, key, []);
+  };
+
+  saveHistory = (
+    bookKey: string,
+    mode: "ask" | "chat",
+    messages: AiChatMessage[]
+  ): void => {
+    if (!bookKey) {
+      return;
+    }
+    const key = this.HISTORY_KEY_BY_MODE[mode];
+    const trimmed =
+      messages.length <= this.MAX_HISTORY_LENGTH
+        ? messages
+        : messages.slice(messages.length - this.MAX_HISTORY_LENGTH);
+    ConfigService.setObjectConfig(bookKey, trimmed, key);
+  };
 
   startUpdateInterval() {
     if (this.updateInterval) {
@@ -73,8 +104,8 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     this.isHydrating = true;
     this.setState(
       {
-        askHistory: this.aiChatManager.loadHistory(bookKey, "ask"),
-        chatHistory: this.aiChatManager.loadHistory(bookKey, "chat"),
+        askHistory: this.loadHistory(bookKey, "ask"),
+        chatHistory: this.loadHistory(bookKey, "chat"),
       },
       () => {
         this.isHydrating = false;
@@ -89,8 +120,8 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     if (!bookKey || this.isHydrating) {
       return;
     }
-    this.aiChatManager.saveHistory(bookKey, "ask", this.state.askHistory);
-    this.aiChatManager.saveHistory(bookKey, "chat", this.state.chatHistory);
+    this.saveHistory(bookKey, "ask", this.state.askHistory);
+    this.saveHistory(bookKey, "chat", this.state.chatHistory);
   }
   componentDidMount(): void {
     this.loadChatHistory();
@@ -138,10 +169,10 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       return;
     }
     if (prevState.askHistory !== this.state.askHistory) {
-      this.aiChatManager.saveHistory(bookKey, "ask", this.state.askHistory);
+      this.saveHistory(bookKey, "ask", this.state.askHistory);
     }
     if (prevState.chatHistory !== this.state.chatHistory) {
-      this.aiChatManager.saveHistory(bookKey, "chat", this.state.chatHistory);
+      this.saveHistory(bookKey, "chat", this.state.chatHistory);
     }
   }
   componentWillUnmount(): void {
