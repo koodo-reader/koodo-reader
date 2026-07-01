@@ -87,7 +87,7 @@ class SettingDialog extends React.Component<
       case "background":
         return "Background";
       case "font":
-        return "Font";
+        return "Font management";
       case "chapter":
         return "TXT parser";
       case "text":
