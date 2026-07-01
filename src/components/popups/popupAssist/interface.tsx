@@ -1,6 +1,6 @@
 import PluginModel from "../../../models/Plugin";
 import BookModel from "../../../models/Book";
-type AiChatMessage = {
+export type AiChatMessage = {
   role: "user" | "assistant";
   content: string;
 };
