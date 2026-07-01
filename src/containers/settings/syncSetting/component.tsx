@@ -274,6 +274,10 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       });
       return;
     }
+    if (targetDrive === "add") {
+      this.setState({ showDefaultSyncAddGrid: true });
+      return;
+    }
     if (
       targetDrive !== "local" &&
       !driveList
@@ -925,6 +929,13 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             onChange={async (event) => {
               event.preventDefault();
               const newValue = event.target.value;
+              if (newValue === "add") {
+                this.setState({
+                  showDefaultSyncAddGrid: !this.state.showDefaultSyncAddGrid,
+                });
+                event.target.value = this.props.defaultSyncOption;
+                return;
+              }
               const currentValue = this.props.defaultSyncOption;
               let onlineBooks: Book[] = [];
               for (let i = 0; i < this.props.books.length; i++) {
@@ -964,15 +975,22 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 support: ["desktop"],
               },
               ...driveList,
+              {
+                label: "Add data source",
+                value: "add",
+                isPro: false,
+                support: ["desktop", "browser", "phone"],
+              },
             ]
               .filter(
                 (item) =>
+                  item.value === "add" ||
                   item.value === "local" ||
                   item.value === "" ||
                   this.props.dataSourceList.includes(item.value)
               )
               .filter((item) => {
-                if (item.value === "") {
+                if (item.value === "add" || item.value === "") {
                   return true;
                 }
                 if (!isElectron) {
@@ -1038,11 +1056,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <option value="" className="lang-setting-option">
               {this.props.t("Please select")}
             </option>
-            {[{ label: "Local", value: "local", isPro: false }, ...driveList]
+            {[{ label: "Local", value: "local", isPro: false }, ...driveList, { label: "Add data source", value: "add", isPro: false }]
               .filter(
                 (item) =>
                   this.props.dataSourceList.includes(item.value) ||
-                  item.value === "local"
+                  item.value === "local" ||
+                  item.value === "add"
               )
               .map((item) => (
                 <option
@@ -1068,11 +1087,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <option value="" className="lang-setting-option">
               {this.props.t("Please select")}
             </option>
-            {[{ label: "Local", value: "local", isPro: false }, ...driveList]
+            {[{ label: "Local", value: "local", isPro: false }, ...driveList, { label: "Add data source", value: "add", isPro: false }]
               .filter(
                 (item) =>
                   this.props.dataSourceList.includes(item.value) ||
-                  item.value === "local"
+                  item.value === "local" ||
+                  item.value === "add"
               )
               .map((item) => (
                 <option
