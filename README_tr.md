@@ -1,6 +1,6 @@
 <div align="left">
 
-[简体中文](https://github.com/koodo-reader/koodo-reader/blob/master/README_cn.md) | [हिंदी](https://github.com/koodo-reader/koodo-reader/blob/master/README_hi.md) | [Português](https://github.com/koodo-reader/koodo-reader/blob/master/README_pt.md) | [Indonesian](https://github.com/koodo-reader/koodo-reader/blob/master/README_id.md) | [English](https://github.com/koodo-reader/koodo-reader/blob/master/README.md) | Türkçe
+[简体中文](./README_cn.md) | [हिंदी](./README_hi.md) | [Português](./README_pt.md) | [Indonesian](./README_id.md) | [English](./README.md) | Türkçe
 
 </div>
 
@@ -176,8 +176,8 @@ yarn ve git'in kurulu olduğundan emin olun
 
 4. Çevirinizin miktarına bağlı olarak çeviri dosyasını ya da yalnızca çeviri parçalarını [bu bağlantıya](https://github.com/koodo-reader/koodo-reader/issues/new?assignees=&labels=submit+translation&projects=&template=submit_translation.yml) gönderin. Pull request de memnuniyetle karşılanır.
 
-| Dil (A-Z)       | Kod   | Görüntüle                               |
-| --------------- | ----- | --------------------------------------- |
+| Dil (A-Z)       | Kod   | Görüntüle                                    |
+| --------------- | ----- | -------------------------------------------- |
 | Almanca         | de    | [Görüntüle](./src/assets/locales/de.json)    |
 | Amharca         | am    | [Görüntüle](./src/assets/locales/am.json)    |
 | Arapça          | ar    | [Görüntüle](./src/assets/locales/ar.json)    |
