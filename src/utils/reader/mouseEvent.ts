@@ -174,6 +174,7 @@ const NAV_TAB_SHORTCUTS: Array<{
   { shortcut: "openBookmarkList", tab: "bookmarks" },
   { shortcut: "openNoteList", tab: "notes" },
   { shortcut: "openHighlightList", tab: "highlights" },
+  { shortcut: "openToc", tab: "contents" },
 ];
 let lock = false; //prevent from clicking too fasts
 const arrowKeys = async (
@@ -260,10 +261,6 @@ const handleShortcut = (
   if (matchShortcut(event, shortcuts.searchInBook)) {
     event.preventDefault();
     searchInTheBook("", "", false);
-  }
-  if (matchShortcut(event, shortcuts.openToc)) {
-    event.preventDefault();
-    openTableOfContents();
   }
   for (const { shortcut, position } of READING_PANEL_SHORTCUTS) {
     if (matchShortcut(event, shortcuts[shortcut])) {

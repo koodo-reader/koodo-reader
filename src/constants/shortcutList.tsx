@@ -55,11 +55,7 @@ export const shortcutList: ShortcutListItem[] = [
     title: "Search in book",
     desc: "Open the in-book search panel",
   },
-  {
-    action: "openToc",
-    title: "Open table of contents",
-    desc: "Open the navigation panel",
-  },
+
   {
     action: "openLeftPanel",
     title: "Open left reading panel",
@@ -99,6 +95,11 @@ export const shortcutList: ShortcutListItem[] = [
     action: "openHighlightList",
     title: "Toggle highlight list",
     desc: "Open or close the highlight list in the left reading panel",
+  },
+  {
+    action: "openToc",
+    title: "Toggle table of contents",
+    desc: "Open or close table of contents in the left reading panel",
   },
   {
     action: "selectionTranslate",

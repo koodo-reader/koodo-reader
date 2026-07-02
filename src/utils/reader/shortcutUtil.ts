@@ -175,7 +175,6 @@ export const DEFAULT_SHORTCUT_CONFIG: ShortcutConfig = {
   toggleFullscreen: [{ keyCode: 122 }],
   exitReader: [{ keyCode: 27 }],
   searchInBook: [{ keyCode: 70, ctrl: true }],
-  openToc: [{ keyCode: 66, ctrl: true }],
   openLeftPanel: [{ keyCode: 117 }],
   openRightPanel: [{ keyCode: 118 }],
   openTopPanel: [{ keyCode: 119 }],
@@ -186,6 +185,7 @@ export const DEFAULT_SHORTCUT_CONFIG: ShortcutConfig = {
   nextChapter: [{ keyCode: 39, ctrl: true, alt: true }],
   openNoteList: [{ keyCode: 78, ctrl: true, alt: true }],
   openHighlightList: [{ keyCode: 72, ctrl: true, alt: true }],
+  openToc: [{ keyCode: 84, ctrl: true, alt: true }],
   selectionTranslate: [{ keyCode: 84, ctrl: true, shift: true }],
   selectionDict: [{ keyCode: 68, ctrl: true, shift: true }],
   selectionNote: [{ keyCode: 78, ctrl: true, shift: true }],
@@ -215,7 +215,14 @@ export const bindingEquals = (
   !!a.shift === !!b.shift;
 
 export const matchShortcut = (
-  event: KeyboardEvent | { keyCode: number; ctrlKey?: boolean; altKey?: boolean; shiftKey?: boolean },
+  event:
+    | KeyboardEvent
+    | {
+        keyCode: number;
+        ctrlKey?: boolean;
+        altKey?: boolean;
+        shiftKey?: boolean;
+      },
   bindings: ShortcutBinding[]
 ): boolean => {
   return bindings.some(
@@ -299,7 +306,14 @@ export const findShortcutConflict = (
 const isVerticalArrow = (keyCode: number) => keyCode === 38 || keyCode === 40;
 
 export const isPrevPageKey = (
-  event: KeyboardEvent | { keyCode: number; ctrlKey?: boolean; altKey?: boolean; shiftKey?: boolean },
+  event:
+    | KeyboardEvent
+    | {
+        keyCode: number;
+        ctrlKey?: boolean;
+        altKey?: boolean;
+        shiftKey?: boolean;
+      },
   readerMode: string
 ): boolean => {
   const config = getShortcutConfig();
@@ -313,7 +327,14 @@ export const isPrevPageKey = (
 };
 
 export const isNextPageKey = (
-  event: KeyboardEvent | { keyCode: number; ctrlKey?: boolean; altKey?: boolean; shiftKey?: boolean },
+  event:
+    | KeyboardEvent
+    | {
+        keyCode: number;
+        ctrlKey?: boolean;
+        altKey?: boolean;
+        shiftKey?: boolean;
+      },
   readerMode: string
 ): boolean => {
   const config = getShortcutConfig();
