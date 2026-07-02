@@ -6,6 +6,7 @@ import DatabaseService from "../../utils/storage/databaseService";
 import ConfigUtil from "../../utils/file/configUtil";
 import Note from "../../models/Note";
 import Bookmark from "../../models/Bookmark";
+import { HighlightValue } from "../../utils/common";
 
 export function handleNotes(notes: NoteModel[]) {
   return { type: "HANDLE_NOTES", payload: notes };
@@ -22,11 +23,14 @@ export function handleQuoteText(quoteText: string) {
 export function handleOriginalSentence(originalSentence: string) {
   return { type: "HANDLE_ORIGINAL_SENTENCE", payload: originalSentence };
 }
-export function handleColor(color: number) {
-  return { type: "HANDLE_COLOR", payload: color };
+export function handleHighlight(highlight: HighlightValue) {
+  return { type: "HANDLE_HIGHLIGHT", payload: highlight };
 }
 export function handleConvertDialog(isConvertOpen: boolean) {
   return { type: "HANDLE_CONVERT_DIALOG", payload: isConvertOpen };
+}
+export function handlePdfCropDialog(isPdfCropOpen: boolean) {
+  return { type: "HANDLE_PDF_CROP_DIALOG", payload: isPdfCropOpen };
 }
 export function handleSpeechDialog(isSpeechOpen: boolean) {
   return { type: "HANDLE_SPEECH_DIALOG", payload: isSpeechOpen };

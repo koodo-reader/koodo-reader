@@ -1,0 +1,247 @@
+.font-setting-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 25px 20px 25px;
+}
+
+.font-setting-item {
+  width: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  background: var(--color-card-bg, rgba(128, 128, 128, 0.08));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 5px;
+  transition:
+    border-color 0.15s,
+    transform 0.1s;
+}
+
+.font-setting-item:hover {
+  transform: scale(1.04);
+}
+
+.font-setting-item.active-font-item {
+  border-color: var(--color-theme-color, #0179ca);
+}
+
+.font-setting-badge {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 10px;
+  padding: 2px 5px;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+.font-setting-label {
+  font-size: 13px;
+  opacity: 0.85;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.font-setting-type {
+  font-size: 12px;
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+.font-setting-delete {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+  line-height: 1;
+}
+
+.font-setting-item:hover .font-setting-delete {
+  opacity: 1;
+}
+
+.font-setting-empty {
+  text-align: center;
+  opacity: 0.45;
+  padding: 40px 0 20px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.font-setting-actions {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.font-setting-action-btn {
+  cursor: pointer;
+  position: static;
+}
+
+.font-featured-section {
+  margin: 0 25px 80px 25px;
+}
+
+.font-featured-section-title {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.font-featured-list {
+  padding: 0;
+}
+
+.font-featured-family {
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.font-featured-family-icon {
+  font-size: 12px;
+  opacity: 1;
+  transition: transform 0.15s;
+}
+.font-featured-family-header {
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.font-featured-variant {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px 10px 14px;
+  border-top: 1px solid rgba(128, 128, 128, 0.12);
+  font-size: 14px;
+}
+
+.font-featured-download-btn {
+  cursor: pointer;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: transparent;
+  white-space: nowrap;
+}
+
+.font-featured-download-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.font-featured-progress {
+  height: 3px;
+  background: rgba(128, 128, 128, 0.15);
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.font-featured-progress-bar {
+  height: 100%;
+  transition: width 0.15s;
+}
+
+.font-preview-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.15s ease;
+}
+
+.font-preview-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+
+.font-preview-close:hover {
+  opacity: 1;
+}
+
+.font-preview-content {
+  max-width: min(640px, 88vw);
+  padding: 32px 40px;
+  border-radius: 12px;
+  background: var(--color-card-bg, #fff);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.font-preview-sample {
+  font-size: 48px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.font-preview-paragraph {
+  font-size: 18px;
+  line-height: 1.6;
+  opacity: 0.85;
+  margin-bottom: 12px;
+}
+
+.font-preview-name {
+  font-size: 13px;
+  opacity: 0.55;
+}
+
+.font-preview-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.font-preview-loading {
+  min-width: 200px;
+  opacity: 0.7;
+}

@@ -14,6 +14,7 @@ a {
 .more-option-text,
 .book-subcontent-name,
 .pin-keypad-title,
+.add-source-card,
 .pin-key {
   color: rgba(235, 235, 235, 1);
 }
@@ -42,6 +43,7 @@ a {
 .token-dialog-url-box,
 .token-dialog-username-box,
 .account-login-option,
+.font-featured-download-btn,
 .token-dialog-password-box,
 .general-setting-dropdown,
 .delete-dialog-uncheck-icon,
@@ -55,6 +57,7 @@ a {
 .token-dialog-link-text,
 .token-dialog-token-text,
 .nav-search-page-item,
+.add-source-card,
 .pin-dot {
   border: 1.5px solid rgba(235, 235, 235, 1);
 }
@@ -71,6 +74,7 @@ a {
 }
 .delete-digest-button,
 .add-dialog-confirm,
+.font-featured-progress-bar,
 .backup-page-backup-selector,
 .delete-dialog-confirm,
 .book-item-config,
@@ -100,6 +104,10 @@ a {
 .biometric-auth-button {
   background-color: rgba(71, 76, 80, 1);
   color: rgba(235, 235, 235, 1);
+}
+.previous-chapter-single-container,
+.next-chapter-single-container {
+  opacity: 0.7;
 }
 .pin-dot.pin-dot-filled {
   background-color: rgba(235, 235, 235, 1);
@@ -163,6 +171,7 @@ a {
 .new-version,
 .sort-dialog-container,
 .popup-menu-box,
+.popup-color-box,
 .popup-box-container,
 .loading-page-cover,
 .loading-page-cover,
@@ -232,6 +241,7 @@ a {
 .voice-add-cancel,
 .new-version,
 .popup-menu-box,
+.popup-color-box,
 .popup-box-container,
 .general-setting-dropdown,
 .card-list-item-card,

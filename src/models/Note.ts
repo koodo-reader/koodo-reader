@@ -9,7 +9,7 @@ class Note {
   range: string;
   notes: string;
   percentage: string;
-  color: number;
+  color: string;
   tag: string[];
   constructor(
     bookKey: string,
@@ -20,7 +20,7 @@ class Note {
     range: string,
     notes: string,
     percentage: string,
-    color: number,
+    color: string,
     tag: string[]
   ) {
     this.key = new Date().getTime() + "";

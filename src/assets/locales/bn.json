@@ -658,11 +658,7 @@
   "Reset main window's position": "মূল উইন্ডোর অবস্থান রিসেট করুন",
   "Copy quotes": "উদ্ধৃতি কপি করুন",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "৭ দিনের ফ্রি ট্রায়াল কেবল সুপারিশকৃত ইমেইল প্রদানকারীদের দিয়ে নিবন্ধিত ব্যবহারকারীদের জন্য প্রযোজ্য। সুপারিশকৃত ইমেইল প্রদানকারীরা হলো",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "ভবিষ্যতে আমরা আরও সদস্য-এক্সক্লুসিভ ফিচার আনব, যেমন পড়ার পরিসংখ্যান এবং আপনার নোট, হাইলাইট, পড়ার অগ্রগতি ও শব্দতালিকা Notion, Obsidian, Logseq, Anki ইত্যাদিতে স্বয়ংক্রিয় সিঙ্ক।",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "প্রো সংস্করণ থেকে বের হলে আপনি আর সিঙ্ক ও অন্যান্য প্রিমিয়াম ফিচার ব্যবহার করতে পারবেন না",
-  "I'll think about it": "আমি ভেবে দেখব",
   "Convert PDF to Text": "PDF কে টেক্সটে রূপান্তর করুন",
-  "Still refuse": "এখনও অস্বীকার",
   "Set OCR language": "OCR ভাষা সেট করুন",
   "Unsupported file format": "অসমর্থিত ফাইল ফরম্যাট",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "দুটি লাইনের মধ্যবর্তী দূরত্ব যদি স্বাভাবিক দূরত্বের n গুণ হয়, তবে সেগুলো দুটি অনুচ্ছেদে বিভক্ত হবে",
@@ -965,7 +961,7 @@
   "Bar Chart": "বার চার্ট",
   "Line Chart": "লাইন চার্ট",
   "Customize popup menu": "পপআপ মেনু কাস্টমাইজ করুন",
-  "You can enable up to 8 options": "আপনি সর্বোচ্চ ৮টি অপশন সক্রিয় করতে পারেন",
+  "You can enable up to {{count}} options": "আপনি সর্বোচ্চ {{count}}টি অপশন সক্রিয় করতে পারেন",
   "From URL": "URL থেকে",
   "Enter book download URL or article URL": "বই ডাউনলোড URL বা নিবন্ধ URL লিখুন",
   "Please enter a valid http or https URL": "একটি বৈধ http বা https URL লিখুন",
@@ -1109,5 +1105,6 @@
   "All": "সব",
   "Unread": "অপঠিত",
   "CurrentlyReading": "পড়ছি",
-  "Finished": "শেষ"
+  "Finished": "শেষ",
+  "Theme": "Theme"
 }

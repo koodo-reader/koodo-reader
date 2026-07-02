@@ -6,7 +6,6 @@ export interface BookCoverProps extends RouteComponentProps<any> {
   currentBook: BookModel;
   isOpenActionDialog: boolean;
   isCollapsed: boolean;
-  dragItem: string;
   isSelectBook: boolean;
   isSelected: boolean;
   selectedBooks: string[];
@@ -18,7 +17,6 @@ export interface BookCoverProps extends RouteComponentProps<any> {
   handleReadingBook: (book: BookModel) => void;
   handleActionDialog: (isShowActionDialog: boolean) => void;
   t: (title: string) => string;
-  handleDragItem: (key: string) => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
   handleDeleteDialog: (isShow: boolean) => void;
 }

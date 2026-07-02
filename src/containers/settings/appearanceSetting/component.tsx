@@ -3,22 +3,22 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  HighlightUtil,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import {
   appearanceSettingList,
   skinList,
 } from "../../../constants/settingList";
 import { themeList } from "../../../constants/themeList";
 import { HexColorPicker } from "react-colorful";
-import { dropdownList } from "../../../constants/dropdownList";
-import {
-  loadFontData,
-  reloadManager,
-  vexComfirmAsync,
-  parseColorInput,
-} from "../../../utils/common";
+import { reloadManager, parseColorInput } from "../../../utils/common";
+import FontUtil from "../../../utils/file/fontUtil";
 import {
   applyCustomSystemCSS,
+  applyCustomSystemFont,
   syncNativeThemeSource,
 } from "../../../utils/reader/launchUtil";
 
@@ -26,8 +26,12 @@ class AppearanceSetting extends React.Component<
   SettingInfoProps,
   SettingInfoState
 > {
+  highlightUtil: any;
   constructor(props: SettingInfoProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
+    const ttsHighlight = this.highlightUtil.getTtsHighlightValue();
+    const searchHighlight = this.highlightUtil.getSearchHighlightValue();
     this.state = {
       appSkin: ConfigService.getReaderConfig("appSkin"),
       currentThemeIndex: themeList.findIndex(
@@ -40,6 +44,7 @@ class AppearanceSetting extends React.Component<
       pendingCustomColor:
         ConfigService.getReaderConfig("themeColor") || "#0179CA",
       fontListVersion: 0,
+      fontOptions: [] as { label: string; value: string }[],
       isDisablePDFCover:
         ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
@@ -48,34 +53,28 @@ class AppearanceSetting extends React.Component<
       isCustomSystemCSS:
         ConfigService.getReaderConfig("isCustomSystemCSS") === "yes",
       customSystemCSS: ConfigService.getReaderConfig("customSystemCSS") || "",
+      ttsHighlightStyleType: ttsHighlight.styleType,
+      ttsHighlightColor: ttsHighlight.color,
+      searchHighlightStyleType: searchHighlight.styleType,
+      searchHighlightColor: searchHighlight.color,
     };
   }
 
   componentDidMount(): void {
     this.loadFont();
+    window.addEventListener("font-list-changed", this.loadFont);
   }
 
-  loadFont = () => {
-    const fontFamilyItem = dropdownList.find(
-      (item) => item.value === "fontFamily"
-    );
-    const subFontFamilyItem = dropdownList.find(
-      (item) => item.value === "subFontFamily"
-    );
+  componentWillUnmount(): void {
+    window.removeEventListener("font-list-changed", this.loadFont);
+  }
 
-    loadFontData().then((result) => {
-      if (fontFamilyItem && fontFamilyItem.option.length <= 2) {
-        fontFamilyItem.option = fontFamilyItem.option.concat(result || []);
-      }
-      if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
-        subFontFamilyItem.option = subFontFamilyItem.option.concat(
-          result || []
-        );
-      }
-      this.setState((prevState) => ({
-        fontListVersion: prevState.fontListVersion + 1,
-      }));
-    });
+  loadFont = async () => {
+    const options = await FontUtil.getMergedFontOptions();
+    this.setState((prevState) => ({
+      fontOptions: options,
+      fontListVersion: prevState.fontListVersion + 1,
+    }));
   };
 
   handleRest = (_bool: boolean) => {
@@ -112,19 +111,12 @@ class AppearanceSetting extends React.Component<
     reloadManager();
   };
 
-  changeFont = (font: string) => {
-    if (font === "Load local fonts") {
-      vexComfirmAsync(
-        this.props.t(
-          "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
-        )
-      );
-
-      return;
-    }
-    let body = document.getElementsByTagName("body")[0];
-    body?.setAttribute("style", "font-family:" + font + "!important");
-    ConfigService.setReaderConfig("systemFont", font);
+  changeFont = async (font: string) => {
+    ConfigService.setReaderConfig(
+      "systemFont",
+      font === "Built-in font" ? "" : font
+    );
+    await applyCustomSystemFont();
     this.forceUpdate();
   };
 
@@ -150,6 +142,170 @@ class AppearanceSetting extends React.Component<
     });
     ConfigService.setReaderConfig("themeColor", color);
     reloadManager();
+  };
+
+  handleTtsStyleType = (styleType: string) => {
+    const color = KookitConfig.HighlightPresetColors[styleType][0];
+    this.setState({
+      ttsHighlightStyleType: styleType,
+      ttsHighlightColor: color,
+    });
+    this.highlightUtil.saveTtsHighlightValue({ styleType, color });
+  };
+
+  handleTtsPresetColor = (index: number) => {
+    const styleType = this.state.ttsHighlightStyleType;
+    const color = KookitConfig.HighlightPresetColors[styleType][index];
+    this.setState({
+      ttsHighlightColor: color,
+    });
+    this.highlightUtil.saveTtsHighlightValue({ styleType, color });
+  };
+
+  handleSearchStyleType = (styleType: string) => {
+    const color = KookitConfig.HighlightPresetColors[styleType][0];
+    this.setState({
+      searchHighlightStyleType: styleType,
+      searchHighlightColor: color,
+    });
+    this.highlightUtil.saveSearchHighlightValue({ styleType, color });
+  };
+
+  handleSearchPresetColor = (index: number) => {
+    const styleType = this.state.searchHighlightStyleType;
+    const color = KookitConfig.HighlightPresetColors[styleType][index];
+    this.setState({
+      searchHighlightColor: color,
+    });
+    this.highlightUtil.saveSearchHighlightValue({ styleType, color });
+  };
+
+  renderTtsHighlightSetting = () => {
+    const styleType = this.state.ttsHighlightStyleType;
+    const currentColor = this.state.ttsHighlightColor;
+    const presetColors = KookitConfig.HighlightPresetColors[styleType];
+
+    return (
+      <>
+        <div className="setting-dialog-new-title">
+          <Trans>TTS highlight style</Trans>
+        </div>
+        <p className="setting-option-subtitle">
+          <Trans>
+            Customize the highlight style when listening to audiobooks
+          </Trans>
+        </p>
+        <ul className="tts-highlight-style-tabs">
+          {KookitConfig.HighlightStyleTypes.map((item) => {
+            const previewColor =
+              item.value === styleType
+                ? currentColor
+                : KookitConfig.HighlightPresetColors[item.value][0];
+            return (
+              <li
+                key={item.value}
+                className={
+                  styleType === item.value
+                    ? "tts-highlight-style-tab active-tts-highlight-tab"
+                    : "tts-highlight-style-tab"
+                }
+                onClick={() => this.handleTtsStyleType(item.value)}
+              >
+                <span
+                  className="tts-highlight-style-preview"
+                  style={this.highlightUtil.buildTtsHighlightPreviewStyle(
+                    item.value,
+                    previewColor
+                  )}
+                >
+                  Aa
+                </span>
+                <span className="tts-highlight-style-label">
+                  <Trans>{item.label}</Trans>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        <ul className="tts-highlight-color-container">
+          {presetColors.map((color, index) => (
+            <li
+              key={color}
+              className={
+                presetColors.indexOf(currentColor) === index
+                  ? "tts-highlight-color-item active-tts-highlight-color"
+                  : "tts-highlight-color-item"
+              }
+              style={{ backgroundColor: color }}
+              onClick={() => this.handleTtsPresetColor(index)}
+            />
+          ))}
+        </ul>
+      </>
+    );
+  };
+
+  renderSearchHighlightSetting = () => {
+    const styleType = this.state.searchHighlightStyleType;
+    const currentColor = this.state.searchHighlightColor;
+    const presetColors = KookitConfig.HighlightPresetColors[styleType];
+
+    return (
+      <>
+        <div className="setting-dialog-new-title">
+          <Trans>Search highlight style</Trans>
+        </div>
+        <p className="setting-option-subtitle">
+          <Trans>Customize the highlight style when searching in books</Trans>
+        </p>
+        <ul className="tts-highlight-style-tabs">
+          {KookitConfig.HighlightStyleTypes.map((item) => {
+            const previewColor =
+              item.value === styleType
+                ? currentColor
+                : KookitConfig.HighlightPresetColors[item.value][0];
+            return (
+              <li
+                key={item.value}
+                className={
+                  styleType === item.value
+                    ? "tts-highlight-style-tab active-tts-highlight-tab"
+                    : "tts-highlight-style-tab"
+                }
+                onClick={() => this.handleSearchStyleType(item.value)}
+              >
+                <span
+                  className="tts-highlight-style-preview"
+                  style={this.highlightUtil.buildSearchHighlightPreviewStyle(
+                    item.value,
+                    previewColor
+                  )}
+                >
+                  Aa
+                </span>
+                <span className="tts-highlight-style-label">
+                  <Trans>{item.label}</Trans>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        <ul className="tts-highlight-color-container">
+          {presetColors.map((color, index) => (
+            <li
+              key={color}
+              className={
+                presetColors.indexOf(currentColor) === index
+                  ? "tts-highlight-color-item active-tts-highlight-color"
+                  : "tts-highlight-color-item"
+              }
+              style={{ backgroundColor: color }}
+              onClick={() => this.handleSearchPresetColor(index)}
+            />
+          ))}
+        </ul>
+      </>
+    );
   };
 
   renderSwitchOption = (optionList: any[]) => {
@@ -204,22 +360,24 @@ class AppearanceSetting extends React.Component<
           <select
             name=""
             className="lang-setting-dropdown"
-            value={ConfigService.getReaderConfig("systemFont")}
+            value={
+              ConfigService.getReaderConfig("systemFont") || "Built-in font"
+            }
             onChange={(event) => {
               this.changeFont(event.target.value);
             }}
           >
-            {dropdownList
-              .find((item) => item.value === "fontFamily")
-              ?.option.map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {this.props.t(item.label)}
-                </option>
-              ))}
+            {this.state.fontOptions.map((item) => (
+              <option
+                value={item.value}
+                key={item.value}
+                className="lang-setting-option"
+              >
+                {item.value === "Built-in font"
+                  ? this.props.t(item.label)
+                  : item.label}
+              </option>
+            ))}
           </select>
         </div>
         <div className="setting-dialog-new-title">
@@ -344,6 +502,8 @@ class AppearanceSetting extends React.Component<
             </div>
           </div>
         )}
+        {this.renderTtsHighlightSetting()}
+        {this.renderSearchHighlightSetting()}
         <div className="setting-dialog-new-title">
           <Trans>Appearance</Trans>
         </div>

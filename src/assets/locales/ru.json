@@ -658,11 +658,7 @@
   "Reset main window's position": "Сбросить положение главного окна",
   "Copy quotes": "Копировать цитаты",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "7-дневная пробная версия доступна только пользователям, зарегистрировавшимся через рекомендованные почтовые сервисы. Список сервисов приведён ниже.",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "В будущем мы добавим больше функций, доступных только подписчикам: статистику чтения, автоматическую синхронизацию заметок, выделений, прогресса чтения и словарей с платформами вроде Notion, Obsidian, Logseq, Anki и другими.",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "После выхода из версии Pro синхронизация и другие премиум-функции станут недоступны.",
-  "I'll think about it": "Я подумаю",
   "Convert PDF to Text": "Преобразовать PDF в текст",
-  "Still refuse": "Всё равно отказаться",
   "Set OCR language": "Выбрать язык OCR",
   "Unsupported file format": "Формат файла не поддерживается",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "Если расстояние между строками превышает стандартное в n раз, текст будет разделён на два абзаца.",
@@ -965,7 +961,7 @@
   "Bar Chart": "Гистограмма",
   "Line Chart": "Линейный график",
   "Customize popup menu": "Настроить всплывающее меню",
-  "You can enable up to 8 options": "Вы можете включить до 8 опций",
+  "You can enable up to {{count}} options": "Вы можете включить до {{count}} опций",
   "From URL": "Из URL",
   "Enter book download URL or article URL": "Введите URL загрузки книги или URL статьи",
   "Please enter a valid http or https URL": "Пожалуйста, введите действительный http или https URL",
@@ -1109,5 +1105,6 @@
   "All": "Все",
   "Unread": "Непрочитанное",
   "CurrentlyReading": "Читаю",
-  "Finished": "Завершённое"
+  "Finished": "Завершённое",
+  "Theme": "Theme"
 }

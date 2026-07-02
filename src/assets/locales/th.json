@@ -657,11 +657,7 @@
   "Reset main window's position": "รีเซ็ตตำแหน่งหน้าต่างหลัก",
   "Copy quotes": "คัดลอกคำคม",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "ทดลองใช้ฟรี 7 วันมีผลเฉพาะผู้ใช้ที่ลงทะเบียนด้วยผู้ให้บริการอีเมลที่แนะนำ ผู้ให้บริการที่แนะนำมีดังนี้",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "ในอนาคตเราจะเพิ่มฟีเจอร์สำหรับสมาชิก เช่น สถิติการอ่านและการซิงค์โน้ต ไฮไลต์ ความคืบหน้าการอ่าน และรายการคำศัพท์ไปยัง Notion, Obsidian, Logseq, Anki และอื่นๆ",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "เมื่อออกจากเวอร์ชัน Pro คุณจะไม่สามารถใช้การซิงค์และฟีเจอร์พรีเมียมอื่นๆ ได้",
-  "I'll think about it": "ฉันจะคิดดูก่อน",
   "Convert PDF to Text": "แปลง PDF เป็นข้อความ",
-  "Still refuse": "ยังคงปฏิเสธ",
   "Set OCR language": "ตั้งค่าภาษา OCR",
   "Unsupported file format": "รูปแบบไฟล์ที่ไม่รองรับ",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "เมื่อระยะห่างระหว่างสองบรรทัดเป็น n เท่าของระยะปกติ จะถูกแบ่งเป็นสองย่อหน้า",
@@ -964,7 +960,7 @@
   "Bar Chart": "แผนภูมิแท่ง",
   "Line Chart": "แผนภูมิเส้น",
   "Customize popup menu": "ปรับแต่งเมนูป๊อปอัป",
-  "You can enable up to 8 options": "คุณสามารถเปิดใช้งานได้สูงสุด 8 ตัวเลือก",
+  "You can enable up to {{count}} options": "คุณสามารถเปิดใช้งานได้สูงสุด {{count}} ตัวเลือก",
   "From URL": "จาก URL",
   "Enter book download URL or article URL": "ป้อน URL ดาวน์โหลดหนังสือหรือ URL บทความ",
   "Please enter a valid http or https URL": "โปรดป้อน URL http หรือ https ที่ถูกต้อง",
@@ -1108,5 +1104,6 @@
   "All": "ทั้งหมด",
   "Unread": "ยังไม่ได้อ่าน",
   "CurrentlyReading": "กำลังอ่าน",
-  "Finished": "อ่านแล้ว"
+  "Finished": "อ่านแล้ว",
+  "Theme": "Theme"
 }

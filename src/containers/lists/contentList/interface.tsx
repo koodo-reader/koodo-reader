@@ -18,4 +18,7 @@ export interface ContentListState {
   isCollapsed: boolean;
   isExpandContent: boolean;
   expandedItems: Set<string>;
+  isSearchOpen: boolean;
+  searchKeyword: string;
+  isComposing: boolean;
 }

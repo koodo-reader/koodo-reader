@@ -18,6 +18,7 @@ import {
   getParserRegex,
   getPdfPassword,
   getServerRegion,
+  getTextRules,
   showDownloadProgress,
   throttle,
 } from "../../utils/common";
@@ -94,7 +95,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.isSettingLocked
         )
       );
-      this.handleRenderBook();
+      if (ConfigService.getReaderConfig("isFullscreen") !== "yes") {
+        this.handleRenderBook();
+      }
     });
     window.addEventListener("resize", this.resizeHandler);
   }
@@ -247,18 +250,32 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           return;
         }
       }
+      const crop = ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "pdfCrop",
+        null
+      );
+      let pdfCrop;
+      if (crop) {
+        const top = Number(crop.top) || 0;
+        const bottom = Number(crop.bottom) || 0;
+        const left = Number(crop.left) || 0;
+        const right = Number(crop.right) || 0;
+        if (top !== 0 || bottom !== 0 || left !== 0 || right !== 0) {
+          pdfCrop = { top, bottom, left, right };
+        }
+      }
       let rendition = BookHelper.getRendition(
         result,
         {
           format: isCacheExsit ? "CACHE" : format,
           readerMode: this.props.readerMode,
           charset: this.props.currentBook.charset,
-          animation:
-            ConfigService.getReaderConfig("isSliding") === "yes"
-              ? "sliding"
-              : "",
+          animation: ConfigService.getReaderConfig("animation") || "none",
           convertChinese: ConfigService.getReaderConfig("convertChinese"),
           bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
+          textRules: getTextRules(this.props.currentBook.key),
+          codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
           parserRegex: getParserRegex(
             this.props.currentBook.format,
             this.props.currentBook.key
@@ -283,6 +300,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isAllowScript: ConfigService.getReaderConfig("isAllowScript"),
           isBionic: ConfigService.getReaderConfig("isBionic"),
           password: getPdfPassword(this.props.currentBook),
+          pdfCrop,
           scale: parseFloat(this.props.scale),
           isConvertPDF: ConfigService.getAllListConfig(
             "convertPDFBooks"
@@ -314,6 +332,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             this.props.currentBook.description.indexOf("scanned") > -1
               ? "yes"
               : "no",
+          isKeepPDFBackground: ConfigService.getReaderConfig(
+            "isKeepPDFBackground"
+          ),
         },
         Kookit
       );
@@ -359,15 +380,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     });
     this.setState({ rendition });
 
-    if (
-      this.props.currentBook.format === "PDF" &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      )
-    ) {
-    } else {
-      StyleUtil.addDefaultCss(this.props.currentBook.key);
-    }
+    StyleUtil.addDefaultCss(this.props.currentBook.key);
+    await StyleUtil.applyReaderFonts(rendition);
     let bookLocation: {
       text: string;
       count: string;
@@ -450,15 +464,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapter,
         chapterDocIndex,
       });
-      if (
-        this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        )
-      ) {
-      } else {
-        StyleUtil.addDefaultCss(this.props.currentBook.key);
-      }
+      StyleUtil.addDefaultCss(this.props.currentBook.key);
+      await StyleUtil.applyReaderFonts(rendition);
       // rendition.tranformText();
       this.handleBindGesture();
       await this.handleHighlight(rendition);
@@ -640,7 +647,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                   // marginLeft: this.state.pageOffset,
                   // marginRight: this.state.pageOffset,
                   paddingLeft: "0px",
-                  paddingRight: "15px",
+                  paddingRight: "0px",
                   left: this.state.pageOffset,
                   width: this.state.pageWidth,
                 }

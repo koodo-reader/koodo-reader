@@ -16,7 +16,11 @@ import { isElectron } from "react-device-detect";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../../assets/lib/kookit.min";
-import { getPdfPassword, getStorageLocation } from "../../../utils/common";
+import {
+  getPdfPassword,
+  getStorageLocation,
+  getTextRules,
+} from "../../../utils/common";
 import { BookHelper } from "../../../assets/lib/kookit.min";
 declare var window: any;
 class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
@@ -57,7 +61,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
     const baseLeft = this.props.left + (this.props.isExceed ? -195 : 195) + 195;
     const noteOffset = isNotes ? 1 : 2;
     const itemHeight = 33;
-    const baseTop = this.props.top + 70 + noteOffset * itemHeight;
+    const baseTop = this.props.top + 103 + noteOffset * itemHeight;
 
     return (
       <div
@@ -128,7 +132,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
               ? {
                   position: "fixed",
                   left: this.props.left + (this.props.isExceed ? -195 : 195),
-                  top: this.props.top + 70,
+                  top: this.props.top + 103,
                 }
               : { display: "none" }
           }
@@ -272,12 +276,13 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                       readerMode: "",
                       charset: this.props.currentBook.charset,
                       animation:
-                        ConfigService.getReaderConfig("isSliding") === "yes"
-                          ? "sliding"
-                          : "",
+                        ConfigService.getReaderConfig("animation") || "none",
                       convertChinese:
                         ConfigService.getReaderConfig("convertChinese"),
                       bookLayout: ConfigService.getReaderConfig("bookLayout"),
+                      textRules: getTextRules(this.props.currentBook.key),
+                      codeHighlight:
+                        ConfigService.getReaderConfig("codeHighlight") || "",
                       fullTranslationMode: "no",
                       textOrientation:
                         ConfigService.getReaderConfig("textOrientation"),
@@ -286,6 +291,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                       isMobile: "no",
                       password: getPdfPassword(this.props.currentBook),
                       isScannedPDF: "no",
+                      isKeepPDFBackground: "no",
                     },
                     Kookit
                   );

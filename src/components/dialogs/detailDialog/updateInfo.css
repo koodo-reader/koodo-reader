@@ -22,6 +22,9 @@
   display: flex;
   flex-wrap: wrap;
 }
+.detail-dialog-shelf-location .tag-list-item {
+  cursor: pointer;
+}
 .download-desk-feature-item {
   font-size: 15px;
   line-height: 23px;

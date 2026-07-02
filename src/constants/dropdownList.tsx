@@ -1,4 +1,54 @@
 import i18n from "../i18n";
+import { KookitConfig } from "../assets/lib/kookit-extra-browser.min";
+
+export const fullTranslationLangList = (() => {
+  const seen = new Set<string>();
+  const options: { code: string; label: string }[] = [];
+  for (const [code, label] of Object.entries(KookitConfig.ConvertLangMap)) {
+    if (!seen.has(label)) {
+      seen.add(label);
+      options.push({ code, label });
+    }
+  }
+  return options;
+})();
+
+export const codeHighlightLangList = [
+  { label: "Disable", value: "" },
+  { label: "JavaScript", value: "javascript" },
+  { label: "TypeScript", value: "typescript" },
+  { label: "Python", value: "python" },
+  { label: "Go", value: "go" },
+  { label: "Java", value: "java" },
+  { label: "C", value: "c" },
+  { label: "C++", value: "cpp" },
+  { label: "C#", value: "csharp" },
+  { label: "Rust", value: "rust" },
+  { label: "Ruby", value: "ruby" },
+  { label: "PHP", value: "php" },
+  { label: "Swift", value: "swift" },
+  { label: "Kotlin", value: "kotlin" },
+  { label: "Bash", value: "bash" },
+  { label: "Shell", value: "shell" },
+  { label: "SQL", value: "sql" },
+  { label: "JSON", value: "json" },
+  { label: "YAML", value: "yaml" },
+  { label: "Markdown", value: "markdown" },
+  { label: "CSS", value: "css" },
+  { label: "SCSS", value: "scss" },
+  { label: "Less", value: "less" },
+  { label: "XML", value: "xml" },
+  { label: "GraphQL", value: "graphql" },
+  { label: "Lua", value: "lua" },
+  { label: "Perl", value: "perl" },
+  { label: "R", value: "r" },
+  { label: "Objective-C", value: "objectivec" },
+  { label: "Makefile", value: "makefile" },
+  { label: "Diff", value: "diff" },
+  { label: "INI", value: "ini" },
+  { label: "VB.NET", value: "vbnet" },
+  { label: "WebAssembly", value: "wasm" },
+];
 
 export const dropdownList = [
   {
@@ -19,27 +69,21 @@ export const dropdownList = [
     isPDF: false,
   },
   {
+    title: "Code highlighting",
+    value: "codeHighlight",
+    option: codeHighlightLangList,
+    isPDF: false,
+  },
+  {
     title: "Default font family",
     value: "fontFamily",
-    option: [
-      { label: "Built-in font", value: "Built-in font" },
-      {
-        label: "Load local fonts",
-        value: "Load local fonts",
-      },
-    ],
+    option: [{ label: "Built-in font", value: "Built-in font" }],
     isPDF: false,
   },
   {
     title: "CJK font family",
     value: "subFontFamily",
-    option: [
-      { label: "Built-in font", value: "Built-in font" },
-      {
-        label: "Load local fonts",
-        value: "Load local fonts",
-      },
-    ],
+    option: [{ label: "Built-in font", value: "Built-in font" }],
     isPDF: false,
   },
   {
@@ -91,6 +135,16 @@ export const dropdownList = [
       },
     ],
     isPDF: false,
+  },
+  {
+    title: "Page turning animation",
+    value: "animation",
+    option: [
+      { label: "None", value: "none" },
+      { label: "Slide", value: "sliding" },
+      { label: "Flip", value: "mimical" },
+    ],
+    isPDF: true,
   },
   {
     title: "Action after selecting text",

@@ -5,21 +5,33 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  overflow: scroll;
+  overflow: auto;
+  z-index: 50;
+  outline: none;
+}
+.image-content {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  z-index: 50;
+  min-width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
 }
 .image {
   z-index: 5;
+  flex-shrink: 0;
+  margin-block: auto;
+  pointer-events: auto;
 }
 .image-operation {
   position: fixed;
   left: calc(50% - 200px);
   bottom: 30px;
   font-size: 25px;
-  z-index: 6;
+  z-index: 10;
   background-color: black;
   opacity: 0.3;
   padding: 10px;
@@ -39,4 +51,43 @@
   position: fixed;
   top: 0px;
   left: 0px;
+  z-index: 1;
+}
+.image-nav {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  position: fixed;
+  top: 50%;
+  margin-top: -22px;
+  font-size: 22px;
+  cursor: pointer;
+  opacity: 0.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.55);
+  pointer-events: auto;
+}
+.image-nav-prev {
+  left: 20px;
+}
+.image-nav-next {
+  right: 20px;
+}
+.image-nav:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+.image-nav-prev-icon {
+  display: inline-block;
+  transform: rotate(90deg);
+  line-height: 1;
+}
+.image-nav-next-icon {
+  display: inline-block;
+  transform: rotate(-90deg);
+  line-height: 1;
 }

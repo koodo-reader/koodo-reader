@@ -656,11 +656,7 @@
   "Reset main window's position": "Redefinir a posição da janela principal",
   "Copy quotes": "Copiar citações",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "O teste gratuito de 7 dias se aplica apenas a usuários que se registraram com provedores de e-mail recomendados. Os provedores recomendados são os seguintes",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "No futuro, introduziremos mais recursos exclusivos para membros, incluindo estatísticas de leitura e sincronização automática de suas notas, destaques, progresso de leitura e listas de vocabulário para plataformas como Notion, Obsidian, Logseq, Anki e outras.",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Depois de sair da versão Pro, você não poderá mais usar a sincronização e outros recursos premium",
-  "I'll think about it": "Vou pensar nisso",
   "Convert PDF to Text": "Converter PDF em texto",
-  "Still refuse": "Recusar mesmo assim",
   "Set OCR language": "Definir idioma do OCR",
   "Unsupported file format": "Formato de arquivo não suportado",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "Quando o espaçamento entre duas linhas de texto for n vezes o espaçamento normal, elas serão separadas em dois parágrafos",
@@ -963,7 +959,7 @@
   "Bar Chart": "Gráfico de Barras",
   "Line Chart": "Gráfico de Linhas",
   "Customize popup menu": "Personalizar menu pop-up",
-  "You can enable up to 8 options": "Pode ativar até 8 opções",
+  "You can enable up to {{count}} options": "Pode ativar até {{count}} opções",
   "From URL": "A partir de URL",
   "Enter book download URL or article URL": "Insira o URL de download do livro ou o URL do artigo",
   "Please enter a valid http or https URL": "Por favor, insira um URL http ou https válido",
@@ -1107,5 +1103,6 @@
   "All": "Todos",
   "Unread": "Não lido",
   "CurrentlyReading": "Lendo",
-  "Finished": "Concluído"
+  "Finished": "Concluído",
+  "Theme": "Theme"
 }

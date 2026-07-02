@@ -1,9 +1,13 @@
 import React from "react";
 import "./popupMenu.css";
 import PopupOption from "../popupOption";
+import ColorOption from "../../colorOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  HighlightUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import {
   getSelection,
   getSelectionSentence,
@@ -12,8 +16,12 @@ import { createHighlight } from "../../../utils/reader/noteUtil";
 
 declare var window: any;
 
+const MENU_WIDTH = 252;
+const MENU_HEIGHT = 141;
+
 class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   highlighter: any;
+  highlightUtil: any;
   timer!: NodeJS.Timeout;
   key: any;
   mode: string;
@@ -22,6 +30,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   rect: any;
   constructor(props: PopupMenuProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
     this.showNote = false;
     this.isFirstShow = false;
     this.highlighter = null;
@@ -67,14 +76,14 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posX = rect.left + rect.width;
     }
     if (
-      rect.top < 188 &&
-      pageSize.height - rect.top - rect.height < 188 &&
+      rect.top < MENU_HEIGHT &&
+      pageSize.height - rect.top - rect.height < MENU_HEIGHT &&
       this.props.readerMode !== "scroll"
     ) {
       this.props.handleChangeDirection(true);
       posY = rect.top + 16 + pageSize.top;
     } else if (
-      pageSize.height - rect.height < 188 &&
+      pageSize.height - rect.height < MENU_HEIGHT &&
       pageSize.height - rect.height > -10
     ) {
       this.props.handleChangeDirection(true);
@@ -84,13 +93,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       this.props.readerMode === "scroll"
     ) {
       posY = 40;
-    } else if (posY < pageSize.height - 188 + pageSize.top) {
+    } else if (posY < pageSize.height - MENU_HEIGHT + pageSize.top) {
       this.props.handleChangeDirection(true);
       posY = posY + 16 + pageSize.top;
     } else {
-      posY = posY - rect.height - 188 + pageSize.top;
+      posY = posY - rect.height - MENU_HEIGHT + pageSize.top;
     }
-    posX = posX - 80 + pageSize.left;
+    posX = posX - MENU_WIDTH / 2 + pageSize.left;
     if (
       this.props.currentBook.format === "PDF" &&
       this.props.readerMode === "double" &&
@@ -114,8 +123,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     if (posY < 0) {
       posY = 16;
     }
-    if (posY > pageSize.height - 188) {
-      posY = pageSize.height - 188;
+    if (posY > pageSize.height - MENU_HEIGHT) {
+      posY = pageSize.height - MENU_HEIGHT;
     }
     if (
       this.props.readerMode === "scroll" &&
@@ -123,7 +132,10 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     ) {
       posX = posX - pageSize.scrollLeft;
     }
-    return { posX, posY } as any;
+    return {
+      posX: Math.min(Math.max(12, posX), window.innerWidth - 12 - MENU_WIDTH),
+      posY,
+    } as any;
   }
 
   openMenu = () => {
@@ -176,6 +188,27 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.props.handleMenuMode("menu");
   };
 
+  handleDigest = async () => {
+    await createHighlight({
+      currentBook: this.props.currentBook,
+      htmlBook: this.props.htmlBook,
+      chapterDocIndex: this.props.chapterDocIndex,
+      chapter: this.props.chapter,
+      color: this.highlightUtil.formatHighlightValue(this.props.highlight),
+      t: this.props.t,
+      onNoteClick: (event: Event) => {
+        this.props.handleNoteKey((event.target as any).dataset.key);
+        this.props.handleMenuMode("note");
+        this.props.handleOpenMenu(true);
+      },
+      onSuccess: () => {
+        this.props.handleOpenMenu(false);
+        this.props.handleFetchNotes();
+        this.props.handleMenuMode("");
+      },
+    });
+  };
+
   handleSelectAction = async (action: string, sel: Selection) => {
     const format = this.props.currentBook.format;
     const text = getSelection(format);
@@ -199,7 +232,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           htmlBook: this.props.htmlBook,
           chapterDocIndex: this.props.chapterDocIndex,
           chapter: this.props.chapter,
-          color: this.props.color,
+          color: this.highlightUtil.formatHighlightValue(this.props.highlight),
           t: this.props.t,
           onSuccess: () => {
             this.props.handleOpenMenu(false);
@@ -231,23 +264,27 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
     };
+    const ColorProps = {
+      handleDigest: this.handleDigest,
+    };
     return (
       <div>
         <div
           className="popup-menu-container"
           style={this.props.isOpenMenu ? {} : { display: "none" }}
         >
-          <div className="popup-menu-box">
-            {this.props.menuMode === "menu" ? (
-              <PopupOption {...(PopupProps as any)} />
-            ) : null}
+          <div
+            className="popup-menu-box"
+            style={this.props.menuMode === "menu" ? {} : { display: "none" }}
+          >
+            <PopupOption {...(PopupProps as any)} />
           </div>
-          {this.props.menuMode === "menu" &&
-            (this.props.isChangeDirection ? (
-              <span className="icon-popup popup-menu-triangle-up"></span>
-            ) : (
-              <span className="icon-popup popup-menu-triangle-down"></span>
-            ))}
+          <div
+            className="popup-color-box"
+            style={this.props.menuMode === "menu" ? {} : { display: "none" }}
+          >
+            <ColorOption {...(ColorProps as any)} />
+          </div>
         </div>
       </div>
     );

@@ -52,6 +52,10 @@ export const supportedFormats = [
   ".cbr",
   ".cb7",
 ];
+export interface HighlightValue {
+  styleType: string;
+  color: string;
+}
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     if (isElectron) {
@@ -136,6 +140,22 @@ export const vexComfirmAsync = (
       },
     });
   });
+};
+export const confirmBrowserExtensionAsync = async (): Promise<boolean> => {
+  const result = await vexComfirmAsync(
+    "Due to browser security restrictions, you may not be able to use this data source properly. If you encounter any issues, you can resolve them by installing our browser extension.",
+    "Confirm",
+    "Install extension"
+  );
+  if (!result) {
+    const lang = ConfigService.getReaderConfig("lang");
+    openExternalUrl(
+      getWebsiteUrl() +
+        (lang?.startsWith("zh") ? "/zh/use-extension" : "/en/use-extension")
+    );
+    return false;
+  }
+  return true;
 };
 export const vexOpenAsync = (
   config: Record<string, any>,
@@ -628,7 +648,8 @@ export const getChatLocale = () => {
     return "en";
   }
 };
-export function addChatBox() {
+export async function addChatBox() {
+  let deviceUuid = await TokenService.getFingerprint();
   const scriptContent = `
     (function (d, t) {
       var BASE_URL = "https://app.chatwoot.com";
@@ -648,6 +669,7 @@ export function addChatBox() {
           window.$chatwoot.setCustomAttributes({
             version: '${packageJson.version}',
             client: 'web',
+            device: '${deviceUuid}',
           });
         });
       };
@@ -693,10 +715,11 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         format: selectedBook.format,
         readerMode: "",
         charset: selectedBook.charset,
-        animation:
-          ConfigService.getReaderConfig("isSliding") === "yes" ? "sliding" : "",
+        animation: ConfigService.getReaderConfig("animation") || "none",
         convertChinese: ConfigService.getReaderConfig("convertChinese"),
         bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
+        textRules: getTextRules(selectedBook.key),
+        codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
         fullTranslationMode: "no",
         textOrientation: ConfigService.getReaderConfig("textOrientation"),
         parserRegex: "",
@@ -705,6 +728,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         password: getPdfPassword(selectedBook),
         isScannedPDF:
           selectedBook.description.indexOf("scanned") > -1 ? "yes" : "no",
+        isKeepPDFBackground: "no",
       },
       Kookit
     );
@@ -754,7 +778,11 @@ export const generateSyncRecord = async () => {
         );
       }
     }
-    if (config === "readingTime" || config === "recordLocation") {
+    if (
+      config === "readingTime" ||
+      config === "recordLocation" ||
+      config === "pdfCrop"
+    ) {
       let configItems: string[] = Object.keys(
         ConfigService.getAllObjectConfig(config)
       );
@@ -842,6 +870,13 @@ function triggerReactChange(id: string, value: string) {
     reactInstance.onChange(syntheticEvent);
   }
 }
+export const getFullTranslationTarget = (): string => {
+  const langCode =
+    ConfigService.getReaderConfig("fullTranslationTarget") ||
+    ConfigService.getReaderConfig("lang") ||
+    "zhCN";
+  return KookitConfig.ConvertLangMap[langCode];
+};
 export const getDefaultTransTarget = (langList) => {
   //reverse key and value
   let langMap = {};
@@ -1354,6 +1389,29 @@ export const detectLocalLanguage = (text: string): string => {
     return "ja";
   return "ko";
 };
+export interface TextRule {
+  id: string;
+  type: "replace" | "delete";
+  pattern: string;
+  replacement?: string;
+  matchType: "regex" | "plain";
+  scope: "all" | "book";
+  bookKey?: string;
+  bookName?: string;
+}
+
+export const getTextRules = (bookKey?: string): TextRule[] => {
+  const ruleList: string[] =
+    ConfigService.getAllListConfig("textRuleList") || [];
+  return ruleList
+    .map((id) => ConfigService.getObjectConfig(id, "textRules", null))
+    .filter((rule): rule is TextRule => {
+      if (!rule) return false;
+      if (rule.scope === "all") return true;
+      return !!bookKey && rule.bookKey === bookKey;
+    });
+};
+
 export const getParserRegex = (extension: string, bookKey?: string) => {
   let parserRegex = "";
   if (extension.toLowerCase().endsWith("txt")) {

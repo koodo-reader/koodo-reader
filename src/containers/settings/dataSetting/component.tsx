@@ -3,6 +3,7 @@ import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import {
   clearAllData,
+  confirmBrowserExtensionAsync,
   generateSyncRecord,
   getStorageLocation,
   getWebsiteUrl,
@@ -96,6 +97,12 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       ConfigService.setReaderConfig("isEnableKoReaderSync", "no");
       toast.success(this.props.t("Change successful"));
       return;
+    }
+
+    if (!isElectron) {
+      if (!(await confirmBrowserExtensionAsync())) {
+        return;
+      }
     }
 
     const savedConfig =
@@ -207,6 +214,12 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     const currentlyEnabled = this.state[item.propName];
 
     if (!currentlyEnabled && item.requiresAuth) {
+      if (!isElectron) {
+        if (!(await confirmBrowserExtensionAsync())) {
+          return;
+        }
+      }
+
       // Special case: Markdown sync uses a folder picker in Electron
       if (item.propName === "isEnableMarkdownSync" && isElectron) {
         const { ipcRenderer } = window.require("electron");

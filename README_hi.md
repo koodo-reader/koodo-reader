@@ -1,6 +1,6 @@
 <div align="left">
 
-[简体中文](https://github.com/koodo-reader/koodo-reader/blob/master/README_cn.md) | [English](https://github.com/koodo-reader/koodo-reader/blob/master/README.md) | हिंदी |[Português](https://github.com/koodo-reader/koodo-reader/blob/master/README_pt.md) | [Indonesian](https://github.com/koodo-reader/koodo-reader/blob/master/README_id.md)
+[简体中文](./README_cn.md) | [English](./README.md) | हिंदी |[Português](./README_pt.md) | [Indonesian](./README_id.md)
 
 </div>
 

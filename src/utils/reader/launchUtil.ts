@@ -8,6 +8,7 @@ import {
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../package.json";
 import BackgroundUtil from "../file/backgroundUtil";
+import FontUtil from "../file/fontUtil";
 
 export const syncNativeThemeSource = (appSkin: string) => {
   if (!isElectron) {
@@ -56,15 +57,45 @@ export const initTheme = () => {
   }
   document.head.appendChild(style);
 };
-export const initSystemFont = () => {
-  if (ConfigService.getReaderConfig("systemFont")) {
-    let body = document.getElementsByTagName("body")[0];
+export const initSystemFont = async () => {
+  await applyCustomSystemFont();
+};
+
+export const applyCustomSystemFont = async () => {
+  const systemFont = ConfigService.getReaderConfig("systemFont");
+  const body = document.getElementsByTagName("body")[0];
+  if (!body) return;
+
+  if (!systemFont) {
+    body.removeAttribute("style");
+    const styleEl = document.getElementById("custom-system-font-style");
+    if (styleEl) styleEl.textContent = "";
+    return;
+  }
+
+  if (FontUtil.isCustomFont(systemFont)) {
+    const url = await FontUtil.getFontUrl(systemFont);
+    if (!url) return;
+    let styleEl = document.getElementById("custom-system-font-style");
+    if (!styleEl) {
+      styleEl = document.createElement("style");
+      styleEl.id = "custom-system-font-style";
+      document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = `
+      @font-face {
+        font-family: "${systemFont}";
+        src: url("${url}");
+      }
+    `;
     body.setAttribute(
       "style",
-      "font-family:" +
-        ConfigService.getReaderConfig("systemFont") +
-        "!important"
+      `font-family:"${systemFont}"!important`
     );
+  } else {
+    const styleEl = document.getElementById("custom-system-font-style");
+    if (styleEl) styleEl.textContent = "";
+    body.setAttribute("style", "font-family:" + systemFont + "!important");
   }
 };
 

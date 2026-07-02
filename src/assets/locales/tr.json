@@ -658,11 +658,7 @@
   "Reset main window's position": "Ana pencere konumunu sıfırla",
   "Copy quotes": "Alıntıları kopyala",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "7 günlük ücretsiz deneme yalnızca önerilen e-posta sağlayıcılarıyla kayıt olan kullanıcılar için geçerlidir. Önerilen sağlayıcılar şunlardır",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "Gelecekte, okuma istatistikleri ve notlarınızın, vurgularınızın, okuma ilerlemenizin ve kelime listelerinizin Notion, Obsidian, Logseq, Anki gibi platformlara otomatik senkronizasyonu dahil daha fazla üye-özel özellik sunacağız.",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Pro sürümden çıktıktan sonra senkronizasyon ve diğer premium özellikleri artık kullanamazsınız",
-  "I'll think about it": "Düşüneceğim",
   "Convert PDF to Text": "PDF'yi metne dönüştür",
-  "Still refuse": "Yine de reddet",
   "Set OCR language": "OCR dilini ayarla",
   "Unsupported file format": "Desteklenmeyen dosya biçimi",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "İki metin satırı arasındaki boşluk normalin n katıysa, iki paragrafa ayrılır",
@@ -965,7 +961,7 @@
   "Bar Chart": "Çubuk Grafik",
   "Line Chart": "Çizgi Grafik",
   "Customize popup menu": "Açılır menüyü özelleştir",
-  "You can enable up to 8 options": "En fazla 8 seçenek etkinleştirebilirsiniz",
+  "You can enable up to {{count}} options": "En fazla {{count}} seçenek etkinleştirebilirsiniz",
   "From URL": "URL'den",
   "Enter book download URL or article URL": "Kitap indirme URL'si veya makale URL'si girin",
   "Please enter a valid http or https URL": "Lütfen geçerli bir http veya https URL'si girin",
@@ -1109,5 +1105,6 @@
   "All": "Tümü",
   "Unread": "Okunmamış",
   "CurrentlyReading": "Okunuyor",
-  "Finished": "Tamamlandı"
+  "Finished": "Tamamlandı",
+  "Theme": "Theme"
 }

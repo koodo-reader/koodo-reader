@@ -2,13 +2,12 @@ import React from "react";
 import "./popupOption.css";
 
 import { PopupOptionProps } from "./interface";
-import ColorOption from "../../colorOption";
 import {
   getEnabledPopupOptionKeys,
   popupOptionMap,
   PopupOptionKey,
 } from "../../../constants/popupList";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import {
   getSelection,
@@ -19,13 +18,19 @@ import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { openExternalUrl } from "../../../utils/common";
 import { createHighlight } from "../../../utils/reader/noteUtil";
+import { Tooltip } from "react-tooltip";
 
 declare var window: any;
 
 class PopupOption extends React.Component<PopupOptionProps> {
+  highlightUtil: any;
+  constructor(props: PopupOptionProps) {
+    super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
+  }
   handleNote = () => {
-    // this.props.handleChangeDirection(false);
     this.props.handleMenuMode("note");
+    this.props.handleOpenMenu(true);
   };
   handleCopy = () => {
     let text = getSelection(this.props.currentBook.format);
@@ -51,6 +56,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
   handleTrans = () => {
     this.props.handleMenuMode("trans");
     this.props.handleOriginalText(getSelection(this.props.currentBook.format));
+    this.props.handleOpenMenu(true);
   };
   handleDict = () => {
     this.props.handleMenuMode("dict");
@@ -58,6 +64,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleOriginalSentence(
       getSelectionSentence(this.props.currentBook.format)
     );
+    this.props.handleOpenMenu(true);
   };
   handleDigest = async () => {
     await createHighlight({
@@ -65,7 +72,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
       htmlBook: this.props.htmlBook,
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
-      color: this.props.color,
+      color: this.highlightUtil.formatHighlightValue(this.props.highlight),
       t: this.props.t,
       onNoteClick: this.handleNoteClick,
       onSuccess: () => {
@@ -229,62 +236,55 @@ class PopupOption extends React.Component<PopupOptionProps> {
   };
 
   render() {
-    const PopupProps = {
-      handleDigest: this.handleDigest,
-    };
     const popupOptionKeys = getEnabledPopupOptionKeys().filter((item) => {
       return !(
         item === "assistant" &&
         ConfigService.getReaderConfig("isDisableAI") === "yes"
       );
     });
-    const renderMenuList = () => {
-      return (
-        <>
-          <div className="menu-list">
-            {popupOptionKeys.map((itemKey) => {
-              const item = popupOptionMap[itemKey];
-              return (
-                <div
-                  key={item.key}
-                  className={item.name + "-option"}
-                  onClick={() => {
-                    this.handleOptionClick(item.key);
-                  }}
-                >
-                  <span
-                    data-tooltip-id="my-tooltip"
-                    data-tooltip-content={this.props.t(item.title)}
-                  >
-                    <span
-                      className={`icon-${item.icon} ${item.name}-icon`}
-                    ></span>
-                  </span>
-                </div>
-              );
-            })}
+    return (
+      <div className="menu-list">
+        <Tooltip id="option-tooltip" style={{ zIndex: 25 }} />
+        {popupOptionKeys.map((itemKey) => {
+          const item = popupOptionMap[itemKey];
+          return (
             <div
-              className="setting-option"
+              key={item.key}
+              className={item.name + "-option"}
               onClick={() => {
-                this.handleOpenPopupOptionDialog();
+                this.handleOptionClick(item.key);
               }}
             >
               <span
-                data-tooltip-id="my-tooltip"
-                data-tooltip-content={this.props.t("Customize popup menu")}
+                data-tooltip-id="option-tooltip"
+                data-tooltip-content={this.props.t(item.title)}
               >
                 <span
-                  className="icon-setting setting-icon"
-                  style={{ color: "#8a8f9f", fontSize: "24px" }}
+                  className={`icon-${item.icon} ${item.name}-icon`}
+                  style={{ pointerEvents: "none" }}
                 ></span>
               </span>
             </div>
-          </div>
-          <ColorOption {...(PopupProps as any)} />
-        </>
-      );
-    };
-    return renderMenuList();
+          );
+        })}
+        <div
+          className="setting-option"
+          onClick={() => {
+            this.handleOpenPopupOptionDialog();
+          }}
+        >
+          <span
+            data-tooltip-id="option-tooltip"
+            data-tooltip-content={this.props.t("Customize popup menu")}
+          >
+            <span
+              className="icon-setting setting-icon"
+              style={{ color: "#8a8f9f", fontSize: "20px" }}
+            ></span>
+          </span>
+        </div>
+      </div>
+    );
   }
 }
 

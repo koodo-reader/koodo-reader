@@ -1,6 +1,6 @@
 import { ConfigService } from "../assets/lib/kookit-extra-browser.min";
 
-export const POPUP_OPTION_LIMIT = 8;
+export const POPUP_OPTION_LIMIT = 11;
 export const POPUP_OPTION_ORDER_CONFIG = "popupOptionOrder";
 export const POPUP_OPTION_ENABLED_CONFIG = "popupOptionEnabled";
 
@@ -86,14 +86,14 @@ export const popupList: PopupOptionItem[] = [
     name: "speech-start",
     title: "Read from here",
     icon: "earphone",
-    defaultEnabled: false,
+    defaultEnabled: true,
   },
   {
     key: "assistant",
     name: "assistant",
     title: "Ask AI",
     icon: "ai-assist",
-    defaultEnabled: false,
+    defaultEnabled: true,
   },
 ];
 

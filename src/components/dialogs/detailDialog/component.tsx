@@ -38,6 +38,12 @@ class DetailDialog extends React.Component<
   handleClose = () => {
     this.props.handleDetailDialog(false);
   };
+  handleShelfClick = (shelfTitle: string) => {
+    this.props.handleDetailDialog(false);
+    this.props.handleShelf(shelfTitle);
+    this.props.handleMode("shelf");
+    this.props.history.push("/manager/shelf");
+  };
   render() {
     const renderShelfLocation = (shelfLocation: string[]) => {
       return shelfLocation.map((item: any, index: number) => {
@@ -46,6 +52,9 @@ class DetailDialog extends React.Component<
             key={item}
             className={"tag-list-item"}
             style={{ borderWidth: 1.5 }}
+            onClick={() => {
+              this.handleShelfClick(item);
+            }}
           >
             <div className="center">
               <Trans>{item}</Trans>

@@ -1359,6 +1359,17 @@ const createMainWin = () => {
     let { dbName, storagePath } = config;
     let db = getDBConnection(dbName, storagePath, SqlStatement.sqlStatement);
     delete dbConnection[dbName];
+    // Flush WAL into the main .db file and flip to rollback journal mode so the
+    // on-disk file is self-contained (header read/write version = 1, no -wal
+    // dependency). Other consumers — e.g. the Expo app's expo-sqlite
+    // deserializeDatabaseAsync — can only open a non-WAL SQLite image; without
+    // this, backups restored there fail with "unable to open database file".
+    try {
+      db.pragma("wal_checkpoint(TRUNCATE)");
+      db.pragma("journal_mode = DELETE");
+    } catch (error) {
+      console.error("failed to checkpoint/switch journal mode:", error);
+    }
     db.close();
   });
   ipcMain.handle("set-always-on-top", async (event, config) => {

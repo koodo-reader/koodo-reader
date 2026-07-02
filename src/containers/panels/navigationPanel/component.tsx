@@ -8,34 +8,98 @@ import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../../utils/file/coverUtil";
+import {
+  NAV_TAB_TOGGLE_EVENT,
+  openReadingPanel,
+  READING_PANEL_TOGGLE_EVENT,
+} from "../../../utils/reader/mouseEvent";
+
+export interface SearchItemWithKey {
+  key: string;
+  item: any;
+  index: number;
+}
+
+export interface SearchResultGroup {
+  docIndex: number;
+  title: string;
+  items: SearchItemWithKey[];
+}
+
+// 解析单条 search item 的 cfi（JSON 字符串），安全容错
+const parseLocation = (
+  item: any
+): { chapterTitle: string; chapterDocIndex: number } => {
+  let bookLocation: any = {};
+  try {
+    bookLocation = JSON.parse(item.cfi) || {};
+  } catch {
+    bookLocation = {};
+  }
+  const rawIndex = bookLocation.chapterDocIndex;
+  const docIndex =
+    typeof rawIndex === "number" ? rawIndex : parseInt(rawIndex, 10);
+  return {
+    chapterTitle: bookLocation.chapterTitle || "",
+    chapterDocIndex: Number.isFinite(docIndex) ? docIndex : 0,
+  };
+};
+
+// 生成稳定 key：同章同位置可能 cfi 重复，追加 index 兜底保证唯一
+export const buildSearchItemKey = (item: any, index: number): string => {
+  const { chapterDocIndex } = parseLocation(item);
+  return `${chapterDocIndex}:${item.cfi}:${index}`;
+};
+
+// 按 chapterDocIndex 升序分组，组内保留搜索返回顺序
+export const groupSearchResults = (searchList: any[]): SearchResultGroup[] => {
+  const map = new Map<number, SearchResultGroup>();
+  for (let i = 0; i < searchList.length; i++) {
+    const item = searchList[i];
+    const { chapterDocIndex, chapterTitle } = parseLocation(item);
+    let group = map.get(chapterDocIndex);
+    if (!group) {
+      group = {
+        docIndex: chapterDocIndex,
+        title: chapterTitle,
+        items: [],
+      };
+      map.set(chapterDocIndex, group);
+    }
+    group.items.push({
+      key: buildSearchItemKey(item, i),
+      item,
+      index: i,
+    });
+  }
+  return Array.from(map.values()).sort((a, b) => a.docIndex - b.docIndex);
+};
 
 class NavigationPanel extends React.Component<
   NavigationPanelProps,
   NavigationPanelState
 > {
+  highlightUtil: any;
   constructor(props: NavigationPanelProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
     this.state = {
       currentTab: "contents",
       chapters: [],
       searchState: "",
       searchList: null,
-      startIndex: 0,
-      currentIndex: 0,
       cover: "",
       isCoverExist: false,
+      activeSearchKey: null,
+      collapsedChapters: new Set<number>(),
     };
   }
   handleNavSearchState = (state: string) => {
     this.setState({ searchState: state });
     if (state === "searching") {
-      this.setState({
-        searchList: null,
-        startIndex: 0,
-        currentIndex: 0,
-      });
+      this.resetSearchState();
     }
     if (state) {
       this.props.handleSearch(true);
@@ -46,7 +110,18 @@ class NavigationPanel extends React.Component<
     }
   };
   handleSearchList = (searchList: any) => {
-    this.setState({ searchList });
+    if (searchList === null) {
+      this.resetSearchState();
+    } else {
+      this.setState({ searchList });
+    }
+  };
+  resetSearchState = () => {
+    this.setState({
+      searchList: null,
+      activeSearchKey: null,
+      collapsedChapters: new Set<number>(),
+    });
   };
   async UNSAFE_componentWillReceiveProps(nextProps: NavigationPanelProps) {
     if (nextProps.currentBook.key !== this.props.currentBook.key) {
@@ -60,7 +135,41 @@ class NavigationPanel extends React.Component<
   }
   componentDidMount() {
     this.props.handleFetchBookmarks();
+    window.addEventListener(NAV_TAB_TOGGLE_EVENT, this.handleNavTabToggle);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener(NAV_TAB_TOGGLE_EVENT, this.handleNavTabToggle);
+  }
+
+  isLeftPanelOpen = () => {
+    const el = document.querySelector(
+      ".navigation-panel-container"
+    ) as HTMLElement | null;
+    return !!el && !el.style.transform;
+  };
+
+  handleNavTabToggle = (event: Event) => {
+    const tab = (event as CustomEvent<{ tab: string }>).detail?.tab;
+    if (!tab) return;
+    if (this.state.searchState) {
+      this.handleNavSearchState("");
+      this.props.handleSearch(false);
+      this.resetSearchState();
+    }
+    if (this.isLeftPanelOpen() && this.state.currentTab === tab) {
+      window.dispatchEvent(
+        new CustomEvent(READING_PANEL_TOGGLE_EVENT, {
+          detail: { position: "left" },
+        })
+      );
+      return;
+    }
+    if (!this.isLeftPanelOpen()) {
+      openReadingPanel("left");
+    }
+    this.handleChangeTab(tab);
+  };
 
   handleChangeTab = (currentTab: string) => {
     this.setState({ currentTab });
@@ -75,6 +184,44 @@ class NavigationPanel extends React.Component<
       this.props.renderBookFunc();
     }, 300);
   };
+  toggleChapter = (docIndex: number) => {
+    this.setState((prevState) => {
+      const next = new Set(prevState.collapsedChapters);
+      if (next.has(docIndex)) {
+        next.delete(docIndex);
+      } else {
+        next.add(docIndex);
+      }
+      return { collapsedChapters: next };
+    });
+  };
+  handleSearchItemClick = async (item: any) => {
+    let bookLocation = JSON.parse(item.cfi) || {};
+    await this.props.htmlBook.rendition.goToPosition(
+      JSON.stringify({
+        text: bookLocation.text,
+        chapterTitle: bookLocation.chapterTitle,
+        chapterDocIndex: bookLocation.chapterDocIndex,
+        chapterHref: bookLocation.chapterHref,
+        count: bookLocation.hasOwnProperty("cfi")
+          ? "ignore"
+          : bookLocation.count,
+        percentage: bookLocation.percentage,
+        cfi: bookLocation.cfi,
+        page: bookLocation.page,
+      })
+    );
+    let style = this.highlightUtil.buildSearchHighlightStyle(
+      this.props.currentBook.format === "PDF" &&
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
+    );
+    this.props.htmlBook.rendition.highlightSearchNode(
+      bookLocation.keyword,
+      style
+    );
+  };
   renderSearchList = () => {
     if (!this.state.searchList[0]) {
       return (
@@ -83,113 +230,54 @@ class NavigationPanel extends React.Component<
         </div>
       );
     }
-    return this.state.searchList
-      .slice(
-        this.state.currentIndex * 10,
-        this.state.currentIndex * 10 + 10 > this.state.searchList.length
-          ? this.state.searchList.length
-          : this.state.currentIndex * 10 + 10
-      )
-      .map((item: any) => {
-        return (
-          <li
-            className="nav-search-list-item"
-            key={item.text}
-            onClick={async () => {
-              let bookLocation = JSON.parse(item.cfi) || {};
-              await this.props.htmlBook.rendition.goToPosition(
-                JSON.stringify({
-                  text: bookLocation.text,
-                  chapterTitle: bookLocation.chapterTitle,
-                  chapterDocIndex: bookLocation.chapterDocIndex,
-                  chapterHref: bookLocation.chapterHref,
-                  count: bookLocation.hasOwnProperty("cfi")
-                    ? "ignore"
-                    : bookLocation.count,
-                  percentage: bookLocation.percentage,
-                  cfi: bookLocation.cfi,
-                  page: bookLocation.page,
-                })
-              );
-              let style = "background: #f3a6a68c;";
-              this.props.htmlBook.rendition.highlightSearchNode(
-                bookLocation.keyword,
-                style
-              );
-            }}
-          >
-            <div>{Parser(DOMPurify.sanitize(item.excerpt))}</div>
-            <div
-              style={{
-                textAlign: "right",
-                fontSize: "15px",
-                marginTop: "5px",
-                opacity: 0.7,
-              }}
-            >
-              {JSON.parse(item.cfi).chapterTitle}
-            </div>
-          </li>
-        );
-      });
-  };
-  renderSearchPage = () => {
-    let startIndex = this.state.startIndex;
-    let currentIndex =
-      startIndex > 0 ? startIndex + 2 : this.state.currentIndex;
-    let pageList: any[] = [];
-    let total = Math.ceil(this.state.searchList.length / 10);
-    if (total <= 5) {
-      for (let i = 0; i < total; i++) {
-        pageList.push(
-          <li
-            className={
-              currentIndex === i
-                ? "nav-search-page-item active-page "
-                : "nav-search-page-item"
-            }
+    const groups: SearchResultGroup[] = groupSearchResults(
+      this.state.searchList
+    );
+    return groups.map((group: SearchResultGroup) => {
+      const collapsed = this.state.collapsedChapters.has(group.docIndex);
+      return (
+        <li className="nav-search-group" key={`group-${group.docIndex}`}>
+          <div
+            className="nav-search-group-title"
             onClick={() => {
-              this.setState({ currentIndex: i });
+              this.toggleChapter(group.docIndex);
             }}
           >
-            {i + 1}
-          </li>
-        );
-      }
-    } else {
-      for (
-        let i = 0;
-        i < (total - startIndex < 5 ? total - startIndex : 5);
-        i++
-      ) {
-        let isShow = currentIndex > 2 ? i === 2 : currentIndex === i;
-        pageList.push(
-          <li
-            className={
-              isShow
-                ? "nav-search-page-item active-page "
-                : "nav-search-page-item"
-            }
-            onClick={() => {
-              if (i === 3 && startIndex === 0) {
-                this.setState({
-                  startIndex: 1,
-                  currentIndex: 3,
-                });
-                return;
-              }
-              this.setState({
-                startIndex: currentIndex > 2 ? i + startIndex - 2 : 0,
-                currentIndex: i + startIndex,
-              });
-            }}
-          >
-            {i + startIndex + 1}
-          </li>
-        );
-      }
-    }
-    return pageList;
+            <span
+              className="icon-dropdown font-featured-family-icon"
+              style={!collapsed ? { transform: "rotate(180deg)" } : {}}
+            ></span>
+            <span className="nav-search-group-name">{group.title}</span>
+            <span className="nav-search-group-count">
+              ({group.items.length})
+            </span>
+          </div>
+          {!collapsed && (
+            <ul className="nav-search-group-items">
+              {group.items.map((entry) => {
+                const isActive = this.state.activeSearchKey === entry.key;
+                return (
+                  <li
+                    className={
+                      isActive
+                        ? "nav-search-list-item nav-search-list-item-active"
+                        : "nav-search-list-item"
+                    }
+                    key={entry.key}
+                    onClick={() => {
+                      this.setState({ activeSearchKey: entry.key });
+                      this.handleSearchItemClick(entry.item);
+                    }}
+                  >
+                    <div>{Parser(DOMPurify.sanitize(entry.item.excerpt))}</div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </li>
+      );
+    });
   };
   render() {
     const searchProps = {
@@ -225,7 +313,7 @@ class NavigationPanel extends React.Component<
               onClick={() => {
                 this.handleNavSearchState("");
                 this.props.handleSearch(false);
-                this.setState({ searchList: null });
+                this.resetSearchState();
               }}
             >
               <span className="icon-close theme-color-delete"></span>
@@ -248,9 +336,6 @@ class NavigationPanel extends React.Component<
               ) : this.state.searchList ? (
                 this.renderSearchList()
               ) : null}
-            </ul>
-            <ul className="nav-search-page">
-              {this.state.searchList ? this.renderSearchPage() : null}
             </ul>
           </>
         ) : (

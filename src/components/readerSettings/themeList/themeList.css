@@ -8,7 +8,7 @@
   font-size: 15px;
   font-weight: 500;
   margin-bottom: -5px;
-  margin-top: 15px;
+  margin-top: 5px;
 }
 @keyframes fade-in {
   0% {
@@ -24,7 +24,6 @@
   margin: 10px 0px 0px;
   width: 100%;
   min-height: 44px;
-  padding-bottom: 6px;
 }
 .background-color-circle {
   display: inline-block;
@@ -115,4 +114,37 @@
 }
 .color-input-box:focus {
   border-color: currentColor;
+}
+.preset-theme-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px 0px 0px;
+  width: 100%;
+}
+.preset-theme-item {
+  flex: 0 0 calc(20% - 14px);
+  height: 24px;
+  margin: 2px;
+  margin-top: 6px;
+  border-radius: 18px;
+  border: 1.5px solid rgba(128, 128, 128, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  user-select: none;
+  padding: 3px;
+}
+.preset-theme-item:hover {
+  transform: scale(1.05);
+}
+.preset-theme-text {
+  font-size: 13px;
+  line-height: 1;
+  text-align: center;
 }

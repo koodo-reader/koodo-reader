@@ -4,6 +4,10 @@
   float: left;
   overflow: hidden;
   position: relative;
+  cursor: grab;
+}
+.book-list-item:active {
+  cursor: grabbing;
 }
 .book-item-cover {
   width: calc(105px * var(--card-scale, 1));
