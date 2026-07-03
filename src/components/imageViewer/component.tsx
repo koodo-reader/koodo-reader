@@ -101,10 +101,14 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
   loadChapterImages = async (direction: "next" | "prev") => {
     const { rendition } = this.props;
     while (true) {
-      const prevHref = rendition.getPosition()?.chapterHref || "";
+      const prevChapterDocIndex =
+        rendition.getPosition()?.chapterDocIndex || "";
       await rendition[direction === "next" ? "nextChapter" : "prevChapter"]();
-      if ((rendition.getPosition()?.chapterHref || "") === prevHref)
+      if (
+        (rendition.getPosition()?.chapterDocIndex || "") === prevChapterDocIndex
+      ) {
         return null;
+      }
       const list = (await rendition.getImageList?.()) || [];
       if (list.length) return list;
     }
