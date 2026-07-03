@@ -25,9 +25,18 @@ export const getSelection = (format: string, bookKey?: string) => {
     let doc = docs[i];
     if (!doc) continue;
     let sel = doc.getSelection();
-    if (!sel) continue;
-    text = sel.toString();
-    text = text && text.trim();
+    if (!sel || sel.rangeCount === 0) continue;
+    // In Electron/Chromium, Selection.toString() includes text inside
+    // user-select:none elements (e.g. <rt>/<rp> ruby annotations), even though
+    // they are not visually highlighted. Clone the selected ranges into a
+    // fragment, strip the ruby annotations, and read back the text so it
+    // matches the visual selection (consistent with the CSS rule on <rt>).
+    let fragment = doc.createDocumentFragment();
+    for (let r = 0; r < sel.rangeCount; r++) {
+      fragment.appendChild(sel.getRangeAt(r).cloneContents());
+    }
+    fragment.querySelectorAll("rt, rp").forEach((el) => el.remove());
+    text = (fragment.textContent || "").trim();
     if (text) {
       break;
     }
