@@ -31,7 +31,7 @@ export type ShortcutAction =
   | "selectionNote"
   | "selectionHighlight"
   | "selectionSpeak"
-  | "searchSelectedInBook";
+  | "selectionSearch";
 
 export type ShortcutConfig = Record<ShortcutAction, ShortcutBinding[]>;
 
@@ -59,7 +59,7 @@ export const SHORTCUT_ACTIONS: ShortcutAction[] = [
   "selectionNote",
   "selectionHighlight",
   "selectionSpeak",
-  "searchSelectedInBook",
+  "selectionSearch",
 ];
 
 const KEY_LABELS: Record<number, string> = {
@@ -191,7 +191,7 @@ export const DEFAULT_SHORTCUT_CONFIG: ShortcutConfig = {
   selectionNote: [{ keyCode: 78, ctrl: true, shift: true }],
   selectionHighlight: [{ keyCode: 72, ctrl: true, shift: true }],
   selectionSpeak: [{ keyCode: 82, ctrl: true, shift: true }],
-  searchSelectedInBook: [{ keyCode: 70, ctrl: true, shift: true }],
+  selectionSearch: [{ keyCode: 70, ctrl: true, shift: true }],
 };
 
 const cloneBindings = (bindings: ShortcutBinding[]): ShortcutBinding[] =>

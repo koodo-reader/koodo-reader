@@ -122,6 +122,7 @@ const SELECTION_SHORTCUT_OPTIONS: Array<{
   { shortcut: "selectionNote", optionName: "note" },
   { shortcut: "selectionHighlight", optionName: "highlight" },
   { shortcut: "selectionSpeak", optionName: "speaker" },
+  { shortcut: "selectionSearch", optionName: "search-book" },
 ];
 
 export const READING_PANEL_TOGGLE_EVENT = "koodo-reading-panel-toggle";
@@ -288,14 +289,6 @@ const handleShortcut = (
   if (rendition && matchShortcut(event, shortcuts.nextChapter)) {
     event.preventDefault();
     rendition.nextChapter();
-  }
-  if (
-    matchShortcut(event, shortcuts.searchSelectedInBook) &&
-    getSelection(format, bookKey)
-  ) {
-    event.preventDefault();
-    searchInTheBook("", format, true);
-    return;
   }
   for (const { shortcut, optionName } of SELECTION_SHORTCUT_OPTIONS) {
     if (matchShortcut(event, shortcuts[shortcut])) {

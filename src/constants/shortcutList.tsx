@@ -127,7 +127,7 @@ export const shortcutList: ShortcutListItem[] = [
     desc: "Read the selected text aloud",
   },
   {
-    action: "searchSelectedInBook",
+    action: "selectionSearch",
     title: "Search selection in book",
     desc: "Search the book using the selected text",
   },
