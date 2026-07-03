@@ -111,7 +111,8 @@
 }
 .side-menu-item.shelf-drop-target .side-menu-selector {
   background-color: rgba(119, 162, 218, 0.18);
-  border-radius: 8px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 .side-menu-item.shelf-drop-target .side-menu-hover-container,
 .side-menu-item.shelf-drop-target .side-menu-selector-container {
