@@ -135,9 +135,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         let targetLang =
           this.state.dictTarget ||
           ConfigService.getReaderConfig("dictTarget") ||
-          KookitConfig.ConvertLangMap[
-            ConfigService.getReaderConfig("lang") || "zhCN"
-          ];
+          getFullTranslationTarget();
         let systemPrompt =
           ConfigService.getReaderConfig("aiDictPrompt") ||
           KookitConfig.DefaultPrompts.aiDict;
