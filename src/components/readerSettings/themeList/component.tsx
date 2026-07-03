@@ -81,7 +81,6 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     this.setState({ bgColorInput: color });
     ConfigService.setReaderConfig("backgroundColor", color);
     this.props.handleBackgroundColor(color);
-    StyleUtil.addDefaultCss(this.props.currentBook.key);
     this.setState({
       currentPresetIndex: this.getPresetIndex(
         color,
