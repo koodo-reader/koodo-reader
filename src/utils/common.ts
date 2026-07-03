@@ -898,7 +898,17 @@ export const getServerRegion = () => {
   if (ConfigService.getItem("serverRegion")) {
     isUseCN = ConfigService.getItem("serverRegion") === "china";
   } else {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (navigator.language && navigator.language === "zh-CN") {
+      isUseCN = true;
+    }
+    if (
+      timeZone &&
+      [
+        "Asia/Shanghai", 
+        "Asia/Urumqi", 
+      ].includes(timeZone)
+    ) {
       isUseCN = true;
     }
   }
