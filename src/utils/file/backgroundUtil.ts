@@ -42,7 +42,7 @@ class BackgroundUtil {
       }
       fs.writeFileSync(path.join(dir, filename), Buffer.from(arrayBuffer));
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         await LocalFileManager.saveFile(filename, arrayBuffer, BG_FOLDER);
       } else {
         // store raw dataUrl in localforage keyed by `background_<id>`
@@ -68,7 +68,7 @@ class BackgroundUtil {
       const mime = ext === "jpg" ? "image/jpeg" : `image/${ext}`;
       return `data:${mime};base64,${base64}`;
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         const ext = extension || "png";
         const filename = `${id}.${ext}`;
         const buf = await LocalFileManager.readFile(filename, BG_FOLDER);
@@ -97,7 +97,7 @@ class BackgroundUtil {
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
       }
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         // Try common extensions
         for (const ext of ["png", "jpg", "jpeg", "webp", "gif"]) {
           await LocalFileManager.deleteFile(`${id}.${ext}`, BG_FOLDER).catch(

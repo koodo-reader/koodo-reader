@@ -164,17 +164,17 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       upgradeConfig();
       const status = await LocalFileManager.getPermissionStatus();
       if (
-        !ConfigService.getReaderConfig("isUseLocal") &&
+        !ConfigService.getItem("isUseLocal") &&
         LocalFileManager.isSupported()
       ) {
         this.props.handleLocalFileDialog(true);
       } else if (
-        ConfigService.getReaderConfig("isUseLocal") === "yes" &&
+        ConfigService.getItem("isUseLocal") === "yes" &&
         !status.directoryName
       ) {
         this.props.handleLocalFileDialog(true);
       } else if (
-        ConfigService.getReaderConfig("isUseLocal") === "yes" &&
+        ConfigService.getItem("isUseLocal") === "yes" &&
         (status.needsReauthorization || !status.hasAccess)
       ) {
         this.props.handleLocalFileDialog(true);

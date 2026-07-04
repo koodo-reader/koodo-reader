@@ -118,8 +118,7 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
           resolve(false);
           return;
         }
-        const isUseLocal =
-          ConfigService.getReaderConfig("isUseLocal") === "yes";
+        const isUseLocal = ConfigService.getItem("isUseLocal") === "yes";
         // Restore book files
         const bookFiles = Object.keys(zip.files).filter(
           (name) => !zip.files[name].dir && name.startsWith("book/")

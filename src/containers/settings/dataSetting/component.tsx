@@ -510,11 +510,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
         if (directoryHandle) {
           // 成功获取权限
-          ConfigService.setReaderConfig("isUseLocal", "yes");
-          ConfigService.setReaderConfig(
-            "localDirectoryName",
-            directoryHandle.name
-          );
+          ConfigService.setItem("isUseLocal", "yes");
           this.setState({
             storageLocation: directoryHandle.name,
           });

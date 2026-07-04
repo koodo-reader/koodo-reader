@@ -79,7 +79,7 @@ class FontUtil {
         fs.mkdirSync(dir, { recursive: true });
       }
       fs.writeFileSync(path.join(dir, filename), Buffer.from(arrayBuffer));
-    } else if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+    } else if (ConfigService.getItem("isUseLocal") === "yes") {
       await LocalFileManager.saveFile(filename, arrayBuffer, FONT_FOLDER);
     } else {
       const mime = FONT_MIME[type] || "font/ttf";
@@ -109,7 +109,7 @@ class FontUtil {
       return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
     }
 
-    if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+    if (ConfigService.getItem("isUseLocal") === "yes") {
       const buf = await LocalFileManager.readFile(filename, FONT_FOLDER);
       return buf || null;
     }
@@ -149,7 +149,7 @@ class FontUtil {
         const filePath = path.join(dir, file);
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
       }
-    } else if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+    } else if (ConfigService.getItem("isUseLocal") === "yes") {
       const extensions = ext ? [ext] : ["ttf", "otf", "woff", "woff2"];
       for (const type of extensions) {
         await LocalFileManager.deleteFile(

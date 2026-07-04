@@ -146,22 +146,3 @@ export function removeThemeColor(): void {
     styleEl.remove();
   }
 }
-
-// Old name → new hex color mapping for config migration
-const LEGACY_COLOR_MAP: Record<string, string> = {
-  blue: "#0179CA",
-  green: "#008F91",
-  red: "#F16464",
-  purple: "#6867D1",
-};
-
-/**
- * Migrate legacy theme config (color name → hex value)
- * Should be called once at app startup
- */
-export function migrateThemeConfig(): void {
-  const current = ConfigService.getReaderConfig("themeColor");
-  if (current && LEGACY_COLOR_MAP[current]) {
-    ConfigService.setReaderConfig("themeColor", LEGACY_COLOR_MAP[current]);
-  }
-}
