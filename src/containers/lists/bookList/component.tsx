@@ -395,7 +395,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
         this.state.readingStatusFilter
       );
     }
-    if (this.state.isHideFinishedBook) {
+    if (this.state.isHideFinishedBook && (bookMode === "home" || bookMode === "hide")) {
       books = books.filter((book) => {
         const record = ConfigService.getObjectConfig(book.key, "recordLocation", {});
         return record.percentage !== "1";
