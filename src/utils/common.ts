@@ -1888,9 +1888,9 @@ export function migrateConfig(): void {
   if (current && LEGACY_COLOR_MAP[current]) {
     ConfigService.setReaderConfig("themeColor", LEGACY_COLOR_MAP[current]);
   }
-  // const isUseLocal = ConfigService.getReaderConfig("isUseLocal");
-  // if (isUseLocal) {
-  //   ConfigService.setItem("isUseLocal", isUseLocal);
-  //   ConfigService.setReaderConfig("isUseLocal", "");
-  // }
+  const isUseLocal = ConfigService.getReaderConfig("isUseLocal");
+  if (isUseLocal) {
+    ConfigService.setItem("isUseLocal", isUseLocal);
+    ConfigService.setReaderConfig("isUseLocal", "");
+  }
 }
