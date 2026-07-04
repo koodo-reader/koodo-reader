@@ -13,6 +13,12 @@ export const generalSettingList = [
   },
   {
     isElectron: false,
+    title: "Hide books already read",
+    desc: "Hide books that have been fully read, so they won't show up in the list",
+    propName: "isHideFinishedBook",
+  },
+  {
+    isElectron: false,
     title: "Delete book from shelf also deleting book itself",
     desc: "When deleting book from shelf, the book will be deleted as well",
     propName: "isDeleteShelfBook",

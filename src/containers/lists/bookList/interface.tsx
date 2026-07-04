@@ -31,4 +31,5 @@ export interface BookListState {
   fullBooksData: BookModel[];
   cardScale: number;
   readingStatusFilter: string;
+  isHideFinishedBook: boolean;
 }

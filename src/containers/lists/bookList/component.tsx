@@ -34,6 +34,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
   private scrollContainer: React.RefObject<HTMLUListElement>;
   private visibilityChangeHandler: ((event: Event) => void) | null = null;
   private resizeHandler: (() => void) | null = null;
+  private hideFinishedHandler: (() => void) | null = null;
+  private loadRequestId: number = 0;
 
   constructor(props: BookListProps) {
     super(props);
@@ -44,6 +46,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
       ).length,
       isHideShelfBook:
         ConfigService.getReaderConfig("isHideShelfBook") === "yes",
+      isHideFinishedBook:
+        ConfigService.getReaderConfig("isHideFinishedBook") === "yes",
       displayedBooksCount: 24,
       isLoadingMore: false,
       fullBooksData: [], // 存储从数据库加载的完整书籍数据
@@ -56,6 +60,16 @@ class BookList extends React.Component<BookListProps, BookListState> {
   }
 
   async componentDidMount() {
+    this.hideFinishedHandler = () => {
+      this.setState(
+        {
+          isHideFinishedBook:
+            ConfigService.getReaderConfig("isHideFinishedBook") === "yes",
+        },
+        () => this.loadFullBooksData()
+      );
+    };
+    window.addEventListener("koodo-hide-finished-toggle", this.hideFinishedHandler);
     if (!this.props.books || !this.props.books[0]) {
       return <Redirect to="manager/empty" />;
     }
@@ -116,6 +130,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
       const { ipcRenderer } = window.require("electron");
       ipcRenderer.removeAllListeners("reading-finished");
     }
+
+    window.removeEventListener("koodo-hide-finished-toggle", this.hideFinishedHandler);
   }
 
   componentDidUpdate(prevProps: BookListProps, prevState: BookListState) {
@@ -147,20 +163,19 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
   // 从数据库加载完整的书籍数据
   loadFullBooksData = async () => {
+    const requestId = ++this.loadRequestId;
     const { books } = this.handleBooks();
     const displayedBooks = books.slice(0, this.state.displayedBooksCount);
 
     const fullBooksData: Book[] = [];
     for (let i = 0; i < displayedBooks.length; i++) {
-      const book = await DatabaseService.getRecord(
-        displayedBooks[i].key,
-        "books"
-      );
-      if (book) {
-        fullBooksData.push(book);
-      }
+      const book = await DatabaseService.getRecord(displayedBooks[i].key, "books");
+      if (book) fullBooksData.push(book);
     }
 
+    if (requestId !== this.loadRequestId) {
+      return; // a newer call has started since — discard this stale result
+    }
     this.setState({ fullBooksData });
   };
   handleFinishReading = async () => {
@@ -368,9 +383,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
           ? this.handleShelf(this.props.books, this.props.shelfTitle)
           : bookMode === "favorite"
             ? this.handleKeyFilter(
-                this.props.books,
-                ConfigService.getAllListConfig("favoriteBooks")
-              )
+              this.props.books,
+              ConfigService.getAllListConfig("favoriteBooks")
+            )
             : bookMode === "hide"
               ? this.handleFilterShelfBook(this.props.books)
               : this.props.books;
@@ -379,6 +394,12 @@ class BookList extends React.Component<BookListProps, BookListState> {
         books,
         this.state.readingStatusFilter
       );
+    }
+    if (this.state.isHideFinishedBook) {
+      books = books.filter((book) => {
+        const record = ConfigService.getObjectConfig(book.key, "recordLocation", {});
+        return record.percentage !== "1";
+      });
     }
     const topBookKeys: string[] = ConfigService.getAllListConfig("topBooks");
     if (topBookKeys.length > 0) {

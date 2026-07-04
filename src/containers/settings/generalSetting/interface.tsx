@@ -48,6 +48,7 @@ export interface SettingInfoState {
   isDeleteOriginal: boolean;
   isDisablePDFCover: boolean;
   isHideShelfBook: boolean;
+  isHideFinishedBook: boolean;
   isPreventAdd: boolean;
   startupShelf: string;
 }

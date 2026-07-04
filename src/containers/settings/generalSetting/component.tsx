@@ -35,6 +35,8 @@ class GeneralSetting extends React.Component<
         ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",
       isHideShelfBook:
         ConfigService.getReaderConfig("isHideShelfBook") === "yes",
+      isHideFinishedBook:
+        ConfigService.getReaderConfig("isHideFinishedBook") === "yes",
       isPreventSleep: ConfigService.getReaderConfig("isPreventSleep") === "yes",
       isAlwaysOnTop: ConfigService.getReaderConfig("isAlwaysOnTop") === "yes",
       isAutoMaximizeWin:
@@ -137,6 +139,10 @@ class GeneralSetting extends React.Component<
                   case "isAlwaysOnTop":
                     this.handleAlwaysOnTop();
                     break;
+                  case "isHideFinishedBook":
+                    this.handleSetting("isHideFinishedBook");
+                    window.dispatchEvent(new CustomEvent("koodo-hide-finished-toggle"));
+                    break;
                   case "isAutoMaximizeWin":
                     this.handleMaximizeWin();
                     break;
@@ -158,13 +164,13 @@ class GeneralSetting extends React.Component<
                 style={
                   this.state[item.propName]
                     ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
+                      transform: "translateX(20px)",
+                      transition: "transform 0.5s ease",
+                    }
                     : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
+                      transform: "translateX(0px)",
+                      transition: "transform 0.5s ease",
+                    }
                 }
               ></span>
             </span>
