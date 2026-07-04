@@ -126,6 +126,7 @@ a {
 .nav-close-icon:hover,
 .setting-close-container:hover,
 .side-menu-hover-container,
+.side-menu-item.shelf-drop-target .side-menu-selector,
 .setting-dialog-location-title,
 .note-option:hover,
 .digest-option:hover,
@@ -152,7 +153,7 @@ a {
 .restore-file:hover,
 .book-manage-title:hover,
 .copy-option:hover {
-  background-color: rgba(75, 75, 75, 0.035);
+  background-color: rgba(75, 75, 75, 0.05);
 }
 .drag-background {
   background: hsla(0, 0%, 0%, 0.4);

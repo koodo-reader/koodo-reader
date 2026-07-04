@@ -936,6 +936,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 event.target.value = this.props.defaultSyncOption;
                 return;
               }
+              if (newValue === "local") {
+                ConfigService.setReaderConfig("useLocalSync", "yes");
+                event.target.value = "local";
+                toast.success(this.props.t("Change successful"));
+                return;
+              }
               const currentValue = this.props.defaultSyncOption;
               let onlineBooks: Book[] = [];
               for (let i = 0; i < this.props.books.length; i++) {
@@ -1056,7 +1062,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <option value="" className="lang-setting-option">
               {this.props.t("Please select")}
             </option>
-            {[{ label: "Local", value: "local", isPro: false }, ...driveList, { label: "Add data source", value: "add", isPro: false }]
+            {[
+              { label: "Local", value: "local", isPro: false },
+              ...driveList,
+              { label: "Add data source", value: "add", isPro: false },
+            ]
               .filter(
                 (item) =>
                   this.props.dataSourceList.includes(item.value) ||
@@ -1087,7 +1097,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <option value="" className="lang-setting-option">
               {this.props.t("Please select")}
             </option>
-            {[{ label: "Local", value: "local", isPro: false }, ...driveList, { label: "Add data source", value: "add", isPro: false }]
+            {[
+              { label: "Local", value: "local", isPro: false },
+              ...driveList,
+              { label: "Add data source", value: "add", isPro: false },
+            ]
               .filter(
                 (item) =>
                   this.props.dataSourceList.includes(item.value) ||
