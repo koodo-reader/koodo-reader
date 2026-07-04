@@ -563,6 +563,12 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     let finalUrl = searchUrl
       .replace("{searchTerms}", encodeURIComponent(searchQuery.trim()))
       .replace("%7BsearchTerms%7D", encodeURIComponent(searchQuery.trim()));
+    if (!finalUrl.startsWith("http")) {
+      const baseUrl = this.state.feedStack[0]?.url || currentFeed?.url || "";
+      if (baseUrl) {
+        finalUrl = new URL(finalUrl, baseUrl).href;
+      }
+    }
     this.setState({ isLoading: true, error: "" });
     try {
       const feed = await fetchOPDSFeed(finalUrl, currentCatalogAuth);
@@ -580,8 +586,29 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       }));
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      this.setState({ isLoading: false, error: msg });
-      toast.error(this.props.t("Search failed") + ": " + msg);
+      if (msg.includes("404")) {
+        this.setState((prev) => ({
+          currentFeed: {
+            title: this.props.t("Search") + ": " + searchQuery,
+            url: finalUrl,
+            entries: [],
+            links: [],
+            searchTemplate: prev.currentFeed?.searchTemplate || "",
+          },
+          feedStack: [
+            ...prev.feedStack,
+            {
+              url: finalUrl,
+              title: this.props.t("Search") + ": " + searchQuery,
+            },
+          ],
+          isLoading: false,
+          searchQuery: "",
+        }));
+      } else {
+        this.setState({ isLoading: false, error: msg });
+        toast.error(this.props.t("Search failed") + ": " + msg);
+      }
     }
   };
 
