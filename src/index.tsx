@@ -17,7 +17,7 @@ import {
 import { migrateConfig } from "./utils/common";
 initTheme();
 initSystemFont();
-migrateConfig();
+// migrateConfig();
 applyCustomSystemCSS();
 applyAppBackgroundImage();
 const container = document.getElementById("root")!;
