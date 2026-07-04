@@ -7,6 +7,7 @@ import {
   handleRenderNoteFunc,
   handleOriginalText,
   handleOriginalSentence,
+  handleFetchNotes,
 } from "../../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
@@ -20,7 +21,7 @@ const mapStateToProps = (state: stateType) => {
     isOpenMenu: state.viewArea.isOpenMenu,
     menuMode: state.viewArea.menuMode,
     readerMode: state.reader.readerMode,
-    color: state.reader.color,
+    highlight: state.reader.highlight,
     isChangeDirection: state.viewArea.isChangeDirection,
     htmlBook: state.reader.htmlBook,
   };
@@ -34,6 +35,7 @@ const actionCreator = {
   handleRenderNoteFunc,
   handleOriginalText,
   handleOriginalSentence,
+  handleFetchNotes,
 };
 export default connect(
   mapStateToProps,

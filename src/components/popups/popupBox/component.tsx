@@ -26,11 +26,11 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
   showNote: boolean;
   isFirstShow: boolean;
   rect: any;
-  private isResizing: boolean = false;
-  private resizeStartX: number = 0;
-  private resizeStartY: number = 0;
-  private resizeStartWidth: number = 0;
-  private resizeStartHeight: number = 0;
+  isResizing: boolean = false;
+  resizeStartX: number = 0;
+  resizeStartY: number = 0;
+  resizeStartWidth: number = 0;
+  resizeStartHeight: number = 0;
 
   constructor(props: PopupBoxProps) {
     super(props);

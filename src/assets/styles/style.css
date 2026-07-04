@@ -1,20 +1,18 @@
 @font-face {
-  font-family: "icomoon";
-  src: url("fonts/icomoon.eot?abnyq9");
-  src:
-    url("fonts/icomoon.eot?abnyq9#iefix") format("embedded-opentype"),
-    url("fonts/icomoon.ttf?abnyq9") format("truetype"),
-    url("fonts/icomoon.woff?abnyq9") format("woff"),
-    url("fonts/icomoon.svg?abnyq9#icomoon") format("svg");
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?bp1qig');
+  src:  url('fonts/icomoon.eot?bp1qig#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?bp1qig') format('truetype'),
+    url('fonts/icomoon.woff?bp1qig') format('woff'),
+    url('fonts/icomoon.svg?bp1qig#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="icon-"],
-[class*=" icon-"] {
+[class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: "icomoon" !important;
+  font-family: 'icomoon' !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -27,11 +25,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-font:before {
+  content: "\e96b";
+}
+.icon-keyboard:before {
+  content: "\e96a";
+}
+.icon-crop:before {
+  content: "\e969";
+}
 .icon-pin:before {
   content: "\e968";
 }
 .icon-chart:before {
   content: "\e967";
+  color: #3e4055;
 }
 .icon-clock:before {
   content: "\e966";
@@ -80,21 +88,27 @@
 }
 .icon-desktop:before {
   content: "\e959";
+  color: #585858;
 }
 .icon-phone:before {
   content: "\e95a";
+  color: #585858;
 }
 .icon-github:before {
   content: "\e90f";
+  color: #585858;
 }
 .icon-onedrive:before {
   content: "\e930";
+  color: #585858;
 }
 .icon-facebook:before {
   content: "\e931";
+  color: #585858;
 }
 .icon-microsoft:before {
   content: "\e952";
+  color: #585858;
 }
 .icon-s3compatible:before {
   content: "\e958";
@@ -257,9 +271,11 @@
 }
 .icon-simplified:before {
   content: "\e92e";
+  color: #565656;
 }
 .icon-traditional:before {
   content: "\e932";
+  color: #565656;
 }
 .icon-local:before {
   content: "\e92a";
@@ -299,9 +315,11 @@
 }
 .icon-dropbox:before {
   content: "\e910";
+  color: #4b4b4b;
 }
 .icon-webdav:before {
   content: "\e916";
+  color: #4b4b4b;
 }
 .icon-exit:before {
   content: "\e919";
@@ -311,6 +329,7 @@
 }
 .icon-googledrive:before {
   content: "\e934";
+  color: #4b4b4b;
 }
 .icon-list:before {
   content: "\e937";

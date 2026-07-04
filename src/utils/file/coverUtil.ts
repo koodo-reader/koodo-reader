@@ -61,7 +61,7 @@ class CoverUtil {
       }
       return imageFilePath;
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         let coverList = await this.getLocalCoverList();
         if (!coverList || coverList.length === 0) {
           return book.cover;
@@ -111,7 +111,7 @@ class CoverUtil {
       const imageFiles = files.filter((file) => file.startsWith(book.key));
       return imageFiles.length > 0;
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         let coverList = await this.getLocalCoverList();
         if (!coverList || coverList.length === 0) {
           return book.cover !== "";
@@ -144,7 +144,7 @@ class CoverUtil {
         fs.unlinkSync(imageFilePath);
       }
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         let coverList = await this.getLocalCoverList();
         if (!coverList || coverList.length === 0) {
           return;
@@ -177,7 +177,7 @@ class CoverUtil {
           fs.unlinkSync(imageFilePath);
         }
       } else {
-        if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        if (ConfigService.getItem("isUseLocal") === "yes") {
           let coverList = await this.getLocalCoverList();
           if (!coverList || coverList.length === 0) {
             return;
@@ -221,7 +221,7 @@ class CoverUtil {
       );
       book.cover = "";
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         let result = await this.convertCoverBase64(coverBase64);
         await LocalFileManager.saveFile(
           `${book.key}.${result.extension}`,
@@ -341,7 +341,7 @@ class CoverUtil {
         console.error("download cover failed");
         return;
       }
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         await LocalFileManager.saveFile(cover, imgBuffer, "cover");
       } else {
         let imgStr = CommonTool.arrayBufferToBase64(imgBuffer);
@@ -379,7 +379,7 @@ class CoverUtil {
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let book = await DatabaseService.getRecord(cover.split(".")[0], "books");
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         let coverBuffer = await LocalFileManager.readFile(cover, "cover");
         if (!coverBuffer) {
           return;
@@ -420,7 +420,7 @@ class CoverUtil {
       const files = fs.readdirSync(directoryPath);
       return files;
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         let coverList = await LocalFileManager.listFiles("cover");
         return coverList;
       } else {

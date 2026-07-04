@@ -8,6 +8,7 @@ export interface ReaderProps {
   isNavLocked: boolean;
   isSettingLocked: boolean;
   isConvertOpen: boolean;
+  isPdfCropOpen: boolean;
   isSpeechOpen: boolean;
   isOpenPopupOptionDialog: boolean;
   isSearch: boolean;
@@ -24,6 +25,7 @@ export interface ReaderProps {
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;
   handleConvertDialog: (isConvertOpen: boolean) => void;
+  handlePdfCropDialog: (isPdfCropOpen: boolean) => void;
   handleSpeechDialog: (isSpeechOpen: boolean) => void;
   handleMenuMode: (menuMode: string) => void;
   handleOriginalText: (originalText: string) => void;

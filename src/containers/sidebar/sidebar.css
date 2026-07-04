@@ -109,6 +109,14 @@
   overflow: hidden;
   transition: 0.1s;
 }
+.side-menu-item.shelf-drop-target .side-menu-selector {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.side-menu-item.shelf-drop-target .side-menu-hover-container,
+.side-menu-item.shelf-drop-target .side-menu-selector-container {
+  display: none;
+}
 .side-menu-selector {
   width: 100%;
   height: 39px;

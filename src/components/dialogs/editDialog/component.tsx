@@ -177,7 +177,17 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
               cursor: "pointer",
               opacity: 0.8,
             }}
-            onClick={() => this.setState({ isMetadataDialogOpen: true })}
+            onClick={() => {
+              if (!this.props.isAuthed) {
+                toast(
+                  this.props.t("Please upgrade to Pro to use this feature")
+                );
+                this.props.handleSetting(true);
+                this.props.handleSettingMode("account");
+                return;
+              }
+              this.setState({ isMetadataDialogOpen: true });
+            }}
           >
             <Trans>Get metadata</Trans>
           </div>

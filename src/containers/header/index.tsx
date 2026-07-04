@@ -5,7 +5,6 @@ import {
   handleSetting,
   handleSettingMode,
   handleAbout,
-  handleBackupDialog,
   handleLocalFileDialog,
   handleFetchBooks,
   handleFetchNotes,
@@ -41,7 +40,6 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleSortDisplay,
-  handleBackupDialog,
   handleLocalFileDialog,
   handleSetting,
   handleSettingMode,

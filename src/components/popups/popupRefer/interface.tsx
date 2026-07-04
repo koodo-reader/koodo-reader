@@ -4,7 +4,6 @@ export interface PopupReferProps {
   currentBook: BookModel;
   isChangeDirection: boolean;
   menuMode: string;
-  color: number;
   rendition: any;
   chapterDocIndex: number;
   readerMode: string;

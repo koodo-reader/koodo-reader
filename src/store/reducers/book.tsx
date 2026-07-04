@@ -4,7 +4,6 @@ const initState = {
   isOpenAddDialog: false,
   isOpenActionDialog: false,
   isReading: false,
-  dragItem: "",
   currentBook: {},
   renderBookFunc: () => {},
   importBookFunc: () => {},
@@ -65,11 +64,6 @@ export function book(
       return {
         ...state,
         currentBook: action.payload,
-      };
-    case "HANDLE_DRAG_ITEM":
-      return {
-        ...state,
-        dragItem: action.payload,
       };
     case "HANDLE_REDIRECT":
       return {

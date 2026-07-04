@@ -1,67 +1,82 @@
 .color-option-container {
-  width: 90%;
-  height: 25px;
-  margin-left: 5%;
-  padding-bottom: 5px;
+  width: 100%;
+  margin-left: 0;
+  padding-bottom: 0;
   flex-shrink: 0;
   display: flex;
-  justify-content: space-around;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
 }
-.color-option {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  opacity: 1;
-  box-sizing: border-box;
-  cursor: pointer;
-  animation: slide-left 0.2s ease-in-out 0s 1;
+.note-highlight-style-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex-shrink: 0;
 }
-.popup-color-more {
-  display: inline-block;
-  width: 10px;
-  position: relative;
-  right: 3px;
-  top: 4px;
-  opacity: 0.7;
-  cursor: pointer;
-}
-.line-option {
-  width: 25px;
-  margin-right: 5px;
-  margin-top: 5px;
-  height: 25px;
-  border-radius: 50%;
-  opacity: 1;
-  box-sizing: border-box;
-  position: relative;
-  bottom: 5px;
+.note-highlight-style-tab {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
   cursor: pointer;
-  animation: slide-right 0.2s ease-in-out 0s 1;
+  padding: 2px;
+  opacity: 0.5;
+  transition:
+    border-color 0.15s,
+    opacity 0.15s;
+  box-sizing: border-box;
+  border: 2px solid transparent;
 }
-@keyframes slide-right {
-  0% {
-    transform: translateX(30px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0px);
-    opacity: 1;
-  }
+.note-highlight-style-tab.active-note-highlight-tab {
+  opacity: 1;
 }
-@keyframes slide-left {
-  0% {
-    transform: translateX(-50px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0px);
-    opacity: 1;
-  }
+.note-highlight-style-preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  font-weight: 600;
+  box-sizing: border-box;
+  border: 2px solid transparent;
 }
-.demo-line {
-  width: 80%;
-  height: 0px;
+.note-highlight-color-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex: 1;
+  justify-content: flex-end;
+}
+.note-highlight-color-item {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  transition: border-color 0.15s;
+  padding: 2px;
+  background-clip: content-box;
+}
+.note-highlight-color-item.active-note-highlight-color {
+  border-color: currentColor;
+}
+.color-option-container-edit {
+  position: absolute;
+  top: calc(100% - 110px);
+  width: calc(100% - 60px);
+  margin-left: 0;
+  justify-content: flex-start;
+}
+.color-option-container-edit .note-highlight-color-container {
+  justify-content: flex-start;
+  flex: 0 1 auto;
 }

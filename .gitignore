@@ -16,6 +16,7 @@ dist/
 /build/*
 /.vscode
 /.claude
+/.superpowers
 
 # misc
 .DS_Store

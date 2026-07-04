@@ -1,4 +1,5 @@
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, HighlightUtil } from "../../assets/lib/kookit-extra-browser.min";
+const highlightUtil = new HighlightUtil(ConfigService);
 const initState = {
   bookmarks: [],
   notes: [],
@@ -6,13 +7,7 @@ const initState = {
   chapters: null,
   currentChapter: "",
   currentChapterIndex: 0,
-  color: parseInt(ConfigService.getReaderConfig("highlightIndex"))
-    ? parseInt(ConfigService.getReaderConfig("highlightIndex"))
-    : ConfigService.getReaderConfig("appSkin") === "night" ||
-        (ConfigService.getReaderConfig("appSkin") === "system" &&
-          ConfigService.getReaderConfig("isOSNight") === "yes")
-      ? 3
-      : 0,
+  highlight: highlightUtil.getNoteHighlightValue(),
   backgroundColor:
     ConfigService.getReaderConfig("isMergeWord") === "yes"
       ? "rgba(0,0,0,0)"
@@ -33,6 +28,7 @@ const initState = {
   section: null,
   readerMode: "double",
   isConvertOpen: false,
+  isPdfCropOpen: false,
   isSpeechOpen: false,
   speechStartText: "",
   isSpeechAutoStart: false,
@@ -86,6 +82,11 @@ export function reader(
       return {
         ...state,
         isConvertOpen: action.payload,
+      };
+    case "HANDLE_PDF_CROP_DIALOG":
+      return {
+        ...state,
+        isPdfCropOpen: action.payload,
       };
     case "HANDLE_SPEECH_DIALOG":
       return {
@@ -192,10 +193,10 @@ export function reader(
         ...state,
         htmlBook: action.payload,
       };
-    case "HANDLE_COLOR":
+    case "HANDLE_HIGHLIGHT":
       return {
         ...state,
-        color: action.payload,
+        highlight: action.payload,
       };
     case "HANDLE_BACKGROUND_COLOR":
       return {

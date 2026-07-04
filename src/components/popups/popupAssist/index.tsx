@@ -12,6 +12,7 @@ import { withTranslation } from "react-i18next";
 import PopupTrans from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
+    currentBook: state.book.currentBook,
     originalText: state.reader.originalText,
     quoteText: state.reader.quoteText,
     plugins: state.manager.plugins,

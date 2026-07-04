@@ -1,10 +1,10 @@
+import Note from "../../models/Note";
+import { HighlightValue } from "../../utils/common";
+
 export interface ColorProps {
-  color: number;
-  targetColor: number;
+  highlight: HighlightValue;
+  noteItem?: Note;
   isEdit: boolean;
-  handleColor: (color: number) => void;
+  handleHighlight: (value: HighlightValue) => void;
   handleDigest: () => void;
-}
-export interface ColorStates {
-  isLine: boolean;
 }

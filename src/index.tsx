@@ -14,10 +14,10 @@ import {
   applyCustomSystemCSS,
   applyAppBackgroundImage,
 } from "./utils/reader/launchUtil";
-import { migrateThemeConfig } from "./utils/reader/themeUtil";
+import { migrateConfig } from "./utils/common";
 initTheme();
 initSystemFont();
-migrateThemeConfig();
+migrateConfig();
 applyCustomSystemCSS();
 applyAppBackgroundImage();
 const container = document.getElementById("root")!;

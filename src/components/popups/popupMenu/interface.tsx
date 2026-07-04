@@ -1,5 +1,6 @@
 import BookModel from "../../../models/Book";
 import HtmlBook from "../../../models/HtmlBook";
+import { HighlightValue } from "../../../utils/common";
 
 export interface PopupMenuProps {
   currentBook: BookModel;
@@ -7,7 +8,7 @@ export interface PopupMenuProps {
   isChangeDirection: boolean;
   menuMode: string;
 
-  color: number;
+  highlight: HighlightValue;
   rendition: any;
   htmlBook: HtmlBook;
   // cfiRange: any;
@@ -24,6 +25,7 @@ export interface PopupMenuProps {
   handleRenderNoteFunc: (renderNoteFunc: () => void) => void;
   handleOriginalText: (originalText: string) => void;
   handleOriginalSentence: (originalSentence: string) => void;
+  handleFetchNotes: () => void;
 }
 export interface PopupMenuStates {
   deleteKey: string;

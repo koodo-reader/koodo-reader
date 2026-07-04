@@ -50,6 +50,7 @@ a {
 .token-dialog-url-box,
 .token-dialog-username-box,
 .account-login-option,
+.font-featured-download-btn,
 .token-dialog-password-box,
 .general-setting-dropdown,
 .delete-dialog-uncheck-icon,
@@ -107,6 +108,7 @@ a {
 .active-page,
 .sk-chase-dot:before,
 .biometric-auth-button,
+.font-featured-progress-bar,
 .pin-dot.pin-dot-filled {
   background-color: rgba(75, 75, 75, 1) !important;
   color: rgba(255, 255, 255, 1) !important;
@@ -124,6 +126,7 @@ a {
 .nav-close-icon:hover,
 .setting-close-container:hover,
 .side-menu-hover-container,
+.side-menu-item.shelf-drop-target .side-menu-selector,
 .setting-dialog-location-title,
 .note-option:hover,
 .digest-option:hover,
@@ -150,7 +153,7 @@ a {
 .restore-file:hover,
 .book-manage-title:hover,
 .copy-option:hover {
-  background-color: rgba(75, 75, 75, 0.035);
+  background-color: rgba(75, 75, 75, 0.05);
 }
 .drag-background {
   background: hsla(0, 0%, 0%, 0.4);
@@ -170,6 +173,7 @@ a {
 .new-version,
 .sort-dialog-container,
 .popup-menu-box,
+.popup-color-box,
 .popup-box-container,
 .loading-page-cover,
 .loading-page-cover,
@@ -206,6 +210,9 @@ a {
 .book-cover-item-cover {
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);
+}
+.book-item-image {
+  -webkit-user-drag: none;
 }
 .book-item-list {
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.18);
@@ -248,6 +255,7 @@ a {
 .voice-add-cancel,
 .new-version,
 .popup-menu-box,
+.popup-color-box,
 .popup-box-container,
 .general-setting-dropdown,
 .card-list-item-card,
@@ -275,6 +283,7 @@ a {
 .enter-fullscreen-icon,
 .icon-popup,
 .delete-dialog-uncheck-icon,
+.setting-dialog-sidebar-item.active,
 .book-bookmark-link {
   color: rgba(255, 255, 255, 1);
 }

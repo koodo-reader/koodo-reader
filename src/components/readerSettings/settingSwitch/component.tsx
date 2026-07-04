@@ -16,7 +16,6 @@ class SettingSwitch extends React.Component<
     this.state = {
       isBold: ConfigService.getReaderConfig("isBold") === "yes",
       isIndent: ConfigService.getReaderConfig("isIndent") === "yes",
-      isSliding: ConfigService.getReaderConfig("isSliding") === "yes",
       isUnderline: ConfigService.getReaderConfig("isUnderline") === "yes",
       isShadow: ConfigService.getReaderConfig("isShadow") === "yes",
       isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
@@ -24,6 +23,8 @@ class SettingSwitch extends React.Component<
       isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
       isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
       isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
+      isKeepPDFBackground:
+        ConfigService.getReaderConfig("isKeepPDFBackground") === "yes",
       isAllowScript: ConfigService.getReaderConfig("isAllowScript") === "yes",
       isStartFromEven:
         ConfigService.getReaderConfig("isStartFromEven") === "yes",
@@ -295,7 +296,9 @@ class SettingSwitch extends React.Component<
                 });
               }
               toast(this.props.t("Change successful"));
-              this.props.renderBookFunc();
+              setTimeout(async () => {
+                this.props.renderBookFunc();
+              }, 500);
             }}
             style={this.state.isWordDefinition ? {} : { opacity: 0.6 }}
           >

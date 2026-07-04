@@ -657,11 +657,7 @@
   "Reset main window's position": "གཙོ་བའི་སྒོ་སྒྲིག་གནས་ས་སླར་སྒྲིག",
   "Copy quotes": "ཚིག་འདྲེན་ངོས་བཤུས།",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "ཉིན་7 ཐོན་པ་ཐེབས་མེད་ཚོད་ལྟ་ནི་བསྟན་པའི་གློག་འཕྲིན་སྤྲོད་པ་ལས་ཐོ་འགོད་བྱས་པའི་སྤྱོད་པར་ཁོ་ནར་འགྲུལ་བ་ཡིན། བསྟན་པའི་གློག་འཕྲིན་སྤྲོད་པ་ནི་འདི་དག་ཡིན།",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "མ་འོངས་པར་ང་ཚོས་རྩིས་ཐོ་སྒེར་སྒྲིག་ལས་ལག་དེ་ལས་མང་བ་འདི་འདྲ་བརྒྱུད་དགོན། བཀླག་པའི་གྲངས་ཐོ། ཁྱེད་ཀྱི་ཟུར་མཆན། གདམ་ཚེགས། བཀླག་པའི་འཕེལ་རྒྱས། ཚིག་མཛོད་ཐོ་གཞུང་དེབ་སོགས་ཀྱི Notion, Obsidian, Logseq, Anki སོགས་ཀྱི་སྟེགས་བུར་རང་འགུལ་སྒྲིག་མཐུན།",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Pro ཐོན་པ་ནས་ཕྱིར་འཐོན་ན་སྒྲིག་མཐུན་དང་དེ་ལས་མང་བའི་གཟུགས་སྤེལ་ཁྱད་ཆོས་མི་སྤྱོད་ཐུབ།",
-  "I'll think about it": "ངས་བསམ་བློ་གཏོང་བཞིན།",
   "Convert PDF to Text": "PDF ཡིག་ཆར་བསྒྱུར།",
-  "Still refuse": "ད་དུང་བརྒྱུད་མི་བྱེད།",
   "Set OCR language": "OCR སྐད་ཡིག་སྒྲིག",
   "Unsupported file format": "རྒྱབ་སྐྱོར་མེད་པའི་ཡིག་ཆ་རྣམ་གཞག",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "ཚིག་གི་ཐིག་གཉིས་བར་དུ་དབྱེན་ཐག་གི་ཚད་དེ་སྤྱི་བཏང་དབྱེན་ཐག་གི n གྱི་མཐུན་སྒྲིག་ཡིན་ན་གཉིས་སུ་བསྐྱེད་པར་བྱེད།",
@@ -964,7 +960,7 @@
   "Bar Chart": "ཀ་བའི་རིས་མོ།",
   "Line Chart": "ཐིག་རིས།",
   "Customize popup menu": "ལྡེབ་ཐེར་ཐོ་ཡིག་སྒེར་གཤིས་བཟོ།",
-  "You can enable up to 8 options": "མང་མཐར་གདམ་ཀ་8 སྤྱོད་ཐུབ།",
+  "You can enable up to {{count}} options": "མང་མཐར་གདམ་ཀ་{{count}} སྤྱོད་ཐུབ།",
   "From URL": "URL ནས།",
   "Enter book download URL or article URL": "དཔེ་དེབ་ཕབ་ལེན་ URL ཡང་ན་དཔེ་སྐྱེལ་ཡིག་ URL འཇུག",
   "Please enter a valid http or https URL": "ནུས་པ་ལྡན་པའི་ http ཡང་ན་ https URL ཞིག་འཇུག་རོགས།",
@@ -1108,5 +1104,6 @@
   "All": "ཚང་མ།",
   "Unread": "མ་ཀློག",
   "CurrentlyReading": "ཀློག་བཞིན་པ།",
-  "Finished": "རྫོགས་ཟིན།"
+  "Finished": "རྫོགས་ཟིན།",
+  "Theme": "Theme"
 }

@@ -20,6 +20,7 @@ export interface SettingInfoState {
   isPrecacheBook: boolean;
   isOverwriteLink: boolean;
   isOverwriteText: boolean;
+  isOverwriteBackground: boolean;
   isAutoFullscreen: boolean;
   isAutoMaximize: boolean;
   isHideShelfBook: boolean;

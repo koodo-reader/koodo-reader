@@ -1,12 +1,9 @@
 import BookModel from "../../../models/Book";
-
 export interface PopupBoxProps {
   currentBook: BookModel;
   isOpenMenu: boolean;
   isChangeDirection: boolean;
   menuMode: string;
-
-  color: number;
   isNavLocked: boolean;
   isSettingLocked: boolean;
   rendition: any;

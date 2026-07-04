@@ -12,6 +12,7 @@ import NoteModel from "../models/Note";
 import BookmarkModel from "../models/Bookmark";
 import HtmlBookModel from "../models/HtmlBook";
 import PluginModel from "../models/Plugin";
+import { HighlightValue } from "../utils/common";
 const rootReducer = combineReducers({
   book,
   manager,
@@ -66,7 +67,6 @@ export type stateType = {
     isOpenAddDialog: boolean;
     isOpenActionDialog: boolean;
     isReading: boolean;
-    dragItem: string;
     currentBook: BookModel;
     renderBookFunc: () => void;
     importBookFunc: (file: any) => Promise<void>;
@@ -93,7 +93,7 @@ export type stateType = {
     bookmarks: BookmarkModel[];
     notes: NoteModel[];
     highlights: NoteModel[];
-    color: number;
+    highlight: HighlightValue;
     chapters: any[];
     readerMode: string;
     scale: string;
@@ -105,6 +105,7 @@ export type stateType = {
     isNavLocked: boolean;
     isSettingLocked: boolean;
     isConvertOpen: boolean;
+    isPdfCropOpen: boolean;
     isSpeechOpen: boolean;
     isHideFooter: boolean;
     isHideHeader: boolean;

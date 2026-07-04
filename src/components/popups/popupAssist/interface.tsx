@@ -1,5 +1,11 @@
 import PluginModel from "../../../models/Plugin";
+import BookModel from "../../../models/Book";
+export type AiChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
 export interface PopupAssistProps {
+  currentBook: BookModel;
   originalText: string;
   quoteText: string;
   plugins: PluginModel[];
@@ -17,8 +23,8 @@ export interface PopupAssistState {
   isAddNew: boolean;
   isWaiting: boolean;
   question: string;
-  askHistory: any[];
-  chatHistory: any[];
+  askHistory: AiChatMessage[];
+  chatHistory: AiChatMessage[];
   answer: string;
   mode: string;
   inputQuestion: string;

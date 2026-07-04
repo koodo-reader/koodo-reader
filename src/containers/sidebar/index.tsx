@@ -7,6 +7,7 @@ import {
   handleShelf,
   handleSortShelfDialog,
 } from "../../store/actions";
+import { handleFetchBooks } from "../../store/actions/manager";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
 import { withTranslation } from "react-i18next";
@@ -30,6 +31,7 @@ const actionCreator = {
   handleSelectBook,
   handleShelf,
   handleSortShelfDialog,
+  handleFetchBooks,
 };
 
 export default connect(

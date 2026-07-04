@@ -658,11 +658,7 @@
   "Reset main window's position": "Återställ huvudfönstrets position",
   "Copy quotes": "Kopiera citat",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "7-dagars gratis provperiod gäller endast användare som registrerat sig med rekommenderade e-postleverantörer. Rekommenderade leverantörer är följande",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "I framtiden kommer vi att introducera fler medlems-exklusiva funktioner, inklusive lässtatistik och automatisk synkronisering av dina anteckningar, markeringar, läsframsteg och vokabulärlistor till plattformar som Notion, Obsidian, Logseq, Anki med mera.",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "När du lämnar Pro-versionen kan du inte längre använda synkronisering och andra premiumfunktioner",
-  "I'll think about it": "Jag ska tänka på det",
   "Convert PDF to Text": "Konvertera PDF till text",
-  "Still refuse": "Vägrar fortfarande",
   "Set OCR language": "Ställ in OCR-språk",
   "Unsupported file format": "Filformat stöds inte",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "När avståndet mellan två textrader är n gånger det vanliga radavståndet kommer de att delas upp i två stycken",
@@ -965,7 +961,7 @@
   "Bar Chart": "Grafico a barre",
   "Line Chart": "Grafico a linee",
   "Customize popup menu": "Personalizza menu a comparsa",
-  "You can enable up to 8 options": "Puoi abilitare fino a 8 opzioni",
+  "You can enable up to {{count}} options": "Puoi abilitare fino a {{count}} opzioni",
   "From URL": "Da URL",
   "Enter book download URL or article URL": "Inserisci URL download libro o URL articolo",
   "Please enter a valid http or https URL": "Inserisci un URL http o https valido",
@@ -1109,5 +1105,6 @@
   "All": "Tutti",
   "Unread": "Non letto",
   "CurrentlyReading": "In lettura",
-  "Finished": "Finito"
+  "Finished": "Finito",
+  "Theme": "Theme"
 }

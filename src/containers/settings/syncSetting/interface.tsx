@@ -8,6 +8,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   handleTokenDialog: (isOpenTokenDialog: boolean) => void;
   handleFetchDataSourceList: () => void;
   handleFetchDefaultSyncOption: () => void;
+  handleDefaultSyncOption: (defaultSyncOption: string) => void;
   handleFetchLoginOptionList: () => void;
   userInfo: any;
   handleLoginOptionList: (
@@ -35,4 +36,7 @@ export interface SettingInfoState {
   autoOffline: boolean;
   driveConfig: any;
   scheduledSyncInterval: string;
+  backupDrive: string;
+  restoreDrive: string;
+  showDefaultSyncAddGrid: boolean;
 }

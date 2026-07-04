@@ -1,5 +1,8 @@
 import React from "react";
-import { dropdownList } from "../../../constants/dropdownList";
+import {
+  dropdownList,
+  fullTranslationLangList,
+} from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
@@ -7,7 +10,7 @@ import {
   ConfigService,
   KookitConfig,
 } from "../../../assets/lib/kookit-extra-browser.min";
-import { loadFontData, vexComfirmAsync } from "../../../utils/common";
+import FontUtil from "../../../utils/file/fontUtil";
 import toast from "react-hot-toast";
 declare var window: any;
 class DropdownList extends React.Component<
@@ -25,12 +28,21 @@ class DropdownList extends React.Component<
       currentTextAlignValue: ConfigService.getReaderConfig("textAlign") || "",
       chineseConversionValue:
         ConfigService.getReaderConfig("convertChinese") || "",
+      currentAnimationValue:
+        ConfigService.getReaderConfig("animation") || "none",
       currentBookLayoutValue: ConfigService.getReaderConfig("bookLayout") || "",
+      currentCodeHighlighterValue:
+        ConfigService.getReaderConfig("codeHighlight") || "",
       fullTranslationModeValue: ConfigService.getAllListConfig(
         "fullTranslationBooks"
       ).includes(props.currentBook?.key)
         ? ConfigService.getReaderConfig("fullTranslationMode") || ""
         : "",
+      fullTranslationTargetValue:
+        ConfigService.getReaderConfig("fullTranslationTarget") ||
+        ConfigService.getReaderConfig("lang") ||
+        "zhCN",
+      fontOptions: [],
       currentTextOrientationValue:
         ConfigService.getReaderConfig("textOrientation") || "",
       currentSelectActionValue:
@@ -71,30 +83,24 @@ class DropdownList extends React.Component<
         ...customParserOptions,
       ],
     });
-    loadFontData().then((result) => {
-      if (!result || result.length === 0) return;
-      let fontFamilyItem = dropdownList.find(
-        (item) => item.value === "fontFamily"
-      );
-      let subFontFamilyItem = dropdownList.find(
-        (item) => item.value === "subFontFamily"
-      );
-      if (fontFamilyItem && fontFamilyItem.option.length <= 2) {
-        fontFamilyItem.option = fontFamilyItem.option.concat(result);
-      }
-      if (subFontFamilyItem && subFontFamilyItem.option.length <= 2) {
-        subFontFamilyItem.option = subFontFamilyItem.option.concat(result);
-      }
-      if (fontFamilyItem && subFontFamilyItem) {
-        this.setState({
-          currentFontFamilyValue:
-            ConfigService.getReaderConfig("fontFamily") || "Built-in font",
-          currentSubFontFamilyValue:
-            ConfigService.getReaderConfig("subFontFamily") || "Built-in font",
-        });
-      }
-    });
+    this.loadMergedFonts();
+    window.addEventListener("font-list-changed", this.loadMergedFonts);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener("font-list-changed", this.loadMergedFonts);
+  }
+
+  loadMergedFonts = async () => {
+    const options = await FontUtil.getMergedFontOptions();
+    this.setState({
+      fontOptions: options,
+      currentFontFamilyValue:
+        ConfigService.getReaderConfig("fontFamily") || "Built-in font",
+      currentSubFontFamilyValue:
+        ConfigService.getReaderConfig("subFontFamily") || "Built-in font",
+    });
+  };
 
   handleView(event: any, option: string) {
     const value = event.target.value;
@@ -108,17 +114,6 @@ class DropdownList extends React.Component<
         if (arr[0] === "Built-in font") {
           ConfigService.setReaderConfig(option, "");
         }
-        if (arr[0] === "Load local fonts") {
-          vexComfirmAsync(
-            this.props.t(
-              "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
-            )
-          );
-          ConfigService.setReaderConfig(option, "");
-
-          return;
-        }
-
         break;
       case "subFontFamily":
         this.setState({
@@ -127,17 +122,6 @@ class DropdownList extends React.Component<
         if (arr[0] === "Built-in font") {
           ConfigService.setReaderConfig(option, "");
         }
-        if (arr[0] === "Load local fonts") {
-          vexComfirmAsync(
-            this.props.t(
-              "Please install local fonts to your machine and then restart the application. The installed font will automatically appear in the dropdown list."
-            )
-          );
-          ConfigService.setReaderConfig(option, "");
-
-          return;
-        }
-
         break;
 
       case "lineHeight":
@@ -158,9 +142,20 @@ class DropdownList extends React.Component<
         });
 
         break;
+      case "animation":
+        this.setState({
+          currentAnimationValue: arr[0],
+        });
+
+        break;
       case "bookLayout":
         this.setState({
           currentBookLayoutValue: arr[0],
+        });
+        break;
+      case "codeHighlight":
+        this.setState({
+          currentCodeHighlighterValue: arr[0],
         });
         break;
       case "fullTranslationMode":
@@ -229,62 +224,128 @@ class DropdownList extends React.Component<
     this.props.renderBookFunc();
   }
   render() {
-    const renderParagraphCharacter = () => {
-      return dropdownList.map((item) => (
-        <li className="paragraph-character-container" key={item.value}>
-          <p className="general-setting-title">
-            <Trans>{item.title}</Trans>
-          </p>
-          <select
-            name=""
-            className="general-setting-dropdown"
-            value={
-              item.value === "lineHeight"
-                ? this.state.currentLineHeightValue
-                : item.value === "textAlign"
-                  ? this.state.currentTextAlignValue
-                  : item.value === "convertChinese"
-                    ? this.state.chineseConversionValue
-                    : item.value === "bookLayout"
-                      ? this.state.currentBookLayoutValue
-                      : item.value === "fullTranslationMode"
-                        ? this.state.fullTranslationModeValue
-                        : item.value === "textOrientation"
-                          ? this.state.currentTextOrientationValue
-                          : item.value === "fontFamily"
-                            ? this.state.currentFontFamilyValue
-                            : item.value === "selectAction"
-                              ? this.state.currentSelectActionValue
-                              : this.state.currentSubFontFamilyValue
-            }
-            onChange={(event) => {
-              this.handleView(event, item.value);
-            }}
-          >
-            {item.option.map(
-              (
-                subItem: {
-                  label: string;
-                  value: string;
-                },
-                index: number
-              ) => (
-                <option
-                  value={subItem.value}
-                  key={index}
-                  className="general-setting-option"
-                >
-                  {this.props.t(subItem.label)}
-                </option>
-              )
-            )}
-          </select>
-        </li>
-      ));
-    };
-
     const isTxt = this.props.currentBook?.format?.toUpperCase() === "TXT";
-
+    const isPDF = this.props.currentBook?.format?.toUpperCase() === "PDF";
+    const renderParagraphCharacter = () => {
+      return dropdownList
+        .filter((item) => {
+          if (isPDF) {
+            return item.isPDF;
+          }
+          return true;
+        })
+        .map((item) => (
+          <React.Fragment key={item.value}>
+            <li className="paragraph-character-container">
+              <p className="general-setting-title">
+                <Trans>{item.title}</Trans>
+              </p>
+              <select
+                name=""
+                className="general-setting-dropdown"
+                value={
+                  item.value === "lineHeight"
+                    ? this.state.currentLineHeightValue
+                    : item.value === "textAlign"
+                      ? this.state.currentTextAlignValue
+                      : item.value === "convertChinese"
+                        ? this.state.chineseConversionValue
+                        : item.value === "animation"
+                          ? this.state.currentAnimationValue
+                          : item.value === "bookLayout"
+                            ? this.state.currentBookLayoutValue
+                            : item.value === "codeHighlight"
+                              ? this.state.currentCodeHighlighterValue
+                              : item.value === "fullTranslationMode"
+                                ? this.state.fullTranslationModeValue
+                                : item.value === "textOrientation"
+                                  ? this.state.currentTextOrientationValue
+                                  : item.value === "fontFamily"
+                                    ? this.state.currentFontFamilyValue
+                                    : item.value === "selectAction"
+                                      ? this.state.currentSelectActionValue
+                                      : this.state.currentSubFontFamilyValue
+                }
+                onChange={(event) => {
+                  this.handleView(event, item.value);
+                }}
+              >
+                {(item.value === "fontFamily" || item.value === "subFontFamily"
+                  ? this.state.fontOptions
+                  : item.option
+                ).map(
+                  (
+                    subItem: {
+                      label: string;
+                      value: string;
+                    },
+                    index: number
+                  ) => (
+                    <option
+                      value={subItem.value}
+                      key={index}
+                      className="general-setting-option"
+                    >
+                      {item.value === "codeHighlight"
+                        ? subItem.value === ""
+                          ? this.props.t("Disable")
+                          : subItem.label
+                        : item.value === "fontFamily" ||
+                            item.value === "subFontFamily"
+                          ? subItem.value === "Built-in font"
+                            ? this.props.t(subItem.label)
+                            : subItem.label
+                          : this.props.t(subItem.label)}
+                    </option>
+                  )
+                )}
+              </select>
+            </li>
+            {item.value === "fullTranslationMode" &&
+              (this.state.fullTranslationModeValue === "both" ||
+                this.state.fullTranslationModeValue === "target") && (
+                <li className="paragraph-character-container">
+                  <p className="general-setting-title">
+                    <Trans>Target translation language</Trans>
+                  </p>
+                  <select
+                    className="general-setting-dropdown"
+                    value={
+                      fullTranslationLangList.find(
+                        (opt) =>
+                          opt.code === this.state.fullTranslationTargetValue ||
+                          KookitConfig.ConvertLangMap[opt.code] ===
+                            KookitConfig.ConvertLangMap[
+                              this.state.fullTranslationTargetValue
+                            ]
+                      )?.code || this.state.fullTranslationTargetValue
+                    }
+                    onChange={(event) => {
+                      const val = event.target.value;
+                      this.setState({ fullTranslationTargetValue: val });
+                      ConfigService.setReaderConfig(
+                        "fullTranslationTarget",
+                        val
+                      );
+                      toast(this.props.t("Change successful"));
+                      this.props.renderBookFunc();
+                    }}
+                  >
+                    {fullTranslationLangList.map((opt) => (
+                      <option
+                        key={opt.code}
+                        value={opt.code}
+                        className="general-setting-option"
+                      >
+                        {this.props.t(opt.label)}
+                      </option>
+                    ))}
+                  </select>
+                </li>
+              )}
+          </React.Fragment>
+        ));
+    };
     return (
       <ul className="paragraph-character-setting">
         {renderParagraphCharacter()}

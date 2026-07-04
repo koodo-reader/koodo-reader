@@ -3,6 +3,7 @@ import BookModel from "../../models/Book";
 import BookUtil from "../../utils/file/bookUtil";
 import CoverUtil from "../../utils/file/coverUtil";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { setBookDragData } from "../../utils/reader/bookDrag";
 
 export interface BookItemSharedProps {
   book: BookModel;
@@ -238,6 +239,19 @@ export function useBookItem(props: BookItemSharedProps) {
     return ConfigService.getAllListConfig("topBooks").indexOf(book.key) > -1;
   }, [book.key]);
 
+  const handleBookDragStart = useCallback(
+    (e: React.DragEvent) => {
+      const keys =
+        isSelectBook &&
+        selectedBooks.length > 0 &&
+        selectedBooks.includes(book.key)
+          ? selectedBooks
+          : [book.key];
+      setBookDragData(e, keys);
+    },
+    [book.key, isSelectBook, selectedBooks]
+  );
+
   return {
     // state
     isFavorite,
@@ -257,6 +271,7 @@ export function useBookItem(props: BookItemSharedProps) {
     handleShiftSelect,
     handleJump,
     handleSelectIconClick,
+    handleBookDragStart,
     getPercentage,
     isFavoriteBook,
     isTopBook,

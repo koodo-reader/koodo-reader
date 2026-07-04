@@ -27,6 +27,7 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     isBookOffline,
     handleJump,
     handleSelectIconClick,
+    handleBookDragStart,
     getPercentage,
     isFavoriteBook,
     isTopBook,
@@ -48,12 +49,6 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     props.handleReadingBook(props.book);
   };
 
-  const handleLoveBook = () => {
-    ConfigService.setListConfig(props.book.key, "favoriteBooks");
-    setIsFavorite(true);
-    toast.success(props.t("Addition successful"));
-  };
-
   const percentage = getPercentage();
 
   var htmlString = props.book.description;
@@ -67,6 +62,8 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     <>
       <div
         className="book-list-cover-item"
+        draggable
+        onDragStart={handleBookDragStart}
         onContextMenu={(event) => {
           handleMoreAction(event);
         }}
@@ -141,9 +138,13 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
               <EmptyCover
                 {...{
                   format: props.book.format,
-                  title: ConfigService.getReaderConfig("isUseOriginalName") === "yes"
-                    ? getFileNameWithoutExtension(props.book.path, props.book.name)
-                    : props.book.name,
+                  title:
+                    ConfigService.getReaderConfig("isUseOriginalName") === "yes"
+                      ? getFileNameWithoutExtension(
+                          props.book.path,
+                          props.book.name
+                        )
+                      : props.book.name,
                   scale: 1.14,
                 }}
               />
@@ -152,6 +153,7 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
             <img
               src={cover}
               alt=""
+              draggable={false}
               style={
                 direction === "horizontal" ||
                 ConfigService.getReaderConfig("isDisableCrop") === "yes"

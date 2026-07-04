@@ -664,11 +664,7 @@
   "Reset main window's position": "Nollaa pääikkunan sijainti",
   "Copy quotes": "Kopioi lainaukset",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "7 päivän ilmainen kokeilu koskee vain suositeltujen sähköpostipalveluiden käyttäjiä. Suositellut tarjoajat ovat:",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "Tulevaisuudessa tuomme lisää jäsenominaisuuksia, kuten lukutilastot ja muistiinpanojen, korostusten ja sanastojen automaattisen synkronoinnin Notioniin, Obsidianiin, Logseqiin, Ankiin ja muihin.",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Kun poistut Pro-versiosta, et voi enää käyttää synkronointia ja muita premium-ominaisuuksia",
-  "I'll think about it": "Palaan asiaan",
   "Convert PDF to Text": "Muunna PDF tekstiksi",
-  "Still refuse": "Edelleen kieltäydy",
   "Set OCR language": "Aseta OCR-kieli",
   "Unsupported file format": "Ei tuettu tiedostomuoto",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "Kun riviväli on n-kertainen normaaliin verrattuna, teksti jaetaan kahteen kappaleeseen",
@@ -971,7 +967,7 @@
   "Bar Chart": "Pylväsdiagrammi",
   "Line Chart": "Viivadiagrammi",
   "Customize popup menu": "Mukauta ponnahdusvalikko",
-  "You can enable up to 8 options": "Voit ottaa käyttöön enintään 8 vaihtoehtoa",
+  "You can enable up to {{count}} options": "Voit ottaa käyttöön enintään {{count}} vaihtoehtoa",
   "From URL": "URL-osoitteesta",
   "Enter book download URL or article URL": "Anna kirjan lataus-URL tai artikkeli-URL",
   "Please enter a valid http or https URL": "Anna kelvollinen http- tai https-URL",
@@ -1115,5 +1111,6 @@
   "All": "Kaikki",
   "Unread": "Lukematon",
   "CurrentlyReading": "Lukemassa",
-  "Finished": "Valmis"
+  "Finished": "Valmis",
+  "Theme": "Theme"
 }

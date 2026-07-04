@@ -145,7 +145,6 @@
 }
 .setting-icon {
   float: left;
-  font-size: 25px;
 }
 .header-report-container {
   text-align: right;
@@ -198,10 +197,30 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  overflow: hidden;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   transform: scale(1);
+  overflow: hidden;
+}
+
+.header-chat-widget-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #e53935;
+  color: #fff;
+  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 1001;
+  box-sizing: border-box;
 }
 
 .header-chat-widget:hover {

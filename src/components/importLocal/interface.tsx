@@ -3,7 +3,6 @@ import { RouteComponentProps } from "react-router";
 export interface ImportLocalProps extends RouteComponentProps<any> {
   books: BookModel[];
   deletedBooks: BookModel[];
-  dragItem: string;
 
   isCollapsed: boolean;
   isAuthed: boolean;
@@ -22,5 +21,4 @@ export interface ImportLocalState {
   isOpenFile: boolean;
   isMoreOptionsVisible: boolean;
   width: number;
-  importingShelfTitle: string;
 }

@@ -113,7 +113,7 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
       baseWidth + noteTags.length * tagWidth + addButtonWidth;
 
     return {
-      minWidth: "100%",
+      maxWidth: "100%",
       width: `${Math.max(calculatedWidth, 300)}px`, // ensure minimum width
     };
   };

@@ -4,6 +4,7 @@ import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
 import {
   ConfigService,
+  HighlightUtil,
   KookitConfig,
 } from "../../assets/lib/kookit-extra-browser.min";
 import {
@@ -35,8 +36,10 @@ class TextToSpeech extends React.Component<
   voices: any;
   nativeVoices: any;
   previewPlayer: Howl | null;
+  highlightUtil: any;
   constructor(props: TextToSpeechProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
     this.state = {
       isSupported: false,
       isAudioOn: false,
@@ -550,7 +553,7 @@ class TextToSpeech extends React.Component<
     }
   };
   handleGetText = async () => {
-    if (ConfigService.getReaderConfig("isSliding") === "yes") {
+    if ((ConfigService.getReaderConfig("animation") || "none") !== "none") {
       await sleep(1000);
     }
     let nodeList = [];
@@ -666,7 +669,12 @@ class TextToSpeech extends React.Component<
       if (this.state.isPaused || !this.state.isAudioOn) return;
       this.setState({ currentIndex: index });
       let node = this.nodeList[index];
-      let style = "background: #f3a6a68c;";
+      let style = this.highlightUtil.buildTtsHighlightStyle(
+        this.props.currentBook.format === "PDF" &&
+          !ConfigService.getAllListConfig("convertPDFBooks").includes(
+            this.props.currentBook.key
+          )
+      );
       this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
       if (index === nodeIndex) {
         let result = await TTSUtil.cacheAudio(
@@ -779,7 +787,12 @@ class TextToSpeech extends React.Component<
     }
     this.setState({ currentIndex: index });
     let node = this.nodeList[index];
-    let style = "background: #f3a6a68c;";
+    let style = this.highlightUtil.buildTtsHighlightStyle(
+      this.props.currentBook.format === "PDF" &&
+        !ConfigService.getAllListConfig("convertPDFBooks").includes(
+          this.props.currentBook.key
+        )
+    );
     this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
     toast.dismiss("tts-load");
     let res = await this.handleSystemSpeech(

@@ -1,6 +1,6 @@
 <div align="left">
 
-简体中文 | [हिंदी](https://github.com/koodo-reader/koodo-reader/blob/master/README_hi.md) |[Português](https://github.com/koodo-reader/koodo-reader/blob/master/README_pt.md) | [English](https://github.com/koodo-reader/koodo-reader/blob/master/README.md) | [Indonesian](https://github.com/koodo-reader/koodo-reader/blob/master/README_id.md)
+简体中文 | [हिंदी](./README_hi.md) |[Português](./README_pt.md) | [English](./README.md) | [Indonesian](./README_id.md)
 
 </div>
 
@@ -59,7 +59,7 @@
 - 一键导出笔记与高亮，支持 **CSV**、**Markdown**、**HTML**、**TXT** 等格式
 - 隐私优先，不使用任何追踪服务，不主动上传您的阅读数据与隐私信息
 - 支持 **OPDS** 协议，并可将您的书库以 **OPDS** 形式分享
-- 支持浏览器扩展用于将网页文章剪藏到您的书库
+- 支持浏览器扩展，可将网页文章剪藏到您的书库
 - 内置 50+ 翻译、词典及听书插件，并支持自定义插件
 - 支持竖排图书阅读
 - 支持阅读统计功能

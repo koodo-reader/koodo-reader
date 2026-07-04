@@ -660,11 +660,7 @@
   "Reset main window's position": "Nulstil hovedvinduets placering",
   "Copy quotes": "Kopiér citater",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "7-dages gratis prøve gælder kun for brugere registreret med anbefalede e-mailudbydere. Anbefalede udbydere er følgende",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "I fremtiden vil vi introducere flere medlems-eksklusive funktioner, inklusive læsestatistik og automatisk synkronisering af dine noter, markeringer, læsefremskridt og ordlister til platforme som Notion, Obsidian, Logseq, Anki og flere.",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Når du forlader Pro-versionen, kan du ikke længere bruge synkronisering og andre premium-funktioner",
-  "I'll think about it": "Jeg vil tænke over det",
   "Convert PDF to Text": "Konvertér PDF til tekst",
-  "Still refuse": "Stadig afvis",
   "Set OCR language": "Vælg OCR-sprog",
   "Unsupported file format": "Ikke understøttet filformat",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "Når afstanden mellem to tekstlinjer er n gange normal afstand, opdeles de i to afsnit",
@@ -967,7 +963,7 @@
   "Bar Chart": "Søjlediagram",
   "Line Chart": "Linjediagram",
   "Customize popup menu": "Tilpas popup-menu",
-  "You can enable up to 8 options": "Du kan aktivere op til 8 muligheder",
+  "You can enable up to {{count}} options": "Du kan aktivere op til {{count}} muligheder",
   "From URL": "Fra URL",
   "Enter book download URL or article URL": "Indtast download-URL for bog eller artikel-URL",
   "Please enter a valid http or https URL": "Indtast venligst en gyldig http- eller https-URL",
@@ -1111,5 +1107,6 @@
   "All": "Alle",
   "Unread": "Ulæst",
   "CurrentlyReading": "Læser nu",
-  "Finished": "Færdig"
+  "Finished": "Færdig",
+  "Theme": "Theme"
 }

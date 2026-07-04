@@ -16,4 +16,8 @@ export interface NavListProps {
 export interface NavListState {
   deleteIndex: number;
   currentData: (BookmarkModel | NoteModel)[];
+  isSearchOpen: boolean;
+  searchKeyword: string;
+  searchResults: (BookmarkModel | NoteModel)[];
+  isComposing: boolean;
 }

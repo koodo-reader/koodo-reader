@@ -1,101 +1,103 @@
 import React from "react";
 import "./colorOption.css";
-import { ColorProps, ColorStates } from "./interface";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { ColorProps } from "./interface";
+import {
+  ConfigService,
+  HighlightUtil,
+  KookitConfig,
+} from "../../assets/lib/kookit-extra-browser.min";
 
-class ColorOption extends React.Component<ColorProps, ColorStates> {
+class ColorOption extends React.Component<ColorProps> {
+  highlightUtil: any;
   constructor(props: ColorProps) {
     super(props);
-    this.state = {
-      isLine: this.props.color > 3 ? true : false,
-    };
+    this.highlightUtil = new HighlightUtil(ConfigService);
   }
-  handleChangeOption = () => {
-    this.setState({ isLine: !this.state.isLine });
+  handleStyleType = (styleType: string) => {
+    const color = KookitConfig.HighlightPresetColors[styleType][0];
+    const value = { styleType, color };
+    this.props.handleHighlight(value);
+    this.highlightUtil.saveNoteHighlightValue(value);
   };
+
+  handlePresetColor = (index: number) => {
+    const styleType = this.props.highlight.styleType;
+    const color = KookitConfig.HighlightPresetColors[styleType][index];
+    const value = { styleType, color };
+    this.props.handleHighlight(value);
+    this.highlightUtil.saveNoteHighlightValue(value);
+    if (!this.props.isEdit) {
+      setTimeout(() => {
+        this.props.handleDigest();
+      }, 100);
+    }
+  };
+
   render() {
-    const renderLine = () => {
-      return ["#FF0000", "#000080", "#0000FF", "#2EFF2E"].map((item, index) => {
-        return (
-          <div
-            className="line-option"
-            style={{
-              border: `${this.props.color === index + 4 ? "" : "2px"}`,
-              animation: `${this.props.isEdit ? undefined : ""}`,
-            }}
-            key={item}
-            onClick={() => {
-              this.props.handleColor(index + 4);
-              ConfigService.setReaderConfig(
-                "highlightIndex",
-                (index + 4).toString()
-              );
-              setTimeout(() => {
-                this.props.handleDigest();
-              }, 100);
-            }}
-          >
-            <div
-              className="demo-line"
-              style={{ borderBottom: `solid 2px ${item}` }}
-            ></div>
-          </div>
-        );
-      });
-    };
-    const renderColor = () => {
-      return ["#FBF1D1", "#EFEEB0", "#CAEFC9", "#76BEE9"].map((item, index) => {
-        return (
-          <div
-            className="color-option"
-            style={{
-              backgroundColor: item,
-              border: `${this.props.color === index ? "" : "0px"}`,
-              animation: `${this.props.isEdit ? undefined : ""}`,
-            }}
-            key={item}
-            onClick={() => {
-              this.props.handleColor(index);
-              ConfigService.setReaderConfig("highlightIndex", index.toString());
-              setTimeout(() => {
-                this.props.handleDigest();
-              }, 100);
-            }}
-          ></div>
-        );
-      });
-    };
+    const { styleType, color } = this.props.highlight;
+    const presetColors = KookitConfig.HighlightPresetColors[styleType];
+
     return (
       <div
-        className="color-option-container"
-        style={
+        className={
           this.props.isEdit
-            ? {
-                position: "absolute",
-                top: "calc(100% - 105px)",
-                width: "70%",
-                marginLeft: 0,
-              }
-            : {}
+            ? "color-option-container color-option-container-edit"
+            : "color-option-container"
         }
       >
-        {this.props.isEdit ? (
-          <>
-            {renderColor()}
-            {renderLine()}
-          </>
-        ) : (
-          <>
-            {!this.state.isLine && renderColor()}
-            <span
-              className="icon-sort popup-color-more"
-              onClick={() => {
-                this.handleChangeOption();
-              }}
-            ></span>
-            {this.state.isLine && renderLine()}
-          </>
-        )}
+        <ul className="note-highlight-style-tabs">
+          {KookitConfig.HighlightStyleTypes.map((item) => {
+            const previewColor =
+              item.value === styleType
+                ? color
+                : KookitConfig.HighlightPresetColors[item.value][0];
+            return (
+              <li
+                key={item.value}
+                className={
+                  styleType === item.value
+                    ? "note-highlight-style-tab active-note-highlight-tab"
+                    : "note-highlight-style-tab"
+                }
+                onClick={() => this.handleStyleType(item.value)}
+                style={
+                  styleType === item.value
+                    ? { borderColor: "currentColor" }
+                    : {}
+                }
+              >
+                <span
+                  className="note-highlight-style-preview"
+                  style={{
+                    ...this.highlightUtil.buildHighlightPreviewStyle(
+                      item.value,
+                      previewColor
+                    ),
+                    ...(item.value === "background"
+                      ? { borderRadius: "50%" }
+                      : {}),
+                  }}
+                >
+                  Aa
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        <ul className="note-highlight-color-container">
+          {presetColors.map((presetColor, index) => (
+            <li
+              key={presetColor}
+              className={
+                presetColors.indexOf(color) === index
+                  ? "note-highlight-color-item active-note-highlight-color"
+                  : "note-highlight-color-item"
+              }
+              style={{ backgroundColor: presetColor }}
+              onClick={() => this.handlePresetColor(index)}
+            />
+          ))}
+        </ul>
       </div>
     );
   }

@@ -4,7 +4,7 @@ export interface PopupOptionDialogProps {
   handlePopupOptionDialog: (isOpenPopupOptionDialog: boolean) => void;
   handlePopupOptionUpdate: (popupOptionUpdateIndex: number) => void;
   isOpenPopupOptionDialog: boolean;
-  t: (title: string) => string;
+  t: (title: string, options?: Record<string, unknown>) => string;
 }
 
 export interface PopupOptionDialogItem extends PopupOptionItem {

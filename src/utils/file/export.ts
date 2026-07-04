@@ -147,17 +147,15 @@ export const exportNotes = async (
     let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
     let bookName = book ? book.name : "Unknown book";
     let bookAuthor = book ? book.author : "Unknown author";
+    const [highlightType, color] = item.color.split("-");
     return {
       ...item,
       date: `${item.date.year}-${
         item.date.month <= 9 ? "0" + item.date.month : item.date.month
       }-${item.date.day <= 9 ? "0" + item.date.day : item.date.day}`,
       tag: item.tag.join(","),
-      color: [
-        ...["#FBF1D1", "#EFEEB0", "#CAEFC9", "#76BEE9"],
-        ...["#FF0000", "#000080", "#0000FF", "#2EFF2E"],
-      ][item.color],
-      highlightType: item.color > 3 ? "line" : "background",
+      color,
+      highlightType,
       bookName: bookName,
       bookAuthor: bookAuthor,
     };
@@ -253,17 +251,15 @@ export const exportHighlights = async (
     let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
     let bookName = book ? book.name : "Unknown book";
     let bookAuthor = book ? book.author : "Unknown author";
+    const [highlightType, color] = item.color.split("-");
     let highlight = {
       ...item,
       date: `${item.date.year}-${
         item.date.month <= 9 ? "0" + item.date.month : item.date.month
       }-${item.date.day <= 9 ? "0" + item.date.day : item.date.day}`,
       tag: item.tag.join(","),
-      color: [
-        ...["#FBF1D1", "#EFEEB0", "#CAEFC9", "#76BEE9"],
-        ...["#FF0000", "#000080", "#0000FF", "#2EFF2E"],
-      ][item.color],
-      highlightType: item.color > 3 ? "line" : "background",
+      color,
+      highlightType,
       bookName: bookName,
       bookAuthor: bookAuthor,
     };

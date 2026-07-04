@@ -33,6 +33,7 @@ import { resetReaderRequest } from "../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
 
 class Login extends React.Component<LoginProps, LoginState> {
+  private lastLoginClickTime: number = 0;
   constructor(props: LoginProps) {
     super(props);
     this.state = {
@@ -827,6 +828,16 @@ class Login extends React.Component<LoginProps, LoginState> {
                         );
                         return;
                       }
+                      const now = Date.now();
+                      if (now - this.lastLoginClickTime < 3000) {
+                        toast.error(
+                          this.props.t(
+                            "You are clicking too fast, please try again later"
+                          )
+                        );
+                        return;
+                      }
+                      this.lastLoginClickTime = now;
                       this.handleLogin(
                         this.state.loginConfig.email +
                           "#" +
