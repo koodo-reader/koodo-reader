@@ -110,7 +110,6 @@
   transition: 0.1s;
 }
 .side-menu-item.shelf-drop-target .side-menu-selector {
-  background-color: rgba(119, 162, 218, 0.18);
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
 }
