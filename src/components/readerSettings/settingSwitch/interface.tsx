@@ -27,7 +27,6 @@ export interface SettingSwitchState {
   isHideFooter: boolean;
   isBold: boolean;
   isIndent: boolean;
-  isSliding: boolean;
   isShadow: boolean;
   isUnderline: boolean;
   isItalic: boolean;
@@ -36,6 +35,7 @@ export interface SettingSwitchState {
   isAllowScript: boolean;
   isHyphenation: boolean;
   isOrphanWidow: boolean;
+  isKeepPDFBackground: boolean;
   isBionic: boolean;
   isHideHeader: boolean;
   isHidePageButton: boolean;

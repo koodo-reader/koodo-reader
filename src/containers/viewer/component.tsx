@@ -18,6 +18,7 @@ import {
   getParserRegex,
   getPdfPassword,
   getServerRegion,
+  getTextRules,
   showDownloadProgress,
   throttle,
 } from "../../utils/common";
@@ -34,6 +35,7 @@ let lock = false; //prevent from clicking too fasts
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   private resizeHandler: (() => void) | null = null;
+  private _pendingRerender = false;
   lock: boolean;
   constructor(props: ViewerProps) {
     super(props);
@@ -94,7 +96,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.isSettingLocked
         )
       );
-      this.handleRenderBook();
+      if (lock) {
+        this._pendingRerender = true;
+      } else {
+        this.handleRenderBook();
+      }
     });
     window.addEventListener("resize", this.resizeHandler);
   }
@@ -227,24 +233,19 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       true,
       path
     ).then(async (result: any) => {
-      if (!result) {
-        if (this.props.defaultSyncOption) {
-          let timer = showDownloadProgress(
-            this.props.defaultSyncOption,
-            "cloud",
-            this.props.currentBook.size
-          );
-          let result = await BookUtil.downloadBook(key, format.toLowerCase());
-          clearInterval(timer);
-          toast.dismiss("offline-book");
-          if (result) {
-            toast.success(this.props.t("Download successful"));
-          } else {
-            toast.error(this.props.t("Book not exists"));
-          }
-        } else {
-          toast.error(this.props.t("Book not exists"));
-          return;
+      const crop = ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "pdfCrop",
+        null
+      );
+      let pdfCrop;
+      if (crop) {
+        const top = Number(crop.top) || 0;
+        const bottom = Number(crop.bottom) || 0;
+        const left = Number(crop.left) || 0;
+        const right = Number(crop.right) || 0;
+        if (top !== 0 || bottom !== 0 || left !== 0 || right !== 0) {
+          pdfCrop = { top, bottom, left, right };
         }
       }
       let rendition = BookHelper.getRendition(
@@ -253,12 +254,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           format: isCacheExsit ? "CACHE" : format,
           readerMode: this.props.readerMode,
           charset: this.props.currentBook.charset,
-          animation:
-            ConfigService.getReaderConfig("isSliding") === "yes"
-              ? "sliding"
-              : "",
+          animation: ConfigService.getReaderConfig("animation") || "none",
           convertChinese: ConfigService.getReaderConfig("convertChinese"),
           bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
+          textRules: getTextRules(this.props.currentBook.key),
+          codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
           parserRegex: getParserRegex(
             this.props.currentBook.format,
             this.props.currentBook.key
@@ -283,6 +283,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           isAllowScript: ConfigService.getReaderConfig("isAllowScript"),
           isBionic: ConfigService.getReaderConfig("isBionic"),
           password: getPdfPassword(this.props.currentBook),
+          pdfCrop,
           scale: parseFloat(this.props.scale),
           isConvertPDF: ConfigService.getAllListConfig(
             "convertPDFBooks"
@@ -314,6 +315,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             this.props.currentBook.description.indexOf("scanned") > -1
               ? "yes"
               : "no",
+          isKeepPDFBackground: ConfigService.getReaderConfig(
+            "isKeepPDFBackground"
+          ),
         },
         Kookit
       );
@@ -358,16 +362,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rendition: rendition,
     });
     this.setState({ rendition });
-
     if (
       this.props.currentBook.format === "PDF" &&
       !ConfigService.getAllListConfig("convertPDFBooks").includes(
         this.props.currentBook.key
       )
     ) {
+      //ignore
     } else {
       StyleUtil.addDefaultCss(this.props.currentBook.key);
+      await StyleUtil.applyReaderFonts(rendition);
     }
+
     let bookLocation: {
       text: string;
       count: string;
@@ -456,15 +462,21 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.currentBook.key
         )
       ) {
+        //ignore
       } else {
         StyleUtil.addDefaultCss(this.props.currentBook.key);
+        await StyleUtil.applyReaderFonts(rendition);
       }
       // rendition.tranformText();
       this.handleBindGesture();
       await this.handleHighlight(rendition);
       lock = true;
-      setTimeout(function () {
+      setTimeout(() => {
         lock = false;
+        if (this._pendingRerender) {
+          this._pendingRerender = false;
+          this.handleRenderBook();
+        }
       }, 1000);
       return false;
     });
@@ -640,7 +652,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                   // marginLeft: this.state.pageOffset,
                   // marginRight: this.state.pageOffset,
                   paddingLeft: "0px",
-                  paddingRight: "15px",
+                  paddingRight: "0px",
                   left: this.state.pageOffset,
                   width: this.state.pageWidth,
                 }

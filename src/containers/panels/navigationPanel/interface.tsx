@@ -18,10 +18,10 @@ export interface NavigationPanelProps {
 export interface NavigationPanelState {
   currentTab: string;
   chapters: any;
-  startIndex: number;
-  currentIndex: number;
   searchState: string;
   searchList: any;
   cover: string;
   isCoverExist: boolean;
+  activeSearchKey: string | null;
+  collapsedChapters: Set<number>;
 }

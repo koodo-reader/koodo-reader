@@ -668,11 +668,7 @@
   "Reset main window's position": "メインウィンドウの位置をリセット",
   "Copy quotes": "引用をコピー",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "7日間無料トライアルは、推奨メールプロバイダーで登録したユーザーにのみ適用されます。推奨メールプロバイダーは以下のとおりです",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "今後、読書統計やノート・ハイライト・読書進捗・語彙リストをNotion、Obsidian、Logseq、Ankiなどに自動同期する機能など、会員限定機能を追加していきます。",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Pro版を終了すると、同期などのプレミアム機能は利用できなくなります",
-  "I'll think about it": "検討します",
   "Convert PDF to Text": "PDFをテキストに変換",
-  "Still refuse": "まだ拒否",
   "Set OCR language": "OCR言語を設定",
   "Unsupported file format": "非対応のファイル形式",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "2行間の間隔が通常の間隔のn倍の場合、2つの段落に分割されます",
@@ -975,7 +971,7 @@
   "Bar Chart": "棒グラフ",
   "Line Chart": "折れ線グラフ",
   "Customize popup menu": "ポップアップメニューをカスタマイズ",
-  "You can enable up to 8 options": "最大8個のオプションを有効にできます",
+  "You can enable up to {{count}} options": "最大{{count}}個のオプションを有効にできます",
   "From URL": "URLからインポート",
   "Enter book download URL or article URL": "書籍のダウンロードURLまたは記事URLを入力",
   "Please enter a valid http or https URL": "有効なhttpまたはhttps URLを入力してください",
@@ -1119,5 +1115,6 @@
   "All": "すべて",
   "Unread": "未読",
   "CurrentlyReading": "読書中",
-  "Finished": "完了"
+  "Finished": "完了",
+  "Theme": "Theme"
 }

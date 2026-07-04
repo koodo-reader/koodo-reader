@@ -13,7 +13,7 @@ import {
   verifyPin,
   setProtectionPassword,
   setProtectionPin,
-} from "../../../utils/protectionUtil";
+} from "../../../utils/reader/protectionUtil";
 import { vexPasswordInputAsync, vexSelectAsync } from "../../../utils/common";
 import i18n from "../../../i18n";
 

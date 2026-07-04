@@ -657,11 +657,7 @@
   "Reset main window's position": "메인 창 위치 초기화",
   "Copy quotes": "인용문 복사",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "7일 무료 체험은 추천 이메일 제공업체로 등록한 사용자에게만 적용됩니다. 추천 이메일 제공업체는 다음과 같습니다",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "향후 독서 통계 및 노트/하이라이트/읽기 진행률/어휘 목록을 Notion, Obsidian, Logseq, Anki 등으로 자동 동기화하는 등 회원 전용 기능을 추가할 예정입니다.",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Pro 버전을 종료하면 동기화 및 기타 프리미엄 기능을 사용할 수 없습니다",
-  "I'll think about it": "생각해 볼게요",
   "Convert PDF to Text": "PDF를 텍스트로 변환",
-  "Still refuse": "계속 거부",
   "Set OCR language": "OCR 언어 설정",
   "Unsupported file format": "지원되지 않는 파일 형식",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "두 줄 사이 간격이 일반 간격의 n배일 때 두 개의 단락으로 분리됩니다",
@@ -964,7 +960,7 @@
   "Bar Chart": "막대 차트",
   "Line Chart": "꺾은선 차트",
   "Customize popup menu": "팝업 메뉴 사용자 지정",
-  "You can enable up to 8 options": "최대 8개의 옵션을 활성화할 수 있습니다",
+  "You can enable up to {{count}} options": "최대 {{count}}개의 옵션을 활성화할 수 있습니다",
   "From URL": "URL에서 가져오기",
   "Enter book download URL or article URL": "책 다운로드 URL 또는 기사 URL을 입력하세요",
   "Please enter a valid http or https URL": "유효한 http 또는 https URL을 입력하세요",
@@ -1108,5 +1104,6 @@
   "All": "전체",
   "Unread": "읽지 않음",
   "CurrentlyReading": "읽는 중",
-  "Finished": "완료"
+  "Finished": "완료",
+  "Theme": "Theme"
 }

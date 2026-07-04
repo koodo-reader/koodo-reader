@@ -71,11 +71,7 @@ class LocalFileDialog extends React.Component<
           isFinish: true,
           hasLocalAccess: true,
         });
-        ConfigService.setReaderConfig("isUseLocal", "yes");
-        ConfigService.setReaderConfig(
-          "localDirectoryName",
-          directoryHandle.name
-        );
+        ConfigService.setItem("isUseLocal", "yes");
         this.showMessage("Local folder access granted successfully");
         this.props.handleFetchBooks();
         setTimeout(() => {
@@ -134,7 +130,7 @@ class LocalFileDialog extends React.Component<
                 className="add-dialog-cancel"
                 style={{ borderWidth: 0, marginRight: "20px" }}
                 onClick={() => {
-                  ConfigService.setReaderConfig("isUseLocal", "no");
+                  ConfigService.setItem("isUseLocal", "no");
                   this.handleClose();
                 }}
               >

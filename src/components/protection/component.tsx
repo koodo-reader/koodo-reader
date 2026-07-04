@@ -6,7 +6,7 @@ import {
   promptBiometricAuth,
   verifyPassword,
   verifyPin,
-} from "../../utils/protectionUtil";
+} from "../../utils/reader/protectionUtil";
 import { vexPasswordInputAsync } from "../../utils/common";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";

@@ -658,11 +658,7 @@
   "Reset main window's position": "إعادة ضبط موضع النافذة الرئيسية",
   "Copy quotes": "نسخ الاقتباسات",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "تسري التجربة المجانية لمدة 7 أيام فقط على المستخدمين الذين سجلوا عبر مزودي البريد الإلكتروني الموصى بهم. مزودو البريد الموصى بهم هم:",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "في المستقبل سنقدم المزيد من الميزات الحصرية للأعضاء، بما في ذلك إحصاءات القراءة والمزامنة التلقائية لملاحظاتك وتظليلاتك وتقدم القراءة وقوائم المفردات إلى منصات مثل Notion وObsidian وLogseq وAnki وغيرها.",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "بمجرد الخروج من نسخة Pro لن تتمكن من استخدام المزامنة والميزات المميزة الأخرى",
-  "I'll think about it": "سأفكر في الأمر",
   "Convert PDF to Text": "تحويل PDF إلى نص",
-  "Still refuse": "لا أوافق",
   "Set OCR language": "تعيين لغة OCR",
   "Unsupported file format": "تنسيق ملف غير مدعوم",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "عندما يكون التباعد بين سطرين من النص بمقدار n من التباعد المعتاد، سيتم تقسيمهما إلى فقرتين",
@@ -965,7 +961,7 @@
   "Bar Chart": "مخطط عمودي",
   "Line Chart": "مخطط خطي",
   "Customize popup menu": "تخصيص القائمة المنبثقة",
-  "You can enable up to 8 options": "يمكنك تفعيل ما يصل إلى 8 خيارات",
+  "You can enable up to {{count}} options": "يمكنك تفعيل ما يصل إلى {{count}} خيارات",
   "From URL": "من رابط",
   "Enter book download URL or article URL": "أدخل رابط تنزيل الكتاب أو رابط المقال",
   "Please enter a valid http or https URL": "يرجى إدخال رابط http أو https صالح",
@@ -1109,5 +1105,6 @@
   "All": "الكل",
   "Unread": "غير مقروء",
   "CurrentlyReading": "يُقرأ",
-  "Finished": "منتهي"
+  "Finished": "منتهي",
+  "Theme": "Theme"
 }

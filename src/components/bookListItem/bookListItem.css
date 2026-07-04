@@ -2,6 +2,10 @@
   margin: 12px;
   margin-right: 25px;
   position: relative;
+  cursor: grab;
+}
+.book-list-item-container:active {
+  cursor: grabbing;
 }
 .book-item-list-cover {
   width: 43px;

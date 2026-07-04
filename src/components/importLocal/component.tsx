@@ -19,6 +19,7 @@ import { Readability } from "@mozilla/readability";
 import {
   calculateFileMD5,
   fetchFileFromPath,
+  getTextRules,
   supportedFormats,
   throttle,
   vexPromptAsync,
@@ -50,7 +51,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       isOpenFile: false,
       width: document.body.clientWidth,
       isMoreOptionsVisible: false,
-      importingShelfTitle: "",
     };
   }
   componentDidMount() {
@@ -125,6 +125,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           id: "add-book",
         }
       );
+      let isImportPath =
+        ConfigService.getReaderConfig("isImportPath") === "yes";
+      if (isElectron && isImportPath) {
+        const fs = window.require("fs");
+        if (!book.path || !fs.existsSync(book.path)) {
+          isImportPath = false;
+        }
+      }
       if (this.state.isOpenFile) {
         if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
           //ignore
@@ -134,7 +142,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         ) {
           await BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
           await CoverUtil.addCover(book);
-        } else if (ConfigService.getReaderConfig("isImportPath") === "yes") {
+        } else if (isImportPath) {
           await CoverUtil.addCover(book);
           //ignore
         } else {
@@ -149,7 +157,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         }
       } else {
         if (
-          ConfigService.getReaderConfig("isImportPath") !== "yes" ||
+          !isImportPath ||
           (this.props.isAuthed && ConfigService.getItem("defaultSyncOption"))
         ) {
           await BookUtil.addBook(book.key, book.format.toLowerCase(), buffer);
@@ -164,11 +172,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         .then(() => {
           this.props.handleFetchBooks();
           if (this.props.mode === "shelf") {
-            if (!this.state.importingShelfTitle) {
-              this.setState({ importingShelfTitle: this.props.shelfTitle });
-            }
             ConfigService.setMapConfig(
-              this.state.importingShelfTitle || this.props.shelfTitle,
+              this.props.shelfTitle,
               book.key,
               "shelfList"
             );
@@ -286,12 +291,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   readerMode: "",
                   charset: "",
                   animation:
-                    ConfigService.getReaderConfig("isSliding") === "yes"
-                      ? "sliding"
-                      : "",
+                    ConfigService.getReaderConfig("animation") || "none",
                   convertChinese:
                     ConfigService.getReaderConfig("convertChinese"),
                   bookLayout: ConfigService.getReaderConfig("bookLayout"),
+                  textRules: getTextRules(),
+                  codeHighlight:
+                    ConfigService.getReaderConfig("codeHighlight") || "",
                   fullTranslationMode: "no",
                   textOrientation:
                     ConfigService.getReaderConfig("textOrientation"),
@@ -300,6 +306,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   isMobile: "no",
                   password: "",
                   isScannedPDF: "no",
+                  isKeepPDFBackground: "no",
                 },
                 Kookit
               );
@@ -389,11 +396,92 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       const next = toAbs(src);
       if (next) img.setAttribute("src", next);
     });
+    ["data-src", "data-original", "data-lazy-src"].forEach((attr) => {
+      rootDoc.querySelectorAll(`img[${attr}]`).forEach((img) => {
+        const value = img.getAttribute(attr);
+        const next = toAbs(value);
+        if (next) img.setAttribute(attr, next);
+      });
+    });
     rootDoc.querySelectorAll("link[href]").forEach((l) => {
       const href = l.getAttribute("href");
       const next = toAbs(href);
       if (next) l.setAttribute("href", next);
     });
+  };
+
+  fetchImageAsDataUrl = async (imageUrl: string): Promise<string | null> => {
+    if (!imageUrl || imageUrl.startsWith("data:")) {
+      return imageUrl || null;
+    }
+    if (imageUrl.startsWith("blob:")) {
+      return null;
+    }
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) return null;
+      const blob = await response.blob();
+      const contentType = (
+        response.headers.get("content-type") ||
+        blob.type ||
+        ""
+      ).toLowerCase();
+      if (contentType && !contentType.startsWith("image/")) {
+        return null;
+      }
+      return await CoverUtil.blobToBase64(blob);
+    } catch {
+      return null;
+    }
+  };
+
+  resolveImageUrl = (img: Element): string | null => {
+    const candidates = [
+      img.getAttribute("src"),
+      img.getAttribute("data-src"),
+      img.getAttribute("data-original"),
+      img.getAttribute("data-lazy-src"),
+    ].filter(Boolean) as string[];
+
+    for (const value of candidates) {
+      if (value.startsWith("data:")) {
+        if (value.length > 200) return value;
+        continue;
+      }
+      if (!value.startsWith("blob:")) return value;
+    }
+    return null;
+  };
+
+  embedImagesAsBase64 = async (rootDoc: Document, toastId: string) => {
+    const images = Array.from(rootDoc.querySelectorAll("img"));
+    const total = images.length;
+    if (total === 0) return;
+
+    for (let i = 0; i < images.length; i++) {
+      const img = images[i];
+      const imageUrl = this.resolveImageUrl(img);
+      if (!imageUrl) continue;
+
+      if (imageUrl.startsWith("data:")) {
+        img.setAttribute("src", imageUrl);
+        continue;
+      }
+
+      const dataUrl = await this.fetchImageAsDataUrl(imageUrl);
+      if (dataUrl) {
+        img.setAttribute("src", dataUrl);
+        img.removeAttribute("data-src");
+        img.removeAttribute("data-original");
+        img.removeAttribute("data-lazy-src");
+        img.removeAttribute("srcset");
+      }
+
+      const pct = Math.round(((i + 1) / total) * 100);
+      toast.loading(this.props.t("Downloading") + ": " + pct + "%", {
+        id: toastId,
+      });
+    }
   };
 
   importHtmlFromURL = async (
@@ -453,6 +541,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     const contentDoc = parser.parseFromString(extractedContent, "text/html");
     if (contentDoc?.body) {
       this.makeUrlsAbsolute(contentDoc, url);
+      await this.embedImagesAsBase64(contentDoc, toastId);
     }
 
     // 4) Sanitize & rebuild as a standalone html "book" file.
@@ -595,19 +684,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       <Dropzone
         onDrop={async (acceptedFiles) => {
           this.props.handleDrag(false);
-          if (ConfigService.getReaderConfig("isImportPath") === "yes") {
-            toast.error(
-              this.props.t("Please turn off import books as link first")
-            );
-            return;
-          }
-          if (this.props.mode === "shelf") {
-            this.setState({ importingShelfTitle: this.props.shelfTitle });
-          }
           for (let item of acceptedFiles) {
             await this.getMd5WithBrowser(item);
           }
-          this.setState({ importingShelfTitle: "" });
           if (
             ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
             ConfigService.getItem("defaultSyncOption")
@@ -709,11 +788,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                           // Get all supported book files
                           const allFiles = getAllFiles(newPath);
                           // Process each file
-                          if (this.props.mode === "shelf") {
-                            this.setState({
-                              importingShelfTitle: this.props.shelfTitle,
-                            });
-                          }
                           for (const filePath of allFiles) {
                             try {
                               const buffer =
@@ -739,7 +813,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             }
                           }
                           this.setState({
-                            importingShelfTitle: "",
                             isMoreOptionsVisible: false,
                           });
                           if (
@@ -778,11 +851,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                             if (!files || files.length === 0) {
                               return;
                             }
-                            if (this.props.mode === "shelf") {
-                              this.setState({
-                                importingShelfTitle: this.props.shelfTitle,
-                              });
-                            }
                             for (let item of files) {
                               if (
                                 !supportedFormats.find((format) =>
@@ -793,7 +861,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                               }
                               await this.getMd5WithBrowser(item);
                             }
-                            this.setState({ importingShelfTitle: "" });
                             this.toggleMoreOptions();
                             if (
                               ConfigService.getReaderConfig(
@@ -864,11 +931,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                     "select-book",
                     "ping"
                   );
-                  if (this.props.mode === "shelf") {
-                    this.setState({
-                      importingShelfTitle: this.props.shelfTitle,
-                    });
-                  }
                   for (let filePath of filePaths) {
                     try {
                       const fs = window.require("fs").promises;
@@ -892,7 +954,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                       );
                     }
                   }
-                  this.setState({ importingShelfTitle: "" });
                   if (
                     ConfigService.getReaderConfig("isDisableAutoSync") !==
                       "yes" &&

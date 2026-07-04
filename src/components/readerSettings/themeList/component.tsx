@@ -4,7 +4,10 @@ import StyleUtil from "../../../utils/reader/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
 import { ThemeListProps, ThemeListState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import { HexColorPicker } from "react-colorful";
 import toast from "react-hot-toast";
 import { normalizePickerColor, parseColorInput } from "../../../utils/common";
@@ -32,6 +35,15 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         }),
       isShowTextPicker: false,
       isShowBgPicker: false,
+      currentPresetIndex: KookitConfig.PresetThemeList.findIndex((item) => {
+        return (
+          item.backgroundColor ===
+            (ConfigService.getReaderConfig("backgroundColor") ||
+              "rgba(255,255,255,1)") &&
+          item.textColor ===
+            (ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)")
+        );
+      }),
       bgColorInput: normalizePickerColor(
         ConfigService.getReaderConfig("backgroundColor"),
         "#ffffff"
@@ -57,21 +69,24 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       ConfigService.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
     this.props.renderBookFunc();
+    this.setState({
+      currentPresetIndex: this.getPresetIndex(
+        color,
+        ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)"
+      ),
+    });
   };
 
   handleChooseBgColor = (color: string) => {
     this.setState({ bgColorInput: color });
     ConfigService.setReaderConfig("backgroundColor", color);
     this.props.handleBackgroundColor(color);
-    if (
-      this.props.currentBook.format === "PDF" &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      )
-    ) {
-    } else {
-      StyleUtil.addDefaultCss(this.props.currentBook.key);
-    }
+    this.setState({
+      currentPresetIndex: this.getPresetIndex(
+        color,
+        ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)"
+      ),
+    });
   };
   handleColorTextPicker = (isShowTextPicker: boolean) => {
     if (
@@ -118,8 +133,42 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         .concat(ConfigService.getAllListConfig("themeColors"))
         .indexOf(color),
       textColorInput: color,
+      currentPresetIndex: this.getPresetIndex(
+        ConfigService.getReaderConfig("backgroundColor") ||
+          "rgba(255,255,255,1)",
+        color
+      ),
     });
     ConfigService.setReaderConfig("textColor", color);
+    this.props.renderBookFunc();
+  };
+  getPresetIndex = (backgroundColor: string, textColor: string) => {
+    return KookitConfig.PresetThemeList.findIndex((item) => {
+      return (
+        item.backgroundColor === backgroundColor && item.textColor === textColor
+      );
+    });
+  };
+  handleChoosePreset = (
+    preset: { textColor: string; backgroundColor: string },
+    index: number
+  ) => {
+    ConfigService.setReaderConfig("backgroundColor", preset.backgroundColor);
+    ConfigService.setReaderConfig("textColor", preset.textColor);
+    this.props.handleBackgroundColor(preset.backgroundColor);
+    const bgIndex = backgroundList
+      .concat(ConfigService.getAllListConfig("themeColors"))
+      .indexOf(preset.backgroundColor);
+    const textIndex = textList
+      .concat(ConfigService.getAllListConfig("themeColors"))
+      .indexOf(preset.textColor);
+    this.setState({
+      currentBackgroundIndex: bgIndex,
+      currentTextIndex: textIndex,
+      currentPresetIndex: index,
+      bgColorInput: normalizePickerColor(preset.backgroundColor, "#ffffff"),
+      textColorInput: normalizePickerColor(preset.textColor, "#000000"),
+    });
     this.props.renderBookFunc();
   };
   render() {
@@ -346,6 +395,42 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
             />
           </div>
         )}
+        <div
+          className="background-color-text"
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
+          <Trans>Theme</Trans>
+        </div>
+        <div className="preset-theme-list">
+          {KookitConfig.PresetThemeList.map((item, index) => {
+            return (
+              <div
+                key={item.key}
+                className={"preset-theme-item"}
+                style={{
+                  backgroundColor: item.backgroundColor,
+                  color: item.textColor,
+                  borderColor: item.textColor,
+                }}
+                onClick={() => {
+                  this.handleChoosePreset(item, index);
+                }}
+              >
+                <span className="preset-theme-text">
+                  {(ConfigService.getReaderConfig("lang") || "").startsWith(
+                    "zh"
+                  )
+                    ? this.props.t(item.title)
+                    : "A"}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }

@@ -50,6 +50,7 @@ import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
 import { getTempToken, updateUserConfig } from "../../utils/request/user";
 import i18n from "../../i18n";
+import { getNotification } from "../../utils/request/common";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -68,6 +69,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       isDataChange: false,
       isHidePro: false,
       isSync: false,
+      notificationCount: 0,
     };
   }
   async componentDidMount() {
@@ -162,17 +164,17 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       upgradeConfig();
       const status = await LocalFileManager.getPermissionStatus();
       if (
-        !ConfigService.getReaderConfig("isUseLocal") &&
+        !ConfigService.getItem("isUseLocal") &&
         LocalFileManager.isSupported()
       ) {
         this.props.handleLocalFileDialog(true);
       } else if (
-        ConfigService.getReaderConfig("isUseLocal") === "yes" &&
+        ConfigService.getItem("isUseLocal") === "yes" &&
         !status.directoryName
       ) {
         this.props.handleLocalFileDialog(true);
       } else if (
-        ConfigService.getReaderConfig("isUseLocal") === "yes" &&
+        ConfigService.getItem("isUseLocal") === "yes" &&
         (status.needsReauthorization || !status.hasAccess)
       ) {
         this.props.handleLocalFileDialog(true);
@@ -251,6 +253,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   ) {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       if (isElectron) {
+        getNotification().then((res) => {
+          if (
+            res.data &&
+            res.data.result === "ok" &&
+            res.data.unread &&
+            res.data.unread > 0
+          ) {
+            this.setState({ notificationCount: res.data.unread });
+          }
+        });
       } else {
         addChatBox();
       }
@@ -709,14 +721,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.props.t("Local") +
         ")"
     );
-    toast.success(
-      this.props.t(
-        "Your data has been exported to your local folder, learn how to sync your data to your other devices by visiting our documentation, Upgrade to pro to get more advanced features"
-      ),
-      {
-        duration: 4000,
-      }
-    );
   };
 
   render() {
@@ -728,7 +732,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         {isElectron && this.props.isAuthed && (
           <div
             className="header-chat-widget"
-            onClick={() => {
+            onClick={async () => {
+              this.setState({ notificationCount: 0 });
+              let deviceUuid = await TokenService.getFingerprint();
               window.require("electron").ipcRenderer.invoke("new-chat", {
                 url:
                   getWebsiteUrl() +
@@ -737,7 +743,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                     : "/en/faq") +
                   "?referer=app&version=" +
                   packageJson.version +
-                  "&client=desktop",
+                  "&client=desktop&device=" +
+                  deviceUuid,
                 locale: getChatLocale(),
               });
             }}
@@ -751,6 +758,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 height: "100%",
               }}
             />
+            {this.state.notificationCount > 0 && (
+              <div className="header-chat-widget-badge">
+                {this.state.notificationCount > 99
+                  ? "99+"
+                  : this.state.notificationCount}
+              </div>
+            )}
           </div>
         )}
         <div
@@ -797,28 +811,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               data-tooltip-content={this.props.t("Setting")}
               data-tooltip-place="left"
             >
-              <span className="icon-setting setting-icon"></span>
+              <span
+                className="icon-setting setting-icon"
+                style={{ fontSize: "25px" }}
+              ></span>
             </span>
           </div>
-          <div
-            className="setting-icon-container"
-            onClick={() => {
-              this.props.handleBackupDialog(true);
-            }}
-            onMouseLeave={() => {
-              this.props.handleSortDisplay(false);
-            }}
-            style={{ marginTop: "1px" }}
-          >
-            <span
-              data-tooltip-id="my-tooltip"
-              data-tooltip-content={this.props.t("Backup")}
-              data-tooltip-place="left"
-            >
-              <span className="icon-archive header-archive-icon"></span>
-            </span>
-          </div>
-
           <div
             className="setting-icon-container"
             onClick={async () => {
@@ -831,12 +829,29 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 return;
               }
               this.setState({ isSync: true });
+              if (
+                ConfigService.getReaderConfig("useLocalSync") === "yes" &&
+                !ConfigService.getItem("defaultSyncOption")
+              ) {
+                await this.handleLocalSync();
+                this.handleKOReaderSync();
+                return;
+              }
               if (this.props.isAuthed) {
                 let userInfo = await this.props.handleFetchUserInfo();
                 await this.handleCloudSync(userInfo);
               } else {
-                await this.handleLocalSync();
-                this.handleKOReaderSync();
+                toast.success(
+                  this.props.t(
+                    "Please set the default sync option to local in the settings, or upgrade to Pro to sync with more cloud storage"
+                  ),
+                  {
+                    duration: 4000,
+                  }
+                );
+                this.props.handleSetting(true);
+                this.props.handleSettingMode("sync");
+                this.setState({ isSync: false });
               }
             }}
             style={{ marginTop: "2px" }}
@@ -852,14 +867,18 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   (this.state.isSync ? " icon-rotate" : "")
                 }
                 style={
-                  this.state.isDataChange ? { color: "rgb(35, 170, 242)" } : {}
+                  this.state.isDataChange
+                    ? { color: "rgb(35, 170, 242)", fontSize: "25px" }
+                    : { fontSize: "25px" }
                 }
               ></span>
             </span>
           </div>
         </div>
 
-        {!this.props.isAuthed && !this.state.isHidePro ? (
+        {!this.props.isAuthed &&
+        !this.state.isHidePro &&
+        window.location.hostname !== "web.koodoreader.cn" ? (
           <div className="header-report-container">
             <span
               style={{ textDecoration: "underline" }}

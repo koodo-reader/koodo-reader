@@ -4,6 +4,10 @@
   float: left;
   overflow: hidden;
   position: relative;
+  cursor: grab;
+}
+.book-list-cover-item:active {
+  cursor: grabbing;
 }
 .book-cover-item-header {
   width: 150px;

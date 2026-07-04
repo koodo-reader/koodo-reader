@@ -14,6 +14,14 @@ import JSZip from "jszip";
 import { LocalFileManager } from "./localFile";
 import CoverUtil from "./coverUtil";
 declare var window: any;
+
+const mergeRecords = (localRecords: any[], backupRecords: any[]): any[] => {
+  const recordMap = new Map(localRecords.map((r) => [r.key, r]));
+  for (const record of backupRecords) {
+    recordMap.set(record.key, record);
+  }
+  return Array.from(recordMap.values());
+};
 let oldConfigArr = [
   "notes.json",
   "books.json",
@@ -96,7 +104,9 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
               const sqlUtil = new SqlUtil();
               const dbName = entryName.split(".")[0];
               const cloudRecords = await sqlUtil.dbBufferToJson(buf, dbName);
-              await DatabaseService.saveAllRecords(cloudRecords, dbName);
+              const localRecords = await DatabaseService.getAllRecords(dbName);
+              const mergedRecords = mergeRecords(localRecords, cloudRecords);
+              await DatabaseService.saveAllRecords(mergedRecords, dbName);
             }
             updateProgress();
           } catch {
@@ -108,8 +118,7 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
           resolve(false);
           return;
         }
-        const isUseLocal =
-          ConfigService.getReaderConfig("isUseLocal") === "yes";
+        const isUseLocal = ConfigService.getItem("isUseLocal") === "yes";
         // Restore book files
         const bookFiles = Object.keys(zip.files).filter(
           (name) => !zip.files[name].dir && name.startsWith("book/")
@@ -391,6 +400,7 @@ export const restoreFromfilePath = async (filePath: string) => {
         name.startsWith("cover/") ||
         name.startsWith("dict/") ||
         name.startsWith("background/") ||
+        name.startsWith("font/") ||
         name.startsWith("snapshot/"))
   );
   await Promise.all(
@@ -428,121 +438,7 @@ export const restoreFromOldBackup = async (zipEntries: any) => {
     return false;
   }
 };
-export const unzipConfig = async (zipEntries: any) => {
-  const fs = window.require("fs");
-  const path = window.require("path");
-  const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath, "config"))) {
-    fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });
-  }
-  // no longer support backup from older version
-  if (
-    zipEntries
-      .map((item: any) => item.entryName)
-      .indexOf("config/config.json") === -1
-  ) {
-    return false;
-  }
-  let flag = true;
-  for (let i = 0; i < zipEntries.length; i++) {
-    if (
-      zipEntries[i].entryName.startsWith("config/") &&
-      !zipEntries[i].isDirectory
-    ) {
-      if (zipEntries[i].name === "config.json") {
-        let text = zipEntries[i].getData().toString("utf8");
-        if (!text) {
-          flag = false;
-          break;
-        }
-        let config = JSON.parse(text);
-        for (let key in config) {
-          ConfigService.setItem(key, config[key]);
-        }
-      } else if (zipEntries[i].name === "sync.json") {
-        let text = zipEntries[i].getData().toString("utf8");
-        if (!text) {
-          flag = false;
-          break;
-        }
-        ConfigService.setItem("syncRecord", text);
-      } else {
-        let buffer = zipEntries[i].getData();
-        if (!buffer) {
-          flag = false;
-          break;
-        }
-        let dbName = zipEntries[i].name.split(".")[0];
-        // await window.require("electron").ipcRenderer.invoke("close-database", {
-        //   dbName: dbName,
-        //   storagePath: getStorageLocation(),
-        // });
-        let arraybuffer = new Uint8Array(buffer).buffer;
-        let sqlUtil = new SqlUtil();
-        let cloudRecords = await sqlUtil.dbBufferToJson(arraybuffer, dbName);
-        await DatabaseService.saveAllRecords(cloudRecords, dbName);
 
-        // fs.writeFileSync(
-        //   path.join(dataPath, "config", zipEntries[i].name),
-        //   buffer
-        // );
-      }
-    }
-  }
-  return flag;
-};
-
-export const unzipBook = async (zipEntries: any) => {
-  const fs = window.require("fs");
-  const path = window.require("path");
-  const dataPath = getStorageLocation() || "";
-
-  if (!fs.existsSync(path.join(dataPath, "book"))) {
-    fs.mkdirSync(path.join(dataPath, "book"), { recursive: true });
-  }
-  let flag = true;
-  for (let i = 0; i < zipEntries.length; i++) {
-    if (
-      zipEntries[i].entryName.startsWith("book/") &&
-      !zipEntries[i].isDirectory
-    ) {
-      let buffer = zipEntries[i].getData();
-      if (!buffer) {
-        flag = false;
-        break;
-      }
-      fs.writeFileSync(path.join(dataPath, "book", zipEntries[i].name), buffer);
-    }
-  }
-  return flag;
-};
-export const unzipCover = async (zipEntries: any) => {
-  const fs = window.require("fs");
-  const path = window.require("path");
-  const dataPath = getStorageLocation() || "";
-
-  if (!fs.existsSync(path.join(dataPath, "cover"))) {
-    fs.mkdirSync(path.join(dataPath, "cover"), { recursive: true });
-  }
-  let flag = true;
-  for (let i = 0; i < zipEntries.length; i++) {
-    if (
-      zipEntries[i].entryName.startsWith("cover/") &&
-      !zipEntries[i].isDirectory
-    ) {
-      let buffer = zipEntries[i].getData();
-      if (!buffer) {
-        flag = false;
-        break;
-      }
-      fs.writeFileSync(
-        path.join(dataPath, "cover", zipEntries[i].name),
-        buffer
-      );
-    }
-  }
-  return flag;
-};
 export const unzipOldConfig = (zipEntries: any) => {
   return new Promise<boolean>((resolve) => {
     zipEntries.forEach(function (zipEntry) {

@@ -1,6 +1,6 @@
 import React from "react";
 import "./popupAssist.css";
-import { PopupAssistProps, PopupAssistState } from "./interface";
+import { PopupAssistProps, PopupAssistState, AiChatMessage } from "./interface";
 import {
   ConfigService,
   KookitConfig,
@@ -10,15 +10,17 @@ import DOMPurify from "dompurify";
 import { Trans } from "react-i18next";
 import { handleContextMenu } from "../../../utils/common";
 import toast from "react-hot-toast";
+import { saveAs } from "file-saver";
 import { getAnswerStream } from "../../../utils/request/reader";
 import { chatStream } from "../../../utils/request/common";
 import { marked } from "marked";
 import { sampleQuestion } from "../../../constants/settingList";
 class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
-  private chatBoxRef: React.RefObject<HTMLDivElement>;
-  private textareaRef: React.RefObject<HTMLTextAreaElement>;
-  private answerTextAccumulator: string = "";
-  private updateInterval: ReturnType<typeof setInterval> | null = null;
+  chatBoxRef: React.RefObject<HTMLDivElement>;
+  textareaRef: React.RefObject<HTMLTextAreaElement>;
+  answerTextAccumulator: string = "";
+  updateInterval: ReturnType<typeof setInterval> | null = null;
+  isHydrating = false;
 
   constructor(props: PopupAssistProps) {
     super(props);
@@ -37,7 +39,41 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     this.textareaRef = React.createRef();
   }
 
-  private startUpdateInterval() {
+  MAX_HISTORY_LENGTH = 50;
+
+  AI_ASK_HISTORY_KEY = "aiAskHistory";
+  AI_CHAT_HISTORY_KEY = "aiChatHistory";
+
+  HISTORY_KEY_BY_MODE: Record<string, string> = {
+    ask: this.AI_ASK_HISTORY_KEY,
+    chat: this.AI_CHAT_HISTORY_KEY,
+  };
+
+  loadHistory = (bookKey: string, mode: "ask" | "chat"): AiChatMessage[] => {
+    if (!bookKey) {
+      return [];
+    }
+    const key = this.HISTORY_KEY_BY_MODE[mode];
+    return ConfigService.getObjectConfig(bookKey, key, []);
+  };
+
+  saveHistory = (
+    bookKey: string,
+    mode: "ask" | "chat",
+    messages: AiChatMessage[]
+  ): void => {
+    if (!bookKey) {
+      return;
+    }
+    const key = this.HISTORY_KEY_BY_MODE[mode];
+    const trimmed =
+      messages.length <= this.MAX_HISTORY_LENGTH
+        ? messages
+        : messages.slice(messages.length - this.MAX_HISTORY_LENGTH);
+    ConfigService.setObjectConfig(bookKey, trimmed, key);
+  };
+
+  startUpdateInterval() {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
     }
@@ -51,7 +87,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     }, 150);
   }
 
-  private stopUpdateInterval(finalAnswer?: string) {
+  stopUpdateInterval(finalAnswer?: string) {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
@@ -60,7 +96,35 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       this.setState({ answer: finalAnswer });
     }
   }
+  loadChatHistory() {
+    const bookKey = this.props.currentBook?.key;
+    if (!bookKey) {
+      return;
+    }
+    this.isHydrating = true;
+    this.setState(
+      {
+        askHistory: this.loadHistory(bookKey, "ask"),
+        chatHistory: this.loadHistory(bookKey, "chat"),
+      },
+      () => {
+        this.isHydrating = false;
+        if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
+          this.scrollToBottom();
+        }
+      }
+    );
+  }
+  saveChatHistory() {
+    const bookKey = this.props.currentBook?.key;
+    if (!bookKey || this.isHydrating) {
+      return;
+    }
+    this.saveHistory(bookKey, "ask", this.state.askHistory);
+    this.saveHistory(bookKey, "chat", this.state.chatHistory);
+  }
   componentDidMount(): void {
+    this.loadChatHistory();
     if (this.props.quoteText) {
       this.setState({ inputQuestion: this.props.quoteText + "\n" }, () => {
         this.autoResizeTextarea();
@@ -87,6 +151,35 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
           isAddNew: true,
         });
       }
+    }
+  }
+  componentDidUpdate(
+    prevProps: PopupAssistProps,
+    prevState: PopupAssistState
+  ): void {
+    if (prevProps.currentBook?.key !== this.props.currentBook?.key) {
+      this.loadChatHistory();
+      return;
+    }
+    if (this.isHydrating) {
+      return;
+    }
+    const bookKey = this.props.currentBook?.key;
+    if (!bookKey) {
+      return;
+    }
+    if (prevState.askHistory !== this.state.askHistory) {
+      this.saveHistory(bookKey, "ask", this.state.askHistory);
+    }
+    if (prevState.chatHistory !== this.state.chatHistory) {
+      this.saveHistory(bookKey, "chat", this.state.chatHistory);
+    }
+  }
+  componentWillUnmount(): void {
+    this.saveChatHistory();
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
     }
   }
   autoResizeTextarea = () => {
@@ -340,6 +433,38 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       );
     });
   };
+  handleExportChatHistory = () => {
+    const messages =
+      this.state.mode === "ask"
+        ? this.state.askHistory
+        : this.state.chatHistory;
+    if (messages.length === 0) {
+      toast(this.props.t("Nothing to export"));
+      return;
+    }
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    const dateStr = `${year}-${month <= 9 ? "0" + month : month}-${
+      day <= 9 ? "0" + day : day
+    }`;
+    const modeLabel = this.state.mode === "ask" ? "Reading" : "Chat";
+    const bookName = this.props.currentBook?.name || "Unknown";
+    const exportData = {
+      bookName,
+      mode: this.state.mode,
+      exportedAt: now.toISOString(),
+      messages,
+    };
+    saveAs(
+      new Blob([JSON.stringify(exportData, null, 2)], {
+        type: "application/json;charset=UTF-8",
+      }),
+      `KoodoReader-${modeLabel}-Assistant-${bookName}-${dateStr}.json`
+    );
+    toast.success(this.props.t("Export successful"));
+  };
   handleNewQuestion = (question: string) => {
     if (this.state.mode === "ask") {
       this.setState(
@@ -432,49 +557,64 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             </div>
           </div>
 
-          <select
-            className="dict-service-selector"
-            style={{ margin: 0, color: "#f16464" }}
-            value={this.state.aiService}
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-              if (event.target.value === "add-new") {
-                this.props.handleOpenMenu(false);
-                this.props.handleMenuMode("");
-                this.props.handleSetting(true);
-                this.props.handleSettingMode("ai");
-                return;
-              }
-              this.handleChangeAiService(event.target.value);
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
             }}
           >
-            <option
-              value={""}
-              key={"select"}
-              className="add-dialog-shelf-list-option"
+            <div
+              className="popup-assist-export-button"
+              title={this.props.t("Export")}
+              onClick={this.handleExportChatHistory}
             >
-              {this.props.t("Please select")}
-            </option>
-            {this.props.plugins
-              .filter((item) => item.type === "assistant")
-              .map((item) => {
-                return (
-                  <option
-                    value={item.key}
-                    key={item.key}
-                    className="add-dialog-shelf-list-option"
-                  >
-                    {this.props.t(item.displayName)}
-                  </option>
-                );
-              })}
-            <option
-              value={"add-new"}
-              key={"add-new"}
-              className="add-dialog-shelf-list-option"
+              <span className="icon-share"></span>
+            </div>
+            <select
+              className="dict-service-selector"
+              style={{ margin: 0, color: "#f16464" }}
+              value={this.state.aiService}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                if (event.target.value === "add-new") {
+                  this.props.handleOpenMenu(false);
+                  this.props.handleMenuMode("");
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("ai");
+                  return;
+                }
+                this.handleChangeAiService(event.target.value);
+              }}
             >
-              {this.props.t("Add new plugin")}
-            </option>
-          </select>
+              <option
+                value={""}
+                key={"select"}
+                className="add-dialog-shelf-list-option"
+              >
+                {this.props.t("Please select")}
+              </option>
+              {this.props.plugins
+                .filter((item) => item.type === "assistant")
+                .map((item) => {
+                  return (
+                    <option
+                      value={item.key}
+                      key={item.key}
+                      className="add-dialog-shelf-list-option"
+                    >
+                      {this.props.t(item.displayName)}
+                    </option>
+                  );
+                })}
+              <option
+                value={"add-new"}
+                key={"add-new"}
+                className="add-dialog-shelf-list-option"
+              >
+                {this.props.t("Add new plugin")}
+              </option>
+            </select>
+          </div>
         </div>
 
         {this.state.isAddNew && (

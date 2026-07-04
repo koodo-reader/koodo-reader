@@ -9,31 +9,40 @@ import toast from "react-hot-toast";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import {
   ConfigService,
+  HighlightUtil,
   NoteSyncManager,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
 class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
+  highlightUtil: any;
   constructor(props: PopupNoteProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
     this.state = { tag: [], text: "", note: null };
   }
   async componentDidMount() {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
     if (this.props.noteKey) {
-      let note = await DatabaseService.getRecord(this.props.noteKey, "notes");
+      let note: Note = await DatabaseService.getRecord(
+        this.props.noteKey,
+        "notes"
+      );
       this.setState({
         text: note.text,
         tag: note.tag,
         note: note,
       });
       textArea.value = note.notes;
-      if (this.props.htmlBook && this.props.htmlBook.rendition) {
-      } else {
-        this.props.handleColor(note.color);
-      }
+      let { styleType, color } = this.highlightUtil.getHighlightValue(
+        note.color || "background-#FEF3CD"
+      );
+      this.props.handleHighlight({
+        styleType,
+        color,
+      });
     } else {
       let docs = getIframeDoc(this.props.currentBook.format);
       let text = "";
@@ -75,10 +84,11 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       );
       newNote.notes = notes;
       newNote.tag = this.state.tag;
-      newNote.color = this.props.color || newNote.color;
+      newNote.color =
+        this.highlightUtil.formatHighlightValue(this.props.highlight) ||
+        newNote.color;
       DatabaseService.updateRecord(newNote, "notes").then(() => {
         this.props.handleOpenMenu(false);
-        toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
         this.props.handleNoteKey("");
@@ -132,7 +142,9 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
           ).percentage
         : "0";
 
-      let color = this.props.color || 0;
+      let color =
+        this.highlightUtil.formatHighlightValue(this.props.highlight) ||
+        "background-#FEF3CD";
       let tag = this.state.tag;
 
       let note = new Note(
@@ -149,7 +161,6 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       );
       DatabaseService.saveRecord(note, "notes").then(async () => {
         this.props.handleOpenMenu(false);
-        toast.success(this.props.t("Addition successful"));
         this.props.handleFetchNotes();
         this.props.handleMenuMode("");
         await this.props.htmlBook.rendition.createOneNote(
@@ -165,7 +176,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       });
     }
   }
-  handleUpdateHighlight = (color: number) => {};
+  handleUpdateHighlight = () => {};
   handleClose = () => {
     if (this.props.noteKey) {
       DatabaseService.deleteRecord(this.props.noteKey, "notes").then(() => {
@@ -191,9 +202,10 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
   };
 
   render() {
-    const PopupProps = {
+    const colorOptionProps = {
       handleDigest: this.handleUpdateHighlight,
       isEdit: true,
+      noteItem: this.state.note,
     };
     let note = this.state.note;
 
@@ -207,13 +219,14 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
               style={{ height: "calc(100% - 90px)" }}
             />
           </div>
+          <ColorOption {...(colorOptionProps as any)} />
           <div
             className="note-tags"
             style={{
               position: "absolute",
               bottom: "35px",
               height: "40px",
-              width: "calc(100% - 60px)",
+              width: "calc(100% - 40px)",
             }}
           >
             <NoteTag
@@ -223,7 +236,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
               } as any)}
             />
           </div>
-          <ColorOption {...(PopupProps as any)} />
+
           <div className="note-button-container">
             <span
               className="book-manage-title"

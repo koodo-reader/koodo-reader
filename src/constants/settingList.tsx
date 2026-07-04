@@ -1,12 +1,5 @@
 export const generalSettingList = [
   {
-    isElectron: true,
-    title: "Import books as link",
-    desc: "The imported books will not be copied to library, only linked to the original book path",
-    propName: "isImportPath",
-  },
-
-  {
     isElectron: false,
     title: "Disable trash bin",
     desc: "When deleting books, they will be deleted permanently instead of sending to trash bin",
@@ -94,6 +87,12 @@ export const generalSettingList = [
     isElectron: true,
     title: "Open url with built-in browser",
     propName: "isUseBuiltIn",
+  },
+  {
+    isElectron: true,
+    title: "Import books as link",
+    desc: "The imported books will not be copied to library, only linked to the original book path",
+    propName: "isImportPath",
   },
 ];
 export const appearanceSettingList = [
@@ -395,6 +394,11 @@ export const readingSettingList = [
     title: "Overwrite the default text style in the book",
     propName: "isOverwriteText",
   },
+  {
+    isElectron: false,
+    title: "Overwrite the default background style in the book",
+    propName: "isOverwriteBackground",
+  },
   // {
   //   isElectron: false,
   //   title: "Lemmatize words when looking up in a dictionary",
@@ -478,11 +482,6 @@ export const skinList = [
 
 export const readerSettingList = [
   {
-    title: "Sliding animation",
-    propName: "isSliding",
-    isPDF: true,
-  },
-  {
     title: "Render PDF from even page",
     propName: "isStartFromEven",
     isPDF: true,
@@ -496,6 +495,11 @@ export const readerSettingList = [
     title: "Enable hyphenation",
     propName: "isHyphenation",
     isPDF: false,
+  },
+  {
+    title: "Keep the original background in PDFs",
+    propName: "isKeepPDFBackground",
+    isPDF: true,
   },
   {
     title: "Allow orphan and widow lines",

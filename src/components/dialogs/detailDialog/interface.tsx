@@ -1,6 +1,9 @@
 import BookModel from "../../../models/Book";
 export interface DetailDialogProps {
   handleDetailDialog: (isDetailDialog: boolean) => void;
+  handleShelf: (shelfTitle: string) => void;
+  handleMode: (mode: string) => void;
+  history: any;
   currentBook: BookModel;
 }
 export interface DetailDialogState {

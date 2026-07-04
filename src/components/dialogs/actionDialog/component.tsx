@@ -4,6 +4,7 @@ import { Trans } from "react-i18next";
 import { ActionDialogProps, ActionDialogState } from "./interface";
 import toast from "react-hot-toast";
 import MoreAction from "../moreAction";
+import MarkAction from "../markAction";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 declare var window: any;
 class ActionDialog extends React.Component<
@@ -14,6 +15,7 @@ class ActionDialog extends React.Component<
     super(props);
     this.state = {
       isShowExport: false,
+      isShowMark: false,
       isShowDetail: false,
       isExceed: false,
     };
@@ -82,6 +84,9 @@ class ActionDialog extends React.Component<
   handleMoreAction = (isShow: boolean) => {
     this.setState({ isShowExport: isShow });
   };
+  handleMarkAction = (isShow: boolean) => {
+    this.setState({ isShowMark: isShow });
+  };
   render() {
     const moreActionProps = {
       left: this.props.left,
@@ -89,6 +94,13 @@ class ActionDialog extends React.Component<
       isShowExport: this.state.isShowExport,
       isExceed: this.state.isExceed,
       handleMoreAction: this.handleMoreAction,
+    };
+    const markActionProps = {
+      left: this.props.left,
+      top: this.props.top,
+      isShowMark: this.state.isShowMark,
+      isExceed: this.state.isExceed,
+      handleMarkAction: this.handleMarkAction,
     };
     if (this.props.mode === "trash") {
       return (
@@ -233,6 +245,41 @@ class ActionDialog extends React.Component<
             </div>
             <div
               className="action-dialog-edit"
+              onMouseEnter={(event) => {
+                this.setState({ isShowMark: true, isShowExport: false });
+                const e = event || window.event;
+                let x = e.clientX;
+                if (x > document.body.clientWidth - 300) {
+                  this.setState({ isExceed: true });
+                } else {
+                  this.setState({ isExceed: false });
+                }
+              }}
+              onMouseLeave={(event) => {
+                this.setState({ isShowMark: false });
+                event.stopPropagation();
+              }}
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <p className="action-name" style={{ marginLeft: "0px" }}>
+                <span
+                  className="icon-check view-icon"
+                  style={{
+                    display: "inline-block",
+                    marginRight: "12px",
+                    marginLeft: "3px",
+                    fontSize: "14px",
+                  }}
+                ></span>
+                <Trans>Mark as</Trans>
+              </p>
+              <span
+                className="icon-dropdown icon-export-all"
+                style={{ left: "95px" }}
+              ></span>
+            </div>
+            <div
+              className="action-dialog-edit"
               onClick={() => {
                 this.handleDetailBook();
               }}
@@ -248,7 +295,7 @@ class ActionDialog extends React.Component<
             <div
               className="action-dialog-edit"
               onMouseEnter={(event) => {
-                this.setState({ isShowExport: true });
+                this.setState({ isShowExport: true, isShowMark: false });
                 const e = event || window.event;
                 let x = e.clientX;
                 if (x > document.body.clientWidth - 300) {
@@ -284,6 +331,7 @@ class ActionDialog extends React.Component<
             </div>
           </div>
         </div>
+        <MarkAction {...(markActionProps as any)} />
         <MoreAction {...(moreActionProps as any)} />
       </>
     );

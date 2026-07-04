@@ -1,17 +1,18 @@
 import BookModel from "../../../models/Book";
 import HtmlBook from "../../../models/HtmlBook";
 import NoteModel from "../../../models/Note";
+import { HighlightValue } from "../../../utils/common";
 export interface PopupNoteProps {
   currentBook: BookModel;
 
-  color: number;
+  highlight: HighlightValue;
   noteKey: string;
 
   chapterDocIndex: number;
   chapter: string;
   htmlBook: HtmlBook;
   handleNoteKey: (key: string) => void;
-  handleColor: (color: number) => void;
+  handleHighlight: (value: HighlightValue) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleShowPopupNote: (isShowPopupNote: boolean) => void;
   handleMenuMode: (menu: string) => void;

@@ -6,6 +6,7 @@ export interface ImageViewerProps {
   handleEnterReader: (position: string) => void;
   t: any;
   currentBook: BookModel;
+  readerMode: string;
 }
 export interface ImageViewerStates {
   isShowImage: boolean;
@@ -13,4 +14,6 @@ export interface ImageViewerStates {
   imageName: string;
   zoomIndex: number;
   rotateIndex: number;
+  imageList: string[];
+  currentIndex: number;
 }

@@ -1,13 +1,13 @@
 import React from "react";
 import "./pageWidget.css";
 import { PageWidgetProps, PageWidgetState } from "./interface";
-import {
-  ConfigService,
-  KookitConfig,
-} from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
 import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
-import { detectLocalLanguage } from "../../utils/common";
+import {
+  detectLocalLanguage,
+  getFullTranslationTarget,
+} from "../../utils/common";
 import toast from "react-hot-toast";
 class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
   isFirst: Boolean;
@@ -41,7 +41,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
   async componentDidMount() {
     this.timeInterval = setInterval(() => {
       this.setState({ currentTime: this.getFormattedTime() });
-    }, 10000);
+    }, 60000);
   }
 
   componentWillUnmount() {
@@ -96,9 +96,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
         let res = await getBatchTrans(
           batchTransTexts,
           "Automatic",
-          KookitConfig.ConvertLangMap[
-            ConfigService.getReaderConfig("lang") || "zhCN"
-          ]
+          getFullTranslationTarget()
         );
         if (res && res.data && res.data.texts) {
           rendition.handleBatchTransResult(batchTransTexts, res.data.texts);

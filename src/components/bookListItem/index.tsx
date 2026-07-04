@@ -4,7 +4,6 @@ import {
   handleDeleteDialog,
   handleAddDialog,
   handleReadingBook,
-  handleDragItem,
   handleFetchBooks,
   handleSelectedBooks,
   handleSelectBook,
@@ -20,7 +19,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     percentage: state.progressPanel.percentage,
     currentBook: state.book.currentBook,
-    dragItem: state.book.dragItem,
     isSelectBook: state.manager.isSelectBook,
     selectedBooks: state.manager.selectedBooks,
     isOpenActionDialog: state.book.isOpenActionDialog,
@@ -33,7 +31,6 @@ const actionCreator = {
   handleDeleteDialog,
   handleAddDialog,
   handleActionDialog,
-  handleDragItem,
   handleSelectBook,
   handleFetchBooks,
   handleSelectedBooks,

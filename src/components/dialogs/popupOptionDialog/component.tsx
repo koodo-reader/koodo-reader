@@ -39,7 +39,11 @@ class PopupOptionDialog extends React.Component<
     if (!targetOption) return;
 
     if (!targetOption.enabled && enabledCount >= POPUP_OPTION_LIMIT) {
-      toast(this.props.t("You can enable up to 8 options"));
+      toast(
+        this.props.t("You can enable up to {{count}} options", {
+          count: POPUP_OPTION_LIMIT,
+        })
+      );
       return;
     }
 
@@ -133,7 +137,9 @@ class PopupOptionDialog extends React.Component<
           </ReactSortable>
         </div>
         <div className="popup-option-dialog-tip popup-option-dialog-limit">
-          {this.props.t("You can enable up to 8 options")}
+          {this.props.t("You can enable up to {{count}} options", {
+            count: POPUP_OPTION_LIMIT,
+          })}
         </div>
         <div className="import-dialog-back-button">
           {this.props.t("Drag to sort")}

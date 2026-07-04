@@ -29,7 +29,7 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: flex-start;
-  margin: 0px 10px;
+  margin: 0px 0px;
   overflow-x: auto;
   overflow-y: hidden;
   width: max-content;

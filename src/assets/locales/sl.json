@@ -655,11 +655,7 @@
   "Reset main window's position": "Ponastavi položaj glavnega okna",
   "Copy quotes": "Kopiraj navedke",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "7-dnevni brezplačni preizkus velja le za uporabnike, ki so se registrirali s priporočljivimi ponudniki e-pošte. Priporočeni ponudniki so:",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "V prihodnje bomo uvedli več funkcij, namenjenih članom, vključno s statistiko branja in samodejno sinhronizacijo vaših zapiskov, označb, napredka branja in seznamov besedišča na platforme, kot so Notion, Obsidian, Logseq, Anki in druge.",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Ko zapustite različico Pro, ne boste več mogli uporabljati sinhronizacije in drugih premium funkcij",
-  "I'll think about it": "Bom premislil",
   "Convert PDF to Text": "Pretvori PDF v besedilo",
-  "Still refuse": "Še vedno zavrni",
   "Set OCR language": "Nastavi jezik OCR",
   "Unsupported file format": "Nepodprta oblika datoteke",
   "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs": "Ko je razmik med dvema vrsticama besedila n-kratnik običajnega razmika, bosta razdeljeni v dva odstavka",
@@ -962,7 +958,7 @@
   "Bar Chart": "Stolpčni diagram",
   "Line Chart": "Črtni diagram",
   "Customize popup menu": "Prilagodi pojavni meni",
-  "You can enable up to 8 options": "Omogočite lahko do 8 možnosti",
+  "You can enable up to {{count}} options": "Omogočite lahko do {{count}} možnosti",
   "From URL": "Iz URL",
   "Enter book download URL or article URL": "Vnesite URL za prenos knjige ali URL članka",
   "Please enter a valid http or https URL": "Prosimo, vnesite veljaven http ali https URL",
@@ -1106,5 +1102,6 @@
   "All": "Vse",
   "Unread": "Neprebrano",
   "CurrentlyReading": "Berem",
-  "Finished": "Končano"
+  "Finished": "Končano",
+  "Theme": "Theme"
 }

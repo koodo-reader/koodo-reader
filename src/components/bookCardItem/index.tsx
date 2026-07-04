@@ -2,7 +2,6 @@ import { connect } from "react-redux";
 import {
   handleActionDialog,
   handleReadingBook,
-  handleDragItem,
   handleDeleteDialog,
   handleSelectBook,
   handleSelectedBooks,
@@ -16,7 +15,6 @@ import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     isOpenActionDialog: state.book.isOpenActionDialog,
-    dragItem: state.book.dragItem,
     currentBook: state.book.currentBook,
     isSelectBook: state.manager.isSelectBook,
     selectedBooks: state.manager.selectedBooks,
@@ -26,7 +24,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleReadingBook,
   handleActionDialog,
-  handleDragItem,
   handleSelectBook,
   handleDeleteDialog,
   handleSelectedBooks,
