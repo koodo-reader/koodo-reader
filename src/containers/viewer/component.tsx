@@ -35,6 +35,7 @@ let lock = false; //prevent from clicking too fasts
 
 class Viewer extends React.Component<ViewerProps, ViewerState> {
   private resizeHandler: (() => void) | null = null;
+  private _pendingRerender = false;
   lock: boolean;
   constructor(props: ViewerProps) {
     super(props);
@@ -95,7 +96,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.isSettingLocked
         )
       );
-      this.handleRenderBook();
+      if (lock) {
+        this._pendingRerender = true;
+      } else {
+        this.handleRenderBook();
+      }
     });
     window.addEventListener("resize", this.resizeHandler);
   }
@@ -466,8 +471,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.handleBindGesture();
       await this.handleHighlight(rendition);
       lock = true;
-      setTimeout(function () {
+      setTimeout(() => {
         lock = false;
+        if (this._pendingRerender) {
+          this._pendingRerender = false;
+          this.handleRenderBook();
+        }
       }, 1000);
       return false;
     });
