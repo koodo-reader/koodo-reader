@@ -938,7 +938,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               }
               if (newValue === "local") {
                 ConfigService.setReaderConfig("useLocalSync", "yes");
-                event.target.value = "local";
+                ConfigService.removeItem("defaultSyncOption");
+                this.props.handleDefaultSyncOption("local");
                 toast.success(this.props.t("Change successful"));
                 return;
               }

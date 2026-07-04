@@ -829,7 +829,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 return;
               }
               this.setState({ isSync: true });
-              if (ConfigService.getReaderConfig("useLocalSync") === "yes") {
+              if (
+                ConfigService.getReaderConfig("useLocalSync") === "yes" &&
+                !ConfigService.getItem("defaultSyncOption")
+              ) {
                 await this.handleLocalSync();
                 this.handleKOReaderSync();
                 return;
