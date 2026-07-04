@@ -228,26 +228,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       true,
       path
     ).then(async (result: any) => {
-      if (!result) {
-        if (this.props.defaultSyncOption) {
-          let timer = showDownloadProgress(
-            this.props.defaultSyncOption,
-            "cloud",
-            this.props.currentBook.size
-          );
-          let result = await BookUtil.downloadBook(key, format.toLowerCase());
-          clearInterval(timer);
-          toast.dismiss("offline-book");
-          if (result) {
-            toast.success(this.props.t("Download successful"));
-          } else {
-            toast.error(this.props.t("Book not exists"));
-          }
-        } else {
-          toast.error(this.props.t("Book not exists"));
-          return;
-        }
-      }
       const crop = ConfigService.getObjectConfig(
         this.props.currentBook.key,
         "pdfCrop",
