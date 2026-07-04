@@ -46,7 +46,7 @@ class BookUtil {
         throw error;
       }
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         await LocalFileManager.saveFile(key + "." + format, buffer, "book");
       } else {
         await localforage.setItem(key, buffer);
@@ -76,7 +76,7 @@ class BookUtil {
         });
       } else {
         this.deleteCloudBook(key, format);
-        if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        if (ConfigService.getItem("isUseLocal") === "yes") {
           return LocalFileManager.deleteFile(key + "." + format, "book");
         } else {
           return localforage.removeItem(key);
@@ -108,7 +108,7 @@ class BookUtil {
           resolve(false);
         }
       } else {
-        if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+        if (ConfigService.getItem("isUseLocal") === "yes") {
           LocalFileManager.fileExists(key + "." + format, "book").then(
             (exists) => {
               resolve(exists);
@@ -162,7 +162,7 @@ class BookUtil {
         }
       });
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         return LocalFileManager.readFile(
           key + "." + format,
           "book"
@@ -404,7 +404,7 @@ class BookUtil {
       if (!bookBuffer) {
         return false;
       }
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         await LocalFileManager.saveFile(key + "." + format, bookBuffer, "book");
       } else {
         await localforage.setItem(key, bookBuffer);

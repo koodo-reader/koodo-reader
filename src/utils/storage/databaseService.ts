@@ -26,7 +26,7 @@ class DatabaseService {
         });
       return records;
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         let sqlUtil = new SqlUtil();
         let dbBuffer = await LocalFileManager.readFile(
           dbName + ".db",
@@ -74,7 +74,7 @@ class DatabaseService {
         }
       }
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         let sqlUtil = new SqlUtil();
         let dbBuffer = await sqlUtil.JsonToDbBuffer(records, dbName);
         await LocalFileManager.saveFile(dbName + ".db", dbBuffer, "config");
@@ -120,7 +120,7 @@ class DatabaseService {
         storagePath: getStorageLocation(),
       });
     } else {
-      if (ConfigService.getReaderConfig("isUseLocal") === "yes") {
+      if (ConfigService.getItem("isUseLocal") === "yes") {
         await LocalFileManager.deleteFile(dbName + ".db", "config");
       } else {
         await localforage.removeItem(dbName);

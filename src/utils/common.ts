@@ -1875,3 +1875,22 @@ export const getBookPartialMd5 = async (book: Book) => {
     return md5;
   }
 };
+// Old name → new hex color mapping for config migration
+const LEGACY_COLOR_MAP: Record<string, string> = {
+  blue: "#0179CA",
+  green: "#008F91",
+  red: "#F16464",
+  purple: "#6867D1",
+};
+
+export function migrateConfig(): void {
+  const current = ConfigService.getReaderConfig("themeColor");
+  if (current && LEGACY_COLOR_MAP[current]) {
+    ConfigService.setReaderConfig("themeColor", LEGACY_COLOR_MAP[current]);
+  }
+  const isUseLocal = ConfigService.getReaderConfig("isUseLocal");
+  if (isUseLocal) {
+    ConfigService.setItem("isUseLocal", isUseLocal);
+    ConfigService.setReaderConfig("isUseLocal", "");
+  }
+}
