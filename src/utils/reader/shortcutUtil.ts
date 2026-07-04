@@ -160,38 +160,51 @@ const getKeyLabel = (keyCode: number): string => {
   return `Key${keyCode}`;
 };
 
+/**
+ * Key codes for modifier keys (Ctrl, Shift, Alt, Meta) that should not
+ * themselves be treated as an assignable shortcut key.
+ */
 const MODIFIER_KEY_CODES = [16, 17, 18, 91, 92, 93, 224];
 
+/**
+ * Default keyboard shortcut bindings for the reader.
+ * Users can override these via Settings > Shortcuts; overrides are
+ * merged on top of these defaults in getShortcutConfig().
+ */
 export const DEFAULT_SHORTCUT_CONFIG: ShortcutConfig = {
   nextPage: [
-    { keyCode: 40 },
-    { keyCode: 39 },
-    { keyCode: 32 },
-    { keyCode: 34 },
+    { keyCode: 40 }, // Down
+    { keyCode: 39 }, // Right
+    { keyCode: 32 }, // Space
+    { keyCode: 34 }, // PageDown
   ],
-  prevPage: [{ keyCode: 38 }, { keyCode: 37 }, { keyCode: 33 }],
-  bossKey: [{ keyCode: 9 }],
-  toggleFishMode: [{ keyCode: 123 }],
-  toggleFullscreen: [{ keyCode: 122 }],
-  exitReader: [{ keyCode: 27 }],
-  searchInBook: [{ keyCode: 70, ctrl: true }],
-  openLeftPanel: [{ keyCode: 117 }],
-  openRightPanel: [{ keyCode: 118 }],
-  openTopPanel: [{ keyCode: 119 }],
-  openBottomPanel: [{ keyCode: 120 }],
-  createBookmark: [{ keyCode: 66, ctrl: true, shift: true }],
-  openBookmarkList: [{ keyCode: 66, ctrl: true, alt: true }],
-  prevChapter: [{ keyCode: 37, ctrl: true, alt: true }],
-  nextChapter: [{ keyCode: 39, ctrl: true, alt: true }],
-  openNoteList: [{ keyCode: 78, ctrl: true, alt: true }],
-  openHighlightList: [{ keyCode: 72, ctrl: true, alt: true }],
-  openToc: [{ keyCode: 84, ctrl: true, alt: true }],
-  selectionTranslate: [{ keyCode: 84, ctrl: true, shift: true }],
-  selectionDict: [{ keyCode: 68, ctrl: true, shift: true }],
-  selectionNote: [{ keyCode: 78, ctrl: true, shift: true }],
-  selectionHighlight: [{ keyCode: 72, ctrl: true, shift: true }],
-  selectionSpeak: [{ keyCode: 82, ctrl: true, shift: true }],
-  selectionSearch: [{ keyCode: 70, ctrl: true, shift: true }],
+  prevPage: [
+    { keyCode: 38 }, // Up
+    { keyCode: 37 }, // Left
+    { keyCode: 33 }, // PageUp
+  ],
+  bossKey: [{ keyCode: 9 }], // Tab
+  toggleFishMode: [{ keyCode: 123 }], // F12
+  toggleFullscreen: [{ keyCode: 122 }], // F11
+  exitReader: [{ keyCode: 27 }], // Esc
+  searchInBook: [{ keyCode: 70, ctrl: true }], // Ctrl+F
+  openLeftPanel: [{ keyCode: 117 }], // F6
+  openRightPanel: [{ keyCode: 118 }], // F7
+  openTopPanel: [{ keyCode: 119 }], // F8
+  openBottomPanel: [{ keyCode: 120 }], // F9
+  createBookmark: [{ keyCode: 66, ctrl: true, shift: true }], // Ctrl+Shift+B
+  openBookmarkList: [{ keyCode: 66, ctrl: true, alt: true }], // Ctrl+Alt+B
+  prevChapter: [{ keyCode: 37, ctrl: true, alt: true }], // Ctrl+Alt+Left
+  nextChapter: [{ keyCode: 39, ctrl: true, alt: true }], // Ctrl+Alt+Right
+  openNoteList: [{ keyCode: 78, ctrl: true, alt: true }], // Ctrl+Alt+N
+  openHighlightList: [{ keyCode: 72, ctrl: true, alt: true }], // Ctrl+Alt+H
+  openToc: [{ keyCode: 84, ctrl: true, alt: true }], // Ctrl+Alt+T
+  selectionTranslate: [{ keyCode: 84, ctrl: true, shift: true }], // Ctrl+Shift+T
+  selectionDict: [{ keyCode: 68, ctrl: true, shift: true }], // Ctrl+Shift+D
+  selectionNote: [{ keyCode: 78, ctrl: true, shift: true }], // Ctrl+Shift+N
+  selectionHighlight: [{ keyCode: 72, ctrl: true, shift: true }], // Ctrl+Shift+H
+  selectionSpeak: [{ keyCode: 82, ctrl: true, shift: true }], // Ctrl+Shift+R
+  selectionSearch: [{ keyCode: 70, ctrl: true, shift: true }], // Ctrl+Shift+F
 };
 
 const cloneBindings = (bindings: ShortcutBinding[]): ShortcutBinding[] =>
