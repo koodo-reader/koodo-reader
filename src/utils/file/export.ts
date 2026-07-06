@@ -4,7 +4,10 @@ import Note from "../../models/Note";
 import BookUtil from "./bookUtil";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  HighlightUtil,
+} from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import i18n from "../../i18n";
 import toast from "react-hot-toast";
@@ -147,7 +150,18 @@ export const exportNotes = async (
     let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
     let bookName = book ? book.name : "Unknown book";
     let bookAuthor = book ? book.author : "Unknown author";
-    const [highlightType, color] = item.color.split("-");
+    let styleType = "background";
+    let color = "#FEF3CD";
+    if (typeof item.color === "number") {
+      let highlightUtil = new HighlightUtil(ConfigService);
+      let highlightValue = highlightUtil.convertNumberToHighlightValue(
+        item.color
+      );
+      styleType = highlightValue.styleType;
+      color = highlightValue.color;
+    } else {
+      [styleType, color] = item.color.split("-");
+    }
     return {
       ...item,
       date: `${item.date.year}-${
@@ -155,7 +169,7 @@ export const exportNotes = async (
       }-${item.date.day <= 9 ? "0" + item.date.day : item.date.day}`,
       tag: item.tag.join(","),
       color,
-      highlightType,
+      styleType,
       bookName: bookName,
       bookAuthor: bookAuthor,
     };
@@ -251,7 +265,19 @@ export const exportHighlights = async (
     let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
     let bookName = book ? book.name : "Unknown book";
     let bookAuthor = book ? book.author : "Unknown author";
-    const [highlightType, color] = item.color.split("-");
+    let styleType = "background";
+    let color = "#FEF3CD";
+    if (typeof item.color === "number") {
+      let highlightUtil = new HighlightUtil(ConfigService);
+      let highlightValue = highlightUtil.convertNumberToHighlightValue(
+        item.color
+      );
+      styleType = highlightValue.styleType;
+      color = highlightValue.color;
+    } else {
+      [styleType, color] = item.color.split("-");
+    }
+
     let highlight = {
       ...item,
       date: `${item.date.year}-${
@@ -259,7 +285,7 @@ export const exportHighlights = async (
       }-${item.date.day <= 9 ? "0" + item.date.day : item.date.day}`,
       tag: item.tag.join(","),
       color,
-      highlightType,
+      styleType,
       bookName: bookName,
       bookAuthor: bookAuthor,
     };
