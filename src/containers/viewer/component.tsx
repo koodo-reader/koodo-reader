@@ -590,6 +590,30 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         var rect = selection.getRangeAt(0).getBoundingClientRect();
         this.setState({ rect });
       });
+      doc.addEventListener(
+        "selectionchange",
+        _.debounce(() => {
+          if (
+            this.props.currentBook.format === "PDF" &&
+            !ConfigService.getAllListConfig("convertPDFBooks").includes(
+              this.props.currentBook.key
+            )
+          ) {
+            let iframe = doc.defaultView?.frameElement as HTMLIFrameElement | null;
+            let id = iframe?.getAttribute("id") || "";
+            let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
+            this.setState({ chapterDocIndex });
+          }
+
+          if (this.state.isDisablePopup) return;
+
+          let selection = doc!.getSelection();
+          if (!selection || selection.rangeCount === 0) return;
+
+          var rect = selection.getRangeAt(0).getBoundingClientRect();
+          this.setState({ rect });
+        }, 100)
+      );
     }
   };
   render() {
