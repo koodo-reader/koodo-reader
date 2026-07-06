@@ -4,7 +4,6 @@ import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
 import Background from "../../components/background";
-import toast from "react-hot-toast";
 import StyleUtil from "../../utils/reader/styleUtil";
 import "./index.css";
 import { htmlMouseEvent } from "../../utils/reader/mouseEvent";
@@ -19,7 +18,6 @@ import {
   getPdfPassword,
   getServerRegion,
   getTextRules,
-  showDownloadProgress,
   throttle,
 } from "../../utils/common";
 import _ from "underscore";
@@ -529,7 +527,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.handleLeaveReader("top");
         this.props.handleLeaveReader("bottom");
       });
-      doc.addEventListener("mouseup", (event) => {
+      doc.addEventListener("pointerup", (event) => {
         if (
           this.props.currentBook.format === "PDF" &&
           !ConfigService.getAllListConfig("convertPDFBooks").includes(
@@ -590,30 +588,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         var rect = selection.getRangeAt(0).getBoundingClientRect();
         this.setState({ rect });
       });
-      doc.addEventListener(
-        "selectionchange",
-        _.debounce(() => {
-          if (
-            this.props.currentBook.format === "PDF" &&
-            !ConfigService.getAllListConfig("convertPDFBooks").includes(
-              this.props.currentBook.key
-            )
-          ) {
-            let iframe = doc.defaultView?.frameElement as HTMLIFrameElement | null;
-            let id = iframe?.getAttribute("id") || "";
-            let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
-            this.setState({ chapterDocIndex });
-          }
-
-          if (this.state.isDisablePopup) return;
-
-          let selection = doc!.getSelection();
-          if (!selection || selection.rangeCount === 0) return;
-
-          var rect = selection.getRangeAt(0).getBoundingClientRect();
-          this.setState({ rect });
-        }, 100)
-      );
     }
   };
   render() {
