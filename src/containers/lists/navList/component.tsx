@@ -271,7 +271,17 @@ class NavList extends React.Component<NavListProps, NavListState> {
     this.setState({ deleteIndex: index });
   };
   getHighlightPreviewStyle = (colorCode: string) => {
-    const [styleType, color] = colorCode.split("-");
+    let styleType = "background";
+    let color = "#FEF3CD";
+    if (typeof colorCode === "number") {
+      let highlightValue =
+        this.highlightUtil.convertNumberToHighlightValue(colorCode);
+      styleType = highlightValue.styleType;
+      color = highlightValue.color;
+    } else {
+      [styleType, color] = colorCode.split("-");
+    }
+
     return this.highlightUtil.buildHighlightPreviewStyle(styleType, color);
   };
   renderBookNavList = (displayData: (Bookmark | Note)[]) => {

@@ -25,6 +25,7 @@
   height: calc(100% - 55px);
   overflow-y: scroll;
   box-sizing: border-box;
+  padding-top: 5px;
 
   /* display: none; */
 }
