@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.564.0",
+    "@cantoo/pdf-lib": "^2.7.1",
     "@mozilla/readability": "^0.6.0",
     "adm-zip": "^0.5.2",
     "axios": "0.31.1",

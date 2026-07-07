@@ -11,6 +11,7 @@ import {
 import { isElectron } from "react-device-detect";
 import i18n from "../../i18n";
 import toast from "react-hot-toast";
+import { PDFDocument } from "@cantoo/pdf-lib";
 export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
   var zip = new JSZip();
   for (let index = 0; index < buffers.length; index++) {
@@ -705,10 +706,9 @@ const preparePDFExportFrame = async (
 
 // 将 HTML 内容渲染为 PDF 并返回 Blob；库不可用时 fallback 为 HTML Blob
 const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
-  const jsPDFLib = (window as any).jspdf;
   const html2canvas = (window as any).html2canvas;
 
-  if (!jsPDFLib || !jsPDFLib.jsPDF || !html2canvas) {
+  if (!html2canvas) {
     return new Blob([htmlContent], { type: "text/html,charset=UTF-8" });
   }
 
@@ -721,11 +721,6 @@ const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
   }
 
   try {
-    const { jsPDF } = jsPDFLib;
-    const a4WidthMm = 210;
-    const a4HeightMm = 297;
-    const margin = 10;
-
     const captureTarget = iframeDoc.body;
     const captureWidth = Math.max(
       iframeDoc.documentElement.scrollWidth,
@@ -745,22 +740,22 @@ const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
       windowHeight: captureHeight,
     });
 
-    const imgWidthMm = a4WidthMm - margin * 2;
-    const imgHeightMm = (canvas.height * imgWidthMm) / canvas.width;
+    const pdfDoc = await PDFDocument.create();
+    const a4Width = 595.28;
+    const a4Height = 841.89;
+    const margin = 28.35;
 
-    const doc = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    });
-    const pageContentHeight = a4HeightMm - margin * 2;
-    let remainingHeight = imgHeightMm;
+    const imgWidth = a4Width - margin * 2;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const pageContentHeight = a4Height - margin * 2;
+
+    let remainingHeight = imgHeight;
     let sourceY = 0;
 
     while (remainingHeight > 0) {
       const sliceHeight = Math.min(remainingHeight, pageContentHeight);
-      const srcYpx = (sourceY / imgHeightMm) * canvas.height;
-      const srcHpx = (sliceHeight / imgHeightMm) * canvas.height;
+      const srcYpx = (sourceY / imgHeight) * canvas.height;
+      const srcHpx = (sliceHeight / imgHeight) * canvas.height;
 
       const pageCanvas = document.createElement("canvas");
       pageCanvas.width = canvas.width;
@@ -779,21 +774,24 @@ const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
           Math.round(srcHpx)
         );
       }
-      doc.addImage(
-        pageCanvas.toDataURL("image/jpeg", 0.92),
-        "JPEG",
-        margin,
-        margin,
-        imgWidthMm,
-        sliceHeight
+
+      const image = await pdfDoc.embedJpg(
+        pageCanvas.toDataURL("image/jpeg", 0.92)
       );
+      const page = pdfDoc.addPage([a4Width, a4Height]);
+      page.drawImage(image, {
+        x: margin,
+        y: a4Height - margin - sliceHeight,
+        width: imgWidth,
+        height: sliceHeight,
+      });
 
       remainingHeight -= sliceHeight;
       sourceY += sliceHeight;
-      if (remainingHeight > 0) doc.addPage();
     }
 
-    return doc.output("blob");
+    const pdfBytes = await pdfDoc.save();
+    return new Blob([pdfBytes as BlobPart], { type: "application/pdf" });
   } finally {
     document.body.removeChild(iframe);
   }
