@@ -11,7 +11,7 @@ import {
 import { isElectron } from "react-device-detect";
 import i18n from "../../i18n";
 import toast from "react-hot-toast";
-import { PDFDocument } from "@cantoo/pdf-lib";
+declare var window: any;
 export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
   var zip = new JSZip();
   for (let index = 0; index < buffers.length; index++) {
@@ -740,7 +740,7 @@ const generateHTMLAsPDFBlob = async (htmlContent: string): Promise<Blob> => {
       windowHeight: captureHeight,
     });
 
-    const pdfDoc = await PDFDocument.create();
+    const pdfDoc = await window.PDFLib.PDFDocument.create();
     const a4Width = 595.28;
     const a4Height = 841.89;
     const margin = 28.35;
