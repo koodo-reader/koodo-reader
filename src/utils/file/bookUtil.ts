@@ -216,7 +216,7 @@ class BookUtil {
         return;
       }
       toast.loading(i18n.t("Downloading"), {
-        id: "offline-book",
+        id: "offline-book-" + book.key,
       });
       if (
         (await TokenService.getToken("is_authed")) === "yes" &&
@@ -225,11 +225,12 @@ class BookUtil {
         let timer = showDownloadProgress(
           ConfigService.getItem("defaultSyncOption") || "",
           "cloud",
-          book.size
+          book.size,
+          book.key
         );
         let result = await this.downloadBook(book.key, book.format);
         clearInterval(timer);
-        toast.dismiss("offline-book");
+        toast.dismiss("offline-book-" + book.key);
 
         let covers = await CoverUtil.getCloudCoverList();
         for (let cover of covers) {
@@ -240,17 +241,17 @@ class BookUtil {
 
         if (result) {
           toast.success(i18n.t("Download successful"), {
-            id: "offline-book",
+            id: "offline-book-" + book.key,
           });
         } else {
           let result = await this.downloadCacheBook(book.key);
           if (result) {
             toast.success(i18n.t("Download successful"), {
-              id: "offline-book",
+              id: "offline-book-" + book.key,
             });
           } else {
             toast.error(i18n.t("Download failed"), {
-              id: "offline-book",
+              id: "offline-book-" + book.key,
             });
             if (ConfigService.getItem("defaultSyncOption") === "adrive") {
               toast.error(
@@ -258,7 +259,7 @@ class BookUtil {
                   "Aliyun Drive imposes strict limits on concurrent downloads. It is recommended that you wait 10 seconds before attempting to download again."
                 ),
                 {
-                  id: "offline-book",
+                  id: "offline-book-" + book.key,
                 }
               );
             }
@@ -267,7 +268,7 @@ class BookUtil {
         }
       } else {
         toast.error(i18n.t("Book not exists"), {
-          id: "offline-book",
+          id: "offline-book-" + book.key,
         });
         return;
       }

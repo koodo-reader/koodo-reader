@@ -1096,29 +1096,37 @@ export const getPdfPassword = (book: Book) => {
 export const showDownloadProgress = (
   service: string,
   type: string,
-  bookSize: number
+  bookSize: number,
+  bookKey?: string
 ) => {
   if (bookSize === 0) {
     return setTimeout(() => {
       console.warn("Book size is 0, skipping download progress.");
     }, 1000);
   }
+
+  const toastId = bookKey ? `offline-book-${bookKey}` : "offline-book";
+  // 记录下载起始时 cloud-progress 的基线值，用增量估算当前书的进度
+  let baseline: number | null = null;
+
   let isFirst = true;
   let timer = setInterval(async () => {
     let downloadedSize = 0;
+    let progress = 0;
+
     if (isElectron) {
+      let tokenConfig = await getCloudConfig(service);
+      let config = {
+        ...tokenConfig,
+        service: service,
+        storagePath: getStorageLocation(),
+      };
+
       if (type === "cloud") {
-        let tokenConfig = await getCloudConfig(service);
-        let config = {
-          ...tokenConfig,
-          service: service,
-          storagePath: getStorageLocation(),
-        };
         downloadedSize = await window
           .require("electron")
           .ipcRenderer.invoke("cloud-progress", config);
       } else {
-        let tokenConfig = await getCloudConfig(service);
         downloadedSize = await window
           .require("electron")
           .ipcRenderer.invoke("picker-progress", {
@@ -1129,17 +1137,20 @@ export const showDownloadProgress = (
             storagePath: getStorageLocation(),
           });
       }
-      if (isFirst && downloadedSize > 0) {
-        downloadedSize = 0;
-        isFirst = false;
-      }
-      let progress = downloadedSize / bookSize;
-      toast.loading(
-        i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
-        {
-          id: "offline-book",
+
+      // 增量修改，采用基线法和原方法作为备份，确保下载进度正确     
+      if (bookKey) {
+        if (baseline === null) {
+          baseline = downloadedSize;
         }
-      );
+        progress = Math.min(Math.max((downloadedSize - baseline) / bookSize, 0), 1);
+      } else {
+        if (isFirst && downloadedSize > 0) {
+          downloadedSize = 0;
+          isFirst = false;
+        }
+        progress = downloadedSize / bookSize;
+      }
     } else {
       if (type === "cloud") {
         let syncUtil = await SyncService.getSyncUtil();
@@ -1152,14 +1163,13 @@ export const showDownloadProgress = (
         downloadedSize = 0;
         isFirst = false;
       }
-      let progress = downloadedSize / bookSize;
-      toast.loading(
-        i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
-        {
-          id: "offline-book",
-        }
-      );
+      progress = downloadedSize / bookSize;
     }
+    toast.loading(
+        i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
+        { id: toastId }
+      );
+
   }, 500);
   return timer;
 };
