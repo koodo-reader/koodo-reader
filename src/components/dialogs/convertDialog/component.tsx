@@ -189,6 +189,11 @@ class ConvertDialog extends React.Component<
                       {
                         label: this.props.t("Official AI OCR") + " (Pro)",
                         value: "official-ai-ocr",
+                        lang: "general",
+                      },
+                      {
+                        label: "MinerU Agent API",
+                        value: "mineru-official-agent",
                         lang: "",
                       },
                       {
@@ -239,12 +244,32 @@ class ConvertDialog extends React.Component<
                       const engine = ConfigService.getReaderConfig("ocrEngine");
                       const currentLang = ConfigService.getReaderConfig("lang");
                       let list: any[];
-                      if (engine === "tesseract") list = ocrTesseractLangList;
-                      else if (engine === "official-ai-ocr")
+                      if (engine === "tesseract") {
+                        list = ocrTesseractLangList;
+                      } else if (engine === "official-ai-ocr") {
                         list = [
-                          { label: "General", value: "general", lang: "" },
+                          {
+                            label: "General",
+                            value: "general",
+                            lang: "general",
+                          },
+                          {
+                            label: "Accurate",
+                            value: "accurate",
+                            lang: "accurate",
+                          },
                         ];
-                      else list = getOcrPaddleLangList();
+                      } else if (engine === "mineru-official-agent") {
+                        list = [
+                          {
+                            label: "General",
+                            value: "general",
+                            lang: "general",
+                          },
+                        ];
+                      } else {
+                        list = getOcrPaddleLangList();
+                      }
                       const match = list.find(
                         (o: any) => o.lang === currentLang
                       );
