@@ -138,7 +138,9 @@ class ConvertDialog extends React.Component<
                   <select
                     name=""
                     className="lang-setting-dropdown"
-                    value={ConfigService.getReaderConfig("ocrEngine") || "paddle"}
+                    value={
+                      ConfigService.getReaderConfig("ocrEngine") || "paddle"
+                    }
                     onChange={(event) => {
                       if (
                         event.target.value === "official-ai-ocr" &&
@@ -220,7 +222,12 @@ class ConvertDialog extends React.Component<
                     justifyContent: "space-between",
                   }}
                 >
-                  <Trans>Set OCR language</Trans>
+                  <Trans>
+                    {ConfigService.getReaderConfig("ocrEngine") ===
+                    "official-ai-ocr"
+                      ? "Set OCR mode"
+                      : "Set OCR language"}
+                  </Trans>
 
                   <select
                     name=""
@@ -233,9 +240,14 @@ class ConvertDialog extends React.Component<
                       const currentLang = ConfigService.getReaderConfig("lang");
                       let list: any[];
                       if (engine === "tesseract") list = ocrTesseractLangList;
-                      else if (engine === "official-ai-ocr") list = [{ label: "General", value: "general", lang: "" }];
+                      else if (engine === "official-ai-ocr")
+                        list = [
+                          { label: "General", value: "general", lang: "" },
+                        ];
                       else list = getOcrPaddleLangList();
-                      const match = list.find((o: any) => o.lang === currentLang);
+                      const match = list.find(
+                        (o: any) => o.lang === currentLang
+                      );
                       return match ? match.value : "";
                     })()}
                     onChange={(event) => {
@@ -260,7 +272,18 @@ class ConvertDialog extends React.Component<
                         ? ocrTesseractLangList
                         : ConfigService.getReaderConfig("ocrEngine") ===
                             "official-ai-ocr"
-                          ? [{ label: "General", value: "general", lang: "" }]
+                          ? [
+                              {
+                                label: "General",
+                                value: "general",
+                                lang: "general",
+                              },
+                              {
+                                label: "Accurate",
+                                value: "accurate",
+                                lang: "accurate",
+                              },
+                            ]
                           : getOcrPaddleLangList()),
                     ].map((item) => (
                       <option
@@ -292,7 +315,10 @@ class ConvertDialog extends React.Component<
                       name=""
                       className="lang-setting-dropdown"
                       style={{ width: "70px" }}
-                      value={ConfigService.getReaderConfig("paraSpacingValue") || "1.5"}
+                      value={
+                        ConfigService.getReaderConfig("paraSpacingValue") ||
+                        "1.5"
+                      }
                       onChange={(event) => {
                         ConfigService.setReaderConfig(
                           "paraSpacingValue",
@@ -348,7 +374,9 @@ class ConvertDialog extends React.Component<
                       name=""
                       className="lang-setting-dropdown"
                       style={{ width: "70px" }}
-                      value={ConfigService.getReaderConfig("titleSizeValue") || "1.2"}
+                      value={
+                        ConfigService.getReaderConfig("titleSizeValue") || "1.2"
+                      }
                       onChange={(event) => {
                         ConfigService.setReaderConfig(
                           "titleSizeValue",
