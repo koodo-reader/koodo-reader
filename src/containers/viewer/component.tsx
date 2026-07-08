@@ -26,7 +26,7 @@ import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
 import { ocrTesseractLangList } from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
-import { getOcrResult } from "../../utils/request/reader";
+import { getOcrResult, getOcrResultV2 } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -298,7 +298,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 ? "standard_v5_mobile"
                 : "standard_v5_mobile",
           externalWorker: {
-            recognize: getOcrResult,
+            recognize:
+              ConfigService.getReaderConfig("ocrLang") === "accurate"
+                ? getOcrResultV2
+                : getOcrResult,
           },
           ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "paddle",
           serverRegion:

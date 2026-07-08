@@ -635,6 +635,8 @@
   "Failed to load catalog": "加载目录失败",
   "Search in catalog...": "在目录中搜索...",
   "Search failed": "搜索失败",
+  "Set OCR mode": "设置 OCR 模式",
+  "Accurate": "高精度",
   "Book Detail": "图书详情",
   "Download as": "下载格式",
   "No supported formats available": "暂无可用的支持格式",
