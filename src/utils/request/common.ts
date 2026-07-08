@@ -2,6 +2,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
 import { SSE } from "sse.js";
+import { marked } from "marked";
 import {
   CommonTool,
   ConfigService,
@@ -145,4 +146,75 @@ export const getNotification = async () => {
   // 	"unread": 0
   // }
   return res;
+};
+const MINERU_AGENT_BASE = "https://mineru.net/api/v1/agent";
+
+export const parseWithMineruAgent = async (file: any) => {
+  const fileName = file?.name || "document.pdf";
+
+  // Step 1: Get signed upload URL and task ID
+  const createResp = await axios.post(`${MINERU_AGENT_BASE}/parse/file`, {
+    file_name: fileName,
+    language: "ch",
+    enable_table: true,
+    is_ocr: false,
+    enable_formula: true,
+  });
+
+  if (createResp.data.code !== 0) {
+    throw new Error(
+      createResp.data.msg || "Failed to create MinerU parse task"
+    );
+  }
+
+  const { task_id, file_url } = createResp.data.data;
+  if (!task_id || !file_url) {
+    throw new Error("Invalid response: missing task_id or file_url");
+  }
+
+  // Step 2: Upload file to signed OSS URL
+  // Use ArrayBuffer to avoid fetch auto-setting Content-Type header,
+  // which would break the OSS signature if Mineru signed without Content-Type
+  const buffer = await file.arrayBuffer();
+  const putResp = await fetch(file_url, {
+    method: "PUT",
+    body: buffer,
+  });
+  if (!putResp.ok) {
+    throw new Error(`File upload failed, HTTP ${putResp.status}`);
+  }
+
+  // Step 3: Poll for result every 3 seconds
+  const MAX_POLL_TIME = 5 * 60 * 1000;
+  const POLL_INTERVAL = 3000;
+  const startTime = Date.now();
+
+  while (Date.now() - startTime < MAX_POLL_TIME) {
+    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL));
+
+    const pollResp = await axios.get(`${MINERU_AGENT_BASE}/parse/${task_id}`);
+    const { state, markdown_url, err_msg } = pollResp.data.data;
+
+    if (state === "done" && markdown_url) {
+      // Step 4: Fetch markdown content
+      const mdResp = await axios.get(markdown_url);
+      const markdown = mdResp.data;
+      console.log("MinerU parse completed successfully. Markdown:", markdown);
+
+      // Step 5: Convert markdown to HTML
+      const html = await marked.parse(markdown);
+      console.log("MinerU parse completed successfully.", html);
+      return {
+        data: {
+          text: html,
+        },
+      };
+    }
+
+    if (state === "failed") {
+      throw new Error(err_msg || "MinerU parse failed");
+    }
+  }
+
+  throw new Error(`MinerU parse timed out after ${MAX_POLL_TIME / 1000}s`);
 };
