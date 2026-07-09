@@ -224,14 +224,10 @@ export const parseWithSystemOCR = async (imageBase64: string) => {
     return;
   }
   const { ipcRenderer } = window.require("electron");
-  let textContent = await ipcRenderer.invoke("system-ocr", {
+  let result = await ipcRenderer.invoke("system-ocr", {
     base64: imageBase64,
     lang: "auto",
   });
-  console.log("System OCR result:", textContent);
-  return {
-    data: {
-      text: textContent,
-    },
-  };
+  console.log("System OCR result:", result);
+  return result.text || "";
 };
