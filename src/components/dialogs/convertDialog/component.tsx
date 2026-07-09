@@ -24,6 +24,10 @@ class ConvertDialog extends React.Component<
       isConvertPDF: ConfigService.getAllListConfig("convertPDFBooks").includes(
         props.currentBook?.key
       ),
+      defaultOcrEngine:
+        this.props.currentBook.description.indexOf("scanned") > -1
+          ? "paddle"
+          : "system-ocr",
     };
   }
   renderSwitchOption = (optionList: any[]) => {
@@ -121,221 +125,123 @@ class ConvertDialog extends React.Component<
                 propName: "isConvertPDF",
               },
             ])}
-            {this.props.currentBook.description.indexOf("scanned") > -1 ? (
-              <>
-                <div
-                  className="setting-dialog-new-title"
-                  style={{
-                    marginLeft: 10,
-                    width: "calc(100% - 20px)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Trans>OCR engine</Trans>
 
-                  <select
-                    name=""
-                    className="lang-setting-dropdown"
-                    value={
-                      ConfigService.getReaderConfig("ocrEngine") || "paddle"
+            <div
+              className="setting-dialog-new-title"
+              style={{
+                marginLeft: 10,
+                width: "calc(100% - 20px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginTop: 10,
+                marginBottom: 10,
+              }}
+            >
+              <Trans>OCR engine</Trans>
+
+              <select
+                name=""
+                className="lang-setting-dropdown"
+                value={
+                  ConfigService.getReaderConfig("ocrEngine") ||
+                  this.state.defaultOcrEngine
+                }
+                onChange={(event) => {
+                  if (
+                    event.target.value === "official-ai-ocr" &&
+                    !this.props.isAuthed
+                  ) {
+                    toast(
+                      this.props.t("Please upgrade to Pro to use this feature")
+                    );
+                    this.props.handleSetting(true);
+                    this.props.handleSettingMode("account");
+                    return;
+                  }
+                  ConfigService.setReaderConfig(
+                    "ocrEngine",
+                    event.target.value
+                  );
+                  if (event.target.value === "tesseract") {
+                    ConfigService.setReaderConfig(
+                      "ocrLang",
+                      ocrTesseractLangList.find(
+                        (item) =>
+                          item.lang === ConfigService.getReaderConfig("lang")
+                      )?.value || "chi_sim"
+                    );
+                  } else if (event.target.value === "paddle") {
+                    ConfigService.setReaderConfig(
+                      "ocrLang",
+                      "standard_v5_mobile"
+                    );
+                  }
+                  if (
+                    ConfigService.getAllListConfig("convertPDFBooks").includes(
+                      this.props.currentBook.key
+                    )
+                  ) {
+                    BookUtil.reloadBooks(this.props.currentBook);
+                  }
+                  this.forceUpdate();
+                }}
+              >
+                {[
+                  { label: "Please select", value: "", lang: "" },
+                  {
+                    label: this.props.t("Official AI OCR") + " (Pro)",
+                    value: "official-ai-ocr",
+                    lang: "general",
+                  },
+                  {
+                    label: "MinerU Agent API",
+                    value: "mineru-official-agent",
+                    lang: "",
+                  },
+                  {
+                    label: "System OCR",
+                    value: "system-ocr",
+                    lang: "auto",
+                  },
+                  {
+                    label: "Paddle OCR",
+                    value: "paddle",
+                    lang: "standard_v5_mobile",
+                  },
+                  {
+                    label: "Tesseract",
+                    value: "tesseract",
+                    lang: "chi_sim",
+                  },
+                ]
+                  .filter((item) => {
+                    if (!isElectron && item.value === "mineru-official-agent") {
+                      return false;
                     }
-                    onChange={(event) => {
-                      if (
-                        event.target.value === "official-ai-ocr" &&
-                        !this.props.isAuthed
-                      ) {
-                        toast(
-                          this.props.t(
-                            "Please upgrade to Pro to use this feature"
-                          )
-                        );
-                        this.props.handleSetting(true);
-                        this.props.handleSettingMode("account");
-                        return;
-                      }
-                      ConfigService.setReaderConfig(
-                        "ocrEngine",
-                        event.target.value
-                      );
-                      if (event.target.value === "tesseract") {
-                        ConfigService.setReaderConfig(
-                          "ocrLang",
-                          ocrTesseractLangList.find(
-                            (item) =>
-                              item.lang ===
-                              ConfigService.getReaderConfig("lang")
-                          )?.value || "chi_sim"
-                        );
-                      } else if (event.target.value === "paddle") {
-                        ConfigService.setReaderConfig(
-                          "ocrLang",
-                          "standard_v5_mobile"
-                        );
-                      }
-                      if (
-                        ConfigService.getAllListConfig(
-                          "convertPDFBooks"
-                        ).includes(this.props.currentBook.key)
-                      ) {
-                        BookUtil.reloadBooks(this.props.currentBook);
-                      }
-                      this.forceUpdate();
-                    }}
-                  >
-                    {[
-                      { label: "Please select", value: "", lang: "" },
-                      {
-                        label: this.props.t("Official AI OCR") + " (Pro)",
-                        value: "official-ai-ocr",
-                        lang: "general",
-                      },
-                      {
-                        label: "MinerU Agent API",
-                        value: "mineru-official-agent",
-                        lang: "",
-                      },
-                      {
-                        label: "System OCR",
-                        value: "system-ocr",
-                        lang: "auto",
-                      },
-                      {
-                        label: "Paddle OCR",
-                        value: "paddle",
-                        lang: "standard_v5_mobile",
-                      },
-                      {
-                        label: "Tesseract",
-                        value: "tesseract",
-                        lang: "chi_sim",
-                      },
-                    ].map((item) => (
-                      <option
-                        value={item.value}
-                        key={item.value}
-                        className="lang-setting-option"
-                      >
-                        {this.props.t(item.label)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div
-                  className="setting-dialog-new-title"
-                  style={{
-                    marginLeft: 10,
-                    width: "calc(100% - 20px)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Trans>
-                    {ConfigService.getReaderConfig("ocrEngine") ===
-                    "official-ai-ocr"
-                      ? "Set OCR mode"
-                      : "Set OCR language"}
-                  </Trans>
-
-                  <select
-                    name=""
-                    className="lang-setting-dropdown"
-                    style={{ width: "70px" }}
-                    value={(() => {
-                      const ocrLang = ConfigService.getReaderConfig("ocrLang");
-                      if (ocrLang) return ocrLang;
-                      const engine = ConfigService.getReaderConfig("ocrEngine");
-                      const currentLang = ConfigService.getReaderConfig("lang");
-                      let list: any[];
-                      if (engine === "tesseract") {
-                        list = ocrTesseractLangList;
-                      } else if (engine === "official-ai-ocr") {
-                        list = [
-                          {
-                            label: "General",
-                            value: "general",
-                            lang: "general",
-                          },
-                          {
-                            label: "Accurate",
-                            value: "accurate",
-                            lang: "accurate",
-                          },
-                        ];
-                      } else if (engine === "mineru-official-agent") {
-                        list = [
-                          {
-                            label: "General",
-                            value: "general",
-                            lang: "general",
-                          },
-                        ];
-                      } else if (engine === "mineru-official-agent") {
-                        list = [
-                          {
-                            label: "Auto",
-                            value: "auto",
-                            lang: "auto",
-                          },
-                        ];
-                      } else {
-                        list = getOcrPaddleLangList();
-                      }
-                      const match = list.find(
-                        (o: any) => o.lang === currentLang
-                      );
-                      return match ? match.value : "";
-                    })()}
-                    onChange={(event) => {
-                      ConfigService.setReaderConfig(
-                        "ocrLang",
-                        event.target.value
-                      );
-                      if (
-                        ConfigService.getAllListConfig(
-                          "convertPDFBooks"
-                        ).includes(this.props.currentBook.key)
-                      ) {
-                        BookUtil.reloadBooks(this.props.currentBook);
-                      }
-                      this.forceUpdate();
-                    }}
-                  >
-                    {[
-                      { label: "Please select", value: "", lang: "" },
-                      ...(ConfigService.getReaderConfig("ocrEngine") ===
-                      "tesseract"
-                        ? ocrTesseractLangList
-                        : ConfigService.getReaderConfig("ocrEngine") ===
-                            "official-ai-ocr"
-                          ? [
-                              {
-                                label: "General",
-                                value: "general",
-                                lang: "general",
-                              },
-                              {
-                                label: "Accurate",
-                                value: "accurate",
-                                lang: "accurate",
-                              },
-                            ]
-                          : getOcrPaddleLangList()),
-                    ].map((item) => (
-                      <option
-                        value={item.value}
-                        key={item.value}
-                        className="lang-setting-option"
-                      >
-                        {this.props.t(item.label)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </>
-            ) : (
+                    if (
+                      !isElectron &&
+                      item.value === "system-ocr" &&
+                      this.props.currentBook.description.indexOf("scanned") ===
+                        -1
+                    ) {
+                      return false;
+                    }
+                    return true;
+                  })
+                  .map((item) => (
+                    <option
+                      value={item.value}
+                      key={item.value}
+                      className="lang-setting-option"
+                    >
+                      {this.props.t(item.label)}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            {this.props.currentBook.description.indexOf("scanned") === -1 &&
+            ConfigService.getReaderConfig("ocrEngine") === "system-ocr" ? (
               <>
                 <div>
                   <div
@@ -455,6 +361,117 @@ class ConvertDialog extends React.Component<
                   </p>
                 </div>
               </>
+            ) : (
+              <div
+                className="setting-dialog-new-title"
+                style={{
+                  marginLeft: 10,
+                  width: "calc(100% - 20px)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Trans>
+                  {ConfigService.getReaderConfig("ocrEngine") ===
+                  "official-ai-ocr"
+                    ? "Set OCR mode"
+                    : "Set OCR language"}
+                </Trans>
+
+                <select
+                  name=""
+                  className="lang-setting-dropdown"
+                  style={{ width: "70px" }}
+                  value={(() => {
+                    const ocrLang = ConfigService.getReaderConfig("ocrLang");
+                    if (ocrLang) return ocrLang;
+                    const engine = ConfigService.getReaderConfig("ocrEngine");
+                    const currentLang = ConfigService.getReaderConfig("lang");
+                    let list: any[];
+                    if (engine === "tesseract") {
+                      list = ocrTesseractLangList;
+                    } else if (engine === "official-ai-ocr") {
+                      list = [
+                        {
+                          label: "General",
+                          value: "general",
+                          lang: "general",
+                        },
+                        {
+                          label: "Accurate",
+                          value: "accurate",
+                          lang: "accurate",
+                        },
+                      ];
+                    } else if (engine === "mineru-official-agent") {
+                      list = [
+                        {
+                          label: "General",
+                          value: "general",
+                          lang: "general",
+                        },
+                      ];
+                    } else if (engine === "mineru-official-agent") {
+                      list = [
+                        {
+                          label: "Auto",
+                          value: "auto",
+                          lang: "auto",
+                        },
+                      ];
+                    } else {
+                      list = getOcrPaddleLangList();
+                    }
+                    const match = list.find((o: any) => o.lang === currentLang);
+                    return match ? match.value : "";
+                  })()}
+                  onChange={(event) => {
+                    ConfigService.setReaderConfig(
+                      "ocrLang",
+                      event.target.value
+                    );
+                    if (
+                      ConfigService.getAllListConfig(
+                        "convertPDFBooks"
+                      ).includes(this.props.currentBook.key)
+                    ) {
+                      BookUtil.reloadBooks(this.props.currentBook);
+                    }
+                    this.forceUpdate();
+                  }}
+                >
+                  {[
+                    { label: "Please select", value: "", lang: "" },
+                    ...(ConfigService.getReaderConfig("ocrEngine") ===
+                    "tesseract"
+                      ? ocrTesseractLangList
+                      : ConfigService.getReaderConfig("ocrEngine") ===
+                          "official-ai-ocr"
+                        ? [
+                            {
+                              label: "General",
+                              value: "general",
+                              lang: "general",
+                            },
+                            {
+                              label: "Accurate",
+                              value: "accurate",
+                              lang: "accurate",
+                            },
+                          ]
+                        : getOcrPaddleLangList()),
+                  ].map((item) => (
+                    <option
+                      value={item.value}
+                      key={item.value}
+                      className="lang-setting-option"
+                    >
+                      {this.props.t(item.label)}
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
           </ul>
         </div>
