@@ -24,7 +24,10 @@ import _ from "underscore";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
-import { ocrTesseractLangList } from "../../constants/dropdownList";
+import {
+  ocrEngineList,
+  ocrTesseractLangList,
+} from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
 import { getOcrResult, getOcrResultV2 } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
@@ -250,6 +253,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           pdfCrop = { top, bottom, left, right };
         }
       }
+      const ocrLangKey =
+        this.props.currentBook.description.indexOf("scanned") > -1
+          ? "scannedOcrLang"
+          : "textOcrLang";
+      const ocrEngineKey =
+        this.props.currentBook.description.indexOf("scanned") > -1
+          ? "scannedOcrEngine"
+          : "textOcrEngine";
       let rendition = BookHelper.getRendition(
         result,
         {
@@ -292,27 +303,30 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           ).includes(this.props.currentBook.key)
             ? "yes"
             : "no",
-          ocrLang: ConfigService.getReaderConfig("ocrLang")
-            ? ConfigService.getReaderConfig("ocrLang")
-            : ConfigService.getReaderConfig("ocrEngine") === "tesseract"
+          ocrLang: ConfigService.getReaderConfig(ocrLangKey)
+            ? ConfigService.getReaderConfig(ocrLangKey)
+            : ConfigService.getReaderConfig(ocrEngineKey) === "tesseract"
               ? ocrTesseractLangList.find(
                   (item) => item.lang === ConfigService.getReaderConfig("lang")
                 )?.value || "chi_sim"
-              : ConfigService.getReaderConfig("ocrEngine") === "paddle"
-                ? "standard_v5_mobile"
+              : ConfigService.getReaderConfig(ocrEngineKey)
+                ? ocrEngineList.find(
+                    (item) =>
+                      item.value === ConfigService.getReaderConfig(ocrEngineKey)
+                  )?.lang || "general"
                 : "standard_v5_mobile",
           externalWorker: {
             recognize:
-              ConfigService.getReaderConfig("ocrEngine") === "system-ocr"
+              ConfigService.getReaderConfig(ocrEngineKey) === "system-ocr"
                 ? parseWithSystemOCR
-                : ConfigService.getReaderConfig("ocrEngine") ===
+                : ConfigService.getReaderConfig(ocrEngineKey) ===
                     "mineru-official-agent"
                   ? parseWithMineruAgent
-                  : ConfigService.getReaderConfig("ocrLang") === "accurate"
+                  : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
                     ? getOcrResultV2
                     : getOcrResult,
           },
-          ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "paddle",
+          ocrEngine: ConfigService.getReaderConfig(ocrEngineKey) || "paddle",
           serverRegion:
             getServerRegion() === "china" && this.props.isAuthed
               ? "china"

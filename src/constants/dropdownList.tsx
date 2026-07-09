@@ -409,3 +409,31 @@ export const titleSizeList = [
   { label: "4", value: "4" },
   { label: "5", value: "5" },
 ];
+export const ocrEngineList = [
+  { label: "Please select", value: "", lang: "" },
+  {
+    label: i18n.t("Official AI OCR") + " (Pro)",
+    value: "official-ai-ocr",
+    lang: "general",
+  },
+  {
+    label: "MinerU Agent API",
+    value: "mineru-official-agent",
+    lang: "",
+  },
+  {
+    label: "System OCR",
+    value: "system-ocr",
+    lang: "auto",
+  },
+  {
+    label: "Paddle OCR",
+    value: "paddle",
+    lang: "standard_v5_mobile",
+  },
+  {
+    label: "Tesseract",
+    value: "tesseract",
+    lang: "chi_sim",
+  },
+];
