@@ -124,7 +124,8 @@
       "node_modules/**/*",
       "package.json",
       "src/assets/lib/kookit-extra.min.mjs",
-      "main.js"
+      "main.js",
+      "assets/macos/ocr-*-apple-darwin"
     ],
     "protocols": {
       "name": "KoodoReader",

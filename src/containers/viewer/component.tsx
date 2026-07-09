@@ -28,7 +28,10 @@ import { ocrTesseractLangList } from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
 import { getOcrResult, getOcrResultV2 } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
-import { parseWithMineruAgent } from "../../utils/request/common";
+import {
+  parseWithMineruAgent,
+  parseWithSystemOCR,
+} from "../../utils/request/common";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -300,12 +303,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
                 : "standard_v5_mobile",
           externalWorker: {
             recognize:
-              ConfigService.getReaderConfig("ocrEngine") ===
-              "mineru-official-agent"
-                ? parseWithMineruAgent
-                : ConfigService.getReaderConfig("ocrLang") === "accurate"
-                  ? getOcrResultV2
-                  : getOcrResult,
+              ConfigService.getReaderConfig("ocrEngine") === "system-ocr"
+                ? parseWithSystemOCR
+                : ConfigService.getReaderConfig("ocrEngine") ===
+                    "mineru-official-agent"
+                  ? parseWithMineruAgent
+                  : ConfigService.getReaderConfig("ocrLang") === "accurate"
+                    ? getOcrResultV2
+                    : getOcrResult,
           },
           ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "paddle",
           serverRegion:
