@@ -14,5 +14,4 @@ export interface ConvertDialogProps {
 export interface ConvertDialogState {
   isShowExportAll: boolean;
   isConvertPDF: boolean;
-  defaultOcrEngine: string;
 }

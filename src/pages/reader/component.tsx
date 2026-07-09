@@ -157,7 +157,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     if (
       key &&
       ConfigService.getAllListConfig("convertPDFBooks").includes(key) &&
-      ConfigService.getReaderConfig("ocrEngine") === "official-ai-ocr"
+      ConfigService.getReaderConfig(
+        this.props.currentBook?.description?.indexOf("scanned") > -1
+          ? "scannedOcrEngine"
+          : "textOcrEngine"
+      ) === "official-ai-ocr"
     ) {
       await this.props.handleFetchUserInfo();
     }
