@@ -185,6 +185,26 @@ const writeOcrTempImage = (buffer, ext) => {
   return filePath;
 };
 
+const cleanWindowsOcrText = (text) => {
+  if (!text) return text;
+  // Windows.Media.Ocr 对中日韩等无词边界的语言按"字"分词，Text 用空格连接，
+  // 导致中文每字之间出现空格。循环去除 CJK 文字/全角标点之间的空格，
+  // 保留英文与数字之间的空格。单次 replace 无法合并连续序列（如"符 号 学"），
+  // 需循环直到无变化。
+  const cjk = "一-鿿㐀-䶿぀-ヿ가-힯　-〿＀-￯";
+  const pattern = new RegExp(
+    "([" + cjk + "])\\s+([" + cjk + "])",
+    "gu"
+  );
+  let prev;
+  let cur = text;
+  do {
+    prev = cur;
+    cur = cur.replace(pattern, "$1$2");
+  } while (cur !== prev);
+  return cur;
+};
+
 // Windows: 通过 PowerShell 调用 Windows.Media.Ocr (WinRT)
 const runWindowsOcr = (imagePath, winLang) => {
   // PowerShell 脚本里用单引号包裹路径，需转义内部单引号
@@ -243,7 +263,8 @@ try {
     }
     if (trimmed.startsWith("OK")) {
       const b64 = trimmed.slice(2);
-      return b64 ? Buffer.from(b64, "base64").toString("utf8") : "";
+      const raw = b64 ? Buffer.from(b64, "base64").toString("utf8") : "";
+      return cleanWindowsOcrText(raw);
     }
     throw new Error("Windows OCR returned unexpected output");
   });
