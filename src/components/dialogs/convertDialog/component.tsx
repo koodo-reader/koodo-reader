@@ -197,6 +197,11 @@ class ConvertDialog extends React.Component<
                         lang: "",
                       },
                       {
+                        label: "System OCR",
+                        value: "system-ocr",
+                        lang: "auto",
+                      },
+                      {
                         label: "Paddle OCR",
                         value: "paddle",
                         lang: "standard_v5_mobile",
@@ -265,6 +270,14 @@ class ConvertDialog extends React.Component<
                             label: "General",
                             value: "general",
                             lang: "general",
+                          },
+                        ];
+                      } else if (engine === "mineru-official-agent") {
+                        list = [
+                          {
+                            label: "Auto",
+                            value: "auto",
+                            lang: "auto",
                           },
                         ];
                       } else {
