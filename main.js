@@ -142,14 +142,14 @@ const OCR_LANG_MAP = {
   "zh-HK": { macos: "zh-Hant", win: "zh-Hant-HK" },
   "zh-Hans": { macos: "zh-Hans", win: "zh-Hans-CN" },
   "zh-Hant": { macos: "zh-Hant", win: "zh-Hant-TW" },
-  "en": { macos: "en-US", win: "en-US" },
+  en: { macos: "en-US", win: "en-US" },
   "en-US": { macos: "en-US", win: "en-US" },
   "en-GB": { macos: "en-US", win: "en-GB" },
-  "ja": { macos: "ja-JP", win: "ja" },
+  ja: { macos: "ja-JP", win: "ja" },
   "ja-JP": { macos: "ja-JP", win: "ja" },
-  "ko": { macos: "ko-KR", win: "ko" },
+  ko: { macos: "ko-KR", win: "ko" },
   "ko-KR": { macos: "ko-KR", win: "ko" },
-  "fr": { macos: "fr-FR", win: "fr" },
+  fr: { macos: "fr-FR", win: "fr" },
   "fr-FR": { macos: "fr-FR", win: "fr" },
 };
 
@@ -164,11 +164,12 @@ const parseOcrImageInput = (input) => {
     throw new Error("Invalid image data");
   }
   // dataURL: data:image/png;base64,xxxx
-  const dataUrlMatch = input.match(
-    /^data:image\/([a-zA-Z0-9]+);base64,(.+)$/
-  );
+  const dataUrlMatch = input.match(/^data:image\/([a-zA-Z0-9]+);base64,(.+)$/);
   if (dataUrlMatch) {
-    const ext = dataUrlMatch[1].toLowerCase() === "jpeg" ? "jpg" : dataUrlMatch[1].toLowerCase();
+    const ext =
+      dataUrlMatch[1].toLowerCase() === "jpeg"
+        ? "jpg"
+        : dataUrlMatch[1].toLowerCase();
     return { buffer: Buffer.from(dataUrlMatch[2], "base64"), ext };
   }
   // 纯 base64，按 PNG 处理
@@ -191,11 +192,17 @@ const cleanWindowsOcrText = (text) => {
   // 导致中文每字之间出现空格。循环去除 CJK 文字/全角标点之间的空格，
   // 保留英文与数字之间的空格。单次 replace 无法合并连续序列（如"符 号 学"），
   // 需循环直到无变化。
-  const cjk = "一-鿿㐀-䶿぀-ヿ가-힯　-〿＀-￯";
-  const pattern = new RegExp(
-    "([" + cjk + "])\\s+([" + cjk + "])",
-    "gu"
-  );
+  //
+  // CJK 范围用 Unicode 码点表示：
+  //   一-龿   CJK 统一汉字（基本区）
+  //   㐀-䶿   CJK 扩展 A 区
+  //   ぀-ヿ   日文平假名 / 片假名
+  //   가-힯   韩文谚文音节
+  //   　-〿   CJK 符号与标点（全角空格、· 、。 等）
+  //   ＀-￯   全角符号（全角字母数字、（） 等）
+  const cjk =
+    "\\u4e00-\\u9fbf\\u3400-\\u4dbf\\u3040-\\u30ff\\uac00-\\ud7af\\u3000-\\u303f\\uff00-\\uffef";
+  const pattern = new RegExp("([" + cjk + "])\\s+([" + cjk + "])", "gu");
   let prev;
   let cur = text;
   do {
@@ -258,7 +265,9 @@ try {
       throw err;
     }
     if (trimmed.startsWith("ERR")) {
-      const msg = Buffer.from(trimmed.slice(3), "base64").toString("utf8").trim();
+      const msg = Buffer.from(trimmed.slice(3), "base64")
+        .toString("utf8")
+        .trim();
       throw new Error(msg || "Windows OCR failed");
     }
     if (trimmed.startsWith("OK")) {
@@ -274,11 +283,7 @@ try {
 const runMacosOcr = (imagePath, macosLang) => {
   const arch = process.arch; // arm64 / x64
   const archName =
-    arch === "arm64"
-      ? "aarch64"
-      : arch === "x64"
-      ? "x86_64"
-      : arch;
+    arch === "arm64" ? "aarch64" : arch === "x64" ? "x86_64" : arch;
   const binPath = isDev
     ? path.join(__dirname, "assets/macos/ocr-" + archName + "-apple-darwin")
     : path.join(
