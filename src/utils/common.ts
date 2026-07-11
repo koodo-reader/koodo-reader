@@ -1894,3 +1894,15 @@ export function migrateConfig(): void {
     ConfigService.setReaderConfig("isUseLocal", "");
   }
 }
+export const BRUSH_COLORS = [
+  "#E53131",
+  "#F08C00",
+  "#F5C400",
+  "#1FA861",
+  "#1B8CF0",
+  "#6C5CE7",
+  "#E54394",
+  "#2C2C2C",
+];
+
+export const BRUSH_WIDTHS = [2, 4, 8, 14];

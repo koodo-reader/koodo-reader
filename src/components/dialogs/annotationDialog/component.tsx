@@ -2,19 +2,7 @@ import React from "react";
 import { AnnotationDialogProps, AnnotationDialogState } from "./interface";
 import "./annotationDialog.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-
-const BRUSH_COLORS = [
-  "#E53131",
-  "#F08C00",
-  "#F5C400",
-  "#1FA861",
-  "#1B8CF0",
-  "#6C5CE7",
-  "#E54394",
-  "#2C2C2C",
-];
-
-const BRUSH_WIDTHS = [2, 4, 8, 14];
+import { BRUSH_COLORS, BRUSH_WIDTHS } from "../../../utils/common";
 
 class AnnotationDialog extends React.Component<
   AnnotationDialogProps,

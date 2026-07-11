@@ -442,7 +442,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               className="next-chapter-single-container"
               onClick={() => {
                 this.props.htmlBook.rendition.applyAnnotationConfig({
-                  isDrawing: "yes",
+                  isDrawing: this.props.isAnnotationOpen ? "no" : "yes",
                 });
                 this.props.handleAnnotationDialog(!this.props.isAnnotationOpen);
               }}
