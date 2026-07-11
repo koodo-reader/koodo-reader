@@ -1195,7 +1195,7 @@ export const showTaskProgress = async (
       let stats = await window
         .require("electron")
         .ipcRenderer.invoke("cloud-stats", config);
-      if (stats.total > 0) {
+      if (stats.total > 0 && ConfigService.getReaderConfig("hideSyncProgress") !== "yes") {
         toast.loading(
           i18n.t("Start Transferring Data") +
             " (" +
@@ -1220,7 +1220,7 @@ export const showTaskProgress = async (
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let stats = await syncUtil.getStats();
-      if (stats.total > 0) {
+      if (stats.total > 0 && ConfigService.getReaderConfig("hideSyncProgress") !== "yes") {
         toast.loading(
           i18n.t("Start Transferring Data") +
             " (" +

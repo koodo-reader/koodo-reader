@@ -450,18 +450,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       return false;
     }
     if (ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes") {
-      toast.loading(
-        this.props.t("Start syncing") +
-          " (" +
-          this.props.t(
-            driveList.find(
-              (item) =>
-                item.value === ConfigService.getItem("defaultSyncOption")
-            )?.label || ""
-          ) +
-          ")",
-        { id: "syncing", position: "bottom-center" }
-      );
+      if (ConfigService.getReaderConfig("hideSyncProgress") !== "yes") {
+        toast.loading(
+          this.props.t("Start syncing") +
+            " (" +
+            this.props.t(
+              driveList.find(
+                (item) =>
+                  item.value === ConfigService.getItem("defaultSyncOption")
+              )?.label || ""
+            ) +
+            ")",
+          { id: "syncing", position: "bottom-center" }
+        );
+      }
     }
 
     return true;
@@ -534,9 +536,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.props.handleFetchBookmarks();
     this.props.handleFetchNotes();
 
-    toast.success(this.props.t("Synchronisation successful"), {
-      id: "syncing",
-    });
+    if (ConfigService.getReaderConfig("hideSyncProgress") !== "yes") {
+      toast.success(this.props.t("Synchronisation successful"), {
+        id: "syncing",
+      });
+    }
 
     if (
       ConfigService.getItem("defaultSyncOption") === "adrive" &&
@@ -642,10 +646,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         );
         return;
       }
-      toast.loading(this.props.t("Almost finished"), {
-        id: "syncing",
-        position: "bottom-center",
-      });
+      if (ConfigService.getReaderConfig("hideSyncProgress") !== "yes") {
+        toast.loading(this.props.t("Almost finished"), {
+          id: "syncing",
+          position: "bottom-center",
+        });
+      }
       await this.handleSuccess();
     } catch (error) {
       console.error(error);

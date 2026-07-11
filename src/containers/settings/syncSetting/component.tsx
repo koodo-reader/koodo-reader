@@ -54,6 +54,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         ConfigService.getReaderConfig("isDisableAutoSync") === "yes",
       isEnableKoodoSync:
         ConfigService.getReaderConfig("isEnableKoodoSync") === "yes",
+      hideSyncProgress:
+        ConfigService.getReaderConfig("hideSyncProgress") === "yes",
       driveConfig: {},
       scheduledSyncInterval:
         ConfigService.getReaderConfig("scheduledSyncInterval") || "",
