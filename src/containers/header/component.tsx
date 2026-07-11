@@ -371,10 +371,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.error(
         this.props.t(
           "Please add data source in the setting-Sync and backup first"
-        ),
-        {
-          position: "bottom-center",
-        }
+        )
       );
       this.props.handleSetting(true);
       this.props.handleSettingMode("sync");
@@ -772,10 +769,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 toast(
                   this.props.t(
                     "Please add data source in the setting-Sync and backup first"
-                  ),
-                  {
-                    position: "bottom-center",
-                  }
+                  )
                 );
                 this.props.handleSetting(true);
                 this.props.handleSettingMode("sync");
