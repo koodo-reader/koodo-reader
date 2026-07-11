@@ -437,27 +437,34 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 AI
               </div>
             )}
-          {!this.props.isHideAnnotationButton && (
-            <div
-              className="next-chapter-single-container"
-              onClick={() => {
-                this.props.htmlBook.rendition.applyAnnotationConfig({
-                  isDrawing: this.props.isAnnotationOpen ? "no" : "yes",
-                });
-                this.props.handleAnnotationDialog(!this.props.isAnnotationOpen);
-              }}
-              style={{ position: "static", transform: "rotate(0deg)" }}
-            >
-              <span
-                style={
-                  this.props.isAnnotationOpen
-                    ? { fontWeight: "bold", marginTop: "4px" }
-                    : { fontSize: "17px" }
-                }
-                className={`icon-${this.props.isAnnotationOpen ? "close" : "edit"} next-chapter-single`}
-              ></span>
-            </div>
-          )}
+          {!this.props.isHideAnnotationButton &&
+            this.props.currentBook.format === "PDF" &&
+            !ConfigService.getAllListConfig("convertPDFBooks").includes(
+              this.props.currentBook.key
+            ) &&
+            this.props.currentBook.description.indexOf("scanned") > -1 && (
+              <div
+                className="next-chapter-single-container"
+                onClick={() => {
+                  this.props.htmlBook.rendition.applyAnnotationConfig({
+                    isDrawing: this.props.isAnnotationOpen ? "no" : "yes",
+                  });
+                  this.props.handleAnnotationDialog(
+                    !this.props.isAnnotationOpen
+                  );
+                }}
+                style={{ position: "static", transform: "rotate(0deg)" }}
+              >
+                <span
+                  style={
+                    this.props.isAnnotationOpen
+                      ? { fontWeight: "bold", marginTop: "4px" }
+                      : { fontSize: "17px" }
+                  }
+                  className={`icon-${this.props.isAnnotationOpen ? "close" : "edit"} next-chapter-single`}
+                ></span>
+              </div>
+            )}
         </div>
 
         <div
