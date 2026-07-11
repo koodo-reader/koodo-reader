@@ -322,6 +322,11 @@ export const syncSettingList = [
     desc: "If you update a piece of data that has already been deleted in the cloud before synchronization, it will cause a conflict. In this case, we will keep the cloud data by default. If you turn this option on, we will keep the local data",
     propName: "isKeepLocal",
   },
+  {
+    isElectron: false,
+    title: "Hide sync progress bar when syncing",
+    propName: "hideSyncProgress",
+  },
 ];
 export const readingSettingList = [
   {
