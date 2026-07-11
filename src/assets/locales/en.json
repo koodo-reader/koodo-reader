@@ -1239,6 +1239,15 @@
   "Brush width": "Brush width",
   "Still refuse": "Still refuse",
   "I'll think about it": "I'll think about it",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more."
+  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Once you exit Pro, you will immediately lose the following member benefits",
+  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.",
+  "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)",
+  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Official translation in 90+ languages": "Official translation in 90+ languages",
+  "Official dictionary with definitions, examples & pronunciation": "Official dictionary with definitions, examples & pronunciation",
+  "AI reading aids (chapter summaries, outline, multi-role narration)": "AI reading aids (chapter summaries, outline, multi-role narration)",
+  "Natural text-to-speech (82 languages, 569 voices)": "Natural text-to-speech (82 languages, 569 voices)",
+  "OCR text recognition for scanned PDFs": "OCR text recognition for scanned PDFs",
+  "Send to Kindle": "Send to Kindle",
+  "Email & live-chat priority support": "Email & live-chat priority support"
 }
