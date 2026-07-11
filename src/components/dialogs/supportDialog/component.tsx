@@ -115,18 +115,43 @@ class SupportDialog extends React.Component<
                         "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features"
                       )}
                     </p>
-                    <p
-                      className="support-dialog-list"
-                      style={{
-                        textAlign: "center",
-                        lineHeight: "1.5",
-                        marginTop: 10,
-                      }}
-                    >
-                      {this.props.t(
-                        "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more."
-                      )}
-                    </p>
+                    <ul className="support-dialog-benefit-list">
+                      <li>
+                        {this.props.t(
+                          "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)"
+                        )}
+                      </li>
+                      <li>
+                        {this.props.t(
+                          "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)"
+                        )}
+                      </li>
+                      <li>
+                        {this.props.t("Official translation in 90+ languages")}
+                      </li>
+                      <li>
+                        {this.props.t(
+                          "Official dictionary with definitions, examples & pronunciation"
+                        )}
+                      </li>
+                      <li>
+                        {this.props.t(
+                          "AI reading aids (chapter summaries, outline, multi-role narration)"
+                        )}
+                      </li>
+                      <li>
+                        {this.props.t(
+                          "Natural text-to-speech (82 languages, 569 voices)"
+                        )}
+                      </li>
+                      <li>
+                        {this.props.t("OCR text recognition for scanned PDFs")}
+                      </li>
+                      <li>{this.props.t("Send to Kindle")}</li>
+                      <li>
+                        {this.props.t("Email & live-chat priority support")}
+                      </li>
+                    </ul>
                   </div>
                 </>
               </>

@@ -1249,6 +1249,15 @@
   "Theme": "主题",
   "Still refuse": "狠心拒绝",
   "I'll think about it": "我再想想",
-  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "退出之后，您将无法使用同步和其他高级功能",
-  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "后续我们还会推出更多会员专属功能，包括阅读统计，自动同步您的笔记、高亮、阅读进度和生词本到Notion、语雀、Obsidian、Anki等平台。"
+  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "退出专业版后，您将立即失去以下会员权益",
+  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "后续我们还会推出更多会员专属功能，包括阅读统计，自动同步您的笔记、高亮、阅读进度和生词本到Notion、语雀、Obsidian、Anki等平台。",
+  "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "跨平台数据同步（网盘、WebDAV、Docker、对象存储）",
+  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "从网盘/服务器导入图书（百度网盘、阿里云盘、Google Drive、WebDAV、FTP、SMB）",
+  "Official translation in 90+ languages": "官方翻译（90+ 语言）",
+  "Official dictionary with definitions, examples & pronunciation": "官方词典（释义、例句、发音）",
+  "AI reading aids (chapter summaries, outline, multi-role narration)": "官方阅读辅助（章节总结、大纲生成、多角色朗读、在线匹配封面）",
+  "Natural text-to-speech (82 languages, 569 voices)": "真人语音朗读（82 门语言、569 种语音）",
+  "OCR text recognition for scanned PDFs": "OCR 文字识别",
+  "Send to Kindle": "发送到 Kindle",
+  "Email & live-chat priority support": "邮件与实时聊天支持"
 }
