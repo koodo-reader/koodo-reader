@@ -407,7 +407,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               style={{ position: "static", transform: "rotate(0deg)" }}
             >
               <span
-                style={this.props.isSpeechOpen ? { fontWeight: "bold" } : {}}
+                style={
+                  this.props.isSpeechOpen
+                    ? { fontWeight: "bold", marginTop: "4px" }
+                    : {}
+                }
                 className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
               ></span>
             </div>
@@ -437,15 +441,18 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <div
               className="next-chapter-single-container"
               onClick={() => {
-                this.props.handleAnnotationDialog(
-                  !this.props.isAnnotationOpen
-                );
+                this.props.htmlBook.rendition.applyAnnotationConfig({
+                  isDrawing: "yes",
+                });
+                this.props.handleAnnotationDialog(!this.props.isAnnotationOpen);
               }}
               style={{ position: "static", transform: "rotate(0deg)" }}
             >
               <span
                 style={
-                  this.props.isAnnotationOpen ? { fontWeight: "bold" } : {}
+                  this.props.isAnnotationOpen
+                    ? { fontWeight: "bold", marginTop: "4px" }
+                    : { fontSize: "17px" }
                 }
                 className={`icon-${this.props.isAnnotationOpen ? "close" : "edit"} next-chapter-single`}
               ></span>

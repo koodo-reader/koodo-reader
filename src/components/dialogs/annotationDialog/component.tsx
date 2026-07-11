@@ -23,7 +23,8 @@ class AnnotationDialog extends React.Component<
   constructor(props: AnnotationDialogProps) {
     super(props);
     this.state = {
-      brushColor: ConfigService.getReaderConfig("brushColor") || BRUSH_COLORS[0],
+      brushColor:
+        ConfigService.getReaderConfig("brushColor") || BRUSH_COLORS[0],
       brushWidth: parseFloat(
         ConfigService.getReaderConfig("brushWidth") || BRUSH_WIDTHS[1] + ""
       ),
@@ -31,14 +32,23 @@ class AnnotationDialog extends React.Component<
   }
   handleSelectColor = (color: string) => {
     this.setState({ brushColor: color });
+    this.props.htmlBook.rendition.applyAnnotationConfig({
+      brushColor: color,
+    });
     ConfigService.setReaderConfig("brushColor", color);
   };
   handleSelectWidth = (width: number) => {
     this.setState({ brushWidth: width });
+    this.props.htmlBook.rendition.applyAnnotationConfig({
+      brushWidth: width,
+    });
     ConfigService.setReaderConfig("brushWidth", width + "");
   };
   handleClose = () => {
     this.props.handleAnnotationDialog(false);
+    this.props.htmlBook.rendition.applyAnnotationConfig({
+      isDrawing: "no",
+    });
   };
   render() {
     const { brushColor, brushWidth } = this.state;
@@ -49,7 +59,7 @@ class AnnotationDialog extends React.Component<
           left: "auto",
           top: "auto",
           bottom: "60px",
-          width: "300px",
+          width: "200px",
           right: this.props.isSettingLocked ? 370 : 65,
         }}
       >
@@ -103,7 +113,7 @@ class AnnotationDialog extends React.Component<
                   style={{
                     backgroundColor: brushColor,
                     height: width + "px",
-                    borderRadius: (width / 2) + "px",
+                    borderRadius: width / 2 + "px",
                   }}
                 ></span>
               </li>
