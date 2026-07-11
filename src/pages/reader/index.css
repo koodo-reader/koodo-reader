@@ -61,10 +61,10 @@
 }
 .left-panel {
   width: 40px;
-  height: 60%;
+  height: 40%;
   position: absolute;
   left: 0px;
-  top: calc(50vh - 30%);
+  top: calc(50vh - 20%);
   background-color: rgba(75, 75, 75, 0.3);
   border-bottom-right-radius: 20px;
   border-top-right-radius: 20px;
@@ -77,10 +77,10 @@
 }
 .right-panel {
   width: 40px;
-  height: 60%;
+  height: 40%;
   position: absolute;
   right: 0px;
-  top: calc(50vh - 30%);
+  top: calc(50vh - 20%);
   background-color: rgba(75, 75, 75, 0.3);
   border-bottom-left-radius: 20px;
   border-top-left-radius: 20px;
@@ -92,10 +92,10 @@
   cursor: pointer;
 }
 .top-panel {
-  width: 60%;
+  width: 40%;
   height: 40px;
   position: absolute;
-  left: calc(50vw - 30%);
+  left: calc(50vw - 20%);
   top: 0px;
   background-color: rgba(75, 75, 75, 0.3);
   border-bottom-left-radius: 20px;
@@ -108,10 +108,10 @@
   cursor: pointer;
 }
 .bottom-panel {
-  width: 60%;
+  width: 40%;
   height: 40px;
   position: absolute;
-  left: calc(50vw - 30%);
+  left: calc(50vw - 20%);
   bottom: 0px;
   background-color: rgba(75, 75, 75, 0.3);
   border-top-left-radius: 20px;

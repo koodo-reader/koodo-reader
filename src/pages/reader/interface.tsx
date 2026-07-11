@@ -10,6 +10,7 @@ export interface ReaderProps {
   isConvertOpen: boolean;
   isPdfCropOpen: boolean;
   isSpeechOpen: boolean;
+  isAnnotationOpen: boolean;
   isOpenPopupOptionDialog: boolean;
   isSearch: boolean;
   isAuthed: boolean;
@@ -17,6 +18,7 @@ export interface ReaderProps {
   isSettingOpen: boolean;
   isHideMenuButton: boolean;
   isHideAudiobookButton: boolean;
+  isHideAnnotationButton: boolean;
   isHideAIButton: boolean;
   isHidePDFConvertButton: boolean;
   isHideScaleButton: boolean;
@@ -27,6 +29,7 @@ export interface ReaderProps {
   handleConvertDialog: (isConvertOpen: boolean) => void;
   handlePdfCropDialog: (isPdfCropOpen: boolean) => void;
   handleSpeechDialog: (isSpeechOpen: boolean) => void;
+  handleAnnotationDialog: (isAnnotationOpen: boolean) => void;
   handleMenuMode: (menuMode: string) => void;
   handleOriginalText: (originalText: string) => void;
   handleFetchBooks: () => void;

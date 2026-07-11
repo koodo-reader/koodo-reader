@@ -11,6 +11,7 @@ import {
   handleConvertDialog,
   handlePdfCropDialog,
   handleSpeechDialog,
+  handleAnnotationDialog,
   handleScale,
   handleFetchAuthed,
   handleFetchUserInfo,
@@ -30,6 +31,7 @@ const mapStateToProps = (state: stateType) => {
     isConvertOpen: state.reader.isConvertOpen,
     isPdfCropOpen: state.reader.isPdfCropOpen,
     isSpeechOpen: state.reader.isSpeechOpen,
+    isAnnotationOpen: state.reader.isAnnotationOpen,
     isOpenPopupOptionDialog: state.backupPage.isOpenPopupOptionDialog,
     isSettingLocked: state.reader.isSettingLocked,
     isAuthed: state.manager.isAuthed,
@@ -40,6 +42,7 @@ const mapStateToProps = (state: stateType) => {
     isHidePageButton: state.reader.isHidePageButton,
     isHideMenuButton: state.reader.isHideMenuButton,
     isHideAudiobookButton: state.reader.isHideAudiobookButton,
+    isHideAnnotationButton: state.reader.isHideAnnotationButton,
     isHideAIButton: state.reader.isHideAIButton,
     isHidePDFConvertButton: state.reader.isHidePDFConvertButton,
     isHideScaleButton: state.reader.isHideScaleButton,
@@ -60,6 +63,7 @@ const actionCreator = {
   handleScale,
   handleFetchAuthed,
   handleSpeechDialog,
+  handleAnnotationDialog,
   handleFetchUserInfo,
 };
 export default connect(

@@ -35,6 +35,9 @@ export function handlePdfCropDialog(isPdfCropOpen: boolean) {
 export function handleSpeechDialog(isSpeechOpen: boolean) {
   return { type: "HANDLE_SPEECH_DIALOG", payload: isSpeechOpen };
 }
+export function handleAnnotationDialog(isAnnotationOpen: boolean) {
+  return { type: "HANDLE_ANNOTATION_DIALOG", payload: isAnnotationOpen };
+}
 export function handleSpeechStartText(speechStartText: string) {
   return { type: "HANDLE_SPEECH_START_TEXT", payload: speechStartText };
 }
@@ -105,6 +108,12 @@ export function handleHideAudiobookButton(isHideAudiobookButton: boolean) {
   return {
     type: "HANDLE_HIDE_AUDIOBOOK_BUTTON",
     payload: isHideAudiobookButton,
+  };
+}
+export function handleHideAnnotationButton(isHideAnnotationButton: boolean) {
+  return {
+    type: "HANDLE_HIDE_ANNOTATION_BUTTON",
+    payload: isHideAnnotationButton,
   };
 }
 export function handleHideAIButton(isHideAIButton: boolean) {
