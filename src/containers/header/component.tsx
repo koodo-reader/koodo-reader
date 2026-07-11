@@ -15,7 +15,6 @@ import { backupToConfigJson, generateSnapshot } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
 import {
   getCloudConfig,
-  getLastSyncTimeFromConfigJson,
   removeCloudConfig,
   upgradeConfig,
   upgradeStorage,
@@ -66,7 +65,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       language: ConfigService.getReaderConfig("lang"),
       isNewVersion: false,
       width: document.body.clientWidth,
-      isDataChange: false,
       isHidePro: false,
       isSync: false,
       notificationCount: 0,
@@ -111,15 +109,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       let res2 = upgradeConfig();
       if (!res1 || !res2) {
         console.error("upgrade failed");
-      }
-
-      //Detect data modification
-      let lastSyncTime = getLastSyncTimeFromConfigJson();
-      if (
-        ConfigService.getItem("lastSyncTime") &&
-        lastSyncTime > parseInt(ConfigService.getItem("lastSyncTime") || "0")
-      ) {
-        this.setState({ isDataChange: true });
       }
 
       ipcRenderer.on("reading-finished", async (event: any, config: any) => {
@@ -338,55 +327,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }, 2000);
   };
 
-  syncFromLocation = async () => {
-    let result = await restoreFromConfigJson();
-    if (result) {
-      this.setState({ isDataChange: false });
-      //Check for data update
-      let lastSyncTime = getLastSyncTimeFromConfigJson();
-      if (ConfigService.getItem("lastSyncTime") && lastSyncTime) {
-        ConfigService.setItem("lastSyncTime", lastSyncTime + "");
-      } else {
-        let timestamp = new Date().getTime().toString();
-        ConfigService.setItem("lastSyncTime", timestamp);
-      }
-    }
-    if (!result) {
-      toast.error(this.props.t("Sync failed"));
-    } else {
-      toast.success(
-        this.props.t("Synchronisation successful") +
-          " (" +
-          this.props.t("Local") +
-          ")"
-      );
-      toast.success(
-        this.props.t(
-          "Your data has been imported from your local folder, Upgrade to pro to get more advanced features"
-        ),
-        {
-          duration: 4000,
-        }
-      );
-    }
-  };
-  handleLocalSync = async () => {
-    let lastSyncTime = getLastSyncTimeFromConfigJson();
-    if (!lastSyncTime) {
-      await this.syncToLocation();
-    } else {
-      if (
-        ConfigService.getItem("lastSyncTime") &&
-        lastSyncTime <= parseInt(ConfigService.getItem("lastSyncTime")!)
-      ) {
-        await this.syncToLocation();
-      } else {
-        await this.syncFromLocation();
-      }
-    }
-
-    this.setState({ isSync: false });
-  };
   handleKOReaderSync = async () => {
     if (ConfigService.getReaderConfig("isEnableKoReaderSync") !== "yes") {
       return;
@@ -711,17 +651,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       return;
     }
   };
-  syncToLocation = async () => {
-    let timestamp = new Date().getTime().toString();
-    ConfigService.setItem("lastSyncTime", timestamp);
-    await backupToConfigJson();
-    toast.success(
-      this.props.t("Synchronisation successful") +
-        " (" +
-        this.props.t("Local") +
-        ")"
-    );
-  };
 
   render() {
     return (
@@ -820,35 +749,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <div
             className="setting-icon-container"
             onClick={async () => {
-              if (!isElectron && !this.props.isAuthed) {
-                toast(
-                  this.props.t("Please upgrade to Pro to use this feature")
-                );
-                this.props.handleSetting(true);
-                this.props.handleSettingMode("account");
-                return;
-              }
-              this.setState({ isSync: true });
-              if (
-                ConfigService.getReaderConfig("useLocalSync") === "yes" &&
-                !ConfigService.getItem("defaultSyncOption")
-              ) {
-                await this.handleLocalSync();
-                this.handleKOReaderSync();
-                return;
-              }
               if (this.props.isAuthed) {
+                this.setState({ isSync: true });
                 let userInfo = await this.props.handleFetchUserInfo();
                 await this.handleCloudSync(userInfo);
               } else {
-                toast.success(
-                  this.props.t(
-                    "Please set the default sync option to local in the settings, or upgrade to Pro to sync with more cloud storage"
-                  ),
-                  {
-                    duration: 4000,
-                  }
-                );
+                toast(this.props.t("Please add data source in the setting"), {
+                  duration: 4000,
+                });
                 this.props.handleSetting(true);
                 this.props.handleSettingMode("sync");
                 this.setState({ isSync: false });
@@ -866,11 +774,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   "icon-sync setting-icon" +
                   (this.state.isSync ? " icon-rotate" : "")
                 }
-                style={
-                  this.state.isDataChange
-                    ? { color: "rgb(35, 170, 242)", fontSize: "25px" }
-                    : { fontSize: "25px" }
-                }
+                style={{ fontSize: "25px" }}
               ></span>
             </span>
           </div>

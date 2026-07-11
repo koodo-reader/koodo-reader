@@ -936,13 +936,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 event.target.value = this.props.defaultSyncOption;
                 return;
               }
-              if (newValue === "local") {
-                ConfigService.setReaderConfig("useLocalSync", "yes");
-                ConfigService.removeItem("defaultSyncOption");
-                this.props.handleDefaultSyncOption("local");
-                toast.success(this.props.t("Change successful"));
-                return;
-              }
               const currentValue = this.props.defaultSyncOption;
               let onlineBooks: Book[] = [];
               for (let i = 0; i < this.props.books.length; i++) {

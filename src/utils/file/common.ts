@@ -77,21 +77,6 @@ const isKoodoLibrary = (folderPath: string) => {
   const files = fs.readdirSync(folderPath);
   return files.includes("config");
 };
-export const getLastSyncTimeFromConfigJson = () => {
-  const fs = window.require("fs");
-  const path = window.require("path");
-  const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath, "config", "config.json"))) {
-    return 0;
-  }
-  let data = fs.readFileSync(
-    path.join(dataPath, "config", "config.json"),
-    "utf-8"
-  );
-
-  const config = JSON.parse(data);
-  return parseInt(config.lastSyncTime || "0");
-};
 export function getParamsFromUrl() {
   var hashParams: any = {};
   var e,
