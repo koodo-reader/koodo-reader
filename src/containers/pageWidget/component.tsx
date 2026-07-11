@@ -9,6 +9,9 @@ import {
   getFullTranslationTarget,
 } from "../../utils/common";
 import toast from "react-hot-toast";
+import DatabaseService from "../../utils/storage/databaseService";
+import Note from "../../models/Note";
+import ConfigUtil from "../../utils/file/configUtil";
 class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
   isFirst: Boolean;
   timeInterval: any;
@@ -62,6 +65,57 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
           this.props.handleJumpPosition(null);
         }
       });
+      nextProps.htmlBook.rendition.on(
+        "annotation-changed",
+        async (chapterDocIndex: number) => {
+          let annotationData =
+            nextProps.htmlBook.rendition.getAnnotationData(chapterDocIndex);
+          let notes = await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
+            this.props.currentBook.key,
+            "highlight"
+          );
+          let note = notes.find(
+            (note: Note) => note.chapterIndex === chapterDocIndex
+          );
+          if (note && note.color === "annotation") {
+            let newNote = {
+              ...note,
+              range: JSON.stringify(annotationData),
+            };
+            await DatabaseService.updateRecord(newNote, "notes");
+          } else {
+            let bookLocation: {
+              text: string;
+              count: string;
+              chapterTitle: string;
+              chapterDocIndex: string;
+              chapterHref: string;
+              percentage: string;
+              cfi: string;
+              page: string;
+              xpath: string;
+            } = ConfigService.getObjectConfig(
+              this.props.currentBook.key,
+              "recordLocation",
+              {}
+            );
+            let newNote = new Note(
+              this.props.currentBook.key,
+              bookLocation.chapterTitle,
+              chapterDocIndex,
+              "",
+              JSON.stringify(bookLocation),
+              JSON.stringify(annotationData),
+              "",
+              bookLocation.percentage,
+              "annotation",
+              []
+            );
+            await DatabaseService.saveRecord(newNote, "notes");
+          }
+          this.props.handleFetchNotes();
+        }
+      );
       nextProps.htmlBook.rendition.on("rendered", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
         await this.handleBatchTranslation(nextProps.htmlBook.rendition);

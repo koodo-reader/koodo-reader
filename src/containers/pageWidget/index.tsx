@@ -5,11 +5,13 @@ import {
   handleCurrentChapter,
   handleCurrentChapterIndex,
   handleJumpPosition,
+  handleFetchNotes,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
+    notes: state.reader.notes,
     currentChapter: state.reader.currentChapter,
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
@@ -30,6 +32,7 @@ const actionCreator = {
   handleCurrentChapter,
   handleCurrentChapterIndex,
   handleJumpPosition,
+  handleFetchNotes,
 };
 export default connect(
   mapStateToProps,
