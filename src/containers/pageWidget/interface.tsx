@@ -1,5 +1,6 @@
 import BookModel from "../../models/Book";
 import HtmlBookModel from "../../models/HtmlBook";
+import NoteModel from "../../models/Note";
 export interface PageWidgetProps {
   currentBook: BookModel;
   currentChapter: string;
@@ -15,7 +16,9 @@ export interface PageWidgetProps {
   isShowPageBorder: boolean;
   textOrientation: string;
   backgroundColor: string;
+  notes: NoteModel[];
   t: (title: string) => string;
+  handleFetchNotes: () => void;
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
   jumpPosition: object | null;
