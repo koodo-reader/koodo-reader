@@ -19,6 +19,7 @@ import PdfCropDialog from "../../components/dialogs/pdfCropDialog";
 import { isElectron } from "react-device-detect";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import SpeechDialog from "../../components/dialogs/speechDialog";
+import AnnotationDialog from "../../components/dialogs/annotationDialog";
 import PopupOptionDialog from "../../components/dialogs/popupOptionDialog";
 import {
   updateDiscordPresence,
@@ -432,6 +433,24 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 AI
               </div>
             )}
+          {!this.props.isHideAnnotationButton && (
+            <div
+              className="next-chapter-single-container"
+              onClick={() => {
+                this.props.handleAnnotationDialog(
+                  !this.props.isAnnotationOpen
+                );
+              }}
+              style={{ position: "static", transform: "rotate(0deg)" }}
+            >
+              <span
+                style={
+                  this.props.isAnnotationOpen ? { fontWeight: "bold" } : {}
+                }
+                className={`icon-${this.props.isAnnotationOpen ? "close" : "edit"} next-chapter-single`}
+              ></span>
+            </div>
+          )}
         </div>
 
         <div
@@ -812,6 +831,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <SpeechDialog />
           </div>
         }
+        {this.props.isAnnotationOpen && <AnnotationDialog />}
       </div>
     );
   }

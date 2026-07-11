@@ -30,6 +30,7 @@ const initState = {
   isConvertOpen: false,
   isPdfCropOpen: false,
   isSpeechOpen: false,
+  isAnnotationOpen: false,
   speechStartText: "",
   isSpeechAutoStart: false,
   isNavLocked: ConfigService.getReaderConfig("isNavLocked") === "yes",
@@ -41,6 +42,8 @@ const initState = {
   isHideMenuButton: ConfigService.getReaderConfig("isHideMenuButton") === "yes",
   isHideAudiobookButton:
     ConfigService.getReaderConfig("isHideAudiobookButton") === "yes",
+  isHideAnnotationButton:
+    ConfigService.getReaderConfig("isHideAnnotationButton") === "yes",
   isHideAIButton: ConfigService.getReaderConfig("isHideAIButton") === "yes",
   isHideScaleButton:
     ConfigService.getReaderConfig("isHideScaleButton") === "yes",
@@ -92,6 +95,11 @@ export function reader(
       return {
         ...state,
         isSpeechOpen: action.payload,
+      };
+    case "HANDLE_ANNOTATION_DIALOG":
+      return {
+        ...state,
+        isAnnotationOpen: action.payload,
       };
     case "HANDLE_SPEECH_START_TEXT":
       return {
@@ -162,6 +170,11 @@ export function reader(
       return {
         ...state,
         isHideAudiobookButton: action.payload,
+      };
+    case "HANDLE_HIDE_ANNOTATION_BUTTON":
+      return {
+        ...state,
+        isHideAnnotationButton: action.payload,
       };
     case "HANDLE_HIDE_AI_BUTTON":
       return {

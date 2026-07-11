@@ -1233,5 +1233,8 @@
   "Search highlight style": "Search highlight style",
   "Customize the highlight style when searching in books": "Customize the highlight style when searching in books",
   "Theme": "Theme",
-  "You are clicking too fast, please try again later": "You are clicking too fast, please try again later"
+  "You are clicking too fast, please try again later": "You are clicking too fast, please try again later",
+  "Annotation": "Annotation",
+  "Brush color": "Brush color",
+  "Brush width": "Brush width"
 }
