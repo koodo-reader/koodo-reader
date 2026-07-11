@@ -70,6 +70,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
         async (chapterDocIndex: number) => {
           let annotationData =
             nextProps.htmlBook.rendition.getAnnotationData(chapterDocIndex);
+          console.log("annotationData", annotationData);
           let notes = await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
             this.props.currentBook.key,
             "highlight"

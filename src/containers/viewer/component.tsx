@@ -13,6 +13,7 @@ import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import {
+  BRUSH_WIDTHS,
   getPageWidth,
   getParserRegex,
   getPdfPassword,
@@ -339,6 +340,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             this.props.currentBook.description.indexOf("scanned") > -1
               ? "yes"
               : "no",
+          brushColor: ConfigService.getReaderConfig("brushColor") || "#FF0000",
+          brushWidth: parseFloat(
+            ConfigService.getReaderConfig("brushWidth") || BRUSH_WIDTHS[1] + ""
+          ),
           isKeepPDFBackground: ConfigService.getReaderConfig(
             "isKeepPDFBackground"
           ),
