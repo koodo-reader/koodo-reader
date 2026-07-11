@@ -235,4 +235,30 @@ describe("nestPack (multi-language registry)", () => {
     await ensureNestPackLoaded(RU_CONFIG);
     expect(lookupWordStructure("знать", "ru")!.lemma).toBe("знать");
   });
+
+  test("retry after a mid-parse failure does not duplicate nest members", async () => {
+    // nests succeed, forms fail: the nests map is half-filled before the throw
+    const bodyFor = (u: string) =>
+      u.includes("ru.nests") ? RU_NESTS : u.includes("ru.glosses") ? RU_GLOSSES : RU_MORPHEMES;
+    let failForms = true;
+    (global as any).fetch = (url: any) => {
+      const u = String(url);
+      if (u.includes("ru.forms")) {
+        return failForms
+          ? Promise.resolve({ ok: false, status: 500, arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)) })
+          : Promise.resolve({ ok: true, status: 200, arrayBuffer: () => Promise.resolve(new TextEncoder().encode(RU_FORMS).buffer) });
+      }
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        arrayBuffer: () => Promise.resolve(new TextEncoder().encode(bodyFor(u)).buffer),
+      });
+    };
+    await expect(ensureNestPackLoaded(RU_CONFIG)).rejects.toThrow(/500/);
+    failForms = false;
+    await ensureNestPackLoaded(RU_CONFIG);
+    // знать's nest keeps exactly its 4 members, not doubled by the retry
+    expect(lookupWordStructure("знание", "ru")!.memberCount).toBe(4);
+    expect(lookupWordStructure("знание", "ru")!.tree.children).toHaveLength(2);
+  });
 });

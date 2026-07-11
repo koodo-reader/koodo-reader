@@ -334,8 +334,12 @@ if (glossDir) {
 }
 
 // ---- 4. write ---------------------------------------------------------------
+const HEADER_SOURCE = {
+  ru: "MorphyNet rus v1, CC BY-SA 3.0, source: Russian Wiktionary",
+  en: "MorphyNet eng v1, CC BY-SA 3.0, source: English Wiktionary",
+};
 const header = (kind) =>
-  `# koodo word-structure pack v1 (${kind}) | MorphyNet rus v1, CC BY-SA 3.0, source: Russian Wiktionary | https://github.com/kbatsuren/MorphyNet\n`;
+  `# koodo word-structure pack v1 (${kind}) | ${HEADER_SOURCE[lang] || "MorphyNet"} | https://github.com/kbatsuren/MorphyNet\n`;
 // ---- 3b. morpheme dictionary layer (ru.wiktionary морфо-ru) -----------------
 const morphoLines = [];
 if (morphoPath) {

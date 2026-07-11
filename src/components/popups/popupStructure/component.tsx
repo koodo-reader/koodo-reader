@@ -45,6 +45,7 @@ class PopupStructure extends React.Component<
   private packConfig: WordStructurePluginConfig | null = null;
   private profile: LanguageProfile = getLanguageProfile("");
   private aiModel: AiGlossModel | null = null;
+  private aiInFlight = 0;
 
   constructor(props: PopupStructureProps) {
     super(props);
@@ -96,7 +97,14 @@ class PopupStructure extends React.Component<
     const { result } = this.state;
     if (!result || !this.aiModel || !this.aiEnabled()) return;
     const rootMorpheme = this.rootMorphemeText() || result.root;
+    this.aiInFlight += 1;
     this.setState({ aiPending: true });
+    const settle = () => {
+      this.aiInFlight -= 1;
+      if (!this.isUnmounted && this.aiInFlight === 0) {
+        this.setState({ aiPending: false });
+      }
+    };
     fetchAiGlosses(
       {
         lang: this.lang,
@@ -108,19 +116,19 @@ class PopupStructure extends React.Component<
       this.aiModel
     )
       .then((aiResult) => {
-        if (this.isUnmounted || !aiResult) {
-          if (!this.isUnmounted) this.setState({ aiPending: false });
-          return;
+        if (!this.isUnmounted && aiResult) {
+          // functional setState so overlapping responses merge instead of
+          // clobbering each other
+          this.setState((prev) => ({
+            aiGlosses: { ...prev.aiGlosses, ...aiResult.glosses },
+            aiRoot: aiResult.root ?? prev.aiRoot,
+          }));
         }
-        this.setState({
-          aiGlosses: { ...this.state.aiGlosses, ...aiResult.glosses },
-          aiRoot: aiResult.root ?? this.state.aiRoot,
-          aiPending: false,
-        });
       })
       .catch(() => {
-        if (!this.isUnmounted) this.setState({ aiPending: false });
-      });
+        /* a failed request just leaves its words un-glossed */
+      })
+      .finally(settle);
   }
 
   /** family words the popup currently shows: lemma + chain + first tree level */
@@ -352,13 +360,14 @@ class PopupStructure extends React.Component<
             <div className="structure-message">
               <Trans>No word structure plugin for this language</Trans>
             </div>
-            <div
+            <button
+              type="button"
               className="structure-install-button"
               onClick={this.handleOpenPluginSettings}
             >
               <span className="icon-add" style={{ marginRight: 6 }}></span>
               <Trans>Install word structure plugin</Trans>
-            </div>
+            </button>
           </>
         )}
         {status === "loading" && (
@@ -389,13 +398,14 @@ class PopupStructure extends React.Component<
             <div className="structure-word">
               {result.lemma}
               {this.renderPos(result.chain[result.chain.length - 1]?.pos || "")}
-              <span
+              <button
+                type="button"
                 className="structure-translate-link"
                 title={this.props.t("Translate")}
                 onClick={() => this.handleTranslateWord(result.lemma)}
               >
                 ⇄
-              </span>
+              </button>
             </div>
             {(() => {
               const gloss = this.glossFor(result.lemma);

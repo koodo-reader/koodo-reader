@@ -136,7 +136,6 @@
 }
 
 .structure-morphemes-plain .structure-morpheme {
-  padding-top: 0;
   border-bottom: none;
   background: rgba(127, 127, 127, 0.12);
   border-radius: 4px;
@@ -186,6 +185,8 @@
   align-items: center;
   margin: 10px 5px;
   padding: 8px 18px;
+  border: none;
+  font: inherit;
   border-radius: 6px;
   background: #2084e8;
   color: #fff;
@@ -319,6 +320,10 @@
   cursor: pointer;
   margin-left: 10px;
   vertical-align: 3px;
+  border: none;
+  background: none;
+  padding: 0;
+  line-height: 1;
 }
 
 .structure-footer {

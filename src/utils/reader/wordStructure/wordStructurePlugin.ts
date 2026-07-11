@@ -69,7 +69,14 @@ export function getPluginConfig(
   plugin: Plugin
 ): WordStructurePluginConfig | null {
   const config = plugin.config as WordStructurePluginConfig;
-  if (!config || !config.lang || !config.packBaseUrl || !config.files) {
+  if (
+    !config ||
+    !config.lang ||
+    !config.packBaseUrl ||
+    !config.files ||
+    !config.files.nests ||
+    !config.files.forms
+  ) {
     return null;
   }
   return config;

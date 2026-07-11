@@ -108,7 +108,7 @@ function locateRoot(
 }
 
 /** prefixes surface in reverse application order */
-function splitPrefixes(zone: string, prefixes: string[]): Morpheme[] {
+function splitPrefixes(zone: string, prefixes: string[]): Morpheme[] | null {
   if (!zone) return [];
   const segments: Morpheme[] = [];
   let rest = zone;
@@ -119,9 +119,9 @@ function splitPrefixes(zone: string, prefixes: string[]): Morpheme[] {
       rest = rest.slice(prefix.length);
     }
   }
-  if (rest) {
-    segments.push({ text: rest, role: "prefix" });
-  }
+  // unmatched chars in the pre-root zone mean the chain's prefixes don't align
+  // with the surface form; return null rather than invent a prefix segment
+  if (rest) return null;
   return segments;
 }
 
@@ -152,6 +152,9 @@ function splitSuffixes(zone: string, suffixes: string[]): Morpheme[] | null {
     segments.unshift({ text: matched, role: "suffix" });
     rest = rest.slice(0, rest.length - matched.length);
   }
+  // leftover between root and the first matched suffix: interfixes, connecting
+  // vowels, or affixes the derivation chain doesn't carry. Keep it as a single
+  // suffix segment rather than dropping the whole breakdown.
   if (rest) {
     segments.unshift({ text: rest, role: "suffix" });
   }
@@ -232,6 +235,7 @@ export function buildMorphemeBreakdown(
     .map((row) => row.affix);
 
   const prefixes = splitPrefixes(prefixZone, prefixAffixes);
+  if (!prefixes) return null;
 
   for (const ending of endingCandidates(pos, tail, profile)) {
     const zone = ending ? tail.slice(0, tail.length - ending.length) : tail;

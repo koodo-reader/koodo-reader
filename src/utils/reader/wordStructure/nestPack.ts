@@ -179,6 +179,14 @@ export function ensureNestPackLoaded(
   const normalize = profile.normalizeKey;
   pack.loadPromise = (async () => {
     try {
+      // clear any partial state left by a previous failed attempt, so a retry
+      // re-parses from scratch instead of appending duplicate nest members
+      pack.formToLemma.clear();
+      pack.rowByKey.clear();
+      pack.membersByRoot.clear();
+      pack.glossByKey.clear();
+      pack.morphemesByKey.clear();
+      pack.ready = false;
       emit({ lang: pack.lang, phase: "downloading" });
       const [nestsText, formsText, glossesText, morphemesText] =
         await Promise.all([
