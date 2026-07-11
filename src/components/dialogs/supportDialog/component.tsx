@@ -4,6 +4,7 @@ import { SupportDialogProps, SupportDialogState } from "./interface";
 import { Trans } from "react-i18next";
 import Lottie from "lottie-react";
 import supportAnimation from "../../../assets/lotties/support.json";
+import exitAnimation from "../../../assets/lotties/exit.json";
 import {
   getServerRegion,
   getWebsiteUrl,
@@ -29,6 +30,7 @@ class SupportDialog extends React.Component<
     super(props);
     this.state = {
       isRedeemCode: false,
+      isExitPro: false,
       redeemCode: "",
     };
   }
@@ -42,281 +44,375 @@ class SupportDialog extends React.Component<
       <>
         {this.props.isAuthed && this.props.isShowSupport && (
           <div className="new-version">
-            <div className="new-version-title">
-              <Trans>Your trial period has expired</Trans>
-            </div>
-            <div
-              style={{
-                fontSize: 16,
-                color: "rgb(231, 69, 69)",
-                position: "absolute",
-                left: 20,
-                bottom: 20,
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                this.setState({ isRedeemCode: true });
-              }}
-            >
-              <Trans>Redeem</Trans>
-            </div>
-            {this.state.isRedeemCode ? (
-              <div
-                className="voice-add-new-container"
-                style={{
-                  marginLeft: "25px",
-                  marginTop: "20px",
-                  width: "calc(100% - 50px)",
-                  fontWeight: 500,
-                }}
-              >
-                <input
-                  type={"text"}
-                  name={"redeemCode"}
-                  placeholder={this.props.t("Enter your redemption code")}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      this.setState({
-                        redeemCode: e.target.value.trim().toUpperCase(),
-                      });
-                    }
-                  }}
-                  onContextMenu={() => {
-                    handleContextMenu("token-dialog-redeem-code-box", true);
-                  }}
-                  id={"token-dialog-redeem-code-box"}
-                  className="token-dialog-username-box"
-                  style={{ height: "35px" }}
-                />
-                <div className="token-dialog-button-container">
-                  <div
-                    className="voice-add-confirm"
-                    onClick={async () => {
-                      toast.loading(this.props.t("Verifying..."), {
-                        id: "redeem-code",
-                      });
-                      let userRequest = await getUserRequest();
-                      let response = await userRequest.redeemCode({
-                        code: this.state.redeemCode,
-                      });
-                      if (response.code === 200) {
-                        this.props.handleFetchUserInfo();
-                        toast.success(this.props.t("Redeem successful"), {
-                          id: "redeem-code",
-                        });
-
-                        this.setState({ isRedeemCode: false });
+            {this.state.isExitPro ? (
+              <>
+                <div className="new-version-title">
+                  <Trans>Exit Pro</Trans>
+                </div>
+                <>
+                  <div className="support-us-out-button" style={{}}>
+                    <div
+                      onClick={async () => {
+                        await handleClearToken();
+                        this.props.handleFetchAuthed();
+                        this.props.handleFetchDataSourceList();
+                        this.props.handleFetchDefaultSyncOption();
+                        this.props.handleLoginOptionList([]);
                         this.props.handleShowSupport(false);
-                      } else if (response.code === 401) {
-                        toast.error(
-                          this.props.t("Redeem failed, error code") +
-                            ": " +
-                            response.msg,
-                          {
+                        toast.success(this.props.t("Log out successful"));
+                        this.handleClose();
+                        this.setState({ isExitPro: false });
+                      }}
+                      className="support-us-need-help"
+                      style={{ marginRight: 10 }}
+                    >
+                      {this.props.t("Still refuse")}
+                    </div>
+                  </div>
+                  <div
+                    className="support-us-info"
+                    style={{ height: 380, overflowY: "scroll" }}
+                  >
+                    <div className="new-version-animation">
+                      <div
+                        className="new-version-animation"
+                        style={{ marginLeft: 20 }}
+                      >
+                        <Lottie
+                          animationData={exitAnimation}
+                          loop={true}
+                          style={{ height: 180, width: "100%" }}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        margin: 20,
+                      }}
+                    >
+                      <div
+                        className="new-version-open"
+                        onClick={async () => {
+                          this.setState({ isExitPro: false });
+                        }}
+                        style={{ fontWeight: "bold" }}
+                      >
+                        <Trans>I'll think about it</Trans>
+                      </div>
+                    </div>
+                    <p
+                      className="update-dialog-new-title"
+                      style={{
+                        textAlign: "center",
+                        margin: 20,
+                        marginLeft: 0,
+                        marginRight: 0,
+                      }}
+                    >
+                      {this.props.t(
+                        "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features"
+                      )}
+                    </p>
+                    <p
+                      className="support-dialog-list"
+                      style={{
+                        textAlign: "center",
+                        lineHeight: "1.5",
+                        marginTop: 10,
+                      }}
+                    >
+                      {this.props.t(
+                        "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more."
+                      )}
+                    </p>
+                  </div>
+                </>
+              </>
+            ) : (
+              <>
+                <div className="new-version-title">
+                  <Trans>Your trial period has expired</Trans>
+                </div>
+                <div
+                  style={{
+                    fontSize: 16,
+                    color: "rgb(231, 69, 69)",
+                    position: "absolute",
+                    left: 20,
+                    bottom: 20,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    this.setState({ isRedeemCode: true });
+                  }}
+                >
+                  <Trans>Redeem</Trans>
+                </div>
+                {this.state.isRedeemCode ? (
+                  <div
+                    className="voice-add-new-container"
+                    style={{
+                      marginLeft: "25px",
+                      marginTop: "20px",
+                      width: "calc(100% - 50px)",
+                      fontWeight: 500,
+                    }}
+                  >
+                    <input
+                      type={"text"}
+                      name={"redeemCode"}
+                      placeholder={this.props.t("Enter your redemption code")}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          this.setState({
+                            redeemCode: e.target.value.trim().toUpperCase(),
+                          });
+                        }
+                      }}
+                      onContextMenu={() => {
+                        handleContextMenu("token-dialog-redeem-code-box", true);
+                      }}
+                      id={"token-dialog-redeem-code-box"}
+                      className="token-dialog-username-box"
+                      style={{ height: "35px" }}
+                    />
+                    <div className="token-dialog-button-container">
+                      <div
+                        className="voice-add-confirm"
+                        onClick={async () => {
+                          toast.loading(this.props.t("Verifying..."), {
                             id: "redeem-code",
-                          }
-                        );
-                        handleExitApp();
-                        return;
-                      } else if (response.code === 10010) {
-                        toast.error(
-                          this.props.t(
-                            "This code has already been used, if you have redeemed it before, there is no need to redeem it again. Just log in to same account to use Pro features"
-                          ),
-                          {
-                            id: "redeem-code",
-                            duration: 6000,
-                          }
-                        );
-                      } else {
-                        toast.error(
-                          this.props.t("Redeem failed, error code") +
-                            ": " +
-                            response.msg,
-                          {
-                            id: "redeem-code",
-                          }
-                        );
-                        if (response.code === 10009) {
-                          if (this.state.redeemCode.startsWith("CD")) {
-                            toast(
+                          });
+                          let userRequest = await getUserRequest();
+                          let response = await userRequest.redeemCode({
+                            code: this.state.redeemCode,
+                          });
+                          if (response.code === 200) {
+                            this.props.handleFetchUserInfo();
+                            toast.success(this.props.t("Redeem successful"), {
+                              id: "redeem-code",
+                            });
+
+                            this.setState({ isRedeemCode: false });
+                            this.props.handleShowSupport(false);
+                          } else if (response.code === 401) {
+                            toast.error(
+                              this.props.t("Redeem failed, error code") +
+                                ": " +
+                                response.msg,
+                              {
+                                id: "redeem-code",
+                              }
+                            );
+                            handleExitApp();
+                            return;
+                          } else if (response.code === 10010) {
+                            toast.error(
                               this.props.t(
-                                "This is the order number not the redemption code, please check your email again, the redemption code is below the order number"
+                                "This code has already been used, if you have redeemed it before, there is no need to redeem it again. Just log in to same account to use Pro features"
                               ),
                               {
-                                duration: 8000,
+                                id: "redeem-code",
+                                duration: 6000,
                               }
                             );
                           } else {
-                            toast(
-                              this.props.t(
-                                "Please make sure you entered the correct redemption code and the code matches your server region, if you have any questions, please contact our support team"
-                              ),
+                            toast.error(
+                              this.props.t("Redeem failed, error code") +
+                                ": " +
+                                response.msg,
                               {
-                                duration: 8000,
+                                id: "redeem-code",
                               }
                             );
+                            if (response.code === 10009) {
+                              if (this.state.redeemCode.startsWith("CD")) {
+                                toast(
+                                  this.props.t(
+                                    "This is the order number not the redemption code, please check your email again, the redemption code is below the order number"
+                                  ),
+                                  {
+                                    duration: 8000,
+                                  }
+                                );
+                              } else {
+                                toast(
+                                  this.props.t(
+                                    "Please make sure you entered the correct redemption code and the code matches your server region, if you have any questions, please contact our support team"
+                                  ),
+                                  {
+                                    duration: 8000,
+                                  }
+                                );
+                              }
+                            }
                           }
-                        }
-                      }
-                    }}
-                  >
-                    <Trans>Redeem</Trans>
-                  </div>
-                  <div className="voice-add-button-container">
-                    <div
-                      className="voice-add-cancel"
-                      onClick={() => {
-                        this.setState({ isRedeemCode: false });
+                        }}
+                      >
+                        <Trans>Redeem</Trans>
+                      </div>
+                      <div className="voice-add-button-container">
+                        <div
+                          className="voice-add-cancel"
+                          onClick={() => {
+                            this.setState({ isRedeemCode: false });
+                          }}
+                        >
+                          <Trans>Cancel</Trans>
+                        </div>
+                      </div>
+                    </div>
+                    <p
+                      className="support-dialog-list"
+                      style={{
+                        textAlign: "left",
+                        lineHeight: "1.5",
+                        margin: 0,
+                        fontSize: 14,
                       }}
                     >
-                      <Trans>Cancel</Trans>
-                    </div>
+                      {this.props.t(
+                        "Redemption code has been sent to the email address you provided during checkout. If you haven't received the code, please check the spam foler or contact our support team for assistance."
+                      )}
+                    </p>
                   </div>
-                </div>
-                <p
-                  className="support-dialog-list"
-                  style={{
-                    textAlign: "left",
-                    lineHeight: "1.5",
-                    margin: 0,
-                    fontSize: 14,
-                  }}
-                >
-                  {this.props.t(
-                    "Redemption code has been sent to the email address you provided during checkout. If you haven't received the code, please check the spam foler or contact our support team for assistance."
-                  )}
-                </p>
-              </div>
-            ) : (
-              <>
-                <div className="support-us-out-button" style={{}}>
-                  <div
-                    onClick={async () => {
-                      await handleClearToken();
-                      this.props.handleFetchAuthed();
-                      this.props.handleFetchDataSourceList();
-                      this.props.handleFetchDefaultSyncOption();
-                      this.props.handleLoginOptionList([]);
-                      this.props.handleShowSupport(false);
-                      toast.success(this.props.t("Log out successful"));
-                      this.handleClose();
-                    }}
-                    className="support-us-need-help"
-                    style={{ marginRight: 10 }}
-                  >
-                    {this.props.t("Exit Pro")}
-                  </div>
-                  <div
-                    onClick={async () => {
-                      toast.loading(this.props.t("Checking payment status"), {
-                        id: "check-payment-status",
-                      });
-                      let res = await fetchUserInfo();
-                      if (res.code === 200) {
-                        let userInfo = res.data;
-                        if (
-                          userInfo.valid_until <
-                          parseInt(new Date().getTime() / 1000 + "")
-                        ) {
-                          toast.error(
-                            this.props.t("You haven't upgraded to Pro yet") +
-                              "\n" +
-                              this.props.t(
-                                "If you purchased a redemption code, please click the redeem button to redeem it, or contact our support team for assistance"
-                              ),
+                ) : (
+                  <>
+                    <div className="support-us-out-button" style={{}}>
+                      <div
+                        onClick={async () => {
+                          this.setState({ isExitPro: true });
+                        }}
+                        className="support-us-need-help"
+                        style={{ marginRight: 10 }}
+                      >
+                        {this.props.t("Exit Pro")}
+                      </div>
+                      <div
+                        onClick={async () => {
+                          toast.loading(
+                            this.props.t("Checking payment status"),
                             {
                               id: "check-payment-status",
-                              duration: 6000,
                             }
                           );
-                        } else {
-                          this.props.handleFetchUserInfo();
-                          toast.success(this.props.t("Thanks for your support"), {
-                            id: "check-payment-status",
-                          });
+                          let res = await fetchUserInfo();
+                          if (res.code === 200) {
+                            let userInfo = res.data;
+                            if (
+                              userInfo.valid_until <
+                              parseInt(new Date().getTime() / 1000 + "")
+                            ) {
+                              toast.error(
+                                this.props.t(
+                                  "You haven't upgraded to Pro yet"
+                                ) +
+                                  "\n" +
+                                  this.props.t(
+                                    "If you purchased a redemption code, please click the redeem button to redeem it, or contact our support team for assistance"
+                                  ),
+                                {
+                                  id: "check-payment-status",
+                                  duration: 6000,
+                                }
+                              );
+                            } else {
+                              this.props.handleFetchUserInfo();
+                              toast.success(
+                                this.props.t("Thanks for your support"),
+                                {
+                                  id: "check-payment-status",
+                                }
+                              );
 
-                          this.props.handleShowSupport(false);
-                        }
-                      } else {
-                        toast.error(this.props.t("Failed to get user info"));
-                      }
-                    }}
-                    className="support-us-need-help"
-                    style={{ marginRight: 10, marginLeft: 10 }}
-                  >
-                    {this.props.t("I've paid")}
-                  </div>
-                </div>
-                <div className="support-us-info" style={{ height: 420 }}>
-                  <div className="new-version-animation">
-                    <Lottie
-                      animationData={supportAnimation}
-                      loop={true}
-                      style={{ height: 200, width: "100%" }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      margin: 20,
-                    }}
-                  >
-                    <div
-                      className="new-version-open"
-                      onClick={async () => {
-                        toast.loading(
-                          this.props.t("Generating payment link"),
-                          {
-                            id: "generate-payment-link",
+                              this.props.handleShowSupport(false);
+                            }
+                          } else {
+                            toast.error(
+                              this.props.t("Failed to get user info")
+                            );
                           }
-                        );
-                        let response = await getTempToken();
-                        if (response.code === 200) {
-                          toast.dismiss("generate-payment-link");
-                          let tempToken = response.data.access_token;
-                          let deviceUuid = await TokenService.getFingerprint();
-                          openInBrowser(
-                            getWebsiteUrl() +
-                              (ConfigService.getReaderConfig(
-                                "lang"
-                              ).startsWith("zh")
-                                ? "/zh"
-                                : "/en") +
-                              "/pricing?temp_token=" +
-                              tempToken +
-                              "&device_uuid=" +
-                              deviceUuid
-                          );
-                        } else if (response.code === 401) {
-                          this.props.handleFetchAuthed();
-                        }
-                      }}
-                      style={{ fontWeight: "bold" }}
-                    >
-                      {getServerRegion() === "global" ? (
-                        <Trans>Upgrade</Trans>
-                      ) : (
-                        <Trans>Purchase the code</Trans>
-                      )}
+                        }}
+                        className="support-us-need-help"
+                        style={{ marginRight: 10, marginLeft: 10 }}
+                      >
+                        {this.props.t("I've paid")}
+                      </div>
                     </div>
-                  </div>
-                  <p
-                    className="update-dialog-new-title"
-                    style={{ textAlign: "center", marginLeft: 0 }}
-                  >
-                    <Trans>Please support our development</Trans>
-                  </p>
-                  <p
-                    className="support-dialog-list"
-                    style={{ textAlign: "center", lineHeight: "1.5" }}
-                  >
-                    {this.props.t(
-                      "For just the price of a cup of coffee per year, you can continue to enjoy the premium features and support our development"
-                    )}
-                  </p>
-                </div>
+                    <div className="support-us-info" style={{ height: 420 }}>
+                      <div className="new-version-animation">
+                        <Lottie
+                          animationData={supportAnimation}
+                          loop={true}
+                          style={{ height: 200, width: "100%" }}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          margin: 20,
+                        }}
+                      >
+                        <div
+                          className="new-version-open"
+                          onClick={async () => {
+                            toast.loading(
+                              this.props.t("Generating payment link"),
+                              {
+                                id: "generate-payment-link",
+                              }
+                            );
+                            let response = await getTempToken();
+                            if (response.code === 200) {
+                              toast.dismiss("generate-payment-link");
+                              let tempToken = response.data.access_token;
+                              let deviceUuid =
+                                await TokenService.getFingerprint();
+                              openInBrowser(
+                                getWebsiteUrl() +
+                                  (ConfigService.getReaderConfig(
+                                    "lang"
+                                  ).startsWith("zh")
+                                    ? "/zh"
+                                    : "/en") +
+                                  "/pricing?temp_token=" +
+                                  tempToken +
+                                  "&device_uuid=" +
+                                  deviceUuid
+                              );
+                            } else if (response.code === 401) {
+                              this.props.handleFetchAuthed();
+                            }
+                          }}
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {getServerRegion() === "global" ? (
+                            <Trans>Upgrade</Trans>
+                          ) : (
+                            <Trans>Purchase the code</Trans>
+                          )}
+                        </div>
+                      </div>
+                      <p
+                        className="update-dialog-new-title"
+                        style={{ textAlign: "center", marginLeft: 0 }}
+                      >
+                        <Trans>Please support our development</Trans>
+                      </p>
+                      <p
+                        className="support-dialog-list"
+                        style={{ textAlign: "center", lineHeight: "1.5" }}
+                      >
+                        {this.props.t(
+                          "For just the price of a cup of coffee per year, you can continue to enjoy the premium features and support our development"
+                        )}
+                      </p>
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>
