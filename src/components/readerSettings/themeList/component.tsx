@@ -281,7 +281,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           {renderBackgroundColorList()}
         </ul>
         {this.state.isShowBgPicker && (
-          <div style={{ margin: "10px 20px" }}>
+          <div style={{ margin: "10px 20px", marginLeft: "30px" }}>
             <HexColorPicker
               color={normalizePickerColor(
                 ConfigService.getReaderConfig("backgroundColor"),
@@ -356,7 +356,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           {renderTextColorList()}
         </ul>
         {this.state.isShowTextPicker && (
-          <div style={{ margin: "10px 20px" }}>
+          <div style={{ margin: "10px 20px", marginLeft: "30px" }}>
             <HexColorPicker
               color={normalizePickerColor(
                 ConfigService.getReaderConfig("textColor"),
