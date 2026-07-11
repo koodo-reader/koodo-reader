@@ -130,7 +130,9 @@
       {
         "from": "assets/macos",
         "to": "assets/macos",
-        "filter": ["ocr-*-apple-darwin"]
+        "filter": [
+          "ocr-*-apple-darwin"
+        ]
       }
     ],
     "protocols": {
