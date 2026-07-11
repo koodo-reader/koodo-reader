@@ -52,6 +52,14 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         ConfigService.getReaderConfig("textColor"),
         "#000000"
       ),
+      pendingBgColor: normalizePickerColor(
+        ConfigService.getReaderConfig("backgroundColor"),
+        "#ffffff"
+      ),
+      pendingTextColor: normalizePickerColor(
+        ConfigService.getReaderConfig("textColor"),
+        "#000000"
+      ),
     };
   }
   handleChangeBgColor = (color: string, index: number = -1) => {
@@ -77,53 +85,51 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     });
   };
 
-  handleChooseBgColor = (color: string) => {
-    this.setState({ bgColorInput: color });
-    ConfigService.setReaderConfig("backgroundColor", color);
-    this.props.handleBackgroundColor(color);
-    this.setState({
-      currentPresetIndex: this.getPresetIndex(
-        color,
-        ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)"
-      ),
-    });
+  handlePreviewBgColor = (color: string) => {
+    this.setState({ bgColorInput: color, pendingBgColor: color });
+  };
+  handlePreviewTextColor = (color: string) => {
+    this.setState({ textColorInput: color, pendingTextColor: color });
   };
   handleColorTextPicker = (isShowTextPicker: boolean) => {
-    if (
-      !isShowTextPicker &&
-      textList
+    if (!isShowTextPicker) {
+      const pendingHex = this.state.pendingTextColor;
+      const exists = textList
         .concat(ConfigService.getAllListConfig("themeColors"))
-        .findIndex((item) => {
-          return (
-            item ===
-            (ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)")
-          );
-        }) === -1
-    ) {
-      ConfigService.setListConfig(
+        .some((item) => normalizePickerColor(item, "#000000") === pendingHex);
+      if (!exists) {
+        ConfigService.setListConfig(pendingHex, "themeColors");
+      }
+    } else {
+      const current = normalizePickerColor(
         ConfigService.getReaderConfig("textColor"),
-        "themeColors"
+        "#000000"
       );
+      this.setState({
+        pendingTextColor: current,
+        textColorInput: current,
+      });
     }
     this.setState({ isShowTextPicker });
   };
   handleColorBgPicker = (isShowBgPicker: boolean) => {
-    if (
-      !isShowBgPicker &&
-      backgroundList
+    if (!isShowBgPicker) {
+      const pendingHex = this.state.pendingBgColor;
+      const exists = backgroundList
         .concat(ConfigService.getAllListConfig("themeColors"))
-        .findIndex((item) => {
-          return (
-            item ===
-            (ConfigService.getReaderConfig("backgroundColor") ||
-              "rgba(255,255,255,1)")
-          );
-        }) === -1
-    ) {
-      ConfigService.setListConfig(
+        .some((item) => normalizePickerColor(item, "#ffffff") === pendingHex);
+      if (!exists) {
+        ConfigService.setListConfig(pendingHex, "themeColors");
+      }
+    } else {
+      const current = normalizePickerColor(
         ConfigService.getReaderConfig("backgroundColor"),
-        "themeColors"
+        "#ffffff"
       );
+      this.setState({
+        pendingBgColor: current,
+        bgColorInput: current,
+      });
     }
     this.setState({ isShowBgPicker });
   };
@@ -132,7 +138,8 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       currentTextIndex: textList
         .concat(ConfigService.getAllListConfig("themeColors"))
         .indexOf(color),
-      textColorInput: color,
+      textColorInput: normalizePickerColor(color, "#000000"),
+      pendingTextColor: normalizePickerColor(color, "#000000"),
       currentPresetIndex: this.getPresetIndex(
         ConfigService.getReaderConfig("backgroundColor") ||
           "rgba(255,255,255,1)",
@@ -283,11 +290,8 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         {this.state.isShowBgPicker && (
           <div style={{ margin: "10px 20px", marginLeft: "30px" }}>
             <HexColorPicker
-              color={normalizePickerColor(
-                ConfigService.getReaderConfig("backgroundColor"),
-                "#ffffff"
-              )}
-              onChange={this.handleChooseBgColor}
+              color={this.state.pendingBgColor}
+              onChange={this.handlePreviewBgColor}
               style={{
                 marginBottom: 10,
                 animation: "fade-in 0.2s ease-in-out 0s 1",
@@ -297,22 +301,21 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
               className="color-input-box"
               value={this.state.bgColorInput}
               placeholder="#rrggbb / rgba(r,g,b,a)"
-              onChange={(e) => this.setState({ bgColorInput: e.target.value })}
+              onChange={(e) =>
+                this.setState({ bgColorInput: e.target.value })
+              }
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   const hex = parseColorInput(this.state.bgColorInput);
-                  if (hex) this.handleChooseBgColor(hex);
+                  if (hex) this.handlePreviewBgColor(hex);
                 }
               }}
               onBlur={() => {
                 const hex = parseColorInput(this.state.bgColorInput);
-                if (hex) this.handleChooseBgColor(hex);
+                if (hex) this.handlePreviewBgColor(hex);
                 else
                   this.setState({
-                    bgColorInput: normalizePickerColor(
-                      ConfigService.getReaderConfig("backgroundColor"),
-                      "#ffffff"
-                    ),
+                    bgColorInput: this.state.pendingBgColor,
                   });
               }}
             />
@@ -358,11 +361,8 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         {this.state.isShowTextPicker && (
           <div style={{ margin: "10px 20px", marginLeft: "30px" }}>
             <HexColorPicker
-              color={normalizePickerColor(
-                ConfigService.getReaderConfig("textColor"),
-                "#000000"
-              )}
-              onChange={this.handleChooseTextColor}
+              color={this.state.pendingTextColor}
+              onChange={this.handlePreviewTextColor}
               style={{
                 marginBottom: 10,
                 animation: "fade-in 0.2s ease-in-out 0s 1",
@@ -378,18 +378,15 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   const hex = parseColorInput(this.state.textColorInput);
-                  if (hex) this.handleChooseTextColor(hex);
+                  if (hex) this.handlePreviewTextColor(hex);
                 }
               }}
               onBlur={() => {
                 const hex = parseColorInput(this.state.textColorInput);
-                if (hex) this.handleChooseTextColor(hex);
+                if (hex) this.handlePreviewTextColor(hex);
                 else
                   this.setState({
-                    textColorInput: normalizePickerColor(
-                      ConfigService.getReaderConfig("textColor"),
-                      "#000000"
-                    ),
+                    textColorInput: this.state.pendingTextColor,
                   });
               }}
             />
