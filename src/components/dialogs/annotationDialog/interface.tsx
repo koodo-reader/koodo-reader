@@ -3,6 +3,7 @@ export interface AnnotationDialogProps {
   isSettingLocked: boolean;
   handleAnnotationDialog: (isAnnotationOpen: boolean) => void;
   t: (title: string) => string;
+  htmlBook: any;
 }
 
 export interface AnnotationDialogState {
