@@ -213,10 +213,7 @@ class BookUtil {
     ) {
       if (!ConfigService.getItem("defaultSyncOption")) {
         toast(
-          i18n.t("Please add data source in the setting-Sync and backup first"),
-          {
-            position: "bottom-center",
-          }
+          i18n.t("Please add data source in the setting-Sync and backup first")
         );
         return;
       }

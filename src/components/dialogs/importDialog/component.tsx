@@ -57,10 +57,7 @@ class ImportDialog extends React.Component<
       toast(
         this.props.t(
           "Please add data source in the setting-Sync and backup first"
-        ),
-        {
-          position: "bottom-center",
-        }
+        )
       );
       this.props.handleSetting(true);
       this.props.handleSettingMode("sync");
@@ -79,10 +76,7 @@ class ImportDialog extends React.Component<
       toast(
         this.props.t(
           "Please add data source in the setting-Sync and backup first"
-        ),
-        {
-          position: "bottom-center",
-        }
+        )
       );
       this.props.handleSetting(true);
       this.props.handleSettingMode("sync");
