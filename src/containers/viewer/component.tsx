@@ -35,6 +35,7 @@ import {
   parseWithMineruAgent,
   parseWithSystemOCR,
 } from "../../utils/request/common";
+import { detectAndCacheBookLanguage } from "../../utils/reader/wordStructure/bookLanguage";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -386,6 +387,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rendition: rendition,
     });
     this.setState({ rendition });
+    // cache the book language once for word-structure plugin routing
+    try {
+      detectAndCacheBookLanguage(
+        this.props.currentBook.key,
+        rendition?.getDocument?.()
+      );
+    } catch {
+      /* detection is best-effort */
+    }
     if (
       this.props.currentBook.format === "PDF" &&
       !ConfigService.getAllListConfig("convertPDFBooks").includes(
@@ -642,6 +652,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         (this.props.menuMode === "dict" ||
           this.props.menuMode === "trans" ||
           this.props.menuMode === "assistant" ||
+          this.props.menuMode === "structure" ||
           this.props.menuMode === "note") ? (
           <PopupBox
             {...({

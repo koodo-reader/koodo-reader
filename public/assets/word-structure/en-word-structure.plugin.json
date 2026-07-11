@@ -1,0 +1,27 @@
+{
+  "identifier": "en-word-structure",
+  "type": "word-structure",
+  "displayName": "Word structure (English)",
+  "icon": "convert-text",
+  "version": "1.0.0",
+  "autoValue": "",
+  "langList": [],
+  "voiceList": [],
+  "config": {
+    "lang": "en",
+    "packVersion": "1.0.0",
+    "packBaseUrl": "assets/word-structure",
+    "files": {
+      "nests": "en.nests.v1.tsv",
+      "forms": "en.forms.v1.tsv"
+    },
+    "sha256": {
+      "nests": "cd7dcfadd447142990b4936e35a4965a3c8bd0127f2d17b5d63ed35695ca1744",
+      "forms": "180e5b00e6af90c0088cb3355ac27a7eee12e7c37395db4415b9c86e90f49318"
+    },
+    "sizeMB": 12,
+    "glossLangs": []
+  },
+  "script": "",
+  "scriptSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

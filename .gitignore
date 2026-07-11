@@ -38,3 +38,7 @@ kookit-extra.js
 kookit-extra.mjs
 kookit-extra-browser.js
 kookit-extra-browser.mjs
+
+# tool / dev scratch
+/.serena
+/output

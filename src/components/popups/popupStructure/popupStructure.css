@@ -1,0 +1,357 @@
+.structure-container {
+  width: calc(100% - 50px);
+  height: calc(100% - 55px);
+  padding: 25px;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  user-select: text;
+}
+
+.structure-word {
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 1.4;
+  margin-left: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.structure-message {
+  opacity: 0.6;
+  margin: 12px 5px;
+  font-size: 15px;
+}
+
+.structure-section-title {
+  color: #2084e8;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 14px 5px 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.structure-member-count {
+  font-weight: normal;
+  opacity: 0.65;
+  font-size: 12px;
+}
+
+/* school-style morpheme marks: ¬ prefix, ⌒ root, ∧ suffix, □ ending */
+.structure-morphemes {
+  display: flex;
+  align-items: baseline;
+  margin: 14px 5px 4px;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: 0.5px;
+}
+
+.structure-morpheme {
+  position: relative;
+  padding-top: 12px;
+  white-space: pre;
+}
+
+/* основа: everything except the ending is underlined */
+.structure-morpheme-prefix,
+.structure-morpheme-root,
+.structure-morpheme-suffix,
+.structure-morpheme-postfix {
+  border-bottom: 2px solid currentColor;
+}
+
+/* приставка: flat line above with a right-end tick */
+.structure-morpheme-prefix::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 1px;
+  height: 8px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+}
+
+/* корень: arc above */
+.structure-morpheme-root::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1px;
+  right: 1px;
+  height: 11px;
+  border: 2px solid currentColor;
+  border-bottom: none;
+  border-radius: 100% 100% 0 0 / 200% 200% 0 0;
+}
+
+/* суффикс and постфикс: ∧ above */
+.structure-morpheme-suffix::before,
+.structure-morpheme-postfix::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid currentColor;
+  border-left: 2px solid currentColor;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* интерфикс: connecting-vowel mark ⌣ below the letter */
+.structure-morpheme-interfix::before {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 15%;
+  right: 15%;
+  height: 7px;
+  border: 2px solid currentColor;
+  border-top: none;
+  border-radius: 0 0 100% 100% / 0 0 200% 200%;
+}
+
+/* окончание: box around (an empty box marks the zero ending) */
+.structure-morpheme-ending {
+  border: 2px solid currentColor;
+  padding: 0 4px;
+  margin-left: 2px;
+  min-width: 10px;
+  align-self: flex-end;
+}
+
+.structure-morpheme-ending.structure-morpheme {
+  padding-top: 0;
+}
+
+/* plain (non-Russian-school) notation: dot-separated segments, no marks */
+.structure-morphemes-plain {
+  gap: 8px;
+  font-size: 24px;
+}
+
+.structure-morphemes-plain .structure-morpheme {
+  padding-top: 0;
+  border-bottom: none;
+  background: rgba(127, 127, 127, 0.12);
+  border-radius: 4px;
+  padding: 1px 7px;
+}
+
+.structure-morphemes-plain .structure-morpheme::before {
+  display: none;
+}
+
+.structure-morphemes-plain .structure-morpheme-root {
+  color: #2084e8;
+  font-weight: bold;
+}
+
+.structure-morphemes-plain .structure-morpheme-ending {
+  border: none;
+  align-self: auto;
+  margin-left: 0;
+}
+
+.structure-ai-badge {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(32, 132, 232, 0.55);
+  color: #2084e8;
+  border-radius: 3px;
+  padding: 0 3px;
+  margin-left: 4px;
+  vertical-align: 2px;
+  font-style: normal;
+}
+
+.structure-root-sense {
+  margin: 10px 5px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.structure-root-sense b {
+  color: #2084e8;
+}
+
+.structure-install-button {
+  display: inline-flex;
+  align-items: center;
+  margin: 10px 5px;
+  padding: 8px 18px;
+  border-radius: 6px;
+  background: #2084e8;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.structure-morpheme-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 2px 5px 0;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.structure-morpheme-legend-item b {
+  font-weight: 600;
+}
+
+.structure-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0 5px;
+  font-size: 16px;
+}
+
+.structure-chain-arrow {
+  opacity: 0.45;
+  font-size: 13px;
+}
+
+.structure-chain-step {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(127, 127, 127, 0.12);
+}
+
+.structure-affix {
+  font-size: 12px;
+  color: #2084e8;
+  white-space: nowrap;
+}
+
+.structure-pos {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 0 5px;
+  border-radius: 3px;
+  background: rgba(127, 127, 127, 0.14);
+  opacity: 0.9;
+  margin-left: 4px;
+  vertical-align: 2px;
+}
+
+.structure-tree-box {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0 5px;
+  padding-right: 6px;
+}
+
+.structure-tree {
+  list-style: none;
+  margin: 0;
+  padding-left: 16px;
+  border-left: 1px solid rgba(127, 127, 127, 0.25);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.structure-tree-root {
+  padding-left: 0;
+  border-left: none;
+}
+
+.structure-tree summary {
+  cursor: pointer;
+}
+
+.structure-node-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+
+.structure-node-row:hover {
+  background: rgba(32, 132, 232, 0.1);
+}
+
+.structure-node-current > .structure-node-word,
+.structure-node-current .structure-node-word {
+  color: #2084e8;
+  font-weight: bold;
+}
+
+.structure-gloss {
+  opacity: 0.75;
+  font-size: 13px;
+}
+
+.structure-gloss-lemma {
+  margin: 0 5px;
+  line-height: 1.4;
+}
+
+.structure-gloss-inline {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-left: 6px;
+  font-style: italic;
+  max-width: 230px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+.structure-translate-link {
+  font-size: 16px;
+  color: #2084e8;
+  cursor: pointer;
+  margin-left: 10px;
+  vertical-align: 3px;
+}
+
+.structure-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  margin-left: 5px;
+}
+
+.structure-attribution {
+  font-size: 11px;
+  opacity: 0.45;
+}
+
+.structure-gloss-switch {
+  display: flex;
+  gap: 4px;
+}
+
+.structure-gloss-switch button {
+  font-size: 10px;
+  padding: 1px 7px;
+  border: 1px solid rgba(127, 127, 127, 0.4);
+  background: none;
+  color: inherit;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0.55;
+}
+
+.structure-gloss-switch button.on {
+  border-color: #2084e8;
+  color: #2084e8;
+  opacity: 1;
+}

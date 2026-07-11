@@ -1,0 +1,34 @@
+{
+  "identifier": "ru-word-structure",
+  "type": "word-structure",
+  "displayName": "Word structure (Russian)",
+  "icon": "convert-text",
+  "version": "1.0.0",
+  "autoValue": "",
+  "langList": [],
+  "voiceList": [],
+  "config": {
+    "lang": "ru",
+    "packVersion": "1.0.0",
+    "packBaseUrl": "assets/word-structure",
+    "files": {
+      "nests": "ru.nests.v1.tsv",
+      "forms": "ru.forms.v1.tsv",
+      "morphemes": "ru.morphemes.v1.tsv",
+      "glosses": "ru.glosses.v1.tsv"
+    },
+    "sha256": {
+      "nests": "d9b0580804f74dba5f21f7bb2d2152d24727a35b97ec9fcccddf65f26c4c9abe",
+      "forms": "f5a6e3da1d3390d0d74f19992e4be232f03355e2d47ac5d635e111e459f81115",
+      "morphemes": "f1f0e5296a4753d3844165721ccaffc19869c6abe19ff0347557cf2e47a0d211",
+      "glosses": "506361887418c85a76d0cb0d813206226b0321fbf570b6b7d071b57188b00ae3"
+    },
+    "sizeMB": 39,
+    "glossLangs": [
+      "en",
+      "de"
+    ]
+  },
+  "script": "",
+  "scriptSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

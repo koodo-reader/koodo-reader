@@ -14,7 +14,8 @@ export type PopupOptionKey =
   | "browser"
   | "speaker"
   | "speech-start"
-  | "assistant";
+  | "assistant"
+  | "structure";
 
 export interface PopupOptionItem {
   key: PopupOptionKey;
@@ -93,6 +94,13 @@ export const popupList: PopupOptionItem[] = [
     name: "assistant",
     title: "Ask AI",
     icon: "ai-assist",
+    defaultEnabled: true,
+  },
+  {
+    key: "structure",
+    name: "structure",
+    title: "Word structure",
+    icon: "convert-text",
     defaultEnabled: true,
   },
 ];

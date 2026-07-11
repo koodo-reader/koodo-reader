@@ -214,7 +214,9 @@ class SettingDialog extends React.Component<
                             ? "speaker"
                             : item.type === "translation"
                               ? "translation"
-                              : "ai-assist"
+                              : item.type === "word-structure"
+                                ? "convert-text"
+                                : "ai-assist"
                       } setting-plugin-icon`}
                     ></span>
                     <span className="setting-plugin-name">

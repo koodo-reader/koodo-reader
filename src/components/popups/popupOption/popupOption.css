@@ -21,6 +21,7 @@
 .browser-option,
 .dict-option,
 .wikipedia-option,
+.structure-option,
 .copy-option {
   height: 36px;
   width: 36px;
@@ -48,6 +49,7 @@
 .browser-option:hover,
 .dict-option:hover,
 .wikipedia-option:hover,
+.structure-option:hover,
 .copy-option:hover {
   border-radius: 5px;
 }
@@ -65,9 +67,14 @@
 .bing-icon,
 .copy-icon,
 .wikipedia-icon,
+.structure-icon,
 .highlight-icon {
   line-height: 1 !important;
   font-size: 22px;
+}
+.structure-icon {
+  color: #d2691e;
+  font-size: 20px;
 }
 .translation-icon {
   color: #f16464;

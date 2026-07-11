@@ -184,6 +184,13 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleOpenMenu(false);
   };
 
+  handleStructure = () => {
+    const text = getSelection(this.props.currentBook.format);
+    if (!text) return;
+    this.props.handleMenuMode("structure");
+    this.props.handleOriginalText(text);
+    this.props.handleOpenMenu(true);
+  };
   handleAssistant = () => {
     const text = getSelection(this.props.currentBook.format);
     if (!text) return;
@@ -229,6 +236,9 @@ class PopupOption extends React.Component<PopupOptionProps> {
         break;
       case "assistant":
         this.handleAssistant();
+        break;
+      case "structure":
+        this.handleStructure();
         break;
       default:
         break;
