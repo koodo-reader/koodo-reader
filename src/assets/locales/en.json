@@ -1236,5 +1236,9 @@
   "You are clicking too fast, please try again later": "You are clicking too fast, please try again later",
   "Annotation": "Annotation",
   "Brush color": "Brush color",
-  "Brush width": "Brush width"
+  "Brush width": "Brush width",
+  "Still refuse": "Still refuse",
+  "I'll think about it": "I'll think about it",
+  "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features",
+  "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more."
 }
