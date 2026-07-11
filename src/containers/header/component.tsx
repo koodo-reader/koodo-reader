@@ -762,17 +762,25 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             className="setting-icon-container"
             onClick={async () => {
               if (this.props.isAuthed) {
+                if (!ConfigService.getItem("defaultSyncOption")) {
+                  toast(
+                    this.props.t(
+                      "Please add data source in the setting-Sync and backup first"
+                    )
+                  );
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("sync");
+                  return;
+                }
                 this.setState({ isSync: true });
                 let userInfo = await this.props.handleFetchUserInfo();
                 await this.handleCloudSync(userInfo);
               } else {
                 toast(
-                  this.props.t(
-                    "Please add data source in the setting-Sync and backup first"
-                  )
+                  this.props.t("Please upgrade to Pro to use this feature")
                 );
                 this.props.handleSetting(true);
-                this.props.handleSettingMode("sync");
+                this.props.handleSettingMode("account");
                 this.setState({ isSync: false });
               }
             }}
