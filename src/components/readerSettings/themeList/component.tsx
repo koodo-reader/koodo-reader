@@ -100,6 +100,13 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       if (!exists) {
         ConfigService.setListConfig(pendingHex, "themeColors");
       }
+      const appliedColor =
+        ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)";
+      this.setState({
+        currentTextIndex: textList
+          .concat(ConfigService.getAllListConfig("themeColors"))
+          .indexOf(appliedColor),
+      });
     } else {
       const current = normalizePickerColor(
         ConfigService.getReaderConfig("textColor"),
@@ -121,6 +128,14 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       if (!exists) {
         ConfigService.setListConfig(pendingHex, "themeColors");
       }
+      const appliedColor =
+        ConfigService.getReaderConfig("backgroundColor") ||
+        "rgba(255,255,255,1)";
+      this.setState({
+        currentBackgroundIndex: backgroundList
+          .concat(ConfigService.getAllListConfig("themeColors"))
+          .indexOf(appliedColor),
+      });
     } else {
       const current = normalizePickerColor(
         ConfigService.getReaderConfig("backgroundColor"),
