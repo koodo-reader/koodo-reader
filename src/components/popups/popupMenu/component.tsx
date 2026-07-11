@@ -118,7 +118,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       ) &&
       posY < 0
     ) {
-      posY = posY + this.props.chapterDocIndex * pageSize.sectionHeight;
+      posY =
+        posY + this.props.chapterDocIndex * (pageSize.sectionHeight * 1.02);
     }
     if (posY < 0) {
       posY = 16;
