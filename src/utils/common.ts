@@ -1170,7 +1170,12 @@ export const showTaskProgress = async (
   let timer: any;
   let service = ConfigService.getItem("defaultSyncOption");
   if (!service) {
-    toast(i18n.t("Please add data source in the setting"));
+    toast(
+      i18n.t("Please add data source in the setting-Sync and backup first"),
+      {
+        position: "bottom-center",
+      }
+    );
     return null;
   }
   if (isElectron) {
@@ -1244,7 +1249,12 @@ export const showTaskProgress = async (
 export const getTaskStats = async () => {
   let service = ConfigService.getItem("defaultSyncOption");
   if (!service) {
-    toast(i18n.t("Please add data source in the setting"));
+    toast(
+      i18n.t("Please add data source in the setting-Sync and backup first"),
+      {
+        position: "bottom-center",
+      }
+    );
     return {};
   }
   if (isElectron) {
