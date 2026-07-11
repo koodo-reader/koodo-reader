@@ -101,7 +101,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       );
       return;
     }
-    if (targetDrive === "webdav" && !this.props.isAuthed && !isElectron) {
+    if (!this.props.isAuthed) {
       toast(this.props.t("Please upgrade to Pro to use this feature"));
       this.props.handleSetting(true);
       this.props.handleSettingMode("account");
@@ -227,15 +227,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     if (!newValue) {
       return;
     }
-    if (
-      !this.props.isAuthed &&
-      (newValue === "webdav" ||
-        newValue === "docker" ||
-        newValue === "ftp" ||
-        newValue === "sftp" ||
-        newValue === "mega" ||
-        newValue === "s3compatible")
-    ) {
+    if (!this.props.isAuthed) {
       toast(this.props.t("Please upgrade to Pro to use this feature"));
       this.props.handleSetting(true);
       this.props.handleSettingMode("account");

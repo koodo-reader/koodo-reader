@@ -368,7 +368,16 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   };
   beforeSync = async (userInfo: any) => {
     if (!ConfigService.getItem("defaultSyncOption")) {
-      toast.error(this.props.t("Please add data source in the setting"));
+      toast.error(
+        this.props.t(
+          "Please add data source in the setting-Sync and backup first"
+        ),
+        {
+          position: "bottom-center",
+        }
+      );
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("sync");
       return false;
     }
     if (
@@ -754,9 +763,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 let userInfo = await this.props.handleFetchUserInfo();
                 await this.handleCloudSync(userInfo);
               } else {
-                toast(this.props.t("Please add data source in the setting"), {
-                  duration: 4000,
-                });
+                toast(
+                  this.props.t(
+                    "Please add data source in the setting-Sync and backup first"
+                  ),
+                  {
+                    position: "bottom-center",
+                  }
+                );
                 this.props.handleSetting(true);
                 this.props.handleSettingMode("sync");
                 this.setState({ isSync: false });
