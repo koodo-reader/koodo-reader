@@ -155,6 +155,8 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
 
   handleCompositionStart = () => {
     this.setState({ isComposing: true });
+    ConfigService.setReaderConfig("isTempLocked", "yes");
+    ConfigService.setReaderConfig("isNavLocked", "yes");
   };
 
   handleCompositionEnd = (
@@ -164,6 +166,10 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       isComposing: false,
       searchKeyword: event.currentTarget.value,
     });
+    if (ConfigService.getReaderConfig("isTempLocked") === "yes") {
+      ConfigService.setReaderConfig("isNavLocked", "");
+      ConfigService.setReaderConfig("isTempLocked", "");
+    }
   };
 
   handleSearchJump = async (item: any) => {
