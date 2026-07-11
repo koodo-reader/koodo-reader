@@ -960,12 +960,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 isPro: false,
                 support: ["desktop", "browser", "phone"],
               },
-              {
-                label: "Local",
-                value: "local",
-                isPro: false,
-                support: ["desktop"],
-              },
               ...driveList,
               {
                 label: "Add data source",
@@ -977,7 +971,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               .filter(
                 (item) =>
                   item.value === "add" ||
-                  item.value === "local" ||
                   item.value === "" ||
                   this.props.dataSourceList.includes(item.value)
               )
