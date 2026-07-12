@@ -154,7 +154,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         }
       }
       toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
-      console.log("drivePath", drivePath);
       let res = await encryptToken(settingDrive, {
         drivePath: drivePath,
       });

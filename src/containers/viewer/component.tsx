@@ -612,11 +612,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
   };
   render() {
-    console.log(
-      "Viewer render",
-      this.props.isHideBackground,
-      ConfigService.getReaderConfig("isHideBackground")
-    );
     return (
       <>
         {this.props.htmlBook ? (
