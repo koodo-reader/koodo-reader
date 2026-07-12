@@ -153,18 +153,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let firstIndexOfQuestion = url.indexOf("?");
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
-    this.props.handleFetchBooks();
-    this.props.handleFetchAuthed();
-    if (
-      ConfigService.getAllListConfig("seperateStyleBooks").includes(
-        this.props.currentBook?.key
-      )
-    ) {
-      window.currentBookKey = this.props.currentBook.key;
+    if (ConfigService.getAllListConfig("seperateStyleBooks").includes(key)) {
+      window.currentBookKey = key;
       this.props.handleBackgroundColor(
         ConfigService.getReaderConfig("backgroundColor") || ""
       );
     }
+    this.props.handleFetchBooks();
+    this.props.handleFetchAuthed();
     if (
       key &&
       ConfigService.getAllListConfig("convertPDFBooks").includes(key) &&
