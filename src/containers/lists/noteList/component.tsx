@@ -68,7 +68,9 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     }
     let cardList = await ConfigUtil.getNoteWithTags(tag);
     cardList = cardList.filter((note) =>
-      this.props.tabMode === "note" ? note.notes !== "" : note.notes === ""
+      this.props.tabMode === "note"
+        ? note.notes !== "" && note.notes !== "annotation"
+        : note.notes === ""
     );
     this.setState({ tag, cardList });
   };

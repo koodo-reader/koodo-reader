@@ -33,7 +33,8 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
     const isVisible = this.state.exportSubmenu === type;
     const isNotes = type === "notes";
     const filterFn = isNotes
-      ? (note: any) => note.notes && note.notes.length > 0
+      ? (note: any) =>
+          note.notes && note.notes.length > 0 && note.notes !== "annotation"
       : (note: any) => note.notes === "";
     const exportFn = isNotes ? exportNotes : exportHighlights;
 
