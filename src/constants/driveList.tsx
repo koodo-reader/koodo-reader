@@ -58,7 +58,7 @@ export const driveList = [
     scoped: true,
   },
   {
-    label: "Local",
+    label: "Local folder",
     value: "local",
     icon: "icon-local",
     isPro: true,
