@@ -795,12 +795,6 @@ class TextToSpeech extends React.Component<
         ),
       ConfigService.getReaderConfig("textOrientation") === "vertical"
     );
-    console.log(
-      "highlightAudioNode",
-      ConfigService.getReaderConfig("textOrientation"),
-      node.text,
-      style
-    );
     this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
     toast.dismiss("tts-load");
     let res = await this.handleSystemSpeech(

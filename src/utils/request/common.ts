@@ -200,11 +200,9 @@ export const parseWithMineruAgent = async (file: any) => {
       // Step 4: Fetch markdown content
       const mdResp = await axios.get(markdown_url);
       const markdown = mdResp.data;
-      console.log("MinerU parse completed successfully. Markdown:", markdown);
 
       // Step 5: Convert markdown to HTML
       const html = await marked.parse(markdown);
-      console.log("MinerU parse completed successfully.", html);
       return {
         data: {
           text: html,
@@ -228,6 +226,5 @@ export const parseWithSystemOCR = async (imageBase64: string) => {
     base64: imageBase64,
     lang: "auto",
   });
-  console.log("System OCR result:", result);
   return result.text || "";
 };
