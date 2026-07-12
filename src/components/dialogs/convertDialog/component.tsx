@@ -203,9 +203,9 @@ class ConvertDialog extends React.Component<
                     if (!isElectron && item.value === "mineru-official-agent") {
                       return false;
                     }
-if (!isElectron && item.value === "system-ocr") {
-  return false;
-}
+                    if (!isElectron && item.value === "system-ocr") {
+                      return false;
+                    }
                     return true;
                   })
                   .map((item) => (
