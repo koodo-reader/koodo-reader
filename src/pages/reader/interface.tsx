@@ -33,6 +33,7 @@ export interface ReaderProps {
   handleMenuMode: (menuMode: string) => void;
   handleOriginalText: (originalText: string) => void;
   handleFetchBooks: () => void;
+  handleBackgroundColor: (backgroundColor: string) => void;
   handleOpenMenu: (isOpen: boolean) => void;
   handleFetchBookmarks: () => void;
   handleFetchPercentage: (currentBook: BookModel) => void;

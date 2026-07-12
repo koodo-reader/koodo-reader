@@ -27,7 +27,7 @@ import {
 } from "../../utils/reader/discordRPC";
 import SupportDialog from "../../components/dialogs/supportDialog";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
-
+declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
 let isMouseMoving = false;
@@ -155,6 +155,16 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
     this.props.handleFetchBooks();
     this.props.handleFetchAuthed();
+    if (
+      ConfigService.getAllListConfig("seperateStyleBooks").includes(
+        this.props.currentBook?.key
+      )
+    ) {
+      window.currentBookKey = this.props.currentBook.key;
+      this.props.handleBackgroundColor(
+        ConfigService.getReaderConfig("backgroundColor") || ""
+      );
+    }
     if (
       key &&
       ConfigService.getAllListConfig("convertPDFBooks").includes(key) &&
