@@ -242,16 +242,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   ) {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
       if (isElectron) {
-        getNotification().then((res) => {
-          if (
-            res.data &&
-            res.data.result === "ok" &&
-            res.data.unread &&
-            res.data.unread > 0
-          ) {
-            this.setState({ notificationCount: res.data.unread });
-          }
-        });
+        if (ConfigService.getReaderConfig("isAllowNotification") === "yes") {
+          getNotification().then((res) => {
+            if (
+              res.data &&
+              res.data.result === "ok" &&
+              res.data.unread &&
+              res.data.unread > 0
+            ) {
+              this.setState({ notificationCount: res.data.unread });
+            }
+          });
+          ConfigService.setReaderConfig("isAllowNotification", "no");
+        }
       } else {
         addChatBox();
       }
