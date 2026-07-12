@@ -1692,6 +1692,12 @@ const createMainWin = () => {
         frame: true,
         hasShadow: true,
         transparent: false,
+        webPreferences: {
+          ...options.webPreferences,
+          nodeIntegration: false,
+          contextIsolation: true,
+          preload: path.join(__dirname, "preload.chat.js"),
+        },
       });
       chatWindow.loadURL(config.url);
       chatWindow.on("close", (event) => {
@@ -1701,6 +1707,11 @@ const createMainWin = () => {
     } else if (chatWindow && !chatWindow.isDestroyed()) {
       chatWindow.show();
       chatWindow.focus();
+    }
+  });
+  ipcMain.on("chat-message", (event, msg) => {
+    if (mainWin && !mainWin.isDestroyed()) {
+      mainWin.webContents.send("chat-message", msg);
     }
   });
   ipcMain.handle("clear-all-data", (event, config) => {
