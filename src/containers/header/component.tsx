@@ -149,6 +149,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           BookUtil.redirectBook(book);
         }
       );
+      ipcRenderer.on("chat-message", async (_event: any, msg: any) => {
+        if (msg.payload.event === "new-message") {
+          ConfigService.setReaderConfig("isAllowNotification", "yes");
+        }
+      });
     } else {
       upgradeConfig();
       const status = await LocalFileManager.getPermissionStatus();
