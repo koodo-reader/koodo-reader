@@ -27,6 +27,44 @@ class ConvertDialog extends React.Component<
       ),
     };
   }
+  getLangList = (engine: string) => {
+    let list: any[];
+    if (engine === "tesseract") {
+      list = ocrTesseractLangList;
+    } else if (engine === "official-ai-ocr") {
+      list = [
+        {
+          label: "General",
+          value: "general",
+          lang: "general",
+        },
+        {
+          label: "Accurate",
+          value: "accurate",
+          lang: "accurate",
+        },
+      ];
+    } else if (engine === "mineru-official-agent") {
+      list = [
+        {
+          label: "General",
+          value: "general",
+          lang: "general",
+        },
+      ];
+    } else if (engine === "system-ocr") {
+      list = [
+        {
+          label: "Auto",
+          value: "auto",
+          lang: "auto",
+        },
+      ];
+    } else {
+      list = getOcrPaddleLangList();
+    }
+    return list;
+  };
   renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
@@ -378,42 +416,10 @@ class ConvertDialog extends React.Component<
                         : "textOcrEngine"
                     );
                     const currentLang = ConfigService.getReaderConfig("lang");
-                    let list: any[];
-                    if (engine === "tesseract") {
-                      list = ocrTesseractLangList;
-                    } else if (engine === "official-ai-ocr") {
-                      list = [
-                        {
-                          label: "General",
-                          value: "general",
-                          lang: "general",
-                        },
-                        {
-                          label: "Accurate",
-                          value: "accurate",
-                          lang: "accurate",
-                        },
-                      ];
-                    } else if (engine === "mineru-official-agent") {
-                      list = [
-                        {
-                          label: "General",
-                          value: "general",
-                          lang: "general",
-                        },
-                      ];
-                    } else if (engine === "mineru-official-agent") {
-                      list = [
-                        {
-                          label: "Auto",
-                          value: "auto",
-                          lang: "auto",
-                        },
-                      ];
-                    } else {
-                      list = getOcrPaddleLangList();
-                    }
-                    const match = list.find((o: any) => o.lang === currentLang);
+
+                    const match = this.getLangList(engine).find(
+                      (o: any) => o.lang === currentLang
+                    );
                     return match ? match.value : "";
                   })()}
                   onChange={(event) => {
@@ -435,32 +441,14 @@ class ConvertDialog extends React.Component<
                 >
                   {[
                     { label: "Please select", value: "", lang: "" },
-                    ...(ConfigService.getReaderConfig(
-                      this.props.currentBook.description.indexOf("scanned") > -1
-                        ? "scannedOcrEngine"
-                        : "textOcrEngine"
-                    ) === "tesseract"
-                      ? ocrTesseractLangList
-                      : ConfigService.getReaderConfig(
-                            this.props.currentBook.description.indexOf(
-                              "scanned"
-                            ) > -1
-                              ? "scannedOcrEngine"
-                              : "textOcrEngine"
-                          ) === "official-ai-ocr"
-                        ? [
-                            {
-                              label: "General",
-                              value: "general",
-                              lang: "general",
-                            },
-                            {
-                              label: "Accurate",
-                              value: "accurate",
-                              lang: "accurate",
-                            },
-                          ]
-                        : getOcrPaddleLangList()),
+                    ...(this.getLangList(
+                      ConfigService.getReaderConfig(
+                        this.props.currentBook.description.indexOf("scanned") >
+                          -1
+                          ? "scannedOcrEngine"
+                          : "textOcrEngine"
+                      )
+                    ) || []),
                   ].map((item) => (
                     <option
                       value={item.value}
