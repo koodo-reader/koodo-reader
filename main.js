@@ -1696,7 +1696,7 @@ const createMainWin = () => {
           ...options.webPreferences,
           nodeIntegration: false,
           contextIsolation: true,
-          preload: path.join(__dirname, "preload.chat.js"),
+          preload: path.join(__dirname, "preload.js"),
         },
       });
       chatWindow.loadURL(config.url);
