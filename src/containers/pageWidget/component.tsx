@@ -77,6 +77,10 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
           let note = notes.find(
             (note: Note) => note.chapterIndex === chapterDocIndex
           );
+          if (note) {
+            note = await DatabaseService.getRecord(note.key, "notes");
+            console.log("annotation-changed note", note);
+          }
           if (note && note.color === "annotation") {
             let newNote = {
               ...note,
