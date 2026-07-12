@@ -15,6 +15,7 @@ import {
   handleScale,
   handleFetchAuthed,
   handleFetchUserInfo,
+  handleBackgroundColor,
 } from "../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
@@ -65,6 +66,7 @@ const actionCreator = {
   handleSpeechDialog,
   handleAnnotationDialog,
   handleFetchUserInfo,
+  handleBackgroundColor,
 };
 export default connect(
   mapStateToProps,
