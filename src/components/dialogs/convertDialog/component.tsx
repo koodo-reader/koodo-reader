@@ -252,7 +252,8 @@ class ConvertDialog extends React.Component<
                       key={item.value}
                       className="lang-setting-option"
                     >
-                      {this.props.t(item.label)}
+                      {this.props.t(item.label) +
+                        (item.isPro ? " (Pro)" : "")}
                     </option>
                   ))}
               </select>
