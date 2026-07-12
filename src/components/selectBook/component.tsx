@@ -223,7 +223,11 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                                 this.props.selectedBooks,
                                 "notes"
                               )
-                            ).filter((note) => note.notes !== "");
+                            ).filter(
+                              (note) =>
+                                note.notes !== "" &&
+                                note.notes !== "annotation"
+                            );
                             if (notes.length > 0) {
                               exportNotes(notes, selectedBooks, fmt);
                               toast.success(this.props.t("Export successful"));

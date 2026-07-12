@@ -72,7 +72,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
             nextProps.htmlBook.rendition.getAnnotationData(chapterDocIndex);
           let notes = await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
             this.props.currentBook.key,
-            "highlight"
+            "annotation"
           );
           let note = notes.find(
             (note: Note) => note.chapterIndex === chapterDocIndex
@@ -80,8 +80,6 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
           if (note) {
             note = await DatabaseService.getRecord(note.key, "notes");
             console.log("annotation-changed note", note);
-          }
-          if (note && note.color === "annotation") {
             let newNote = {
               ...note,
               range: JSON.stringify(annotationData),
@@ -110,7 +108,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
               "",
               JSON.stringify(bookLocation),
               JSON.stringify(annotationData),
-              "",
+              "annotation",
               bookLocation.percentage,
               "annotation",
               []

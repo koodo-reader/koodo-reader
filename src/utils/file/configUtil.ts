@@ -255,15 +255,20 @@ class ConfigUtil {
       let queryString = "";
       let data: any[] = [];
       if (type === "note" && bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes != '' ORDER BY ${sort} ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes != '' AND notes != 'annotation' ORDER BY ${sort} ${order}`;
         data = [bookKey];
       } else if (type === "highlight" && bookKey) {
         queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes = '' ORDER BY ${sort} ${order}`;
         data = [bookKey];
       } else if (type === "note" && !bookKey) {
-        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes != '' ORDER BY ${sort} ${order}`;
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes != '' AND notes != 'annotation' ORDER BY ${sort} ${order}`;
       } else if (type === "highlight" && !bookKey) {
         queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes = '' ORDER BY ${sort} ${order}`;
+      } else if (type === "annotation" && bookKey) {
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? AND notes = 'annotation' ORDER BY ${sort} ${order}`;
+        data = [bookKey];
+      } else if (type === "annotation" && !bookKey) {
+        queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE notes = 'annotation' ORDER BY ${sort} ${order}`;
       } else if (!type && bookKey) {
         queryString = `SELECT key, bookKey, chapterIndex FROM notes WHERE bookKey = ? ORDER BY ${sort} ${order}`;
         data = [bookKey];
@@ -282,8 +287,11 @@ class ConfigUtil {
       let notes: Note[] = await DatabaseService.getAllRecords("notes");
       let filteredNotes = notes.filter((note) => {
         let typeMatch =
-          (type === "note" && note.notes !== "") ||
+          (type === "note" &&
+            note.notes !== "" &&
+            note.notes !== "annotation") ||
           (type === "highlight" && note.notes === "") ||
+          (type === "annotation" && note.notes === "annotation") ||
           !type;
         let bookKeyMatch = bookKey ? note.bookKey === bookKey : true;
         return typeMatch && bookKeyMatch;
@@ -318,7 +326,7 @@ class ConfigUtil {
       let queryString = "";
       let data: any[] = [];
       if (type === "note" && bookKey) {
-        queryString = `SELECT * FROM notes WHERE bookKey = ? AND (notes LIKE ? OR text LIKE ?) ORDER BY key DESC`;
+        queryString = `SELECT * FROM notes WHERE bookKey = ? AND notes != '' AND notes != 'annotation' AND (notes LIKE ? OR text LIKE ?) ORDER BY key DESC`;
         data = [
           bookKey,
           `%${keyword.toLowerCase()}%`,
@@ -332,7 +340,7 @@ class ConfigUtil {
           `%${keyword.toLowerCase()}%`,
         ];
       } else if (type === "note" && !bookKey) {
-        queryString = `SELECT * FROM notes WHERE (notes != '' AND (notes LIKE ? OR text LIKE ?)) ORDER BY key DESC`;
+        queryString = `SELECT * FROM notes WHERE (notes != '' AND notes != 'annotation' AND (notes LIKE ? OR text LIKE ?)) ORDER BY key DESC`;
         data = [`%${keyword.toLowerCase()}%`, `%${keyword.toLowerCase()}%`];
       } else if (type === "highlight" && !bookKey) {
         queryString = `SELECT * FROM notes WHERE (notes = '' AND (notes LIKE ? OR text LIKE ?)) ORDER BY key DESC`;
@@ -359,7 +367,9 @@ class ConfigUtil {
       let notes = await DatabaseService.getAllRecords("notes");
       let filteredNotes = notes.filter(
         (note) =>
-          ((type === "note" && note.notes !== "") ||
+          ((type === "note" &&
+            note.notes !== "" &&
+            note.notes !== "annotation") ||
             (type === "highlight" && note.notes === "") ||
             !type) &&
           (note.bookKey === bookKey || !bookKey) &&
