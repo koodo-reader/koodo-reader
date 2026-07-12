@@ -128,23 +128,35 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     this.props.handleSettingDrive(targetDrive);
     let settingDrive = targetDrive;
-    if (settingDrive === "icloud") {
-      let drivePath = getICloudDrivePath();
-      if (!drivePath) {
-        toast.error(
-          this.props.t(
-            "Can't find Koodo Reader's folder in the default iCloud path, please make sure iCloud Drive is installed and set up correctly, and you have already synced your library to iCloud Drive on the iOS version first."
-          ),
-          {
-            duration: 6000,
-          }
-        );
-        this.props.handleSettingDrive("");
-        return;
+    if (settingDrive === "icloud" || settingDrive === "local") {
+      let drivePath = "";
+      if (settingDrive === "icloud") {
+        drivePath = getICloudDrivePath();
+        if (!drivePath) {
+          toast.error(
+            this.props.t(
+              "Can't find Koodo Reader's folder in the default iCloud path, please make sure iCloud Drive is installed and set up correctly, and you have already synced your library to iCloud Drive on the iOS version first."
+            ),
+            {
+              duration: 6000,
+            }
+          );
+          this.props.handleSettingDrive("");
+          return;
+        }
+      } else if (settingDrive === "local") {
+        const { ipcRenderer } = window.require("electron");
+        drivePath = await ipcRenderer.invoke("select-path");
+        if (!drivePath) {
+          toast.error(i18n.t("Please select a folder"));
+          this.props.handleSettingDrive("");
+          return;
+        }
       }
       toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
+      console.log("drivePath", drivePath);
       let res = await encryptToken(settingDrive, {
-        iCloudDrivePath: drivePath,
+        drivePath: drivePath,
       });
       if (res.code === 200) {
         toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });

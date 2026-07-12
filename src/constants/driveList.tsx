@@ -58,6 +58,14 @@ export const driveList = [
     scoped: true,
   },
   {
+    label: "Local",
+    value: "local",
+    icon: "icon-local",
+    isPro: true,
+    support: ["desktop"],
+    scoped: true,
+  },
+  {
     label: "Dubox",
     value: "dubox",
     icon: "icon-dubox",

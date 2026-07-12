@@ -1348,6 +1348,7 @@ export const handleAutoCloudSync = async () => {
     syncRes.code === 200 &&
     syncRes.data.default_sync_option &&
     syncRes.data.default_sync_option !== "icloud" &&
+    syncRes.data.default_sync_option !== "local" &&
     syncRes.data.default_sync_token
   ) {
     let supportedSources = driveList
