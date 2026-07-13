@@ -158,6 +158,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.props.handleBackgroundColor(
         ConfigService.getReaderConfig("backgroundColor") || ""
       );
+    } else {
+      window.currentBookKey = "";
     }
     this.props.handleFetchBooks();
     this.props.handleFetchAuthed();
