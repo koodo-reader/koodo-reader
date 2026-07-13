@@ -243,10 +243,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.currentBook.description.indexOf("scanned") > -1
           ? "scannedOcrLang"
           : "textOcrLang";
-      const ocrEngineKey =
-        this.props.currentBook.description.indexOf("scanned") > -1
-          ? "scannedOcrEngine"
-          : "textOcrEngine";
       let rendition = BookHelper.getRendition(
         result,
         {
