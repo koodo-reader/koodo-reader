@@ -455,14 +455,11 @@ export const bindHtmlEvent = (
   );
 
   doc.addEventListener("mousemove", (event: any) => {
-    const iframe = getIframeWin();
-    if (!iframe) return;
-    const rect = iframe.getBoundingClientRect();
     window.dispatchEvent(
       new CustomEvent(MOUSE_POSITION_EVENT, {
         detail: {
-          clientX: rect.left + event.clientX,
-          clientY: rect.top + event.clientY,
+          clientX: event.screenX - window.screenX,
+          clientY: event.screenY - window.screenY,
         },
       })
     );
