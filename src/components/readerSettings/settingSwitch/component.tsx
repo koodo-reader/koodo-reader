@@ -32,17 +32,8 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("isHideBackground") === "yes",
       isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
       isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
-      isHideAIButton: ConfigService.getReaderConfig("isHideAIButton") === "yes",
-      isHideScaleButton:
-        ConfigService.getReaderConfig("isHideScaleButton") === "yes",
-      isHidePDFConvertButton:
-        ConfigService.getReaderConfig("isHidePDFConvertButton") === "yes",
-      isHidePageButton:
-        ConfigService.getReaderConfig("isHidePageButton") === "yes",
       isHideMenuButton:
         ConfigService.getReaderConfig("isHideMenuButton") === "yes",
-      isHideAudiobookButton:
-        ConfigService.getReaderConfig("isHideAudiobookButton") === "yes",
       isShowPageBorder:
         ConfigService.getReaderConfig("isShowPageBorder") === "yes",
       isCustomBookCSS:
@@ -411,11 +402,6 @@ class SettingSwitch extends React.Component<
                     isHideFooter: this.props.handleHideFooter,
                     isHideHeader: this.props.handleHideHeader,
                     isHideBackground: this.props.handleHideBackground,
-                    isHidePageButton: this.props.handleHidePageButton,
-                    isHideAIButton: this.props.handleHideAIButton,
-                    isHideScaleButton: this.props.handleHideScaleButton,
-                    isHidePDFConvertButton:
-                      this.props.handleHidePDFConvertButton,
                     isShowPageBorder: this.props.handleShowBorder,
                   };
 
@@ -436,11 +422,6 @@ class SettingSwitch extends React.Component<
                       this.props.handleHideMenuButton(false);
                       this.handleChange("isHideMenuButton");
                     }
-                  } else if (propName === "isHideAudiobookButton") {
-                    this.props.handleHideAudiobookButton(
-                      !this.state.isHideAudiobookButton
-                    );
-                    this.handleChange("isHideAudiobookButton");
                   } else if (propName === "isShowPageBorder") {
                     this.props.handleShowBorder(!this.state.isShowPageBorder);
                     if (!this.state.isShowPageBorder) {

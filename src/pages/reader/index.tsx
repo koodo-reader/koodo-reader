@@ -40,13 +40,7 @@ const mapStateToProps = (state: stateType) => {
     isSettingOpen: state.manager.isSettingOpen,
     scale: state.reader.scale,
     renderBookFunc: state.book.renderBookFunc,
-    isHidePageButton: state.reader.isHidePageButton,
     isHideMenuButton: state.reader.isHideMenuButton,
-    isHideAudiobookButton: state.reader.isHideAudiobookButton,
-    isHideAnnotationButton: state.reader.isHideAnnotationButton,
-    isHideAIButton: state.reader.isHideAIButton,
-    isHidePDFConvertButton: state.reader.isHidePDFConvertButton,
-    isHideScaleButton: state.reader.isHideScaleButton,
   };
 };
 const actionCreator = {

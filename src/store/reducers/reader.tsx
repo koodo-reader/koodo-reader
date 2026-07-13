@@ -38,17 +38,7 @@ const initState = {
   isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
   isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
   isHideBackground: ConfigService.getReaderConfig("isHideBackground") === "yes",
-  isHidePageButton: ConfigService.getReaderConfig("isHidePageButton") === "yes",
   isHideMenuButton: ConfigService.getReaderConfig("isHideMenuButton") === "yes",
-  isHideAudiobookButton:
-    ConfigService.getReaderConfig("isHideAudiobookButton") === "yes",
-  isHideAnnotationButton:
-    ConfigService.getReaderConfig("isHideAnnotationButton") === "yes",
-  isHideAIButton: ConfigService.getReaderConfig("isHideAIButton") === "yes",
-  isHideScaleButton:
-    ConfigService.getReaderConfig("isHideScaleButton") === "yes",
-  isHidePDFConvertButton:
-    ConfigService.getReaderConfig("isHidePDFConvertButton") === "yes",
   isShowPageBorder: ConfigService.getReaderConfig("isShowPageBorder") === "yes",
   textOrientation: ConfigService.getReaderConfig("textOrientation") || "",
   jumpPosition: null as object | null,
@@ -156,40 +146,10 @@ export function reader(
         ...state,
         isHideBackground: action.payload,
       };
-    case "HANDLE_HIDE_PAGE_BUTTON":
-      return {
-        ...state,
-        isHidePageButton: action.payload,
-      };
     case "HANDLE_HIDE_MENU_BUTTON":
       return {
         ...state,
         isHideMenuButton: action.payload,
-      };
-    case "HANDLE_HIDE_AUDIOBOOK_BUTTON":
-      return {
-        ...state,
-        isHideAudiobookButton: action.payload,
-      };
-    case "HANDLE_HIDE_ANNOTATION_BUTTON":
-      return {
-        ...state,
-        isHideAnnotationButton: action.payload,
-      };
-    case "HANDLE_HIDE_AI_BUTTON":
-      return {
-        ...state,
-        isHideAIButton: action.payload,
-      };
-    case "HANDLE_HIDE_SCALE_BUTTON":
-      return {
-        ...state,
-        isHideScaleButton: action.payload,
-      };
-    case "HANDLE_HIDE_PDF_CONVERT_BUTTON":
-      return {
-        ...state,
-        isHidePDFConvertButton: action.payload,
       };
     case "HANDLE_SHOW_BORDER":
       return {
