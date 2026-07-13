@@ -136,6 +136,12 @@ const SELECTION_SHORTCUT_OPTIONS: Array<{
 
 export const READING_PANEL_TOGGLE_EVENT = "koodo-reading-panel-toggle";
 
+// Iframe content has its own document, so mousemove over the book never
+// reaches window listeners on the outer document. Re-broadcast it on the
+// outer window (translated into outer-window coordinates) so components
+// like the reader edge buttons can react to mouse position uniformly.
+export const MOUSE_POSITION_EVENT = "mouse-position";
+
 export const openReadingPanel = (
   position: "left" | "right" | "top" | "bottom"
 ) => {
@@ -447,6 +453,20 @@ export const bindHtmlEvent = (
     },
     { passive: false }
   );
+
+  doc.addEventListener("mousemove", (event: any) => {
+    const iframe = getIframeWin();
+    if (!iframe) return;
+    const rect = iframe.getBoundingClientRect();
+    window.dispatchEvent(
+      new CustomEvent(MOUSE_POSITION_EVENT, {
+        detail: {
+          clientX: rect.left + event.clientX,
+          clientY: rect.top + event.clientY,
+        },
+      })
+    );
+  });
 };
 export const htmlMouseEvent = (
   rendition: any,

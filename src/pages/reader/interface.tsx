@@ -54,6 +54,7 @@ export interface ReaderState {
   hoverPanel: string;
   scale: string;
   isShowScale: boolean;
+  isNearEdge: boolean;
   totalDuration: number;
   currentDuration: number;
 }
