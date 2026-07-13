@@ -14,6 +14,8 @@ import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import {
   BRUSH_WIDTHS,
+  getDefaultOcrEngine,
+  getDefaultOcrLang,
   getPageWidth,
   getParserRegex,
   getPdfPassword,
@@ -25,16 +27,10 @@ import _ from "underscore";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
-import {
-  ocrEngineList,
-  ocrTesseractLangList,
-} from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
 import { getOcrResult, getOcrResultV2 } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
-import {
-  parseWithSystemOCR,
-} from "../../utils/request/common";
+import { parseWithSystemOCR } from "../../utils/request/common";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -293,27 +289,19 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           ).includes(this.props.currentBook.key)
             ? "yes"
             : "no",
-          ocrLang: ConfigService.getReaderConfig(ocrLangKey)
-            ? ConfigService.getReaderConfig(ocrLangKey)
-            : ConfigService.getReaderConfig(ocrEngineKey) === "tesseract"
-              ? ocrTesseractLangList.find(
-                  (item) => item.lang === ConfigService.getReaderConfig("lang")
-                )?.value || "chi_sim"
-              : ConfigService.getReaderConfig(ocrEngineKey)
-                ? ocrEngineList.find(
-                    (item) =>
-                      item.value === ConfigService.getReaderConfig(ocrEngineKey)
-                  )?.lang || "general"
-                : "standard_v5_mobile",
+          ocrLang: getDefaultOcrLang(
+            getDefaultOcrEngine(this.props.currentBook),
+            this.props.currentBook
+          ),
           externalWorker: {
             recognize:
-              ConfigService.getReaderConfig(ocrEngineKey) === "system-ocr"
+              getDefaultOcrEngine(this.props.currentBook) === "system-ocr"
                 ? parseWithSystemOCR
                 : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
-                    ? getOcrResultV2
-                    : getOcrResult,
+                  ? getOcrResultV2
+                  : getOcrResult,
           },
-          ocrEngine: ConfigService.getReaderConfig(ocrEngineKey) || "paddle",
+          ocrEngine: getDefaultOcrEngine(this.props.currentBook),
           serverRegion:
             getServerRegion() === "china" && this.props.isAuthed
               ? "china"

@@ -6,13 +6,13 @@ import "./convertDialog.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import BookUtil from "../../../utils/file/bookUtil";
 import {
-  getOcrPaddleLangList,
   ocrEngineList,
   ocrTesseractLangList,
   paraSpacingList,
   titleSizeList,
 } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
+import { getDefaultOcrEngine, getOcrLangList } from "../../../utils/common";
 
 class ConvertDialog extends React.Component<
   ConvertDialogProps,
@@ -27,36 +27,7 @@ class ConvertDialog extends React.Component<
       ),
     };
   }
-  getLangList = (engine: string) => {
-    let list: any[];
-    if (engine === "tesseract") {
-      list = ocrTesseractLangList;
-    } else if (engine === "official-ai-ocr") {
-      list = [
-        {
-          label: "General",
-          value: "general",
-          lang: "general",
-        },
-        {
-          label: "Accurate",
-          value: "accurate",
-          lang: "accurate",
-        },
-      ];
-    } else if (engine === "system-ocr") {
-      list = [
-        {
-          label: "Auto",
-          value: "auto",
-          lang: "auto",
-        },
-      ];
-    } else {
-      list = getOcrPaddleLangList();
-    }
-    return list;
-  };
+
   renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
@@ -170,16 +141,7 @@ class ConvertDialog extends React.Component<
               <select
                 name=""
                 className="lang-setting-dropdown"
-                value={
-                  ConfigService.getReaderConfig(
-                    this.props.currentBook.description.indexOf("scanned") > -1
-                      ? "scannedOcrEngine"
-                      : "textOcrEngine"
-                  ) ||
-                  (this.props.currentBook.description.indexOf("scanned") > -1
-                    ? "paddle"
-                    : "system-ocr")
-                }
+                value={getDefaultOcrEngine(this.props.currentBook)}
                 onChange={(event) => {
                   if (
                     event.target.value === "official-ai-ocr" &&
@@ -228,23 +190,15 @@ class ConvertDialog extends React.Component<
                   this.forceUpdate();
                 }}
               >
-                {ocrEngineList
-                  .filter((item) => {
-                    if (!isElectron && item.value === "system-ocr") {
-                      return false;
-                    }
-                    return true;
-                  })
-                  .map((item) => (
-                    <option
-                      value={item.value}
-                      key={item.value}
-                      className="lang-setting-option"
-                    >
-                      {this.props.t(item.label) +
-                        (item.isPro ? " (Pro)" : "")}
-                    </option>
-                  ))}
+                {ocrEngineList.map((item) => (
+                  <option
+                    value={item.value}
+                    key={item.value}
+                    className="lang-setting-option"
+                  >
+                    {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+                  </option>
+                ))}
               </select>
             </div>
             {this.props.currentBook.description.indexOf("scanned") === -1 &&
@@ -407,7 +361,7 @@ class ConvertDialog extends React.Component<
                     );
                     const currentLang = ConfigService.getReaderConfig("lang");
 
-                    const match = this.getLangList(engine).find(
+                    const match = getOcrLangList(engine).find(
                       (o: any) => o.lang === currentLang
                     );
                     return match ? match.value : "";
@@ -431,13 +385,8 @@ class ConvertDialog extends React.Component<
                 >
                   {[
                     { label: "Please select", value: "", lang: "" },
-                    ...(this.getLangList(
-                      ConfigService.getReaderConfig(
-                        this.props.currentBook.description.indexOf("scanned") >
-                          -1
-                          ? "scannedOcrEngine"
-                          : "textOcrEngine"
-                      )
+                    ...(getOcrLangList(
+                      getDefaultOcrEngine(this.props.currentBook)
                     ) || []),
                   ].map((item) => (
                     <option
