@@ -26,7 +26,10 @@ import {
   clearDiscordPresence,
 } from "../../utils/reader/discordRPC";
 import SupportDialog from "../../components/dialogs/supportDialog";
-import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
+import {
+  READING_PANEL_TOGGLE_EVENT,
+  MOUSE_POSITION_EVENT,
+} from "../../utils/reader/mouseEvent";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
@@ -112,6 +115,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
       isShowScale: false,
+      isNearEdge: false,
     };
   }
   componentDidMount() {
@@ -143,6 +147,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         isMouseMoving = false;
       }, 100);
     });
+    window.addEventListener("mousemove", this.handleEdgeProximity);
+    window.addEventListener(MOUSE_POSITION_EVENT, this.handleEdgeProximity);
     window.addEventListener(
       READING_PANEL_TOGGLE_EVENT,
       this.handleReadingPanelToggle
@@ -201,6 +207,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   }
 
   componentWillUnmount() {
+    window.removeEventListener("mousemove", this.handleEdgeProximity);
+    window.removeEventListener(
+      MOUSE_POSITION_EVENT,
+      this.handleEdgeProximity
+    );
     window.removeEventListener(
       READING_PANEL_TOGGLE_EVENT,
       this.handleReadingPanelToggle
@@ -339,6 +350,23 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.handleEnterReader(position);
     }
   };
+  handleEdgeProximity = (
+    event: MouseEvent | CustomEvent<{ clientX: number; clientY: number }>
+  ) => {
+    const threshold = 0.2;
+    const { clientX, clientY } =
+      event instanceof CustomEvent ? event.detail : event;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const isNearEdge =
+      clientX <= width * threshold ||
+      clientX >= width * (1 - threshold) ||
+      clientY <= height * threshold ||
+      clientY >= height * (1 - threshold);
+    if (isNearEdge !== this.state.isNearEdge) {
+      this.setState({ isNearEdge });
+    }
+  };
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();
 
@@ -374,6 +402,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             }}
             style={{
               left: this.props.isNavLocked ? 315 : 15,
+              opacity: this.state.isNearEdge ? undefined : 0,
+              pointerEvents: this.state.isNearEdge ? undefined : "none",
+              transition: "opacity 0.3s ease",
             }}
           >
             <span className="icon-dropdown previous-chapter-single"></span>
@@ -389,6 +420,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             alignItems: "center",
             gap: "8px",
             zIndex: 10,
+            opacity: this.state.isNearEdge ? 1 : 0,
+            pointerEvents: this.state.isNearEdge ? "auto" : "none",
+            transition: "opacity 0.3s ease",
           }}
         >
           {!this.props.isHidePageButton && (
@@ -485,6 +519,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-end",
+            opacity: this.state.isNearEdge ? 1 : 0,
+            pointerEvents: this.state.isNearEdge ? "auto" : "none",
+            transition: "opacity 0.3s ease",
           }}
         >
           {(this.props.readerMode === "scroll" ||
