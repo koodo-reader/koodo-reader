@@ -452,7 +452,7 @@ class ImportDialog extends React.Component<
                     }}
                   >
                     <span className="cloud-drive-label">
-                      {this.props.t(item.label)}
+                      {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                     </span>
                     <span className="icon-dropdown import-dialog-more-file"></span>
                   </div>
