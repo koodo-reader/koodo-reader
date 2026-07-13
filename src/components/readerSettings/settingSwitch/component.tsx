@@ -74,7 +74,11 @@ class SettingSwitch extends React.Component<
         ).includes(nextProps.currentBook?.key),
       });
     }
-    if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
+    if (
+      nextProps.htmlBook !== this.props.htmlBook &&
+      nextProps.htmlBook &&
+      !this.props.htmlBook
+    ) {
       nextProps.htmlBook.rendition.on("rendered", async () => {
         let text = await nextProps.htmlBook?.rendition.audioText();
         if (text && text.length > 0) {
