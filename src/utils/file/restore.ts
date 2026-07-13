@@ -196,6 +196,9 @@ export const restore = async (service: string): Promise<Boolean> => {
     await generateSyncRecord();
     return restoreRes;
   } else {
+    toast.loading(i18n.t("Restoring..."), {
+      id: "backup",
+    });
     let tokenConfig = await getCloudConfig(service);
     let result = await ipcRenderer.invoke("cloud-download", {
       ...tokenConfig,
@@ -210,9 +213,7 @@ export const restore = async (service: string): Promise<Boolean> => {
     }
     const path = window.require("path");
     let filePath = path.join(getStorageLocation(), "backup", "data.zip");
-    toast.loading(i18n.t("Restoring..."), {
-      id: "backup",
-    });
+
     // 让 UI 有时间渲染 toast
     await new Promise((resolve) => setTimeout(resolve, 100));
     let restoreRes = await restoreFromfilePath(filePath);
