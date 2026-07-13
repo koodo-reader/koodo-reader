@@ -44,14 +44,6 @@ class ConvertDialog extends React.Component<
           lang: "accurate",
         },
       ];
-    } else if (engine === "mineru-official-agent") {
-      list = [
-        {
-          label: "General",
-          value: "general",
-          lang: "general",
-        },
-      ];
     } else if (engine === "system-ocr") {
       list = [
         {
@@ -238,9 +230,6 @@ class ConvertDialog extends React.Component<
               >
                 {ocrEngineList
                   .filter((item) => {
-                    if (!isElectron && item.value === "mineru-official-agent") {
-                      return false;
-                    }
                     if (!isElectron && item.value === "system-ocr") {
                       return false;
                     }

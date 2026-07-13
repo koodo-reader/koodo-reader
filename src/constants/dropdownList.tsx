@@ -418,11 +418,6 @@ export const ocrEngineList = [
     isPro: true,
   },
   {
-    label: "MinerU Agent API",
-    value: "mineru-official-agent",
-    lang: "",
-  },
-  {
     label: "System OCR",
     value: "system-ocr",
     lang: "auto",
