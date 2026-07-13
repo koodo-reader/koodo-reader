@@ -98,35 +98,8 @@ export function handleHideHeader(isHideHeader: boolean) {
 export function handleHideBackground(isHideBackground: boolean) {
   return { type: "HANDLE_HIDE_BACKGROUND", payload: isHideBackground };
 }
-export function handleHidePageButton(isHidePageButton: boolean) {
-  return { type: "HANDLE_HIDE_PAGE_BUTTON", payload: isHidePageButton };
-}
 export function handleHideMenuButton(isHideMenuButton: boolean) {
   return { type: "HANDLE_HIDE_MENU_BUTTON", payload: isHideMenuButton };
-}
-export function handleHideAudiobookButton(isHideAudiobookButton: boolean) {
-  return {
-    type: "HANDLE_HIDE_AUDIOBOOK_BUTTON",
-    payload: isHideAudiobookButton,
-  };
-}
-export function handleHideAnnotationButton(isHideAnnotationButton: boolean) {
-  return {
-    type: "HANDLE_HIDE_ANNOTATION_BUTTON",
-    payload: isHideAnnotationButton,
-  };
-}
-export function handleHideAIButton(isHideAIButton: boolean) {
-  return { type: "HANDLE_HIDE_AI_BUTTON", payload: isHideAIButton };
-}
-export function handleHideScaleButton(isHideScaleButton: boolean) {
-  return { type: "HANDLE_HIDE_SCALE_BUTTON", payload: isHideScaleButton };
-}
-export function handleHidePDFConvertButton(isHidePDFConvertButton: boolean) {
-  return {
-    type: "HANDLE_HIDE_PDF_CONVERT_BUTTON",
-    payload: isHidePDFConvertButton,
-  };
 }
 export function handleShowBorder(isShowPageBorder: boolean) {
   return { type: "HANDLE_SHOW_BORDER", payload: isShowPageBorder };

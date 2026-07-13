@@ -14,14 +14,8 @@ export interface ReaderProps {
   isOpenPopupOptionDialog: boolean;
   isSearch: boolean;
   isAuthed: boolean;
-  isHidePageButton: boolean;
   isSettingOpen: boolean;
   isHideMenuButton: boolean;
-  isHideAudiobookButton: boolean;
-  isHideAnnotationButton: boolean;
-  isHideAIButton: boolean;
-  isHidePDFConvertButton: boolean;
-  isHideScaleButton: boolean;
   readerMode: string;
   scale: string;
   handleFetchNotes: () => void;
