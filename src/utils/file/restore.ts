@@ -282,29 +282,6 @@ export const restoreFromSnapshot = async (fileName: string) => {
 
   return true;
 };
-export const restoreFromConfigJson = () => {
-  const fs = window.require("fs");
-  const path = window.require("path");
-  const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath, "config", "config.json"))) {
-    return false;
-  }
-  try {
-    let configStr = fs.readFileSync(
-      path.join(dataPath, "config", "config.json"),
-      "utf-8"
-    );
-    let config = JSON.parse(configStr);
-    for (let key in config) {
-      ConfigService.setItem(key, config[key]);
-    }
-  } catch (error) {
-    console.error("restore config error:", error);
-    return false;
-  }
-
-  return true;
-};
 export const restoreFromfilePath = async (filePath: string) => {
   const fs = window.require("fs");
   const path = window.require("path");

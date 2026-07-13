@@ -10,8 +10,7 @@ import {
   KOReaderUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
-import { restoreFromConfigJson } from "../../utils/file/restore";
-import { backupToConfigJson, generateSnapshot } from "../../utils/file/backup";
+import { generateSnapshot } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
 import {
   getCloudConfig,
