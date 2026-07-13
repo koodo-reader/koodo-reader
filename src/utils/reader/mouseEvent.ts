@@ -1,7 +1,12 @@
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
-import { handleExitFullScreen, handleFullScreen, sleep } from "../common";
+import {
+  handleExitFullScreen,
+  handleFullScreen,
+  sleep,
+  throttle,
+} from "../common";
 import Hammer from "hammerjs";
 import TTSUtil from "./ttsUtil";
 import {
@@ -454,7 +459,7 @@ export const bindHtmlEvent = (
     { passive: false }
   );
 
-  doc.addEventListener("mousemove", (event: any) => {
+  const throttledMouseMove = throttle((event: any) => {
     window.dispatchEvent(
       new CustomEvent(MOUSE_POSITION_EVENT, {
         detail: {
@@ -463,7 +468,9 @@ export const bindHtmlEvent = (
         },
       })
     );
-  });
+  }, 100);
+
+  doc.addEventListener("mousemove", throttledMouseMove);
 };
 export const htmlMouseEvent = (
   rendition: any,
