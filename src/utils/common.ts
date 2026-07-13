@@ -31,6 +31,10 @@ import { driveList } from "../constants/driveList";
 import { updateUserConfig } from "./request/user";
 import { languageCNMap, languageENMap } from "../constants/ttsList";
 import { BookHelper } from "../assets/lib/kookit.min";
+import {
+  getOcrPaddleLangList,
+  ocrTesseractLangList,
+} from "../constants/dropdownList";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -1917,3 +1921,67 @@ export const BRUSH_COLORS = [
 ];
 
 export const BRUSH_WIDTHS = [2, 4, 8, 14];
+export const getDefaultOcrEngine = (currentBook: any) => {
+  const engine = ConfigService.getReaderConfig(
+    currentBook.description.indexOf("scanned") > -1
+      ? "scannedOcrEngine"
+      : "textOcrEngine"
+  );
+  if (engine) return engine;
+  if (currentBook.description.indexOf("scanned") > -1) {
+    return "paddle";
+  } else {
+    return "system-ocr";
+  }
+};
+export const getOcrLangList = (engine: string) => {
+  let list: any[];
+  if (engine === "tesseract") {
+    list = ocrTesseractLangList;
+  } else if (engine === "official-ai-ocr") {
+    list = [
+      {
+        label: "General",
+        value: "general",
+        lang: "general",
+      },
+      {
+        label: "Accurate",
+        value: "accurate",
+        lang: "accurate",
+      },
+    ];
+  } else if (engine === "system-ocr") {
+    list = [
+      {
+        label: "Auto",
+        value: "auto",
+        lang: "auto",
+      },
+    ];
+  } else {
+    list = getOcrPaddleLangList();
+  }
+  return list;
+};
+export const getDefaultOcrLang = (engine: string, currentBook: any) => {
+  const lang = ConfigService.getReaderConfig(
+    currentBook.description.indexOf("scanned") > -1
+      ? "scannedOcrLang"
+      : "textOcrLang"
+  );
+  if (lang) return lang;
+  if (engine === "tesseract") {
+    return (
+      ocrTesseractLangList.find(
+        (item) => item.lang === ConfigService.getReaderConfig("lang")
+      )?.value || "chi_sim"
+    );
+  } else if (engine === "official-ai-ocr") {
+    return "general";
+  } else if (engine === "system-ocr") {
+    return "auto";
+  } else if (engine === "paddle") {
+    return "standard_v5_mobile";
+  }
+};
