@@ -159,9 +159,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     ConfigService.setReaderConfig("isNavLocked", "yes");
   };
 
-  handleCompositionEnd = (
-    event: React.CompositionEvent<HTMLInputElement>
-  ) => {
+  handleCompositionEnd = (event: React.CompositionEvent<HTMLInputElement>) => {
     this.setState({
       isComposing: false,
       searchKeyword: event.currentTarget.value,
@@ -234,7 +232,11 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     }
   }
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
-    if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
+    if (
+      nextProps.htmlBook !== this.props.htmlBook &&
+      nextProps.htmlBook &&
+      !this.props.htmlBook
+    ) {
       this.handleScrollToChapter(nextProps.htmlBook);
     }
     if (

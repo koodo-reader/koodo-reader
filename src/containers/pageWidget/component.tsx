@@ -54,7 +54,11 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
   }
 
   async UNSAFE_componentWillReceiveProps(nextProps: PageWidgetProps) {
-    if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
+    if (
+      nextProps.htmlBook !== this.props.htmlBook &&
+      nextProps.htmlBook &&
+      !this.props.htmlBook
+    ) {
       await this.handlePageNum(nextProps.htmlBook.rendition);
       nextProps.htmlBook.rendition.on("page-changed", async () => {
         await this.handlePageNum(nextProps.htmlBook.rendition);
