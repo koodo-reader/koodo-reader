@@ -256,9 +256,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               res.data.unread > 0
             ) {
               this.setState({ notificationCount: res.data.unread });
+              ConfigService.setReaderConfig("isAllowNotification", "no");
             }
           });
-          ConfigService.setReaderConfig("isAllowNotification", "no");
         }
       } else {
         addChatBox();
