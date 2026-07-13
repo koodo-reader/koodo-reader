@@ -213,6 +213,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleRenderBook = async () => {
     if (lock) return;
     let { key, path, format, name } = this.props.currentBook;
+    if (ConfigService.getAllListConfig("seperateStyleBooks").includes(key)) {
+      window.currentBookKey = key;
+      this.props.handleBackgroundColor(
+        ConfigService.getReaderConfig("backgroundColor") || ""
+      );
+    } else {
+      window.currentBookKey = "";
+    }
     this.props.handleHtmlBook(null);
     if (this.state.rendition) {
       this.state.rendition.removeContent();
@@ -592,6 +600,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
   };
   render() {
+    console.log(
+      "Viewer render",
+      this.props.isHideBackground,
+      ConfigService.getReaderConfig("isHideBackground")
+    );
     return (
       <>
         {this.props.htmlBook ? (
