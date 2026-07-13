@@ -59,7 +59,7 @@ export const driveList = [
   },
   {
     label: "Local folder",
-    value: "local",
+    value: "folder",
     icon: "icon-local",
     isPro: true,
     support: ["desktop"],

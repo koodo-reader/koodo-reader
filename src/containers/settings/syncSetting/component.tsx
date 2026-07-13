@@ -128,7 +128,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     this.props.handleSettingDrive(targetDrive);
     let settingDrive = targetDrive;
-    if (settingDrive === "icloud" || settingDrive === "local") {
+    if (settingDrive === "icloud" || settingDrive === "folder") {
       let drivePath = "";
       if (settingDrive === "icloud") {
         drivePath = getICloudDrivePath();
@@ -144,7 +144,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           this.props.handleSettingDrive("");
           return;
         }
-      } else if (settingDrive === "local") {
+      } else if (settingDrive === "folder") {
         const { ipcRenderer } = window.require("electron");
         drivePath = await ipcRenderer.invoke("select-path");
         if (!drivePath) {
