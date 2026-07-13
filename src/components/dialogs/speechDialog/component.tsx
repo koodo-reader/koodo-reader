@@ -1,7 +1,6 @@
 import React from "react";
 import { SpeechDialogProps, SpeechDialogState } from "./interface";
 import "./speechDialog.css";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import TextToSpeech from "../../textToSpeech";
 
 class SpeechDialog extends React.Component<
@@ -30,11 +29,20 @@ class SpeechDialog extends React.Component<
             top: "auto",
             bottom: "60px",
             width: "300px",
-            height: "320px",
+            height: "340px",
             overflowY: "scroll",
             right: this.props.isSettingLocked ? 370 : 65,
           }}
         >
+          <div className="speech-dialog-header">
+            <span className="speech-dialog-title"></span>
+            <span
+              className="icon-close speech-dialog-close"
+              onClick={() => {
+                this.props.handleSpeechDialog(false);
+              }}
+            ></span>
+          </div>
           {this.props.plugins && <TextToSpeech />}
         </div>
       </>
