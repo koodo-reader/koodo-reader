@@ -30,6 +30,7 @@ import {
   READING_PANEL_TOGGLE_EVENT,
   MOUSE_POSITION_EVENT,
 } from "../../utils/reader/mouseEvent";
+import { throttle } from "../../utils/common";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
@@ -141,12 +142,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         ConfigService.setReaderConfig("isFinishWebReading", "yes");
       }
     });
-    window.addEventListener("mousemove", () => {
+    const handleMouseMove = () => {
       isMouseMoving = true;
       setTimeout(() => {
         isMouseMoving = false;
       }, 100);
-    });
+    };
+    const throttledMouseMove = throttle(handleMouseMove, 100);
+    window.addEventListener("mousemove", throttledMouseMove);
     window.addEventListener("mousemove", this.handleEdgeProximity);
     window.addEventListener(MOUSE_POSITION_EVENT, this.handleEdgeProximity);
     window.addEventListener(
@@ -208,10 +211,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
   componentWillUnmount() {
     window.removeEventListener("mousemove", this.handleEdgeProximity);
-    window.removeEventListener(
-      MOUSE_POSITION_EVENT,
-      this.handleEdgeProximity
-    );
+    window.removeEventListener(MOUSE_POSITION_EVENT, this.handleEdgeProximity);
     window.removeEventListener(
       READING_PANEL_TOGGLE_EVENT,
       this.handleReadingPanelToggle
