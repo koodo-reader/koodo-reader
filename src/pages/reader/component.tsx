@@ -514,6 +514,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             opacity: this.state.isNearEdge ? 1 : 0,
             pointerEvents: this.state.isNearEdge ? "auto" : "none",
             transition: "opacity 0.3s ease",
+            color: ConfigService.getReaderConfig("textColor")
+              ? ConfigService.getReaderConfig("textColor")
+              : "",
           }}
         >
           {(this.props.readerMode === "scroll" ||
@@ -537,9 +540,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                       className="input-value"
                       defaultValue={
                         ConfigService.getReaderConfig("scale")
-                          ? parseFloat(
-                              ConfigService.getReaderConfig("scale")
-                            ) * 100
+                          ? parseFloat(ConfigService.getReaderConfig("scale")) *
+                            100
                           : 100
                       }
                       value={
@@ -612,7 +614,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 <span className="icon-zoom-in reader-setting-icon"></span>
               </div>
             </div>
-            )}
+          )}
 
           {this.props.currentBook.format === "PDF" &&
             this.props.readerMode === "scroll" && (

@@ -83,7 +83,6 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
           );
           if (note) {
             note = await DatabaseService.getRecord(note.key, "notes");
-            console.log("annotation-changed note", note);
             let newNote = {
               ...note,
               range: JSON.stringify(annotationData),
