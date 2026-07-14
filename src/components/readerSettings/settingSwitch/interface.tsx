@@ -11,7 +11,6 @@ export interface SettingSwitchProps {
   handleHideHeader: (isHideHeader: boolean) => void;
   t: (title: string) => string;
   handleHideBackground: (isHideBackground: boolean) => void;
-  handleHideMenuButton: (isHideMenuButton: boolean) => void;
   handleShowBorder: (isShowPageBorder: boolean) => void;
   handleSetting: (isOpenSetting: boolean) => void;
   handleSettingMode: (mode: string) => void;
@@ -33,7 +32,6 @@ export interface SettingSwitchState {
   isKeepPDFBackground: boolean;
   isBionic: boolean;
   isHideHeader: boolean;
-  isHideMenuButton: boolean;
   isShowPageBorder: boolean;
   isCustomBookCSS: boolean;
   customBookCSS: string;

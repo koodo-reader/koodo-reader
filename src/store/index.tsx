@@ -111,7 +111,6 @@ export type stateType = {
     isHideFooter: boolean;
     isHideHeader: boolean;
     isHideBackground: boolean;
-    isHideMenuButton: boolean;
     isShowPageBorder: boolean;
     textOrientation: string;
     noteKey: string;

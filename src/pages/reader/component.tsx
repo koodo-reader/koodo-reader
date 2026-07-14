@@ -644,19 +644,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               ></span>
             </div>
           )}
-          {!this.props.isHideMenuButton && (
-            <div
-              className="reader-setting-icon-container"
-              onClick={() => {
-                this.handleEnterReader("left");
-                this.handleEnterReader("right");
-                this.handleEnterReader("bottom");
-                this.handleEnterReader("top");
-              }}
-            >
-              <span className="icon-grid reader-setting-icon"></span>
-            </div>
-          )}
+          <div
+            className="reader-setting-icon-container"
+            onClick={() => {
+              this.handleEnterReader("left");
+              this.handleEnterReader("right");
+              this.handleEnterReader("bottom");
+              this.handleEnterReader("top");
+            }}
+          >
+            <span className="icon-grid reader-setting-icon"></span>
+          </div>
         </div>
         {this.props.isSettingOpen && (
           <>
