@@ -10,16 +10,11 @@ export interface ReaderProps {
   isConvertOpen: boolean;
   isPdfCropOpen: boolean;
   isSpeechOpen: boolean;
+  isAnnotationOpen: boolean;
   isOpenPopupOptionDialog: boolean;
   isSearch: boolean;
   isAuthed: boolean;
-  isHidePageButton: boolean;
   isSettingOpen: boolean;
-  isHideMenuButton: boolean;
-  isHideAudiobookButton: boolean;
-  isHideAIButton: boolean;
-  isHidePDFConvertButton: boolean;
-  isHideScaleButton: boolean;
   readerMode: string;
   scale: string;
   handleFetchNotes: () => void;
@@ -27,9 +22,11 @@ export interface ReaderProps {
   handleConvertDialog: (isConvertOpen: boolean) => void;
   handlePdfCropDialog: (isPdfCropOpen: boolean) => void;
   handleSpeechDialog: (isSpeechOpen: boolean) => void;
+  handleAnnotationDialog: (isAnnotationOpen: boolean) => void;
   handleMenuMode: (menuMode: string) => void;
   handleOriginalText: (originalText: string) => void;
   handleFetchBooks: () => void;
+  handleBackgroundColor: (backgroundColor: string) => void;
   handleOpenMenu: (isOpen: boolean) => void;
   handleFetchBookmarks: () => void;
   handleFetchPercentage: (currentBook: BookModel) => void;
@@ -50,6 +47,7 @@ export interface ReaderState {
   hoverPanel: string;
   scale: string;
   isShowScale: boolean;
+  isNearEdge: boolean;
   totalDuration: number;
   currentDuration: number;
 }

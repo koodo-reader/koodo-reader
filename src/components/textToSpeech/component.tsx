@@ -673,7 +673,8 @@ class TextToSpeech extends React.Component<
         this.props.currentBook.format === "PDF" &&
           !ConfigService.getAllListConfig("convertPDFBooks").includes(
             this.props.currentBook.key
-          )
+          ),
+        ConfigService.getReaderConfig("textOrientation") === "vertical"
       );
       this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
       if (index === nodeIndex) {
@@ -791,7 +792,8 @@ class TextToSpeech extends React.Component<
       this.props.currentBook.format === "PDF" &&
         !ConfigService.getAllListConfig("convertPDFBooks").includes(
           this.props.currentBook.key
-        )
+        ),
+      ConfigService.getReaderConfig("textOrientation") === "vertical"
     );
     this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
     toast.dismiss("tts-load");

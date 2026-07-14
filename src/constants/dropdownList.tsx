@@ -409,3 +409,27 @@ export const titleSizeList = [
   { label: "4", value: "4" },
   { label: "5", value: "5" },
 ];
+export const ocrEngineList = [
+  { label: "Please select", value: "", lang: "" },
+  {
+    label: "Official AI OCR",
+    value: "official-ai-ocr",
+    lang: "general",
+    isPro: true,
+  },
+  {
+    label: "System OCR",
+    value: "system-ocr",
+    lang: "auto",
+  },
+  {
+    label: "Paddle OCR",
+    value: "paddle",
+    lang: "standard_v5_mobile",
+  },
+  {
+    label: "Tesseract",
+    value: "tesseract",
+    lang: "chi_sim",
+  },
+];

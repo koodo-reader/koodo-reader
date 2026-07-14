@@ -722,7 +722,10 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               let books = await DatabaseService.getAllRecords("books");
               let notes = await DatabaseService.getAllRecords("notes");
               notes = notes.filter(
-                (note: any) => note.notes && note.notes.length > 0
+                (note: any) =>
+                  note.notes &&
+                  note.notes.length > 0 &&
+                  note.notes !== "annotation"
               );
               if (notes.length > 0) {
                 exportNotes(notes, books, fmt);

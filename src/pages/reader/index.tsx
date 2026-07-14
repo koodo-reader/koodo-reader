@@ -11,9 +11,11 @@ import {
   handleConvertDialog,
   handlePdfCropDialog,
   handleSpeechDialog,
+  handleAnnotationDialog,
   handleScale,
   handleFetchAuthed,
   handleFetchUserInfo,
+  handleBackgroundColor,
 } from "../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../store";
@@ -30,6 +32,7 @@ const mapStateToProps = (state: stateType) => {
     isConvertOpen: state.reader.isConvertOpen,
     isPdfCropOpen: state.reader.isPdfCropOpen,
     isSpeechOpen: state.reader.isSpeechOpen,
+    isAnnotationOpen: state.reader.isAnnotationOpen,
     isOpenPopupOptionDialog: state.backupPage.isOpenPopupOptionDialog,
     isSettingLocked: state.reader.isSettingLocked,
     isAuthed: state.manager.isAuthed,
@@ -37,12 +40,6 @@ const mapStateToProps = (state: stateType) => {
     isSettingOpen: state.manager.isSettingOpen,
     scale: state.reader.scale,
     renderBookFunc: state.book.renderBookFunc,
-    isHidePageButton: state.reader.isHidePageButton,
-    isHideMenuButton: state.reader.isHideMenuButton,
-    isHideAudiobookButton: state.reader.isHideAudiobookButton,
-    isHideAIButton: state.reader.isHideAIButton,
-    isHidePDFConvertButton: state.reader.isHidePDFConvertButton,
-    isHideScaleButton: state.reader.isHideScaleButton,
   };
 };
 const actionCreator = {
@@ -60,7 +57,9 @@ const actionCreator = {
   handleScale,
   handleFetchAuthed,
   handleSpeechDialog,
+  handleAnnotationDialog,
   handleFetchUserInfo,
+  handleBackgroundColor,
 };
 export default connect(
   mapStateToProps,

@@ -26,3 +26,22 @@
   justify-content: center;
   align-items: center;
 }
+.support-dialog-benefit-list {
+  text-align: left;
+  padding: 0 24px;
+  margin: 0;
+  list-style: none;
+}
+.support-dialog-benefit-list li {
+  position: relative;
+  padding: 6px 0 6px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-color, #333);
+}
+.support-dialog-benefit-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--color, #888);
+}

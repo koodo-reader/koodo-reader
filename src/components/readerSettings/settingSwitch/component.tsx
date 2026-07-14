@@ -5,7 +5,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
 import { wordFrequencyList } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
-import { vexComfirmAsync, detectLocalLanguage } from "../../../utils/common";
+import { detectLocalLanguage } from "../../../utils/common";
 import BookUtil from "../../../utils/file/bookUtil";
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
@@ -32,17 +32,6 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("isHideBackground") === "yes",
       isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
       isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
-      isHideAIButton: ConfigService.getReaderConfig("isHideAIButton") === "yes",
-      isHideScaleButton:
-        ConfigService.getReaderConfig("isHideScaleButton") === "yes",
-      isHidePDFConvertButton:
-        ConfigService.getReaderConfig("isHidePDFConvertButton") === "yes",
-      isHidePageButton:
-        ConfigService.getReaderConfig("isHidePageButton") === "yes",
-      isHideMenuButton:
-        ConfigService.getReaderConfig("isHideMenuButton") === "yes",
-      isHideAudiobookButton:
-        ConfigService.getReaderConfig("isHideAudiobookButton") === "yes",
       isShowPageBorder:
         ConfigService.getReaderConfig("isShowPageBorder") === "yes",
       isCustomBookCSS:
@@ -74,7 +63,11 @@ class SettingSwitch extends React.Component<
         ).includes(nextProps.currentBook?.key),
       });
     }
-    if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
+    if (
+      nextProps.htmlBook !== this.props.htmlBook &&
+      nextProps.htmlBook &&
+      !this.props.htmlBook
+    ) {
       nextProps.htmlBook.rendition.on("rendered", async () => {
         let text = await nextProps.htmlBook?.rendition.audioText();
         if (text && text.length > 0) {
@@ -407,37 +400,10 @@ class SettingSwitch extends React.Component<
                     isHideFooter: this.props.handleHideFooter,
                     isHideHeader: this.props.handleHideHeader,
                     isHideBackground: this.props.handleHideBackground,
-                    isHidePageButton: this.props.handleHidePageButton,
-                    isHideAIButton: this.props.handleHideAIButton,
-                    isHideScaleButton: this.props.handleHideScaleButton,
-                    isHidePDFConvertButton:
-                      this.props.handleHidePDFConvertButton,
                     isShowPageBorder: this.props.handleShowBorder,
                   };
 
-                  if (propName === "isHideMenuButton") {
-                    if (!this.state.isHideMenuButton) {
-                      const result = await vexComfirmAsync(
-                        "After hiding the menu button, you can move the mouse to the edge of the window to show it again."
-                      );
-                      if (result) {
-                        this.props.handleHideMenuButton(true);
-                        ConfigService.setReaderConfig(
-                          "isHideMenuButton",
-                          "yes"
-                        );
-                        toast(this.props.t("Change successful"));
-                      }
-                    } else {
-                      this.props.handleHideMenuButton(false);
-                      this.handleChange("isHideMenuButton");
-                    }
-                  } else if (propName === "isHideAudiobookButton") {
-                    this.props.handleHideAudiobookButton(
-                      !this.state.isHideAudiobookButton
-                    );
-                    this.handleChange("isHideAudiobookButton");
-                  } else if (propName === "isShowPageBorder") {
+                  if (propName === "isShowPageBorder") {
                     this.props.handleShowBorder(!this.state.isShowPageBorder);
                     if (!this.state.isShowPageBorder) {
                       this.props.handleHideBackground(true);

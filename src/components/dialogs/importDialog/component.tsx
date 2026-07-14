@@ -59,6 +59,8 @@ class ImportDialog extends React.Component<
           "Please add data source in the setting-Sync and backup first"
         )
       );
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("sync");
       return;
     }
     if (
@@ -71,7 +73,13 @@ class ImportDialog extends React.Component<
       return;
     }
     if (event.target.value === "add") {
-      toast(this.props.t("Please add data source in the setting"));
+      toast(
+        this.props.t(
+          "Please add data source in the setting-Sync and backup first"
+        )
+      );
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("sync");
 
       return;
     }
@@ -444,7 +452,7 @@ class ImportDialog extends React.Component<
                     }}
                   >
                     <span className="cloud-drive-label">
-                      {this.props.t(item.label)}
+                      {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                     </span>
                     <span className="icon-dropdown import-dialog-more-file"></span>
                   </div>

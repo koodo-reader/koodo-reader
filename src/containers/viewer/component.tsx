@@ -4,7 +4,6 @@ import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
 import Background from "../../components/background";
-import toast from "react-hot-toast";
 import StyleUtil from "../../utils/reader/styleUtil";
 import "./index.css";
 import { htmlMouseEvent } from "../../utils/reader/mouseEvent";
@@ -14,22 +13,24 @@ import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import {
+  BRUSH_WIDTHS,
+  getDefaultOcrEngine,
+  getDefaultOcrLang,
   getPageWidth,
   getParserRegex,
   getPdfPassword,
   getServerRegion,
   getTextRules,
-  showDownloadProgress,
   throttle,
 } from "../../utils/common";
 import _ from "underscore";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
-import { ocrTesseractLangList } from "../../constants/dropdownList";
 import DatabaseService from "../../utils/storage/databaseService";
-import { getOcrResult } from "../../utils/request/reader";
+import { getOcrResult, getOcrResultV2 } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
+import { parseWithSystemOCR } from "../../utils/request/common";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -212,19 +213,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleRenderBook = async () => {
     if (lock) return;
     let { key, path, format, name } = this.props.currentBook;
-    this.props.handleHtmlBook(null);
-    if (this.state.rendition) {
-      this.state.rendition.removeContent();
-    }
-    if (
-      ConfigService.getAllListConfig("seperateStyleBooks").includes(
-        this.props.currentBook?.key
-      )
-    ) {
-      window.currentBookKey = this.props.currentBook.key;
+    if (ConfigService.getAllListConfig("seperateStyleBooks").includes(key)) {
+      window.currentBookKey = key;
       this.props.handleBackgroundColor(
         ConfigService.getReaderConfig("backgroundColor") || ""
       );
+    } else {
+      window.currentBookKey = "";
+    }
+    this.props.handleHtmlBook(null);
+    if (this.state.rendition) {
+      this.state.rendition.removeContent();
     }
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, "zip", path);
     BookUtil.fetchBook(
@@ -248,6 +247,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           pdfCrop = { top, bottom, left, right };
         }
       }
+      const ocrLangKey =
+        this.props.currentBook.description.indexOf("scanned") > -1
+          ? "scannedOcrLang"
+          : "textOcrLang";
       let rendition = BookHelper.getRendition(
         result,
         {
@@ -290,19 +293,19 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           ).includes(this.props.currentBook.key)
             ? "yes"
             : "no",
-          ocrLang: ConfigService.getReaderConfig("ocrLang")
-            ? ConfigService.getReaderConfig("ocrLang")
-            : ConfigService.getReaderConfig("ocrEngine") === "tesseract"
-              ? ocrTesseractLangList.find(
-                  (item) => item.lang === ConfigService.getReaderConfig("lang")
-                )?.value || "chi_sim"
-              : ConfigService.getReaderConfig("ocrEngine") === "paddle"
-                ? "standard_v5_mobile"
-                : "standard_v5_mobile",
+          ocrLang: getDefaultOcrLang(
+            getDefaultOcrEngine(this.props.currentBook),
+            this.props.currentBook
+          ),
           externalWorker: {
-            recognize: getOcrResult,
+            recognize:
+              getDefaultOcrEngine(this.props.currentBook) === "system-ocr"
+                ? parseWithSystemOCR
+                : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
+                  ? getOcrResultV2
+                  : getOcrResult,
           },
-          ocrEngine: ConfigService.getReaderConfig("ocrEngine") || "paddle",
+          ocrEngine: getDefaultOcrEngine(this.props.currentBook),
           serverRegion:
             getServerRegion() === "china" && this.props.isAuthed
               ? "china"
@@ -315,6 +318,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             this.props.currentBook.description.indexOf("scanned") > -1
               ? "yes"
               : "no",
+          brushColor: ConfigService.getReaderConfig("brushColor") || "#FF0000",
+          brushWidth: parseFloat(
+            ConfigService.getReaderConfig("brushWidth") || BRUSH_WIDTHS[1] + ""
+          ),
           isKeepPDFBackground: ConfigService.getReaderConfig(
             "isKeepPDFBackground"
           ),
@@ -529,7 +536,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.handleLeaveReader("top");
         this.props.handleLeaveReader("bottom");
       });
-      doc.addEventListener("mouseup", (event) => {
+      doc.addEventListener("pointerup", (event) => {
         if (
           this.props.currentBook.format === "PDF" &&
           !ConfigService.getAllListConfig("convertPDFBooks").includes(

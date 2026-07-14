@@ -1,3 +1,23 @@
+.speech-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0px;
+  padding-top: 5px;
+}
+.speech-dialog-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+.speech-dialog-close {
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+.speech-dialog-close:hover {
+  opacity: 1;
+}
 .icon-export-all {
   line-height: 18px;
   display: inline-block;

@@ -107,15 +107,10 @@ export type stateType = {
     isConvertOpen: boolean;
     isPdfCropOpen: boolean;
     isSpeechOpen: boolean;
+    isAnnotationOpen: boolean;
     isHideFooter: boolean;
     isHideHeader: boolean;
     isHideBackground: boolean;
-    isHidePageButton: boolean;
-    isHideMenuButton: boolean;
-    isHideAudiobookButton: boolean;
-    isHideAIButton: boolean;
-    isHideScaleButton: boolean;
-    isHidePDFConvertButton: boolean;
     isShowPageBorder: boolean;
     textOrientation: string;
     noteKey: string;

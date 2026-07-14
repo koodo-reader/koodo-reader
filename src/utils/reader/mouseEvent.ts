@@ -1,7 +1,12 @@
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import { getIframeDoc, getIframeWin } from "./docUtil";
-import { handleExitFullScreen, handleFullScreen, sleep } from "../common";
+import {
+  handleExitFullScreen,
+  handleFullScreen,
+  sleep,
+  throttle,
+} from "../common";
 import Hammer from "hammerjs";
 import TTSUtil from "./ttsUtil";
 import {
@@ -135,6 +140,12 @@ const SELECTION_SHORTCUT_OPTIONS: Array<{
 ];
 
 export const READING_PANEL_TOGGLE_EVENT = "koodo-reading-panel-toggle";
+
+// Iframe content has its own document, so mousemove over the book never
+// reaches window listeners on the outer document. Re-broadcast it on the
+// outer window (translated into outer-window coordinates) so components
+// like the reader edge buttons can react to mouse position uniformly.
+export const MOUSE_POSITION_EVENT = "mouse-position";
 
 export const openReadingPanel = (
   position: "left" | "right" | "top" | "bottom"
@@ -447,6 +458,19 @@ export const bindHtmlEvent = (
     },
     { passive: false }
   );
+
+  const throttledMouseMove = throttle((event: any) => {
+    window.dispatchEvent(
+      new CustomEvent(MOUSE_POSITION_EVENT, {
+        detail: {
+          clientX: event.screenX - window.screenX,
+          clientY: event.screenY - window.screenY,
+        },
+      })
+    );
+  }, 100);
+
+  doc.addEventListener("mousemove", throttledMouseMove);
 };
 export const htmlMouseEvent = (
   rendition: any,

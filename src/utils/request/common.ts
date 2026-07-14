@@ -11,6 +11,7 @@ import { getServerRegion, reloadManager } from "../common";
 import { resetReaderRequest } from "./reader";
 import { resetUserRequest } from "./user";
 import { resetThirdpartyRequest } from "./thirdparty";
+import { isElectron } from "react-device-detect";
 const PUBLIC_URL = "https://api.koodoreader.com";
 const CN_PUBLIC_URL = "https://api.koodoreader.cn";
 let cachedPluginList: any[] | null = null;
@@ -145,4 +146,15 @@ export const getNotification = async () => {
   // 	"unread": 0
   // }
   return res;
+};
+export const parseWithSystemOCR = async (imageBase64: string) => {
+  if (!isElectron) {
+    return;
+  }
+  const { ipcRenderer } = window.require("electron");
+  let result = await ipcRenderer.invoke("system-ocr", {
+    base64: imageBase64,
+    lang: "auto",
+  });
+  return result.text || "";
 };

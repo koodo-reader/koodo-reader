@@ -8,6 +8,7 @@ import { getIframeDoc } from "../../../utils/reader/docUtil";
 import PopupAssist from "../popupAssist";
 import { isElectron } from "react-device-detect";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { throttle } from "../../../utils/common";
 
 const POPUP_SIZE_KEY = "popupBoxSize";
 const DEFAULT_WIDTH = 500;
@@ -79,7 +80,8 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       });
       this.setState({ isShowUrl });
     }
-    document.addEventListener("mousemove", this.handleResizeMove);
+    const throttledMouseMove = throttle(this.handleResizeMove, 100);
+    document.addEventListener("mousemove", throttledMouseMove);
     document.addEventListener("mouseup", this.handleResizeEnd);
   }
 
