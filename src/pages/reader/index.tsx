@@ -40,7 +40,6 @@ const mapStateToProps = (state: stateType) => {
     isSettingOpen: state.manager.isSettingOpen,
     scale: state.reader.scale,
     renderBookFunc: state.book.renderBookFunc,
-    isHideMenuButton: state.reader.isHideMenuButton,
   };
 };
 const actionCreator = {

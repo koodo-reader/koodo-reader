@@ -15,7 +15,6 @@ export interface ReaderProps {
   isSearch: boolean;
   isAuthed: boolean;
   isSettingOpen: boolean;
-  isHideMenuButton: boolean;
   readerMode: string;
   scale: string;
   handleFetchNotes: () => void;

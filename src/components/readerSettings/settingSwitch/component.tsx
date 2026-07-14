@@ -5,7 +5,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
 import { wordFrequencyList } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
-import { vexComfirmAsync, detectLocalLanguage } from "../../../utils/common";
+import { detectLocalLanguage } from "../../../utils/common";
 import BookUtil from "../../../utils/file/bookUtil";
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
@@ -32,8 +32,6 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("isHideBackground") === "yes",
       isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
       isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
-      isHideMenuButton:
-        ConfigService.getReaderConfig("isHideMenuButton") === "yes",
       isShowPageBorder:
         ConfigService.getReaderConfig("isShowPageBorder") === "yes",
       isCustomBookCSS:
@@ -405,24 +403,7 @@ class SettingSwitch extends React.Component<
                     isShowPageBorder: this.props.handleShowBorder,
                   };
 
-                  if (propName === "isHideMenuButton") {
-                    if (!this.state.isHideMenuButton) {
-                      const result = await vexComfirmAsync(
-                        "After hiding the menu button, you can move the mouse to the edge of the window to show it again."
-                      );
-                      if (result) {
-                        this.props.handleHideMenuButton(true);
-                        ConfigService.setReaderConfig(
-                          "isHideMenuButton",
-                          "yes"
-                        );
-                        toast(this.props.t("Change successful"));
-                      }
-                    } else {
-                      this.props.handleHideMenuButton(false);
-                      this.handleChange("isHideMenuButton");
-                    }
-                  } else if (propName === "isShowPageBorder") {
+                  if (propName === "isShowPageBorder") {
                     this.props.handleShowBorder(!this.state.isShowPageBorder);
                     if (!this.state.isShowPageBorder) {
                       this.props.handleHideBackground(true);

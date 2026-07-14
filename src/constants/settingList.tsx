@@ -567,11 +567,6 @@ export const readerSettingList = [
     propName: "isHideBackground",
     isPDF: true,
   },
-  {
-    title: "Hide menu button",
-    propName: "isHideMenuButton",
-    isPDF: true,
-  },
 ];
 export const officialTranList = {
   Automatic: "Automatic",

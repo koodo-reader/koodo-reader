@@ -38,7 +38,6 @@ const initState = {
   isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
   isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
   isHideBackground: ConfigService.getReaderConfig("isHideBackground") === "yes",
-  isHideMenuButton: ConfigService.getReaderConfig("isHideMenuButton") === "yes",
   isShowPageBorder: ConfigService.getReaderConfig("isShowPageBorder") === "yes",
   textOrientation: ConfigService.getReaderConfig("textOrientation") || "",
   jumpPosition: null as object | null,
@@ -145,11 +144,6 @@ export function reader(
       return {
         ...state,
         isHideBackground: action.payload,
-      };
-    case "HANDLE_HIDE_MENU_BUTTON":
-      return {
-        ...state,
-        isHideMenuButton: action.payload,
       };
     case "HANDLE_SHOW_BORDER":
       return {
