@@ -74,6 +74,7 @@ a {
 .card-list-item-show-more,
 .token-dialog-link-text,
 .token-dialog-token-text,
+.book-content-search-input,
 .pin-key-cancel {
   color: rgba(75, 75, 75, 0.8);
 }
@@ -115,6 +116,7 @@ a {
 }
 
 .header-search-box,
+.book-content-search-input,
 #jumpPage,
 #jumpChapter,
 #newTag,
