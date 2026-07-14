@@ -56,6 +56,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   scheduledSyncTimer: any;
   private isSyncing: boolean = false;
   private resizeHandler: (() => void) | null = null;
+  private readingFinishedHandler:
+    | ((event: any, config: any) => void)
+    | null = null;
   constructor(props: HeaderProps) {
     super(props);
 
@@ -110,9 +113,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         console.error("upgrade failed");
       }
 
-      ipcRenderer.on("reading-finished", async (event: any, config: any) => {
+      this.readingFinishedHandler = async (event: any, config: any) => {
         this.handleFinishReading();
-      });
+      };
+      ipcRenderer.on("reading-finished", this.readingFinishedHandler);
       ipcRenderer.on(
         "open-book-from-link",
         async (_event: any, config: any) => {
@@ -204,6 +208,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     if (this.resizeHandler) {
       window.removeEventListener("resize", this.resizeHandler);
       this.resizeHandler = null;
+    }
+    if (isElectron && this.readingFinishedHandler) {
+      const { ipcRenderer } = window.require("electron");
+      ipcRenderer.removeListener(
+        "reading-finished",
+        this.readingFinishedHandler
+      );
+      this.readingFinishedHandler = null;
     }
   }
   startScheduledSync = () => {
