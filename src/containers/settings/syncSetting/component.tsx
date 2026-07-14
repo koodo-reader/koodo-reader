@@ -54,6 +54,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         ConfigService.getReaderConfig("isDisableAutoSync") === "yes",
       isEnableKoodoSync:
         ConfigService.getReaderConfig("isEnableKoodoSync") === "yes",
+      hideSyncProgress:
+        ConfigService.getReaderConfig("hideSyncProgress") === "yes",
       driveConfig: {},
       scheduledSyncInterval:
         ConfigService.getReaderConfig("scheduledSyncInterval") || "",
@@ -101,7 +103,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       );
       return;
     }
-    if (targetDrive === "webdav" && !this.props.isAuthed && !isElectron) {
+    if (!this.props.isAuthed) {
       toast(this.props.t("Please upgrade to Pro to use this feature"));
       this.props.handleSetting(true);
       this.props.handleSettingMode("account");
@@ -126,23 +128,34 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     this.props.handleSettingDrive(targetDrive);
     let settingDrive = targetDrive;
-    if (settingDrive === "icloud") {
-      let drivePath = getICloudDrivePath();
-      if (!drivePath) {
-        toast.error(
-          this.props.t(
-            "Can't find Koodo Reader's folder in the default iCloud path, please make sure iCloud Drive is installed and set up correctly, and you have already synced your library to iCloud Drive on the iOS version first."
-          ),
-          {
-            duration: 6000,
-          }
-        );
-        this.props.handleSettingDrive("");
-        return;
+    if (settingDrive === "icloud" || settingDrive === "folder") {
+      let drivePath = "";
+      if (settingDrive === "icloud") {
+        drivePath = getICloudDrivePath();
+        if (!drivePath) {
+          toast.error(
+            this.props.t(
+              "Can't find Koodo Reader's folder in the default iCloud path, please make sure iCloud Drive is installed and set up correctly, and you have already synced your library to iCloud Drive on the iOS version first."
+            ),
+            {
+              duration: 6000,
+            }
+          );
+          this.props.handleSettingDrive("");
+          return;
+        }
+      } else if (settingDrive === "folder") {
+        const { ipcRenderer } = window.require("electron");
+        drivePath = await ipcRenderer.invoke("select-path");
+        if (!drivePath) {
+          toast.error(i18n.t("Please select a folder"));
+          this.props.handleSettingDrive("");
+          return;
+        }
       }
       toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
       let res = await encryptToken(settingDrive, {
-        iCloudDrivePath: drivePath,
+        drivePath: drivePath,
       });
       if (res.code === 200) {
         toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
@@ -227,15 +240,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     if (!newValue) {
       return;
     }
-    if (
-      !this.props.isAuthed &&
-      (newValue === "webdav" ||
-        newValue === "docker" ||
-        newValue === "ftp" ||
-        newValue === "sftp" ||
-        newValue === "mega" ||
-        newValue === "s3compatible")
-    ) {
+    if (!this.props.isAuthed) {
       toast(this.props.t("Please upgrade to Pro to use this feature"));
       this.props.handleSetting(true);
       this.props.handleSettingMode("account");
@@ -936,13 +941,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 event.target.value = this.props.defaultSyncOption;
                 return;
               }
-              if (newValue === "local") {
-                ConfigService.setReaderConfig("useLocalSync", "yes");
-                ConfigService.removeItem("defaultSyncOption");
-                this.props.handleDefaultSyncOption("local");
-                toast.success(this.props.t("Change successful"));
-                return;
-              }
               const currentValue = this.props.defaultSyncOption;
               let onlineBooks: Book[] = [];
               for (let i = 0; i < this.props.books.length; i++) {
@@ -975,12 +973,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 isPro: false,
                 support: ["desktop", "browser", "phone"],
               },
-              {
-                label: "Local",
-                value: "local",
-                isPro: false,
-                support: ["desktop"],
-              },
               ...driveList,
               {
                 label: "Add data source",
@@ -992,7 +984,6 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               .filter(
                 (item) =>
                   item.value === "add" ||
-                  item.value === "local" ||
                   item.value === "" ||
                   this.props.dataSourceList.includes(item.value)
               )

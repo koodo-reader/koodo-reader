@@ -34,6 +34,7 @@ export interface SettingInfoState {
   isEnableKoodoSync: boolean;
   isDisableAutoSync: boolean;
   autoOffline: boolean;
+  hideSyncProgress: boolean;
   driveConfig: any;
   scheduledSyncInterval: string;
   backupDrive: string;

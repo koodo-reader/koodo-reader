@@ -15,4 +15,6 @@ export interface ThemeListState {
   isShowBgPicker: boolean;
   bgColorInput: string;
   textColorInput: string;
+  pendingBgColor: string;
+  pendingTextColor: string;
 }

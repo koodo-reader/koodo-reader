@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "2.3.9",
+  "version": "2.4.0",
   "description": "Koodo Reader is a cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -124,7 +124,17 @@
       "node_modules/**/*",
       "package.json",
       "src/assets/lib/kookit-extra.min.mjs",
-      "main.js"
+      "main.js",
+      "preload.js"
+    ],
+    "extraResources": [
+      {
+        "from": "assets/macos",
+        "to": "assets/macos",
+        "filter": [
+          "ocr-*-apple-darwin"
+        ]
+      }
     ],
     "protocols": {
       "name": "KoodoReader",

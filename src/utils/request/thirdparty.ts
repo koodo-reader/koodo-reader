@@ -87,11 +87,6 @@ export const onSyncCallback = async (service: string, authCode: string) => {
 };
 export const encryptToken = async (service: string, config: any) => {
   let syncToken = JSON.stringify(config);
-  let isAuthed = await TokenService.getToken("is_authed");
-  if (!isAuthed) {
-    await TokenService.setToken(service + "_token", syncToken);
-    return { code: 200, msg: "success", data: syncToken };
-  }
   let thirdpartyRequest = await getThirdpartyRequest();
   let response = await thirdpartyRequest.encryptToken({
     token: syncToken,
@@ -116,15 +111,6 @@ export const encryptToken = async (service: string, config: any) => {
   }
 };
 export const decryptToken = async (service: string) => {
-  let isAuthed = await TokenService.getToken("is_authed");
-  if (!isAuthed) {
-    let syncToken = (await TokenService.getToken(service + "_token")) || "{}";
-    return {
-      code: 200,
-      msg: "success",
-      data: { token: syncToken },
-    };
-  }
   let thirdpartyRequest = await getThirdpartyRequest();
   let encryptedToken = await TokenService.getToken(service + "_token");
   if (!encryptedToken || encryptedToken === "{}") {

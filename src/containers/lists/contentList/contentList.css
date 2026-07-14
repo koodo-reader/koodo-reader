@@ -69,6 +69,7 @@
   border: none;
   outline: none;
   font-size: 15px;
+  background-color: transparent;
 }
 .book-content-search-empty {
   padding: 10px 0;

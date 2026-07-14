@@ -196,6 +196,9 @@ export const restore = async (service: string): Promise<Boolean> => {
     await generateSyncRecord();
     return restoreRes;
   } else {
+    toast.loading(i18n.t("Restoring..."), {
+      id: "backup",
+    });
     let tokenConfig = await getCloudConfig(service);
     let result = await ipcRenderer.invoke("cloud-download", {
       ...tokenConfig,
@@ -210,9 +213,7 @@ export const restore = async (service: string): Promise<Boolean> => {
     }
     const path = window.require("path");
     let filePath = path.join(getStorageLocation(), "backup", "data.zip");
-    toast.loading(i18n.t("Restoring..."), {
-      id: "backup",
-    });
+
     // 让 UI 有时间渲染 toast
     await new Promise((resolve) => setTimeout(resolve, 100));
     let restoreRes = await restoreFromfilePath(filePath);
@@ -276,29 +277,6 @@ export const restoreFromSnapshot = async (fileName: string) => {
     toast.error(error instanceof Error ? error.message : String(error), {
       id: "restore-snapshot",
     });
-    return false;
-  }
-
-  return true;
-};
-export const restoreFromConfigJson = () => {
-  const fs = window.require("fs");
-  const path = window.require("path");
-  const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath, "config", "config.json"))) {
-    return false;
-  }
-  try {
-    let configStr = fs.readFileSync(
-      path.join(dataPath, "config", "config.json"),
-      "utf-8"
-    );
-    let config = JSON.parse(configStr);
-    for (let key in config) {
-      ConfigService.setItem(key, config[key]);
-    }
-  } catch (error) {
-    console.error("restore config error:", error);
     return false;
   }
 

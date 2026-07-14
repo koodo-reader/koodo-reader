@@ -8,7 +8,10 @@ import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
-import { ConfigService, HighlightUtil } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  HighlightUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import CoverUtil from "../../../utils/file/coverUtil";
 import {
   NAV_TAB_TOGGLE_EVENT,
@@ -215,7 +218,8 @@ class NavigationPanel extends React.Component<
       this.props.currentBook.format === "PDF" &&
         !ConfigService.getAllListConfig("convertPDFBooks").includes(
           this.props.currentBook.key
-        )
+        ),
+      ConfigService.getReaderConfig("textOrientation") === "vertical"
     );
     this.props.htmlBook.rendition.highlightSearchNode(
       bookLocation.keyword,

@@ -19,14 +19,19 @@ import PdfCropDialog from "../../components/dialogs/pdfCropDialog";
 import { isElectron } from "react-device-detect";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import SpeechDialog from "../../components/dialogs/speechDialog";
+import AnnotationDialog from "../../components/dialogs/annotationDialog";
 import PopupOptionDialog from "../../components/dialogs/popupOptionDialog";
 import {
   updateDiscordPresence,
   clearDiscordPresence,
 } from "../../utils/reader/discordRPC";
 import SupportDialog from "../../components/dialogs/supportDialog";
-import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
-
+import {
+  READING_PANEL_TOGGLE_EVENT,
+  MOUSE_POSITION_EVENT,
+} from "../../utils/reader/mouseEvent";
+import { throttle } from "../../utils/common";
+declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
 let isMouseMoving = false;
@@ -111,6 +116,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
       isShowScale: false,
+      isNearEdge: false,
     };
   }
   componentDidMount() {
@@ -136,12 +142,16 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         ConfigService.setReaderConfig("isFinishWebReading", "yes");
       }
     });
-    window.addEventListener("mousemove", () => {
+    const handleMouseMove = () => {
       isMouseMoving = true;
       setTimeout(() => {
         isMouseMoving = false;
       }, 100);
-    });
+    };
+    const throttledMouseMove = throttle(handleMouseMove, 100);
+    window.addEventListener("mousemove", throttledMouseMove);
+    window.addEventListener("mousemove", this.handleEdgeProximity);
+    window.addEventListener(MOUSE_POSITION_EVENT, this.handleEdgeProximity);
     window.addEventListener(
       READING_PANEL_TOGGLE_EVENT,
       this.handleReadingPanelToggle
@@ -152,12 +162,24 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     let firstIndexOfQuestion = url.indexOf("?");
     let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
     let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
+    if (ConfigService.getAllListConfig("seperateStyleBooks").includes(key)) {
+      window.currentBookKey = key;
+      this.props.handleBackgroundColor(
+        ConfigService.getReaderConfig("backgroundColor") || ""
+      );
+    } else {
+      window.currentBookKey = "";
+    }
     this.props.handleFetchBooks();
     this.props.handleFetchAuthed();
     if (
       key &&
       ConfigService.getAllListConfig("convertPDFBooks").includes(key) &&
-      ConfigService.getReaderConfig("ocrEngine") === "official-ai-ocr"
+      ConfigService.getReaderConfig(
+        this.props.currentBook?.description?.indexOf("scanned") > -1
+          ? "scannedOcrEngine"
+          : "textOcrEngine"
+      ) === "official-ai-ocr"
     ) {
       await this.props.handleFetchUserInfo();
     }
@@ -188,6 +210,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   }
 
   componentWillUnmount() {
+    window.removeEventListener("mousemove", this.handleEdgeProximity);
+    window.removeEventListener(MOUSE_POSITION_EVENT, this.handleEdgeProximity);
     window.removeEventListener(
       READING_PANEL_TOGGLE_EVENT,
       this.handleReadingPanelToggle
@@ -326,6 +350,23 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.handleEnterReader(position);
     }
   };
+  handleEdgeProximity = (
+    event: MouseEvent | CustomEvent<{ clientX: number; clientY: number }>
+  ) => {
+    const threshold = 0.2;
+    const { clientX, clientY } =
+      event instanceof CustomEvent ? event.detail : event;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const isNearEdge =
+      clientX <= width * threshold ||
+      clientX >= width * (1 - threshold) ||
+      clientY <= height * threshold ||
+      clientY >= height * (1 - threshold);
+    if (isNearEdge !== this.state.isNearEdge) {
+      this.setState({ isNearEdge });
+    }
+  };
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();
 
@@ -349,23 +390,24 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       <div className="viewer">
         <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
 
-        {!this.props.isHidePageButton && (
-          <div
-            className="previous-chapter-single-container"
-            onClick={async () => {
-              if (lock) return;
-              lock = true;
-              await this.props.htmlBook.rendition.prev();
-              this.handleLocation();
-              setTimeout(() => (lock = false), throttleTime);
-            }}
-            style={{
-              left: this.props.isNavLocked ? 315 : 15,
-            }}
-          >
-            <span className="icon-dropdown previous-chapter-single"></span>
-          </div>
-        )}
+        <div
+          className="previous-chapter-single-container"
+          onClick={async () => {
+            if (lock) return;
+            lock = true;
+            await this.props.htmlBook.rendition.prev();
+            this.handleLocation();
+            setTimeout(() => (lock = false), throttleTime);
+          }}
+          style={{
+            left: this.props.isNavLocked ? 315 : 15,
+            opacity: this.state.isNearEdge ? undefined : 0,
+            pointerEvents: this.state.isNearEdge ? undefined : "none",
+            transition: "opacity 0.3s ease",
+          }}
+        >
+          <span className="icon-dropdown previous-chapter-single"></span>
+        </div>
         <div
           style={{
             position: "absolute",
@@ -376,56 +418,85 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             alignItems: "center",
             gap: "8px",
             zIndex: 10,
+            opacity: this.state.isNearEdge ? 1 : 0,
+            pointerEvents: this.state.isNearEdge ? "auto" : "none",
+            transition: "opacity 0.3s ease",
           }}
         >
-          {!this.props.isHidePageButton && (
+          <div
+            className="next-chapter-single-container"
+            onClick={async () => {
+              if (lock) return;
+              lock = true;
+              await this.props.htmlBook.rendition.next();
+              this.handleLocation();
+              setTimeout(() => (lock = false), throttleTime);
+            }}
+            style={{ position: "static" }}
+          >
+            <span className="icon-dropdown next-chapter-single"></span>
+          </div>
+          <div
+            className="next-chapter-single-container"
+            onClick={async () => {
+              this.props.handleSpeechDialog(!this.props.isSpeechOpen);
+            }}
+            style={{ position: "static", transform: "rotate(0deg)" }}
+          >
+            <span
+              style={
+                this.props.isSpeechOpen
+                  ? { fontWeight: "bold", marginTop: "4px" }
+                  : {}
+              }
+              className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
+            ></span>
+          </div>
+          {ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
             <div
               className="next-chapter-single-container"
               onClick={async () => {
-                if (lock) return;
-                lock = true;
-                await this.props.htmlBook.rendition.next();
-                this.handleLocation();
-                setTimeout(() => (lock = false), throttleTime);
+                this.props.handleMenuMode("assistant");
+                this.props.handleOriginalText(
+                  await this.props.htmlBook.rendition.chapterText()
+                );
+                this.props.handleOpenMenu(true);
               }}
-              style={{ position: "static" }}
+              style={{
+                position: "static",
+                transform: "rotate(0deg)",
+                fontWeight: "bold",
+                fontSize: "17px",
+              }}
             >
-              <span className="icon-dropdown next-chapter-single"></span>
+              AI
             </div>
           )}
-          {!this.props.isHideAudiobookButton && (
-            <div
-              className="next-chapter-single-container"
-              onClick={async () => {
-                this.props.handleSpeechDialog(!this.props.isSpeechOpen);
-              }}
-              style={{ position: "static", transform: "rotate(0deg)" }}
-            >
-              <span
-                style={this.props.isSpeechOpen ? { fontWeight: "bold" } : {}}
-                className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
-              ></span>
-            </div>
-          )}
-          {!this.props.isHideAIButton &&
-            ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
+          {this.props.currentBook.format === "PDF" &&
+            !ConfigService.getAllListConfig("convertPDFBooks").includes(
+              this.props.currentBook.key
+            ) &&
+            this.props.currentBook.description.indexOf("scanned") > -1 && (
               <div
                 className="next-chapter-single-container"
-                onClick={async () => {
-                  this.props.handleMenuMode("assistant");
-                  this.props.handleOriginalText(
-                    await this.props.htmlBook.rendition.chapterText()
+                onClick={() => {
+                  this.props.htmlBook.rendition.applyAnnotationConfig({
+                    isDrawing: this.props.isAnnotationOpen ? "no" : "yes",
+                  });
+                  this.props.handleAnnotationDialog(
+                    !this.props.isAnnotationOpen
                   );
-                  this.props.handleOpenMenu(true);
                 }}
-                style={{
-                  position: "static",
-                  transform: "rotate(0deg)",
-                  fontWeight: "bold",
-                  fontSize: "17px",
-                }}
+                style={{ position: "static", transform: "rotate(0deg)" }}
               >
-                AI
+                <span
+                  style={
+                    this.props.isAnnotationOpen
+                      ? { fontWeight: "bold", marginTop: "4px" }
+                      : { fontSize: "17px" }
+                  }
+                  className={`icon-${this.props.isAnnotationOpen ? "close" : "edit"} next-chapter-single`}
+                ></span>
               </div>
             )}
         </div>
@@ -440,106 +511,110 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-end",
+            opacity: this.state.isNearEdge ? 1 : 0,
+            pointerEvents: this.state.isNearEdge ? "auto" : "none",
+            transition: "opacity 0.3s ease",
+            color: ConfigService.getReaderConfig("textColor")
+              ? ConfigService.getReaderConfig("textColor")
+              : "",
           }}
         >
           {(this.props.readerMode === "scroll" ||
-            this.props.readerMode === "single") &&
-            !this.props.isHideScaleButton && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                }}
-              >
-                {this.state.isShowScale && (
-                  <div className="scale-container">
-                    <div
-                      style={{
-                        zIndex: 100,
-                        width: "100px",
+            this.props.readerMode === "single") && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
+              {this.state.isShowScale && (
+                <div className="scale-container">
+                  <div
+                    style={{
+                      zIndex: 100,
+                      width: "100px",
+                    }}
+                  >
+                    <input
+                      className="input-value"
+                      defaultValue={
+                        ConfigService.getReaderConfig("scale")
+                          ? parseFloat(ConfigService.getReaderConfig("scale")) *
+                            100
+                          : 100
+                      }
+                      value={
+                        this.state.scale === " "
+                          ? this.state.scale
+                          : Math.round(parseFloat(this.state.scale) * 100)
+                      }
+                      type="number"
+                      onInput={(event: any) => {
+                        let fieldVal = event.target.value;
+                        ConfigService.setReaderConfig(
+                          "scale",
+                          parseFloat(fieldVal) / 100 + ""
+                        );
                       }}
-                    >
-                      <input
-                        className="input-value"
-                        defaultValue={
-                          ConfigService.getReaderConfig("scale")
-                            ? parseFloat(
-                                ConfigService.getReaderConfig("scale")
-                              ) * 100
-                            : 100
-                        }
-                        value={
-                          this.state.scale === " "
-                            ? this.state.scale
-                            : Math.round(parseFloat(this.state.scale) * 100)
-                        }
-                        type="number"
-                        onInput={(event: any) => {
-                          let fieldVal = event.target.value;
+                      onFocus={() => {
+                        this.setState({ scale: " " });
+                      }}
+                      onChange={(event) => {
+                        let fieldVal = event.target.value;
+                        this.setState({
+                          scale: parseFloat(fieldVal) / 100 + "",
+                        });
+                      }}
+                      onBlur={(event) => {
+                        let fieldVal = event.target.value;
+                        if (fieldVal.trim() !== "") {
                           ConfigService.setReaderConfig(
                             "scale",
                             parseFloat(fieldVal) / 100 + ""
                           );
-                        }}
-                        onFocus={() => {
-                          this.setState({ scale: " " });
-                        }}
-                        onChange={(event) => {
-                          let fieldVal = event.target.value;
-                          this.setState({
-                            scale: parseFloat(fieldVal) / 100 + "",
-                          });
-                        }}
-                        onBlur={(event) => {
-                          let fieldVal = event.target.value;
-                          if (fieldVal.trim() !== "") {
-                            ConfigService.setReaderConfig(
-                              "scale",
-                              parseFloat(fieldVal) / 100 + ""
-                            );
-                          }
-                          this.props.renderBookFunc();
-                        }}
-                      />
-                      <span> %</span>
-                    </div>
-
-                    <input
-                      className="input-progress"
-                      value={this.state.scale}
-                      type="range"
-                      max={4}
-                      min={0.5}
-                      step={0.01}
-                      onInput={(event: any) => {
-                        const scale = event.target.value;
-                        ConfigService.setReaderConfig("scale", scale);
-                      }}
-                      onChange={(event) => {
-                        this.setState({ scale: event.target.value });
-                      }}
-                      onMouseUp={() => {
-                        this.props.handleScale(this.state.scale);
+                        }
                         this.props.renderBookFunc();
                       }}
-                      style={{
-                        zIndex: 100,
-                        width: "120px",
-                      }}
                     />
+                    <span> %</span>
                   </div>
-                )}
-                <div
-                  className="reader-zoom-in-icon-container"
-                  onClick={() => {
-                    this.setState({ isShowScale: !this.state.isShowScale });
-                  }}
-                >
-                  <span className="icon-zoom-in reader-setting-icon"></span>
+
+                  <input
+                    className="input-progress"
+                    value={this.state.scale}
+                    type="range"
+                    max={4}
+                    min={0.5}
+                    step={0.01}
+                    onInput={(event: any) => {
+                      const scale = event.target.value;
+                      ConfigService.setReaderConfig("scale", scale);
+                    }}
+                    onChange={(event) => {
+                      this.setState({ scale: event.target.value });
+                    }}
+                    onMouseUp={() => {
+                      this.props.handleScale(this.state.scale);
+                      this.props.renderBookFunc();
+                    }}
+                    style={{
+                      zIndex: 100,
+                      width: "120px",
+                    }}
+                  />
                 </div>
+              )}
+              <div
+                className="reader-zoom-in-icon-container"
+                onClick={() => {
+                  this.setState({ isShowScale: !this.state.isShowScale });
+                }}
+              >
+                <span className="icon-zoom-in reader-setting-icon"></span>
               </div>
-            )}
+            </div>
+          )}
 
           {this.props.currentBook.format === "PDF" &&
             this.props.readerMode === "scroll" && (
@@ -556,33 +631,30 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               </div>
             )}
 
-          {this.props.currentBook.format === "PDF" &&
-            !this.props.isHidePDFConvertButton && (
-              <div
-                className="reader-setting-icon-container"
-                onClick={() => {
-                  this.props.handleConvertDialog(!this.props.isConvertOpen);
-                }}
-              >
-                <span
-                  className="icon-convert-text reader-setting-icon"
-                  style={{ fontSize: 26 }}
-                ></span>
-              </div>
-            )}
-          {!this.props.isHideMenuButton && (
+          {this.props.currentBook.format === "PDF" && (
             <div
               className="reader-setting-icon-container"
               onClick={() => {
-                this.handleEnterReader("left");
-                this.handleEnterReader("right");
-                this.handleEnterReader("bottom");
-                this.handleEnterReader("top");
+                this.props.handleConvertDialog(!this.props.isConvertOpen);
               }}
             >
-              <span className="icon-grid reader-setting-icon"></span>
+              <span
+                className="icon-convert-text reader-setting-icon"
+                style={{ fontSize: 26 }}
+              ></span>
             </div>
           )}
+          <div
+            className="reader-setting-icon-container"
+            onClick={() => {
+              this.handleEnterReader("left");
+              this.handleEnterReader("right");
+              this.handleEnterReader("bottom");
+              this.handleEnterReader("top");
+            }}
+          >
+            <span className="icon-grid reader-setting-icon"></span>
+          </div>
         </div>
         {this.props.isSettingOpen && (
           <>
@@ -808,6 +880,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             <SpeechDialog />
           </div>
         }
+        {this.props.isAnnotationOpen && <AnnotationDialog />}
       </div>
     );
   }

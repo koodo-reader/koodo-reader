@@ -217,6 +217,16 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
             <textarea
               className="editor-box"
               style={{ height: "calc(100% - 90px)" }}
+              onKeyDown={(event) => {
+                if (
+                  event.key === "Enter" &&
+                  !event.shiftKey &&
+                  !(event.nativeEvent as any).isComposing
+                ) {
+                  event.preventDefault();
+                  this.createNote();
+                }
+              }}
             />
           </div>
           <ColorOption {...(colorOptionProps as any)} />
