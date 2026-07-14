@@ -34,6 +34,9 @@ class BookList extends React.Component<BookListProps, BookListState> {
   private scrollContainer: React.RefObject<HTMLUListElement>;
   private visibilityChangeHandler: ((event: Event) => void) | null = null;
   private resizeHandler: (() => void) | null = null;
+  private readingFinishedHandler:
+    | ((event: any, config: any) => void)
+    | null = null;
 
   constructor(props: BookListProps) {
     super(props);
@@ -83,9 +86,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
-      ipcRenderer.on("reading-finished", async (event: any, config: any) => {
+      this.readingFinishedHandler = async (event: any, config: any) => {
         this.handleFinishReading();
-      });
+      };
+      ipcRenderer.on("reading-finished", this.readingFinishedHandler);
     }
 
     // 初始加载完整的书籍数据
@@ -111,10 +115,14 @@ class BookList extends React.Component<BookListProps, BookListState> {
       this.visibilityChangeHandler = null;
     }
 
-    // 清理 IPC 监听器
-    if (isElectron) {
+    // 清理 IPC 监听器（只移除自身，避免误删 Header 等其他组件的监听器）
+    if (isElectron && this.readingFinishedHandler) {
       const { ipcRenderer } = window.require("electron");
-      ipcRenderer.removeAllListeners("reading-finished");
+      ipcRenderer.removeListener(
+        "reading-finished",
+        this.readingFinishedHandler
+      );
+      this.readingFinishedHandler = null;
     }
   }
 
