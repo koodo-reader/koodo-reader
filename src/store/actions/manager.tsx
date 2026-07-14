@@ -1,5 +1,6 @@
 import {
   ConfigService,
+  KookitConfig,
   TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import BookModel from "../../models/Book";
@@ -18,7 +19,6 @@ import {
 import toast from "react-hot-toast";
 import BookUtil from "../../utils/file/bookUtil";
 import i18n from "../../i18n";
-import { azureTTSVoiceList, officialVoiceList } from "../../constants/ttsList";
 import { langToName } from "../../utils/common";
 import { resetReaderRequest } from "../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
@@ -443,7 +443,7 @@ export function handleFetchPlugins() {
             );
             pluginList.push(sumPlugin);
             let sortedVoiceList = [
-              ...officialVoiceList.map((item) => {
+              ...KookitConfig.OfficialVoiceList.map((item) => {
                 return {
                   ...item,
                   label:
@@ -458,7 +458,7 @@ export function handleFetchPlugins() {
                       : i18n.t("Male voice")),
                 };
               }),
-              ...azureTTSVoiceList.map((item) => {
+              ...KookitConfig.AzureTTSVoiceList.map((item) => {
                 return {
                   ...item,
                   label:
@@ -498,7 +498,7 @@ export function handleFetchPlugins() {
             dispatch(handlePlugins(pluginList));
           } else if (isAuthed) {
             let sortedVoiceList = [
-              ...azureTTSVoiceList.map((item) => {
+              ...KookitConfig.AzureTTSVoiceList.map((item) => {
                 return {
                   ...item,
                   label:
