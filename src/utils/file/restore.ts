@@ -428,10 +428,14 @@ export const unzipOldConfig = async (zipEntries: any) => {
           zipEntry.name === "books.json" ||
           zipEntry.name === "bookmarks.json"
         ) {
-          await localforage.setItem(
-            zipEntry.name.split(".")[0],
-            JSON.parse(text)
-          );
+          try {
+            await localforage.setItem(
+              zipEntry.name.split(".")[0],
+              JSON.parse(text)
+            );
+          } catch (error) {
+            console.error(`Error parsing ${zipEntry.name}:`, error);
+          }
         } else if (zipEntry.name === "pdfjs.history.json") {
           ConfigService.setItem("pdfjs.history", text);
         } else {
