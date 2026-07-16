@@ -690,7 +690,7 @@ class BookUtil {
     } else {
       let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
       for (let book of books) {
-        if (book.md5.includes(md5)) {
+        if (book.md5 && book.md5.includes(md5)) {
           return book;
         }
       }
