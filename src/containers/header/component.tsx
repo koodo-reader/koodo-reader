@@ -338,6 +338,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   };
   handleFinishUpgrade = () => {
+    this.props.handleFetchBooks();
     setTimeout(() => {
       if (this.props.mode === "home") {
         this.props.history.push("/manager/home");
