@@ -85,7 +85,7 @@ export const chatStream = async (
   onMessage: (result) => void
 ) => {
   return new Promise<{ done: boolean }>((resolve, reject) => {
-    const messages = [...chat, { role: "user", content: prompt }];
+    const messages = [...chat, { role: "user", content: prompt }].slice(-5);
     const source = new SSE(url + "/chat/completions", {
       headers: {
         "Content-Type": "application/json",
