@@ -403,7 +403,7 @@ export const restoreFromOldBackup = async (zipEntries: any) => {
     let res = await unzipOldBook(zipEntries);
     if (res) {
       let res1 = await upgradeStorage();
-      let res2 = upgradeConfig();
+      let res2 = await upgradeConfig();
       if (res1 && res2) {
         return true;
       } else {

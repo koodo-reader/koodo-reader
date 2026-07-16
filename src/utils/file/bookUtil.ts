@@ -674,6 +674,29 @@ class BookUtil {
       return null;
     }
   }
+  static async getPDFBookByMd5(md5: string) {
+    if (!md5) {
+      return null;
+    }
+    if (isElectron) {
+      const { ipcRenderer } = window.require("electron");
+      return await ipcRenderer.invoke("custom-database-command", {
+        query: `SELECT * FROM books WHERE md5 LIKE ? LIMIT 1`,
+        data: [`%${md5}%`],
+        dbName: "books",
+        storagePath: getStorageLocation(),
+        executeType: "get",
+      });
+    } else {
+      let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
+      for (let book of books) {
+        if (book.md5.includes(md5)) {
+          return book;
+        }
+      }
+      return null;
+    }
+  }
   static async searchBooksByKeyword(keyword: string) {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");

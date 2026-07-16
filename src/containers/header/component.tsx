@@ -56,9 +56,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   scheduledSyncTimer: any;
   private isSyncing: boolean = false;
   private resizeHandler: (() => void) | null = null;
-  private readingFinishedHandler:
-    | ((event: any, config: any) => void)
-    | null = null;
+  private readingFinishedHandler: ((event: any, config: any) => void) | null =
+    null;
   constructor(props: HeaderProps) {
     super(props);
 
@@ -108,7 +107,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       //Check for data update
       //upgrade data from old version
       let res1 = await upgradeStorage(this.handleFinishUpgrade);
-      let res2 = upgradeConfig();
+      let res2 = await upgradeConfig();
       if (!res1 || !res2) {
         console.error("upgrade failed");
       }
@@ -158,7 +157,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         }
       });
     } else {
-      upgradeConfig();
+      await upgradeConfig();
       const status = await LocalFileManager.getPermissionStatus();
       if (
         !ConfigService.getItem("isUseLocal") &&
