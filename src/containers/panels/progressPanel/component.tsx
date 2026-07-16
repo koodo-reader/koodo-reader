@@ -155,7 +155,6 @@ class ProgressPanel extends React.Component<
               let fieldVal = event.target.value;
               this.setState({ targetPage: fieldVal });
             }}
-            //TODO
             onBlur={(event) => {
               if (event.target.value.trim()) {
                 this.props.htmlBook.rendition.goToPage(
