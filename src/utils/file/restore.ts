@@ -403,7 +403,7 @@ export const restoreFromOldBackup = async (zipEntries: any) => {
     let res = await unzipOldBook(zipEntries);
     if (res) {
       let res1 = await upgradeStorage();
-      let res2 = upgradeConfig();
+      let res2 = await upgradeConfig();
       if (res1 && res2) {
         return true;
       } else {
@@ -417,58 +417,67 @@ export const restoreFromOldBackup = async (zipEntries: any) => {
   }
 };
 
-export const unzipOldConfig = (zipEntries: any) => {
-  return new Promise<boolean>((resolve) => {
-    zipEntries.forEach(function (zipEntry) {
+export const unzipOldConfig = async (zipEntries: any) => {
+  for (let i = 0; i < zipEntries.length; i++) {
+    let zipEntry = zipEntries[i];
+    if (oldConfigArr.indexOf(zipEntry.name) > -1) {
       let text = zipEntry.getData().toString("utf8");
-      if (oldConfigArr.indexOf(zipEntry.name) > -1 && text) {
+      if (text) {
         if (
           zipEntry.name === "notes.json" ||
           zipEntry.name === "books.json" ||
           zipEntry.name === "bookmarks.json"
         ) {
-          localforage.setItem(zipEntry.name.split(".")[0], JSON.parse(text));
+          try {
+            await localforage.setItem(
+              zipEntry.name.split(".")[0],
+              JSON.parse(text)
+            );
+          } catch (error) {
+            console.error(`Error parsing ${zipEntry.name}:`, error);
+          }
         } else if (zipEntry.name === "pdfjs.history.json") {
           ConfigService.setItem("pdfjs.history", text);
         } else {
           ConfigService.setItem(zipEntry.name.split(".")[0], text);
         }
       }
-    });
-    ConfigService.setItem("isUpgradedStorage", "no");
-    ConfigService.setItem("isUpgradedConfig", "no");
-    resolve(true);
-  });
-};
-export const unzipOldBook = (zipEntries: any) => {
-  return new Promise<boolean>((resolve) => {
-    localforage.getItem("books").then((value: any) => {
-      let count = 0;
-      const fs = window.require("fs");
-      const path = window.require("path");
-      const dataPath = getStorageLocation() || "";
-      value &&
-        value.length > 0 &&
-        value.forEach((item: any) => {
-          zipEntries.forEach(async (zipEntry) => {
-            if (zipEntry.name === item.key) {
-              let buffer = zipEntry.getData();
+    }
+  }
 
-              fs.writeFileSync(
-                path.join(
-                  dataPath,
-                  "book",
-                  item.key + "." + item.format.toLowerCase()
-                ),
-                buffer
-              );
-              count++;
-              if (count === value.length) {
-                resolve(true);
-              }
-            }
-          });
-        });
-    });
-  });
+  ConfigService.setItem("isUpgradedStorage", "no");
+  ConfigService.setItem("isUpgradedConfig", "no");
+  return true;
+};
+export const unzipOldBook = async (zipEntries: any): Promise<boolean> => {
+  const value: any = await localforage.getItem("books");
+  if (!value || value.length === 0) {
+    return true;
+  }
+  const fs = window.require("fs");
+  const path = window.require("path");
+  const dataPath = getStorageLocation() || "";
+  const bookPath = path.join(dataPath, "book");
+  if (!fs.existsSync(bookPath)) {
+    fs.mkdirSync(bookPath, { recursive: true });
+  }
+  for (let i = 0; i < value.length; i++) {
+    const item = value[i];
+    for (let j = 0; j < zipEntries.length; j++) {
+      const zipEntry = zipEntries[j];
+      if (zipEntry.name === item.key) {
+        let buffer = zipEntry.getData();
+        fs.writeFileSync(
+          path.join(
+            dataPath,
+            "book",
+            item.key + "." + item.format.toLowerCase()
+          ),
+          buffer
+        );
+        break;
+      }
+    }
+  }
+  return true;
 };

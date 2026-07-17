@@ -13,6 +13,7 @@ import DictHistory from "../../models/DictHistory";
 import { decryptToken } from "../request/thirdparty";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
+import BookUtil from "./bookUtil";
 declare var window: any;
 
 // File System Access API type declarations
@@ -202,7 +203,7 @@ export const upgradeStorage = async (
     return false;
   }
 };
-export const upgradeConfig = (): Boolean => {
+export const upgradeConfig = async (): Promise<Boolean> => {
   try {
     if (ConfigService.getItem("isUpgradedConfig") === "yes") {
       return true;
@@ -232,6 +233,36 @@ export const upgradeConfig = (): Boolean => {
     json = ConfigService.getItem("bookSortCode");
     if (json) {
       ConfigService.setReaderConfig("bookSortCode", json);
+    }
+
+    json = ConfigService.getItem("pdfjs.history");
+    if (json) {
+      try {
+        const history = JSON.parse(json);
+        if (history.files && history.files.length > 0) {
+          for (let i = 0; i < history.files.length; i++) {
+            const file = history.files[i];
+            if (file.fingerprint) {
+              let book: Book | null = await BookUtil.getPDFBookByMd5(
+                file.fingerprint
+              );
+              if (book) {
+                ConfigService.setObjectConfig(
+                  book.key,
+                  {
+                    ...file,
+                    chapterDocIndex: file.page - 1 + "",
+                    chapterHref: "title" + (file.page - 1),
+                  },
+                  "recordLocation"
+                );
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Failed to parse pdfjs.history:", error);
+      }
     }
 
     //remove dropbox token
