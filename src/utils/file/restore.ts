@@ -444,6 +444,7 @@ export const unzipOldConfig = async (zipEntries: any) => {
       }
     }
   }
+
   ConfigService.setItem("isUpgradedStorage", "no");
   ConfigService.setItem("isUpgradedConfig", "no");
   return true;
