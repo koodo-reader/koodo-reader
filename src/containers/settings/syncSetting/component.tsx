@@ -10,6 +10,7 @@ import { syncSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
 import {
   confirmBrowserExtensionAsync,
+  detectKoodoExtension,
   generateSyncRecord,
   getICloudDrivePath,
   getServerRegion,
@@ -809,10 +810,27 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               <div
                 className="voice-add-confirm"
                 onClick={async () => {
-                  if (this.props.settingDrive === "webdav") {
+                  if (
+                    this.props.settingDrive === "webdav" ||
+                    this.props.settingDrive === "s3compatible"
+                  ) {
+                    toast.loading(i18n.t("Testing connection..."), {
+                      id: "testing-connection-id",
+                    });
                     let corsResult = await testCORS(this.state.driveConfig.url);
 
+                    if (!corsResult && !isElectron) {
+                      const extensionInfo = await detectKoodoExtension();
+                      if (extensionInfo.installed) {
+                        vexComfirmAsync(
+                          this.props.t(
+                            "Please click the Koodo Reader extension icon in the upper right corner of the browser, authorize the request to this endpoint, and try again"
+                          )
+                        );
+                      }
+                    }
                     if (!corsResult) {
+                      toast.dismiss("testing-connection-id");
                       return;
                     }
                   }
@@ -888,11 +906,28 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     className="voice-add-confirm"
                     style={{ marginRight: "10px" }}
                     onClick={async () => {
-                      if (this.props.settingDrive === "webdav") {
+                      if (
+                        this.props.settingDrive === "webdav" ||
+                        this.props.settingDrive === "s3compatible"
+                      ) {
+                        toast.loading(i18n.t("Testing connection..."), {
+                          id: "testing-connection-id",
+                        });
                         let corsResult = await testCORS(
                           this.state.driveConfig.url
                         );
+                        if (!corsResult && !isElectron) {
+                          const extensionInfo = await detectKoodoExtension();
+                          if (extensionInfo.installed) {
+                            vexComfirmAsync(
+                              this.props.t(
+                                "Please click the Koodo Reader extension icon in the upper right corner of the browser, authorize the request to this endpoint, and try again"
+                              )
+                            );
+                          }
+                        }
                         if (!corsResult) {
+                          toast.dismiss("testing-connection-id");
                           return;
                         }
                       }
