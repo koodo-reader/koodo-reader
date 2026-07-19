@@ -145,7 +145,18 @@ export const vexComfirmAsync = (
     });
   });
 };
+const NAMESPACE = "__KOODO_EXTENSION__";
+
+export type KoodoExtensionInfo = {
+  installed: boolean;
+  /** Extension version from chrome.runtime.getManifest().version, when known. */
+  version?: string;
+};
 export const confirmBrowserExtensionAsync = async (): Promise<boolean> => {
+  const extensionInfo = await detectKoodoExtension();
+  if (extensionInfo.installed) {
+    return true;
+  }
   const result = await vexComfirmAsync(
     "Due to browser security restrictions, you may not be able to use this data source properly. If you encounter any issues, you can resolve them by installing our browser extension.",
     "Confirm",
@@ -161,6 +172,57 @@ export const confirmBrowserExtensionAsync = async (): Promise<boolean> => {
   }
   return true;
 };
+export function detectKoodoExtension(
+  timeoutMs = 500
+): Promise<KoodoExtensionInfo> {
+  return new Promise((resolve) => {
+    let id = 0;
+    // Increment until unused so concurrent probes don't steal each other's RES.
+    const probes = (window as { __koodoProbeId?: number }).__koodoProbeId ?? 0;
+    id = probes + 1;
+    (window as { __koodoProbeId?: number }).__koodoProbeId = id;
+
+    let settled = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    const cleanup = () => {
+      if (timer) clearTimeout(timer);
+      window.removeEventListener("message", onMessage);
+    };
+
+    const finish = (info: KoodoExtensionInfo) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      resolve(info);
+    };
+
+    function onMessage(event: MessageEvent) {
+      if (
+        event.source !== window ||
+        !event.data ||
+        event.data.__ns !== NAMESPACE ||
+        event.data.__type !== "RES" ||
+        event.data.__id !== id
+      )
+        return;
+
+      const payload = event.data.payload;
+      if (payload && payload.type === "PONG") {
+        finish({ installed: true, version: payload.version });
+      }
+    }
+
+    window.addEventListener("message", onMessage);
+
+    timer = setTimeout(() => finish({ installed: false }), timeoutMs);
+
+    window.postMessage(
+      { __ns: NAMESPACE, __type: "REQ", __id: id, payload: { type: "PING" } },
+      "*"
+    );
+  });
+}
 export const vexOpenAsync = (
   config: Record<string, any>,
   message: string,
