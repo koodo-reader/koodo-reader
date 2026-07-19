@@ -172,7 +172,7 @@ class LocalFileDialog extends React.Component<
               <Lottie
                 animationData={animationSuccess}
                 loop={false}
-                style={{ height: 80, width: 80 }}
+                style={{ height: 80, width: "100%" }}
               />
               <div className="backup-page-finish-text">
                 <Trans>Setup successful</Trans>

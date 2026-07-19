@@ -104,7 +104,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
               <Lottie
                 animationData={animationSuccess}
                 loop={false}
-                style={{ height: 80, width: 80 }}
+                style={{ height: 80, width: "100%" }}
               />
             ) : (
               <span className="icon-close auth-page-close-icon theme-color-delete"></span>

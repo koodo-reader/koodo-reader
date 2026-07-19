@@ -1215,6 +1215,7 @@
   "Install extension": "安装扩展",
   "You have reached the device limit for your account. Please install the latest mobile version of Koodo Reader to remove unused device by visiting Settings - Account - Device Management. ": "您的账户已达到设备数量上限。请安装最新 Koodo Reader 移动版，移除未使用的设备，请前往 设置 - 账户 - 设备管理。",
   "Relink": "重新链接",
+  "Please click the Koodo Reader extension icon in the upper right corner of the browser, authorize the request to this endpoint, and try again": "请点击浏览器右上角的 Koodo Reader 扩展图标，授权访问此域名，然后重试",
   "The text is empty": "文本为空",
   "Model assignment": "模型分配",
   "Auto sync reading progress with KOReader": "自动将阅读进度与 KOReader 同步",
