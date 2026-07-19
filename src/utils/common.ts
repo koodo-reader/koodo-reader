@@ -1116,7 +1116,7 @@ export const testCORS = async (url: string) => {
     const response = await fetch(url, {
       method: "GET", // 或 'POST' 等
       mode: "cors", // 明确指定跨域模式
-      signal: AbortSignal.timeout(5000), // 8 秒超时，避免不可达 URL 长时间挂起
+      signal: AbortSignal.timeout(8000), // 8 秒超时，避免不可达 URL 长时间挂起
       headers: {
         "Content-Type": "application/json", // 如果是POST，可添加
       },
