@@ -421,6 +421,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       toast.dismiss("testing-connection-id");
       return false;
     }
+    toast.dismiss("testing-connection-id");
     return true;
   };
   handleConfirmDrive = async () => {
@@ -831,10 +832,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               <div
                 className="voice-add-confirm"
                 onClick={async () => {
-                  if (
-                    this.props.settingDrive === "webdav" ||
-                    this.props.settingDrive === "s3compatible"
-                  ) {
+                  if (this.props.settingDrive === "webdav") {
                     if (!(await this.checkCorsForDrive())) {
                       return;
                     }
@@ -911,10 +909,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     className="voice-add-confirm"
                     style={{ marginRight: "10px" }}
                     onClick={async () => {
-                      if (
-                        this.props.settingDrive === "webdav" ||
-                        this.props.settingDrive === "s3compatible"
-                      ) {
+                      if (this.props.settingDrive === "webdav") {
                         if (!(await this.checkCorsForDrive())) {
                           return;
                         }
