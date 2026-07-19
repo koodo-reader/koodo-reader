@@ -1110,23 +1110,26 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
 };
 export const testCORS = async (url: string) => {
   if (isElectron) return true;
+  console.log("Testing CORS for URL:", url);
 
   try {
     const response = await fetch(url, {
       method: "GET", // 或 'POST' 等
       mode: "cors", // 明确指定跨域模式
+      signal: AbortSignal.timeout(5000), // 8 秒超时，避免不可达 URL 长时间挂起
       headers: {
         "Content-Type": "application/json", // 如果是POST，可添加
       },
       // body: JSON.stringify({ test: 'data' }) // 如果是POST
     });
+    console.log("CORS test response:", response);
     if (response.ok) {
-      const data = await response.text();
       return true;
     } else {
       return true;
     }
   } catch (error) {
+    console.error("CORS test failed for URL:", url, error);
     if (window.location.href.startsWith("https://")) {
       if (url.startsWith("http://")) {
         toast.error(
