@@ -1110,8 +1110,6 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
 };
 export const testCORS = async (url: string) => {
   if (isElectron) return true;
-  console.log("Testing CORS for URL:", url);
-
   try {
     const response = await fetch(url, {
       method: "GET", // 或 'POST' 等
@@ -1122,7 +1120,6 @@ export const testCORS = async (url: string) => {
       },
       // body: JSON.stringify({ test: 'data' }) // 如果是POST
     });
-    console.log("CORS test response:", response);
     if (response.ok) {
       return true;
     } else {
