@@ -402,6 +402,27 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   handleCancelDrive = () => {
     this.props.handleSettingDrive("");
   };
+  checkCorsForDrive = async (): Promise<boolean> => {
+    toast.loading(i18n.t("Testing connection..."), {
+      id: "testing-connection-id",
+    });
+    let corsResult = await testCORS(this.state.driveConfig.url);
+    if (!corsResult && !isElectron) {
+      const extensionInfo = await detectKoodoExtension();
+      if (extensionInfo.installed) {
+        vexComfirmAsync(
+          this.props.t(
+            "Please click the Koodo Reader extension icon in the upper right corner of the browser, authorize the request to this endpoint, and try again"
+          )
+        );
+      }
+    }
+    if (!corsResult) {
+      toast.dismiss("testing-connection-id");
+      return false;
+    }
+    return true;
+  };
   handleConfirmDrive = async () => {
     let flag = true;
     for (let item of driveInputConfig[this.props.settingDrive]) {
@@ -814,23 +835,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     this.props.settingDrive === "webdav" ||
                     this.props.settingDrive === "s3compatible"
                   ) {
-                    toast.loading(i18n.t("Testing connection..."), {
-                      id: "testing-connection-id",
-                    });
-                    let corsResult = await testCORS(this.state.driveConfig.url);
-
-                    if (!corsResult && !isElectron) {
-                      const extensionInfo = await detectKoodoExtension();
-                      if (extensionInfo.installed) {
-                        vexComfirmAsync(
-                          this.props.t(
-                            "Please click the Koodo Reader extension icon in the upper right corner of the browser, authorize the request to this endpoint, and try again"
-                          )
-                        );
-                      }
-                    }
-                    if (!corsResult) {
-                      toast.dismiss("testing-connection-id");
+                    if (!(await this.checkCorsForDrive())) {
                       return;
                     }
                   }
@@ -910,24 +915,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         this.props.settingDrive === "webdav" ||
                         this.props.settingDrive === "s3compatible"
                       ) {
-                        toast.loading(i18n.t("Testing connection..."), {
-                          id: "testing-connection-id",
-                        });
-                        let corsResult = await testCORS(
-                          this.state.driveConfig.url
-                        );
-                        if (!corsResult && !isElectron) {
-                          const extensionInfo = await detectKoodoExtension();
-                          if (extensionInfo.installed) {
-                            vexComfirmAsync(
-                              this.props.t(
-                                "Please click the Koodo Reader extension icon in the upper right corner of the browser, authorize the request to this endpoint, and try again"
-                              )
-                            );
-                          }
-                        }
-                        if (!corsResult) {
-                          toast.dismiss("testing-connection-id");
+                        if (!(await this.checkCorsForDrive())) {
                           return;
                         }
                       }
