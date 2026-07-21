@@ -17,6 +17,8 @@ import {
   BRUSH_WIDTHS,
   HIGHLIGHTER_COLORS,
   HIGHLIGHTER_WIDTHS,
+  SHAPE_TYPES,
+  TEXT_COLORS,
   getDefaultOcrEngine,
   getDefaultOcrLang,
   getPageWidth,
@@ -322,22 +324,44 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               ? "yes"
               : "no",
           brushColor:
-            ConfigService.getReaderConfig("brushColor") || BRUSH_COLORS[0],
+            ConfigService.getReaderConfig("annotationBrushColor") ||
+            BRUSH_COLORS[0],
           brushWidth: parseFloat(
-            ConfigService.getReaderConfig("brushWidth") || BRUSH_WIDTHS[1] + ""
+            ConfigService.getReaderConfig("annotationBrushWidth") ||
+              BRUSH_WIDTHS[1] + ""
           ),
           annotationStyle:
             ConfigService.getReaderConfig("annotationStyle") || "brush",
           highlighterColor:
-            ConfigService.getReaderConfig("highlighterColor") ||
+            ConfigService.getReaderConfig("annotationHighlighterColor") ||
             HIGHLIGHTER_COLORS[0],
           highlighterWidth: parseFloat(
-            ConfigService.getReaderConfig("highlighterWidth") ||
+            ConfigService.getReaderConfig("annotationHighlighterWidth") ||
               HIGHLIGHTER_WIDTHS[1] + ""
           ),
           highlighterOpacity: parseFloat(
-            ConfigService.getReaderConfig("highlighterOpacity") || "0.4"
+            ConfigService.getReaderConfig("annotationHighlighterOpacity") ||
+              "0.4"
           ),
+          shapeType:
+            ConfigService.getReaderConfig("annotationShapeType") ||
+            SHAPE_TYPES[0],
+          shapeColor:
+            ConfigService.getReaderConfig("annotationShapeColor") ||
+            BRUSH_COLORS[0],
+          shapeWidth: parseFloat(
+            ConfigService.getReaderConfig("annotationShapeWidth") ||
+              BRUSH_WIDTHS[1] + ""
+          ),
+          textSize: parseFloat(
+            ConfigService.getReaderConfig("annotationTextSize") || "24"
+          ),
+          textFont:
+            ConfigService.getReaderConfig("annotationTextFont") ||
+            "sans-serif",
+          textColor:
+            ConfigService.getReaderConfig("annotationTextColor") ||
+            TEXT_COLORS[0],
           isKeepPDFBackground: ConfigService.getReaderConfig(
             "isKeepPDFBackground"
           ),

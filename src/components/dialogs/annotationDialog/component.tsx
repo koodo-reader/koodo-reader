@@ -1,6 +1,7 @@
 import React from "react";
 import { AnnotationDialogProps, AnnotationDialogState } from "./interface";
 import "./annotationDialog.css";
+import "../../readerSettings/dropdownList/dropdownList.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   BRUSH_COLORS,
@@ -8,7 +9,12 @@ import {
   HIGHLIGHTER_COLORS,
   HIGHLIGHTER_WIDTHS,
   SHAPE_TYPES,
+  TEXT_COLORS,
+  TEXT_SIZE_MAX,
+  TEXT_SIZE_MIN,
+  TEXT_SIZE_STEP,
 } from "../../../utils/common";
+import FontUtil from "../../../utils/file/fontUtil";
 
 class AnnotationDialog extends React.Component<
   AnnotationDialogProps,
@@ -19,29 +25,57 @@ class AnnotationDialog extends React.Component<
     this.state = {
       annotationStyle:
         ConfigService.getReaderConfig("annotationStyle") || "brush",
-      brushColor:
-        ConfigService.getReaderConfig("brushColor") || BRUSH_COLORS[0],
-      brushWidth: parseFloat(
-        ConfigService.getReaderConfig("brushWidth") || BRUSH_WIDTHS[1] + ""
+      annotationBrushColor:
+        ConfigService.getReaderConfig("annotationBrushColor") ||
+        BRUSH_COLORS[0],
+      annotationBrushWidth: parseFloat(
+        ConfigService.getReaderConfig("annotationBrushWidth") ||
+          BRUSH_WIDTHS[1] + ""
       ),
-      highlighterColor:
-        ConfigService.getReaderConfig("highlighterColor") ||
+      annotationHighlighterColor:
+        ConfigService.getReaderConfig("annotationHighlighterColor") ||
         HIGHLIGHTER_COLORS[0],
-      highlighterWidth: parseFloat(
-        ConfigService.getReaderConfig("highlighterWidth") ||
+      annotationHighlighterWidth: parseFloat(
+        ConfigService.getReaderConfig("annotationHighlighterWidth") ||
           HIGHLIGHTER_WIDTHS[1] + ""
       ),
-      highlighterOpacity: parseFloat(
-        ConfigService.getReaderConfig("highlighterOpacity") || "0.4"
+      annotationHighlighterOpacity: parseFloat(
+        ConfigService.getReaderConfig("annotationHighlighterOpacity") || "0.4"
       ),
-      shapeType: ConfigService.getReaderConfig("shapeType") || SHAPE_TYPES[0],
-      shapeColor:
-        ConfigService.getReaderConfig("shapeColor") || BRUSH_COLORS[0],
-      shapeWidth: parseFloat(
-        ConfigService.getReaderConfig("shapeWidth") || BRUSH_WIDTHS[1] + ""
+      annotationShapeType:
+        ConfigService.getReaderConfig("annotationShapeType") ||
+        SHAPE_TYPES[0],
+      annotationShapeColor:
+        ConfigService.getReaderConfig("annotationShapeColor") ||
+        BRUSH_COLORS[0],
+      annotationShapeWidth: parseFloat(
+        ConfigService.getReaderConfig("annotationShapeWidth") ||
+          BRUSH_WIDTHS[1] + ""
       ),
+      annotationTextSize: parseFloat(
+        ConfigService.getReaderConfig("annotationTextSize") || "24"
+      ),
+      annotationTextFont:
+        ConfigService.getReaderConfig("annotationTextFont") || "sans-serif",
+      annotationTextColor:
+        ConfigService.getReaderConfig("annotationTextColor") ||
+        TEXT_COLORS[0],
+      fontOptions: [],
     };
   }
+  componentDidMount() {
+    this.loadFontOptions();
+    window.addEventListener("font-list-changed", this.loadFontOptions);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("font-list-changed", this.loadFontOptions);
+  }
+  loadFontOptions = async () => {
+    const options = (await FontUtil.getMergedFontOptions()).filter(
+      (option) => option.value !== "Built-in font"
+    );
+    this.setState({ fontOptions: options });
+  };
   handleSelectTab = (style: string) => {
     this.setState({ annotationStyle: style });
     this.props.htmlBook.rendition.applyAnnotationConfig({
@@ -50,63 +84,91 @@ class AnnotationDialog extends React.Component<
     ConfigService.setReaderConfig("annotationStyle", style);
   };
   handleSelectColor = (color: string) => {
-    this.setState({ brushColor: color });
+    this.setState({ annotationBrushColor: color });
     this.props.htmlBook.rendition.applyAnnotationConfig({
       brushColor: color,
     });
-    ConfigService.setReaderConfig("brushColor", color);
+    ConfigService.setReaderConfig("annotationBrushColor", color);
   };
   handleSelectWidth = (width: number) => {
-    this.setState({ brushWidth: width });
+    this.setState({ annotationBrushWidth: width });
     this.props.htmlBook.rendition.applyAnnotationConfig({
       brushWidth: width,
     });
-    ConfigService.setReaderConfig("brushWidth", width + "");
+    ConfigService.setReaderConfig("annotationBrushWidth", width + "");
   };
   handleSelectHighlighterColor = (color: string) => {
-    this.setState({ highlighterColor: color });
+    this.setState({ annotationHighlighterColor: color });
     this.props.htmlBook.rendition.applyAnnotationConfig({
       highlighterColor: color,
     });
-    ConfigService.setReaderConfig("highlighterColor", color);
+    ConfigService.setReaderConfig("annotationHighlighterColor", color);
   };
   handleSelectHighlighterWidth = (width: number) => {
-    this.setState({ highlighterWidth: width });
+    this.setState({ annotationHighlighterWidth: width });
     this.props.htmlBook.rendition.applyAnnotationConfig({
       highlighterWidth: width,
     });
-    ConfigService.setReaderConfig("highlighterWidth", width + "");
+    ConfigService.setReaderConfig("annotationHighlighterWidth", width + "");
   };
   handleSelectOpacity = (opacity: number) => {
-    this.setState({ highlighterOpacity: opacity });
+    this.setState({ annotationHighlighterOpacity: opacity });
     this.props.htmlBook.rendition.applyAnnotationConfig({
       highlighterOpacity: opacity,
     });
   };
   handleOpacityRelease = () => {
     ConfigService.setReaderConfig(
-      "highlighterOpacity",
-      this.state.highlighterOpacity + ""
+      "annotationHighlighterOpacity",
+      this.state.annotationHighlighterOpacity + ""
     );
   };
-  handleSelectShapeType = (shapeType: string) => {
-    this.setState({ shapeType });
-    this.props.htmlBook.rendition.applyAnnotationConfig({ shapeType });
-    ConfigService.setReaderConfig("shapeType", shapeType);
+  handleSelectShapeType = (annotationShapeType: string) => {
+    this.setState({ annotationShapeType });
+    this.props.htmlBook.rendition.applyAnnotationConfig({
+      shapeType: annotationShapeType,
+    });
+    ConfigService.setReaderConfig("annotationShapeType", annotationShapeType);
   };
   handleSelectShapeColor = (color: string) => {
-    this.setState({ shapeColor: color });
+    this.setState({ annotationShapeColor: color });
     this.props.htmlBook.rendition.applyAnnotationConfig({
       shapeColor: color,
     });
-    ConfigService.setReaderConfig("shapeColor", color);
+    ConfigService.setReaderConfig("annotationShapeColor", color);
   };
   handleSelectShapeWidth = (width: number) => {
-    this.setState({ shapeWidth: width });
+    this.setState({ annotationShapeWidth: width });
     this.props.htmlBook.rendition.applyAnnotationConfig({
       shapeWidth: width,
     });
-    ConfigService.setReaderConfig("shapeWidth", width + "");
+    ConfigService.setReaderConfig("annotationShapeWidth", width + "");
+  };
+  handleSelectTextSize = (size: number) => {
+    this.setState({ annotationTextSize: size });
+    this.props.htmlBook.rendition.applyAnnotationConfig({
+      textSize: size,
+    });
+  };
+  handleTextSizeRelease = () => {
+    ConfigService.setReaderConfig(
+      "annotationTextSize",
+      this.state.annotationTextSize + ""
+    );
+  };
+  handleSelectTextFont = (font: string) => {
+    this.setState({ annotationTextFont: font });
+    this.props.htmlBook.rendition.applyAnnotationConfig({
+      textFont: font,
+    });
+    ConfigService.setReaderConfig("annotationTextFont", font);
+  };
+  handleSelectTextColor = (color: string) => {
+    this.setState({ annotationTextColor: color });
+    this.props.htmlBook.rendition.applyAnnotationConfig({
+      textColor: color,
+    });
+    ConfigService.setReaderConfig("annotationTextColor", color);
   };
   renderShapeIcon = (type: string) => {
     const stroke = "currentColor";
@@ -165,14 +227,17 @@ class AnnotationDialog extends React.Component<
   render() {
     const {
       annotationStyle,
-      brushColor,
-      brushWidth,
-      highlighterColor,
-      highlighterWidth,
-      highlighterOpacity,
-      shapeType,
-      shapeColor,
-      shapeWidth,
+      annotationBrushColor,
+      annotationBrushWidth,
+      annotationHighlighterColor,
+      annotationHighlighterWidth,
+      annotationHighlighterOpacity,
+      annotationShapeType,
+      annotationShapeColor,
+      annotationShapeWidth,
+      annotationTextSize,
+      annotationTextFont,
+      annotationTextColor,
     } = this.state;
     return (
       <div
@@ -244,6 +309,17 @@ class AnnotationDialog extends React.Component<
               </svg>
             </span>
           </span>
+          <span
+            className={
+              annotationStyle === "text"
+                ? "annotation-dialog-tab active-annotation-dialog-tab"
+                : "annotation-dialog-tab"
+            }
+            onClick={() => this.handleSelectTab("text")}
+            title={this.props.t("Text")}
+          >
+            <span className="icon-font annotation-dialog-tab-icon"></span>
+          </span>
         </div>
 
         {annotationStyle === "brush" ? (
@@ -257,7 +333,7 @@ class AnnotationDialog extends React.Component<
                   <li
                     key={color}
                     className={
-                      brushColor === color
+                      annotationBrushColor === color
                         ? "annotation-color-item active-annotation-color-item"
                         : "annotation-color-item"
                     }
@@ -277,7 +353,7 @@ class AnnotationDialog extends React.Component<
                   <li
                     key={width}
                     className={
-                      brushWidth === width
+                      annotationBrushWidth === width
                         ? "annotation-width-item active-annotation-width-item"
                         : "annotation-width-item"
                     }
@@ -286,7 +362,7 @@ class AnnotationDialog extends React.Component<
                     <span
                       className="annotation-width-preview"
                       style={{
-                        backgroundColor: brushColor,
+                        backgroundColor: annotationBrushColor,
                         height: width + "px",
                         borderRadius: width / 2 + "px",
                       }}
@@ -307,7 +383,7 @@ class AnnotationDialog extends React.Component<
                   <li
                     key={color}
                     className={
-                      highlighterColor === color
+                      annotationHighlighterColor === color
                         ? "annotation-color-item active-annotation-color-item"
                         : "annotation-color-item"
                     }
@@ -317,7 +393,7 @@ class AnnotationDialog extends React.Component<
                       className="annotation-color-fill"
                       style={{
                         backgroundColor: color,
-                        opacity: highlighterOpacity,
+                        opacity: annotationHighlighterOpacity,
                       }}
                     ></span>
                   </li>
@@ -334,7 +410,7 @@ class AnnotationDialog extends React.Component<
                   <li
                     key={width}
                     className={
-                      highlighterWidth === width
+                      annotationHighlighterWidth === width
                         ? "annotation-width-item active-annotation-width-item"
                         : "annotation-width-item"
                     }
@@ -343,8 +419,8 @@ class AnnotationDialog extends React.Component<
                     <span
                       className="annotation-width-preview"
                       style={{
-                        backgroundColor: highlighterColor,
-                        opacity: highlighterOpacity,
+                        backgroundColor: annotationHighlighterColor,
+                        opacity: annotationHighlighterOpacity,
                         height: width + "px",
                         borderRadius: width / 2 + "px",
                       }}
@@ -358,7 +434,7 @@ class AnnotationDialog extends React.Component<
               <div className="annotation-opacity-label">
                 <span>{this.props.t("Opacity")}</span>
                 <span className="annotation-opacity-value">
-                  {Math.round(highlighterOpacity * 100)}%
+                  {Math.round(annotationHighlighterOpacity * 100)}%
                 </span>
               </div>
               <input
@@ -366,7 +442,7 @@ class AnnotationDialog extends React.Component<
                 min="0.1"
                 max="1"
                 step="0.1"
-                value={highlighterOpacity}
+                value={annotationHighlighterOpacity}
                 className="annotation-opacity-slider"
                 onChange={(e) =>
                   this.handleSelectOpacity(parseFloat(e.target.value))
@@ -377,7 +453,7 @@ class AnnotationDialog extends React.Component<
               />
             </div>
           </>
-        ) : (
+        ) : annotationStyle === "shape" ? (
           <>
             <div className="annotation-dialog-section">
               <div className="annotation-dialog-label">
@@ -388,7 +464,7 @@ class AnnotationDialog extends React.Component<
                   <li
                     key={type}
                     className={
-                      shapeType === type
+                      annotationShapeType === type
                         ? "annotation-shape-item active-annotation-shape-item"
                         : "annotation-shape-item"
                     }
@@ -412,7 +488,7 @@ class AnnotationDialog extends React.Component<
                   <li
                     key={color}
                     className={
-                      shapeColor === color
+                      annotationShapeColor === color
                         ? "annotation-color-item active-annotation-color-item"
                         : "annotation-color-item"
                     }
@@ -432,7 +508,7 @@ class AnnotationDialog extends React.Component<
                   <li
                     key={width}
                     className={
-                      shapeWidth === width
+                      annotationShapeWidth === width
                         ? "annotation-width-item active-annotation-width-item"
                         : "annotation-width-item"
                     }
@@ -441,12 +517,78 @@ class AnnotationDialog extends React.Component<
                     <span
                       className="annotation-width-preview"
                       style={{
-                        backgroundColor: shapeColor,
+                        backgroundColor: annotationShapeColor,
                         height: width + "px",
                         borderRadius: width / 2 + "px",
                       }}
                     ></span>
                   </li>
+                ))}
+              </ul>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="annotation-dialog-section annotation-text-size-section">
+              <div className="annotation-opacity-label">
+                <span>{this.props.t("Text size")}</span>
+                <span className="annotation-opacity-value">
+                  {annotationTextSize}
+                </span>
+              </div>
+              <input
+                type="range"
+                min={TEXT_SIZE_MIN}
+                max={TEXT_SIZE_MAX}
+                step={TEXT_SIZE_STEP}
+                value={annotationTextSize}
+                className="annotation-opacity-slider"
+                onChange={(e) =>
+                  this.handleSelectTextSize(parseFloat(e.target.value))
+                }
+                onPointerUp={this.handleTextSizeRelease}
+                onMouseUp={this.handleTextSizeRelease}
+                style={{ width: "100%" }}
+              />
+            </div>
+
+            <div className="annotation-dialog-section">
+              <div className="annotation-dialog-label">
+                {this.props.t("Text font")}
+              </div>
+              <select
+                className="general-setting-dropdown annotation-text-font-select"
+                value={annotationTextFont}
+                onChange={(e) => this.handleSelectTextFont(e.target.value)}
+              >
+                {this.state.fontOptions.map((font) => (
+                  <option
+                    key={font.value}
+                    value={font.value}
+                    className="general-setting-option"
+                  >
+                    {font.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="annotation-dialog-section">
+              <div className="annotation-dialog-label">
+                {this.props.t("Text color")}
+              </div>
+              <ul className="annotation-color-list">
+                {TEXT_COLORS.map((color) => (
+                  <li
+                    key={color}
+                    className={
+                      annotationTextColor === color
+                        ? "annotation-color-item active-annotation-color-item"
+                        : "annotation-color-item"
+                    }
+                    style={{ backgroundColor: color }}
+                    onClick={() => this.handleSelectTextColor(color)}
+                  ></li>
                 ))}
               </ul>
             </div>

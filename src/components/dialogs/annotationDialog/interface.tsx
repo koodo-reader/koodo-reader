@@ -8,12 +8,16 @@ export interface AnnotationDialogProps {
 
 export interface AnnotationDialogState {
   annotationStyle: string;
-  brushColor: string;
-  brushWidth: number;
-  highlighterColor: string;
-  highlighterWidth: number;
-  highlighterOpacity: number;
-  shapeType: string;
-  shapeColor: string;
-  shapeWidth: number;
+  annotationBrushColor: string;
+  annotationBrushWidth: number;
+  annotationHighlighterColor: string;
+  annotationHighlighterWidth: number;
+  annotationHighlighterOpacity: number;
+  annotationShapeType: string;
+  annotationShapeColor: string;
+  annotationShapeWidth: number;
+  annotationTextSize: number;
+  annotationTextFont: string;
+  annotationTextColor: string;
+  fontOptions: { label: string; value: string }[];
 }

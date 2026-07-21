@@ -181,3 +181,23 @@
   margin: 0;
   cursor: pointer;
 }
+.annotation-text-size-section {
+  margin-bottom: 20px;
+}
+.annotation-text-font-select {
+  width: 100% !important;
+  left: 0 !important;
+  margin-right: 0 !important;
+  height: 30px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: var(--background-color, #fff);
+  color: var(--text-color, inherit);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.annotation-text-font-select:hover,
+.annotation-text-font-select:focus {
+  border-color: rgba(0, 0, 0, 0.4);
+}
