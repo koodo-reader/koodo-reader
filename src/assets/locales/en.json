@@ -1205,6 +1205,8 @@
   "SOCKS5 authentication is not supported for in-app requests; use HTTP proxy instead": "SOCKS5 authentication is not supported for in-app requests; use HTTP proxy instead",
   "Save failed": "Save failed",
   "Please enter host and port": "Please enter host and port",
+  "Select proxy type": "Select proxy type",
+  "Disable network proxy?": "Disable network proxy?",
   "No local dictionaries imported yet": "No local dictionaries imported yet",
   "Due to browser security restrictions, you may not be able to use this data source properly. If you encounter any issues, you can resolve them by installing our browser extension.": "Due to browser security restrictions, you may not be able to use this data source properly. If you encounter any issues, you can resolve them by installing our browser extension.",
   "Install extension": "Install extension",

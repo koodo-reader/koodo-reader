@@ -14,7 +14,11 @@ import {
   setProtectionPassword,
   setProtectionPin,
 } from "../../../utils/reader/protectionUtil";
-import { vexPasswordInputAsync, vexSelectAsync } from "../../../utils/common";
+import {
+  vexPasswordInputAsync,
+  vexSelectAsync,
+  vexComfirmAsync,
+} from "../../../utils/common";
 import i18n from "../../../i18n";
 
 class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
@@ -227,23 +231,49 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
     }
   };
 
-  handleToggleProxy = () => {
-    this.setState(
-      (s) => ({ proxyEnabled: !s.proxyEnabled }),
-      () => {
-        if (!this.state.proxyEnabled && window.require) {
-          const { ipcRenderer } = window.require("electron");
-          ipcRenderer.invoke("set-proxy-config", {
-            enabled: false,
-            type: "none",
-            host: "",
-            port: 0,
-            username: "",
-            password: "",
-          });
-        }
+  handleToggleProxy = async () => {
+    if (this.state.proxyEnabled) {
+      const confirmed = await vexComfirmAsync(
+        "Disable network proxy?",
+        "Confirm",
+        "Cancel"
+      );
+      if (!confirmed) return;
+      this.setState({ proxyEnabled: false, proxyType: "none" });
+      if (window.require) {
+        const { ipcRenderer } = window.require("electron");
+        ipcRenderer.invoke("set-proxy-config", {
+          enabled: false,
+          type: "none",
+          host: "",
+          port: 0,
+          username: "",
+          password: "",
+        });
       }
-    );
+      toast.success(this.props.t("Change successful"));
+      return;
+    }
+    const typeOptions: { value: string; label: string }[] = [
+      { value: "http", label: "HTTP" },
+      { value: "socks5", label: "SOCKS5" },
+    ];
+    const selected = await vexSelectAsync("Select proxy type", typeOptions);
+    if (!selected) return;
+    this.setState({
+      proxyEnabled: true,
+      proxyType: selected as "http" | "socks5",
+    });
+  };
+
+  handleChangeProxyType = async () => {
+    const typeOptions: { value: string; label: string }[] = [
+      { value: "http", label: "HTTP" },
+      { value: "socks5", label: "SOCKS5" },
+    ];
+    const selected = await vexSelectAsync("Select proxy type", typeOptions);
+    if (!selected) return;
+    this.setState({ proxyType: selected as "http" | "socks5" });
   };
 
   handleTestConnection = async () => {
@@ -524,56 +554,73 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
           <>
             <div className="setting-dialog-new-title" key="proxy-type">
               <Trans>Proxy type</Trans>
-              <select
+              <span
                 className="lang-setting-dropdown"
-                value={proxyType}
-                onChange={(e) =>
-                  this.setState({ proxyType: e.target.value as any })
-                }
-                style={{ textAlign: "left" }}
+                style={{
+                  textAlign: "left",
+                  cursor: "pointer",
+                  color: "inherit",
+                }}
+                onClick={this.handleChangeProxyType}
               >
-                <option value="none">{this.props.t("Disabled")}</option>
-                <option value="http">HTTP</option>
-                <option value="socks5">SOCKS5</option>
-              </select>
+                {proxyType === "socks5" ? "SOCKS5" : "HTTP"}
+                <span
+                  className="icon-close"
+                  style={{
+                    fontSize: "12px",
+                    marginLeft: "6px",
+                    opacity: 0.6,
+                    display: "inline-block",
+                    transform: "rotate(0deg)",
+                  }}
+                />
+              </span>
             </div>
-            <div className="setting-dialog-new-title" key="proxy-host">
-              <Trans>Proxy host</Trans>
+            <div key="proxy-host">
               <input
                 className="token-dialog-username-box"
                 value={proxyHost}
                 onChange={(e) => this.setState({ proxyHost: e.target.value })}
-                placeholder="127.0.0.1"
+                placeholder={this.props.t("Proxy host")}
               />
             </div>
-            <div className="setting-dialog-new-title" key="proxy-port">
-              <Trans>Proxy port</Trans>
+            <div key="proxy-port">
               <input
                 className="token-dialog-username-box"
                 type="number"
                 value={proxyPort}
                 onChange={(e) => this.setState({ proxyPort: e.target.value })}
-                placeholder="1080"
+                placeholder={this.props.t("Proxy port")}
               />
             </div>
-            <div className="setting-dialog-new-title" key="proxy-username">
-              <Trans>Proxy username</Trans>
+            <div key="proxy-username">
               <input
                 className="token-dialog-username-box"
                 value={proxyUsername}
                 onChange={(e) =>
                   this.setState({ proxyUsername: e.target.value })
                 }
+                placeholder={
+                  this.props.t("Proxy username") +
+                  " (" +
+                  this.props.t("Optional") +
+                  ")"
+                }
               />
             </div>
-            <div className="setting-dialog-new-title" key="proxy-password">
-              <Trans>Proxy password</Trans>
+            <div key="proxy-password">
               <input
                 className="token-dialog-username-box"
                 type="password"
                 value={proxyPassword}
                 onChange={(e) =>
                   this.setState({ proxyPassword: e.target.value })
+                }
+                placeholder={
+                  this.props.t("Proxy password") +
+                  " (" +
+                  this.props.t("Optional") +
+                  ")"
                 }
               />
             </div>
