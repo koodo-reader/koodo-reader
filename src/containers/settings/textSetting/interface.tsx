@@ -1,7 +1,7 @@
 import { RouteComponentProps } from "react-router-dom";
 import BookModel from "../../../models/Book";
 
-export type TextRuleType = "replace" | "delete";
+export type TextRuleType = "replace" | "delete" | "highlight";
 export type TextRuleScope = "all" | "book";
 export type TextRuleMatchType = "regex" | "plain";
 
@@ -10,6 +10,8 @@ export interface TextRule {
   type: TextRuleType;
   pattern: string;
   replacement?: string;
+  highlightStyle?: string;
+  highlightColor?: string;
   matchType: TextRuleMatchType;
   scope: TextRuleScope;
   bookKey?: string;
@@ -33,4 +35,6 @@ export interface TextSettingState {
   formMatchType: TextRuleMatchType;
   formScope: TextRuleScope;
   formBookKey: string;
+  formHighlightStyle: string;
+  formHighlightColor: string;
 }
