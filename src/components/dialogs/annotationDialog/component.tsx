@@ -34,13 +34,11 @@ class AnnotationDialog extends React.Component<
       highlighterOpacity: parseFloat(
         ConfigService.getReaderConfig("highlighterOpacity") || "0.4"
       ),
-      shapeType:
-        ConfigService.getReaderConfig("shapeType") || SHAPE_TYPES[0],
+      shapeType: ConfigService.getReaderConfig("shapeType") || SHAPE_TYPES[0],
       shapeColor:
         ConfigService.getReaderConfig("shapeColor") || BRUSH_COLORS[0],
       shapeWidth: parseFloat(
-        ConfigService.getReaderConfig("shapeWidth") ||
-          BRUSH_WIDTHS[1] + ""
+        ConfigService.getReaderConfig("shapeWidth") || BRUSH_WIDTHS[1] + ""
       ),
     };
   }
@@ -113,8 +111,8 @@ class AnnotationDialog extends React.Component<
   renderShapeIcon = (type: string) => {
     const stroke = "currentColor";
     const common = {
-      width: 18,
-      height: 18,
+      width: 22,
+      height: 22,
       viewBox: "0 0 18 18",
       fill: "none",
       stroke,
@@ -137,7 +135,7 @@ class AnnotationDialog extends React.Component<
         );
       case "ellipse":
         return (
-          <svg {...common}>
+          <svg {...common} width={24} height={24}>
             <ellipse cx="9" cy="9" rx="6.5" ry="4" />
           </svg>
         );
@@ -183,7 +181,7 @@ class AnnotationDialog extends React.Component<
           left: "auto",
           top: "auto",
           bottom: "60px",
-          width: "220px",
+          width: "210px",
           height: "320px",
           overflowY: "scroll",
           right: this.props.isSettingLocked ? 370 : 65,
