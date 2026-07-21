@@ -13,6 +13,7 @@ import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import {
+  BRUSH_COLORS,
   BRUSH_WIDTHS,
   getDefaultOcrEngine,
   getDefaultOcrLang,
@@ -321,6 +322,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           brushColor: ConfigService.getReaderConfig("brushColor") || "#FF0000",
           brushWidth: parseFloat(
             ConfigService.getReaderConfig("brushWidth") || BRUSH_WIDTHS[1] + ""
+          ),
+          annotationStyle:
+            ConfigService.getReaderConfig("annotationStyle") || "brush",
+          highlighterColor:
+            ConfigService.getReaderConfig("highlighterColor") ||
+            BRUSH_COLORS[2],
+          highlighterWidth: parseFloat(
+            ConfigService.getReaderConfig("highlighterWidth") ||
+              BRUSH_WIDTHS[1] + ""
+          ),
+          highlighterOpacity: parseFloat(
+            ConfigService.getReaderConfig("highlighterOpacity") || "0.4"
           ),
           isKeepPDFBackground: ConfigService.getReaderConfig(
             "isKeepPDFBackground"
