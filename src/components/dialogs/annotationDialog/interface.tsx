@@ -13,4 +13,7 @@ export interface AnnotationDialogState {
   highlighterColor: string;
   highlighterWidth: number;
   highlighterOpacity: number;
+  shapeType: string;
+  shapeColor: string;
+  shapeWidth: number;
 }

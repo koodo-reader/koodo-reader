@@ -7,6 +7,7 @@ import {
   BRUSH_WIDTHS,
   HIGHLIGHTER_COLORS,
   HIGHLIGHTER_WIDTHS,
+  SHAPE_TYPES,
 } from "../../../utils/common";
 
 class AnnotationDialog extends React.Component<
@@ -32,6 +33,14 @@ class AnnotationDialog extends React.Component<
       ),
       highlighterOpacity: parseFloat(
         ConfigService.getReaderConfig("highlighterOpacity") || "0.4"
+      ),
+      shapeType:
+        ConfigService.getReaderConfig("shapeType") || SHAPE_TYPES[0],
+      shapeColor:
+        ConfigService.getReaderConfig("shapeColor") || BRUSH_COLORS[0],
+      shapeWidth: parseFloat(
+        ConfigService.getReaderConfig("shapeWidth") ||
+          BRUSH_WIDTHS[1] + ""
       ),
     };
   }
@@ -82,6 +91,73 @@ class AnnotationDialog extends React.Component<
       this.state.highlighterOpacity + ""
     );
   };
+  handleSelectShapeType = (shapeType: string) => {
+    this.setState({ shapeType });
+    this.props.htmlBook.rendition.applyAnnotationConfig({ shapeType });
+    ConfigService.setReaderConfig("shapeType", shapeType);
+  };
+  handleSelectShapeColor = (color: string) => {
+    this.setState({ shapeColor: color });
+    this.props.htmlBook.rendition.applyAnnotationConfig({
+      shapeColor: color,
+    });
+    ConfigService.setReaderConfig("shapeColor", color);
+  };
+  handleSelectShapeWidth = (width: number) => {
+    this.setState({ shapeWidth: width });
+    this.props.htmlBook.rendition.applyAnnotationConfig({
+      shapeWidth: width,
+    });
+    ConfigService.setReaderConfig("shapeWidth", width + "");
+  };
+  renderShapeIcon = (type: string) => {
+    const stroke = "currentColor";
+    const common = {
+      width: 18,
+      height: 18,
+      viewBox: "0 0 18 18",
+      fill: "none",
+      stroke,
+      strokeWidth: 2,
+      strokeLinecap: "round" as const,
+      strokeLinejoin: "round" as const,
+    };
+    switch (type) {
+      case "rect":
+        return (
+          <svg {...common}>
+            <rect x="3" y="4" width="12" height="10" rx="1" />
+          </svg>
+        );
+      case "circle":
+        return (
+          <svg {...common}>
+            <circle cx="9" cy="9" r="6" />
+          </svg>
+        );
+      case "ellipse":
+        return (
+          <svg {...common}>
+            <ellipse cx="9" cy="9" rx="6.5" ry="4" />
+          </svg>
+        );
+      case "line":
+        return (
+          <svg {...common}>
+            <line x1="3" y1="14" x2="15" y2="4" />
+          </svg>
+        );
+      case "arrow":
+        return (
+          <svg {...common}>
+            <line x1="3" y1="14" x2="13.5" y2="4.5" />
+            <polyline points="8 4.5 13.5 4.5 13.5 10" />
+          </svg>
+        );
+      default:
+        return null;
+    }
+  };
   handleClose = () => {
     this.props.handleAnnotationDialog(false);
     this.props.htmlBook.rendition.applyAnnotationConfig({
@@ -96,6 +172,9 @@ class AnnotationDialog extends React.Component<
       highlighterColor,
       highlighterWidth,
       highlighterOpacity,
+      shapeType,
+      shapeColor,
+      shapeWidth,
     } = this.state;
     return (
       <div
@@ -142,6 +221,30 @@ class AnnotationDialog extends React.Component<
             title={this.props.t("Highlighter")}
           >
             <span className="icon-highlight annotation-dialog-tab-icon"></span>
+          </span>
+          <span
+            className={
+              annotationStyle === "shape"
+                ? "annotation-dialog-tab active-annotation-dialog-tab"
+                : "annotation-dialog-tab"
+            }
+            onClick={() => this.handleSelectTab("shape")}
+            title={this.props.t("Shape")}
+          >
+            <span className="annotation-dialog-tab-shape">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 18 18"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="4" width="12" height="10" rx="1" />
+              </svg>
+            </span>
           </span>
         </div>
 
@@ -195,7 +298,7 @@ class AnnotationDialog extends React.Component<
               </ul>
             </div>
           </>
-        ) : (
+        ) : annotationStyle === "highlighter" ? (
           <>
             <div className="annotation-dialog-section">
               <div className="annotation-dialog-label">
@@ -274,6 +377,80 @@ class AnnotationDialog extends React.Component<
                 onMouseUp={this.handleOpacityRelease}
                 style={{ width: "100%" }}
               />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="annotation-dialog-section">
+              <div className="annotation-dialog-label">
+                {this.props.t("Shape type")}
+              </div>
+              <ul className="annotation-shape-list">
+                {SHAPE_TYPES.map((type) => (
+                  <li
+                    key={type}
+                    className={
+                      shapeType === type
+                        ? "annotation-shape-item active-annotation-shape-item"
+                        : "annotation-shape-item"
+                    }
+                    onClick={() => this.handleSelectShapeType(type)}
+                    title={this.props.t(
+                      type.charAt(0).toUpperCase() + type.slice(1)
+                    )}
+                  >
+                    {this.renderShapeIcon(type)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="annotation-dialog-section">
+              <div className="annotation-dialog-label">
+                {this.props.t("Shape color")}
+              </div>
+              <ul className="annotation-color-list">
+                {BRUSH_COLORS.map((color) => (
+                  <li
+                    key={color}
+                    className={
+                      shapeColor === color
+                        ? "annotation-color-item active-annotation-color-item"
+                        : "annotation-color-item"
+                    }
+                    style={{ backgroundColor: color }}
+                    onClick={() => this.handleSelectShapeColor(color)}
+                  ></li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="annotation-dialog-section">
+              <div className="annotation-dialog-label">
+                {this.props.t("Shape width")}
+              </div>
+              <ul className="annotation-width-list">
+                {BRUSH_WIDTHS.map((width) => (
+                  <li
+                    key={width}
+                    className={
+                      shapeWidth === width
+                        ? "annotation-width-item active-annotation-width-item"
+                        : "annotation-width-item"
+                    }
+                    onClick={() => this.handleSelectShapeWidth(width)}
+                  >
+                    <span
+                      className="annotation-width-preview"
+                      style={{
+                        backgroundColor: shapeColor,
+                        height: width + "px",
+                        borderRadius: width / 2 + "px",
+                      }}
+                    ></span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </>
         )}
