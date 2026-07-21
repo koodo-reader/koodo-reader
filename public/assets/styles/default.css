@@ -1,4 +1,5 @@
-body {
+body,
+.active-annotation-dialog-tab {
   -webkit-tap-highlight-color: transparent;
   background: rgba(255, 255, 255, 1);
   color: rgba(75, 75, 75, 1);
@@ -124,6 +125,7 @@ a {
 }
 .backup-page-close-icon:hover,
 .sidebar-list-icon:hover,
+.annotation-dialog-tabs,
 .nav-close-icon:hover,
 .setting-close-container:hover,
 .side-menu-hover-container,

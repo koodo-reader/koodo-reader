@@ -30,7 +30,6 @@
 .annotation-dialog-label {
   font-size: 13px;
   margin-bottom: 8px;
-  opacity: 0.75;
 }
 .annotation-color-list {
   display: flex;
@@ -47,7 +46,9 @@
   cursor: pointer;
   box-sizing: border-box;
   border: 2px solid transparent;
-  transition: border-color 0.15s, transform 0.15s;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
 }
 .annotation-color-item:hover {
   transform: scale(1.1);
@@ -73,7 +74,9 @@
   cursor: pointer;
   box-sizing: border-box;
   border: 2px solid transparent;
-  transition: border-color 0.15s, background-color 0.15s;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
 }
 .annotation-width-item:hover {
   background-color: rgba(0, 0, 0, 0.05);
@@ -88,20 +91,23 @@
 .annotation-dialog-tabs {
   display: flex;
   gap: 8px;
-  margin-bottom: 14px;
+  padding: 5px;
+  margin-bottom: 9px;
+  border-radius: 8px;
 }
 .annotation-dialog-tab {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 34px;
+  height: 24px;
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
   cursor: pointer;
-  opacity: 0.6;
   box-sizing: border-box;
-  transition: opacity 0.15s, background-color 0.15s, border-color 0.15s;
+  transition:
+    opacity 0.15s,
+    background-color 0.15s,
+    border-color 0.15s;
   user-select: none;
 }
 .annotation-dialog-tab:hover {
@@ -131,7 +137,6 @@
   justify-content: space-between;
   font-size: 13px;
   margin-bottom: 8px;
-  opacity: 0.75;
 }
 .annotation-opacity-value {
   font-variant-numeric: tabular-nums;
