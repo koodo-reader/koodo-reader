@@ -10,7 +10,10 @@ import { isElectron } from "react-device-detect";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { throttle } from "../../../utils/common";
 
+const SNAP_THRESHOLD = 5; // 吸附阈值（百分比）
+
 const POPUP_SIZE_KEY = "popupBoxSize";
+const POPUP_POS_KEY = "popupBoxPosition";
 const DEFAULT_WIDTH = 500;
 
 function getDefaultHeight(menuMode: string) {
@@ -32,6 +35,11 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
   resizeStartY: number = 0;
   resizeStartWidth: number = 0;
   resizeStartHeight: number = 0;
+  isDragging: boolean = false;
+  dragStartX: number = 0;
+  dragStartY: number = 0;
+  dragStartLeft: number = 0;
+  dragStartBottom: number = 0;
 
   constructor(props: PopupBoxProps) {
     super(props);
@@ -41,6 +49,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     this.mode = "";
 
     const savedSize = this.getSavedSize();
+    const savedPos = this.getSavedPosition();
     this.state = {
       deleteKey: "",
       rect: this.props.rect,
@@ -49,6 +58,11 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       popupHeight: savedSize
         ? savedSize.height
         : getDefaultHeight(props.menuMode),
+      popupLeft: savedPos ? savedPos.left : 50,
+      popupBottom: savedPos ? savedPos.bottom : 0,
+      isDragging: false,
+      dragStartX: 0,
+      dragStartY: 0,
     };
   }
 
@@ -72,6 +86,26 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     } catch (e) {}
   }
 
+  getSavedPosition(): { left: number; bottom: number } | null {
+    try {
+      const saved = ConfigService.getReaderConfig(POPUP_POS_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.left !== undefined && parsed.bottom !== undefined) return parsed;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  savePositionToConfig(left: number, bottom: number) {
+    try {
+      ConfigService.setReaderConfig(
+        POPUP_POS_KEY,
+        JSON.stringify({ left, bottom })
+      );
+    } catch (e) {}
+  }
+
   componentDidMount(): void {
     if (isElectron) {
       const { ipcRenderer } = window.require("electron");
@@ -80,14 +114,17 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       });
       this.setState({ isShowUrl });
     }
-    const throttledMouseMove = throttle(this.handleResizeMove, 100);
-    document.addEventListener("mousemove", throttledMouseMove);
+    document.addEventListener("mousemove", this.handleResizeMove);
+    document.addEventListener("mousemove", this.handleDragMove);
     document.addEventListener("mouseup", this.handleResizeEnd);
+    document.addEventListener("mouseup", this.handleDragEnd);
   }
 
   componentWillUnmount(): void {
     document.removeEventListener("mousemove", this.handleResizeMove);
+    document.removeEventListener("mousemove", this.handleDragMove);
     document.removeEventListener("mouseup", this.handleResizeEnd);
+    document.removeEventListener("mouseup", this.handleDragEnd);
   }
 
   handleResizeStart = (e: React.MouseEvent) => {
@@ -116,6 +153,37 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     this.saveSizeToConfig(this.state.popupWidth, this.state.popupHeight);
   };
 
+  handleDragStart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.isDragging = true;
+    this.dragStartX = e.clientX;
+    this.dragStartY = e.clientY;
+    this.dragStartLeft = this.state.popupLeft;
+    this.dragStartBottom = this.state.popupBottom;
+  };
+
+  handleDragMove = (e: MouseEvent) => {
+    if (!this.isDragging) return;
+    const dx = e.clientX - this.dragStartX;
+    const dy = e.clientY - this.dragStartY;
+    const newLeft = Math.max(0, Math.min(100, this.dragStartLeft + (dx / window.innerWidth) * 100));
+    const newBottom = Math.max(0, this.dragStartBottom - (dy / window.innerHeight) * 100);
+    this.setState({ popupLeft: newLeft, popupBottom: newBottom });
+  };
+
+  handleDragEnd = (_e: MouseEvent) => {
+    if (!this.isDragging) return;
+    this.isDragging = false;
+    let { popupLeft, popupBottom } = this.state;
+    // 靠近底部时自动吸附回底部
+    if (popupBottom < SNAP_THRESHOLD) {
+      popupBottom = 0;
+    }
+    this.setState({ popupLeft, popupBottom });
+    this.savePositionToConfig(popupLeft, popupBottom);
+  };
+
   handleClose() {
     this.props.handleOpenMenu(false);
     this.props.handleNoteKey("");
@@ -132,7 +200,8 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
     };
-    const { popupWidth, popupHeight } = this.state;
+    const { popupWidth, popupHeight, popupLeft, popupBottom } = this.state;
+    const isAtBottom = popupBottom === 0;
     return (
       <div
         style={{
@@ -154,7 +223,11 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
                   : 0,
             width: popupWidth,
             height: popupHeight,
-            left: `calc(50% - ${popupWidth / 2}px)`,
+            left: `${popupLeft}%`,
+            bottom: `${popupBottom}%`,
+            transform: "translateX(-50%)",
+            borderBottomLeftRadius: isAtBottom ? 0 : 10,
+            borderBottomRightRadius: isAtBottom ? 0 : 10,
           }}
         >
           {this.props.menuMode === "note" ? (
@@ -173,6 +246,13 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
             }}
             style={{ top: "-30px", left: "calc(50% - 10px)" }}
           ></span>
+          <div
+            className="popup-drag-handle"
+            onMouseDown={this.handleDragStart}
+            title="移动"
+          >
+            <span className="icon-menu"></span>
+          </div>
           <div
             className="popup-resize-handle"
             onMouseDown={this.handleResizeStart}

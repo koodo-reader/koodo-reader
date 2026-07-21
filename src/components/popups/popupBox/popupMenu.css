@@ -2,10 +2,11 @@
   opacity: 1;
   border-radius: 10px;
   position: absolute;
-  bottom: 0px;
   width: 500px;
   height: 320px;
-  left: calc(50% - 250px);
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
   z-index: 10;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
@@ -30,6 +31,23 @@
   border-top: 3px solid rgba(128, 128, 128, 0.6);
   border-right: 3px solid rgba(128, 128, 128, 0.6);
   border-radius: 0 6px 0 0;
+}
+.popup-drag-handle {
+  position: absolute;
+  top: 0;
+  right: 24px;
+  width: 18px;
+  height: 18px;
+  cursor: move;
+  z-index: 20;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.popup-drag-handle .icon-menu {
+  font-size: 14px;
+  color: rgba(128, 128, 128, 0.6);
 }
 @media screen and (max-width: 576px) {
   .popup-box-container {
