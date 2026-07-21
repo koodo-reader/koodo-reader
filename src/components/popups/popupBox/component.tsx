@@ -8,9 +8,8 @@ import { getIframeDoc } from "../../../utils/reader/docUtil";
 import PopupAssist from "../popupAssist";
 import { isElectron } from "react-device-detect";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { throttle } from "../../../utils/common";
 
-const SNAP_THRESHOLD = 5; // 吸附阈值（百分比）
+const SNAP_THRESHOLD_PX = 20; // 底部吸附阈值（像素）
 
 const POPUP_SIZE_KEY = "popupBoxSize";
 const POPUP_POS_KEY = "popupBoxPosition";
@@ -63,6 +62,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       isDragging: false,
       dragStartX: 0,
       dragStartY: 0,
+      isNearBottom: false,
     };
   }
 
@@ -91,7 +91,8 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       const saved = ConfigService.getReaderConfig(POPUP_POS_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.left !== undefined && parsed.bottom !== undefined) return parsed;
+        if (parsed.left !== undefined && parsed.bottom !== undefined)
+          return parsed;
       }
     } catch (e) {}
     return null;
@@ -167,20 +168,32 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     if (!this.isDragging) return;
     const dx = e.clientX - this.dragStartX;
     const dy = e.clientY - this.dragStartY;
-    const newLeft = Math.max(0, Math.min(100, this.dragStartLeft + (dx / window.innerWidth) * 100));
-    const newBottom = Math.max(0, this.dragStartBottom - (dy / window.innerHeight) * 100);
-    this.setState({ popupLeft: newLeft, popupBottom: newBottom });
+    const newLeft = Math.max(
+      0,
+      Math.min(100, this.dragStartLeft + (dx / window.innerWidth) * 100)
+    );
+    const newBottom = Math.max(
+      0,
+      this.dragStartBottom - (dy / window.innerHeight) * 100
+    );
+
+    // 检测是否靠近底部吸附区（像素）
+    const bottomPx = (newBottom / 100) * window.innerHeight;
+    const isNearBottom = bottomPx < SNAP_THRESHOLD_PX;
+
+    this.setState({ popupLeft: newLeft, popupBottom: newBottom, isNearBottom });
   };
 
   handleDragEnd = (_e: MouseEvent) => {
     if (!this.isDragging) return;
     this.isDragging = false;
     let { popupLeft, popupBottom } = this.state;
-    // 靠近底部时自动吸附回底部
-    if (popupBottom < SNAP_THRESHOLD) {
+    // 靠近底部吸附回底部
+    const bottomPx = (popupBottom / 100) * window.innerHeight;
+    if (bottomPx < SNAP_THRESHOLD_PX) {
       popupBottom = 0;
     }
-    this.setState({ popupLeft, popupBottom });
+    this.setState({ popupLeft, popupBottom, isNearBottom: false });
     this.savePositionToConfig(popupLeft, popupBottom);
   };
 
@@ -200,7 +213,8 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
     };
-    const { popupWidth, popupHeight, popupLeft, popupBottom } = this.state;
+    const { popupWidth, popupHeight, popupLeft, popupBottom, isNearBottom } =
+      this.state;
     const isAtBottom = popupBottom === 0;
     return (
       <div
@@ -213,7 +227,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
         }}
       >
         <div
-          className="popup-box-container"
+          className={`popup-box-container`}
           style={{
             marginLeft:
               this.props.isNavLocked && !this.props.isSettingLocked
