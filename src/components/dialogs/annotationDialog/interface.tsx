@@ -7,6 +7,10 @@ export interface AnnotationDialogProps {
 }
 
 export interface AnnotationDialogState {
+  annotationStyle: string;
   brushColor: string;
   brushWidth: number;
+  highlighterColor: string;
+  highlighterWidth: number;
+  highlighterOpacity: number;
 }
