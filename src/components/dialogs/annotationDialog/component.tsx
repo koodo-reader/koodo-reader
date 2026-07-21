@@ -104,7 +104,9 @@ class AnnotationDialog extends React.Component<
           left: "auto",
           top: "auto",
           bottom: "60px",
-          width: "200px",
+          width: "220px",
+          height: "320px",
+          overflowY: "scroll",
           right: this.props.isSettingLocked ? 370 : 65,
         }}
       >
@@ -270,6 +272,7 @@ class AnnotationDialog extends React.Component<
                 }
                 onPointerUp={this.handleOpacityRelease}
                 onMouseUp={this.handleOpacityRelease}
+                style={{ width: "100%" }}
               />
             </div>
           </>
