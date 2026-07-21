@@ -803,6 +803,62 @@ const applyNativeThemeSource = (appSkin) => {
   return getNativeDarkColorStatus();
 };
 applyNativeThemeSource(store.get("appSkin"));
+const buildProxyUrl = (config) => {
+  const authentication =
+    config.username || config.password
+      ? `${encodeURIComponent(config.username || "")}:${encodeURIComponent(config.password || "")}@`
+      : "";
+  const portNumber = parseInt(config.port);
+  return config.type === "socks5"
+    ? `socks5://${authentication}${config.host}:${portNumber}`
+    : `http://${authentication}${config.host}:${portNumber}`;
+};
+const applyProxyToSession = async () => {
+  const { session } = require("electron");
+  const http = require("http");
+  const https = require("https");
+  const config = store.get("proxyConfig");
+  const defaultSession = session.defaultSession;
+  const isEnabled =
+    config && config.type !== "none" && config.enabled !== false && config.host;
+  if (!isEnabled) {
+    await defaultSession.setProxy({ mode: "direct" });
+    https.globalAgent = new https.Agent();
+    http.globalAgent = new http.Agent();
+    return;
+  }
+  const proxyUrl = buildProxyUrl(config);
+  let agent = null;
+  try {
+    if (config.type === "socks5") {
+      const { SocksProxyAgent } = require("socks-proxy-agent");
+      agent = new SocksProxyAgent(proxyUrl);
+    } else {
+      const { HttpsProxyAgent } = require("https-proxy-agent");
+      agent = new HttpsProxyAgent(proxyUrl);
+    }
+  } catch (error) {
+    agent = null;
+  }
+  const authentication =
+    config.username
+      ? `${encodeURIComponent(config.username)}:${encodeURIComponent(config.password || "")}@`
+      : "";
+  if (config.type === "http") {
+    const proxyAddress = `${authentication}${config.host}:${config.port}`;
+    await defaultSession.setProxy({
+      proxyRules: `http=${proxyAddress};https=${proxyAddress}`,
+    });
+  } else if (config.type === "socks5") {
+    await defaultSession.setProxy({
+      proxyRules: `socks5://${config.host}:${config.port}`,
+    });
+  }
+  if (agent) {
+    https.globalAgent = agent;
+    http.globalAgent = agent;
+  }
+};
 // Simple encryption function
 const encrypt = (text, key) => {
   let result = "";
@@ -1414,6 +1470,151 @@ const createMainWin = () => {
       req.end();
     });
   });
+  ipcMain.handle("get-proxy-config", async () => {
+    const config = store.get("proxyConfig") || {
+      enabled: false,
+      type: "none",
+      host: "",
+      port: 0,
+      username: "",
+      password: "",
+    };
+    return config;
+  });
+  ipcMain.handle("set-proxy-config", async (event, config) => {
+    const { enabled, type, host, port, username, password } = config || {};
+    const validTypes = ["none", "http", "socks5"];
+    if (!validTypes.includes(type)) {
+      return { ok: false, reason: "invalid_input" };
+    }
+    if (type !== "none") {
+      if (!host || typeof host !== "string" || host.includes("://")) {
+        return { ok: false, reason: "invalid_input" };
+      }
+      const portNumber = parseInt(port);
+      if (isNaN(portNumber) || portNumber < 1 || portNumber > 65535) {
+        return { ok: false, reason: "invalid_input" };
+      }
+    }
+    const finalEnabled = type === "none" ? false : !!enabled;
+    const configToStore = {
+      enabled: finalEnabled,
+      type,
+      host: type === "none" ? "" : host,
+      port: type === "none" ? 0 : parseInt(port),
+      username: type === "none" ? "" : username || "",
+      password: type === "none" ? "" : password || "",
+    };
+    store.set("proxyConfig", configToStore);
+    await applyProxyToSession();
+    return { ok: true };
+  });
+  ipcMain.handle("test-proxy-connection", async (event, config) => {
+    const https = require("https");
+    const { URL } = require("url");
+    const proxyConfig = config || {};
+    const validTypes = ["http", "socks5"];
+    if (!validTypes.includes(proxyConfig.type)) {
+      return { ok: false, reason: "invalid_input", detail: "unsupported type" };
+    }
+    if (
+      !proxyConfig.host ||
+      typeof proxyConfig.host !== "string" ||
+      proxyConfig.host.includes("://")
+    ) {
+      return { ok: false, reason: "invalid_input", detail: "invalid host" };
+    }
+    const portNumber = parseInt(proxyConfig.port);
+    if (isNaN(portNumber) || portNumber < 1 || portNumber > 65535) {
+      return { ok: false, reason: "invalid_input", detail: "invalid port" };
+    }
+    const proxyUrl = buildProxyUrl(proxyConfig);
+    let agent;
+    try {
+      if (proxyConfig.type === "socks5") {
+        const { SocksProxyAgent } = require("socks-proxy-agent");
+        agent = new SocksProxyAgent(proxyUrl);
+      } else {
+        const { HttpsProxyAgent } = require("https-proxy-agent");
+        agent = new HttpsProxyAgent(proxyUrl);
+      }
+    } catch (error) {
+      return { ok: false, reason: "agent_init_failed", detail: error.message };
+    }
+    const target = new URL("https://www.google.com/");
+    const startTime = Date.now();
+    return new Promise((resolve) => {
+      const options = {
+        hostname: target.hostname,
+        port: 443,
+        path: "/",
+        method: "HEAD",
+        timeout: 10000,
+        agent,
+        rejectUnauthorized: true,
+      };
+      const request = https.request(options, (response) => {
+        const elapsedMs = Date.now() - startTime;
+        if (response.statusCode === 407) {
+          return resolve({
+            ok: false,
+            reason: "proxy_auth_failed",
+            status: 407,
+            elapsedMs,
+            detail: `HTTP 407 Proxy Authentication Required`,
+          });
+        }
+        resolve({
+          ok:
+            response.statusCode &&
+            response.statusCode >= 200 &&
+            response.statusCode < 400,
+          status: response.statusCode,
+          elapsedMs,
+          detail: `HTTP ${response.statusCode}`,
+        });
+      });
+      request.on("timeout", () => {
+        request.destroy();
+        resolve({
+          ok: false,
+          reason: "timeout",
+          elapsedMs: Date.now() - startTime,
+          detail: `Connection to ${target.hostname} timed out after 10s`,
+        });
+      });
+      request.on("error", (error) => {
+        let reason = "unknown";
+        if (error.code === "ENOTFOUND") {
+          reason = "dns_failed";
+        } else if (error.code === "ECONNREFUSED") {
+          reason = "connection_refused";
+        } else if (error.code === "ECONNRESET") {
+          reason = "connection_reset";
+        } else if (error.code === "ETIMEDOUT") {
+          reason = "timeout";
+        } else if (error.code === "EPROTO") {
+          reason = "ssl_error";
+        } else if (
+          error.code === "CERT_HAS_EXPIRED" ||
+          error.code === "ERR_TLS_CERT_ALTNAME_INVALID" ||
+          error.code === "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
+        ) {
+          reason = "ssl_error";
+        } else if (error.message && error.message.includes("SSL")) {
+          reason = "ssl_error";
+        }
+        resolve({
+          ok: false,
+          reason,
+          code: error.code || "",
+          elapsedMs: Date.now() - startTime,
+          detail: error.message,
+        });
+      });
+      request.end();
+    });
+  });
   ipcMain.handle("get-mac", async (event, config) => {
     const { machineIdSync } = require("node-machine-id");
     return machineIdSync();
@@ -2012,7 +2213,8 @@ const createMainWin = () => {
   });
 };
 
-app.on("ready", () => {
+app.on("ready", async () => {
+  await applyProxyToSession();
   createMainWin();
 });
 app.on("before-quit", () => {

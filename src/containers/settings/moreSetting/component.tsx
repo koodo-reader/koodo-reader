@@ -27,6 +27,13 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
       pinValue: "",
       pinFirstValue: "",
       pinCallback: null,
+      proxyEnabled: false,
+      proxyType: "none",
+      proxyHost: "",
+      proxyPort: "",
+      proxyUsername: "",
+      proxyPassword: "",
+      isTestingProxy: false,
     };
   }
 
@@ -40,6 +47,20 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
         biometricAvailable: biometricCapability.available,
       });
     });
+    if (window.require) {
+      const { ipcRenderer } = window.require("electron");
+      ipcRenderer.invoke("get-proxy-config").then((cfg: any) => {
+        if (!cfg) return;
+        this.setState({
+          proxyEnabled: cfg.enabled && cfg.type !== "none",
+          proxyType: cfg.type || "none",
+          proxyHost: cfg.host || "",
+          proxyPort: cfg.port ? String(cfg.port) : "",
+          proxyUsername: cfg.username || "",
+          proxyPassword: cfg.password || "",
+        });
+      });
+    }
   }
 
   showPinKeypad = (mode: "setup" | "verify"): Promise<string | false> => {
@@ -206,6 +227,109 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
     }
   };
 
+  handleToggleProxy = () => {
+    this.setState(
+      (s) => ({ proxyEnabled: !s.proxyEnabled }),
+      () => {
+        if (!this.state.proxyEnabled && window.require) {
+          const { ipcRenderer } = window.require("electron");
+          ipcRenderer.invoke("set-proxy-config", {
+            enabled: false,
+            type: "none",
+            host: "",
+            port: 0,
+            username: "",
+            password: "",
+          });
+        }
+      }
+    );
+  };
+
+  handleTestConnection = async () => {
+    const { proxyType, proxyHost, proxyPort, proxyUsername, proxyPassword } =
+      this.state;
+    if (!proxyHost || !proxyPort) {
+      toast.error(this.props.t("Please enter host and port"));
+      return;
+    }
+    const portNum = parseInt(proxyPort);
+    if (isNaN(portNum) || portNum < 1 || portNum > 65535) {
+      toast.error(this.props.t("Please enter host and port"));
+      return;
+    }
+    if (!window.require) return;
+    const { ipcRenderer } = window.require("electron");
+    this.setState({ isTestingProxy: true });
+    toast.loading(this.props.t("Testing connection..."), {
+      id: "proxy-test-id",
+    });
+    try {
+      const res = await ipcRenderer.invoke("test-proxy-connection", {
+        type: proxyType,
+        host: proxyHost,
+        port: portNum,
+        username: proxyUsername,
+        password: proxyPassword,
+      });
+      if (res && res.ok) {
+        toast.success(
+          this.props.t("Connection successful") + ` (${res.elapsedMs}ms)`,
+          { id: "proxy-test-id" }
+        );
+      } else {
+        toast.error(
+          this.props.t("Connection failed") +
+            `: ${res?.reason || res?.detail || ""}`,
+          { id: "proxy-test-id" }
+        );
+      }
+    } catch (e) {
+      toast.error(this.props.t("Connection failed"), { id: "proxy-test-id" });
+    } finally {
+      this.setState({ isTestingProxy: false });
+    }
+  };
+
+  handleSaveProxyConfig = async () => {
+    const {
+      proxyEnabled,
+      proxyType,
+      proxyHost,
+      proxyPort,
+      proxyUsername,
+      proxyPassword,
+    } = this.state;
+    if (!proxyHost || !proxyPort) {
+      toast.error(this.props.t("Please enter host and port"));
+      return;
+    }
+    const portNum = parseInt(proxyPort);
+    if (isNaN(portNum) || portNum < 1 || portNum > 65535) {
+      toast.error(this.props.t("Please enter host and port"));
+      return;
+    }
+    if (!window.require) return;
+    const { ipcRenderer } = window.require("electron");
+    try {
+      const res = await ipcRenderer.invoke("set-proxy-config", {
+        enabled: proxyEnabled,
+        type: proxyType,
+        host: proxyHost,
+        port: portNum,
+        username: proxyUsername,
+        password: proxyPassword,
+      });
+      if (res && res.ok) {
+        toast.success(this.props.t("Save"));
+      } else {
+        toast.error(this.props.t("Save failed"));
+      }
+    } catch (e) {
+      toast.error(this.props.t("Save failed"));
+    }
+  };
+
   renderPinKeypad() {
     const { pinInputMode, pinValue } = this.state;
     if (pinInputMode === "none") return null;
@@ -285,10 +409,22 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
   }
 
   render() {
-    const { protectionMethod, biometricAvailable } = this.state;
+    const {
+      protectionMethod,
+      biometricAvailable,
+      proxyEnabled,
+      proxyType,
+      proxyHost,
+      proxyPort,
+      proxyUsername,
+      proxyPassword,
+      isTestingProxy,
+    } = this.state;
     const isEnabled = !!protectionMethod;
     const showBiometricOption =
       biometricAvailable || protectionMethod === "biometric";
+    const showSocksAuthWarning =
+      proxyType === "socks5" && (proxyUsername || proxyPassword);
 
     return (
       <>
@@ -352,6 +488,136 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
                 <Trans>Use Touch ID or Windows Hello to protect the app</Trans>
               )}
             </p>
+          </>
+        )}
+
+        <div className="setting-dialog-new-title" key="proxy-toggle">
+          <span style={{ width: "calc(100% - 100px)" }}>
+            <Trans>Network proxy</Trans>
+          </span>
+          <span
+            className="single-control-switch"
+            onClick={this.handleToggleProxy}
+            style={proxyEnabled ? {} : { opacity: 0.6 }}
+          >
+            <span
+              className="single-control-button"
+              style={
+                proxyEnabled
+                  ? {
+                      transform: "translateX(20px)",
+                      transition: "transform 0.5s ease",
+                    }
+                  : {
+                      transform: "translateX(0px)",
+                      transition: "transform 0.5s ease",
+                    }
+              }
+            />
+          </span>
+        </div>
+        <p className="setting-option-subtitle">
+          <Trans>Route all network requests through a proxy</Trans>
+        </p>
+
+        {proxyEnabled && (
+          <>
+            <div className="setting-dialog-new-title" key="proxy-type">
+              <Trans>Proxy type</Trans>
+              <select
+                className="lang-setting-dropdown"
+                value={proxyType}
+                onChange={(e) =>
+                  this.setState({ proxyType: e.target.value as any })
+                }
+                style={{ textAlign: "left" }}
+              >
+                <option value="none">{this.props.t("Disabled")}</option>
+                <option value="http">HTTP</option>
+                <option value="socks5">SOCKS5</option>
+              </select>
+            </div>
+            <div className="setting-dialog-new-title" key="proxy-host">
+              <Trans>Proxy host</Trans>
+              <input
+                className="token-dialog-username-box"
+                value={proxyHost}
+                onChange={(e) => this.setState({ proxyHost: e.target.value })}
+                placeholder="127.0.0.1"
+              />
+            </div>
+            <div className="setting-dialog-new-title" key="proxy-port">
+              <Trans>Proxy port</Trans>
+              <input
+                className="token-dialog-username-box"
+                type="number"
+                value={proxyPort}
+                onChange={(e) => this.setState({ proxyPort: e.target.value })}
+                placeholder="1080"
+              />
+            </div>
+            <div className="setting-dialog-new-title" key="proxy-username">
+              <Trans>Proxy username</Trans>
+              <input
+                className="token-dialog-username-box"
+                value={proxyUsername}
+                onChange={(e) =>
+                  this.setState({ proxyUsername: e.target.value })
+                }
+              />
+            </div>
+            <div className="setting-dialog-new-title" key="proxy-password">
+              <Trans>Proxy password</Trans>
+              <input
+                className="token-dialog-username-box"
+                type="password"
+                value={proxyPassword}
+                onChange={(e) =>
+                  this.setState({ proxyPassword: e.target.value })
+                }
+              />
+            </div>
+            {showSocksAuthWarning && (
+              <p
+                className="setting-option-subtitle"
+                style={{ color: "#d6732d" }}
+              >
+                <Trans>
+                  SOCKS5 authentication is not supported for in-app requests;
+                  use HTTP proxy instead
+                </Trans>
+              </p>
+            )}
+            <div
+              className="setting-dialog-new-title"
+              key="proxy-actions"
+              style={{ display: "flex", gap: "8px" }}
+            >
+              <div
+                className="voice-add-confirm"
+                style={{
+                  marginRight: "10px",
+                  opacity: isTestingProxy || !proxyHost ? 0.5 : 1,
+                  pointerEvents:
+                    isTestingProxy || !proxyHost ? "none" : "auto",
+                }}
+                onClick={this.handleTestConnection}
+              >
+                {isTestingProxy
+                  ? this.props.t("Testing connection...")
+                  : this.props.t("Test connection")}
+              </div>
+              <div
+                className="voice-add-confirm"
+                style={{
+                  opacity: !proxyHost ? 0.5 : 1,
+                  pointerEvents: !proxyHost ? "none" : "auto",
+                }}
+                onClick={this.handleSaveProxyConfig}
+              >
+                {this.props.t("Save")}
+              </div>
+            </div>
           </>
         )}
       </>
