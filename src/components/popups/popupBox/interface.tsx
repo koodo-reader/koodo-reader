@@ -25,4 +25,9 @@ export interface PopupBoxStates {
   isShowUrl: boolean;
   popupWidth: number;
   popupHeight: number;
+  popupLeft: number;
+  popupBottom: number;
+  isDragging: boolean;
+  dragStartX: number;
+  dragStartY: number;
 }
