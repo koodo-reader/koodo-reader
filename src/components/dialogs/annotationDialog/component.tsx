@@ -2,7 +2,12 @@ import React from "react";
 import { AnnotationDialogProps, AnnotationDialogState } from "./interface";
 import "./annotationDialog.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { BRUSH_COLORS, BRUSH_WIDTHS } from "../../../utils/common";
+import {
+  BRUSH_COLORS,
+  BRUSH_WIDTHS,
+  HIGHLIGHTER_COLORS,
+  HIGHLIGHTER_WIDTHS,
+} from "../../../utils/common";
 
 class AnnotationDialog extends React.Component<
   AnnotationDialogProps,
@@ -19,10 +24,11 @@ class AnnotationDialog extends React.Component<
         ConfigService.getReaderConfig("brushWidth") || BRUSH_WIDTHS[1] + ""
       ),
       highlighterColor:
-        ConfigService.getReaderConfig("highlighterColor") || BRUSH_COLORS[2],
+        ConfigService.getReaderConfig("highlighterColor") ||
+        HIGHLIGHTER_COLORS[0],
       highlighterWidth: parseFloat(
         ConfigService.getReaderConfig("highlighterWidth") ||
-          BRUSH_WIDTHS[1] + ""
+          HIGHLIGHTER_WIDTHS[1] + ""
       ),
       highlighterOpacity: parseFloat(
         ConfigService.getReaderConfig("highlighterOpacity") || "0.4"
@@ -194,7 +200,7 @@ class AnnotationDialog extends React.Component<
                 {this.props.t("Highlighter color")}
               </div>
               <ul className="annotation-color-list">
-                {BRUSH_COLORS.map((color) => (
+                {HIGHLIGHTER_COLORS.map((color) => (
                   <li
                     key={color}
                     className={
@@ -221,7 +227,7 @@ class AnnotationDialog extends React.Component<
                 {this.props.t("Highlighter width")}
               </div>
               <ul className="annotation-width-list">
-                {BRUSH_WIDTHS.map((width) => (
+                {HIGHLIGHTER_WIDTHS.map((width) => (
                   <li
                     key={width}
                     className={

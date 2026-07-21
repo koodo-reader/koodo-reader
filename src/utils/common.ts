@@ -1983,6 +1983,17 @@ export const BRUSH_COLORS = [
 ];
 
 export const BRUSH_WIDTHS = [2, 4, 8, 14];
+export const HIGHLIGHTER_COLORS = [
+  "#FFE54C",
+  "#6FFB6B",
+  "#FF8AD1",
+  "#FFB05C",
+  "#6CF2FF",
+  "#C9A3FF",
+  "#FF8A8A",
+  "#7AB5FF",
+];
+export const HIGHLIGHTER_WIDTHS = [4, 8, 14, 20];
 export const getDefaultOcrEngine = (currentBook: any) => {
   const engine = ConfigService.getReaderConfig(
     currentBook.description.indexOf("scanned") > -1

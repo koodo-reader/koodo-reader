@@ -15,6 +15,8 @@ import PageWidget from "../pageWidget";
 import {
   BRUSH_COLORS,
   BRUSH_WIDTHS,
+  HIGHLIGHTER_COLORS,
+  HIGHLIGHTER_WIDTHS,
   getDefaultOcrEngine,
   getDefaultOcrLang,
   getPageWidth,
@@ -319,7 +321,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             this.props.currentBook.description.indexOf("scanned") > -1
               ? "yes"
               : "no",
-          brushColor: ConfigService.getReaderConfig("brushColor") || "#FF0000",
+          brushColor:
+            ConfigService.getReaderConfig("brushColor") || BRUSH_COLORS[0],
           brushWidth: parseFloat(
             ConfigService.getReaderConfig("brushWidth") || BRUSH_WIDTHS[1] + ""
           ),
@@ -327,10 +330,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             ConfigService.getReaderConfig("annotationStyle") || "brush",
           highlighterColor:
             ConfigService.getReaderConfig("highlighterColor") ||
-            BRUSH_COLORS[2],
+            HIGHLIGHTER_COLORS[0],
           highlighterWidth: parseFloat(
             ConfigService.getReaderConfig("highlighterWidth") ||
-              BRUSH_WIDTHS[1] + ""
+              HIGHLIGHTER_WIDTHS[1] + ""
           ),
           highlighterOpacity: parseFloat(
             ConfigService.getReaderConfig("highlighterOpacity") || "0.4"
