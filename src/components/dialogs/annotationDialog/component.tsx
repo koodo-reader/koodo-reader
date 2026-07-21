@@ -43,8 +43,7 @@ class AnnotationDialog extends React.Component<
         ConfigService.getReaderConfig("annotationHighlighterOpacity") || "0.4"
       ),
       annotationShapeType:
-        ConfigService.getReaderConfig("annotationShapeType") ||
-        SHAPE_TYPES[0],
+        ConfigService.getReaderConfig("annotationShapeType") || SHAPE_TYPES[0],
       annotationShapeColor:
         ConfigService.getReaderConfig("annotationShapeColor") ||
         BRUSH_COLORS[0],
@@ -58,8 +57,7 @@ class AnnotationDialog extends React.Component<
       annotationTextFont:
         ConfigService.getReaderConfig("annotationTextFont") || "sans-serif",
       annotationTextColor:
-        ConfigService.getReaderConfig("annotationTextColor") ||
-        TEXT_COLORS[0],
+        ConfigService.getReaderConfig("annotationTextColor") || TEXT_COLORS[0],
       fontOptions: [],
     };
   }
@@ -272,7 +270,10 @@ class AnnotationDialog extends React.Component<
             onClick={() => this.handleSelectTab("brush")}
             title={this.props.t("Brush")}
           >
-            <span className="icon-edit annotation-dialog-tab-icon"></span>
+            <span
+              className="icon-edit-line annotation-dialog-tab-icon"
+              style={{ fontSize: "20px" }}
+            ></span>
           </span>
           <span
             className={
@@ -283,7 +284,10 @@ class AnnotationDialog extends React.Component<
             onClick={() => this.handleSelectTab("highlighter")}
             title={this.props.t("Highlighter")}
           >
-            <span className="icon-highlight annotation-dialog-tab-icon"></span>
+            <span
+              className="icon-highlight-line annotation-dialog-tab-icon"
+              style={{ fontSize: "20px" }}
+            ></span>
           </span>
           <span
             className={
@@ -296,12 +300,12 @@ class AnnotationDialog extends React.Component<
           >
             <span className="annotation-dialog-tab-shape">
               <svg
-                width="16"
-                height="16"
+                width="20"
+                height="20"
                 viewBox="0 0 18 18"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
