@@ -334,7 +334,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             </div>
             <ul
               className="tts-highlight-style-tabs"
-              style={{ marginLeft: "0", marginTop: "8px" }}
+              style={{ marginLeft: "-10px", marginTop: "8px" }}
             >
               {HIGHLIGHT_STYLE_TYPES.map(
                 (item: { value: string; label: string }) => {
@@ -377,7 +377,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             </ul>
             <ul
               className="tts-highlight-color-container"
-              style={{ marginLeft: "0" }}
+              style={{ marginLeft: "10px" }}
             >
               {presetColors.map((color: string, index: number) => (
                 <li
