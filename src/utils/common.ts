@@ -1995,6 +1995,19 @@ export const HIGHLIGHTER_COLORS = [
 ];
 export const HIGHLIGHTER_WIDTHS = [4, 8, 14, 20];
 export const SHAPE_TYPES = ["rect", "circle", "ellipse", "line", "arrow"];
+export const TEXT_SIZE_MIN = 12;
+export const TEXT_SIZE_MAX = 72;
+export const TEXT_SIZE_STEP = 1;
+export const TEXT_COLORS = [
+  "#E53131",
+  "#F08C00",
+  "#F5C400",
+  "#1FA861",
+  "#1B8CF0",
+  "#6C5CE7",
+  "#E54394",
+  "#2C2C2C",
+];
 export const getDefaultOcrEngine = (currentBook: any) => {
   const engine = ConfigService.getReaderConfig(
     currentBook.description.indexOf("scanned") > -1
