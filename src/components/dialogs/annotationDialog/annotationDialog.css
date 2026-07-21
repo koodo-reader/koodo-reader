@@ -121,6 +121,41 @@
 .annotation-dialog-tab-icon {
   font-size: 18px;
 }
+.annotation-dialog-tab-shape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+.annotation-shape-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.annotation-shape-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  color: var(--text-color, inherit);
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+.annotation-shape-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.active-annotation-shape-item {
+  border-color: rgba(0, 0, 0, 0.4);
+}
 .annotation-color-fill {
   display: block;
   width: 100%;

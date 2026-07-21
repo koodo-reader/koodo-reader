@@ -1994,6 +1994,7 @@ export const HIGHLIGHTER_COLORS = [
   "#7AB5FF",
 ];
 export const HIGHLIGHTER_WIDTHS = [4, 8, 14, 20];
+export const SHAPE_TYPES = ["rect", "circle", "ellipse", "line", "arrow"];
 export const getDefaultOcrEngine = (currentBook: any) => {
   const engine = ConfigService.getReaderConfig(
     currentBook.description.indexOf("scanned") > -1
