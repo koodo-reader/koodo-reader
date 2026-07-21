@@ -14,11 +14,7 @@ import {
   setProtectionPassword,
   setProtectionPin,
 } from "../../../utils/reader/protectionUtil";
-import {
-  vexPasswordInputAsync,
-  vexSelectAsync,
-  vexComfirmAsync,
-} from "../../../utils/common";
+import { vexPasswordInputAsync, vexSelectAsync } from "../../../utils/common";
 import i18n from "../../../i18n";
 
 class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
@@ -38,6 +34,7 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
       proxyUsername: "",
       proxyPassword: "",
       isTestingProxy: false,
+      proxyEditing: false,
     };
   }
 
@@ -231,15 +228,17 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
     }
   };
 
-  handleToggleProxy = async () => {
+  handleToggleProxy = () => {
     if (this.state.proxyEnabled) {
-      const confirmed = await vexComfirmAsync(
-        "Disable network proxy?",
-        "Confirm",
-        "Cancel"
-      );
-      if (!confirmed) return;
-      this.setState({ proxyEnabled: false, proxyType: "none" });
+      this.setState({
+        proxyEnabled: false,
+        proxyType: "none",
+        proxyHost: "",
+        proxyPort: "",
+        proxyUsername: "",
+        proxyPassword: "",
+        proxyEditing: false,
+      });
       if (window.require) {
         const { ipcRenderer } = window.require("electron");
         ipcRenderer.invoke("set-proxy-config", {
@@ -254,26 +253,27 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
       toast.success(this.props.t("Change successful"));
       return;
     }
-    const typeOptions: { value: string; label: string }[] = [
-      { value: "http", label: "HTTP" },
-      { value: "socks5", label: "SOCKS5" },
-    ];
-    const selected = await vexSelectAsync("Select proxy type", typeOptions);
-    if (!selected) return;
     this.setState({
       proxyEnabled: true,
-      proxyType: selected as "http" | "socks5",
+      proxyType: "http",
+      proxyHost: "",
+      proxyPort: "",
+      proxyUsername: "",
+      proxyPassword: "",
+      proxyEditing: true,
     });
   };
 
-  handleChangeProxyType = async () => {
-    const typeOptions: { value: string; label: string }[] = [
-      { value: "http", label: "HTTP" },
-      { value: "socks5", label: "SOCKS5" },
-    ];
-    const selected = await vexSelectAsync("Select proxy type", typeOptions);
-    if (!selected) return;
-    this.setState({ proxyType: selected as "http" | "socks5" });
+  handleChangeProxyType = (newType: "http" | "socks5") => {
+    if (newType === this.state.proxyType) return;
+    this.setState({
+      proxyType: newType,
+      proxyHost: "",
+      proxyPort: "",
+      proxyUsername: "",
+      proxyPassword: "",
+      proxyEditing: true,
+    });
   };
 
   handleTestConnection = async () => {
@@ -351,6 +351,7 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
         password: proxyPassword,
       });
       if (res && res.ok) {
+        this.setState({ proxyEditing: false });
         toast.success(this.props.t("Save"));
       } else {
         toast.error(this.props.t("Save failed"));
@@ -401,9 +402,7 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
           <div className="pin-keypad-grid">
             {digits.map((d, idx) => {
               if (d === null) {
-                return (
-                  <span key={idx} className="pin-key pin-key-empty" />
-                );
+                return <span key={idx} className="pin-key pin-key-empty" />;
               }
               if (d === "del") {
                 return (
@@ -449,6 +448,7 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
       proxyUsername,
       proxyPassword,
       isTestingProxy,
+      proxyEditing,
     } = this.state;
     const isEnabled = !!protectionMethod;
     const showBiometricOption =
@@ -554,117 +554,124 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
           <>
             <div className="setting-dialog-new-title" key="proxy-type">
               <Trans>Proxy type</Trans>
-              <span
+              <select
                 className="lang-setting-dropdown"
-                style={{
-                  textAlign: "left",
-                  cursor: "pointer",
-                  color: "inherit",
-                }}
-                onClick={this.handleChangeProxyType}
+                value={proxyType}
+                onChange={(e) =>
+                  this.handleChangeProxyType(
+                    e.target.value as "http" | "socks5"
+                  )
+                }
+                style={{ textAlign: "left" }}
               >
-                {proxyType === "socks5" ? "SOCKS5" : "HTTP"}
-                <span
-                  className="icon-close"
+                <option value="http">HTTP</option>
+                <option value="socks5">SOCKS5</option>
+              </select>
+            </div>
+            {proxyEditing && (
+              <div
+                style={{
+                  marginLeft: "25px",
+                  marginRight: "25px",
+                }}
+              >
+                <div key="proxy-host">
+                  <input
+                    className="token-dialog-username-box"
+                    value={proxyHost}
+                    onChange={(e) =>
+                      this.setState({ proxyHost: e.target.value })
+                    }
+                    placeholder={this.props.t("Proxy host")}
+                  />
+                </div>
+                <div key="proxy-port">
+                  <input
+                    className="token-dialog-username-box"
+                    type="number"
+                    value={proxyPort}
+                    onChange={(e) =>
+                      this.setState({ proxyPort: e.target.value })
+                    }
+                    placeholder={this.props.t("Proxy port")}
+                  />
+                </div>
+                <div key="proxy-username">
+                  <input
+                    className="token-dialog-username-box"
+                    value={proxyUsername}
+                    onChange={(e) =>
+                      this.setState({ proxyUsername: e.target.value })
+                    }
+                    placeholder={
+                      this.props.t("Proxy username") +
+                      " (" +
+                      this.props.t("Optional") +
+                      ")"
+                    }
+                  />
+                </div>
+                <div key="proxy-password">
+                  <input
+                    className="token-dialog-username-box"
+                    type="password"
+                    value={proxyPassword}
+                    onChange={(e) =>
+                      this.setState({ proxyPassword: e.target.value })
+                    }
+                    placeholder={
+                      this.props.t("Proxy password") +
+                      " (" +
+                      this.props.t("Optional") +
+                      ")"
+                    }
+                  />
+                </div>
+                {showSocksAuthWarning && (
+                  <p
+                    className="setting-option-subtitle"
+                    style={{ color: "#d6732d" }}
+                  >
+                    <Trans>
+                      SOCKS5 authentication is not supported for in-app
+                      requests; use HTTP proxy instead
+                    </Trans>
+                  </p>
+                )}
+                <div
+                  className="setting-dialog-new-title"
+                  key="proxy-actions"
                   style={{
-                    fontSize: "12px",
-                    marginLeft: "6px",
-                    opacity: 0.6,
-                    display: "inline-block",
-                    transform: "rotate(0deg)",
+                    display: "flex",
+                    gap: "8px",
+                    margin: "0px",
+                    marginTop: "20px",
+                    width: "100%",
                   }}
-                />
-              </span>
-            </div>
-            <div key="proxy-host">
-              <input
-                className="token-dialog-username-box"
-                value={proxyHost}
-                onChange={(e) => this.setState({ proxyHost: e.target.value })}
-                placeholder={this.props.t("Proxy host")}
-              />
-            </div>
-            <div key="proxy-port">
-              <input
-                className="token-dialog-username-box"
-                type="number"
-                value={proxyPort}
-                onChange={(e) => this.setState({ proxyPort: e.target.value })}
-                placeholder={this.props.t("Proxy port")}
-              />
-            </div>
-            <div key="proxy-username">
-              <input
-                className="token-dialog-username-box"
-                value={proxyUsername}
-                onChange={(e) =>
-                  this.setState({ proxyUsername: e.target.value })
-                }
-                placeholder={
-                  this.props.t("Proxy username") +
-                  " (" +
-                  this.props.t("Optional") +
-                  ")"
-                }
-              />
-            </div>
-            <div key="proxy-password">
-              <input
-                className="token-dialog-username-box"
-                type="password"
-                value={proxyPassword}
-                onChange={(e) =>
-                  this.setState({ proxyPassword: e.target.value })
-                }
-                placeholder={
-                  this.props.t("Proxy password") +
-                  " (" +
-                  this.props.t("Optional") +
-                  ")"
-                }
-              />
-            </div>
-            {showSocksAuthWarning && (
-              <p
-                className="setting-option-subtitle"
-                style={{ color: "#d6732d" }}
-              >
-                <Trans>
-                  SOCKS5 authentication is not supported for in-app requests;
-                  use HTTP proxy instead
-                </Trans>
-              </p>
+                >
+                  <div
+                    className="voice-add-confirm"
+                    style={{
+                      marginRight: "0px",
+                    }}
+                    onClick={this.handleTestConnection}
+                  >
+                    {isTestingProxy
+                      ? this.props.t("Testing connection...")
+                      : this.props.t("Test connection")}
+                  </div>
+                  <div
+                    className="voice-add-confirm"
+                    style={{
+                      marginRight: "0px",
+                    }}
+                    onClick={this.handleSaveProxyConfig}
+                  >
+                    {this.props.t("Save")}
+                  </div>
+                </div>
+              </div>
             )}
-            <div
-              className="setting-dialog-new-title"
-              key="proxy-actions"
-              style={{ display: "flex", gap: "8px" }}
-            >
-              <div
-                className="voice-add-confirm"
-                style={{
-                  marginRight: "10px",
-                  opacity: isTestingProxy || !proxyHost ? 0.5 : 1,
-                  pointerEvents:
-                    isTestingProxy || !proxyHost ? "none" : "auto",
-                }}
-                onClick={this.handleTestConnection}
-              >
-                {isTestingProxy
-                  ? this.props.t("Testing connection...")
-                  : this.props.t("Test connection")}
-              </div>
-              <div
-                className="voice-add-confirm"
-                style={{
-                  opacity: !proxyHost ? 0.5 : 1,
-                  pointerEvents: !proxyHost ? "none" : "auto",
-                }}
-                onClick={this.handleSaveProxyConfig}
-              >
-                {this.props.t("Save")}
-              </div>
-            </div>
           </>
         )}
       </>

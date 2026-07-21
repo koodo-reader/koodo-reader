@@ -18,4 +18,5 @@ export interface MoreSettingState {
   proxyUsername: string;
   proxyPassword: string;
   isTestingProxy: boolean;
+  proxyEditing: boolean;
 }

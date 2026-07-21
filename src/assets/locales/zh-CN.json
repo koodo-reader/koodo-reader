@@ -1235,8 +1235,6 @@
   "SOCKS5 authentication is not supported for in-app requests; use HTTP proxy instead": "应用内请求不支持 SOCKS5 认证，请改用 HTTP 代理",
   "Save failed": "保存失败",
   "Please enter host and port": "请输入主机和端口",
-  "Select proxy type": "选择代理类型",
-  "Disable network proxy?": "关闭网络代理？",
   "No local dictionaries imported yet": "未导入任何本地词典",
   "Due to browser security restrictions, you may not be able to use this data source properly. If you encounter any issues, you can resolve them by installing our browser extension.": "由于浏览器的安全限制，您可能无法正常使用此数据源。如果您遇到任何问题，可以通过安装我们的浏览器扩展来解决。",
   "Install extension": "安装扩展",
