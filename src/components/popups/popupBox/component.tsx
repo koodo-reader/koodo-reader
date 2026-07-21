@@ -263,14 +263,14 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
           <div
             className="popup-drag-handle"
             onMouseDown={this.handleDragStart}
-            title="移动"
+            title={this.props.t("Move")}
           >
             <span className="icon-menu"></span>
           </div>
           <div
             className="popup-resize-handle"
             onMouseDown={this.handleResizeStart}
-            title=""
+            title={this.props.t("Resize")}
           />
         </div>
         <div

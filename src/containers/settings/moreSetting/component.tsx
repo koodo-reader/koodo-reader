@@ -16,6 +16,7 @@ import {
 } from "../../../utils/reader/protectionUtil";
 import { vexPasswordInputAsync, vexSelectAsync } from "../../../utils/common";
 import i18n from "../../../i18n";
+import { isElectron } from "react-device-detect";
 
 class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
   constructor(props: MoreSettingProps) {
@@ -520,35 +521,38 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
             </p>
           </>
         )}
-
-        <div className="setting-dialog-new-title" key="proxy-toggle">
-          <span style={{ width: "calc(100% - 100px)" }}>
-            <Trans>Network proxy</Trans>
-          </span>
-          <span
-            className="single-control-switch"
-            onClick={this.handleToggleProxy}
-            style={proxyEnabled ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                proxyEnabled
-                  ? {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            />
-          </span>
-        </div>
-        <p className="setting-option-subtitle">
-          <Trans>Route all network requests through a proxy</Trans>
-        </p>
+        {isElectron && (
+          <>
+            <div className="setting-dialog-new-title" key="proxy-toggle">
+              <span style={{ width: "calc(100% - 100px)" }}>
+                <Trans>Network proxy</Trans>
+              </span>
+              <span
+                className="single-control-switch"
+                onClick={this.handleToggleProxy}
+                style={proxyEnabled ? {} : { opacity: 0.6 }}
+              >
+                <span
+                  className="single-control-button"
+                  style={
+                    proxyEnabled
+                      ? {
+                          transform: "translateX(20px)",
+                          transition: "transform 0.5s ease",
+                        }
+                      : {
+                          transform: "translateX(0px)",
+                          transition: "transform 0.5s ease",
+                        }
+                  }
+                />
+              </span>
+            </div>
+            <p className="setting-option-subtitle">
+              <Trans>Route all network requests through a proxy</Trans>
+            </p>
+          </>
+        )}
 
         {proxyEnabled && (
           <>

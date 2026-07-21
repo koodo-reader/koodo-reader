@@ -45,9 +45,11 @@
   align-items: center;
   justify-content: center;
 }
-.popup-drag-handle .icon-menu {
+.popup-drag-handle {
   font-size: 14px;
-  color: rgba(128, 128, 128, 0.6);
+  margin-top: 2px;
+  opacity: 0.6;
+  font-weight: bold !important;
 }
 @media screen and (max-width: 576px) {
   .popup-box-container {
