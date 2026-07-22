@@ -15,6 +15,7 @@ export interface PopupBoxProps {
   chapter: string;
   handleNoteKey: (key: string) => void;
   t: (title: string) => string;
+  renderBookFunc: () => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleChangeDirection: (isChangeDirection: boolean) => void;
