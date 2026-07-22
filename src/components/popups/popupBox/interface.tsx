@@ -31,4 +31,6 @@ export interface PopupBoxStates {
   dragStartX: number;
   dragStartY: number;
   isNearBottom: boolean;
+  isNearRight: boolean;
+  isDockedRight: boolean;
 }
