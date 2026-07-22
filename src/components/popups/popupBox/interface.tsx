@@ -6,6 +6,7 @@ export interface PopupBoxProps {
   menuMode: string;
   isNavLocked: boolean;
   isSettingLocked: boolean;
+  isDockedRight: boolean;
   rendition: any;
   // cfiRange: any;
   rect: any;
@@ -18,6 +19,7 @@ export interface PopupBoxProps {
   handleMenuMode: (menu: string) => void;
   handleChangeDirection: (isChangeDirection: boolean) => void;
   handleRenderNoteFunc: (renderNoteFunc: () => void) => void;
+  handleDockedRight: (isDockedRight: boolean) => void;
 }
 export interface PopupBoxStates {
   deleteKey: string;

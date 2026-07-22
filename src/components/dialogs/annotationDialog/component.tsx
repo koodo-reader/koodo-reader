@@ -247,7 +247,7 @@ class AnnotationDialog extends React.Component<
           width: "210px",
           height: "320px",
           overflowY: "scroll",
-          right: this.props.isSettingLocked ? 370 : 65,
+          right: this.props.isSettingLocked || this.props.isDockedRight ? 370 : 65,
         }}
       >
         <div className="annotation-dialog-header">

@@ -9,6 +9,7 @@ const mapStateToProps = (state: stateType) => {
     isPdfCropOpen: state.reader.isPdfCropOpen,
     currentBook: state.book.currentBook,
     isSettingLocked: state.reader.isSettingLocked,
+    isDockedRight: state.reader.isDockedRight,
   };
 };
 const actionCreator = {

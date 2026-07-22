@@ -51,7 +51,6 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
 
     const savedSize = this.getSavedSize();
     const savedPos = this.getSavedPosition();
-    const savedDocked = this.getSavedDocked();
     this.state = {
       deleteKey: "",
       rect: this.props.rect,
@@ -67,7 +66,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       dragStartY: 0,
       isNearBottom: false,
       isNearRight: false,
-      isDockedRight: savedDocked,
+      isDockedRight: this.props.isDockedRight,
     };
   }
 
@@ -123,6 +122,13 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     try {
       ConfigService.setReaderConfig("isDockedRight", docked ? "yes" : "no");
     } catch (e) {}
+  }
+
+  syncDockedToRedux(docked: boolean) {
+    this.saveDockedToConfig(docked);
+    if (this.props.handleDockedRight) {
+      this.props.handleDockedRight(docked);
+    }
   }
 
   componentDidMount(): void {
@@ -200,7 +206,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
         popupLeft: newLeft,
         popupBottom: newBottom,
       });
-      this.saveDockedToConfig(false);
+      this.syncDockedToRedux(false);
       return;
     }
     this.isDragging = true;
@@ -251,7 +257,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
         isNearRight: false,
         isNearBottom: false,
       });
-      this.saveDockedToConfig(true);
+      this.syncDockedToRedux(true);
       return;
     }
 

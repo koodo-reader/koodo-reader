@@ -89,6 +89,9 @@ export function handleNavLock(isNavLocked: boolean) {
 export function handleSettingLock(isSettingLocked: boolean) {
   return { type: "HANDLE_SETTING_LOCK", payload: isSettingLocked };
 }
+export function handleDockedRight(isDockedRight: boolean) {
+  return { type: "HANDLE_DOCKED_RIGHT", payload: isDockedRight };
+}
 export function handleHideFooter(isHideFooter: boolean) {
   return { type: "HANDLE_HIDE_FOOTER", payload: isHideFooter };
 }
