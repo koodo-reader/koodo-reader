@@ -15,6 +15,7 @@ const SETTING_PANEL_WIDTH = 299;
 
 const POPUP_SIZE_KEY = "popupBoxSize";
 const POPUP_POS_KEY = "popupBoxPosition";
+const POPUP_DOCKED_KEY = "popupBoxDocked";
 const DEFAULT_WIDTH = 500;
 
 function getDefaultHeight(menuMode: string) {
@@ -51,6 +52,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
 
     const savedSize = this.getSavedSize();
     const savedPos = this.getSavedPosition();
+    const savedDocked = this.getSavedDocked();
     this.state = {
       deleteKey: "",
       rect: this.props.rect,
@@ -66,7 +68,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       dragStartY: 0,
       isNearBottom: false,
       isNearRight: false,
-      isDockedRight: false,
+      isDockedRight: savedDocked,
     };
   }
 
@@ -108,6 +110,19 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
         POPUP_POS_KEY,
         JSON.stringify({ left, bottom })
       );
+    } catch (e) {}
+  }
+
+  getSavedDocked(): boolean {
+    try {
+      return ConfigService.getReaderConfig(POPUP_DOCKED_KEY) === "yes";
+    } catch (e) {}
+    return false;
+  }
+
+  saveDockedToConfig(docked: boolean) {
+    try {
+      ConfigService.setReaderConfig(POPUP_DOCKED_KEY, docked ? "yes" : "no");
     } catch (e) {}
   }
 
@@ -186,6 +201,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
         popupLeft: newLeft,
         popupBottom: newBottom,
       });
+      this.saveDockedToConfig(false);
       return;
     }
     this.isDragging = true;
@@ -236,6 +252,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
         isNearRight: false,
         isNearBottom: false,
       });
+      this.saveDockedToConfig(true);
       return;
     }
 
@@ -308,7 +325,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
           borderBottomLeftRadius: isAtBottom ? 0 : 10,
           borderBottomRightRadius: isAtBottom ? 0 : 10,
           outline: isNearRight
-            ? "2px solid var(--color-primary, #5c9ee6)"
+            ? "6px solid var(--color-primary, #5c9ee6)"
             : "none",
         };
 
@@ -348,7 +365,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
             onMouseDown={this.handleDragStart}
             title={this.props.t("Move")}
           >
-            <span className="icon-menu"></span>
+            <span className="icon-menu" style={{ fontWeight: "bold" }}></span>
           </div>
           {!isDockedRight && (
             <div
