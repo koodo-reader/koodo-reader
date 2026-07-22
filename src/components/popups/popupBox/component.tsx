@@ -364,6 +364,13 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
             className="popup-drag-handle"
             onMouseDown={this.handleDragStart}
             title={this.props.t("Move")}
+            style={
+              isDockedRight
+                ? {
+                    right: "10px",
+                  }
+                : {}
+            }
           >
             <span className="icon-menu" style={{ fontWeight: "bold" }}></span>
           </div>
