@@ -126,8 +126,11 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
 
   syncDockedToRedux(docked: boolean) {
     this.saveDockedToConfig(docked);
-    if (this.props.handleDockedRight) {
-      this.props.handleDockedRight(docked);
+    this.props.handleDockedRight(docked);
+    if (docked) {
+      setTimeout(() => {
+        this.props.renderBookFunc();
+      }, 300);
     }
   }
 

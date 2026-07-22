@@ -757,7 +757,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.scheduleLeaveReader("right");
           }}
           style={
-            this.state.isOpenRightPanel
+            this.state.isOpenRightPanel && (this.props.isSettingLocked || !this.props.isDockedRight)
               ? {}
               : {
                   transform: "translateX(309px)",

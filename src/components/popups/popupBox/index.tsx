@@ -22,6 +22,7 @@ const mapStateToProps = (state: stateType) => {
     isSettingLocked: state.reader.isSettingLocked,
     isDockedRight: state.reader.isDockedRight,
     isChangeDirection: state.viewArea.isChangeDirection,
+    renderBookFunc: state.book.renderBookFunc,
   };
 };
 const actionCreator = {
