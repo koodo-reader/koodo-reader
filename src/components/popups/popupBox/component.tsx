@@ -15,7 +15,6 @@ const SETTING_PANEL_WIDTH = 299;
 
 const POPUP_SIZE_KEY = "popupBoxSize";
 const POPUP_POS_KEY = "popupBoxPosition";
-const POPUP_DOCKED_KEY = "popupBoxDocked";
 const DEFAULT_WIDTH = 500;
 
 function getDefaultHeight(menuMode: string) {
@@ -115,14 +114,14 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
 
   getSavedDocked(): boolean {
     try {
-      return ConfigService.getReaderConfig(POPUP_DOCKED_KEY) === "yes";
+      return ConfigService.getReaderConfig("isDockedRight") === "yes";
     } catch (e) {}
     return false;
   }
 
   saveDockedToConfig(docked: boolean) {
     try {
-      ConfigService.setReaderConfig(POPUP_DOCKED_KEY, docked ? "yes" : "no");
+      ConfigService.setReaderConfig("isDockedRight", docked ? "yes" : "no");
     } catch (e) {}
   }
 
