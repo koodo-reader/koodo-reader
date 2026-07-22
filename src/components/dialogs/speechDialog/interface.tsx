@@ -4,6 +4,7 @@ import Plugin from "../../../models/Plugin";
 export interface SpeechDialogProps {
   isSettingOpen: boolean;
   isSettingLocked: boolean;
+  isDockedRight: boolean;
   isAboutOpen: boolean;
   currentBook: BookModel;
   handleSetting: (isSettingOpen: boolean) => void;

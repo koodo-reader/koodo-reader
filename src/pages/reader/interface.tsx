@@ -7,6 +7,7 @@ export interface ReaderProps {
   htmlBook: HtmlBookModel;
   isNavLocked: boolean;
   isSettingLocked: boolean;
+  isDockedRight: boolean;
   isConvertOpen: boolean;
   isPdfCropOpen: boolean;
   isSpeechOpen: boolean;

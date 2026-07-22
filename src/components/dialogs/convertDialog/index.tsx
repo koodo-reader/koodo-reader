@@ -14,6 +14,7 @@ const mapStateToProps = (state: stateType) => {
     isAuthed: state.manager.isAuthed,
     currentBook: state.book.currentBook,
     isSettingLocked: state.reader.isSettingLocked,
+    isDockedRight: state.reader.isDockedRight,
   };
 };
 const actionCreator = {

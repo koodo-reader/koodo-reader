@@ -35,6 +35,7 @@ const initState = {
   isSpeechAutoStart: false,
   isNavLocked: ConfigService.getReaderConfig("isNavLocked") === "yes",
   isSettingLocked: ConfigService.getReaderConfig("isSettingLocked") === "yes",
+  isDockedRight: ConfigService.getReaderConfig("isDockedRight") === "yes",
   isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
   isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
   isHideBackground: ConfigService.getReaderConfig("isHideBackground") === "yes",
@@ -129,6 +130,11 @@ export function reader(
       return {
         ...state,
         isSettingLocked: action.payload,
+      };
+    case "HANDLE_DOCKED_RIGHT":
+      return {
+        ...state,
+        isDockedRight: action.payload,
       };
     case "HANDLE_HIDE_FOOTER":
       return {

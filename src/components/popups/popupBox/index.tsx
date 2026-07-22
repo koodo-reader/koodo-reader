@@ -5,6 +5,7 @@ import {
   handleChangeDirection,
   handleNoteKey,
   handleRenderNoteFunc,
+  handleDockedRight,
 } from "../../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
@@ -19,6 +20,7 @@ const mapStateToProps = (state: stateType) => {
     menuMode: state.viewArea.menuMode,
     isNavLocked: state.reader.isNavLocked,
     isSettingLocked: state.reader.isSettingLocked,
+    isDockedRight: state.reader.isDockedRight,
     isChangeDirection: state.viewArea.isChangeDirection,
   };
 };
@@ -29,6 +31,7 @@ const actionCreator = {
   handleChangeDirection,
   handleNoteKey,
   handleRenderNoteFunc,
+  handleDockedRight,
 };
 export default connect(
   mapStateToProps,
