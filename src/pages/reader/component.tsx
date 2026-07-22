@@ -506,7 +506,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             position: "absolute",
             top: "0px",
             right: this.props.isSettingLocked ? 300 : 5,
-            zIndex: 11,
+            zIndex: 10,
             width: "120px",
             display: "flex",
             alignItems: "center",

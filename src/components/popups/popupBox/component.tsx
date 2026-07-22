@@ -9,7 +9,9 @@ import PopupAssist from "../popupAssist";
 import { isElectron } from "react-device-detect";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
-const SNAP_THRESHOLD_PX = 20; // 底部吸附阈值（像素）
+const SNAP_THRESHOLD_PX = 50;
+const RIGHT_SNAP_THRESHOLD_PX = 50;
+const SETTING_PANEL_WIDTH = 299;
 
 const POPUP_SIZE_KEY = "popupBoxSize";
 const POPUP_POS_KEY = "popupBoxPosition";
@@ -63,6 +65,8 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       dragStartX: 0,
       dragStartY: 0,
       isNearBottom: false,
+      isNearRight: false,
+      isDockedRight: false,
     };
   }
 
@@ -157,6 +161,33 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
   handleDragStart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (this.state.isDockedRight) {
+      const { popupWidth, popupHeight } = this.state;
+      // 移动图标中心在 popup 内的偏移：right:24px, width:18px, top:0, height:18px
+      // 图标中心距 popup 左边缘 = popupWidth - 24 - 9 = popupWidth - 33
+      // 图标中心距 popup 上边缘 = 9
+      // 反推：让图标中心对齐鼠标，计算 popup 的 left% 和 bottom%
+      const rawLeft =
+        ((e.clientX - popupWidth / 2 + 33) / window.innerWidth) * 100;
+      const newLeft = Math.max(0, Math.min(100, rawLeft));
+      const rawBottom =
+        ((window.innerHeight - e.clientY - popupHeight + 9) /
+          window.innerHeight) *
+        100;
+      const newBottom = Math.max(0, rawBottom);
+
+      this.dragStartLeft = newLeft;
+      this.dragStartBottom = newBottom;
+      this.isDragging = true;
+      this.dragStartX = e.clientX;
+      this.dragStartY = e.clientY;
+      this.setState({
+        isDockedRight: false,
+        popupLeft: newLeft,
+        popupBottom: newBottom,
+      });
+      return;
+    }
     this.isDragging = true;
     this.dragStartX = e.clientX;
     this.dragStartY = e.clientY;
@@ -177,23 +208,47 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       this.dragStartBottom - (dy / window.innerHeight) * 100
     );
 
-    // 检测是否靠近底部吸附区（像素）
     const bottomPx = (newBottom / 100) * window.innerHeight;
     const isNearBottom = bottomPx < SNAP_THRESHOLD_PX;
 
-    this.setState({ popupLeft: newLeft, popupBottom: newBottom, isNearBottom });
+    const rightEdgePx =
+      (newLeft / 100) * window.innerWidth + this.state.popupWidth / 2;
+    const isNearRight =
+      window.innerWidth - rightEdgePx < RIGHT_SNAP_THRESHOLD_PX;
+
+    this.setState({
+      popupLeft: newLeft,
+      popupBottom: newBottom,
+      isNearBottom,
+      isNearRight,
+    });
   };
 
   handleDragEnd = (_e: MouseEvent) => {
     if (!this.isDragging) return;
     this.isDragging = false;
-    let { popupLeft, popupBottom } = this.state;
-    // 靠近底部吸附回底部
+    let { popupLeft, popupBottom, popupWidth } = this.state;
+
+    const rightEdgePx = (popupLeft / 100) * window.innerWidth + popupWidth / 2;
+    if (window.innerWidth - rightEdgePx < RIGHT_SNAP_THRESHOLD_PX) {
+      this.setState({
+        isDockedRight: true,
+        isNearRight: false,
+        isNearBottom: false,
+      });
+      return;
+    }
+
     const bottomPx = (popupBottom / 100) * window.innerHeight;
     if (bottomPx < SNAP_THRESHOLD_PX) {
       popupBottom = 0;
     }
-    this.setState({ popupLeft, popupBottom, isNearBottom: false });
+    this.setState({
+      popupLeft,
+      popupBottom,
+      isNearBottom: false,
+      isNearRight: false,
+    });
     this.savePositionToConfig(popupLeft, popupBottom);
   };
 
@@ -213,9 +268,50 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
     };
-    const { popupWidth, popupHeight, popupLeft, popupBottom, isNearBottom } =
-      this.state;
+    const {
+      popupWidth,
+      popupHeight,
+      popupLeft,
+      popupBottom,
+      isNearBottom,
+      isNearRight,
+      isDockedRight,
+    } = this.state;
     const isAtBottom = popupBottom === 0;
+
+    const containerStyle: React.CSSProperties = isDockedRight
+      ? {
+          position: "fixed",
+          right: 0,
+          top: 0,
+          left: "auto",
+          bottom: 0,
+          width: SETTING_PANEL_WIDTH,
+          height: "100%",
+          transform: "none",
+          borderRadius: "10px 0 0 10px",
+          marginLeft: 0,
+          transition: "none",
+        }
+      : {
+          marginLeft:
+            this.props.isNavLocked && !this.props.isSettingLocked
+              ? 150
+              : !this.props.isNavLocked && this.props.isSettingLocked
+                ? -150
+                : 0,
+          width: popupWidth,
+          height: popupHeight,
+          left: `${popupLeft}%`,
+          bottom: `${popupBottom}%`,
+          transform: "translateX(-50%)",
+          borderBottomLeftRadius: isAtBottom ? 0 : 10,
+          borderBottomRightRadius: isAtBottom ? 0 : 10,
+          outline: isNearRight
+            ? "2px solid var(--color-primary, #5c9ee6)"
+            : "none",
+        };
+
     return (
       <div
         style={{
@@ -226,24 +322,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
               : "block",
         }}
       >
-        <div
-          className={`popup-box-container`}
-          style={{
-            marginLeft:
-              this.props.isNavLocked && !this.props.isSettingLocked
-                ? 150
-                : !this.props.isNavLocked && this.props.isSettingLocked
-                  ? -150
-                  : 0,
-            width: popupWidth,
-            height: popupHeight,
-            left: `${popupLeft}%`,
-            bottom: `${popupBottom}%`,
-            transform: "translateX(-50%)",
-            borderBottomLeftRadius: isAtBottom ? 0 : 10,
-            borderBottomRightRadius: isAtBottom ? 0 : 10,
-          }}
-        >
+        <div className={`popup-box-container`} style={containerStyle}>
           {this.props.menuMode === "note" ? (
             <PopupNote {...(PopupProps as any)} />
           ) : this.props.menuMode === "trans" ? (
@@ -258,7 +337,11 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
             onClick={() => {
               this.handleClose();
             }}
-            style={{ top: "-30px", left: "calc(50% - 10px)" }}
+            style={{
+              ...(isDockedRight
+                ? { display: "none" }
+                : { top: "-30px", left: "calc(50% - 10px)" }),
+            }}
           ></span>
           <div
             className="popup-drag-handle"
@@ -267,18 +350,22 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
           >
             <span className="icon-menu"></span>
           </div>
-          <div
-            className="popup-resize-handle"
-            onMouseDown={this.handleResizeStart}
-            title={this.props.t("Resize")}
-          />
+          {!isDockedRight && (
+            <div
+              className="popup-resize-handle"
+              onMouseDown={this.handleResizeStart}
+              title={this.props.t("Resize")}
+            />
+          )}
         </div>
-        <div
-          className="drag-background"
-          onClick={() => {
-            this.handleClose();
-          }}
-        ></div>
+        {!isDockedRight && (
+          <div
+            className="drag-background"
+            onClick={() => {
+              this.handleClose();
+            }}
+          ></div>
+        )}
       </div>
     );
   }
