@@ -91,6 +91,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.isSettingLocked || this.props.isDockedRight
       )
     );
+    // 刷新页面后，若 popupBox 处于固定右侧状态，自动恢复显示 popupAssist
+    if (this.props.isDockedRight) {
+      this.props.handleMenuMode("assistant");
+      this.props.handleOpenMenu(true);
+    }
     this.props.handleRenderBookFunc(this.handleRenderBook);
     this.resizeHandler = throttle(() => {
       this.setState(
