@@ -41,6 +41,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
   dragStartY: number = 0;
   dragStartLeft: number = 0;
   dragStartBottom: number = 0;
+  wasDocked: boolean = false;
 
   constructor(props: PopupBoxProps) {
     super(props);
@@ -202,6 +203,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       this.dragStartLeft = newLeft;
       this.dragStartBottom = newBottom;
       this.isDragging = true;
+      this.wasDocked = true;
       this.dragStartX = e.clientX;
       this.dragStartY = e.clientY;
       this.setState({
@@ -213,6 +215,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       return;
     }
     this.isDragging = true;
+    this.wasDocked = false;
     this.dragStartX = e.clientX;
     this.dragStartY = e.clientY;
     this.dragStartLeft = this.state.popupLeft;
@@ -275,6 +278,14 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       isNearRight: false,
     });
     this.savePositionToConfig(popupLeft, popupBottom);
+
+    // 从固定右侧状态拖出后松手（未重新吸附），刷新书籍布局
+    if (this.wasDocked) {
+      this.wasDocked = false;
+      setTimeout(() => {
+        this.props.renderBookFunc();
+      }, 300);
+    }
   };
 
   handleClose() {
@@ -298,7 +309,6 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       popupHeight,
       popupLeft,
       popupBottom,
-      isNearBottom,
       isNearRight,
       isDockedRight,
     } = this.state;
