@@ -303,7 +303,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           )}
           {!this.state.isAddNew && (
             <>
-              <div className="trans-lang-selector-container">
+              <div
+                className="trans-lang-selector-container"
+              >
                 <div className="original-lang-box">
                   <select
                     className="original-lang-selector"
@@ -392,11 +394,28 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   </select>
                 </div>
               </div>
-              <div className="trans-box">
-                <div className="original-text-box">
+              <div
+                className="trans-box"
+                style={
+                  this.props.isDockedRight
+                    ? { flexDirection: "column", height: "calc(100% - 80px)" }
+                    : undefined
+                }
+              >
+                <div
+                  className="original-text-box"
+                  style={
+                    this.props.isDockedRight
+                      ? { flex: 1, minHeight: 0, borderRight: "1px solid rgba(0,0,0,0.05)", borderBottom: "1px solid rgba(0,0,0,0.05)", borderBottomLeftRadius: 0, borderTopRightRadius: "7px" }
+                      : undefined
+                  }
+                >
                   <div className="original-text">{this.state.originalText}</div>
                 </div>
-                <div className="trans-text-box">
+                <div
+                  className="trans-text-box"
+                  style={this.props.isDockedRight ? { flex: 1, minHeight: 0 } : undefined}
+                >
                   <div className="trans-text">
                     {this.state.translatedText}
                     {this.state.transService.includes("ai-trans") &&

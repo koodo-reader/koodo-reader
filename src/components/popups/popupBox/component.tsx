@@ -300,10 +300,6 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     }
   }
   render() {
-    const PopupProps = {
-      chapterDocIndex: this.props.chapterDocIndex,
-      chapter: this.props.chapter,
-    };
     const {
       popupWidth,
       popupHeight,
@@ -312,6 +308,11 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       isNearRight,
       isDockedRight,
     } = this.state;
+    const PopupProps = {
+      chapterDocIndex: this.props.chapterDocIndex,
+      chapter: this.props.chapter,
+      isDockedRight,
+    };
     const isAtBottom = popupBottom === 0;
 
     const containerStyle: React.CSSProperties = isDockedRight

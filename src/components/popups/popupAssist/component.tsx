@@ -520,6 +520,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             alignItems: "center",
             width: "calc(100% - 50px)",
             top: "20px",
+            flexWrap: this.props.isDockedRight ? "wrap" : "nowrap",
           }}
         >
           <div
@@ -527,6 +528,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
               display: "flex",
               alignItems: "center",
               justifyContent: "flex-start",
+              flexShrink: 0,
             }}
           >
             <div
@@ -649,9 +651,10 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                height: "calc(100% - 10px)",
-                marginTop: "60px",
+                height: "100%",
+                paddingTop: this.props.isDockedRight ? "100px" : "60px",
                 paddingBottom: "20px",
+                boxSizing: "border-box",
               }}
             >
               <div
