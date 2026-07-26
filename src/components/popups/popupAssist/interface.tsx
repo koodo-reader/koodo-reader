@@ -7,6 +7,7 @@ export type AiChatMessage = {
 export interface PopupAssistProps {
   currentBook: BookModel;
   originalText: string;
+  htmlBook: any;
   quoteText: string;
   plugins: PluginModel[];
   isAuthed: boolean;
