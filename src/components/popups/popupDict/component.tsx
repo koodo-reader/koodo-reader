@@ -322,7 +322,19 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   render() {
     const renderDictBox = () => {
       return (
-        <div className="dict-container" style={{ height: "calc(100% - 65px)" }}>
+        <div
+          className="dict-container"
+          style={
+            this.props.isDockedRight
+              ? {
+                  paddingLeft: 15,
+                  paddingRight: 15,
+                  height: "calc(100% - 65px)",
+                  width: "calc(100% - 30px)",
+                }
+              : { height: "calc(100% - 65px)" }
+          }
+        >
           <div className="dict-service-container" style={{ zIndex: 1 }}>
             <select
               className="dict-service-selector"
