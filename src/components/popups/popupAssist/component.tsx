@@ -234,6 +234,9 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     ) {
       this.setState({ isAddNew: true });
     }
+    if (this.state.mode === "ask" && !originalText) {
+      originalText = await this.props.htmlBook.rendition.chapterText();
+    }
     this.handleDoAnswer(originalText);
   }
   handleDoAnswer = async (text: string) => {
