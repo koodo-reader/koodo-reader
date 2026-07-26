@@ -308,6 +308,13 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       isNearRight,
       isDockedRight,
     } = this.state;
+    const menuMode =
+      isDockedRight &&
+      this.props.menuMode !== "note" &&
+      this.props.menuMode !== "trans" &&
+      this.props.menuMode !== "dict"
+        ? "assistant"
+        : this.props.menuMode;
     const PopupProps = {
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
@@ -353,19 +360,19 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
         style={{
           display:
             this.state.isShowUrl &&
-            (this.props.menuMode === "dict" || this.props.menuMode === "trans")
+            (menuMode === "dict" || menuMode === "trans")
               ? "none"
               : "block",
         }}
       >
         <div className={`popup-box-container`} style={containerStyle}>
-          {this.props.menuMode === "note" ? (
+          {menuMode === "note" ? (
             <PopupNote {...(PopupProps as any)} />
-          ) : this.props.menuMode === "trans" ? (
+          ) : menuMode === "trans" ? (
             <PopupTrans {...(PopupProps as any)} />
-          ) : this.props.menuMode === "dict" ? (
+          ) : menuMode === "dict" ? (
             <PopupDict {...(PopupProps as any)} />
-          ) : this.props.menuMode === "assistant" ? (
+          ) : menuMode === "assistant" ? (
             <PopupAssist {...(PopupProps as any)} />
           ) : null}
           <span
