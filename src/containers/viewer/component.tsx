@@ -666,12 +666,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             } as any)}
           />
         ) : null}
-        {this.props.isOpenMenu &&
-        this.props.htmlBook &&
-        (this.props.menuMode === "dict" ||
-          this.props.menuMode === "trans" ||
-          this.props.menuMode === "assistant" ||
-          this.props.menuMode === "note") ? (
+        {this.props.htmlBook &&
+        (this.props.isDockedRight ||
+          (this.props.isOpenMenu &&
+            (this.props.menuMode === "dict" ||
+              this.props.menuMode === "trans" ||
+              this.props.menuMode === "assistant" ||
+              this.props.menuMode === "note"))) ? (
           <PopupBox
             {...({
               rendition: this.props.htmlBook.rendition,
