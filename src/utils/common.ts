@@ -74,16 +74,39 @@ export const calculateFileMD5 = (file: File): Promise<string> => {
       reader.onerror = (error) => reject(error);
       reader.readAsArrayBuffer(file);
     } else {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const arrayBuffer = event.target?.result as ArrayBuffer;
-        const wordArray = CryptoJS.lib.WordArray.create(
-          new Uint8Array(arrayBuffer) as any
-        );
-        resolve(CryptoJS.MD5(wordArray).toString());
+      // Compute the MD5 by streaming the file in small chunks instead of
+      // reading the whole file into memory at once. The previous approach
+      // (FileReader + CryptoJS.lib.WordArray.create on the full buffer) kept
+      // the entire file AND a copy of it alive simultaneously, which caused
+      // "Out of Memory" errors for large books (e.g. 127 MB).
+      const CHUNK_SIZE = 4 * 1024 * 1024; // 4 MB
+      const fileSize = file.size;
+      const hash = CryptoJS.algo.MD5.create();
+      let offset = 0;
+
+      const readNextChunk = () => {
+        if (offset >= fileSize) {
+          resolve(hash.finalize().toString());
+          return;
+        }
+        const end = Math.min(offset + CHUNK_SIZE, fileSize);
+        const blob = file.slice(offset, end);
+        const chunkReader = new FileReader();
+        chunkReader.onload = (event) => {
+          const chunk = event.target?.result as ArrayBuffer;
+          if (chunk && chunk.byteLength > 0) {
+            const wordArray = CryptoJS.lib.WordArray.create(
+              new Uint8Array(chunk) as any
+            );
+            hash.update(wordArray);
+          }
+          offset = end;
+          readNextChunk();
+        };
+        chunkReader.onerror = (error) => reject(error);
+        chunkReader.readAsArrayBuffer(blob);
       };
-      reader.onerror = (error) => reject(error);
-      reader.readAsArrayBuffer(file);
+      readNextChunk();
     }
   });
 };
