@@ -840,10 +840,9 @@ const applyProxyToSession = async () => {
   } catch (error) {
     agent = null;
   }
-  const authentication =
-    config.username
-      ? `${encodeURIComponent(config.username)}:${encodeURIComponent(config.password || "")}@`
-      : "";
+  const authentication = config.username
+    ? `${encodeURIComponent(config.username)}:${encodeURIComponent(config.password || "")}@`
+    : "";
   if (config.type === "http") {
     const proxyAddress = `${authentication}${config.host}:${config.port}`;
     await defaultSession.setProxy({
