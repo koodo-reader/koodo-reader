@@ -722,7 +722,7 @@ let options = {
     nodeIntegrationInSubFrames: false,
     allowRunningInsecureContent: false,
     enableRemoteModule: false,
-    sandbox: false,
+    sandbox: true,
   },
 };
 const Database = require("better-sqlite3");
@@ -1151,6 +1151,66 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("file-command", async (event, args) => runFileCommand(args));
+  ipcMain.on("node-command-sync", (event, args) => {
+    try {
+      if (!args || typeof args.operation !== "string") {
+        throw new TypeError("Invalid Node operation");
+      }
+      const stringValue = (value) => {
+        if (typeof value !== "string") {
+          throw new TypeError("Invalid string argument");
+        }
+        return value;
+      };
+      const stringArgs = (values) => {
+        if (!Array.isArray(values) || values.some((value) => typeof value !== "string")) {
+          throw new TypeError("Invalid string arguments");
+        }
+        return values;
+      };
+      let value;
+      switch (args.operation) {
+        case "path-join":
+          value = path.join(...stringArgs(args.values));
+          break;
+        case "path-dirname":
+          value = path.dirname(stringValue(args.value));
+          break;
+        case "path-basename":
+          value = path.basename(stringValue(args.value), args.suffix);
+          break;
+        case "path-extname":
+          value = path.extname(stringValue(args.value));
+          break;
+        case "path-resolve":
+          value = path.resolve(...stringArgs(args.values));
+          break;
+        case "path-posix-join":
+          value = path.posix.join(...stringArgs(args.values));
+          break;
+        case "os-homedir":
+          value = os.homedir();
+          break;
+        case "crypto-md5":
+          value = nodeCrypto
+            .createHash("md5")
+            .update(normalizeFileData(args.data))
+            .digest("hex");
+          break;
+        default:
+          throw new Error(`Unsupported Node operation: ${args.operation}`);
+      }
+      event.returnValue = { ok: true, value };
+    } catch (error) {
+      event.returnValue = {
+        ok: false,
+        error: {
+          message: error instanceof Error ? error.message : String(error),
+          code: error && typeof error.code === "string" ? error.code : undefined,
+        },
+      };
+    }
+  });
   ipcMain.handle("open-external", (event, url) => {
     if (typeof url !== "string" || !/^https?:|^mailto:/i.test(url)) {
       throw new TypeError("Invalid external URL");

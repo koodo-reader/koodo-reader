@@ -1,7 +1,4 @@
 const { contextBridge, ipcRenderer } = require("electron");
-const path = require("path");
-const os = require("os");
-const crypto = require("crypto");
 
 const INVOKE_CHANNELS = new Set([
   "cancel-download-app", "discord-rpc-update", "discord-rpc-clear", "update-win-app",
@@ -133,16 +130,25 @@ const file = {
   },
 };
 
+const nodeSync = (operation, args = {}) => {
+  const result = ipcRenderer.sendSync("node-command-sync", { operation, ...args });
+  if (!result || result.ok !== true) {
+    const error = new Error(result?.error?.message || "Node command failed");
+    if (result?.error?.code) error.code = result.error.code;
+    throw error;
+  }
+  return result.value;
+};
 const pathApi = {
-  join: (...parts) => path.join(...parts),
-  dirname: (value) => path.dirname(value),
-  basename: (value, suffix) => path.basename(value, suffix),
-  extname: (value) => path.extname(value),
-  resolve: (...parts) => path.resolve(...parts),
-  posix: { join: (...parts) => path.posix.join(...parts) },
+  join: (...parts) => nodeSync("path-join", { values: parts }),
+  dirname: (value) => nodeSync("path-dirname", { value }),
+  basename: (value, suffix) => nodeSync("path-basename", { value, suffix }),
+  extname: (value) => nodeSync("path-extname", { value }),
+  resolve: (...parts) => nodeSync("path-resolve", { values: parts }),
+  posix: { join: (...parts) => nodeSync("path-posix-join", { values: parts }) },
 };
 const cryptoApi = {
-  md5: (data) => crypto.createHash("md5").update(Buffer.from(bytes(data))).digest("hex"),
+  md5: (data) => nodeSync("crypto-md5", { data: bytes(data) }),
   partialMd5: (filePath) => invoke("partial-md5", filePath),
 };
 
@@ -155,7 +161,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
   removeListener,
   fs: file,
   path: pathApi,
-  os: { platform: () => os.platform(), homedir: () => os.homedir() },
+  os: {
+    platform: () => process.platform,
+    homedir: () => nodeSync("os-homedir"),
+  },
   runtime: { platform: process.platform, windowsStore: process.windowsStore === true },
   crypto: cryptoApi,
   shell: { openExternal: (url) => invoke("open-external", url) },
