@@ -11,10 +11,7 @@ import {
   handleContextMenu,
   openInBrowser,
 } from "../../../utils/common";
-import {
-  ConfigService,
-  TokenService,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { handleClearToken, handleExitApp } from "../../../utils/request/common";
 import {
@@ -22,6 +19,7 @@ import {
   getTempToken,
   getUserRequest,
 } from "../../../utils/request/user";
+import TokenService from "../../../utils/storage/tokenService";
 class SupportDialog extends React.Component<
   SupportDialogProps,
   SupportDialogState

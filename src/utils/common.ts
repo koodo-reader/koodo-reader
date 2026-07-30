@@ -6,7 +6,6 @@ import {
   ConfigService,
   KookitConfig,
   SyncUtil,
-  TokenService,
 } from "../assets/lib/kookit-extra-browser.min";
 import Book from "../models/Book";
 import BookUtil from "./file/bookUtil";
@@ -35,6 +34,7 @@ import {
   getOcrPaddleLangList,
   ocrTesseractLangList,
 } from "../constants/dropdownList";
+import TokenService from "./storage/tokenService";
 declare var window: any;
 export const supportedFormats = [
   ".epub",

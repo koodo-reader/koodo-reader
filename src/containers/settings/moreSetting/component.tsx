@@ -2,7 +2,6 @@ import React from "react";
 import { Trans } from "react-i18next";
 import { MoreSettingProps, MoreSettingState } from "./interface";
 import toast from "react-hot-toast";
-import { TokenService } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   clearProtection,
   getBiometricCapability,
@@ -17,6 +16,7 @@ import {
 import { vexPasswordInputAsync, vexSelectAsync } from "../../../utils/common";
 import i18n from "../../../i18n";
 import { isElectron } from "react-device-detect";
+import TokenService from "../../../utils/storage/tokenService";
 
 class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
   constructor(props: MoreSettingProps) {

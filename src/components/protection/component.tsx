@@ -1,6 +1,5 @@
 import React from "react";
 import "./protection.css";
-import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
 import {
   getBiometricErrorMessage,
   promptBiometricAuth,
@@ -11,6 +10,7 @@ import { vexPasswordInputAsync } from "../../utils/common";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
 import { Trans } from "react-i18next";
+import TokenService from "../../utils/storage/tokenService";
 
 interface ProtectionOverlayState {
   isVisible: boolean;
@@ -177,9 +177,7 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
             <div className="pin-keypad-grid">
               {digits.map((d, idx) => {
                 if (d === null) {
-                  return (
-                    <span key={idx} className="pin-key pin-key-empty" />
-                  );
+                  return <span key={idx} className="pin-key pin-key-empty" />;
                 }
                 if (d === "del") {
                   return (

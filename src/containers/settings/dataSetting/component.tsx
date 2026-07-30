@@ -19,7 +19,6 @@ import { LocalFileManager } from "../../../utils/file/localFile";
 import {
   ConfigService,
   KOReaderUtil,
-  TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { changeLibrary, changePath } from "../../../utils/file/common";
 import { getSnapshots } from "../../../utils/file/backup";
@@ -36,6 +35,7 @@ import {
   noteSyncSettingList,
   wordSyncSettingList,
 } from "../../../constants/settingList";
+import TokenService from "../../../utils/storage/tokenService";
 declare var window: any;
 class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {

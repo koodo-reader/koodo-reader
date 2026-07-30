@@ -1,7 +1,6 @@
 import {
   ConfigService,
   KookitConfig,
-  TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
@@ -23,6 +22,7 @@ import { langToName } from "../../utils/common";
 import { resetReaderRequest } from "../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
 import DictUtil from "../../utils/file/dictUtil";
+import TokenService from "../../utils/storage/tokenService";
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
 }
