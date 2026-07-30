@@ -13,6 +13,7 @@ interface ElectronFileAPI {
   rmSync(path: string, options?: { recursive?: boolean; force?: boolean }): void;
   emptyDirSync(path: string): void;
   copy(source: string, destination: string): Promise<void>;
+  rm(path: string, options?: { recursive?: boolean; force?: boolean }): Promise<void>;
   readFile(path: string, callback: (error: Error | null, data: Uint8Array) => void): void;
   readFile(path: string, options: string | object, callback: (error: Error | null, data: Uint8Array | string) => void): void;
   readFile(path: string, options?: string | object): Promise<Uint8Array | string>;

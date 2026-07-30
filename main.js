@@ -1077,7 +1077,8 @@ const createMainWin = () => {
       throw new TypeError("Invalid file operation");
     }
     const operation = args.operation;
-    const filePath = args.path === undefined ? undefined : validateFilePath(args.path);
+    const filePath =
+      args.path === undefined ? undefined : validateFilePath(args.path);
     switch (operation) {
       case "exists":
         return fs.existsSync(filePath);
@@ -1086,29 +1087,51 @@ const createMainWin = () => {
       case "read":
         return fs.readFileSync(filePath, args.options);
       case "write":
-        return fs.writeFileSync(filePath, normalizeFileData(args.data), args.options);
+        return fs.writeFileSync(
+          filePath,
+          normalizeFileData(args.data),
+          args.options
+        );
       case "readdir": {
         const entries = fs.readdirSync(filePath, args.options || {});
         return args.options && args.options.withFileTypes
-          ? entries.map((entry) => ({ name: entry.name, isFile: entry.isFile(), isDirectory: entry.isDirectory() }))
+          ? entries.map((entry) => ({
+              name: entry.name,
+              isFile: entry.isFile(),
+              isDirectory: entry.isDirectory(),
+            }))
           : entries;
       }
       case "stat": {
         const stat = fs.statSync(filePath);
-        return { size: stat.size, mtimeMs: stat.mtimeMs, isFile: stat.isFile(), isDirectory: stat.isDirectory() };
+        return {
+          size: stat.size,
+          mtimeMs: stat.mtimeMs,
+          isFile: stat.isFile(),
+          isDirectory: stat.isDirectory(),
+        };
       }
       case "unlink":
         return fs.unlinkSync(filePath);
       case "copyFile":
-        return fs.copyFileSync(validateFilePath(args.source), validateFilePath(args.destination));
+        return fs.copyFileSync(
+          validateFilePath(args.source),
+          validateFilePath(args.destination)
+        );
       case "rename":
-        return fs.renameSync(validateFilePath(args.source), validateFilePath(args.destination));
+        return fs.renameSync(
+          validateFilePath(args.source),
+          validateFilePath(args.destination)
+        );
       case "rm":
         return fs.rmSync(filePath, args.options || {});
       case "emptyDir":
         return fsExtra.emptyDirSync(filePath);
       case "copy":
-        return fsExtra.copy(validateFilePath(args.source), validateFilePath(args.destination));
+        return fsExtra.copy(
+          validateFilePath(args.source),
+          validateFilePath(args.destination)
+        );
       default:
         throw new Error(`Unsupported file operation: ${operation}`);
     }
@@ -1121,7 +1144,8 @@ const createMainWin = () => {
         ok: false,
         error: {
           message: error instanceof Error ? error.message : String(error),
-          code: error && typeof error.code === "string" ? error.code : undefined,
+          code:
+            error && typeof error.code === "string" ? error.code : undefined,
         },
       };
     }
@@ -1143,10 +1167,13 @@ const createMainWin = () => {
   });
   ipcMain.handle("dict-lookup", (event, args) => {
     const filePath = validateFilePath(args && args.filePath);
-    if (typeof (args && args.word) !== "string") throw new TypeError("Invalid dictionary word");
+    if (typeof (args && args.word) !== "string")
+      throw new TypeError("Invalid dictionary word");
     const { MDX } = require("js-mdict");
     const result = new MDX(filePath).lookup(args.word);
-    return result && result.definition !== undefined && result.definition !== null
+    return result &&
+      result.definition !== undefined &&
+      result.definition !== null
       ? String(result.definition)
       : "";
   });
