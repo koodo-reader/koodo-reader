@@ -16,6 +16,7 @@ const SETTING_PANEL_WIDTH = 299;
 const POPUP_SIZE_KEY = "popupBoxSize";
 const POPUP_POS_KEY = "popupBoxPosition";
 const DEFAULT_WIDTH = 500;
+const POPUP_MODES = ["note", "trans", "dict", "assistant"];
 
 function getDefaultHeight(menuMode: string) {
   if (menuMode === "assistant") return 400;
@@ -48,7 +49,9 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     this.showNote = false;
     this.isFirstShow = false;
     this.highlighter = null;
-    this.mode = "";
+    this.mode = POPUP_MODES.includes(props.menuMode)
+      ? props.menuMode
+      : "assistant";
 
     const savedSize = this.getSavedSize();
     const savedPos = this.getSavedPosition();
@@ -132,6 +135,12 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       setTimeout(() => {
         this.props.renderBookFunc();
       }, 300);
+    }
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps: PopupBoxProps) {
+    if (POPUP_MODES.includes(nextProps.menuMode)) {
+      this.mode = nextProps.menuMode;
     }
   }
 
@@ -308,13 +317,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       isNearRight,
       isDockedRight,
     } = this.state;
-    const menuMode =
-      isDockedRight &&
-      this.props.menuMode !== "note" &&
-      this.props.menuMode !== "trans" &&
-      this.props.menuMode !== "dict"
-        ? "assistant"
-        : this.props.menuMode;
+    const menuMode = isDockedRight ? this.mode : this.props.menuMode;
     const PopupProps = {
       chapterDocIndex: this.props.chapterDocIndex,
       chapter: this.props.chapter,
