@@ -15,6 +15,7 @@ const {
   shell,
   clipboard,
   net,
+  session,
 } = require("electron");
 const path = require("path");
 const { pathToFileURL } = require("url");
@@ -2546,8 +2547,40 @@ const getCoverProtocolUrl = (value, storagePath) => {
   return `${ASSET_PROTOCOL}://local/${token}`;
 };
 
+const applyCorsToRendererRequests = () => {
+  const filter = {
+    urls: ["http://*/*", "https://*/*"],
+  };
+  session.defaultSession.webRequest.onHeadersReceived(
+    filter,
+    (details, callback) => {
+      const responseHeaders = { ...details.responseHeaders };
+      const corsHeaders = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods":
+          "GET, POST, PUT, DELETE, OPTIONS, PATCH",
+        "Access-Control-Allow-Headers": "*, Authorization",
+        "Access-Control-Expose-Headers": "*",
+      };
+      if (details.method === "OPTIONS") {
+        corsHeaders["Access-Control-Max-Age"] = "86400";
+      }
+      for (const [name, value] of Object.entries(corsHeaders)) {
+        for (const existingName of Object.keys(responseHeaders)) {
+          if (existingName.toLowerCase() === name.toLowerCase()) {
+            delete responseHeaders[existingName];
+          }
+        }
+        responseHeaders[name] = [value];
+      }
+      callback({ responseHeaders });
+    }
+  );
+};
+
 app.on("ready", async () => {
   registerAssetProtocol();
+  applyCorsToRendererRequests();
   await applyProxyToSession();
   createMainWin();
 });
