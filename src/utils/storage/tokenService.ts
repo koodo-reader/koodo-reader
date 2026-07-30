@@ -9,7 +9,7 @@ export default class TokenService {
     if (!token) return;
     if (isElectron) {
       const ipcRenderer = window.electronAPI;
-      ipcRenderer.invoke("encrypt-data", { token });
+      await ipcRenderer.invoke("encrypt-data", { token });
     } else {
       const encrypted = await this.encryptString(token);
       localStorage.setItem("encryptedToken", encrypted);
