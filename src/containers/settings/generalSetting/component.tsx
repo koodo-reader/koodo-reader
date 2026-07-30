@@ -88,28 +88,28 @@ class GeneralSetting extends React.Component<
     this.handleSetting("isOpenInMain");
   };
   handleAlwaysOnTop = () => {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     ipcRenderer.invoke("set-always-on-top", {
       isAlwaysOnTop: this.state.isAlwaysOnTop ? "no" : "yes",
     });
     this.handleSetting("isAlwaysOnTop");
   };
   handleMaximizeWin = () => {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     ipcRenderer.invoke("set-auto-maximize", {
       isAutoMaximizeWin: this.state.isAutoMaximizeWin ? "no" : "yes",
     });
     this.handleSetting("isAutoMaximizeWin");
   };
   handleAutoLaunch = () => {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     ipcRenderer.invoke("toggle-auto-launch", {
       isAutoLaunch: this.state.isAutoLaunch ? "no" : "yes",
     });
     this.handleSetting("isAutoLaunch");
   };
   handleMinimizeToTray = () => {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     ipcRenderer.invoke("toggle-minimize-to-tray", {
       isMinimizeToTray: this.state.isMinimizeToTray ? "no" : "yes",
     });
@@ -178,8 +178,8 @@ class GeneralSetting extends React.Component<
   };
   handleResetMainPosition = () => {
     window
-      .require("electron")
-      .ipcRenderer.invoke("reset-main-position", "ping");
+      .electronAPI
+      .invoke("reset-main-position", "ping");
     toast.success(this.props.t("Reset successful"));
   };
   render() {

@@ -31,7 +31,7 @@ export const backup = async (service: string): Promise<Boolean> => {
     }.zip`;
   }
   if (isElectron) {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     let targetPath = "";
     if (service === "local") {
       const backupPath = await ipcRenderer.invoke("select-path");
@@ -41,7 +41,7 @@ export const backup = async (service: string): Promise<Boolean> => {
       }
       targetPath = backupPath;
     } else {
-      const path = window.require("path");
+      const path = window.electronAPI.path;
       targetPath = path.join(getStorageLocation(), "backup");
     }
     toast.loading(i18n.t("Backup...") + " (0%)", {
@@ -95,48 +95,35 @@ export const backup = async (service: string): Promise<Boolean> => {
 };
 export const generateSnapshot = async () => {
   try {
-    const path = window.require("path");
-    const fs = window.require("fs");
-    const AdmZip = window.require("adm-zip");
-    let zip = new AdmZip();
+    const path = window.electronAPI.path;
+    const fs = window.electronAPI.fs;
+    const zip = new JSZip();
     const dataPath = getStorageLocation() || "";
-    let snapshotPath = path.join(dataPath, "snapshot");
-    let fileName = `${new Date().getTime()}.zip`;
-    let databaseList = CommonTool.databaseList;
+    const snapshotPath = path.join(dataPath, "snapshot");
+    const fileName = `${new Date().getTime()}.zip`;
+    const databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
-      await window.require("electron").ipcRenderer.invoke("close-database", {
+      await window.electronAPI.invoke("close-database", {
         dbName: databaseList[i],
         storagePath: getStorageLocation(),
       });
-      if (
-        fs.existsSync(path.join(dataPath, "config", databaseList[i] + ".db"))
-      ) {
-        zip.addLocalFile(
-          path.join(dataPath, "config", databaseList[i] + ".db"),
-          "config"
-        );
+      const databasePath = path.join(dataPath, "config", databaseList[i] + ".db");
+      if (fs.existsSync(databasePath)) {
+        zip.file(path.posix.join("config", databaseList[i] + ".db"), fs.readFileSync(databasePath));
       }
     }
-    let configStr = JSON.stringify(await ConfigUtil.dumpConfig("config"));
-    zip.addFile("config/config.json", Buffer.from(configStr, "utf-8"));
-
-    if (!fs.existsSync(snapshotPath)) {
-      fs.mkdirSync(snapshotPath, { recursive: true });
-    }
-    await zip.writeZip(path.join(snapshotPath, fileName));
-    //delete old snapshots
-    let snapshots = getSnapshots();
-    if (snapshots.length <= 30) {
-      return;
-    }
+    const configStr = JSON.stringify(await ConfigUtil.dumpConfig("config"));
+    zip.file("config/config.json", configStr);
+    if (!fs.existsSync(snapshotPath)) fs.mkdirSync(snapshotPath, { recursive: true });
+    const output = await zip.generateAsync({ type: "uint8array" });
+    fs.writeFileSync(path.join(snapshotPath, fileName), output);
+    const snapshots = getSnapshots();
     for (let i = 30; i < snapshots.length; i++) {
       fs.unlinkSync(path.join(snapshotPath, snapshots[i].file));
     }
   } catch (error) {
-    // Log error for debugging and avoid unhandled exceptions
     console.error("Failed to generate snapshot:", error);
-    // Best-effort user notification; ignore any errors from toast/i18n
-    let message = error instanceof Error ? error.message : String(error);
+    const message = error instanceof Error ? error.message : String(error);
     toast.error(message);
   }
 };
@@ -144,8 +131,8 @@ export const getSnapshots = () => {
   if (!isElectron) {
     return [];
   }
-  const path = window.require("path");
-  const fs = window.require("fs");
+  const path = window.electronAPI.path;
+  const fs = window.electronAPI.fs;
   const dataPath = getStorageLocation() || "";
   let snapshotPath = path.join(dataPath, "snapshot");
   let snapshots: { file: string; time: number }[] = [];
@@ -177,11 +164,10 @@ export const backupFromPath = async (
   fileName: string,
   onProgress?: (percent: number) => void
 ) => {
-  const path = window.require("path");
+  const path = window.electronAPI.path;
   const dataPath = getStorageLocation() || "";
-  const fs = window.require("fs");
-  const JSZipNode = window.require("jszip");
-  const { ipcRenderer } = window.require("electron");
+  const fs = window.electronAPI.fs;
+  const ipcRenderer = window.electronAPI;
 
   if (!fs.existsSync(targetPath)) {
     fs.mkdirSync(targetPath, { recursive: true });
@@ -197,7 +183,7 @@ export const backupFromPath = async (
     });
   }
 
-  const zip = new JSZipNode();
+  const zip = new JSZip();
 
   // Recursively add a directory from disk into the zip
   const addDirectoryToZip = (
@@ -213,9 +199,9 @@ export const backupFromPath = async (
     for (const entry of entries) {
       const sourcePath = path.join(sourceDir, entry.name);
       const zipPath = path.posix.join(zipDir, entry.name);
-      if (entry.isDirectory()) {
+      if (entry.isDirectory) {
         addDirectoryToZip(zipFolder, sourcePath, zipPath);
-      } else if (entry.isFile()) {
+      } else if (entry.isFile) {
         zip.file(zipPath, fs.readFileSync(sourcePath), {
           binary: true,
           createFolders: true,
@@ -265,7 +251,7 @@ export const backupFromPath = async (
   try {
     const buffer = await zip.generateAsync(
       {
-        type: "nodebuffer",
+        type: "uint8array",
         compression: "DEFLATE",
         compressionOptions: { level: 6 },
       },
@@ -320,8 +306,8 @@ export const backupFromStorage = async () => {
 
 export const backupToConfigJson = async () => {
   let configStr = JSON.stringify(await ConfigUtil.dumpConfig("config"));
-  const fs = window.require("fs");
-  const path = window.require("path");
+  const fs = window.electronAPI.fs;
+  const path = window.electronAPI.path;
   const dataPath = getStorageLocation() || "";
   if (!fs.existsSync(path.join(dataPath, "config"))) {
     fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });
@@ -334,8 +320,8 @@ export const backupToConfigJson = async () => {
 };
 export const backupToSyncJson = async () => {
   let syncStr = JSON.stringify(await ConfigUtil.dumpConfig("sync"));
-  const fs = window.require("fs");
-  const path = window.require("path");
+  const fs = window.electronAPI.fs;
+  const path = window.electronAPI.path;
   const dataPath = getStorageLocation() || "";
   if (!fs.existsSync(path.join(dataPath, "config"))) {
     fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });

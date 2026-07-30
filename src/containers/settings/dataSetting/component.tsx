@@ -222,7 +222,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
       // Special case: Markdown sync uses a folder picker in Electron
       if (item.propName === "isEnableMarkdownSync" && isElectron) {
-        const { ipcRenderer } = window.require("electron");
+        const ipcRenderer = window.electronAPI;
         const folder = await ipcRenderer.invoke("select-path");
         if (!folder) return;
         ConfigService.setObjectConfig(
@@ -447,7 +447,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   };
 
   handleChangeLocation = async () => {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     const newPath = await ipcRenderer.invoke("select-path");
     if (!newPath) {
       return;
@@ -469,7 +469,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   };
   handleSwitchLibrary = async () => {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       const newPath = await ipcRenderer.invoke("select-path");
       if (!newPath) {
         return;
@@ -482,9 +482,9 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       ConfigService.setItem("storageLocation", newPath);
       this.setState({ storageLocation: newPath });
       try {
-        let fs = window.require("fs");
+        let fs = window.electronAPI.fs;
         let text = fs.readFileSync(
-          window.require("path").join(newPath, "config", "config.json"),
+          window.electronAPI.path.join(newPath, "config", "config.json"),
           "utf-8"
         );
         let config = JSON.parse(text);
@@ -574,7 +574,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 <span
                   className="change-location-button"
                   onClick={() => {
-                    const { ipcRenderer } = window.require("electron");
+                    const ipcRenderer = window.electronAPI;
                     ipcRenderer.invoke("open-explorer-folder", {
                       path: this.state.storageLocation,
                       isFolder: true,
@@ -615,7 +615,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   <span
                     className="change-location-button"
                     onClick={() => {
-                      const { ipcRenderer } = window.require("electron");
+                      const ipcRenderer = window.electronAPI;
                       ipcRenderer.invoke("open-explorer-folder", {
                         path: this.state.storageLocation,
                         isFolder: true,

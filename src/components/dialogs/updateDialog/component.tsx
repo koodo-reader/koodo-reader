@@ -52,7 +52,7 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
       ) {
         return;
       }
-      if ((process as any).windowsStore) {
+      if (window.electronAPI?.runtime?.windowsStore) {
         return;
       }
       if (stableVersion === packageInfo.version) {
@@ -157,13 +157,13 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                   className="new-version-open"
                   onClick={() => {
                     if (isWindows) {
-                      const { ipcRenderer } = window.require("electron");
+                      const ipcRenderer = window.electronAPI;
                       if (!this.state.isDownloading) {
                         // 先注册事件监听器，再调用下载
                         this.setState({ isDownloading: true });
                         ipcRenderer.on(
                           "download-app-progress",
-                          (_event: any, config: any) => {
+                          (config: any) => {
                             this.setState({
                               progress: config.progress,
                               downloadedMB: config.downloadedMB,

@@ -127,7 +127,8 @@
       "package.json",
       "src/assets/lib/kookit-extra.min.mjs",
       "main.js",
-      "preload.js"
+      "preload.js",
+      "chat-preload.js"
     ],
     "extraResources": [
       {

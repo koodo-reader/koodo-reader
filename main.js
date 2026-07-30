@@ -12,6 +12,8 @@ const {
   protocol,
   screen,
   systemPreferences,
+  shell,
+  clipboard,
 } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -21,6 +23,8 @@ const os = require("os");
 const { execFile } = require("child_process");
 const store = new Store();
 const fs = require("fs");
+const fsExtra = require("fs-extra");
+const nodeCrypto = require("crypto");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 const packageJson = require("./package.json");
@@ -711,12 +715,13 @@ let options = {
   minHeight: 100,
   webPreferences: {
     webSecurity: false,
-    nodeIntegration: true,
-    contextIsolation: false,
+    nodeIntegration: false,
+    contextIsolation: true,
+    preload: path.join(__dirname, "preload.js"),
     nativeWindowOpen: true,
     nodeIntegrationInSubFrames: false,
     allowRunningInsecureContent: false,
-    enableRemoteModule: true,
+    enableRemoteModule: false,
     sandbox: false,
   },
 };
@@ -1053,6 +1058,115 @@ const createMainWin = () => {
     }
   );
   //cancel-download-app
+  const validateFilePath = (value) => {
+    if (typeof value !== "string" || !value || value.includes("\0")) {
+      throw new TypeError("Invalid file path");
+    }
+    return value;
+  };
+  const normalizeFileData = (value) => {
+    if (value instanceof Uint8Array) return Buffer.from(value);
+    if (value instanceof ArrayBuffer) return Buffer.from(value);
+    if (ArrayBuffer.isView(value)) {
+      return Buffer.from(value.buffer, value.byteOffset, value.byteLength);
+    }
+    return value;
+  };
+  const runFileCommand = (args) => {
+    if (!args || typeof args.operation !== "string") {
+      throw new TypeError("Invalid file operation");
+    }
+    const operation = args.operation;
+    const filePath = args.path === undefined ? undefined : validateFilePath(args.path);
+    switch (operation) {
+      case "exists":
+        return fs.existsSync(filePath);
+      case "mkdir":
+        return fs.mkdirSync(filePath, args.options || {});
+      case "read":
+        return fs.readFileSync(filePath, args.options);
+      case "write":
+        return fs.writeFileSync(filePath, normalizeFileData(args.data), args.options);
+      case "readdir": {
+        const entries = fs.readdirSync(filePath, args.options || {});
+        return args.options && args.options.withFileTypes
+          ? entries.map((entry) => ({ name: entry.name, isFile: entry.isFile(), isDirectory: entry.isDirectory() }))
+          : entries;
+      }
+      case "stat": {
+        const stat = fs.statSync(filePath);
+        return { size: stat.size, mtimeMs: stat.mtimeMs, isFile: stat.isFile(), isDirectory: stat.isDirectory() };
+      }
+      case "unlink":
+        return fs.unlinkSync(filePath);
+      case "copyFile":
+        return fs.copyFileSync(validateFilePath(args.source), validateFilePath(args.destination));
+      case "rename":
+        return fs.renameSync(validateFilePath(args.source), validateFilePath(args.destination));
+      case "rm":
+        return fs.rmSync(filePath, args.options || {});
+      case "emptyDir":
+        return fsExtra.emptyDirSync(filePath);
+      case "copy":
+        return fsExtra.copy(validateFilePath(args.source), validateFilePath(args.destination));
+      default:
+        throw new Error(`Unsupported file operation: ${operation}`);
+    }
+  };
+  ipcMain.on("file-command-sync", (event, args) => {
+    try {
+      event.returnValue = { ok: true, value: runFileCommand(args) };
+    } catch (error) {
+      event.returnValue = {
+        ok: false,
+        error: {
+          message: error instanceof Error ? error.message : String(error),
+          code: error && typeof error.code === "string" ? error.code : undefined,
+        },
+      };
+    }
+  });
+  ipcMain.handle("file-command", async (event, args) => runFileCommand(args));
+  ipcMain.handle("open-external", (event, url) => {
+    if (typeof url !== "string" || !/^https?:|^mailto:/i.test(url)) {
+      throw new TypeError("Invalid external URL");
+    }
+    return shell.openExternal(url);
+  });
+  ipcMain.on("clipboard-read-text-sync", (event) => {
+    event.returnValue = clipboard.readText();
+  });
+  ipcMain.handle("clipboard-read-text", () => clipboard.readText());
+  ipcMain.handle("clipboard-write-text", (event, text) => {
+    if (typeof text !== "string") throw new TypeError("Invalid clipboard text");
+    clipboard.writeText(text);
+  });
+  ipcMain.handle("dict-lookup", (event, args) => {
+    const filePath = validateFilePath(args && args.filePath);
+    if (typeof (args && args.word) !== "string") throw new TypeError("Invalid dictionary word");
+    const { MDX } = require("js-mdict");
+    const result = new MDX(filePath).lookup(args.word);
+    return result && result.definition !== undefined && result.definition !== null
+      ? String(result.definition)
+      : "";
+  });
+  ipcMain.handle("partial-md5", (event, filePath) => {
+    const validatedPath = validateFilePath(filePath);
+    const hash = nodeCrypto.createHash("md5");
+    const fd = fs.openSync(validatedPath, "r");
+    try {
+      const buffer = Buffer.alloc(1024);
+      for (let i = -1; i <= 10; i++) {
+        const position = 1024 << (2 * i);
+        const bytesRead = fs.readSync(fd, buffer, 0, buffer.length, position);
+        if (!bytesRead) break;
+        hash.update(buffer.subarray(0, bytesRead));
+      }
+      return hash.digest("hex");
+    } finally {
+      fs.closeSync(fd);
+    }
+  });
   ipcMain.handle("cancel-download-app", (event, arg) => {
     // Implement cancellation logic here
     // Note: In this example, we are not keeping a reference to the request,

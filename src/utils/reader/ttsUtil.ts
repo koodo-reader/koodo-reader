@@ -224,7 +224,7 @@ class TTSUtil {
   }
   static async clearAudioPaths() {
     if (!isElectron) return;
-    window.require("electron").ipcRenderer.invoke("clear-tts");
+    window.electronAPI.invoke("clear-tts");
   }
   static getAudioPaths() {
     return this.audioPaths;
@@ -252,8 +252,8 @@ class TTSUtil {
       return "";
     } else {
       let audioPath = await window
-        .require("electron")
-        .ipcRenderer.invoke("generate-tts", {
+        .electronAPI
+        .invoke("generate-tts", {
           text: text,
           speed,
           plugin: plugin,

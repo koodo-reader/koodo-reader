@@ -98,7 +98,7 @@ class OperationPanel extends React.Component<
     }
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-        window.require("electron").ipcRenderer.invoke("exit-tab", "ping");
+        window.electronAPI.invoke("exit-tab", "ping");
       } else {
         window.close();
       }

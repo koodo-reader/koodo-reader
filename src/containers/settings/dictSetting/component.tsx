@@ -30,8 +30,8 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   };
 
   handleImportClick = async () => {
-    const { ipcRenderer } = (window as any).require("electron");
-    const path = (window as any).require("path");
+    const ipcRenderer = window.electronAPI;
+    const path = window.electronAPI.path;
 
     const filePath: string | undefined = await ipcRenderer.invoke(
       "select-file",

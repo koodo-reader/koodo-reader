@@ -9,6 +9,7 @@ import {
   HighlightUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
+import { Buffer } from "buffer";
 import i18n from "../../i18n";
 import toast from "react-hot-toast";
 declare var window: any;
@@ -26,9 +27,9 @@ let year = new Date().getFullYear(),
 
 export const exportBooks = async (books: Book[]) => {
   if (isElectron && books.length > 50) {
-    const { ipcRenderer } = window.require("electron");
-    const fs = window.require("fs");
-    const path = window.require("path");
+    const ipcRenderer = window.electronAPI;
+    const fs = window.electronAPI.fs;
+    const path = window.electronAPI.path;
     const exportPath = await ipcRenderer.invoke("select-path");
     if (!exportPath) {
       toast.error(i18n.t("Please select a folder"));

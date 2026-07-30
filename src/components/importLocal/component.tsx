@@ -55,7 +55,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   }
   componentDidMount() {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       if (!ConfigService.getItem("storageLocation")) {
         ConfigService.setItem(
           "storageLocation",
@@ -78,7 +78,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         false
       );
 
-      ipcRenderer.on("import-url-from-link", (_event: any, config: any) => {
+      ipcRenderer.on("import-url-from-link", (config: any) => {
         const rawUrl = config?.url;
         if (!rawUrl || typeof rawUrl !== "string") return;
         this.handleURLImport(undefined as any, rawUrl);
@@ -128,7 +128,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       let isImportPath =
         ConfigService.getReaderConfig("isImportPath") === "yes";
       if (isElectron && isImportPath) {
-        const fs = window.require("fs");
+        const fs = window.electronAPI.fs;
         if (!book.path || !fs.existsSync(book.path)) {
           isImportPath = false;
         }
@@ -737,15 +737,15 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         event.stopPropagation(); // Prevent triggering the Dropzone
                         //select folder from local
                         if (isElectron) {
-                          const { ipcRenderer } = window.require("electron");
+                          const ipcRenderer = window.electronAPI;
                           const newPath =
                             await ipcRenderer.invoke("select-path");
                           if (!newPath) {
                             return;
                           }
                           //get all files in the folder
-                          const fs = window.require("fs");
-                          const path = window.require("path");
+                          const fs = window.electronAPI.fs;
+                          const path = window.electronAPI.path;
                           const getAllFiles = (dirPath: string): string[] => {
                             let files: string[] = [];
 
@@ -756,10 +756,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                                 const fullPath = path.join(dirPath, item);
                                 const stat = fs.statSync(fullPath);
 
-                                if (stat.isDirectory()) {
+                                if (stat.isDirectory) {
                                   // Recursively get files from subdirectories
                                   files = files.concat(getAllFiles(fullPath));
-                                } else if (stat.isFile()) {
+                                } else if (stat.isFile) {
                                   // Check if file has supported format
                                   const ext = path
                                     .extname(item)
@@ -926,15 +926,15 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               <div
                 className="import-book-box"
                 onClick={async () => {
-                  const { ipcRenderer } = window.require("electron");
+                  const ipcRenderer = window.electronAPI;
                   let filePaths = await ipcRenderer.invoke(
                     "select-book",
                     "ping"
                   );
                   for (let filePath of filePaths) {
                     try {
-                      const fs = window.require("fs").promises;
-                      const path = window.require("path");
+                      const fs = window.electronAPI.fs.promises;
+                      const path = window.electronAPI.path;
                       const buffer = await fs.readFile(filePath);
 
                       let arraybuffer = new Uint8Array(buffer).buffer;

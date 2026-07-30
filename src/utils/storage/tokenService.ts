@@ -8,7 +8,7 @@ export default class TokenService {
   static async saveAllToken(token: string): Promise<void> {
     if (!token) return;
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       ipcRenderer.invoke("encrypt-data", { token });
     } else {
       const encrypted = await this.encryptString(token);
@@ -18,7 +18,7 @@ export default class TokenService {
 
   static async getAllToken(): Promise<string | null> {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("decrypt-data");
     } else {
       let encrypted = localStorage.getItem("encryptedToken") || "";
@@ -75,7 +75,7 @@ export default class TokenService {
   }
   public static async getFingerprint(): Promise<string> {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let mac = await ipcRenderer.invoke("get-mac");
       return mac;
     } else {

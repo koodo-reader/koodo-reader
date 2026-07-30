@@ -23,7 +23,7 @@ const checkCloudUrlViaElectron = async (
   url: string
 ): Promise<string | null> => {
   try {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     const result = await ipcRenderer.invoke("check-cloud-url", { url });
     if (result.ok) return null;
     const reasonMap: Record<string, string> = {
@@ -54,7 +54,7 @@ const checkCloudUrlViaElectron = async (
 export const getDeviceName = async (): Promise<string> => {
   if (isElectron) {
     try {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       const name = await ipcRenderer.invoke("get-device-name");
       return name?.trim() || "Desktop";
     } catch (e) {

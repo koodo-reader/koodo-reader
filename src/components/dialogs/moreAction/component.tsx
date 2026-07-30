@@ -189,7 +189,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                     `${this.props.currentBook.name}.${ext}`
                   );
                 } else if (isElectron) {
-                  const fs = window.require("fs");
+                  const fs = window.electronAPI.fs;
                   const ext = cover.split(".").pop() || "jpg";
                   const buffer = fs.readFileSync(cover);
                   saveAs(
@@ -354,8 +354,8 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                 className="action-dialog-edit"
                 style={{ paddingLeft: "0px" }}
                 onClick={async () => {
-                  const fs = window.require("fs");
-                  const path = window.require("path");
+                  const fs = window.electronAPI.fs;
+                  const path = window.electronAPI.path;
                   const localBookPath = this.props.currentBook.path;
 
                   const libraryBookPath = path.join(
@@ -373,13 +373,13 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                     return;
                   }
                   if (fs.existsSync(localBookPath)) {
-                    const { ipcRenderer } = window.require("electron");
+                    const ipcRenderer = window.electronAPI;
                     ipcRenderer.invoke("open-explorer-folder", {
                       path: localBookPath,
                       isFolder: false,
                     });
                   } else {
-                    const { ipcRenderer } = window.require("electron");
+                    const ipcRenderer = window.electronAPI;
                     ipcRenderer.invoke("open-explorer-folder", {
                       path: libraryBookPath,
                       isFolder: false,

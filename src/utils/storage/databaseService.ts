@@ -16,8 +16,8 @@ class DatabaseService {
   static async getAllRecords(dbName: string) {
     if (isElectron) {
       let records = await window
-        .require("electron")
-        .ipcRenderer.invoke("database-command", {
+        .electronAPI
+        .invoke("database-command", {
           statement: "getAllStatement",
           statementType: "string",
           executeType: "all",
@@ -48,8 +48,8 @@ class DatabaseService {
       for (let record of records) {
         try {
           await window
-            .require("electron")
-            .ipcRenderer.invoke("database-command", {
+            .electronAPI
+            .invoke("database-command", {
               statement: "saveStatement",
               statementType: "string",
               executeType: "run",
@@ -112,7 +112,7 @@ class DatabaseService {
       }
     }
     if (isElectron) {
-      await window.require("electron").ipcRenderer.invoke("database-command", {
+      await window.electronAPI.invoke("database-command", {
         statement: "deleteAllStatement",
         statementType: "string",
         executeType: "run",
@@ -129,7 +129,7 @@ class DatabaseService {
   }
   static async saveRecord(record: any, dbName: string, isRecord = true) {
     if (isElectron) {
-      await window.require("electron").ipcRenderer.invoke("database-command", {
+      await window.electronAPI.invoke("database-command", {
         statement: "saveStatement",
         statementType: "string",
         executeType: "run",
@@ -156,7 +156,7 @@ class DatabaseService {
   }
   static async deleteRecord(key: string, dbName: string, isRecord = true) {
     if (isElectron) {
-      await window.require("electron").ipcRenderer.invoke("database-command", {
+      await window.electronAPI.invoke("database-command", {
         statement: "deleteStatement",
         statementType: "string",
         executeType: "run",
@@ -182,7 +182,7 @@ class DatabaseService {
   }
   static async updateRecord(record: any, dbName: string, isRecord = true) {
     if (isElectron) {
-      await window.require("electron").ipcRenderer.invoke("database-command", {
+      await window.electronAPI.invoke("database-command", {
         statement: "updateStatement",
         statementType: "string",
         executeType: "run",
@@ -215,8 +215,8 @@ class DatabaseService {
   static async getRecord(key: string, dbName: string): Promise<any | null> {
     if (isElectron) {
       let record = await window
-        .require("electron")
-        .ipcRenderer.invoke("database-command", {
+        .electronAPI
+        .invoke("database-command", {
           statement: "getStatement",
           statementType: "string",
           executeType: "get",
@@ -238,8 +238,8 @@ class DatabaseService {
   static async getAllRecordKeys(dbName: string): Promise<string[]> {
     if (isElectron) {
       let keys = await window
-        .require("electron")
-        .ipcRenderer.invoke("database-command", {
+        .electronAPI
+        .invoke("database-command", {
           statement: "getKeysStatement",
           statementType: "string",
           executeType: "all",
@@ -258,8 +258,8 @@ class DatabaseService {
   ): Promise<any[]> {
     if (isElectron) {
       let records = await window
-        .require("electron")
-        .ipcRenderer.invoke("database-command", {
+        .electronAPI
+        .invoke("database-command", {
           statement: "getByBookKeyStatement",
           statementType: "string",
           executeType: "all",
@@ -279,8 +279,8 @@ class DatabaseService {
   ): Promise<any[]> {
     if (isElectron) {
       let records = await window
-        .require("electron")
-        .ipcRenderer.invoke("database-command", {
+        .electronAPI
+        .invoke("database-command", {
           statement: "getByBookKeysStatement",
           statementType: "function",
           executeType: "all",
@@ -300,8 +300,8 @@ class DatabaseService {
   ): Promise<any[]> {
     if (isElectron) {
       let records = await window
-        .require("electron")
-        .ipcRenderer.invoke("database-command", {
+        .electronAPI
+        .invoke("database-command", {
           statement: "getByKeysStatement",
           statementType: "function",
           executeType: "all",
@@ -324,8 +324,8 @@ class DatabaseService {
       for (let record of records) {
         try {
           await window
-            .require("electron")
-            .ipcRenderer.invoke("database-command", {
+            .electronAPI
+            .invoke("database-command", {
               statement: "updateStatement",
               statementType: "string",
               executeType: "run",
@@ -380,7 +380,7 @@ class DatabaseService {
       );
     }
     if (isElectron) {
-      await window.require("electron").ipcRenderer.invoke("database-command", {
+      await window.electronAPI.invoke("database-command", {
         statement: "deleteByBookKeyStatement",
         statementType: "string",
         executeType: "run",
