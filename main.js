@@ -1160,11 +1160,6 @@ const createMainWin = () => {
   ipcMain.on("clipboard-read-text-sync", (event) => {
     event.returnValue = clipboard.readText();
   });
-  ipcMain.handle("clipboard-read-text", () => clipboard.readText());
-  ipcMain.handle("clipboard-write-text", (event, text) => {
-    if (typeof text !== "string") throw new TypeError("Invalid clipboard text");
-    clipboard.writeText(text);
-  });
   ipcMain.handle("dict-lookup", (event, args) => {
     const filePath = validateFilePath(args && args.filePath);
     if (typeof (args && args.word) !== "string")
@@ -1782,9 +1777,6 @@ const createMainWin = () => {
   ipcMain.handle("get-device-name", async () => {
     return os.hostname() || "";
   });
-  ipcMain.handle("get-store-value", async (event, config) => {
-    return store.get(config.key);
-  });
   ipcMain.handle("get-biometric-capability", async () => {
     return await getBiometricCapability();
   });
@@ -2298,9 +2290,6 @@ const createMainWin = () => {
   });
   ipcMain.handle("set-native-theme-source", (event, appSkin) => {
     return applyNativeThemeSource(appSkin);
-  });
-  ipcMain.on("check-main-open", (event, arg) => {
-    event.returnValue = mainWin ? true : false;
   });
   ipcMain.on("get-file-data", function (event) {
     if (fs.existsSync(path.join(dirPath, "log.json"))) {
