@@ -98,6 +98,7 @@ const file = {
   existsSync: (filePath) => fileSync("exists", { path: filePath }),
   mkdirSync: (filePath, options) => fileSync("mkdir", { path: filePath, options }),
   writeFileSync: (filePath, data, options) => fileSync("write", { path: filePath, data: bytes(data), options }),
+  appendFileSync: (filePath, data, options) => fileSync("append", { path: filePath, data: bytes(data), options }),
   readFileSync: (filePath, options) => bytes(fileSync("read", { path: filePath, options })),
   readdirSync: (filePath, options) => fileSync("readdir", { path: filePath, options }),
   statSync: (filePath) => fileSync("stat", { path: filePath }),

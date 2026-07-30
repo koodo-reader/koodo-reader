@@ -1122,6 +1122,12 @@ const createMainWin = () => {
           normalizeFileData(args.data),
           args.options
         );
+      case "append":
+        return fs.appendFileSync(
+          filePath,
+          normalizeFileData(args.data),
+          args.options
+        );
       case "readdir": {
         const entries = fs.readdirSync(filePath, args.options || {});
         return args.options && args.options.withFileTypes
