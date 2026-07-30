@@ -70,7 +70,31 @@ const throttle = (func, wait = RESIZE_THROTTLE_MS) => {
     }
   };
 };
+const getFingerprint = async () => {
+  // First, try to get cached fingerprint
+  let deviceUuid = store.get("fingerPrint");
+  if (deviceUuid) {
+    return deviceUuid;
+  }
 
+  // Try to get machine ID with additional error handling
+  try {
+    const { machineIdSync } = require("node-machine-id");
+    let machineId = machineIdSync();
+    if (machineId && typeof machineId === "string" && machineId.length > 0) {
+      // Cache the machine ID for future use
+      store.set("fingerPrint", machineId);
+      return machineId;
+    }
+  } catch (error) {
+    console.error("Failed to get machine ID:", error);
+  }
+
+  // Fallback: generate and cache a UUID
+  let fingerprint = uuidv4().replace(/-/g, "");
+  store.set("fingerPrint", fingerprint);
+  return fingerprint;
+};
 const extractClixmlErrors = (text) => {
   if (!text) return "";
   const matches = text.match(
@@ -1369,9 +1393,7 @@ const createMainWin = () => {
     return result.filePaths[0];
   });
   ipcMain.handle("encrypt-data", async (event, config) => {
-    const { TokenService } =
-      await import("./src/assets/lib/kookit-extra.min.mjs");
-    let fingerprint = await TokenService.getFingerprint();
+    let fingerprint = await getFingerprint();
     let encrypted = encrypt(config.token, fingerprint);
     store.set("encryptedToken", encrypted);
     return "pong";
@@ -1379,9 +1401,7 @@ const createMainWin = () => {
   ipcMain.handle("decrypt-data", async (event) => {
     let encrypted = store.get("encryptedToken");
     if (!encrypted) return "";
-    const { TokenService } =
-      await import("./src/assets/lib/kookit-extra.min.mjs");
-    let fingerprint = await TokenService.getFingerprint();
+    let fingerprint = await getFingerprint();
     let decrypted = decrypt(encrypted, fingerprint);
     if (decrypted.startsWith("{") && decrypted.endsWith("}")) {
       return decrypted;
