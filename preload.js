@@ -110,6 +110,7 @@ const file = {
   rmSync: (filePath, options) => fileSync("rm", { path: filePath, options }),
   emptyDirSync: (filePath) => fileSync("emptyDir", { path: filePath }),
   copy: (source, destination) => fileInvoke("copy", { source, destination }),
+  rm: (filePath, options) => fileInvoke("rm", { path: filePath, options }),
   readFile: (filePath, options, callback) => {
     const cb = typeof options === "function" ? options : callback;
     const readOptions = typeof options === "function" ? undefined : options;

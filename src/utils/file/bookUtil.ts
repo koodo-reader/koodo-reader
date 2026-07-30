@@ -52,26 +52,16 @@ class BookUtil {
       await this.uploadBook(key, format);
     }
   }
-  static deleteBook(key: string, format: string) {
+  static async deleteBook(key: string, format: string) {
     try {
       if (isElectron) {
-        const fs_extra = window.electronAPI.fs;
+        const fs = window.electronAPI.fs;
         const path = window.electronAPI.path;
         const dataPath = getStorageLocation() || "";
-        return new Promise<void>((resolve, reject) => {
-          try {
-            fs_extra.remove(
-              path.join(dataPath, `book`, key + "." + format),
-              (err) => {
-                if (err) throw err;
-                this.deleteCloudBook(key, format);
-                resolve();
-              }
-            );
-          } catch (e) {
-            reject();
-          }
+        await fs.rm(path.join(dataPath, "book", key + "." + format), {
+          force: true,
         });
+        await this.deleteCloudBook(key, format);
       } else {
         this.deleteCloudBook(key, format);
         if (ConfigService.getItem("isUseLocal") === "yes") {
@@ -82,6 +72,7 @@ class BookUtil {
       }
     } catch (error) {
       console.error("delete book error:", error);
+      throw error;
     }
   }
   static isBookExist(key: string, format: string, bookPath: string) {
