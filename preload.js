@@ -10,7 +10,7 @@ const INVOKE_CHANNELS = new Set([
   "cloud-list", "picker-list", "cloud-exist", "cloud-close", "clear-tts", "select-path",
   "select-file", "encrypt-data", "decrypt-data", "check-cloud-url", "get-proxy-config",
   "set-proxy-config", "test-proxy-connection", "get-mac",
-  "get-device-name", "get-store-value", "get-biometric-capability", "prompt-biometric-auth",
+  "get-device-name", "get-biometric-capability", "prompt-biometric-auth",
   "reset-reader-position", "reset-main-position", "select-zip-file", "select-book",
   "custom-database-command", "database-command", "close-database", "set-always-on-top",
   "set-auto-maximize", "toggle-auto-launch", "toggle-minimize-to-tray", "open-explorer-folder",
@@ -18,17 +18,17 @@ const INVOKE_CHANNELS = new Set([
   "clear-all-data", "new-tab", "reload-tab", "adjust-tab-size", "exit-tab",
   "enter-tab-fullscreen", "exit-tab-fullscreen", "enter-fullscreen", "exit-fullscreen",
   "open-url", "switch-moyu", "set-native-theme-source", "system-ocr", "file-command",
-  "open-external", "clipboard-read-text", "clipboard-write-text", "dict-lookup", "partial-md5"
+  "open-external", "dict-lookup", "partial-md5"
 ]);
-const SEND_CHANNELS = new Set(["reader-close-ready", "tab-close-ready", "chat-message"]);
+const SEND_CHANNELS = new Set(["reader-close-ready", "tab-close-ready"]);
 const SEND_SYNC_CHANNELS = new Set([
-  "storage-location", "url-window-status", "get-dirname", "system-color", "check-main-open",
+  "storage-location", "url-window-status", "get-dirname", "system-color",
   "get-file-data", "check-file-data", "user-data", "file-command-sync", "clipboard-read-text-sync"
 ]);
 const EVENT_CHANNELS = new Set([
   "oauth-callback", "before-reader-close", "before-tab-close", "reading-finished",
   "chat-message", "import-url-from-link", "open-book-from-link", "open-note-from-link",
-  "picker-finished", "download-app-progress", "update-progress"
+  "picker-finished", "download-app-progress"
 ]);
 
 const assertChannel = (set, channel) => {
@@ -161,6 +161,5 @@ contextBridge.exposeInMainWorld("electronAPI", {
   shell: { openExternal: (url) => invoke("open-external", url) },
   clipboard: {
     readText: () => sendSync("clipboard-read-text-sync"),
-    writeText: (text) => invoke("clipboard-write-text", text),
   },
 });
