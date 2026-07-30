@@ -2,6 +2,7 @@ interface ElectronFileAPI {
   existsSync(path: string): boolean;
   mkdirSync(path: string, options?: { recursive?: boolean }): void;
   writeFileSync(path: string, data: string | ArrayBuffer | ArrayBufferView, options?: string | object): void;
+  appendFileSync(path: string, data: string | ArrayBuffer | ArrayBufferView, options?: string | object): void;
   readFileSync(path: string, options: string): string;
   readFileSync(path: string, options?: object): Uint8Array;
   readdirSync(path: string, options: { withFileTypes: true }): Array<{ name: string; isFile: boolean; isDirectory: boolean }>;
