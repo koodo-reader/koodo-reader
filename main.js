@@ -1163,7 +1163,10 @@ const createMainWin = () => {
         return value;
       };
       const stringArgs = (values) => {
-        if (!Array.isArray(values) || values.some((value) => typeof value !== "string")) {
+        if (
+          !Array.isArray(values) ||
+          values.some((value) => typeof value !== "string")
+        ) {
           throw new TypeError("Invalid string arguments");
         }
         return values;
@@ -1206,7 +1209,8 @@ const createMainWin = () => {
         ok: false,
         error: {
           message: error instanceof Error ? error.message : String(error),
-          code: error && typeof error.code === "string" ? error.code : undefined,
+          code:
+            error && typeof error.code === "string" ? error.code : undefined,
         },
       };
     }
