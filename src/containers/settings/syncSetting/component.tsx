@@ -33,7 +33,6 @@ import {
   KookitConfig,
   SyncHelper,
   SyncUtil,
-  TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   encryptToken,
@@ -44,6 +43,7 @@ import { updateUserConfig } from "../../../utils/request/user";
 import BookUtil from "../../../utils/file/bookUtil";
 import Book from "../../../models/Book";
 import ConfigUtil from "../../../utils/file/configUtil";
+import TokenService from "../../../utils/storage/tokenService";
 declare var window: any;
 class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {

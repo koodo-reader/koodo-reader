@@ -5,13 +5,13 @@ import { SSE } from "sse.js";
 import {
   CommonTool,
   ConfigService,
-  TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getServerRegion, reloadManager } from "../common";
 import { resetReaderRequest } from "./reader";
 import { resetUserRequest } from "./user";
 import { resetThirdpartyRequest } from "./thirdparty";
 import { isElectron } from "react-device-detect";
+import TokenService from "../storage/tokenService";
 const PUBLIC_URL = "https://api.koodoreader.com";
 const CN_PUBLIC_URL = "https://api.koodoreader.cn";
 let cachedPluginList: any[] | null = null;

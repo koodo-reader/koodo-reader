@@ -8,10 +8,10 @@ import Book from "../../models/Book";
 import {
   CommonTool,
   ConfigService,
-  TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { getCloudConfig } from "./common";
 import { LocalFileManager } from "./localFile";
+import TokenService from "../storage/tokenService";
 declare var window: any;
 class AsyncQueue {
   private queue: (() => Promise<void>)[] = [];

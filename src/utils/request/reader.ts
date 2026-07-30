@@ -2,7 +2,6 @@ import toast from "react-hot-toast";
 import {
   ConfigService,
   ReaderRequest,
-  TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
@@ -14,6 +13,7 @@ import {
   vexComfirmAsync,
 } from "../common";
 import { getTempToken } from "./user";
+import TokenService from "../storage/tokenService";
 let readerRequest: ReaderRequest | undefined;
 let isShowingQuotaAlert = false;
 let quotaAlertDismissTime = 0;

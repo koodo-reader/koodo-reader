@@ -8,7 +8,6 @@ import {
 import {
   ConfigService,
   KookitConfig,
-  TokenService,
   UserRequest,
 } from "../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../package.json";
@@ -16,6 +15,7 @@ import toast from "react-hot-toast";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
 import { getServerRegion, vexComfirmAsync } from "../common";
+import TokenService from "../storage/tokenService";
 declare var window: any;
 let userRequest: UserRequest | undefined;
 

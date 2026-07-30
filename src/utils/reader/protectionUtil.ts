@@ -1,5 +1,5 @@
 import { isElectron } from "react-device-detect";
-import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
+import TokenService from "../storage/tokenService";
 
 declare var window: any;
 

@@ -19,7 +19,6 @@ import {
   ConfigService,
   KookitConfig,
   LoginHelper,
-  TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { loginList } from "../../../constants/loginList";
 import {
@@ -32,6 +31,7 @@ import { handleClearToken, handleExitApp } from "../../../utils/request/common";
 import copyTextToClipboard from "copy-text-to-clipboard";
 import { resetReaderRequest } from "../../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../../utils/request/thirdparty";
+import TokenService from "../../../utils/storage/tokenService";
 declare var window: any;
 class AccountSetting extends React.Component<
   SettingInfoProps,

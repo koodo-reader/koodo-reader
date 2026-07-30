@@ -6,7 +6,6 @@ import { HeaderProps, HeaderState } from "./interface";
 import {
   ConfigService,
   KookitConfig,
-  TokenService,
   KOReaderUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
@@ -49,6 +48,7 @@ import packageJson from "../../../package.json";
 import { getTempToken, updateUserConfig } from "../../utils/request/user";
 import i18n from "../../i18n";
 import { getNotification } from "../../utils/request/common";
+import TokenService from "../../utils/storage/tokenService";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {

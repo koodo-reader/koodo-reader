@@ -17,10 +17,7 @@ import {
   checkStableUpdate,
   handleClearToken,
 } from "../../../utils/request/common";
-import {
-  ConfigService,
-  TokenService,
-} from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { isWindows } from "react-device-detect";
 
