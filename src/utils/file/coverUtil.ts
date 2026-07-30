@@ -59,23 +59,10 @@ class CoverUtil {
       if (!fs.existsSync(imageFilePath)) {
         return book.cover;
       }
-      const extension = path.extname(imageFilePath).slice(1).toLowerCase();
-      const mimeTypes: Record<string, string> = {
-        bmp: "image/bmp",
-        gif: "image/gif",
-        ico: "image/x-icon",
-        jpeg: "image/jpeg",
-        jpg: "image/jpeg",
-        png: "image/png",
-        svg: "image/svg+xml",
-        tiff: "image/tiff",
-        webp: "image/webp",
-      };
-      const mimeType = mimeTypes[extension] || "application/octet-stream";
-      const imageBuffer = fs.readFileSync(imageFilePath);
-      return `data:${mimeType};base64,${Buffer.from(imageBuffer).toString(
-        "base64"
-      )}`;
+      return window.electronAPI.invoke("get-cover-url", {
+        filePath: imageFilePath,
+        storagePath: getStorageLocation(),
+      }) as Promise<string>;
     } else {
       if (ConfigService.getItem("isUseLocal") === "yes") {
         let coverList = await this.getLocalCoverList();

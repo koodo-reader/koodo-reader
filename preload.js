@@ -15,7 +15,7 @@ const INVOKE_CHANNELS = new Set([
   "clear-all-data", "new-tab", "reload-tab", "adjust-tab-size", "exit-tab",
   "enter-tab-fullscreen", "exit-tab-fullscreen", "enter-fullscreen", "exit-fullscreen",
   "open-url", "switch-moyu", "set-native-theme-source", "system-ocr", "file-command",
-  "open-external", "dict-lookup", "partial-md5"
+  "open-external", "dict-lookup", "partial-md5", "get-cover-url"
 ]);
 const SEND_CHANNELS = new Set(["reader-close-ready", "tab-close-ready"]);
 const SEND_SYNC_CHANNELS = new Set([

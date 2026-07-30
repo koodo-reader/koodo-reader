@@ -14,8 +14,10 @@ const {
   systemPreferences,
   shell,
   clipboard,
+  net,
 } = require("electron");
 const path = require("path");
+const { pathToFileURL } = require("url");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const log = require("electron-log/main");
@@ -27,6 +29,33 @@ const fsExtra = require("fs-extra");
 const nodeCrypto = require("crypto");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
+const assetProtocolFiles = new Map();
+const ASSET_PROTOCOL = "asset";
+const assetProtocolSecret = nodeCrypto.randomBytes(32);
+const COVER_MIME_TYPES = {
+  ".bmp": "image/bmp",
+  ".gif": "image/gif",
+  ".ico": "image/x-icon",
+  ".jpeg": "image/jpeg",
+  ".jpg": "image/jpeg",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".tif": "image/tiff",
+  ".tiff": "image/tiff",
+  ".webp": "image/webp",
+};
+const COVER_EXTENSIONS = new Set(Object.keys(COVER_MIME_TYPES));
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: ASSET_PROTOCOL,
+    privileges: {
+      standard: true,
+      secure: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+    },
+  },
+]);
 const packageJson = require("./package.json");
 let mainWin;
 let tray = null;
@@ -1151,6 +1180,12 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("file-command", async (event, args) => runFileCommand(args));
+  ipcMain.handle("get-cover-url", (event, config) => {
+    if (!config || typeof config !== "object") {
+      throw new TypeError("Invalid cover URL config");
+    }
+    return getCoverProtocolUrl(config.filePath, config.storagePath);
+  });
   ipcMain.on("node-command-sync", (event, args) => {
     try {
       if (!args || typeof args.operation !== "string") {
@@ -2426,7 +2461,93 @@ const createMainWin = () => {
   });
 };
 
+const registerAssetProtocol = () => {
+  protocol.handle(ASSET_PROTOCOL, async (request) => {
+    const requestUrl = new URL(request.url);
+    if (requestUrl.hostname !== "local") {
+      return new Response(null, { status: 404 });
+    }
+    const token = requestUrl.pathname.slice(1);
+    const asset = assetProtocolFiles.get(token);
+    if (!asset) {
+      return new Response(null, { status: 404 });
+    }
+    let filePath;
+    try {
+      filePath = fs.realpathSync(asset.filePath);
+      const coverDirectory = fs.realpathSync(asset.coverDirectory);
+      const relativePath = path.relative(coverDirectory, filePath);
+      if (
+        !relativePath ||
+        relativePath.startsWith(".." + path.sep) ||
+        path.isAbsolute(relativePath) ||
+        !COVER_EXTENSIONS.has(path.extname(filePath).toLowerCase())
+      ) {
+        return new Response(null, { status: 403 });
+      }
+    } catch {
+      return new Response(null, { status: 404 });
+    }
+    const response = await net.fetch(pathToFileURL(filePath).toString());
+    const headers = new Headers(response.headers);
+    headers.set(
+      "Content-Type",
+      COVER_MIME_TYPES[path.extname(filePath).toLowerCase()]
+    );
+    headers.set("Access-Control-Allow-Origin", "*");
+    headers.set("X-Content-Type-Options", "nosniff");
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
+  });
+};
+
+const getCoverProtocolUrl = (value, storagePath) => {
+  if (
+    typeof value !== "string" ||
+    !value ||
+    value.includes("\0") ||
+    typeof storagePath !== "string" ||
+    !storagePath ||
+    storagePath.includes("\0")
+  ) {
+    throw new TypeError("Invalid cover path");
+  }
+  const filePath = path.resolve(value);
+  const coverDirectory = path.resolve(storagePath, "cover");
+  const stat = fs.statSync(filePath);
+  if (!stat.isFile()) {
+    throw new Error("Cover file does not exist");
+  }
+  if (!fs.existsSync(coverDirectory)) {
+    throw new Error("Cover directory does not exist");
+  }
+  const realFilePath = fs.realpathSync(filePath);
+  const realCoverDirectory = fs.realpathSync(coverDirectory);
+  const relativePath = path.relative(realCoverDirectory, realFilePath);
+  if (
+    !relativePath ||
+    relativePath.startsWith(".." + path.sep) ||
+    path.isAbsolute(relativePath) ||
+    !COVER_EXTENSIONS.has(path.extname(realFilePath).toLowerCase())
+  ) {
+    throw new Error("Cover path is outside the cover directory");
+  }
+  const token = nodeCrypto
+    .createHmac("sha256", assetProtocolSecret)
+    .update(`${realFilePath}\0${stat.mtimeMs}\0${stat.size}`)
+    .digest("hex");
+  assetProtocolFiles.set(token, {
+    filePath: realFilePath,
+    coverDirectory: realCoverDirectory,
+  });
+  return `${ASSET_PROTOCOL}://local/${token}`;
+};
+
 app.on("ready", async () => {
+  registerAssetProtocol();
   await applyProxyToSession();
   createMainWin();
 });

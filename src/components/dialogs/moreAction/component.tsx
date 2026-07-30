@@ -173,9 +173,14 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                   return;
                 }
                 const cover = await CoverUtil.getCover(this.props.currentBook);
-                if (cover.startsWith("blob:")) {
-                  const ext = "jpg";
-                  saveAs(cover, `${this.props.currentBook.name}.${ext}`);
+                if (
+                  cover.startsWith("blob:") ||
+                  cover.startsWith("asset:")
+                ) {
+                  const response = await fetch(cover);
+                  const blob = await response.blob();
+                  const ext = blob.type.split("/")[1] || "jpg";
+                  saveAs(blob, `${this.props.currentBook.name}.${ext}`);
                 } else if (cover.startsWith("data:")) {
                   const mimeMatch = cover.match(/data:(image\/\w+);base64,/);
                   const mime = mimeMatch ? mimeMatch[1] : "image/jpeg";
