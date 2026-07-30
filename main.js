@@ -714,7 +714,7 @@ let options = {
   minWidth: 300,
   minHeight: 100,
   webPreferences: {
-    webSecurity: false,
+    webSecurity: true,
     nodeIntegration: false,
     contextIsolation: true,
     preload: path.join(__dirname, "preload.js"),
