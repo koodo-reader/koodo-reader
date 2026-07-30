@@ -183,7 +183,7 @@ export const restore = async (service: string): Promise<Boolean> => {
     await generateSyncRecord();
     return restoreRes;
   }
-  const { ipcRenderer } = window.require("electron");
+  const ipcRenderer = window.electronAPI;
   if (service === "local") {
     let filePath = await ipcRenderer.invoke("select-zip-file", "ping");
     if (!filePath) return false;
@@ -211,7 +211,7 @@ export const restore = async (service: string): Promise<Boolean> => {
       console.error("no backup file");
       return false;
     }
-    const path = window.require("path");
+    const path = window.electronAPI.path;
     let filePath = path.join(getStorageLocation(), "backup", "data.zip");
 
     // 让 UI 有时间渲染 toast
@@ -223,55 +223,37 @@ export const restore = async (service: string): Promise<Boolean> => {
 };
 export const restoreFromSnapshot = async (fileName: string) => {
   try {
-    const path = window.require("path");
-    const fs = window.require("fs");
-    const AdmZip = window.require("adm-zip");
+    const path = window.electronAPI.path;
+    const fs = window.electronAPI.fs;
     const dataPath = getStorageLocation() || "";
-
-    let filePath = path.join(getStorageLocation(), "snapshot", fileName);
-    if (!fs.existsSync(filePath)) {
-      return false;
-    }
-    const zip = new AdmZip(filePath);
-    const zipEntries = zip.getEntries();
-    const zipEntryNames = new Set(
-      zipEntries.map((item: any) => item.entryName)
-    );
-    let databaseList = CommonTool.databaseList;
+    const filePath = path.join(dataPath, "snapshot", fileName);
+    if (!fs.existsSync(filePath)) return false;
+    const zip = await JSZip.loadAsync(fs.readFileSync(filePath));
+    const databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
-      await window.require("electron").ipcRenderer.invoke("close-database", {
+      await window.electronAPI.invoke("close-database", {
         dbName: databaseList[i],
         storagePath: getStorageLocation(),
       });
-      if (!zipEntryNames.has("config/" + databaseList[i] + ".db")) {
-        continue;
-      }
-      if (
-        fs.existsSync(path.join(dataPath, "config", databaseList[i] + ".db"))
-      ) {
-        fs.unlinkSync(path.join(dataPath, "config", databaseList[i] + ".db"));
-      }
-      zip.extractEntryTo(
-        "config/" + databaseList[i] + ".db",
-        path.join(dataPath, "config"),
-        false,
-        true
-      );
+      const entryName = "config/" + databaseList[i] + ".db";
+      const entry = zip.file(entryName);
+      if (!entry) continue;
+      const destination = path.join(dataPath, "config", databaseList[i] + ".db");
+      if (fs.existsSync(destination)) fs.unlinkSync(destination);
+      fs.mkdirSync(path.dirname(destination), { recursive: true });
+      fs.writeFileSync(destination, await entry.async("uint8array"));
     }
-    try {
-      let configText = zip
-        .getEntry("config/config.json")
-        .getData()
-        .toString("utf8");
-      let config = JSON.parse(configText);
-      for (let key in config) {
-        ConfigService.setItem(key, config[key]);
+    const configEntry = zip.file("config/config.json");
+    if (configEntry) {
+      try {
+        const config = JSON.parse(await configEntry.async("string"));
+        for (const key in config) ConfigService.setItem(key, config[key]);
+      } catch (error) {
+        console.error("restore config error:", error);
       }
-    } catch (error) {
-      console.error("restore config error:", error);
     }
-
     await generateSyncRecord();
+    return true;
   } catch (error) {
     console.error("restore snapshot error:", error);
     toast.error(error instanceof Error ? error.message : String(error), {
@@ -279,68 +261,43 @@ export const restoreFromSnapshot = async (fileName: string) => {
     });
     return false;
   }
-
-  return true;
 };
 export const restoreFromfilePath = async (filePath: string) => {
-  const fs = window.require("fs");
-  const path = window.require("path");
-  const JSZip = window.require("jszip");
-  if (!fs.existsSync(filePath)) {
-    return false;
-  }
-
-  // Load zip structure lazily via Node.js stream — JSZip reads metadata upfront
-  // but decompresses each file on-demand via nodeStream(), avoiding holding all
-  // file contents in memory simultaneously.
-  const fileBuffer = fs.readFileSync(filePath);
-  const zip = await JSZip.loadAsync(fileBuffer);
-
+  const fs = window.electronAPI.fs;
+  const path = window.electronAPI.path;
+  if (!fs.existsSync(filePath)) return false;
+  const zip = await JSZip.loadAsync(fs.readFileSync(filePath));
   const isNewBackup = zip.file("config/config.json") !== null;
-
   if (!isNewBackup) {
-    // Old backup format: fall back to adm-zip (files are small in old format)
-    const AdmZip = window.require("adm-zip");
-    const admZip = new AdmZip(filePath);
-    return await restoreFromOldBackup(admZip.getEntries());
+    const oldEntries = Object.keys(zip.files)
+      .filter((name) => !zip.files[name].dir)
+      .map((name) => ({
+        name,
+        getData: () => zip.files[name].async("uint8array"),
+      }));
+    return await restoreFromOldBackup(oldEntries);
   }
 
   const dataPath = getStorageLocation() || "";
   let failed = false;
   let processedCount = 0;
-
-  const allFiles = Object.keys(zip.files).filter(
-    (name) => !zip.files[name].dir
-  );
+  const allFiles = Object.keys(zip.files).filter((name) => !zip.files[name].dir);
   const totalFiles = allFiles.length;
   const updateProgress = () => {
     processedCount++;
-    const percent = Math.round(
-      (processedCount / Math.max(totalFiles, 1)) * 100
-    );
+    const percent = Math.round((processedCount / Math.max(totalFiles, 1)) * 100);
     toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, { id: "backup" });
   };
 
-  const streamToFile = (stream: any, dest: string): Promise<void> =>
-    new Promise((res, rej) => {
-      const dir = path.dirname(dest);
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      const out = fs.createWriteStream(dest);
-      stream.pipe(out);
-      out.on("finish", res);
-      out.on("error", rej);
-      stream.on("error", rej);
-    });
-
-  // Process config entries first (sequential, small files)
   const configFiles = Object.keys(zip.files).filter(
     (name) => name.startsWith("config/") && !zip.files[name].dir
   );
   for (const fileName of configFiles) {
     try {
       const entryName = path.basename(fileName);
+      const entry = zip.file(fileName)!;
       if (entryName === "config.json") {
-        const text = await zip.file(fileName)!.async("string");
+        const text = await entry.async("string");
         if (!text) {
           failed = true;
           break;
@@ -348,14 +305,14 @@ export const restoreFromfilePath = async (filePath: string) => {
         const config = JSON.parse(text);
         for (const key in config) ConfigService.setItem(key, config[key]);
       } else if (entryName === "sync.json") {
-        const text = await zip.file(fileName)!.async("string");
+        const text = await entry.async("string");
         if (!text) {
           failed = true;
           break;
         }
         ConfigService.setItem("syncRecord", text);
       } else if (entryName.endsWith(".db")) {
-        const buf: ArrayBuffer = await zip.file(fileName)!.async("arraybuffer");
+        const buf = await entry.async("arraybuffer");
         const sqlUtil = new SqlUtil();
         const dbName = entryName.split(".")[0];
         const cloudRecords = await sqlUtil.dbBufferToJson(buf, dbName);
@@ -367,33 +324,27 @@ export const restoreFromfilePath = async (filePath: string) => {
       break;
     }
   }
-
   if (failed) return false;
 
-  // Stream book and cover files to disk concurrently via nodeStream()
+  const isSafeArchiveName = (name: string) =>
+    !name.startsWith("/") && !name.split(/[\\/]/).includes("..");
   const assetFiles = Object.keys(zip.files).filter(
     (name) =>
+      isSafeArchiveName(name) &&
       !zip.files[name].dir &&
-      (name.startsWith("book/") ||
-        name.startsWith("cover/") ||
-        name.startsWith("dict/") ||
-        name.startsWith("background/") ||
-        name.startsWith("font/") ||
-        name.startsWith("snapshot/"))
+      ["book/", "cover/", "dict/", "background/", "font/", "snapshot/"].some((prefix) => name.startsWith(prefix))
   );
-  await Promise.all(
-    assetFiles.map(async (fileName) => {
-      try {
-        const dest = path.join(dataPath, fileName);
-        const stream = zip.file(fileName)!.nodeStream();
-        await streamToFile(stream, dest);
-        updateProgress();
-      } catch {
-        failed = true;
-      }
-    })
-  );
-
+  for (const name of assetFiles) {
+    try {
+      const destination = path.join(dataPath, name);
+      const directory = path.dirname(destination);
+      if (!fs.existsSync(directory)) fs.mkdirSync(directory, { recursive: true });
+      fs.writeFileSync(destination, await zip.file(name)!.async("uint8array"));
+      updateProgress();
+    } catch {
+      failed = true;
+    }
+  }
   return !failed;
 };
 
@@ -421,7 +372,8 @@ export const unzipOldConfig = async (zipEntries: any) => {
   for (let i = 0; i < zipEntries.length; i++) {
     let zipEntry = zipEntries[i];
     if (oldConfigArr.indexOf(zipEntry.name) > -1) {
-      let text = zipEntry.getData().toString("utf8");
+      const data = await zipEntry.getData();
+      const text = new TextDecoder().decode(data);
       if (text) {
         if (
           zipEntry.name === "notes.json" ||
@@ -454,8 +406,8 @@ export const unzipOldBook = async (zipEntries: any): Promise<boolean> => {
   if (!value || value.length === 0) {
     return true;
   }
-  const fs = window.require("fs");
-  const path = window.require("path");
+  const fs = window.electronAPI.fs;
+  const path = window.electronAPI.path;
   const dataPath = getStorageLocation() || "";
   const bookPath = path.join(dataPath, "book");
   if (!fs.existsSync(bookPath)) {
@@ -466,7 +418,7 @@ export const unzipOldBook = async (zipEntries: any): Promise<boolean> => {
     for (let j = 0; j < zipEntries.length; j++) {
       const zipEntry = zipEntries[j];
       if (zipEntry.name === item.key) {
-        let buffer = zipEntry.getData();
+        let buffer = await zipEntry.getData();
         fs.writeFileSync(
           path.join(
             dataPath,

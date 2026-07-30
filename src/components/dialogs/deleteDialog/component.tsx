@@ -130,7 +130,7 @@ class DeleteDialog extends React.Component<
       ) {
         let fullBook = await DatabaseService.getRecord(key, "books");
         if (fullBook) {
-          const fs = window.require("fs");
+          const fs = window.electronAPI.fs;
           let bookPath = fullBook.path;
           if (fs.existsSync(bookPath)) {
             fs.unlinkSync(bookPath);

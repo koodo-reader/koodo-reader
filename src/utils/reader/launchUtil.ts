@@ -14,7 +14,7 @@ export const syncNativeThemeSource = (appSkin: string) => {
   if (!isElectron) {
     return;
   }
-  const { ipcRenderer } = window.require("electron");
+  const ipcRenderer = window.electronAPI;
   ipcRenderer.invoke("set-native-theme-source", appSkin || "system");
 };
 
@@ -23,7 +23,7 @@ export const initTheme = () => {
   style.rel = "stylesheet";
   let isNight = false;
   if (isElectron) {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     isNight = ipcRenderer.sendSync("system-color");
   } else {
     isNight =

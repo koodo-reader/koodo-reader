@@ -66,10 +66,7 @@ export const calculateFileMD5 = (file: File): Promise<string> => {
       const reader = new FileReader();
       reader.onload = (event) => {
         const arrayBuffer = event.target?.result as ArrayBuffer;
-        const crypto = window.require("crypto");
-        const hash = crypto.createHash("md5");
-        hash.update(Buffer.from(arrayBuffer));
-        resolve(hash.digest("hex"));
+        resolve(window.electronAPI?.crypto.md5(new Uint8Array(arrayBuffer)) || "");
       };
       reader.onerror = (error) => reject(error);
       reader.readAsArrayBuffer(file);
@@ -432,7 +429,7 @@ export const getFileNameWithoutExtension = (
 
 export const fetchFileFromPath = (filePath: string) => {
   return new Promise<File>((resolve) => {
-    const fs = window.require("fs");
+    const fs = window.electronAPI.fs;
 
     fs.readFile(filePath, (err, data) => {
       if (err) {
@@ -518,10 +515,10 @@ export const handleFullScreen = () => {
   if (isElectron) {
     if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
       window
-        .require("electron")
-        .ipcRenderer.invoke("enter-tab-fullscreen", "ping");
+        .electronAPI
+        .invoke("enter-tab-fullscreen", "ping");
     } else {
-      window.require("electron").ipcRenderer.invoke("enter-fullscreen", "ping");
+      window.electronAPI.invoke("enter-fullscreen", "ping");
     }
   } else {
     const el = document.documentElement as any;
@@ -537,10 +534,10 @@ export const handleExitFullScreen = () => {
   if (isElectron) {
     if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
       window
-        .require("electron")
-        .ipcRenderer.invoke("exit-tab-fullscreen", "ping");
+        .electronAPI
+        .invoke("exit-tab-fullscreen", "ping");
     } else {
-      window.require("electron").ipcRenderer.invoke("exit-fullscreen", "ping");
+      window.electronAPI.invoke("exit-fullscreen", "ping");
     }
   } else {
     const doc = document as any;
@@ -568,8 +565,8 @@ export const getStorageLocation = () => {
     return ConfigService.getItem("storageLocation")
       ? ConfigService.getItem("storageLocation")
       : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
+          .electronAPI
+          .sendSync("storage-location", "ping");
   } else {
     return ConfigService.getItem("storageLocation");
   }
@@ -597,7 +594,7 @@ export const checkPlugin = async (plugin: Plugin) => {
 };
 export const reloadManager = () => {
   if (isElectron) {
-    window.require("electron").ipcRenderer.invoke("reload-main", "ping");
+    window.electronAPI.invoke("reload-main", "ping");
   } else {
     window.location.reload();
   }
@@ -609,13 +606,13 @@ export const openExternalUrl = (
 ) => {
   isElectron
     ? ConfigService.getReaderConfig("isUseBuiltIn") === "yes" || isPlugin
-      ? window.require("electron").ipcRenderer.invoke("open-url", { url, type })
-      : window.require("electron").shell.openExternal(url)
+      ? window.electronAPI.invoke("open-url", { url, type })
+      : window.electronAPI.shell.openExternal(url)
     : window.open(url);
 };
 export const openInBrowser = (url: string) => {
   isElectron
-    ? window.require("electron").shell.openExternal(url)
+    ? window.electronAPI.shell.openExternal(url)
     : window.open(url);
 };
 export const getPageWidth = (
@@ -892,7 +889,8 @@ export const generateSyncRecord = async () => {
 };
 export const handleContextMenu = (id: string, isInput: boolean = false) => {
   if (!isElectron) return;
-  const clipboard = window.require("electron").clipboard;
+  if (!window.electronAPI?.clipboard) return "";
+  const clipboard = window.electronAPI.clipboard;
   const text = clipboard.readText();
   // fill the text into the box
   if (!isInput) {
@@ -986,8 +984,8 @@ export const formatTimestamp = (timestamp) => {
 };
 export const checkMissingBook = async () => {
   if (!isElectron) return;
-  var fs = window.require("fs");
-  var path = window.require("path");
+  var fs = window.electronAPI.fs;
+  var path = window.electronAPI.path;
   let bookList = (await BookUtil.getBookList()) as Book[];
   for (let index = 0; index < bookList.length; index++) {
     const book = bookList[index];
@@ -1010,8 +1008,8 @@ export const checkMissingBook = async () => {
 export const deleteBrokenCovers = () => {
   try {
     if (!isElectron) return;
-    var fs = window.require("fs");
-    var path = window.require("path");
+    var fs = window.electronAPI.fs;
+    var path = window.electronAPI.path;
     const storageLocation = getStorageLocation();
     if (!storageLocation) return;
     const dirPath = path.join(storageLocation, "cover");
@@ -1049,8 +1047,8 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
     id: "testing-connection-id",
   });
   if (isElectron) {
-    const { ipcRenderer } = window.require("electron");
-    const fs = window.require("fs");
+    const ipcRenderer = window.electronAPI;
+    const fs = window.electronAPI.fs;
     if (!fs.existsSync(getStorageLocation() + "/config")) {
       fs.mkdirSync(getStorageLocation() + "/config", { recursive: true });
     }
@@ -1181,13 +1179,13 @@ export const showDownloadProgress = (
           storagePath: getStorageLocation(),
         };
         downloadedSize = await window
-          .require("electron")
-          .ipcRenderer.invoke("cloud-progress", config);
+          .electronAPI
+          .invoke("cloud-progress", config);
       } else {
         let tokenConfig = await getCloudConfig(service);
         downloadedSize = await window
-          .require("electron")
-          .ipcRenderer.invoke("picker-progress", {
+          .electronAPI
+          .invoke("picker-progress", {
             ...tokenConfig,
             baseFolder: "",
             service: service,
@@ -1248,7 +1246,7 @@ export const showTaskProgress = async (
       service: service,
       storagePath: getStorageLocation(),
     };
-    await window.require("electron").ipcRenderer.invoke("cloud-reset", config);
+    await window.electronAPI.invoke("cloud-reset", config);
   } else {
     let syncUtil = await SyncService.getSyncUtil();
     syncUtil.resetCounters();
@@ -1256,8 +1254,8 @@ export const showTaskProgress = async (
   timer = setInterval(async () => {
     if (isElectron) {
       let stats = await window
-        .require("electron")
-        .ipcRenderer.invoke("cloud-stats", config);
+        .electronAPI
+        .invoke("cloud-stats", config);
       if (
         stats.total > 0 &&
         ConfigService.getReaderConfig("hideSyncProgress") !== "yes"
@@ -1331,8 +1329,8 @@ export const getTaskStats = async () => {
       storagePath: getStorageLocation(),
     };
     return await window
-      .require("electron")
-      .ipcRenderer.invoke("cloud-stats", config);
+      .electronAPI
+      .invoke("cloud-stats", config);
   } else {
     let syncUtil = await SyncService.getSyncUtil();
     return await syncUtil.getStats();
@@ -1375,10 +1373,10 @@ export const clearAllData = async () => {
 
   if (isElectron) {
     let storageLocation = getStorageLocation();
-    const fs = window.require("fs");
+    const fs = window.electronAPI.fs;
     let databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
-      await window.require("electron").ipcRenderer.invoke("close-database", {
+      await window.electronAPI.invoke("close-database", {
         dbName: databaseList[i],
         storagePath: getStorageLocation(),
       });
@@ -1386,7 +1384,7 @@ export const clearAllData = async () => {
     if (fs.existsSync(storageLocation)) {
       fs.rmSync(storageLocation, { recursive: true, force: true });
     }
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     ipcRenderer.invoke("clear-all-data", {});
   }
   await localforage.clear();
@@ -1696,14 +1694,14 @@ export const findLastMatchIndex = (a: string[], b: string[]) => {
 };
 export const getICloudDrivePath = () => {
   if (!isElectron) return "";
-  const fs = window.require("fs");
-  const path = window.require("path");
-  const os = window.require("os");
+  const fs = window.electronAPI.fs;
+  const path = window.electronAPI.path;
+  const os = window.electronAPI.os;
 
   let iCloudPath = "";
 
   // 自动检测iCloud Drive路径
-  if (isElectron && process.platform === "darwin") {
+  if (isElectron && window.electronAPI?.runtime?.platform === "darwin") {
     // macOS
     const possiblePath = path.join(
       os.homedir(),
@@ -1766,7 +1764,7 @@ export const prepareThirdConfig = async (service: string, config: any) => {
       SyncService.removeSyncUtil(targetDrive);
       removeCloudConfig(targetDrive);
       if (isElectron) {
-        const { ipcRenderer } = window.require("electron");
+        const ipcRenderer = window.electronAPI;
         await ipcRenderer.invoke("cloud-close", {
           service: targetDrive,
         });
@@ -1808,7 +1806,7 @@ export const prepareThirdConfig = async (service: string, config: any) => {
     SyncService.removeSyncUtil(service);
     removeCloudConfig(service);
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       await ipcRenderer.invoke("cloud-close", {
         service: service,
       });
@@ -1872,44 +1870,13 @@ export const langToName = (lang: string) => {
 };
 export const getBookPartialMd5 = async (book: Book) => {
   if (isElectron) {
-    const fs = window.require("fs");
-    const crypto = window.require("crypto");
-    function partialMD5(filepath) {
-      if (!filepath) return;
-
-      try {
-        const fd = fs.openSync(filepath, "r");
-        const step = 1024;
-        const size = 1024;
-        const hash = crypto.createHash("md5");
-        const buffer = Buffer.alloc(size);
-
-        for (let i = -1; i <= 10; i++) {
-          const position = step << (2 * i);
-
-          try {
-            const bytesRead = fs.readSync(fd, buffer, 0, size, position);
-            if (bytesRead > 0) {
-              hash.update(buffer.slice(0, bytesRead));
-            } else {
-              break;
-            }
-          } catch (err) {
-            break;
-          }
-        }
-
-        fs.closeSync(fd);
-        return hash.digest("hex");
-      } catch (err) {
-        return;
-      }
+    const filePath = BookUtil.getBookPath(book);
+    if (!filePath || !window.electronAPI?.crypto) return null;
+    try {
+      return await window.electronAPI.crypto.partialMd5(filePath);
+    } catch (error) {
+      return;
     }
-    let filePath = BookUtil.getBookPath(book);
-    if (!filePath) {
-      return null;
-    }
-    return partialMD5(filePath);
   } else {
     function partialMD5(arrayBuffer) {
       if (!arrayBuffer) return;

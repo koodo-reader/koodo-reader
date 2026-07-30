@@ -89,7 +89,7 @@ class ImportDialog extends React.Component<
     this.setState({ isWaitList: true });
     let fileInfoList = [];
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let tokenConfig = await getCloudConfig(drive);
       fileInfoList = await ipcRenderer.invoke("picker-list", {
         ...tokenConfig,
@@ -141,10 +141,10 @@ class ImportDialog extends React.Component<
     let destPath = "temp/" + item.path.split("/").pop();
     let file: any = null;
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dataPath = getStorageLocation() || "";
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let tokenConfig = await getCloudConfig(this.state.currentDrive);
       if (!fs.existsSync(path.join(dataPath, "temp"))) {
         fs.mkdirSync(path.join(dataPath, "temp"), {
@@ -243,7 +243,7 @@ class ImportDialog extends React.Component<
       let fileInfoList: FileInfo[] = [];
 
       if (isElectron) {
-        const { ipcRenderer } = window.require("electron");
+        const ipcRenderer = window.electronAPI;
         let tokenConfig = await getCloudConfig(this.state.currentDrive);
         fileInfoList = await ipcRenderer.invoke("picker-list", {
           ...tokenConfig,
@@ -306,8 +306,8 @@ class ImportDialog extends React.Component<
           "https://dl.koodoreader.com/websites/google-picker.html?access_token=" +
             pickerUtil.remote.config.access_token
         );
-        const { ipcRenderer } = window.require("electron");
-        ipcRenderer.once("picker-finished", async (event: any, config: any) => {
+        const ipcRenderer = window.electronAPI;
+        ipcRenderer.once("picker-finished", async (config: any) => {
           if (config && config.action === "picked" && config.docs) {
             for (const file of config.docs) {
               await this.handleImportGoogleFile(file);

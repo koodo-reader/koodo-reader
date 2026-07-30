@@ -47,8 +47,8 @@ class Login extends React.Component<LoginProps, LoginState> {
 
   componentDidMount() {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
-      ipcRenderer.on("oauth-callback", (_event, config) => {
+      const ipcRenderer = window.electronAPI;
+      ipcRenderer.on("oauth-callback", (config) => {
         let code = config.code;
         let state = config.state;
         this.setState({ currentStep: 2 });
@@ -497,7 +497,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                     }
                   })
                   .filter((item) => {
-                    if (isElectron && process.platform !== "darwin") {
+                    if (isElectron && window.electronAPI?.runtime?.platform !== "darwin") {
                       return item.value !== "icloud";
                     }
                     return true;

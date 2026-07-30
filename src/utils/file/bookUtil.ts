@@ -25,8 +25,8 @@ class BookUtil {
       });
     }
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dataPath = getStorageLocation() || "";
       try {
         if (!fs.existsSync(path.join(dataPath, "book"))) {
@@ -55,8 +55,8 @@ class BookUtil {
   static deleteBook(key: string, format: string) {
     try {
       if (isElectron) {
-        const fs_extra = window.require("fs-extra");
-        const path = window.require("path");
+        const fs_extra = window.electronAPI.fs;
+        const path = window.electronAPI.path;
         const dataPath = getStorageLocation() || "";
         return new Promise<void>((resolve, reject) => {
           try {
@@ -87,8 +87,8 @@ class BookUtil {
   static isBookExist(key: string, format: string, bookPath: string) {
     return new Promise<boolean>((resolve) => {
       if (isElectron) {
-        var fs = window.require("fs");
-        var path = window.require("path");
+        var fs = window.electronAPI.fs;
+        var path = window.electronAPI.path;
         let _bookPath = path.join(
           getStorageLocation() || "",
           `book`,
@@ -132,8 +132,8 @@ class BookUtil {
   ) {
     if (isElectron) {
       return new Promise<File | ArrayBuffer | boolean>((resolve) => {
-        var fs = window.require("fs");
-        var path = window.require("path");
+        var fs = window.electronAPI.fs;
+        var path = window.electronAPI.path;
         let _bookPath = path.join(
           getStorageLocation() || "",
           `book`,
@@ -172,8 +172,8 @@ class BookUtil {
   }
   static getBookPath(book: Book) {
     if (isElectron) {
-      var fs = window.require("fs");
-      var path = window.require("path");
+      var fs = window.electronAPI.fs;
+      var path = window.electronAPI.path;
       let _bookPath = path.join(
         getStorageLocation() || "",
         `book`,
@@ -276,13 +276,13 @@ class BookUtil {
 
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-        window.require("electron").ipcRenderer.invoke("new-tab", {
+        window.electronAPI.invoke("new-tab", {
           url: `${window.location.href.split("#")[0]}#/${ref}/${
             book.key
           }?title=${book.name}&file=${book.key}`,
         });
       } else {
-        const { ipcRenderer } = window.require("electron");
+        const ipcRenderer = window.electronAPI;
         ipcRenderer.invoke("open-book", {
           url: `${window.location.href.split("#")[0]}#/${ref}/${
             book.key
@@ -310,10 +310,10 @@ class BookUtil {
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
         window
-          .require("electron")
-          .ipcRenderer.invoke("reload-tab", { bookKey: currentBook.key });
+          .electronAPI
+          .invoke("reload-tab", { bookKey: currentBook.key });
       } else {
-        window.require("electron").ipcRenderer.invoke("reload-reader", {
+        window.electronAPI.invoke("reload-reader", {
           bookKey: currentBook.key,
         });
       }
@@ -327,7 +327,7 @@ class BookUtil {
       return false;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
 
@@ -349,7 +349,7 @@ class BookUtil {
       return false;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
 
@@ -383,7 +383,7 @@ class BookUtil {
       return;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
 
@@ -426,7 +426,7 @@ class BookUtil {
       return;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
       let result = await ipcRenderer.invoke("cloud-upload", {
@@ -471,7 +471,7 @@ class BookUtil {
       return;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
 
@@ -530,7 +530,7 @@ class BookUtil {
       return [];
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
 
@@ -551,7 +551,7 @@ class BookUtil {
       return {};
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let placeholders = bookKeys.map(() => "?").join(",");
       let query = `SELECT key, name FROM books WHERE key IN (${placeholders})`;
       let results = await ipcRenderer.invoke("custom-database-command", {
@@ -579,7 +579,7 @@ class BookUtil {
   }
   static async getBookKeysWithSort(sortField: string, orderField: string) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       // Get all books first, then sort in JavaScript for natural sorting
       let results = await ipcRenderer.invoke("custom-database-command", {
         query: `SELECT key, ${sortField} FROM books`,
@@ -654,7 +654,7 @@ class BookUtil {
   }
   static async getBookByMd5(md5: string) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
         query: `SELECT * FROM books WHERE md5=? LIMIT 1`,
         data: [md5],
@@ -677,7 +677,7 @@ class BookUtil {
       return null;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
         query: `SELECT * FROM books WHERE md5 LIKE ? LIMIT 1`,
         data: [`%${md5}%`],
@@ -697,7 +697,7 @@ class BookUtil {
   }
   static async searchBooksByKeyword(keyword: string) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
         query: `SELECT * FROM books WHERE name LIKE ? OR author LIKE ?`,
         data: [`%${keyword}%`, `%${keyword}%`],
@@ -722,7 +722,7 @@ class BookUtil {
   }
   static async getBookList() {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
         query: `SELECT key, format, md5, path FROM books`,
         dbName: "books",

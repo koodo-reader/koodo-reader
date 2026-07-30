@@ -49,8 +49,8 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
         biometricAvailable: biometricCapability.available,
       });
     });
-    if (window.require) {
-      const { ipcRenderer } = window.require("electron");
+    if (window.electronAPI) {
+      const ipcRenderer = window.electronAPI;
       ipcRenderer.invoke("get-proxy-config").then((cfg: any) => {
         if (!cfg) return;
         this.setState({
@@ -240,8 +240,8 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
         proxyPassword: "",
         proxyEditing: false,
       });
-      if (window.require) {
-        const { ipcRenderer } = window.require("electron");
+      if (window.electronAPI) {
+        const ipcRenderer = window.electronAPI;
         ipcRenderer.invoke("set-proxy-config", {
           enabled: false,
           type: "none",
@@ -289,8 +289,8 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
       toast.error(this.props.t("Please enter host and port"));
       return;
     }
-    if (!window.require) return;
-    const { ipcRenderer } = window.require("electron");
+    if (!window.electronAPI) return;
+    const ipcRenderer = window.electronAPI;
     this.setState({ isTestingProxy: true });
     toast.loading(this.props.t("Testing connection..."), {
       id: "proxy-test-id",
@@ -340,8 +340,8 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
       toast.error(this.props.t("Please enter host and port"));
       return;
     }
-    if (!window.require) return;
-    const { ipcRenderer } = window.require("electron");
+    if (!window.electronAPI) return;
+    const ipcRenderer = window.electronAPI;
     try {
       const res = await ipcRenderer.invoke("set-proxy-config", {
         enabled: proxyEnabled,

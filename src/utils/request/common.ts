@@ -151,7 +151,7 @@ export const parseWithSystemOCR = async (imageBase64: string) => {
   if (!isElectron) {
     return;
   }
-  const { ipcRenderer } = window.require("electron");
+  const ipcRenderer = window.electronAPI;
   let result = await ipcRenderer.invoke("system-ocr", {
     base64: imageBase64,
     lang: "auto",

@@ -146,7 +146,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           return;
         }
       } else if (settingDrive === "folder") {
-        const { ipcRenderer } = window.require("electron");
+        const ipcRenderer = window.electronAPI;
         drivePath = await ipcRenderer.invoke("select-path");
         if (!drivePath) {
           toast.error(i18n.t("Please select a folder"));
@@ -168,7 +168,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       SyncService.removeSyncUtil(settingDrive);
       removeCloudConfig(settingDrive);
       if (isElectron) {
-        const { ipcRenderer } = window.require("electron");
+        const ipcRenderer = window.electronAPI;
         await ipcRenderer.invoke("cloud-close", {
           service: settingDrive,
         });
@@ -221,7 +221,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     SyncService.removeSyncUtil(targetDrive);
     removeCloudConfig(targetDrive);
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       await ipcRenderer.invoke("cloud-close", {
         service: targetDrive,
       });
@@ -466,7 +466,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     SyncService.removeSyncUtil(this.props.settingDrive);
     removeCloudConfig(this.props.settingDrive);
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       await ipcRenderer.invoke("cloud-close", {
         service: this.props.settingDrive,
       });
@@ -643,7 +643,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               .filter((item) => {
                 if (
                   isElectron &&
-                  process.platform !== "darwin" &&
+                  window.electronAPI?.runtime?.platform !== "darwin" &&
                   item.value === "icloud"
                 ) {
                   return false;
@@ -1017,7 +1017,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               .filter((item) => {
                 if (
                   isElectron &&
-                  process.platform !== "darwin" &&
+                  window.electronAPI?.runtime?.platform !== "darwin" &&
                   item.value === "icloud"
                 ) {
                   return false;

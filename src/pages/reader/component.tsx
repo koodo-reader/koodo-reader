@@ -77,7 +77,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     isElectron
       ? {
           registerUnloadHandler(callback: () => void): () => void {
-            const { ipcRenderer } = (window as any).require("electron");
+            const ipcRenderer = window.electronAPI;
             // Separate reader window close
             ipcRenderer.on("before-reader-close", callback);
             // In-app tab (WebContentsView) close
@@ -88,7 +88,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             };
           },
           onBeforeClose(): void {
-            const { ipcRenderer } = (window as any).require("electron");
+            const ipcRenderer = window.electronAPI;
             // Reply to whichever close signal is active
             ipcRenderer.send("reader-close-ready");
             ipcRenderer.send("tab-close-ready");

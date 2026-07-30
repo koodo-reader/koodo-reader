@@ -56,7 +56,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   scheduledSyncTimer: any;
   private isSyncing: boolean = false;
   private resizeHandler: (() => void) | null = null;
-  private readingFinishedHandler: ((event: any, config: any) => void) | null =
+  private readingFinishedHandler: ((config: any) => void) | null =
     null;
   constructor(props: HeaderProps) {
     super(props);
@@ -83,9 +83,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.props.handleFetchDefaultSyncOption();
     this.props.handleFetchDataSourceList();
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
-      const { ipcRenderer } = window.require("electron");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
+      const ipcRenderer = window.electronAPI;
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(path.join(dirPath, "data", "book"), { recursive: true });
@@ -112,13 +112,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         console.error("upgrade failed");
       }
 
-      this.readingFinishedHandler = async (event: any, config: any) => {
+      this.readingFinishedHandler = async (config: any) => {
         this.handleFinishReading();
       };
       ipcRenderer.on("reading-finished", this.readingFinishedHandler);
       ipcRenderer.on(
         "open-book-from-link",
-        async (_event: any, config: any) => {
+        async (config: any) => {
           const book = await DatabaseService.getRecord(config.bookKey, "books");
           if (book) {
             BookUtil.redirectBook(book);
@@ -127,7 +127,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       );
       ipcRenderer.on(
         "open-note-from-link",
-        async (_event: any, config: any) => {
+        async (config: any) => {
           const note = await DatabaseService.getRecord(config.noteKey, "notes");
           if (!note) return;
           const book = await DatabaseService.getRecord(note.bookKey, "books");
@@ -151,7 +151,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           BookUtil.redirectBook(book);
         }
       );
-      ipcRenderer.on("chat-message", async (_event: any, msg: any) => {
+      ipcRenderer.on("chat-message", async (msg: any) => {
         if (msg.payload.event === "new-message") {
           ConfigService.setReaderConfig("isAllowNotification", "yes");
         }
@@ -209,7 +209,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.resizeHandler = null;
     }
     if (isElectron && this.readingFinishedHandler) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       ipcRenderer.removeListener(
         "reading-finished",
         this.readingFinishedHandler
@@ -302,7 +302,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     let filePath = "";
     //open book when app start
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       filePath = ipcRenderer.sendSync("check-file-data");
     }
     if (
@@ -433,7 +433,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       SyncService.removeSyncUtil(targetDrive);
       removeCloudConfig(targetDrive);
       if (isElectron) {
-        const { ipcRenderer } = window.require("electron");
+        const ipcRenderer = window.electronAPI;
         await ipcRenderer.invoke("cloud-close", {
           service: targetDrive,
         });
@@ -695,7 +695,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             onClick={async () => {
               this.setState({ notificationCount: 0 });
               let deviceUuid = await TokenService.getFingerprint();
-              window.require("electron").ipcRenderer.invoke("new-chat", {
+              window.electronAPI.invoke("new-chat", {
                 url:
                   getWebsiteUrl() +
                   (ConfigService.getReaderConfig("lang").startsWith("zh")

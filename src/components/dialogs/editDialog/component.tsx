@@ -100,7 +100,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
 
   handleSelectBookPath = async () => {
     if (!isElectron) return;
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     const filePath = await ipcRenderer.invoke("select-file");
     if (!filePath) return;
     this.setState({ bookPath: filePath });
@@ -273,8 +273,8 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
                   <span
                     className="change-location-button"
                     onClick={() => {
-                      const { ipcRenderer } = window.require("electron");
-                      const fs = window.require("fs");
+                      const ipcRenderer = window.electronAPI;
+                      const fs = window.electronAPI.fs;
                       if (
                         !this.state.bookPath ||
                         !fs.existsSync(this.state.bookPath)
