@@ -51,8 +51,35 @@ interface ElectronAPI {
   clipboard: { readText(): string };
 }
 
+interface VexDialogData {
+  [key: string]: string;
+}
+
+interface VexDialogButton {
+  text: string;
+  type?: string;
+  className?: string;
+  click?: () => void;
+}
+
+interface VexAPI {
+  dialog: {
+    buttons: {
+      YES: VexDialogButton;
+      NO: VexDialogButton;
+    };
+    open(options: {
+      message?: string;
+      input?: string;
+      buttons?: VexDialogButton[];
+      callback: (data: VexDialogData | false) => void;
+    }): void;
+  };
+}
+
 interface Window {
   electronAPI: ElectronAPI;
+  vex: VexAPI;
   learnMoreUrl?: string;
   translate?: import("./utils/plugins/types").TranslatePlugin;
   getDictText?: import("./utils/plugins/types").DictionaryPlugin;

@@ -2571,7 +2571,8 @@ const getAssetProtocolUrl = (value, allowedDirectoryValue, assetType) => {
     throw new TypeError("Invalid asset path");
   }
   const mimeTypes = assetType === "audio" ? AUDIO_MIME_TYPES : COVER_MIME_TYPES;
-  const extensions = assetType === "audio" ? AUDIO_EXTENSIONS : COVER_EXTENSIONS;
+  const extensions =
+    assetType === "audio" ? AUDIO_EXTENSIONS : COVER_EXTENSIONS;
   const filePath = path.resolve(value);
   const allowedDirectory = path.resolve(allowedDirectoryValue);
   const stat = fs.statSync(filePath);
@@ -2609,10 +2610,18 @@ const getAssetProtocolUrl = (value, allowedDirectoryValue, assetType) => {
 };
 
 const getCoverProtocolUrl = (value, storagePath) => {
-  if (typeof storagePath !== "string" || !storagePath || storagePath.includes("\0")) {
+  if (
+    typeof storagePath !== "string" ||
+    !storagePath ||
+    storagePath.includes("\0")
+  ) {
     throw new TypeError("Invalid cover path");
   }
-  return getAssetProtocolUrl(value, path.resolve(storagePath, "cover"), "cover");
+  return getAssetProtocolUrl(
+    value,
+    path.resolve(storagePath, "cover"),
+    "cover"
+  );
 };
 
 const applyCorsToRendererRequests = () => {
