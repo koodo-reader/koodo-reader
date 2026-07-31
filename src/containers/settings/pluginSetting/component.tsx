@@ -5,7 +5,6 @@ import _ from "underscore";
 
 import toast from "react-hot-toast";
 import {
-  checkPlugin,
   getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
@@ -15,8 +14,16 @@ import {
 import DatabaseService from "../../../utils/storage/databaseService";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
-import { getPluginList } from "../../../utils/request/common";
-declare var global: any;
+import {
+  getBuiltinPluginDefinition,
+  getBuiltinPluginMarket,
+} from "../../../utils/plugins/catalog";
+import { createBuiltinPluginRecord } from "../../../utils/plugins/records";
+import {
+  verifyCustomRendererPlugin,
+  isCustomRendererPlugin,
+} from "../../../utils/plugins/customPlugin";
+import type { PluginConfig, PluginVoice } from "../../../utils/plugins/types";
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -37,31 +44,22 @@ class SettingDialog extends React.Component<
   componentDidMount() {
     this.handleGetPluginList();
   }
-  handleGetPluginList = async () => {
-    let plugins = await getPluginList();
-    if (plugins) {
-      let installedPluginKeys = this.props.plugins.map((item) => item.key);
-      let pluginList = plugins.filter(
-        (item: any) => !installedPluginKeys.includes(item.plugin.identifier)
-      );
-      const typeOrder: Record<string, number> = {
-        translation: 0,
-        dictionary: 1,
-        voice: 2,
-      };
-      pluginList.sort((a: any, b: any) => {
-        const aOrder =
-          typeOrder[a.plugin.type] !== undefined
-            ? typeOrder[a.plugin.type]
-            : 99;
-        const bOrder =
-          typeOrder[b.plugin.type] !== undefined
-            ? typeOrder[b.plugin.type]
-            : 99;
-        return aOrder - bOrder;
-      });
-      this.setState({ availablePlugins: pluginList });
-    }
+  handleGetPluginList = () => {
+    const installedPluginKeys = this.props.plugins.map((item) => item.key);
+    const pluginList = getBuiltinPluginMarket(
+      ConfigService.getReaderConfig("lang") || navigator.language
+    ).filter(
+      (item) => !installedPluginKeys.includes(item.plugin.identifier)
+    );
+    const typeOrder: Record<string, number> = {
+      translation: 0,
+      dictionary: 1,
+      voice: 2,
+    };
+    pluginList.sort(
+      (a, b) => typeOrder[a.plugin.type] - typeOrder[b.plugin.type]
+    );
+    this.setState({ availablePlugins: pluginList });
   };
   handleFillPluginConfig = async (plugin: any, configuration: string) => {
     if (!plugin || !plugin.config || typeof plugin.config !== "object") {
@@ -112,39 +110,46 @@ class SettingDialog extends React.Component<
                     ) as HTMLTextAreaElement
                   ).value;
                   if (value) {
-                    let plugin = JSON.parse(value);
-                    plugin.key = plugin.identifier;
-                    if (!(await checkPlugin(plugin))) {
-                      toast.error(this.props.t("Plugin verification failed"));
-                      return;
-                    }
-
-                    if (plugin.type === "voice" && !isElectron) {
+                    try {
+                      const parsed = JSON.parse(value);
+                      if (parsed?.type === "voice") {
+                        toast.error(
+                          this.props.t("Custom voice plugins are not supported")
+                        );
+                        return;
+                      }
+                      const plugin = {
+                        ...parsed,
+                        key: parsed.identifier || parsed.key,
+                      };
+                      if (
+                        !isCustomRendererPlugin(plugin) ||
+                        !(await verifyCustomRendererPlugin(plugin))
+                      ) {
+                        toast.error(
+                          this.props.t("Plugin verification failed")
+                        );
+                        return;
+                      }
+                      if (
+                        this.props.plugins.find(
+                          (item) => item.key === plugin.key
+                        )
+                      ) {
+                        await DatabaseService.updateRecord(plugin, "plugins");
+                      } else {
+                        await DatabaseService.saveRecord(plugin, "plugins");
+                      }
+                      this.props.handleFetchPlugins();
+                      toast.success(this.props.t("Addition successful"));
+                    } catch (error) {
                       toast.error(
-                        this.props.t("Only desktop version supports TTS plugin")
+                        error instanceof Error
+                          ? error.message
+                          : this.props.t("Plugin verification failed")
                       );
                       return;
                     }
-                    if (
-                      plugin.type === "voice" &&
-                      plugin.voiceList.length === 0
-                    ) {
-                      let voiceFunc = plugin.script;
-                      // eslint-disable-next-line no-eval
-                      eval(voiceFunc);
-                      plugin.voiceList = await global.getTTSVoice(
-                        plugin.config
-                      );
-                    }
-                    if (
-                      this.props.plugins.find((item) => item.key === plugin.key)
-                    ) {
-                      await DatabaseService.updateRecord(plugin, "plugins");
-                    } else {
-                      await DatabaseService.saveRecord(plugin, "plugins");
-                    }
-                    this.props.handleFetchPlugins();
-                    toast.success(this.props.t("Addition successful"));
                   }
                   this.setState({ isAddNew: false });
                 }}
@@ -301,7 +306,7 @@ class SettingDialog extends React.Component<
           })}
         </div>
         {this.state.availablePlugins &&
-          this.state.availablePlugins.map((item: any, index: number) => {
+          this.state.availablePlugins.map((item, index: number) => {
             const isExpanded =
               this.state.expandedPluginKey === item.plugin.identifier;
             const type = item.plugin.type;
@@ -319,7 +324,7 @@ class SettingDialog extends React.Component<
                     ? this.voiceRef
                     : null;
             return (
-              <div key={item.plugin.key}>
+              <div key={item.plugin.identifier}>
                 {isFirstOfType && sectionRef && (
                   <div ref={sectionRef} className="plugin-section-anchor" />
                 )}
@@ -363,8 +368,8 @@ class SettingDialog extends React.Component<
                     <span
                       className="change-location-button"
                       onClick={async () => {
-                        let plugin = item.plugin;
-                        plugin.key = plugin.identifier;
+                        const plugin = structuredClone(item.plugin);
+                        const pluginKey = plugin.identifier;
 
                         if (plugin.type === "voice" && !isElectron) {
                           toast.error(
@@ -376,35 +381,6 @@ class SettingDialog extends React.Component<
                         }
 
                         if (
-                          plugin.type === "voice" &&
-                          plugin.voiceList.length > 0
-                        ) {
-                          toast.loading(
-                            this.props.t(
-                              "Please visit the documentation to learn how to install this plugin. Your browser will automatically open in 5 seconds"
-                            ),
-                            {
-                              duration: 5000,
-                              id: "plugin-installation",
-                            }
-                          );
-                          await new Promise((resolve) =>
-                            setTimeout(resolve, 5000)
-                          );
-                          toast.dismiss("plugin-installation");
-                          if (
-                            ConfigService.getReaderConfig("lang") &&
-                            ConfigService.getReaderConfig("lang").startsWith(
-                              "zh"
-                            )
-                          ) {
-                            openExternalUrl(getWebsiteUrl() + "/zh/plugin");
-                          } else {
-                            openExternalUrl(getWebsiteUrl() + "/en/plugin");
-                          }
-                          return;
-                        }
-                        if (
                           !(await this.handleFillPluginConfig(
                             plugin,
                             item.configuration
@@ -412,17 +388,18 @@ class SettingDialog extends React.Component<
                         ) {
                           return;
                         }
+                        let voiceList = plugin.voiceList;
                         if (
                           plugin.type === "voice" &&
-                          plugin.voiceList.length === 0
+                          voiceList.length === 0
                         ) {
                           try {
-                            let voiceFunc = plugin.script;
-                            // eslint-disable-next-line no-eval
-                            eval(voiceFunc);
-                            plugin.voiceList = await global.getTTSVoice(
-                              plugin.config
-                            );
+                            voiceList = await window.electronAPI.invoke<
+                              PluginVoice[]
+                            >("get-tts-voices", {
+                              pluginKey,
+                              config: plugin.config,
+                            });
                           } catch (error) {
                             console.error(
                               "Failed to get TTS voice list:",
@@ -436,13 +413,23 @@ class SettingDialog extends React.Component<
                         }
                         if (
                           this.props.plugins.find(
-                            (installed) => installed.key === plugin.key
+                            (installed) => installed.key === pluginKey
                           )
                         ) {
                           toast.error(this.props.t("Plugin already installed"));
                           return;
                         }
-                        await DatabaseService.saveRecord(plugin, "plugins");
+                        const definition =
+                          getBuiltinPluginDefinition(pluginKey);
+                        if (!definition) return;
+                        await DatabaseService.saveRecord(
+                          createBuiltinPluginRecord(
+                            definition,
+                            plugin.config as PluginConfig,
+                            voiceList
+                          ),
+                          "plugins"
+                        );
                         this.props.handleFetchPlugins();
                         toast.success(this.props.t("Addition successful"));
                         this.handleGetPluginList();

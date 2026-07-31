@@ -14,7 +14,6 @@ import { isElectron } from "react-device-detect";
 import TokenService from "../storage/tokenService";
 const PUBLIC_URL = "https://api.koodoreader.com";
 const CN_PUBLIC_URL = "https://api.koodoreader.cn";
-let cachedPluginList: any[] | null = null;
 export const getPublicUrl = () => {
   return getServerRegion() === "china" ? CN_PUBLIC_URL : PUBLIC_URL;
 };
@@ -23,16 +22,6 @@ export const checkDeveloperUpdate = async () => {
     getPublicUrl() + `/api/update_dev?name=${navigator.language}`
   );
   return res.data.log;
-};
-export const getPluginList = async () => {
-  if (cachedPluginList) {
-    return cachedPluginList;
-  }
-  let res = await axios.get(
-    getPublicUrl() + `/api/get_plugins?name=${navigator.language}`
-  );
-  cachedPluginList = res.data.plugins;
-  return res.data.plugins;
 };
 export const uploadFile = async (url: string, file: any) => {
   return new Promise<boolean>((resolve) => {

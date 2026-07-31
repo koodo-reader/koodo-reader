@@ -13,6 +13,7 @@ import { isElectron } from "react-device-detect";
 import JSZip from "jszip";
 import { LocalFileManager } from "./localFile";
 import CoverUtil from "./coverUtil";
+import { sanitizeStoredPluginRecords } from "../plugins/records";
 declare var window: any;
 
 const mergeRecords = (localRecords: any[], backupRecords: any[]): any[] => {
@@ -22,6 +23,11 @@ const mergeRecords = (localRecords: any[], backupRecords: any[]): any[] => {
   }
   return Array.from(recordMap.values());
 };
+
+const sanitizeRestoredRecords = (dbName: string, records: unknown[]) =>
+  dbName === "plugins"
+    ? sanitizeStoredPluginRecords(records).records
+    : records;
 let oldConfigArr = [
   "notes.json",
   "books.json",
@@ -106,7 +112,10 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
               const cloudRecords = await sqlUtil.dbBufferToJson(buf, dbName);
               const localRecords = await DatabaseService.getAllRecords(dbName);
               const mergedRecords = mergeRecords(localRecords, cloudRecords);
-              await DatabaseService.saveAllRecords(mergedRecords, dbName);
+              await DatabaseService.saveAllRecords(
+                sanitizeRestoredRecords(dbName, mergedRecords),
+                dbName
+              );
             }
             updateProgress();
           } catch {
@@ -316,7 +325,10 @@ export const restoreFromfilePath = async (filePath: string) => {
         const sqlUtil = new SqlUtil();
         const dbName = entryName.split(".")[0];
         const cloudRecords = await sqlUtil.dbBufferToJson(buf, dbName);
-        await DatabaseService.saveAllRecords(cloudRecords, dbName);
+        await DatabaseService.saveAllRecords(
+          sanitizeRestoredRecords(dbName, cloudRecords),
+          dbName
+        );
       }
       updateProgress();
     } catch {

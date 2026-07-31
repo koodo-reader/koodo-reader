@@ -514,6 +514,8 @@
   "Paste the code of the plugin here, check out document to learn how to get more plugins": "Paste the code of the plugin here, check out document to learn how to get more plugins",
   "Add new voice": "Add new voice",
   "Plugin verification failed": "Plugin verification failed",
+  "Custom voice plugins are not supported": "Custom voice plugins are not supported",
+  "Custom voice plugins have been disabled": "Custom voice plugins have been disabled",
   "Add new plugin": "Add new plugin",
   "Pot is running": "Pot is running",
   "Please select the service": "Please select the service",

@@ -583,15 +583,6 @@ export const getAllVoices = (pluginList: Plugin[]) => {
   }
   return voiceList;
 };
-export const checkPlugin = async (plugin: Plugin) => {
-  if (
-    (await CommonTool.generateSHA256Hash(plugin.script)) !== plugin.scriptSHA256
-  ) {
-    return false;
-  } else {
-    return true;
-  }
-};
 export const reloadManager = () => {
   if (isElectron) {
     window.electronAPI.invoke("reload-main", "ping");

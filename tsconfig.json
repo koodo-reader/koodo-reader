@@ -24,7 +24,7 @@
     "src/assets/lib/kookit-extra.min.mjs",
     "scripts/i18n-script.js"
   ],
-  "exclude": ["utils"],
+  "exclude": ["utils", "src/utils/plugins/main"],
   "paths": {
     "*": ["./node_modules/@types", "./types"]
   }

@@ -28,6 +28,7 @@ const store = new Store();
 const fs = require("fs");
 const fsExtra = require("fs-extra");
 const nodeCrypto = require("crypto");
+const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 const assetProtocolFiles = new Map();
@@ -1521,11 +1522,38 @@ const createMainWin = () => {
     event.returnValue = "success";
   });
   ipcMain.handle("generate-tts", async (event, voiceConfig) => {
-    let { text, speed, plugin, config } = voiceConfig;
-    let voiceFunc = plugin.script;
-    // eslint-disable-next-line no-eval
-    eval(voiceFunc);
-    return global.getAudioPath(text, speed, dirPath, config);
+    const { text, speed, pluginKey, config } = voiceConfig || {};
+    const plugin = getVoicePlugin(pluginKey);
+    if (
+      !plugin ||
+      typeof text !== "string" ||
+      typeof speed !== "number" ||
+      !Number.isFinite(speed) ||
+      !config ||
+      typeof config !== "object" ||
+      Array.isArray(config)
+    ) {
+      throw new Error("Invalid TTS plugin request");
+    }
+    return plugin.getAudioPath(text, speed, dirPath, config);
+  });
+  ipcMain.handle("get-tts-voices", async (event, request) => {
+    const { pluginKey, config } = request || {};
+    const plugin = getVoicePlugin(pluginKey);
+    if (
+      !plugin ||
+      typeof plugin.getTTSVoice !== "function" ||
+      !config ||
+      typeof config !== "object" ||
+      Array.isArray(config)
+    ) {
+      throw new Error("Invalid TTS voice request");
+    }
+    const voices = await plugin.getTTSVoice(config);
+    if (!Array.isArray(voices)) {
+      throw new Error("Invalid TTS voice list");
+    }
+    return voices;
   });
   ipcMain.handle("cloud-upload", async (event, config) => {
     let syncUtil = await getSyncUtil(config, config.isUseCache);

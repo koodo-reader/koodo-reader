@@ -256,7 +256,7 @@ class TTSUtil {
         .invoke("generate-tts", {
           text: text,
           speed,
-          plugin: plugin,
+          pluginKey: plugin.key,
           config: voice.config,
         });
       return audioPath;
