@@ -12,7 +12,12 @@ import { getDefaultTransTarget, openExternalUrl } from "../../../utils/common";
 import { getTransStream } from "../../../utils/request/reader";
 import { chatStream } from "../../../utils/request/common";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-declare var window: any;
+import { getBuiltinTranslation } from "../../../utils/plugins/rendererRegistry";
+import type { PluginConfig } from "../../../utils/plugins/types";
+import {
+  executeCustomTranslation,
+  isCustomRendererPlugin,
+} from "../../../utils/plugins/customPlugin";
 class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
   private textAccumulator: string = "";
   private updateInterval: ReturnType<typeof setInterval> | null = null;
@@ -85,17 +90,20 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       if (!plugin) {
         return;
       }
-      let translateFunc = plugin.script;
-      // eslint-disable-next-line no-eval
-      eval(translateFunc);
-      window
-        .translate(
+      const builtinTranslate = getBuiltinTranslation(plugin.key);
+      const translate = builtinTranslate
+        ? builtinTranslate
+        : isCustomRendererPlugin(plugin)
+          ? executeCustomTranslation(plugin)
+          : undefined;
+      if (!translate) return;
+      translate(
           text,
           ConfigService.getReaderConfig("transSource") || "",
           ConfigService.getReaderConfig("transTarget") ||
             getDefaultTransTarget(plugin.langList),
           axios,
-          plugin.config
+          plugin.config as PluginConfig
         )
         .then((res: string) => {
           if (res.startsWith("https://")) {

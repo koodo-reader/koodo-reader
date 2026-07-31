@@ -23,6 +23,14 @@ import { resetReaderRequest } from "../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
 import DictUtil from "../../utils/file/dictUtil";
 import TokenService from "../../utils/storage/tokenService";
+import {
+  resolveStoredPlugin,
+  sanitizeStoredPluginRecords,
+} from "../../utils/plugins/records";
+import { isBuiltinPluginKey } from "../../utils/plugins/catalog";
+
+let hasWarnedDisabledCustomVoice = false;
+
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
 }
@@ -299,6 +307,32 @@ export function handleFetchPlugins() {
           await DatabaseService.deleteRecord(p.key, "plugins");
         }
         pluginList = pluginList.filter((p: PluginModel) => p.type !== "ai");
+
+        const hasDisabledCustomVoice = pluginList.some(
+          (plugin: PluginModel) =>
+            plugin.type === "voice" && !isBuiltinPluginKey(plugin.key)
+        );
+        if (hasDisabledCustomVoice && !hasWarnedDisabledCustomVoice) {
+          hasWarnedDisabledCustomVoice = true;
+          toast.error(i18n.t("Custom voice plugins have been disabled"));
+        }
+
+        const sanitized = sanitizeStoredPluginRecords(pluginList);
+        for (const index of sanitized.changedIndexes) {
+          await DatabaseService.updateRecord(
+            sanitized.records[index],
+            "plugins",
+            false
+          );
+        }
+        pluginList = sanitized.records;
+
+        const resolvedPlugins = await Promise.all(
+          pluginList.map((plugin) => resolveStoredPlugin(plugin))
+        );
+        pluginList = resolvedPlugins.filter(
+          (plugin): plugin is PluginModel => Boolean(plugin)
+        );
 
         // Load local dictionary plugins from ConfigService
         const localDictIds = DictUtil.getDictIds();

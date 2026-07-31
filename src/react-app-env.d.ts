@@ -53,6 +53,9 @@ interface ElectronAPI {
 
 interface Window {
   electronAPI: ElectronAPI;
+  learnMoreUrl?: string;
+  translate?: import("./utils/plugins/types").TranslatePlugin;
+  getDictText?: import("./utils/plugins/types").DictionaryPlugin;
 }
 
 

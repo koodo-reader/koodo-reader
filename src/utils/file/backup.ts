@@ -16,11 +16,25 @@ import BackgroundUtil from "./backgroundUtil";
 import FontUtil from "./fontUtil";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
+import { sanitizeStoredPluginRecords } from "../plugins/records";
 
 declare var window: any;
 
+const sanitizePluginDatabase = async () => {
+  const pluginRecords = await DatabaseService.getAllRecords("plugins");
+  const sanitized = sanitizeStoredPluginRecords(pluginRecords);
+  for (const index of sanitized.changedIndexes) {
+    await DatabaseService.updateRecord(
+      sanitized.records[index],
+      "plugins",
+      false
+    );
+  }
+};
+
 export const backup = async (service: string): Promise<Boolean> => {
   await checkMissingBook();
+  await sanitizePluginDatabase();
   let fileName = "data.zip";
   if (service === "local") {
     let year = new Date().getFullYear(),
@@ -95,6 +109,7 @@ export const backup = async (service: string): Promise<Boolean> => {
 };
 export const generateSnapshot = async () => {
   try {
+    await sanitizePluginDatabase();
     const path = window.electronAPI.path;
     const fs = window.electronAPI.fs;
     const zip = new JSZip();
@@ -278,6 +293,7 @@ export const backupFromPath = async (
   return true;
 };
 export const backupFromStorage = async () => {
+  await sanitizePluginDatabase();
   let zip = new JSZip();
   let books = await DatabaseService.getDbBuffer("books");
   let notes = await DatabaseService.getDbBuffer("notes");

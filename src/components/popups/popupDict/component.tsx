@@ -26,7 +26,12 @@ import { chatStream } from "../../../utils/request/common";
 import { marked } from "marked";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import DictUtil from "../../../utils/file/dictUtil";
-declare var window: any;
+import { getBuiltinDictionary } from "../../../utils/plugins/rendererRegistry";
+import type { PluginConfig } from "../../../utils/plugins/types";
+import {
+  executeCustomDictionary,
+  isCustomRendererPlugin,
+} from "../../../utils/plugins/customPlugin";
 class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   private aiTextAccumulator: string = "";
   private updateInterval: ReturnType<typeof setInterval> | null = null;
@@ -189,16 +194,20 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           (item) => item.key === this.state.dictService
         );
         if (!plugin) return "";
-        let dictFunc = plugin.script;
-        // eslint-disable-next-line no-eval
-        eval(dictFunc);
-        dictText = await window.getDictText(
+        const builtinDictionary = getBuiltinDictionary(plugin.key);
+        const getPluginDictText = builtinDictionary
+          ? builtinDictionary
+          : isCustomRendererPlugin(plugin)
+            ? executeCustomDictionary(plugin)
+            : undefined;
+        if (!getPluginDictText) return "";
+        dictText = await getPluginDictText(
           text,
           "auto",
           this.state.dictTarget || "en",
           axios,
           this.props.t,
-          plugin.config
+          plugin.config as PluginConfig
         );
       } else if (
         this.props.isAuthed &&
