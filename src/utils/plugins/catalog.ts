@@ -6357,6 +6357,33 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
   }
 ];
 
+const chineseOnlyPluginKeys = new Set([
+  "baidu-embed-translate-plugin",
+  "volcengine-translate-plugin",
+  "caiyun-translate-plugin",
+  "niutrans-translate-plugin",
+  "tencent-translate-plugin",
+  "youdao-general-translate-plugin",
+  "youdao-llm-translate-plugin",
+  "aliyun-translate-plugin",
+  "baidu-general-translate-plugin",
+  "baidu-llm-translate-plugin",
+  "sogou-embed-translate-plugin",
+  "360-embed-translate-plugin",
+  "transmart-embed-translate-plugin",
+  "youdao-embed-dict-plugin",
+  "eudic-embed-dict-plugin",
+  "esdict-embed-dict-plugin",
+  "frdic-embed-dict-plugin",
+  "godic-embed-dict-plugin",
+  "baidu-embed-dict-plugin",
+  "cuteslator-embed-dict-plugin",
+  "hanyuguoxue-embed-dict-plugin",
+  "qwen-tts-voice-plugin",
+  "zhipu-tts-voice-plugin",
+  "volcengine-tts-voice-plugin",
+]);
+
 const definitionsByKey = new Map(
   builtinPluginCatalog.map((definition) => [definition.key, definition])
 );
@@ -6376,7 +6403,12 @@ export const getBuiltinPluginMarket = (
   language: string
 ): BuiltinPluginMarketItem[] => {
   const useChinese = language.startsWith("zh");
-  return builtinPluginCatalog.map((definition) => ({
+  return builtinPluginCatalog
+    .filter(
+      (definition) =>
+        useChinese || !chineseOnlyPluginKeys.has(definition.key)
+    )
+    .map((definition) => ({
     name: useChinese ? definition.name.zhCN : definition.name.en,
     feature: useChinese ? definition.feature.zhCN : definition.feature.en,
     configuration: useChinese
