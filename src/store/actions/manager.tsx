@@ -23,10 +23,7 @@ import { resetReaderRequest } from "../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
 import DictUtil from "../../utils/file/dictUtil";
 import TokenService from "../../utils/storage/tokenService";
-import {
-  resolveStoredPlugin,
-  sanitizeStoredPluginRecords,
-} from "../../utils/plugins/records";
+import { resolveStoredPlugin } from "../../utils/plugins/records";
 import { isBuiltinPluginKey } from "../../utils/plugins/catalog";
 
 let hasWarnedDisabledCustomVoice = false;
@@ -316,16 +313,6 @@ export function handleFetchPlugins() {
           hasWarnedDisabledCustomVoice = true;
           toast.error(i18n.t("Custom voice plugins have been disabled"));
         }
-
-        const sanitized = sanitizeStoredPluginRecords(pluginList);
-        for (const index of sanitized.changedIndexes) {
-          await DatabaseService.updateRecord(
-            sanitized.records[index],
-            "plugins",
-            false
-          );
-        }
-        pluginList = sanitized.records;
 
         const resolvedPlugins = await Promise.all(
           pluginList.map((plugin) => resolveStoredPlugin(plugin))
