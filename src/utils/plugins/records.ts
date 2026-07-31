@@ -25,8 +25,16 @@ export const createBuiltinPluginRecord = (
   voiceList: PluginVoice[]
 ): BuiltinPluginRecord => ({
   key: definition.key,
+  type: definition.type,
+  displayName: definition.displayName,
+  icon: definition.icon,
+  version: definition.version,
   config,
-  ...(voiceList.length > 0 ? { voiceList } : {}),
+  autoValue: definition.autoValue,
+  langList: definition.langList,
+  voiceList,
+  scriptSHA256: "",
+  script: "",
 });
 
 export const resolveBuiltinPlugin = (

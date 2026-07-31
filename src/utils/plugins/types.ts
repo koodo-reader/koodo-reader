@@ -129,8 +129,16 @@ export interface BuiltinPluginMarketItem {
 
 export interface BuiltinPluginRecord {
   key: string;
+  type: BuiltinPluginType;
+  displayName: string;
+  icon: string;
+  version: string;
   config: PluginConfig;
-  voiceList?: PluginVoice[];
+  autoValue: string;
+  langList: PluginLanguageList;
+  voiceList: PluginVoice[];
+  scriptSHA256: string;
+  script: string;
 }
 
 export interface CustomRendererPluginRecord {

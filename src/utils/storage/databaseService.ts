@@ -6,31 +6,11 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { LocalFileManager } from "../file/localFile";
 declare var window: any;
 
-const prepareRecord = (record: any, dbName: string) =>
-  dbName === "plugins"
-    ? {
-        type: null,
-        displayName: null,
-        icon: null,
-        version: null,
-        config: {},
-        autoValue: null,
-        langList: null,
-        voiceList: null,
-        scriptSHA256: null,
-        script: null,
-        ...record,
-      }
-    : record;
-
 class DatabaseService {
   static async getDbBuffer(dbName: string) {
     let sqlUtil = new SqlUtil();
     let records = await this.getAllRecords(dbName);
-    return sqlUtil.JsonToDbBuffer(
-      records.map((record) => prepareRecord(record, dbName)),
-      dbName
-    );
+    return sqlUtil.JsonToDbBuffer(records, dbName);
   }
 
   static async getAllRecords(dbName: string) {
@@ -66,7 +46,6 @@ class DatabaseService {
   static async saveAllRecords(records: any[], dbName: string, isRecord = true) {
     if (isElectron) {
       for (let record of records) {
-        const preparedRecord = prepareRecord(record, dbName);
         try {
           await window
             .electronAPI
@@ -75,7 +54,7 @@ class DatabaseService {
               statementType: "string",
               executeType: "run",
               dbName: dbName,
-              data: preparedRecord,
+              data: record,
               storagePath: getStorageLocation(),
             });
         } catch (error) {
@@ -97,10 +76,7 @@ class DatabaseService {
     } else {
       if (ConfigService.getItem("isUseLocal") === "yes") {
         let sqlUtil = new SqlUtil();
-        let dbBuffer = await sqlUtil.JsonToDbBuffer(
-          records.map((record) => prepareRecord(record, dbName)),
-          dbName
-        );
+        let dbBuffer = await sqlUtil.JsonToDbBuffer(records, dbName);
         await LocalFileManager.saveFile(dbName + ".db", dbBuffer, "config");
       } else {
         await localforage.setItem(dbName, records);
@@ -158,7 +134,7 @@ class DatabaseService {
         statementType: "string",
         executeType: "run",
         dbName: dbName,
-        data: prepareRecord(record, dbName),
+        data: record,
         storagePath: getStorageLocation(),
       });
     } else {
@@ -211,7 +187,7 @@ class DatabaseService {
         statementType: "string",
         executeType: "run",
         dbName: dbName,
-        data: prepareRecord(record, dbName),
+        data: record,
         storagePath: getStorageLocation(),
       });
     } else {
