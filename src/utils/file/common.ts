@@ -15,8 +15,8 @@ import toast from "react-hot-toast";
 import { Buffer } from "buffer";
 import i18n from "../../i18n";
 import BookUtil from "./bookUtil";
-import { sanitizeBuiltinPluginRecord } from "../plugins/records";
 import { isCustomRendererPlugin } from "../plugins/customPlugin";
+import { isBuiltinPluginKey } from "../plugins/catalog";
 declare var window: any;
 
 // File System Access API type declarations
@@ -173,16 +173,18 @@ export const upgradeStorage = async (
     if (plugins.length > 0) {
       plugins = plugins
         .map((item: unknown) => {
-          const builtin = sanitizeBuiltinPluginRecord(item);
-          if (builtin) return builtin;
           if (item && typeof item === "object") {
             const record = item as Record<string, unknown>;
-            const custom = {
-              ...record,
-              key: record.key || record.identifier,
-            };
-            if (isCustomRendererPlugin(custom)) return custom;
-            if (record.type === "voice") return custom;
+            const key =
+              typeof record.key === "string"
+                ? record.key
+                : typeof record.identifier === "string"
+                  ? record.identifier
+                  : "";
+            const plugin = { ...record, key };
+            if (isBuiltinPluginKey(key)) return plugin;
+            if (isCustomRendererPlugin(plugin)) return plugin;
+            if (record.type === "voice") return plugin;
           }
           return undefined;
         })

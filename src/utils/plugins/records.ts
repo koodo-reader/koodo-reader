@@ -1,8 +1,5 @@
 import PluginModel from "../../models/Plugin";
-import {
-  getBuiltinPluginDefinition,
-  isBuiltinPluginKey,
-} from "./catalog";
+import { getBuiltinPluginDefinition } from "./catalog";
 import {
   isCustomRendererPlugin,
   verifyCustomRendererPlugin,
@@ -85,67 +82,4 @@ export const resolveStoredPlugin = async (record: unknown) => {
   }
 
   return undefined;
-};
-
-export const sanitizeBuiltinPluginRecord = (record: unknown) => {
-  if (!record || typeof record !== "object") return undefined;
-  const stored = record as Record<string, unknown>;
-  const key =
-    typeof stored.key === "string"
-      ? stored.key
-      : typeof stored.identifier === "string"
-        ? stored.identifier
-        : "";
-  if (!isBuiltinPluginKey(key)) return undefined;
-  const definition = getBuiltinPluginDefinition(key);
-  if (!definition) return undefined;
-  return createBuiltinPluginRecord(
-    definition,
-    asConfig(stored.config),
-    asVoiceList(stored.voiceList)
-  );
-};
-
-const isSanitizedBuiltinRecord = (
-  record: unknown,
-  sanitized: BuiltinPluginRecord
-) => {
-  if (!record || typeof record !== "object") return false;
-  const stored = record as Record<string, unknown>;
-  const legacyFields = [
-    "identifier",
-    "type",
-    "displayName",
-    "icon",
-    "version",
-    "autoValue",
-    "langList",
-    "scriptSHA256",
-    "script",
-  ];
-  return (
-    stored.key === sanitized.key &&
-    JSON.stringify(asConfig(stored.config)) ===
-      JSON.stringify(sanitized.config) &&
-    JSON.stringify(asVoiceList(stored.voiceList)) ===
-      JSON.stringify(sanitized.voiceList || []) &&
-    legacyFields.every((field) => stored[field] == null)
-  );
-};
-
-export const sanitizeStoredPluginRecords = (records: unknown[]) => {
-  const changedIndexes: number[] = [];
-  const sanitizedRecords = records.map((record, index) => {
-    const builtin = sanitizeBuiltinPluginRecord(record);
-    if (!builtin) return record;
-    if (!isSanitizedBuiltinRecord(record, builtin)) {
-      changedIndexes.push(index);
-    }
-    return builtin;
-  });
-  return {
-    records: sanitizedRecords,
-    changed: changedIndexes.length > 0,
-    changedIndexes,
-  };
 };
