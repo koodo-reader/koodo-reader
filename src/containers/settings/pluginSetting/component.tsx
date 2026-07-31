@@ -24,6 +24,15 @@ import {
   isCustomRendererPlugin,
 } from "../../../utils/plugins/customPlugin";
 import type { PluginConfig, PluginVoice } from "../../../utils/plugins/types";
+
+const manualVoiceListPluginKeys = new Set([
+  "ttsserver-voice-plugin",
+  "chatttsui-voice-plugin",
+  "chattts-voice-plugin",
+  "gptsovits-voice-plugin",
+  "coquitts-voice-plugin",
+]);
+
 class SettingDialog extends React.Component<
   SettingInfoProps,
   SettingInfoState
@@ -61,6 +70,73 @@ class SettingDialog extends React.Component<
     );
     this.setState({ availablePlugins: pluginList });
   };
+  getPluginTutorialUrl = () =>
+    getWebsiteUrl() +
+    (ConfigService.getReaderConfig("lang")?.startsWith("zh")
+      ? "/zh/plugin"
+      : "/en/plugin");
+  handleFillVoiceList = (pluginKey: string, example: PluginVoice[]) =>
+    new Promise<PluginVoice[] | false>((resolve) => {
+      window.vex.dialog.buttons.YES.text = this.props.t("Confirm");
+      window.vex.dialog.buttons.NO.text = this.props.t("Cancel");
+      const placeholder = JSON.stringify(example, null, 2)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      window.vex.dialog.open({
+        message: this.props.t("Paste voice list JSON"),
+        input: `<textarea name="voiceList" placeholder="${placeholder}" style="width:100%;height:320px;resize:vertical;font-family:monospace" required></textarea>`,
+        buttons: [
+          window.vex.dialog.buttons.YES,
+          window.vex.dialog.buttons.NO,
+          {
+            text: this.props.t("Tutorial"),
+            type: "button",
+            className: "vex-dialog-button-secondary",
+            click: () => {
+              openExternalUrl(this.getPluginTutorialUrl());
+            },
+          },
+        ],
+        callback: (data) => {
+          if (!data) {
+            resolve(false);
+            return;
+          }
+          try {
+            const voiceList = JSON.parse(data.voiceList);
+            if (
+              !Array.isArray(voiceList) ||
+              voiceList.length === 0 ||
+              voiceList.some(
+                (voice) =>
+                  !voice ||
+                  typeof voice !== "object" ||
+                  typeof voice.name !== "string" ||
+                  !voice.name ||
+                  typeof voice.displayName !== "string" ||
+                  !voice.displayName ||
+                  !voice.config ||
+                  typeof voice.config !== "object" ||
+                  Array.isArray(voice.config)
+              )
+            ) {
+              throw new Error();
+            }
+            resolve(
+              voiceList.map((voice) => ({
+                ...voice,
+                plugin: pluginKey,
+              }))
+            );
+          } catch {
+            toast.error(this.props.t("Invalid voice list JSON"));
+            resolve(false);
+          }
+        },
+      });
+    });
   handleFillPluginConfig = async (plugin: any, configuration: string) => {
     if (!plugin || !plugin.config || typeof plugin.config !== "object") {
       return true;
@@ -389,7 +465,14 @@ class SettingDialog extends React.Component<
                           return;
                         }
                         let voiceList = plugin.voiceList;
-                        if (
+                        if (manualVoiceListPluginKeys.has(pluginKey)) {
+                          const configuredVoiceList =
+                            await this.handleFillVoiceList(pluginKey, voiceList);
+                          if (configuredVoiceList === false) {
+                            return;
+                          }
+                          voiceList = configuredVoiceList;
+                        } else if (
                           plugin.type === "voice" &&
                           voiceList.length === 0
                         ) {
@@ -504,14 +587,7 @@ class SettingDialog extends React.Component<
           <span
             style={{ textDecoration: "underline", marginRight: "20px" }}
             onClick={() => {
-              if (
-                ConfigService.getReaderConfig("lang") &&
-                ConfigService.getReaderConfig("lang").startsWith("zh")
-              ) {
-                openExternalUrl(getWebsiteUrl() + "/zh/plugin");
-              } else {
-                openExternalUrl(getWebsiteUrl() + "/en/plugin");
-              }
+              openExternalUrl(this.getPluginTutorialUrl());
             }}
           >
             <Trans>Visit online version</Trans>

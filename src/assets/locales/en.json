@@ -516,6 +516,8 @@
   "Plugin verification failed": "Plugin verification failed",
   "Custom voice plugins are not supported": "Custom voice plugins are not supported",
   "Custom voice plugins have been disabled": "Custom voice plugins have been disabled",
+  "Paste voice list JSON": "Paste voice list JSON",
+  "Invalid voice list JSON": "Enter a non-empty JSON array containing valid voice configurations",
   "Add new plugin": "Add new plugin",
   "Pot is running": "Pot is running",
   "Please select the service": "Please select the service",
