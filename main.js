@@ -47,6 +47,16 @@ const COVER_MIME_TYPES = {
   ".webp": "image/webp",
 };
 const COVER_EXTENSIONS = new Set(Object.keys(COVER_MIME_TYPES));
+const AUDIO_MIME_TYPES = {
+  ".aac": "audio/aac",
+  ".flac": "audio/flac",
+  ".m4a": "audio/mp4",
+  ".mp3": "audio/mpeg",
+  ".ogg": "audio/ogg",
+  ".opus": "audio/ogg",
+  ".wav": "audio/wav",
+};
+const AUDIO_EXTENSIONS = new Set(Object.keys(AUDIO_MIME_TYPES));
 protocol.registerSchemesAsPrivileged([
   {
     scheme: ASSET_PROTOCOL,
@@ -1535,7 +1545,15 @@ const createMainWin = () => {
     ) {
       throw new Error("Invalid TTS plugin request");
     }
-    return plugin.getAudioPath(text, speed, dirPath, config);
+    const audioPath = await plugin.getAudioPath(text, speed, dirPath, config);
+    if (
+      typeof audioPath === "string" &&
+      path.isAbsolute(audioPath) &&
+      fs.existsSync(audioPath)
+    ) {
+      return getAssetProtocolUrl(audioPath, path.join(dirPath, "tts"), "audio");
+    }
+    return audioPath;
   });
   ipcMain.handle("get-tts-voices", async (event, request) => {
     const { pluginKey, config } = request || {};
@@ -1634,6 +1652,11 @@ const createMainWin = () => {
   });
 
   ipcMain.handle("clear-tts", async (event, config) => {
+    for (const [token, asset] of assetProtocolFiles) {
+      if (asset.assetType === "audio") {
+        assetProtocolFiles.delete(token);
+      }
+    }
     if (!fs.existsSync(path.join(dirPath, "tts"))) {
       return "pong";
     } else {
@@ -2510,13 +2533,13 @@ const registerAssetProtocol = () => {
     let filePath;
     try {
       filePath = fs.realpathSync(asset.filePath);
-      const coverDirectory = fs.realpathSync(asset.coverDirectory);
-      const relativePath = path.relative(coverDirectory, filePath);
+      const allowedDirectory = fs.realpathSync(asset.allowedDirectory);
+      const relativePath = path.relative(allowedDirectory, filePath);
       if (
         !relativePath ||
         relativePath.startsWith(".." + path.sep) ||
         path.isAbsolute(relativePath) ||
-        !COVER_EXTENSIONS.has(path.extname(filePath).toLowerCase())
+        path.extname(filePath).toLowerCase() !== asset.extension
       ) {
         return new Response(null, { status: 403 });
       }
@@ -2525,10 +2548,7 @@ const registerAssetProtocol = () => {
     }
     const response = await net.fetch(pathToFileURL(filePath).toString());
     const headers = new Headers(response.headers);
-    headers.set(
-      "Content-Type",
-      COVER_MIME_TYPES[path.extname(filePath).toLowerCase()]
-    );
+    headers.set("Content-Type", asset.contentType);
     headers.set("Access-Control-Allow-Origin", "*");
     headers.set("X-Content-Type-Options", "nosniff");
     return new Response(response.body, {
@@ -2539,46 +2559,60 @@ const registerAssetProtocol = () => {
   });
 };
 
-const getCoverProtocolUrl = (value, storagePath) => {
+const getAssetProtocolUrl = (value, allowedDirectoryValue, assetType) => {
   if (
     typeof value !== "string" ||
     !value ||
     value.includes("\0") ||
-    typeof storagePath !== "string" ||
-    !storagePath ||
-    storagePath.includes("\0")
+    typeof allowedDirectoryValue !== "string" ||
+    !allowedDirectoryValue ||
+    allowedDirectoryValue.includes("\0")
   ) {
-    throw new TypeError("Invalid cover path");
+    throw new TypeError("Invalid asset path");
   }
+  const mimeTypes = assetType === "audio" ? AUDIO_MIME_TYPES : COVER_MIME_TYPES;
+  const extensions = assetType === "audio" ? AUDIO_EXTENSIONS : COVER_EXTENSIONS;
   const filePath = path.resolve(value);
-  const coverDirectory = path.resolve(storagePath, "cover");
+  const allowedDirectory = path.resolve(allowedDirectoryValue);
   const stat = fs.statSync(filePath);
   if (!stat.isFile()) {
-    throw new Error("Cover file does not exist");
+    throw new Error("Asset file does not exist");
   }
-  if (!fs.existsSync(coverDirectory)) {
-    throw new Error("Cover directory does not exist");
+  if (!fs.existsSync(allowedDirectory)) {
+    throw new Error("Asset directory does not exist");
   }
   const realFilePath = fs.realpathSync(filePath);
-  const realCoverDirectory = fs.realpathSync(coverDirectory);
-  const relativePath = path.relative(realCoverDirectory, realFilePath);
+  const realAllowedDirectory = fs.realpathSync(allowedDirectory);
+  const relativePath = path.relative(realAllowedDirectory, realFilePath);
+  const extension = path.extname(realFilePath).toLowerCase();
   if (
     !relativePath ||
     relativePath.startsWith(".." + path.sep) ||
     path.isAbsolute(relativePath) ||
-    !COVER_EXTENSIONS.has(path.extname(realFilePath).toLowerCase())
+    !extensions.has(extension)
   ) {
-    throw new Error("Cover path is outside the cover directory");
+    throw new Error("Asset path is outside the allowed directory");
   }
   const token = nodeCrypto
     .createHmac("sha256", assetProtocolSecret)
     .update(`${realFilePath}\0${stat.mtimeMs}\0${stat.size}`)
     .digest("hex");
-  assetProtocolFiles.set(token, {
+  const assetToken = `${token}${extension}`;
+  assetProtocolFiles.set(assetToken, {
     filePath: realFilePath,
-    coverDirectory: realCoverDirectory,
+    allowedDirectory: realAllowedDirectory,
+    extension,
+    contentType: mimeTypes[extension],
+    assetType,
   });
-  return `${ASSET_PROTOCOL}://local/${token}`;
+  return `${ASSET_PROTOCOL}://local/${assetToken}`;
+};
+
+const getCoverProtocolUrl = (value, storagePath) => {
+  if (typeof storagePath !== "string" || !storagePath || storagePath.includes("\0")) {
+    throw new TypeError("Invalid cover path");
+  }
+  return getAssetProtocolUrl(value, path.resolve(storagePath, "cover"), "cover");
 };
 
 const applyCorsToRendererRequests = () => {
