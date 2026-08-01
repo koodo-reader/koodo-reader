@@ -353,16 +353,15 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   handleEdgeProximity = (
     event: MouseEvent | CustomEvent<{ clientX: number; clientY: number }>
   ) => {
-    const threshold = 0.2;
     const { clientX, clientY } =
       event instanceof CustomEvent ? event.detail : event;
     const width = window.innerWidth;
     const height = window.innerHeight;
     const isNearEdge =
-      clientX <= width * threshold ||
-      clientX >= width * (1 - threshold) ||
-      clientY <= height * threshold ||
-      clientY >= height * (1 - threshold);
+      clientX <= 60 ||
+      clientX >= width - 60 ||
+      clientY <= 60 ||
+      clientY >= height - 60;
     if (isNearEdge !== this.state.isNearEdge) {
       this.setState({ isNearEdge });
     }
