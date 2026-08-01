@@ -26,7 +26,6 @@ import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import {
-  addChatBox,
   checkBrokenDatabase,
   checkMissingBook,
   generateSyncRecord,
@@ -35,7 +34,6 @@ import {
   getTaskStats,
   getWebsiteUrl,
   openInBrowser,
-  removeChatBox,
   resetKoodoSync,
   showTaskProgress,
   throttle,
@@ -256,22 +254,18 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     _nextContext: any
   ) {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
-      if (isElectron) {
-        if (ConfigService.getReaderConfig("isAllowNotification") === "yes") {
-          getNotification().then((res) => {
-            if (
-              res.data &&
-              res.data.result === "ok" &&
-              res.data.unread &&
-              res.data.unread > 0
-            ) {
-              this.setState({ notificationCount: res.data.unread });
-              ConfigService.setReaderConfig("isAllowNotification", "no");
-            }
-          });
-        }
-      } else {
-        addChatBox();
+      if (ConfigService.getReaderConfig("isAllowNotification") === "yes") {
+        getNotification().then((res) => {
+          if (
+            res.data &&
+            res.data.result === "ok" &&
+            res.data.unread &&
+            res.data.unread > 0
+          ) {
+            this.setState({ notificationCount: res.data.unread });
+            ConfigService.setReaderConfig("isAllowNotification", "no");
+          }
+        });
       }
       if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
         try {
@@ -289,12 +283,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.setState({ isSync: true });
         await this.handleCloudSync(userInfo);
         await this.handleOpenLastReadBook();
-      }
-    }
-    if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
-      if (isElectron) {
-      } else {
-        removeChatBox();
       }
     }
   }
@@ -689,24 +677,37 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         className="header"
         style={this.props.isCollapsed ? { marginLeft: "40px" } : {}}
       >
-        {isElectron && this.props.isAuthed && (
+        {this.props.isAuthed && (
           <div
             className="header-chat-widget"
             onClick={async () => {
               this.setState({ notificationCount: 0 });
               let deviceUuid = await TokenService.getFingerprint();
-              window.require("electron").ipcRenderer.invoke("new-chat", {
-                url:
+              if (isElectron) {
+                window.require("electron").ipcRenderer.invoke("new-chat", {
+                  url:
+                    getWebsiteUrl() +
+                    (ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ? "/zh/faq"
+                      : "/en/faq") +
+                    "?referer=app&version=" +
+                    packageJson.version +
+                    "&client=desktop&device=" +
+                    deviceUuid,
+                  locale: getChatLocale(),
+                });
+              } else {
+                openInBrowser(
                   getWebsiteUrl() +
-                  (ConfigService.getReaderConfig("lang").startsWith("zh")
-                    ? "/zh/faq"
-                    : "/en/faq") +
-                  "?referer=app&version=" +
-                  packageJson.version +
-                  "&client=desktop&device=" +
-                  deviceUuid,
-                locale: getChatLocale(),
-              });
+                    (ConfigService.getReaderConfig("lang").startsWith("zh")
+                      ? "/zh/faq"
+                      : "/en/faq") +
+                    "?referer=app&version=" +
+                    packageJson.version +
+                    "&client=web&device=" +
+                    deviceUuid
+                );
+              }
             }}
           >
             <img

@@ -464,7 +464,10 @@ export const bindHtmlEvent = (
       new CustomEvent(MOUSE_POSITION_EVENT, {
         detail: {
           clientX: event.screenX - window.screenX,
-          clientY: event.screenY - window.screenY,
+          clientY:
+            event.screenY -
+            window.screenY -
+            (window.outerHeight - window.innerHeight),
         },
       })
     );
