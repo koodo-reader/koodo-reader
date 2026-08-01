@@ -72,6 +72,7 @@ const PANEL_OPEN_STATE: Record<
 class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
+  private autoShowTimer: NodeJS.Timeout | null = null;
   private readingTimeUtil = new ReadingTimeUtil(
     ConfigService,
     isElectron
@@ -156,6 +157,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       READING_PANEL_TOGGLE_EVENT,
       this.handleReadingPanelToggle
     );
+
+    // 进入阅读器后主动展示快捷按钮 3 秒，提示用户位置后自动隐藏
+    this.setState({ isNearEdge: true });
+    this.autoShowTimer = setTimeout(() => {
+      this.autoShowTimer = null;
+      this.setState({ isNearEdge: false });
+    }, 1500);
   }
   async UNSAFE_componentWillMount() {
     let url = document.location.href;
@@ -220,6 +228,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       clearDiscordPresence();
     }
     clearInterval(this.tickTimer);
+    if (this.autoShowTimer) {
+      clearTimeout(this.autoShowTimer);
+      this.autoShowTimer = null;
+    }
     PANEL_POSITIONS.forEach((position) => {
       this.cancelEnterReader(position);
       this.cancelLeaveReader(position);
@@ -353,6 +365,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   handleEdgeProximity = (
     event: MouseEvent | CustomEvent<{ clientX: number; clientY: number }>
   ) => {
+    // 主动展示期间不响应鼠标位置，保证快捷按钮完整展示 3 秒
+    if (this.autoShowTimer) return;
     const { clientX, clientY } =
       event instanceof CustomEvent ? event.detail : event;
     const width = window.innerWidth;
