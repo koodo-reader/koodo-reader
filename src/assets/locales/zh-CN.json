@@ -655,6 +655,7 @@
   "Synchronize books and reading progress across all your devices": "在您所有的设备之间同步您的整个图书库",
   "Auto maximize main window": "自动最大化主窗口",
   "Main window will be maximized to fit the screen when launching": "启动时自动最大化主窗口",
+  "Please make sure the KoodoReader folder is created in the root directory of your Jianguoyun account, not in the My Jianguoyun folder.": "请确保在坚果云账号的根目录下创建了 KoodoReader 文件夹，而不是在我的坚果云文件夹中创建。",
   "Broken data detected, please click the setting button to reset the sync records": "检测到数据损坏，请前往设置-重置同步记录",
   "Reset sync records": "重置同步记录",
   "Your Pro trial has expired, please renew it to continue using the Pro features": "您的专业版试用已过期，请续费以继续使用专业版功能",
