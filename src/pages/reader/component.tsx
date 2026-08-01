@@ -26,10 +26,7 @@ import {
   clearDiscordPresence,
 } from "../../utils/reader/discordRPC";
 import SupportDialog from "../../components/dialogs/supportDialog";
-import {
-  READING_PANEL_TOGGLE_EVENT,
-  MOUSE_POSITION_EVENT,
-} from "../../utils/reader/mouseEvent";
+import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
 import { throttle } from "../../utils/common";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
@@ -151,8 +148,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     };
     const throttledMouseMove = throttle(handleMouseMove, 100);
     window.addEventListener("mousemove", throttledMouseMove);
-    window.addEventListener("mousemove", this.handleEdgeProximity);
-    window.addEventListener(MOUSE_POSITION_EVENT, this.handleEdgeProximity);
     window.addEventListener(
       READING_PANEL_TOGGLE_EVENT,
       this.handleReadingPanelToggle
@@ -218,8 +213,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("mousemove", this.handleEdgeProximity);
-    window.removeEventListener(MOUSE_POSITION_EVENT, this.handleEdgeProximity);
     window.removeEventListener(
       READING_PANEL_TOGGLE_EVENT,
       this.handleReadingPanelToggle
@@ -362,24 +355,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.handleEnterReader(position);
     }
   };
-  handleEdgeProximity = (
-    event: MouseEvent | CustomEvent<{ clientX: number; clientY: number }>
-  ) => {
-    // 主动展示期间不响应鼠标位置，保证快捷按钮完整展示 3 秒
-    if (this.autoShowTimer) return;
-    const { clientX, clientY } =
-      event instanceof CustomEvent ? event.detail : event;
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const isNearEdge =
-      clientX <= 60 ||
-      clientX >= width - 60 ||
-      clientY <= 60 ||
-      clientY >= height - 60;
-    if (isNearEdge !== this.state.isNearEdge) {
-      this.setState({ isNearEdge });
-    }
-  };
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();
 
@@ -415,9 +390,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           style={{
             left: this.props.isNavLocked ? 315 : 15,
             opacity: this.state.isNearEdge ? undefined : 0,
-            pointerEvents: this.state.isNearEdge ? undefined : "none",
             transition: "opacity 0.3s ease",
           }}
+          onMouseEnter={() => this.setState({ isNearEdge: true })}
+          onMouseLeave={() => this.setState({ isNearEdge: false })}
         >
           <span className="icon-dropdown previous-chapter-single"></span>
         </div>
@@ -432,9 +408,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             gap: "8px",
             zIndex: 10,
             opacity: this.state.isNearEdge ? 1 : 0,
-            pointerEvents: this.state.isNearEdge ? "auto" : "none",
             transition: "opacity 0.3s ease",
           }}
+          onMouseEnter={() => this.setState({ isNearEdge: true })}
+          onMouseLeave={() => this.setState({ isNearEdge: false })}
         >
           <div
             className="next-chapter-single-container"
@@ -525,12 +502,13 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             alignItems: "center",
             justifyContent: "flex-end",
             opacity: this.state.isNearEdge ? 1 : 0,
-            pointerEvents: this.state.isNearEdge ? "auto" : "none",
             transition: "opacity 0.3s ease",
             color: ConfigService.getReaderConfig("textColor")
               ? ConfigService.getReaderConfig("textColor")
               : "",
           }}
+          onMouseEnter={() => this.setState({ isNearEdge: true })}
+          onMouseLeave={() => this.setState({ isNearEdge: false })}
         >
           {(this.props.readerMode === "scroll" ||
             this.props.readerMode === "single") && (
