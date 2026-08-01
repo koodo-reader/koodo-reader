@@ -1043,6 +1043,22 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
       toast.error(i18n.t("Connection failed"), {
         id: "testing-connection-id",
       });
+      if (
+        driveName === "webdav" &&
+        driveConfig &&
+        driveConfig?.url &&
+        driveConfig?.url?.includes("jianguoyun.com")
+      ) {
+        toast.error(
+          i18n.t(
+            "Please make sure the KoodoReader folder is created in the root directory of your Jianguoyun account, not in the My Jianguoyun folder."
+          ),
+          {
+            id: "jianguoyun-folder-error",
+            duration: 4000,
+          }
+        );
+      }
     }
 
     return result;
