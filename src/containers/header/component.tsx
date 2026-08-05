@@ -25,7 +25,6 @@ import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import {
-  addChatBox,
   checkBrokenDatabase,
   checkMissingBook,
   generateSyncRecord,
@@ -34,7 +33,6 @@ import {
   getTaskStats,
   getWebsiteUrl,
   openInBrowser,
-  removeChatBox,
   resetKoodoSync,
   showTaskProgress,
   throttle,
@@ -56,8 +54,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   scheduledSyncTimer: any;
   private isSyncing: boolean = false;
   private resizeHandler: (() => void) | null = null;
-  private readingFinishedHandler: ((config: any) => void) | null =
-    null;
+  private readingFinishedHandler: ((config: any) => void) | null = null;
   constructor(props: HeaderProps) {
     super(props);
 
@@ -116,41 +113,35 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.handleFinishReading();
       };
       ipcRenderer.on("reading-finished", this.readingFinishedHandler);
-      ipcRenderer.on(
-        "open-book-from-link",
-        async (config: any) => {
-          const book = await DatabaseService.getRecord(config.bookKey, "books");
-          if (book) {
-            BookUtil.redirectBook(book);
-          }
-        }
-      );
-      ipcRenderer.on(
-        "open-note-from-link",
-        async (config: any) => {
-          const note = await DatabaseService.getRecord(config.noteKey, "notes");
-          if (!note) return;
-          const book = await DatabaseService.getRecord(note.bookKey, "books");
-          if (!book) return;
-          let bookLocation: any = {};
-          try {
-            bookLocation = JSON.parse(note.cfi) || {};
-          } catch (error) {
-            bookLocation.cfi = note.cfi;
-            bookLocation.chapterTitle = note.chapter;
-          }
-          if (bookLocation.fingerprint) {
-            bookLocation.chapterDocIndex = bookLocation.page - 1 + "";
-            bookLocation.chapterHref = "title" + (bookLocation.page - 1);
-          }
-          ConfigService.setObjectConfig(
-            note.bookKey,
-            bookLocation,
-            "recordLocation"
-          );
+      ipcRenderer.on("open-book-from-link", async (config: any) => {
+        const book = await DatabaseService.getRecord(config.bookKey, "books");
+        if (book) {
           BookUtil.redirectBook(book);
         }
-      );
+      });
+      ipcRenderer.on("open-note-from-link", async (config: any) => {
+        const note = await DatabaseService.getRecord(config.noteKey, "notes");
+        if (!note) return;
+        const book = await DatabaseService.getRecord(note.bookKey, "books");
+        if (!book) return;
+        let bookLocation: any = {};
+        try {
+          bookLocation = JSON.parse(note.cfi) || {};
+        } catch (error) {
+          bookLocation.cfi = note.cfi;
+          bookLocation.chapterTitle = note.chapter;
+        }
+        if (bookLocation.fingerprint) {
+          bookLocation.chapterDocIndex = bookLocation.page - 1 + "";
+          bookLocation.chapterHref = "title" + (bookLocation.page - 1);
+        }
+        ConfigService.setObjectConfig(
+          note.bookKey,
+          bookLocation,
+          "recordLocation"
+        );
+        BookUtil.redirectBook(book);
+      });
       ipcRenderer.on("chat-message", async (msg: any) => {
         if (msg.payload.event === "new-message") {
           ConfigService.setReaderConfig("isAllowNotification", "yes");
@@ -256,22 +247,18 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     _nextContext: any
   ) {
     if (nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
-      if (isElectron) {
-        if (ConfigService.getReaderConfig("isAllowNotification") === "yes") {
-          getNotification().then((res) => {
-            if (
-              res.data &&
-              res.data.result === "ok" &&
-              res.data.unread &&
-              res.data.unread > 0
-            ) {
-              this.setState({ notificationCount: res.data.unread });
-              ConfigService.setReaderConfig("isAllowNotification", "no");
-            }
-          });
-        }
-      } else {
-        addChatBox();
+      if (ConfigService.getReaderConfig("isAllowNotification") === "yes") {
+        getNotification().then((res) => {
+          if (
+            res.data &&
+            res.data.result === "ok" &&
+            res.data.unread &&
+            res.data.unread > 0
+          ) {
+            this.setState({ notificationCount: res.data.unread });
+            ConfigService.setReaderConfig("isAllowNotification", "no");
+          }
+        });
       }
       if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
         try {
@@ -289,12 +276,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.setState({ isSync: true });
         await this.handleCloudSync(userInfo);
         await this.handleOpenLastReadBook();
-      }
-    }
-    if (!nextProps.isAuthed && nextProps.isAuthed !== this.props.isAuthed) {
-      if (isElectron) {
-      } else {
-        removeChatBox();
       }
     }
   }
@@ -689,7 +670,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         className="header"
         style={this.props.isCollapsed ? { marginLeft: "40px" } : {}}
       >
-        {isElectron && this.props.isAuthed && (
+        {this.props.isAuthed && (
           <div
             className="header-chat-widget"
             onClick={async () => {
@@ -703,9 +684,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                     : "/en/faq") +
                   "?referer=app&version=" +
                   packageJson.version +
-                  "&client=desktop&device=" +
+                  "&client=web&device=" +
                   deviceUuid,
-                locale: getChatLocale(),
               });
             }}
           >
