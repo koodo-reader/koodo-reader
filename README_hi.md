@@ -68,6 +68,24 @@ scoop bucket add extras
 scoop install extras/koodo-reader
 ```
 
+- विंगेट के साथ इंस्टॉल करें:
+
+```shell
+winget install AppByTroye.KoodoReader
+```
+
+- फ्लैथब के साथ इंस्टॉल करें:
+
+```shell
+flatpak install flathub io.github.troyeguo.koodo-reader
+```
+
+- स्नैप स्टोर के साथ इंस्टॉल करें:
+
+```shell
+sudo snap install koodo-reader
+```
+
 - होमब्रू के साथ इंस्टॉल करें:
 
 ```shell
