@@ -91,6 +91,24 @@ scoop bucket add extras
 scoop install extras/koodo-reader
 ```
 
+### Install with Winget:
+
+```shell
+winget install AppByTroye.KoodoReader
+```
+
+### Install with Flathub:
+
+```shell
+flatpak install flathub io.github.troyeguo.koodo-reader
+```
+
+### Install with Snap Store:
+
+```shell
+sudo snap install koodo-reader
+```
+
 ### Install with Homebrew:
 
 ```shell

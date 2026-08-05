@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "2.4.2",
+  "version": "2.4.4",
   "description": "Koodo Reader is a cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -332,6 +332,7 @@
       "include": "assets/windows/installer.nsh"
     },
     "snap": {
+      "base": "core22",
       "publish": [
         {
           "provider": "github"
