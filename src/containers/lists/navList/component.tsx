@@ -143,6 +143,8 @@ class NavList extends React.Component<NavListProps, NavListState> {
 
   handleCompositionStart = () => {
     this.setState({ isComposing: true });
+    ConfigService.setReaderConfig("isTempLocked", "yes");
+    ConfigService.setReaderConfig("isNavLocked", "yes");
   };
 
   handleCompositionEnd = (event: React.CompositionEvent<HTMLInputElement>) => {
@@ -150,6 +152,10 @@ class NavList extends React.Component<NavListProps, NavListState> {
     this.setState({ isComposing: false, searchKeyword: keyword }, () => {
       this.handleSearch(keyword);
     });
+    if (ConfigService.getReaderConfig("isTempLocked") === "yes") {
+      ConfigService.setReaderConfig("isNavLocked", "");
+      ConfigService.setReaderConfig("isTempLocked", "");
+    }
   };
 
   async handleJump(cfi: string) {

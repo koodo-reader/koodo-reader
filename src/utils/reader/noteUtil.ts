@@ -85,8 +85,8 @@ export async function createHighlight(params: DigestParams): Promise<void> {
   let noteSyncManager = new NoteSyncManager(
     DatabaseService,
     ConfigService,
-    window.electronAPI.fs,
-    window.electronAPI.path
+    window.electronAPI?.fs,
+    window.electronAPI?.path
   );
   noteSyncManager.syncNote(highlight, bookKey);
   onSuccess?.();
