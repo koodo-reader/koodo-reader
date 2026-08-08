@@ -535,6 +535,7 @@
   "Disable pagination in book list": "图书列表不使用分页展示",
   "Modify the storage location of the library, and the library will be moved to the new location. Please ensure that the new folder is empty": "修改图书库的存储位置，图书库会被迁移到新位置，请确保新文件夹为空",
   "Switch between multiple libraries without affecting the original library. For multi-device synchronization in the free version, please refer to the documentation": "在多个书库中切换，原书库不受影响，免费版多端同步请参考帮助文档",
+  "Switch between multiple libraries without affecting the original library.": "在多个书库中切换，原书库不受影响。如果您需要借助 Syncthing 等工具实现多端同步，请勿修改此设置，您需要在添加数据源时选择本地文件夹作为数据源。",
   "Authorization failed, please login again": "授权失败，请重新登录",
   "Authorization failed": "授权失败",
   "Testing connection...": "测试连接中...",

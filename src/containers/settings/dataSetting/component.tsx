@@ -639,7 +639,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <p className="setting-option-subtitle">
               <Trans>
                 {
-                  "Switch between multiple libraries without affecting the original library. For multi-device synchronization in the free version, please refer to the documentation"
+                  "Switch between multiple libraries without affecting the original library."
                 }
               </Trans>
             </p>
