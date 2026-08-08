@@ -98,3 +98,39 @@
   font-size: 15px;
   opacity: 0.64;
 }
+.book-nav-actions {
+  display: flex;
+  align-items: center;
+}
+.nav-sort-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.nav-sort-dialog-container {
+  position: absolute;
+  left: auto;
+  right: 0;
+  top: 30px;
+  z-index: 10;
+}
+.nav-sort-dialog-container .sort-by-category-list,
+.nav-sort-dialog-container .sort-by-order-list {
+  font-size: 15px;
+  font-weight: 500;
+  min-height: 30px;
+  line-height: 1.5;
+  width: calc(100% - 30px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding-left: 15px;
+  padding-right: 15px;
+  border-radius: 3px;
+}
+.nav-sort-dialog-container .sort-dialog-seperator {
+  width: 100%;
+  height: 0px;
+  margin: 6px 0px;
+}
