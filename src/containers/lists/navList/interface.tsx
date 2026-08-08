@@ -20,4 +20,7 @@ export interface NavListState {
   searchKeyword: string;
   searchResults: (BookmarkModel | NoteModel)[];
   isComposing: boolean;
+  isSortOpen: boolean;
+  sortCode: number;
+  orderCode: number;
 }
