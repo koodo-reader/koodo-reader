@@ -588,9 +588,9 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             marginTop: "20px",
           }}
         >
-          <Trans>Replace rules</Trans>
+          <Trans>Replacement rules</Trans>
         </div>
-        {this.renderRuleList("replace", "No replace rules added")}
+        {this.renderRuleList("replace", "No replacement rules added")}
 
         <div
           style={{
@@ -601,9 +601,9 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             marginTop: "20px",
           }}
         >
-          <Trans>Delete rules</Trans>
+          <Trans>Deletion rules</Trans>
         </div>
-        {this.renderRuleList("delete", "No delete rules added")}
+        {this.renderRuleList("delete", "No deletion rules added")}
 
         <div
           style={{
