@@ -171,8 +171,8 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         let noteSyncManager = new NoteSyncManager(
           DatabaseService,
           ConfigService,
-          window.electronAPI.fs,
-          window.electronAPI.path
+          window.electronAPI?.fs,
+          window.electronAPI?.path
         );
         noteSyncManager.syncNote(note, bookKey);
       });
