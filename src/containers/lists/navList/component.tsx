@@ -415,12 +415,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
             <Trans>Total</Trans>: {this.state.currentData.length}
           </div>
           <div className="book-nav-actions">
-            <div
-              className="nav-sort-wrap"
-              onMouseLeave={() => {
-                this.setState({ isSortOpen: false });
-              }}
-            >
+            <div className="nav-sort-wrap">
               <div className="book-nav-expand" onClick={this.toggleSortOpen}>
                 <span
                   className="icon-sort-desc"
