@@ -626,13 +626,13 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             style={{ fontWeight: "bold" }}
             onClick={() => this.openAddForm("replace")}
           >
-            <Trans>Add replace rule</Trans>
+            <Trans>Add replacement rule</Trans>
           </span>
           <span
             style={{ fontWeight: "bold" }}
             onClick={() => this.openAddForm("delete")}
           >
-            <Trans>Add delete rule</Trans>
+            <Trans>Add deletion rule</Trans>
           </span>
           <span
             style={{ fontWeight: "bold" }}
