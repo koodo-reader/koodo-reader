@@ -57,6 +57,14 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     return ConfigService.getObjectConfig(bookKey, key, []);
   };
 
+  clearHistory = (bookKey: string, mode: "ask" | "chat"): void => {
+    if (!bookKey) {
+      return;
+    }
+    const key = this.HISTORY_KEY_BY_MODE[mode];
+    ConfigService.setObjectConfig(bookKey, [], key);
+  };
+
   saveHistory = (
     bookKey: string,
     mode: "ask" | "chat",
@@ -468,6 +476,18 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     );
     toast.success(this.props.t("Export successful"));
   };
+  handleDeleteChatHistory = () => {
+    this.clearHistory(
+      this.props.currentBook?.key || "",
+      this.state.mode as "ask" | "chat"
+    );
+    toast.success(this.props.t("Deletion successful"));
+    if (this.state.mode === "ask") {
+      this.setState({ askHistory: [] });
+    } else {
+      this.setState({ chatHistory: [] });
+    }
+  };
   handleNewQuestion = (question: string) => {
     if (this.state.mode === "ask") {
       this.setState(
@@ -571,10 +591,26 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
           >
             <div
               className="popup-assist-export-button"
-              title={this.props.t("Export")}
+              style={{ fontSize: 18 }}
+              onClick={this.handleDeleteChatHistory}
+            >
+              <span
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content={this.props.t("Clear chat history")}
+              >
+                <span className="icon-trash-line"></span>
+              </span>
+            </div>
+            <div
+              className="popup-assist-export-button"
               onClick={this.handleExportChatHistory}
             >
-              <span className="icon-share"></span>
+              <span
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content={this.props.t("Export chat history")}
+              >
+                <span className="icon-share"></span>
+              </span>
             </div>
             <select
               className="dict-service-selector"
