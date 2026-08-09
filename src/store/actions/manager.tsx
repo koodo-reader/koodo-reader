@@ -317,8 +317,8 @@ export function handleFetchPlugins() {
         const resolvedPlugins = await Promise.all(
           pluginList.map((plugin) => resolveStoredPlugin(plugin))
         );
-        pluginList = resolvedPlugins.filter(
-          (plugin): plugin is PluginModel => Boolean(plugin)
+        pluginList = resolvedPlugins.filter((plugin): plugin is PluginModel =>
+          Boolean(plugin)
         );
 
         // Load local dictionary plugins from ConfigService
@@ -470,6 +470,9 @@ export function handleFetchPlugins() {
                   label:
                     i18n.t("Official AI Voice") +
                     " - " +
+                    (KookitConfig.UnlimitedVoiceList.includes(item.name)
+                      ? i18n.t("Unlimited quota") + " - "
+                      : "") +
                     item.displayName +
                     " - " +
                     item.language +
@@ -485,6 +488,9 @@ export function handleFetchPlugins() {
                   label:
                     "Azure TTS" +
                     " - " +
+                    (KookitConfig.UnlimitedVoiceList.includes(item.name)
+                      ? i18n.t("Unlimited quota") + " - "
+                      : "") +
                     item.displayName +
                     " - " +
                     langToName(item.locale) +
