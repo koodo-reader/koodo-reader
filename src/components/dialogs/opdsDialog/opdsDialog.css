@@ -326,6 +326,11 @@
   align-items: center;
   text-align: center;
 }
+.backup-page-finish {
+  width: fit-content;
+  max-width: 50%;
+  text-align: center;
+}
 .backup-page-finish-icon {
   font-size: 60px;
   margin: 0px;
