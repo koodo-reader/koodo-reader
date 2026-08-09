@@ -175,7 +175,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       }
       ConfigService.setListConfig(settingDrive, "dataSourceList");
       toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
-      if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
+      if (
+        this.props.isAuthed &&
+        !ConfigService.getItem("defaultSyncOption") &&
+        settingDrive !== "microsoft_exp"
+      ) {
         ConfigService.setItem("defaultSyncOption", settingDrive);
         if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
           resetKoodoSync();
@@ -471,7 +475,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         service: this.props.settingDrive,
       });
     }
-    if (this.props.isAuthed && !ConfigService.getItem("defaultSyncOption")) {
+    if (
+      this.props.isAuthed &&
+      !ConfigService.getItem("defaultSyncOption") &&
+      this.props.settingDrive !== "microsoft_exp"
+    ) {
       ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
       if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
         resetKoodoSync();
@@ -635,6 +643,9 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             {driveList
               .filter((item) => !this.props.dataSourceList.includes(item.value))
               .filter((item) => {
+                if (item.value === "microsoft_exp") {
+                  return false;
+                }
                 if (!isElectron) {
                   return item.support.includes("browser");
                 }
