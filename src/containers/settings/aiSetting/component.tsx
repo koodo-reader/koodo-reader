@@ -3,6 +3,7 @@ import { SettingInfoProps, SettingInfoState, AIModelConfig } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { handleContextMenu, vexTextareaAsync } from "../../../utils/common";
+import { aiRequest } from "../../../utils/request/common";
 import {
   ConfigService,
   KookitConfig,
@@ -138,11 +139,11 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
       if (this.state.apiKey) {
         headers["Authorization"] = `Bearer ${this.state.apiKey}`;
       }
-      const response = await fetch(provider.modelsEndpoint, { headers });
+      const response = await aiRequest(provider.modelsEndpoint, "GET", headers);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
-      const data = await response.json();
+      const data = JSON.parse(response.body);
       const rawModels = data.data || data.models || data.results || data || [];
       if (rawModels.length === 0) {
         toast.error(this.props.t("No models found"));
@@ -186,27 +187,27 @@ class AISetting extends React.Component<SettingInfoProps, SettingInfoState> {
       const chatEndpoint = endpoint.endsWith("/")
         ? endpoint + "chat/completions"
         : endpoint + "/chat/completions";
-      const response = await fetch(chatEndpoint, {
-        method: "POST",
-        headers: {
+      const response = await aiRequest(
+        chatEndpoint,
+        "POST",
+        {
           "Content-Type": "application/json",
           Authorization: `Bearer ${apiKey}`,
         },
-        body: JSON.stringify({
+        JSON.stringify({
           model: modelId,
           messages: [
             { role: "user", content: "Hi, just testing. Reply with OK." },
           ],
           max_tokens: 10,
-        }),
-      });
+        })
+      );
       if (!response.ok) {
-        const errorText = await response.text();
         throw new Error(
-          `HTTP ${response.status}: ${errorText.substring(0, 200)}`
+          `HTTP ${response.status}: ${response.body.substring(0, 200)}`
         );
       }
-      const data = await response.json();
+      const data = JSON.parse(response.body);
       const reply =
         data.choices?.[0]?.message?.content ||
         JSON.stringify(data).substring(0, 100);
