@@ -431,6 +431,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       currentCatalogAuth: null,
       selectedBook: null,
       isLoading: false,
+      isLoadingMore: false,
       error: "",
       searchQuery: "",
       isAddingCatalog: false,
@@ -461,6 +462,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     this.setState({
       view: "feed",
       isLoading: true,
+      isLoadingMore: false,
       error: "",
       feedStack: [{ url: catalog.url, title: catalog.title }],
       currentCatalogAuth: {
@@ -492,6 +494,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     if (!navLink) return;
     this.setState((prev) => ({
       isLoading: true,
+      isLoadingMore: false,
       error: "",
       feedStack: [...prev.feedStack, { url: navLink.href, title: entry.title }],
       searchQuery: "",
@@ -510,6 +513,49 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     }
   };
 
+  loadMore = async () => {
+    const { currentFeed, currentCatalogAuth, isLoading, isLoadingMore } =
+      this.state;
+    if (isLoading || isLoadingMore || !currentFeed) return;
+    const nextLink = currentFeed.links.find((l) => l.rel === "next");
+    if (!nextLink) return;
+    const originalFeed = currentFeed;
+    this.setState({ isLoadingMore: true });
+    try {
+      const nextFeed = await fetchOPDSFeed(nextLink.href, currentCatalogAuth);
+      this.setState((prev): Pick<OPDSDialogState, "isLoadingMore" | "currentFeed"> => {
+        if (prev.currentFeed !== originalFeed) {
+          return { isLoadingMore: false, currentFeed: prev.currentFeed };
+        }
+        return {
+          isLoadingMore: false,
+          currentFeed: {
+            ...prev.currentFeed,
+            entries: prev.currentFeed.entries.concat(nextFeed.entries),
+            links: nextFeed.links,
+          },
+        };
+      });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      this.setState({ isLoadingMore: false });
+      if (this.state.currentFeed === originalFeed) {
+        toast.error(this.props.t("Failed to load more") + ": " + msg);
+      }
+    }
+  };
+
+  handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (this.state.view !== "feed") return;
+    const { isLoading, isLoadingMore, currentFeed } = this.state;
+    if (isLoading || isLoadingMore || !currentFeed) return;
+    if (!currentFeed.links.some((l) => l.rel === "next")) return;
+    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop - clientHeight < 150) {
+      this.loadMore();
+    }
+  };
+
   handleBack = () => {
     const { view, feedStack, currentCatalogAuth } = this.state;
     if (view === "detail") {
@@ -518,13 +564,19 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     }
     if (view === "feed") {
       if (feedStack.length <= 1) {
-        this.setState({ view: "catalog", currentFeed: null, feedStack: [] });
+        this.setState({
+          view: "catalog",
+          currentFeed: null,
+          feedStack: [],
+          isLoadingMore: false,
+        });
         return;
       }
       const newStack = feedStack.slice(0, -1);
       const parentUrl = newStack[newStack.length - 1].url;
       this.setState({
         isLoading: true,
+        isLoadingMore: false,
         error: "",
         feedStack: newStack,
         searchQuery: "",
@@ -569,7 +621,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         finalUrl = new URL(finalUrl, baseUrl).href;
       }
     }
-    this.setState({ isLoading: true, error: "" });
+    this.setState({ isLoading: true, isLoadingMore: false, error: "" });
     try {
       const feed = await fetchOPDSFeed(finalUrl, currentCatalogAuth);
       this.setState((prev) => ({
@@ -883,8 +935,14 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
   }
 
   renderFeedView() {
-    const { currentFeed, isLoading, error, searchQuery, currentCatalogAuth } =
-      this.state;
+    const {
+      currentFeed,
+      isLoading,
+      isLoadingMore,
+      error,
+      searchQuery,
+      currentCatalogAuth,
+    } = this.state;
 
     return (
       <>
@@ -1004,6 +1062,12 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
               <span className="icon-dropdown import-dialog-more-file"></span>
             </div>
           ))}
+
+        {!isLoading && !error && isLoadingMore && (
+          <div className="opds-load-more">
+            <div className="loader-mini"></div>
+          </div>
+        )}
       </>
     );
   }
@@ -1144,7 +1208,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       >
         <div className="backup-dialog-title">{this.renderTitle()}</div>
 
-        <div className="import-dialog-option">
+        <div className="import-dialog-option" onScroll={this.handleScroll}>
           {view === "catalog" && this.renderCatalogView()}
           {view === "feed" && this.renderFeedView()}
           {view === "detail" && this.renderDetailView()}

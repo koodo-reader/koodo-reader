@@ -633,6 +633,7 @@
   "Only translation": "仅译文",
   "Added successfully": "添加成功",
   "Failed to load catalog": "加载目录失败",
+  "Failed to load more": "加载更多失败",
   "Search in catalog...": "在目录中搜索...",
   "Search failed": "搜索失败",
   "Set OCR mode": "设置 OCR 模式",

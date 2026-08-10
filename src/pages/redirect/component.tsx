@@ -99,7 +99,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
               },
             }}
           />
-          <div className="backup-page-finish">
+          <div className="backup-page-finish" style={{ maxWidth: "70%" }}>
             {this.state.isAuthed ? (
               <Lottie
                 animationData={animationSuccess}
