@@ -175,7 +175,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         return "";
       } else if (
         this.state.dictService &&
-        this.state.dictService.startsWith("dict")
+        this.state.dictService.startsWith("dict-")
       ) {
         this.setState({ isAddNew: false });
         const plugin = this.props.plugins.find(
