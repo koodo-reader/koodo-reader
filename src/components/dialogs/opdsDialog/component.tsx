@@ -33,13 +33,35 @@ const BUILT_IN_CATALOGS: OPDSCatalog[] = [
 
 const DOWNLOAD_TYPES: Record<string, string> = {
   "application/epub+zip": "epub",
+  "application/epub": "epub",
   "application/pdf": "pdf",
+  "application/x-pdf": "pdf",
+  "text/plain": "txt",
   "application/x-mobipocket-ebook": "mobi",
-  "application/x-cbz": "cbz",
-  "application/x-cbr": "cbr",
+  "application/vnd.amazon.ebook": "azw",
+  "application/x-mobi8-ebook": "azw3",
+  "application/vnd.amazon.mobi8-ebook": "azw3",
   "text/html": "html",
+  "application/xml": "xml",
+  "text/xml": "xml",
+  "application/xhtml+xml": "xhtml",
+  "application/x-mimearchive": "mhtml",
+  "message/rfc822": "mhtml",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+    "docx",
+  "text/markdown": "md",
+  "text/x-markdown": "md",
   "application/fb2+zip": "fb2",
   "application/fb2": "fb2",
+  "application/x-fb2": "fb2",
+  "application/x-cbz": "cbz",
+  "application/vnd.comicbook+zip": "cbz",
+  "application/x-cbt": "cbt",
+  "application/vnd.comicbook+tar": "cbt",
+  "application/x-cbr": "cbr",
+  "application/vnd.comicbook-rar": "cbr",
+  "application/x-cb7": "cb7",
+  "application/vnd.comicbook+7z": "cb7",
 };
 
 const ACQUISITION_RELS = [
@@ -523,19 +545,21 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     this.setState({ isLoadingMore: true });
     try {
       const nextFeed = await fetchOPDSFeed(nextLink.href, currentCatalogAuth);
-      this.setState((prev): Pick<OPDSDialogState, "isLoadingMore" | "currentFeed"> => {
-        if (prev.currentFeed !== originalFeed) {
-          return { isLoadingMore: false, currentFeed: prev.currentFeed };
+      this.setState(
+        (prev): Pick<OPDSDialogState, "isLoadingMore" | "currentFeed"> => {
+          if (prev.currentFeed !== originalFeed) {
+            return { isLoadingMore: false, currentFeed: prev.currentFeed };
+          }
+          return {
+            isLoadingMore: false,
+            currentFeed: {
+              ...prev.currentFeed,
+              entries: prev.currentFeed.entries.concat(nextFeed.entries),
+              links: nextFeed.links,
+            },
+          };
         }
-        return {
-          isLoadingMore: false,
-          currentFeed: {
-            ...prev.currentFeed,
-            entries: prev.currentFeed.entries.concat(nextFeed.entries),
-            links: nextFeed.links,
-          },
-        };
-      });
+      );
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       this.setState({ isLoadingMore: false });
