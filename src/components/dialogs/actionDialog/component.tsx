@@ -9,7 +9,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   CONTEXT_MENU_WIDTH,
   shouldSubmenuOpenLeft,
-} from "../../../utils/contextMenuLayout";
+} from "../../../utils/common";
 declare var window: any;
 class ActionDialog extends React.Component<
   ActionDialogProps,

@@ -11,7 +11,7 @@ import {
   clampMenuPosition,
   estimateMenuHeight,
   CONTEXT_MENU_WIDTH,
-} from "../../utils/contextMenuLayout";
+} from "../../utils/common";
 
 declare var window: any;
 
@@ -45,9 +45,10 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
     } else {
       x = x - 10;
     }
-    const y = document.body.clientHeight - e.clientY > 250
-      ? e.clientY - 10
-      : e.clientY - 220;
+    const y =
+      document.body.clientHeight - e.clientY > 250
+        ? e.clientY - 10
+        : e.clientY - 220;
     const pos = clampMenuPosition(
       x,
       y,

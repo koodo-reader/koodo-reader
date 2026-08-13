@@ -9,7 +9,7 @@ import {
   CONTEXT_MENU_WIDTH,
   estimateMenuHeight,
   SUBMENU_GAP,
-} from "../../../utils/contextMenuLayout";
+} from "../../../utils/common";
 
 const MENU_ITEM_HEIGHT = 33;
 const MENU_CONTAINER_PADDING = 5;

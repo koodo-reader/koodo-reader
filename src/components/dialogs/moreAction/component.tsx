@@ -27,7 +27,7 @@ import {
   CONTEXT_MENU_WIDTH,
   estimateMenuHeight,
   SUBMENU_GAP,
-} from "../../../utils/contextMenuLayout";
+} from "../../../utils/common";
 declare var window: any;
 class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
@@ -192,10 +192,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                   return;
                 }
                 const cover = await CoverUtil.getCover(this.props.currentBook);
-                if (
-                  cover.startsWith("blob:") ||
-                  cover.startsWith("asset:")
-                ) {
+                if (cover.startsWith("blob:") || cover.startsWith("asset:")) {
                   const response = await fetch(cover);
                   const blob = await response.blob();
                   const ext = blob.type.split("/")[1] || "jpg";
