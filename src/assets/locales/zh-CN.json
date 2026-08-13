@@ -1002,6 +1002,8 @@
   "Auto sync notes and highlights to Notion": "自动同步新添加的笔记和高亮到 Notion",
   "Notion Integration Token": "Notion 集成令牌",
   "Enter your Notion integration token": "请输入您的 Notion 集成令牌",
+  "Notion Personal Access Token": "Notion 个人访问令牌",
+  "Enter your Notion personal access token": "请输入您的 Notion 个人访问令牌",
   "Enter custom CSS here": "在此处输入自定义 CSS",
   "Notion Database ID": "Notion 数据库 ID",
   "Custom app style": "自定义应用样式",

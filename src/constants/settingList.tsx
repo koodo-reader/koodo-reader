@@ -137,8 +137,8 @@ export const noteSyncSettingList = [
     authFields: [
       {
         key: "token",
-        label: "Notion Integration Token",
-        placeholder: "Enter your Notion integration token",
+        label: "Notion Personal Access Token",
+        placeholder: "Enter your Notion personal access token",
       },
       {
         key: "databaseId",
