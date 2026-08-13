@@ -237,51 +237,61 @@ class NavigationPanel extends React.Component<
     const groups: SearchResultGroup[] = groupSearchResults(
       this.state.searchList
     );
-    return groups.map((group: SearchResultGroup) => {
-      const collapsed = this.state.collapsedChapters.has(group.docIndex);
-      return (
-        <li className="nav-search-group" key={`group-${group.docIndex}`}>
-          <div
-            className="nav-search-group-title"
-            onClick={() => {
-              this.toggleChapter(group.docIndex);
-            }}
-          >
-            <span
-              className="icon-dropdown font-featured-family-icon"
-              style={!collapsed ? { transform: "rotate(180deg)" } : {}}
-            ></span>
-            <span className="nav-search-group-name">{group.title}</span>
-            <span className="nav-search-group-count">
-              ({group.items.length})
-            </span>
-          </div>
-          {!collapsed && (
-            <ul className="nav-search-group-items">
-              {group.items.map((entry) => {
-                const isActive = this.state.activeSearchKey === entry.key;
-                return (
-                  <li
-                    className={
-                      isActive
-                        ? "nav-search-list-item nav-search-list-item-active"
-                        : "nav-search-list-item"
-                    }
-                    key={entry.key}
-                    onClick={() => {
-                      this.setState({ activeSearchKey: entry.key });
-                      this.handleSearchItemClick(entry.item);
-                    }}
-                  >
-                    <div>{Parser(DOMPurify.sanitize(entry.item.excerpt))}</div>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </li>
-      );
-    });
+    const totalCount = this.state.searchList.length;
+    return (
+      <>
+        <div className="nav-search-total">
+          <Trans i18nKey="Total search results" count={totalCount}>
+            {"Total " + totalCount + " results"}
+          </Trans>
+        </div>
+        {groups.map((group: SearchResultGroup) => {
+          const collapsed = this.state.collapsedChapters.has(group.docIndex);
+          return (
+            <li className="nav-search-group" key={`group-${group.docIndex}`}>
+              <div
+                className="nav-search-group-title"
+                onClick={() => {
+                  this.toggleChapter(group.docIndex);
+                }}
+              >
+                <span
+                  className="icon-dropdown font-featured-family-icon"
+                  style={!collapsed ? { transform: "rotate(180deg)" } : {}}
+                ></span>
+                <span className="nav-search-group-name">{group.title}</span>
+                <span className="nav-search-group-count">
+                  ({group.items.length})
+                </span>
+              </div>
+              {!collapsed && (
+                <ul className="nav-search-group-items">
+                  {group.items.map((entry) => {
+                    const isActive = this.state.activeSearchKey === entry.key;
+                    return (
+                      <li
+                        className={
+                          isActive
+                            ? "nav-search-list-item nav-search-list-item-active"
+                            : "nav-search-list-item"
+                        }
+                        key={entry.key}
+                        onClick={() => {
+                          this.setState({ activeSearchKey: entry.key });
+                          this.handleSearchItemClick(entry.item);
+                        }}
+                      >
+                        <div>{Parser(DOMPurify.sanitize(entry.item.excerpt))}</div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </li>
+          );
+        })}
+      </>
+    );
   };
   render() {
     const searchProps = {
