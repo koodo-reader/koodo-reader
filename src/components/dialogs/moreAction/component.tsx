@@ -22,6 +22,12 @@ import {
   getTextRules,
 } from "../../../utils/common";
 import { BookHelper } from "../../../assets/lib/kookit.min";
+import {
+  clampMenuPosition,
+  CONTEXT_MENU_WIDTH,
+  estimateMenuHeight,
+  SUBMENU_GAP,
+} from "../../../utils/contextMenuLayout";
 declare var window: any;
 class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
@@ -59,22 +65,30 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
       this.props.handleActionDialog(false);
     };
 
-    const baseLeft = this.props.left + (this.props.isExceed ? -195 : 195) + 195;
     const noteOffset = isNotes ? 1 : 2;
     const itemHeight = 33;
-    const baseTop = this.props.top + 103 + noteOffset * itemHeight;
 
     return (
       <div
         className="action-dialog-container export-format-submenu-action"
         style={
           isVisible
-            ? {
-                position: "fixed",
-                left: `${baseLeft}px`,
-                top: `${baseTop}px`,
-                zIndex: 10,
-              }
+            ? (() => {
+                const pos = clampMenuPosition(
+                  this.props.left +
+                    (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP) +
+                    195,
+                  this.props.top + 103 + noteOffset * itemHeight,
+                  120,
+                  estimateMenuHeight(5)
+                );
+                return {
+                  position: "fixed",
+                  left: pos.left,
+                  top: pos.top,
+                  zIndex: 10,
+                };
+              })()
             : { display: "none" }
         }
         onMouseEnter={() => {
@@ -130,11 +144,16 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
           }}
           style={
             this.props.isShowExport
-              ? {
-                  position: "fixed",
-                  left: this.props.left + (this.props.isExceed ? -195 : 195),
-                  top: this.props.top + 103,
-                }
+              ? (() => {
+                  const pos = clampMenuPosition(
+                    this.props.left +
+                      (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
+                    this.props.top + 103,
+                    CONTEXT_MENU_WIDTH,
+                    estimateMenuHeight(isElectron ? 9 : 8)
+                  );
+                  return { position: "fixed", left: pos.left, top: pos.top };
+                })()
               : { display: "none" }
           }
         >
