@@ -126,6 +126,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     let wordSyncManager = new WordSyncManager(ConfigService);
     wordSyncManager.syncWordToEudic(text, sentence);
     wordSyncManager.syncWordToAnki(text, sentence, bookName, chapter, dictText);
+    wordSyncManager.syncWordToMaiMemo(text);
   };
 
   handleDict = async (text: string): Promise<string> => {
