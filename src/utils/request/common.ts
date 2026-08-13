@@ -69,7 +69,12 @@ export const aiRequest = async (
   method: "GET" | "POST",
   headers: Record<string, string>,
   body?: string
-): Promise<{ ok: boolean; status: number; statusText: string; body: string }> => {
+): Promise<{
+  ok: boolean;
+  status: number;
+  statusText: string;
+  body: string;
+}> => {
   if (isElectron) {
     return await window.electronAPI.invoke("ai-request", {
       url,
@@ -118,8 +123,7 @@ export const chatStream = async (
     return new Promise<{ done: boolean }>((resolve, reject) => {
       const ipcRenderer = window.electronAPI;
       const streamId =
-        typeof crypto !== "undefined" &&
-        typeof crypto.randomUUID === "function"
+        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
           ? crypto.randomUUID()
           : Math.random().toString(36).slice(2) + Date.now().toString(36);
 
