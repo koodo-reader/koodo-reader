@@ -29,7 +29,6 @@ const manualVoiceListPluginKeys = new Set([
   "ttsserver-voice-plugin",
   "chatttsui-voice-plugin",
   "chattts-voice-plugin",
-  "gptsovits-voice-plugin",
   "coquitts-voice-plugin",
 ]);
 
@@ -57,9 +56,7 @@ class SettingDialog extends React.Component<
     const installedPluginKeys = this.props.plugins.map((item) => item.key);
     const pluginList = getBuiltinPluginMarket(
       ConfigService.getReaderConfig("lang") || navigator.language
-    ).filter(
-      (item) => !installedPluginKeys.includes(item.plugin.identifier)
-    );
+    ).filter((item) => !installedPluginKeys.includes(item.plugin.identifier));
     const typeOrder: Record<string, number> = {
       translation: 0,
       dictionary: 1,
@@ -202,9 +199,7 @@ class SettingDialog extends React.Component<
                         !isCustomRendererPlugin(plugin) ||
                         !(await verifyCustomRendererPlugin(plugin))
                       ) {
-                        toast.error(
-                          this.props.t("Plugin verification failed")
-                        );
+                        toast.error(this.props.t("Plugin verification failed"));
                         return;
                       }
                       if (
@@ -467,7 +462,10 @@ class SettingDialog extends React.Component<
                         let voiceList = plugin.voiceList;
                         if (manualVoiceListPluginKeys.has(pluginKey)) {
                           const configuredVoiceList =
-                            await this.handleFillVoiceList(pluginKey, voiceList);
+                            await this.handleFillVoiceList(
+                              pluginKey,
+                              voiceList
+                            );
                           if (configuredVoiceList === false) {
                             return;
                           }
