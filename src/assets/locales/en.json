@@ -349,6 +349,7 @@
   "Speak the text": "Read the Text",
   "Search on the Internet": "Search on the Internet",
   "Search in the Book": "Search in the Book",
+  "Total search results": "Total {{count}} results",
   "Change storage location": "Change storage location",
   "Change location": "Change",
   "Change successful": "Change successful",
