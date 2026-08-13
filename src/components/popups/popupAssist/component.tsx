@@ -756,14 +756,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                         replace: (_domNode) => {},
                       }
                     )}
-                    {this.state.answer && (
-                      <div
-                        className="popup-assist-copy-button"
-                        onClick={() => this.handleCopyAnswer(this.state.answer)}
-                      >
-                        <span className="icon-copy-line"></span>
-                      </div>
-                    )}
                   </div>
                 ) : (
                   <div className="popup-message-assistant">
