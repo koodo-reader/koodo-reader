@@ -161,10 +161,13 @@ class TextToSpeech extends React.Component<
         }
       }
       if (!voiceName && !voiceEngine && this.voices.length > 0) {
-        ConfigService.setReaderConfig("voiceName", this.voices[0].name);
+        let defaultVoice =
+          this.voices.find((item) => item.plugin !== "official-ai-voice-plugin") ||
+          this.voices[0];
+        ConfigService.setReaderConfig("voiceName", defaultVoice.name);
         ConfigService.setReaderConfig(
           "voiceEngine",
-          this.voices[0].plugin || "system"
+          defaultVoice.plugin || "system"
         );
       }
     }
@@ -1150,6 +1153,15 @@ class TextToSpeech extends React.Component<
                 return;
               }
               const newEngine = voice.plugin || "system";
+              if (
+                newEngine === "official-ai-voice-plugin" &&
+                !this.props.isAuthed
+              ) {
+                toast(this.props.t("Please upgrade to Pro to use this feature"));
+                this.props.handleSetting(true);
+                this.props.handleSettingMode("account");
+                return;
+              }
               ConfigService.setReaderConfig("voiceEngine", newEngine);
               if (
                 voice.plugin === "official-ai-voice-plugin" &&

@@ -415,157 +415,119 @@ export function handleFetchPlugins() {
             pluginList.push(assistPlugin);
           }
         }
+        if (ConfigService.getReaderConfig("isDisableAI") !== "yes") {
+          // 官方 AI 插件始终展示（不依赖登录），选择时再判断是否升级
+          let dictPlugin = new PluginModel(
+            "official-ai-dict-plugin",
+            "dictionary",
+            "Official AI Dictionary",
+            "dict",
+            "1.0.0",
+            "",
+            {},
+            officialDictList,
+            [],
+            "",
+            ""
+          );
+          pluginList.push(dictPlugin);
+          let transPlugin = new PluginModel(
+            "official-ai-trans-plugin",
+            "translation",
+            "Official AI Translation",
+            "translation",
+            "1.0.0",
+            "",
+            {},
+            officialTranList,
+            [],
+            "",
+            ""
+          );
+          pluginList.push(transPlugin);
+          let sumPlugin = new PluginModel(
+            "official-ai-assistant-plugin",
+            "assistant",
+            "Official AI Assistant",
+            "assistant",
+            "1.0.0",
+            "",
+            {},
+            officialTranList,
+            [],
+            "",
+            ""
+          );
+          pluginList.push(sumPlugin);
+        }
+        if (ConfigService.getReaderConfig("isDisableAI") !== "yes") {
+          // 官方 AI 语音始终展示（不依赖登录），选择时再判断是否升级
+          let sortedVoiceList = [
+            ...KookitConfig.OfficialVoiceList.map((item) => {
+              return {
+                ...item,
+                label:
+                  i18n.t("Official AI Voice") +
+                  " - " +
+                  (KookitConfig.UnlimitedVoiceList.includes(item.name)
+                    ? i18n.t("Unlimited quota") + " - "
+                    : "") +
+                  item.displayName +
+                  " - " +
+                  item.language +
+                  " - " +
+                  (item.gender === "female"
+                    ? i18n.t("Female voice")
+                    : i18n.t("Male voice")),
+              };
+            }),
+            ...KookitConfig.AzureTTSVoiceList.map((item) => {
+              return {
+                ...item,
+                label:
+                  "Azure TTS" +
+                  " - " +
+                  (KookitConfig.UnlimitedVoiceList.includes(item.name)
+                    ? i18n.t("Unlimited quota") + " - "
+                    : "") +
+                  item.displayName +
+                  " - " +
+                  langToName(item.locale) +
+                  " - " +
+                  (item.gender === "female"
+                    ? i18n.t("Female voice")
+                    : i18n.t("Male voice")),
+              };
+            }),
+          ];
+          let voicePlugin = new PluginModel(
+            "official-ai-voice-plugin",
+            "voice",
+            "Official AI Voice",
+            "speaker",
+            "1.0.0",
+            "",
+            {},
+            {},
+            sortedVoiceList.map((item: any) => {
+              return {
+                ...item,
+                plugin: "official-ai-voice-plugin",
+                config: {},
+                displayName: item.label,
+              };
+            }),
+            "",
+            ""
+          );
+          pluginList.push(voicePlugin);
+        }
         TokenService.getToken("is_authed").then((value) => {
           let isAuthed = value === "yes";
-          if (
-            isAuthed &&
-            ConfigService.getReaderConfig("isDisableAI") !== "yes"
-          ) {
-            let dictPlugin = new PluginModel(
-              "official-ai-dict-plugin",
-              "dictionary",
-              "Official AI Dictionary",
-              "dict",
-              "1.0.0",
-              "",
-              {},
-              officialDictList,
-              [],
-              "",
-              ""
-            );
-            pluginList.push(dictPlugin);
-            let transPlugin = new PluginModel(
-              "official-ai-trans-plugin",
-              "translation",
-              "Official AI Translation",
-              "translation",
-              "1.0.0",
-              "",
-              {},
-              officialTranList,
-              [],
-              "",
-              ""
-            );
-            pluginList.push(transPlugin);
-            let sumPlugin = new PluginModel(
-              "official-ai-assistant-plugin",
-              "assistant",
-              "Official AI Assistant",
-              "assistant",
-              "1.0.0",
-              "",
-              {},
-              officialTranList,
-              [],
-              "",
-              ""
-            );
-            pluginList.push(sumPlugin);
-            let sortedVoiceList = [
-              ...KookitConfig.OfficialVoiceList.map((item) => {
-                return {
-                  ...item,
-                  label:
-                    i18n.t("Official AI Voice") +
-                    " - " +
-                    (KookitConfig.UnlimitedVoiceList.includes(item.name)
-                      ? i18n.t("Unlimited quota") + " - "
-                      : "") +
-                    item.displayName +
-                    " - " +
-                    item.language +
-                    " - " +
-                    (item.gender === "female"
-                      ? i18n.t("Female voice")
-                      : i18n.t("Male voice")),
-                };
-              }),
-              ...KookitConfig.AzureTTSVoiceList.map((item) => {
-                return {
-                  ...item,
-                  label:
-                    "Azure TTS" +
-                    " - " +
-                    (KookitConfig.UnlimitedVoiceList.includes(item.name)
-                      ? i18n.t("Unlimited quota") + " - "
-                      : "") +
-                    item.displayName +
-                    " - " +
-                    langToName(item.locale) +
-                    " - " +
-                    (item.gender === "female"
-                      ? i18n.t("Female voice")
-                      : i18n.t("Male voice")),
-                };
-              }),
-            ];
-            let voicePlugin = new PluginModel(
-              "official-ai-voice-plugin",
-              "voice",
-              "Official AI Voice",
-              "speaker",
-              "1.0.0",
-              "",
-              {},
-              {},
-              sortedVoiceList.map((item: any) => {
-                return {
-                  ...item, // 创建新对象
-                  plugin: "official-ai-voice-plugin",
-                  config: {},
-                  displayName: item.label,
-                };
-              }),
-              "",
-              ""
-            );
-            pluginList.push(voicePlugin);
-            dispatch(handlePlugins(pluginList));
-          } else if (isAuthed) {
-            let sortedVoiceList = [
-              ...KookitConfig.AzureTTSVoiceList.map((item) => {
-                return {
-                  ...item,
-                  label:
-                    "Azure TTS" +
-                    " - " +
-                    item.displayName +
-                    " - " +
-                    langToName(item.locale) +
-                    " - " +
-                    (item.gender === "female"
-                      ? i18n.t("Female voice")
-                      : i18n.t("Male voice")),
-                };
-              }),
-            ];
-            let voicePlugin = new PluginModel(
-              "official-ai-voice-plugin",
-              "voice",
-              "Official AI Voice",
-              "speaker",
-              "1.0.0",
-              "",
-              {},
-              {},
-              sortedVoiceList.map((item: any) => {
-                return {
-                  ...item, // 创建新对象
-                  plugin: "official-ai-voice-plugin",
-                  config: {},
-                  displayName: item.label,
-                };
-              }),
-              "",
-              ""
-            );
-            pluginList.push(voicePlugin);
-            dispatch(handlePlugins(pluginList));
-          } else {
-            dispatch(handlePlugins(pluginList));
+          if (isAuthed && !ConfigService.getItem("serverRegion")) {
+            ConfigService.setItem("serverRegion", "global");
           }
+          dispatch(handlePlugins(pluginList));
         });
       } catch (error) {
         const errorMessage =

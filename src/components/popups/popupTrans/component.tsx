@@ -60,7 +60,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     this.setState({ originalText: originalText });
     if (!this.state.transService) {
       let pluginList = this.props.plugins.filter(
-        (item) => item.type === "translation"
+        (item) =>
+          item.type === "translation" && !item.key.startsWith("official-ai-")
       );
       if (pluginList.length > 0) {
         this.setState({
@@ -218,6 +219,12 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     }
   };
   handleChangeService(target: string) {
+    if (target === "official-ai-trans-plugin" && !this.props.isAuthed) {
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
+      return;
+    }
     this.setState({ transService: target }, () => {
       ConfigService.setReaderConfig("transService", target);
       let plugin = this.props.plugins.find(
