@@ -421,6 +421,11 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       }
     );
   };
+  handleCopyAnswer = (content: string) => {
+    navigator.clipboard.writeText(content || "").then(() => {
+      toast.success(this.props.t("Copied"));
+    });
+  };
   handleRenderHistoryMessage = (message: any[]) => {
     return message.map((item, index) => {
       return (
@@ -439,6 +444,14 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             {
               replace: (_domNode) => {},
             }
+          )}
+          {item.role === "assistant" && (
+            <div
+              className="popup-assist-copy-button"
+              onClick={() => this.handleCopyAnswer(item.content)}
+            >
+              <span className="icon-copy-line"></span>
+            </div>
           )}
         </div>
       );
@@ -742,6 +755,14 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                       {
                         replace: (_domNode) => {},
                       }
+                    )}
+                    {this.state.answer && (
+                      <div
+                        className="popup-assist-copy-button"
+                        onClick={() => this.handleCopyAnswer(this.state.answer)}
+                      >
+                        <span className="icon-copy-line"></span>
+                      </div>
                     )}
                   </div>
                 ) : (
