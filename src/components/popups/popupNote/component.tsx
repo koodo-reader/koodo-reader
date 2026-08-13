@@ -278,6 +278,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
               }}
             >
               <Trans>Confirm</Trans>
+              <span> (CTRL + ↵)</span>
             </span>
           </div>
         </div>
