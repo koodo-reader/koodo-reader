@@ -87,7 +87,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     }
     if (!this.state.dictService) {
       let pluginList = this.props.plugins.filter(
-        (item) => item.type === "dictionary"
+        (item) =>
+          item.type === "dictionary" && !item.key.startsWith("official-ai-")
       );
       if (pluginList.length > 0) {
         this.setState({
@@ -308,6 +309,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     }
   };
   handleChangeDictService = (dictService: string) => {
+    if (dictService === "official-ai-dict-plugin" && !this.props.isAuthed) {
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
+      return;
+    }
     this.setState(
       {
         dictService: dictService,

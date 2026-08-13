@@ -147,7 +147,8 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     }
     if (!this.state.aiService) {
       let pluginList = this.props.plugins.filter(
-        (item) => item.type === "assistant"
+        (item) =>
+          item.type === "assistant" && !item.key.startsWith("official-ai-")
       );
       if (pluginList.length > 0) {
         this.setState({
@@ -405,6 +406,15 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     }
   };
   handleChangeAiService = (aiService: string) => {
+    if (
+      aiService === "official-ai-assistant-plugin" &&
+      !this.props.isAuthed
+    ) {
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
+      return;
+    }
     let plugin = this.props.plugins.find((item) => item.key === aiService);
     if (!plugin) {
       return;
@@ -657,6 +667,12 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                       className="add-dialog-shelf-list-option"
                     >
                       {this.props.t(item.displayName)}
+                      {item.key === "official-ai-assistant-plugin" && (
+                        <span style={{ fontSize: "13px", color: "#f16464" }}>
+                          {" "}
+                          (Pro)
+                        </span>
+                      )}
                     </option>
                   );
                 })}

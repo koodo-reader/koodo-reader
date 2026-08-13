@@ -189,7 +189,8 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
               this.setState({ isMetadataDialogOpen: true });
             }}
           >
-            {this.props.t("Get metadata") + " (Pro)"}
+            <Trans>Get metadata</Trans>
+            <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
           </div>
         </div>
 
