@@ -66,7 +66,9 @@ export const calculateFileMD5 = (file: File): Promise<string> => {
       const reader = new FileReader();
       reader.onload = (event) => {
         const arrayBuffer = event.target?.result as ArrayBuffer;
-        resolve(window.electronAPI?.crypto.md5(new Uint8Array(arrayBuffer)) || "");
+        resolve(
+          window.electronAPI?.crypto.md5(new Uint8Array(arrayBuffer)) || ""
+        );
       };
       reader.onerror = (error) => reject(error);
       reader.readAsArrayBuffer(file);
@@ -514,9 +516,7 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
 export const handleFullScreen = () => {
   if (isElectron) {
     if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-      window
-        .electronAPI
-        .invoke("enter-tab-fullscreen", "ping");
+      window.electronAPI.invoke("enter-tab-fullscreen", "ping");
     } else {
       window.electronAPI.invoke("enter-fullscreen", "ping");
     }
@@ -533,9 +533,7 @@ export const handleFullScreen = () => {
 export const handleExitFullScreen = () => {
   if (isElectron) {
     if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-      window
-        .electronAPI
-        .invoke("exit-tab-fullscreen", "ping");
+      window.electronAPI.invoke("exit-tab-fullscreen", "ping");
     } else {
       window.electronAPI.invoke("exit-fullscreen", "ping");
     }
@@ -564,9 +562,7 @@ export const getStorageLocation = () => {
   if (isElectron) {
     return ConfigService.getItem("storageLocation")
       ? ConfigService.getItem("storageLocation")
-      : window
-          .electronAPI
-          .sendSync("storage-location", "ping");
+      : window.electronAPI.sendSync("storage-location", "ping");
   } else {
     return ConfigService.getItem("storageLocation");
   }
@@ -602,9 +598,7 @@ export const openExternalUrl = (
     : window.open(url);
 };
 export const openInBrowser = (url: string) => {
-  isElectron
-    ? window.electronAPI.shell.openExternal(url)
-    : window.open(url);
+  isElectron ? window.electronAPI.shell.openExternal(url) : window.open(url);
 };
 export const getPageWidth = (
   readerMode: string,
@@ -1146,20 +1140,19 @@ export const showDownloadProgress = (
           service: service,
           storagePath: getStorageLocation(),
         };
-        downloadedSize = await window
-          .electronAPI
-          .invoke("cloud-progress", config);
+        downloadedSize = await window.electronAPI.invoke(
+          "cloud-progress",
+          config
+        );
       } else {
         let tokenConfig = await getCloudConfig(service);
-        downloadedSize = await window
-          .electronAPI
-          .invoke("picker-progress", {
-            ...tokenConfig,
-            baseFolder: "",
-            service: service,
-            currentPath: "",
-            storagePath: getStorageLocation(),
-          });
+        downloadedSize = await window.electronAPI.invoke("picker-progress", {
+          ...tokenConfig,
+          baseFolder: "",
+          service: service,
+          currentPath: "",
+          storagePath: getStorageLocation(),
+        });
       }
       if (isFirst && downloadedSize > 0) {
         downloadedSize = 0;
@@ -1221,9 +1214,7 @@ export const showTaskProgress = async (
   }
   timer = setInterval(async () => {
     if (isElectron) {
-      let stats = await window
-        .electronAPI
-        .invoke("cloud-stats", config);
+      let stats = await window.electronAPI.invoke("cloud-stats", config);
       if (
         stats.total > 0 &&
         ConfigService.getReaderConfig("hideSyncProgress") !== "yes"
@@ -1296,9 +1287,7 @@ export const getTaskStats = async () => {
       service: service,
       storagePath: getStorageLocation(),
     };
-    return await window
-      .electronAPI
-      .invoke("cloud-stats", config);
+    return await window.electronAPI.invoke("cloud-stats", config);
   } else {
     let syncUtil = await SyncService.getSyncUtil();
     return await syncUtil.getStats();
@@ -2007,3 +1996,54 @@ export const getDefaultOcrLang = (engine: string, currentBook: any) => {
     return "standard_v5_mobile";
   }
 };
+export const CONTEXT_MENU_WIDTH = 200;
+export const CONTEXT_MENU_ITEM_HEIGHT = 33;
+export const CONTEXT_MENU_PADDING = 10;
+export const CONTEXT_MENU_MARGIN = 8;
+export const SUBMENU_GAP = 195; // 子菜单相对主菜单的水平偏移（约等于主菜单宽度）
+
+export interface Viewport {
+  width: number;
+  height: number;
+}
+
+export function estimateMenuHeight(itemCount: number): number {
+  return itemCount * CONTEXT_MENU_ITEM_HEIGHT + CONTEXT_MENU_PADDING * 2;
+}
+
+// 将菜单左上角 (left, top) 校正到视口内，菜单宽 menuWidth 高 menuHeight。
+export function clampMenuPosition(
+  left: number,
+  top: number,
+  menuWidth: number,
+  menuHeight: number,
+  viewport?: Viewport
+): { left: number; top: number } {
+  const vw = viewport || {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  };
+  const clampedLeft = Math.max(
+    CONTEXT_MENU_MARGIN,
+    Math.min(left, vw.width - menuWidth - CONTEXT_MENU_MARGIN)
+  );
+  const clampedTop = Math.max(
+    CONTEXT_MENU_MARGIN,
+    Math.min(top, vw.height - menuHeight - CONTEXT_MENU_MARGIN)
+  );
+  return { left: clampedLeft, top: clampedTop };
+}
+
+// 子菜单(宽 subWidth)从 anchorLeft 处向右(先叠 SUBMENU_GAP)展开是否会超右缘。
+// 若超界应改为向左展开。
+export function shouldSubmenuOpenLeft(
+  anchorLeft: number,
+  subWidth: number,
+  viewport?: Viewport
+): boolean {
+  const vw = viewport || {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  };
+  return anchorLeft + SUBMENU_GAP + subWidth + CONTEXT_MENU_MARGIN > vw.width;
+}

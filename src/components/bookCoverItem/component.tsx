@@ -13,7 +13,7 @@ import {
   clampMenuPosition,
   estimateMenuHeight,
   CONTEXT_MENU_WIDTH,
-} from "../../utils/contextMenuLayout";
+} from "../../utils/common";
 
 declare var window: any;
 
@@ -48,7 +48,9 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     }
     const pos = clampMenuPosition(
       x,
-      document.body.clientHeight - e.clientY > 250 ? e.clientY : e.clientY - 200,
+      document.body.clientHeight - e.clientY > 250
+        ? e.clientY
+        : e.clientY - 200,
       CONTEXT_MENU_WIDTH,
       estimateMenuHeight(9)
     );
