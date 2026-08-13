@@ -67,6 +67,15 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
 
     const noteOffset = isNotes ? 1 : 2;
     const itemHeight = 33;
+    // 主菜单渲染时会被 clampMenuPosition 校正到视口内（靠近底部时会整体上移），
+    // 格式子菜单必须以主菜单“实际渲染后的 top”为基准水平对齐，而不是用未校正的 top，
+    // 否则主菜单上移后子菜单仍贴在底部边缘，无法点击。
+    const mainMenuPos = clampMenuPosition(
+      this.props.left + (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
+      this.props.top + 103,
+      CONTEXT_MENU_WIDTH,
+      estimateMenuHeight(isElectron ? 9 : 8)
+    );
 
     return (
       <div
@@ -78,7 +87,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                   this.props.left +
                     (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP) +
                     195,
-                  this.props.top + 103 + noteOffset * itemHeight,
+                  mainMenuPos.top + noteOffset * itemHeight,
                   120,
                   estimateMenuHeight(5)
                 );
