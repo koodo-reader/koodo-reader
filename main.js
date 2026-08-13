@@ -2754,9 +2754,25 @@ const applyCorsToRendererRequests = () => {
   );
 };
 
+// 这里在请求发出前统一移除 Origin 头，按非浏览器请求处理。
+const spoofOriginForLocalDev = () => {
+  const filter = {
+    urls: ["http://*/*", "https://*/*"],
+  };
+  session.defaultSession.webRequest.onBeforeSendHeaders(
+    filter,
+    (details, callback) => {
+      const requestHeaders = { ...details.requestHeaders };
+      delete requestHeaders["Origin"];
+      callback({ requestHeaders });
+    }
+  );
+};
+
 app.on("ready", async () => {
   registerAssetProtocol();
   applyCorsToRendererRequests();
+  spoofOriginForLocalDev();
   await applyProxyToSession();
   createMainWin();
 });
