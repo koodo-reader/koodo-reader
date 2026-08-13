@@ -279,6 +279,12 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   >
                     <span className={`icon-${item.icon} trans-icon`}></span>
                     {this.props.t(item.displayName)}
+                    {item.key === "official-ai-trans-plugin" && (
+                      <span style={{ fontSize: "13px", color: "#f16464" }}>
+                        {" "}
+                        (Pro)
+                      </span>
+                    )}
                   </div>
                 );
               })}

@@ -234,6 +234,7 @@ class SettingSwitch extends React.Component<
         <div className="single-control-switch-container" key="isWordDefinition">
           <span className="single-control-switch-title">
             <Trans>Enable word definitions</Trans>
+            <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
           </span>
           <span
             className="single-control-switch"

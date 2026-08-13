@@ -377,6 +377,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       className="add-dialog-shelf-list-option"
                     >
                       {this.props.t(item.displayName)}
+                      {item.key === "official-ai-dict-plugin" && (
+                        <span style={{ fontSize: "13px", color: "#f16464" }}>
+                          {" "}
+                          (Pro)
+                        </span>
+                      )}
                     </option>
                   );
                 })}

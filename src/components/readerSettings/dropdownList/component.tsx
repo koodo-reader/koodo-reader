@@ -239,6 +239,12 @@ class DropdownList extends React.Component<
             <li className="paragraph-character-container">
               <p className="general-setting-title">
                 <Trans>{item.title}</Trans>
+                {item.value === "fullTranslationMode" && (
+                  <span style={{ fontSize: "13px", color: "#f16464" }}>
+                    {" "}
+                    (Pro)
+                  </span>
+                )}
               </p>
               <select
                 name=""

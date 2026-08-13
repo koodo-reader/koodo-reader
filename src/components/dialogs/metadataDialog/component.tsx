@@ -110,7 +110,7 @@ class MetadataDialog extends React.Component<
     return (
       <div className="metadata-dialog-container edit-dialog-container">
         <div className="metadata-dialog-title">
-          <Trans>Get metadata</Trans>
+          {this.props.t("Get metadata") + " (Pro)"}
         </div>
 
         {/* Search inputs */}
