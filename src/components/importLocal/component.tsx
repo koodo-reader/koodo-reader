@@ -610,12 +610,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       const fs = window.electronAPI.fs;
       const path = window.electronAPI.path;
       const ipcRenderer = window.electronAPI;
-      // Get existing book paths to skip already-imported books
+      // Lightweight dedup: compare path/size, no file read or md5.
       const existingPaths = new Set<string>();
+      const sizeByPath = new Map<string, number>();
       const bookListResult = await ipcRenderer.invoke(
         "custom-database-command",
         {
-          query: `SELECT key, path FROM books`,
+          query: `SELECT path, size FROM books`,
           dbName: "books",
           storagePath: ConfigService.getItem("storageLocation"),
           executeType: "all",
@@ -623,9 +624,16 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       );
       (bookListResult || []).forEach((item: any) => {
         if (item.path) existingPaths.add(item.path);
+        if (item.path && item.size != null) sizeByPath.set(item.path, item.size);
       });
       for (const folderPath of folders) {
-        await this.scanFolderForNewBooks(folderPath, fs, path, existingPaths);
+        await this.scanFolderForNewBooks(
+          folderPath,
+          fs,
+          path,
+          existingPaths,
+          sizeByPath
+        );
       }
     } catch (error) {
       console.error("Auto import folder scan error:", error);
@@ -636,7 +644,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     folderPath: string,
     fs: any,
     path: any,
-    existingPaths: Set<string>
+    existingPaths: Set<string>,
+    sizeByPath: Map<string, number>
   ) => {
     const files: string[] = [];
     const getAllFiles = (dirPath: string): string[] => {
@@ -668,12 +677,17 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       return;
     }
     for (const filePath of files) {
-      if (existingPaths.has(filePath)) continue;
+      const fileName = path.basename(filePath);
       try {
+        const stat = fs.statSync(filePath);
+        if (!stat.isFile) continue;
+        if (existingPaths.has(filePath)) continue;
+        if (sizeByPath.has(filePath) && sizeByPath.get(filePath) === stat.size) {
+          continue;
+        }
         const buffer = await fs.promises.readFile(filePath);
         const arraybuffer = new Uint8Array(buffer).buffer;
         const blob = new Blob([arraybuffer]);
-        const fileName = path.basename(filePath);
         let file: any = new File([blob], fileName);
         file.path = filePath;
         await this.getMd5WithBrowser(file);

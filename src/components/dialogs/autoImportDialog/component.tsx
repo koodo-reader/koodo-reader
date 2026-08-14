@@ -78,13 +78,36 @@ class AutoImportDialog extends React.Component<
   scanAndImportFolder = async (folderPath: string) => {
     const fs = window.electronAPI.fs;
     const path = window.electronAPI.path;
-    const existingPaths = this.getExistingBookPaths();
+    const ipcRenderer = window.electronAPI;
+    // Lightweight dedup: only read db size/path, no file read, no md5.
+    // A path match means already imported; falling back to size+path filter
+    // avoids re-importing an existing book whose stored path is empty.
+    const existingPaths = new Set<string>();
+    const sizeByPath = new Map<string, number>();
+    const bookListResult = await ipcRenderer.invoke("custom-database-command", {
+      query: `SELECT path, size FROM books`,
+      dbName: "books",
+      storagePath: ConfigService.getItem("storageLocation"),
+      executeType: "all",
+    });
+    (bookListResult || []).forEach((item: any) => {
+      if (item.path) existingPaths.add(item.path);
+      if (item.path && item.size != null) sizeByPath.set(item.path, item.size);
+    });
     const files = this.getAllFilesRecursively(fs, path, folderPath);
     let imported = 0;
     for (const filePath of files) {
-      if (existingPaths.has(filePath)) continue;
       const fileName = path.basename(filePath);
       try {
+        const stat = fs.statSync(filePath);
+        if (!stat.isFile) continue;
+        if (existingPaths.has(filePath)) continue;
+        if (
+          sizeByPath.has(filePath) &&
+          sizeByPath.get(filePath) === stat.size
+        ) {
+          continue;
+        }
         const buffer = await fs.promises.readFile(filePath);
         const arraybuffer = new Uint8Array(buffer).buffer;
         const blob = new Blob([arraybuffer]);
