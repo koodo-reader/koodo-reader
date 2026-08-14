@@ -1097,5 +1097,12 @@
   "Unread": "Gan léamh",
   "CurrentlyReading": "Ag léamh",
   "Finished": "Críochnaithe",
-  "Theme": "Theme"
+  "Theme": "Téama",
+  "Auto import folder": "Fillteán ionportála uathoibríoch",
+  "Add local folder": "Cuir fillteán áitiúil leis",
+  "No auto import folder added yet": "Níl aon fhillteán ionportála uathoibríoch curtha leis go fóill",
+  "Folder already added": "Fillteán curtha le cheana",
+  "Auto import complete": "Ionportáil uathoibríoch críochaithe",
+  "No new books found": "Níor aimsíodh aon leabhar nua",
+  "Folder removed": "Fillteán bainte"
 }

@@ -1101,5 +1101,12 @@
   "Unread": "Nelet",
   "CurrentlyReading": "Actualmen leente",
   "Finished": "Finit",
-  "Theme": "Theme"
+  "Theme": "Tematu",
+  "Auto import folder": "Automate import folder",
+  "Add local folder": "Adjunter local folder",
+  "No auto import folder added yet": "Nullc auto import folder addit es",
+  "Folder already added": "Folder ja addit es",
+  "Auto import complete": "Auto import complet",
+  "No new books found": "Nullc nov libros trov",
+  "Folder removed": "Folder remivet"
 }

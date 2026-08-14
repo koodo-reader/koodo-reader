@@ -1098,5 +1098,12 @@
   "Unread": "Não lido",
   "CurrentlyReading": "Lendo",
   "Finished": "Concluído",
-  "Theme": "Theme"
+  "Theme": "Tema",
+  "Auto import folder": "Pasta de importação automática",
+  "Add local folder": "Adicionar pasta local",
+  "No auto import folder added yet": "Nenhuma pasta de importação automática adicionada",
+  "Folder already added": "Pasta já adicionada",
+  "Auto import complete": "Importação automática concluída",
+  "No new books found": "Nenhum novo livro encontrado",
+  "Folder removed": "Pasta removida"
 }

@@ -1100,5 +1100,12 @@
   "Unread": "Непрочитанное",
   "CurrentlyReading": "Читаю",
   "Finished": "Завершённое",
-  "Theme": "Theme"
+  "Theme": "Тема",
+  "Auto import folder": "Папка автоматического импорта",
+  "Add local folder": "Добавить локальную папку",
+  "No auto import folder added yet": "Папки автоматического импорта ещё не добавлены",
+  "Folder already added": "Папка уже добавлена",
+  "Auto import complete": "Автоматический импорт завершён",
+  "No new books found": "Новых книг не найдено",
+  "Folder removed": "Папка удалена"
 }

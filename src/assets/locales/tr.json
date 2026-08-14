@@ -1100,5 +1100,12 @@
   "Unread": "Okunmamış",
   "CurrentlyReading": "Okunuyor",
   "Finished": "Tamamlandı",
-  "Theme": "Theme"
+  "Theme": "Tema",
+  "Auto import folder": "Otomatik içe aktarma klasörü",
+  "Add local folder": "Yerel klasör ekle",
+  "No auto import folder added yet": "Henüz otomatik içe aktarma klasörü eklenmedi",
+  "Folder already added": "Klasör zaten eklendi",
+  "Auto import complete": "Otomatik içe aktarma tamamlandı",
+  "No new books found": "Yeni kitap bulunamadı",
+  "Folder removed": "Klasör kaldırıldı"
 }

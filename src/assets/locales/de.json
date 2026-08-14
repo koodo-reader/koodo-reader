@@ -1099,5 +1099,12 @@
   "Unread": "Ungelesen",
   "CurrentlyReading": "Wird gelesen",
   "Finished": "Fertig",
-  "Theme": "Theme"
+  "Theme": "Design",
+  "Auto import folder": "Ordner für automatischen Import",
+  "Add local folder": "Lokalen Ordner hinzufügen",
+  "No auto import folder added yet": "Noch kein Ordner für automatischen Import hinzugefügt",
+  "Folder already added": "Ordner bereits hinzugefügt",
+  "Auto import complete": "Automatischer Import abgeschlossen",
+  "No new books found": "Keine neuen Bücher gefunden",
+  "Folder removed": "Ordner entfernt"
 }

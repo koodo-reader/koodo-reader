@@ -1097,5 +1097,12 @@
   "Unread": "न पढ़ा गया",
   "CurrentlyReading": "पढ़ रहे हैं",
   "Finished": "समाप्त",
-  "Theme": "Theme"
+  "Theme": "थीम",
+  "Auto import folder": "स्वतः आयात फ़ोल्डर",
+  "Add local folder": "स्थानीय फ़ोल्डर जोड़ें",
+  "No auto import folder added yet": "अभी तक कोई स्वतः आयात फ़ोल्डर नहीं जोड़ा गया",
+  "Folder already added": "फ़ोल्डर पहले से जोड़ा गया है",
+  "Auto import complete": "स्वतः आयात पूर्ण",
+  "No new books found": "कोई नई पुस्तक नहीं मिली",
+  "Folder removed": "फ़ोल्डर हटा दिया गया"
 }

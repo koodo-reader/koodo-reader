@@ -1097,5 +1097,12 @@
   "Unread": "ያልተነበበ",
   "CurrentlyReading": "በማንበብ ላይ",
   "Finished": "ተጠናቋል",
-  "Theme": "Theme"
+  "Theme": "ገድብ",
+  "Auto import folder": "አውቶማቲክ የማስገቢያ አቃፊ",
+  "Add local folder": "የአካባቢያዊ አቃፊ ጨምር",
+  "No auto import folder added yet": "እስካሁን ምንም አውቶማቲክ የማስገቢያ አቃፊ አልተጨመረም",
+  "Folder already added": "አቃፊው ቀድሞውኑ ተጨምሯል",
+  "Auto import complete": "አውቶማቲክ ማስገቢያ ተጠናቋል",
+  "No new books found": "ምንም አዲስ መጽሐፍ አልተገኘም",
+  "Folder removed": "አቃፊው ተወግዷል"
 }

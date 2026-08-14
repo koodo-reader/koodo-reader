@@ -1106,5 +1106,12 @@
   "Unread": "Lukematon",
   "CurrentlyReading": "Lukemassa",
   "Finished": "Valmis",
-  "Theme": "Theme"
+  "Theme": "Teema",
+  "Auto import folder": "Automaatti-importtikansio",
+  "Add local folder": "Lisää paikallinen kansio",
+  "No auto import folder added yet": "Ei vielä lisätty automaatti-importtikansiota",
+  "Folder already added": "Kansio on jo lisätty",
+  "Auto import complete": "Automaattinen importti valmis",
+  "No new books found": "Uusia kirjoja ei löytynyt",
+  "Folder removed": "Kansio poistettu"
 }

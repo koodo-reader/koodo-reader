@@ -1098,5 +1098,12 @@
   "Unread": "படிக்காதவை",
   "CurrentlyReading": "படித்துக்கொண்டிருக்கிறது",
   "Finished": "முடிந்தவை",
-  "Theme": "தோற்றம்"
+  "Theme": "தோற்றம்",
+  "Auto import folder": "தானியங்கி இறக்குமதி கோப்புறை",
+  "Add local folder": "உள்ளூர் கோப்புறையை சேர்க்க",
+  "No auto import folder added yet": "இன்னும் தானியங்கி இறக்குமதி கோப்புறை சேர்க்கப்படவில்லை",
+  "Folder already added": "கோப்புறை ஏற்கனவே சேர்க்கப்பட்டது",
+  "Auto import complete": "தானியங்கி இறக்குமதி முடிந்தது",
+  "No new books found": "புதிய புத்தகங்கள் எதுவும் இல்லை",
+  "Folder removed": "கோப்புறை அகற்றப்பட்டது"
 }

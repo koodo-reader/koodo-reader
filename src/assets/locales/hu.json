@@ -1097,5 +1097,12 @@
   "Unread": "Olvasatlan",
   "CurrentlyReading": "Olvasás közben",
   "Finished": "Befejezett",
-  "Theme": "Theme"
+  "Theme": "Téma",
+  "Auto import folder": "Automatikus importálási mappa",
+  "Add local folder": "Helyi mappa hozzáadása",
+  "No auto import folder added yet": "Még nincs hozzáadva automatikus importálási mappa",
+  "Folder already added": "A mappa már hozzá lett adva",
+  "Auto import complete": "Automatikus importálás kész",
+  "No new books found": "Nem található új könyv",
+  "Folder removed": "A mappa eltávolítva"
 }

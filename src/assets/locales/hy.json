@@ -1100,5 +1100,12 @@
   "Unread": "Չկարդացված",
   "CurrentlyReading": "Ընթերցվում է",
   "Finished": "Ավարտված",
-  "Theme": "Theme"
+  "Theme": "Կաղապար",
+  "Auto import folder": "Ավտոմատ ներմուծման պանակ",
+  "Add local folder": "Աբավելնել տեղական պանակ",
+  "No auto import folder added yet": "Ավտոմատ ներմուծման պանակ դեռ չի ավելացվել",
+  "Folder already added": "Պանակը արեն ավելացված է",
+  "Auto import complete": "Ավտոմատ ներմուծումն ավարտվել է",
+  "No new books found": "Նոր գրքեր չին գտնվել",
+  "Folder removed": "Պանակը հեռացվել է"
 }

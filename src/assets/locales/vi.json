@@ -1103,5 +1103,12 @@
   "Unread": "Chưa đọc",
   "CurrentlyReading": "Đang đọc",
   "Finished": "Đã đọc xong",
-  "Theme": "Theme"
+  "Theme": "Chủ đề",
+  "Auto import folder": "Thư mục nhập tự động",
+  "Add local folder": "Thêm thư mục cục bộ",
+  "No auto import folder added yet": "Chưa có thư mục nhập tự động nào được thêm",
+  "Folder already added": "Thư mục đã được thêm",
+  "Auto import complete": "Nhập tự động hoàn tất",
+  "No new books found": "Không tìm thấy sách mới",
+  "Folder removed": "Thư mục đã bị xóa"
 }

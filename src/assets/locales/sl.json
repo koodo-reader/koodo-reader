@@ -1097,5 +1097,12 @@
   "Unread": "Neprebrano",
   "CurrentlyReading": "Berem",
   "Finished": "Končano",
-  "Theme": "Theme"
+  "Theme": "Tema",
+  "Auto import folder": "Mapa za samodejni uvoz",
+  "Add local folder": "Dodaj lokalno mapo",
+  "No auto import folder added yet": "Še ni dodana mapa za samodejni uvoz",
+  "Folder already added": "Mapa je že dodana",
+  "Auto import complete": "Samodejni uvoz dokončan",
+  "No new books found": "Ni najdenih novih knjig",
+  "Folder removed": "Mapa je odstranjena"
 }

@@ -1114,5 +1114,12 @@
   "Unread": "Belum dibaca",
   "CurrentlyReading": "Sedang dibaca",
   "Finished": "Selesai",
-  "Theme": "Theme"
+  "Theme": "Tema",
+  "Auto import folder": "Folder impor otomatis",
+  "Add local folder": "Tambah folder lokal",
+  "No auto import folder added yet": "Belum ada folder impor otomatis ditambahkan",
+  "Folder already added": "Folder sudah ditambahkan",
+  "Auto import complete": "Impor otomatis selesai",
+  "No new books found": "Tidak ada buku baru ditemukan",
+  "Folder removed": "Folder dihapus"
 }

@@ -83,6 +83,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         if (!rawUrl || typeof rawUrl !== "string") return;
         this.handleURLImport(undefined as any, rawUrl);
       });
+
+      this.autoScanFoldersOnStart();
     }
     this.resizeHandler = throttle(() => {
       this.setState({ width: document.body.clientWidth });
@@ -586,6 +588,105 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.props.handleOPDSDialog(true);
   };
 
+  // Handle auto import folder
+  handleAutoImport = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the Dropzone
+    this.setState({ isMoreOptionsVisible: false });
+    this.props.handleAutoImportDialog(true);
+  };
+
+  // Scan configured auto-import folders for new books on startup
+  autoScanFoldersOnStart = async () => {
+    try {
+      const folders =
+        ConfigService.getAllListConfig("autoImportFolders") || [];
+      if (folders.length === 0) return;
+      // Wait for any pending sync task to finish before auto importing
+      try {
+        await this.props.cloudSyncFunc();
+      } catch (error) {
+        console.error("Auto import: cloud sync error:", error);
+      }
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
+      const ipcRenderer = window.electronAPI;
+      // Get existing book paths to skip already-imported books
+      const existingPaths = new Set<string>();
+      const bookListResult = await ipcRenderer.invoke(
+        "custom-database-command",
+        {
+          query: `SELECT key, path FROM books`,
+          dbName: "books",
+          storagePath: ConfigService.getItem("storageLocation"),
+          executeType: "all",
+        }
+      );
+      (bookListResult || []).forEach((item: any) => {
+        if (item.path) existingPaths.add(item.path);
+      });
+      for (const folderPath of folders) {
+        await this.scanFolderForNewBooks(folderPath, fs, path, existingPaths);
+      }
+    } catch (error) {
+      console.error("Auto import folder scan error:", error);
+    }
+  };
+
+  scanFolderForNewBooks = async (
+    folderPath: string,
+    fs: any,
+    path: any,
+    existingPaths: Set<string>
+  ) => {
+    const files: string[] = [];
+    const getAllFiles = (dirPath: string): string[] => {
+      let result: string[] = [];
+      try {
+        const items = fs.readdirSync(dirPath);
+        for (const item of items) {
+          const fullPath = path.join(dirPath, item);
+          const stat = fs.statSync(fullPath);
+          if (stat.isDirectory && !stat.isFile()) {
+            result = result.concat(getAllFiles(fullPath));
+          } else if (stat.isFile()) {
+            const ext = path.extname(item).toLowerCase();
+            if (supportedFormats.includes(ext)) {
+              result.push(fullPath);
+            }
+          }
+        }
+      } catch (error) {
+        console.error(`Error reading directory ${dirPath}:`, error);
+      }
+      return result;
+    };
+    try {
+      const foundFiles = getAllFiles(folderPath);
+      files.push(...foundFiles);
+    } catch (error) {
+      console.error(`Error scanning folder ${folderPath}:`, error);
+      return;
+    }
+    for (const filePath of files) {
+      if (existingPaths.has(filePath)) continue;
+      try {
+        const buffer = await fs.promises.readFile(filePath);
+        const arraybuffer = new Uint8Array(buffer).buffer;
+        const blob = new Blob([arraybuffer]);
+        const fileName = path.basename(filePath);
+        let file: any = new File([blob], fileName);
+        file.path = filePath;
+        await this.getMd5WithBrowser(file);
+        existingPaths.add(filePath);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        toast.error(errorMessage);
+        console.error(`Error processing file ${filePath}:`, error);
+      }
+    }
+  };
+
   // Handle URL import
   handleURLImport = async (e?: React.MouseEvent, externalUrl?: string) => {
     e?.stopPropagation();
@@ -882,6 +983,16 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         <Trans>From cloud storage</Trans>
                       </span>
                     </div>
+                    {isElectron && (
+                      <div
+                        className="more-option-item"
+                        onClick={this.handleAutoImport}
+                      >
+                        <span className="more-option-text">
+                          <Trans>Auto import folder</Trans>
+                        </span>
+                      </div>
+                    )}
                     <div
                       className="more-option-item"
                       onClick={this.handleOPDSImport}

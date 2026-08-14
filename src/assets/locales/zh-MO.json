@@ -1100,5 +1100,12 @@
   "Unread": "未讀",
   "CurrentlyReading": "閱讀中",
   "Finished": "已讀完",
-  "Theme": "主题"
+  "Theme": "主题",
+  "Auto import folder": "自動匯入資料夾",
+  "Add local folder": "新增本機資料夾",
+  "No auto import folder added yet": "尚未新增自動匯入資料夾",
+  "Folder already added": "資料夾已新增",
+  "Auto import complete": "自動匯入完成",
+  "No new books found": "未找到新書",
+  "Folder removed": "資料夾已移除"
 }

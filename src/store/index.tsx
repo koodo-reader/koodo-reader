@@ -78,6 +78,7 @@ export type stateType = {
     isOpenLocalFileDialog: boolean;
     isOpenImportDialog: boolean;
     isOpenOPDSDialog: boolean;
+    isOpenAutoImportDialog: boolean;
     isOpenSortShelfDialog: boolean;
     isOpenPopupOptionDialog: boolean;
     popupOptionUpdateIndex: number;
