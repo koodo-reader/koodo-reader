@@ -1240,7 +1240,7 @@ const createMainWin = () => {
           break;
         case "os-homedir":
           value = os.homedir();
-          break;
+          break; 
         case "crypto-md5":
           value = nodeCrypto
             .createHash("md5")
