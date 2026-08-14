@@ -1100,5 +1100,12 @@
   "Unread": "Ongelezen",
   "CurrentlyReading": "Aan het lezen",
   "Finished": "Afgerond",
-  "Theme": "Theme"
+  "Theme": "Thema",
+  "Auto import folder": "Map voor automatisch importeren",
+  "Add local folder": "Lokale map toevoegen",
+  "No auto import folder added yet": "Nog geen map voor automatisch importeren toegevoegd",
+  "Folder already added": "Map al toegevoegd",
+  "Auto import complete": "Automatisch importeren voltooid",
+  "No new books found": "Geen nieuwe boeken gevonden",
+  "Folder removed": "Map verwijderd"
 }

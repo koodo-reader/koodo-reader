@@ -1110,5 +1110,12 @@
   "Unread": "未読",
   "CurrentlyReading": "読書中",
   "Finished": "完了",
-  "Theme": "Theme"
+  "Theme": "テーマ",
+  "Auto import folder": "自動取り込みフォルダー",
+  "Add local folder": "ローカルフォルダーを追加",
+  "No auto import folder added yet": "自動取り込みフォルダーはまだ追加されていません",
+  "Folder already added": "フォルダーは既に追加されています",
+  "Auto import complete": "自動取り込み完了",
+  "No new books found": "新しい本は見つかりませんでした",
+  "Folder removed": "フォルダーを削除しました"
 }

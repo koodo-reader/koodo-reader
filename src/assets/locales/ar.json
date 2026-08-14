@@ -1100,5 +1100,12 @@
   "Unread": "غير مقروء",
   "CurrentlyReading": "يُقرأ",
   "Finished": "منتهي",
-  "Theme": "Theme"
+  "Theme": "السمة",
+  "Auto import folder": "مجلد الاستيراد التلقائي",
+  "Add local folder": "إضافة مجلد محلي",
+  "No auto import folder added yet": "لم تتم إضافة مجلد استيراد تلقائي بعد",
+  "Folder already added": "تمت إضافة المجلد بالفعل",
+  "Auto import complete": "اكتمل الاستيراد التلقائي",
+  "No new books found": "لم يتم العثور على كتب جديدة",
+  "Folder removed": "تمت إزالة المجلد"
 }

@@ -1100,5 +1100,12 @@
   "Unread": "Αδιάβαστα",
   "CurrentlyReading": "Διάβασμα",
   "Finished": "Ολοκληρωμένα",
-  "Theme": "Theme"
+  "Theme": "Θέμα",
+  "Auto import folder": "Φάκελος αυτόματης εισαγωγής",
+  "Add local folder": "Προσθήκη τοπικού φακέλου",
+  "No auto import folder added yet": "Δεν έχει προστεθεί ακόμη φάκελος αυτόματης εισαγωγής",
+  "Folder already added": "Ο φάκελος έχει ήδη προστεθεί",
+  "Auto import complete": "Η αυτόματη εισαγωγή ολοκληρώθηκε",
+  "No new books found": "Δεν βρέθηκαν νέα βιβλία",
+  "Folder removed": "Ο φάκελος αφαιρέθηκε"
 }

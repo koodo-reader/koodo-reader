@@ -1097,5 +1097,12 @@
   "Unread": "Hindi pa nababasa",
   "CurrentlyReading": "Kasalukuyang binabasa",
   "Finished": "Tapos",
-  "Theme": "Theme"
+  "Theme": "Tema",
+  "Auto import folder": "Folder ng awtomatikong pag-import",
+  "Add local folder": "Magdagdag ng lokal na folder",
+  "No auto import folder added yet": "Wala pang awtomatikong pag-import na folder na idinagdag",
+  "Folder already added": "Nasa listahan na ang folder",
+  "Auto import complete": "Kumpleto ang awtomatikong pag-import",
+  "No new books found": "Walang nahanap na bagong aklat",
+  "Folder removed": "Inalis ang folder"
 }

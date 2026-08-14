@@ -1100,5 +1100,12 @@
   "Unread": "অপঠিত",
   "CurrentlyReading": "পড়ছি",
   "Finished": "শেষ",
-  "Theme": "Theme"
+  "Theme": "থিম",
+  "Auto import folder": "অটো ইমপোর্ট ফোলডার",
+  "Add local folder": "স্থানীয় ফোলডার যুক্ত করুন",
+  "No auto import folder added yet": "এখনো কোন অটো ইমপোর্ট ফোলডার যুক্ত করা হয়নি",
+  "Folder already added": "ফোলডারটি আগে যুক্ত অাছে",
+  "Auto import complete": "অটো ইমপোর্ট সম্পন্ন",
+  "No new books found": "কোনো নতুন বই খুঁজে পায়া যায়নি",
+  "Folder removed": "ফোলডারটি সরিয়ে দেওয়া হায়েছে"
 }

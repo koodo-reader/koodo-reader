@@ -1104,5 +1104,12 @@
   "Unread": "Olästa",
   "CurrentlyReading": "Läser",
   "Finished": "Avslutade",
-  "Theme": "Theme"
+  "Theme": "Tema",
+  "Auto import folder": "Mapp för automatisk import",
+  "Add local folder": "Lägg till lokal mapp",
+  "No auto import folder added yet": "Ingen mapp för automatisk import tillagd",
+  "Folder already added": "Mappen är redan tillagd",
+  "Auto import complete": "Automatisk import slutförd",
+  "No new books found": "Inga nya böcker hittades",
+  "Folder removed": "Mappen togs bort"
 }

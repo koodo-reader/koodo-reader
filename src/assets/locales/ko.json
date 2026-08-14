@@ -1099,5 +1099,12 @@
   "Unread": "읽지 않음",
   "CurrentlyReading": "읽는 중",
   "Finished": "완료",
-  "Theme": "Theme"
+  "Theme": "테마",
+  "Auto import folder": "자동 가져오기 폴더",
+  "Add local folder": "로컬 폴더 추가",
+  "No auto import folder added yet": "자동 가져오기 폴더가 아직 없습니다",
+  "Folder already added": "폴더가 이미 추가되었습니다",
+  "Auto import complete": "자동 가져오기 완료",
+  "No new books found": "새 책이 없습니다",
+  "Folder removed": "폴더가 제거되었습니다"
 }

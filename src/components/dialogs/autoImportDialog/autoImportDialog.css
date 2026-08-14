@@ -1,0 +1,43 @@
+.auto-import-container {
+  width: 454px !important;
+}
+
+.auto-import-empty {
+  text-align: center;
+  opacity: 0.5;
+  padding: 30px 0;
+  font-size: 14px;
+}
+
+.auto-import-item {
+  padding: 12px 10px !important;
+}
+
+.auto-import-folder-icon {
+  margin-right: 8px;
+  font-size: 15px;
+}
+
+.auto-import-item .cloud-drive-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auto-import-add-button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 10px;
+  width: 100%;
+  height: 40px;
+}
+
+.auto-import-add-button .cloud-drive-label {
+  width: auto;
+  font-size: 16px;
+  color: #f16464;
+}

@@ -1098,5 +1098,12 @@
   "Unread": "Nepročitano",
   "CurrentlyReading": "Čitam",
   "Finished": "Završeno",
-  "Theme": "Theme"
+  "Theme": "Тема",
+  "Auto import folder": "Фасцикла за аутоматски увоз",
+  "Add local folder": "Додај локалну фасциклу",
+  "No auto import folder added yet": "Још није додата фасцикла за аутоматски увоз",
+  "Folder already added": "Фасцикла је већ додата",
+  "Auto import complete": "Аутоматски увоз завршен",
+  "No new books found": "Нема нових књига",
+  "Folder removed": "Фасцикла уклоњена"
 }
