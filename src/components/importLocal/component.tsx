@@ -646,9 +646,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         for (const item of items) {
           const fullPath = path.join(dirPath, item);
           const stat = fs.statSync(fullPath);
-          if (stat.isDirectory && !stat.isFile()) {
+          if (stat.isDirectory && !stat.isFile) {
             result = result.concat(getAllFiles(fullPath));
-          } else if (stat.isFile()) {
+          } else if (stat.isFile) {
             const ext = path.extname(item).toLowerCase();
             if (supportedFormats.includes(ext)) {
               result.push(fullPath);

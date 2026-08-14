@@ -48,9 +48,9 @@ class AutoImportDialog extends React.Component<
       for (const item of items) {
         const fullPath = path.join(dirPath, item);
         const stat = fs.statSync(fullPath);
-        if (stat.isDirectory && !stat.isFile()) {
+        if (stat.isDirectory && !stat.isFile) {
           files = files.concat(this.getAllFilesRecursively(fs, path, fullPath));
-        } else if (stat.isFile()) {
+        } else if (stat.isFile) {
           const ext = path.extname(item).toLowerCase();
           if (supportedFormats.includes(ext)) {
             files.push(fullPath);
