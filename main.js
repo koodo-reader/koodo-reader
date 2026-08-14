@@ -1099,12 +1099,6 @@ const createMainWin = () => {
     }
   );
   //cancel-download-app
-  const validateFilePath = (value) => {
-    if (typeof value !== "string" || !value || value.includes("\0")) {
-      throw new TypeError("Invalid file path");
-    }
-    return value;
-  };
   const normalizeFileData = (value) => {
     if (value instanceof Uint8Array) return Buffer.from(value);
     if (value instanceof ArrayBuffer) return Buffer.from(value);
@@ -1119,7 +1113,7 @@ const createMainWin = () => {
     }
     const operation = args.operation;
     const filePath =
-      args.path === undefined ? undefined : validateFilePath(args.path);
+      args.path === undefined ? undefined : args.path;
     switch (operation) {
       case "exists":
         return fs.existsSync(filePath);
@@ -1162,13 +1156,13 @@ const createMainWin = () => {
         return fs.unlinkSync(filePath);
       case "copyFile":
         return fs.copyFileSync(
-          validateFilePath(args.source),
-          validateFilePath(args.destination)
+          args.source,
+          args.destination
         );
       case "rename":
         return fs.renameSync(
-          validateFilePath(args.source),
-          validateFilePath(args.destination)
+          args.source,
+          args.destination
         );
       case "rm":
         return fs.rmSync(filePath, args.options || {});
@@ -1176,8 +1170,8 @@ const createMainWin = () => {
         return fsExtra.emptyDirSync(filePath);
       case "copy":
         return fsExtra.copy(
-          validateFilePath(args.source),
-          validateFilePath(args.destination)
+          args.source,
+          args.destination
         );
       default:
         throw new Error(`Unsupported file operation: ${operation}`);
@@ -1278,7 +1272,7 @@ const createMainWin = () => {
     event.returnValue = clipboard.readText();
   });
   ipcMain.handle("dict-lookup", (event, args) => {
-    const filePath = validateFilePath(args && args.filePath);
+    const filePath = args && args.filePath;
     if (typeof (args && args.word) !== "string")
       throw new TypeError("Invalid dictionary word");
     const { MDX } = require("js-mdict");
@@ -1290,7 +1284,7 @@ const createMainWin = () => {
       : "";
   });
   ipcMain.handle("partial-md5", (event, filePath) => {
-    const validatedPath = validateFilePath(filePath);
+    const validatedPath = filePath;
     const hash = nodeCrypto.createHash("md5");
     const fd = fs.openSync(validatedPath, "r");
     try {
