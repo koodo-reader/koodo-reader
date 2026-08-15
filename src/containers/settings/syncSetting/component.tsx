@@ -1244,6 +1244,21 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 }
               </Trans>
             </p>
+            <div className="setting-dialog-new-plugin">
+              <span
+                style={{ textDecoration: "underline" }}
+                onClick={() => {
+                  openExternalUrl(
+                    getWebsiteUrl() +
+                      (ConfigService.getReaderConfig("lang").startsWith("zh")
+                        ? "/zh/use-sync"
+                        : "/en/use-sync")
+                  );
+                }}
+              >
+                <Trans>How to sync library across devices</Trans>
+              </span>
+            </div>
           </>
         )}
       </>
