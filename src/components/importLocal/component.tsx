@@ -83,8 +83,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         if (!rawUrl || typeof rawUrl !== "string") return;
         this.handleURLImport(undefined as any, rawUrl);
       });
-
-      this.autoScanFoldersOnStart();
     }
     this.resizeHandler = throttle(() => {
       this.setState({ width: document.body.clientWidth });
@@ -593,115 +591,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     e.stopPropagation(); // Prevent triggering the Dropzone
     this.setState({ isMoreOptionsVisible: false });
     this.props.handleAutoImportDialog(true);
-  };
-
-  // Scan configured auto-import folders for new books on startup
-  autoScanFoldersOnStart = async () => {
-    try {
-      const folders = ConfigService.getAllListConfig("autoImportFolders") || [];
-      if (folders.length === 0) return;
-      // Wait for any pending sync task to finish before auto importing
-      try {
-        await this.props.cloudSyncFunc();
-      } catch (error) {
-        console.error("Auto import: cloud sync error:", error);
-      }
-      const fs = window.electronAPI.fs;
-      const path = window.electronAPI.path;
-      const ipcRenderer = window.electronAPI;
-      // Lightweight dedup: compare path/size, no file read or md5.
-      const existingPaths = new Set<string>();
-      const sizeByPath = new Map<string, number>();
-      const bookListResult = await ipcRenderer.invoke(
-        "custom-database-command",
-        {
-          query: `SELECT path, size FROM books`,
-          dbName: "books",
-          storagePath: ConfigService.getItem("storageLocation"),
-          executeType: "all",
-        }
-      );
-      (bookListResult || []).forEach((item: any) => {
-        if (item.path) existingPaths.add(item.path);
-        if (item.path && item.size != null)
-          sizeByPath.set(item.path, item.size);
-      });
-      for (const folderPath of folders) {
-        await this.scanFolderForNewBooks(
-          folderPath,
-          fs,
-          path,
-          existingPaths,
-          sizeByPath
-        );
-      }
-    } catch (error) {
-      console.error("Auto import folder scan error:", error);
-    }
-  };
-
-  scanFolderForNewBooks = async (
-    folderPath: string,
-    fs: any,
-    path: any,
-    existingPaths: Set<string>,
-    sizeByPath: Map<string, number>
-  ) => {
-    const files: string[] = [];
-    const getAllFiles = (dirPath: string): string[] => {
-      let result: string[] = [];
-      try {
-        const items = fs.readdirSync(dirPath);
-        for (const item of items) {
-          const fullPath = path.join(dirPath, item);
-          const stat = fs.statSync(fullPath);
-          if (stat.isDirectory && !stat.isFile) {
-            result = result.concat(getAllFiles(fullPath));
-          } else if (stat.isFile) {
-            const ext = path.extname(item).toLowerCase();
-            if (supportedFormats.includes(ext)) {
-              result.push(fullPath);
-            }
-          }
-        }
-      } catch (error) {
-        console.error(`Error reading directory ${dirPath}:`, error);
-      }
-      return result;
-    };
-    try {
-      const foundFiles = getAllFiles(folderPath);
-      files.push(...foundFiles);
-    } catch (error) {
-      console.error(`Error scanning folder ${folderPath}:`, error);
-      return;
-    }
-    for (const filePath of files) {
-      const fileName = path.basename(filePath);
-      try {
-        const stat = fs.statSync(filePath);
-        if (!stat.isFile) continue;
-        if (existingPaths.has(filePath)) continue;
-        if (
-          sizeByPath.has(filePath) &&
-          sizeByPath.get(filePath) === stat.size
-        ) {
-          continue;
-        }
-        const buffer = await fs.promises.readFile(filePath);
-        const arraybuffer = new Uint8Array(buffer).buffer;
-        const blob = new Blob([arraybuffer]);
-        let file: any = new File([blob], fileName);
-        file.path = filePath;
-        await this.getMd5WithBrowser(file);
-        existingPaths.add(filePath);
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        toast.error(errorMessage);
-        console.error(`Error processing file ${filePath}:`, error);
-      }
-    }
   };
 
   // Handle URL import

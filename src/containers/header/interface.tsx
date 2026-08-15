@@ -13,6 +13,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   mode: string;
   userInfo: any;
   bookSortCode: { sort: number; order: number };
+  importBookFunc: (file: any) => Promise<void>;
   handleSortDisplay: (isSortDisplay: boolean) => void;
   handleSetting: (isSettingOpen: boolean) => void;
   handleAbout: (isAboutOpen: boolean) => void;

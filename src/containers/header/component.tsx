@@ -34,9 +34,11 @@ import {
   getWebsiteUrl,
   openInBrowser,
   resetKoodoSync,
+  scanFolderForNewBooks,
   showTaskProgress,
   throttle,
   vexComfirmAsync,
+  AUTO_IMPORT_FOLDERS_KEY,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
@@ -53,6 +55,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   timer: any;
   scheduledSyncTimer: any;
   private isSyncing: boolean = false;
+  private hasRunAutoImport: boolean = false;
   private resizeHandler: (() => void) | null = null;
   private readingFinishedHandler: ((config: any) => void) | null = null;
   constructor(props: HeaderProps) {
@@ -187,6 +190,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ConfigService.getItem("defaultSyncOption");
     if (!willAutoSync) {
       this.handleOpenLastReadBook();
+      this.autoScanFoldersOnStart();
     }
     this.startScheduledSync();
   }
@@ -276,9 +280,31 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.setState({ isSync: true });
         await this.handleCloudSync(userInfo);
         await this.handleOpenLastReadBook();
+        await this.autoScanFoldersOnStart();
+      } else {
+        await this.autoScanFoldersOnStart();
       }
     }
   }
+  autoScanFoldersOnStart = async () => {
+    if (!isElectron || this.hasRunAutoImport) return;
+    this.hasRunAutoImport = true;
+    try {
+      const folders =
+        ConfigService.getAllListConfig(AUTO_IMPORT_FOLDERS_KEY) || [];
+      if (folders.length === 0) return;
+      const importBookFunc = this.props.importBookFunc;
+      if (!importBookFunc) {
+        console.error("Auto import: no import function available");
+        return;
+      }
+      for (const folderPath of folders) {
+        await scanFolderForNewBooks(folderPath, importBookFunc);
+      }
+    } catch (error) {
+      console.error("Auto import folder scan error:", error);
+    }
+  };
   handleOpenLastReadBook = async () => {
     let filePath = "";
     //open book when app start
