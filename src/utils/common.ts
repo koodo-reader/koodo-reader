@@ -2052,12 +2052,12 @@ export const AUTO_IMPORT_FOLDERS_KEY = "autoImportFolders";
 
 export interface BookPathIndex {
   existingPaths: Set<string>;
-  sizeByPath: Map<string, number>;
+  sizeSet: Set<number>;
 }
 
 export const getBookPathIndex = async (): Promise<BookPathIndex> => {
   const existingPaths = new Set<string>();
-  const sizeByPath = new Map<string, number>();
+  const sizeSet = new Set<number>();
   const bookListResult = await window.electronAPI.invoke(
     "custom-database-command",
     {
@@ -2069,9 +2069,9 @@ export const getBookPathIndex = async (): Promise<BookPathIndex> => {
   );
   (bookListResult || []).forEach((item: any) => {
     if (item.path) existingPaths.add(item.path);
-    if (item.path && item.size != null) sizeByPath.set(item.path, item.size);
+    if (item.size != null) sizeSet.add(item.size);
   });
-  return { existingPaths, sizeByPath };
+  return { existingPaths, sizeSet };
 };
 
 export const collectSupportedFiles = (
@@ -2101,16 +2101,17 @@ export const collectSupportedFiles = (
 };
 
 // Lightweight dedup: only read db size/path, no file read, no md5.
-// A path match means already imported; falling back to size+path filter
-// avoids re-importing an existing book whose stored path is empty.
+// A path match means already imported; a size match against any book in
+// the library also counts as already imported, regardless of path.
 export const scanFolderForNewBooks = async (
   folderPath: string,
   importFile: (file: any) => Promise<void>,
   index?: BookPathIndex
 ): Promise<number> => {
+  console.log(`Scanning folder for new books: ${folderPath}`);
   const fs = window.electronAPI.fs;
   const path = window.electronAPI.path;
-  const { existingPaths, sizeByPath } = index || (await getBookPathIndex());
+  const { existingPaths, sizeSet } = index || (await getBookPathIndex());
   const files = collectSupportedFiles(fs, path, folderPath);
   let imported = 0;
   for (const filePath of files) {
@@ -2119,7 +2120,7 @@ export const scanFolderForNewBooks = async (
       const stat = fs.statSync(filePath);
       if (!stat.isFile) continue;
       if (existingPaths.has(filePath)) continue;
-      if (sizeByPath.has(filePath) && sizeByPath.get(filePath) === stat.size) {
+      if (sizeSet.has(stat.size)) {
         continue;
       }
       const buffer = await fs.promises.readFile(filePath);
