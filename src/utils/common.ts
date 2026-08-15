@@ -2047,3 +2047,97 @@ export function shouldSubmenuOpenLeft(
   };
   return anchorLeft + SUBMENU_GAP + subWidth + CONTEXT_MENU_MARGIN > vw.width;
 }
+
+export const AUTO_IMPORT_FOLDERS_KEY = "autoImportFolders";
+
+export interface BookPathIndex {
+  existingPaths: Set<string>;
+  sizeByPath: Map<string, number>;
+}
+
+export const getBookPathIndex = async (): Promise<BookPathIndex> => {
+  const existingPaths = new Set<string>();
+  const sizeByPath = new Map<string, number>();
+  const bookListResult = await window.electronAPI.invoke(
+    "custom-database-command",
+    {
+      query: `SELECT path, size FROM books`,
+      dbName: "books",
+      storagePath: ConfigService.getItem("storageLocation"),
+      executeType: "all",
+    }
+  );
+  (bookListResult || []).forEach((item: any) => {
+    if (item.path) existingPaths.add(item.path);
+    if (item.path && item.size != null) sizeByPath.set(item.path, item.size);
+  });
+  return { existingPaths, sizeByPath };
+};
+
+export const collectSupportedFiles = (
+  fs: any,
+  path: any,
+  dirPath: string
+): string[] => {
+  let files: string[] = [];
+  try {
+    const items = fs.readdirSync(dirPath);
+    for (const item of items) {
+      const fullPath = path.join(dirPath, item);
+      const stat = fs.statSync(fullPath);
+      if (stat.isDirectory && !stat.isFile) {
+        files = files.concat(collectSupportedFiles(fs, path, fullPath));
+      } else if (stat.isFile) {
+        const ext = path.extname(item).toLowerCase();
+        if (supportedFormats.includes(ext)) {
+          files.push(fullPath);
+        }
+      }
+    }
+  } catch (error) {
+    console.error(`Error reading directory ${dirPath}:`, error);
+  }
+  return files;
+};
+
+// Lightweight dedup: only read db size/path, no file read, no md5.
+// A path match means already imported; falling back to size+path filter
+// avoids re-importing an existing book whose stored path is empty.
+export const scanFolderForNewBooks = async (
+  folderPath: string,
+  importFile: (file: any) => Promise<void>,
+  index?: BookPathIndex
+): Promise<number> => {
+  const fs = window.electronAPI.fs;
+  const path = window.electronAPI.path;
+  const { existingPaths, sizeByPath } = index || (await getBookPathIndex());
+  const files = collectSupportedFiles(fs, path, folderPath);
+  let imported = 0;
+  for (const filePath of files) {
+    const fileName = path.basename(filePath);
+    try {
+      const stat = fs.statSync(filePath);
+      if (!stat.isFile) continue;
+      if (existingPaths.has(filePath)) continue;
+      if (sizeByPath.has(filePath) && sizeByPath.get(filePath) === stat.size) {
+        continue;
+      }
+      const buffer = await fs.promises.readFile(filePath);
+      const arraybuffer = new Uint8Array(buffer).buffer;
+      const blob = new Blob([arraybuffer]);
+      const file: any = new File([blob], fileName);
+      file.path = filePath;
+      await importFile(file);
+      existingPaths.add(filePath);
+      imported++;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(
+        i18n.t("Import failed") + ": " + fileName + " - " + errorMessage
+      );
+      console.error(`Error processing file ${filePath}:`, error);
+    }
+  }
+  return imported;
+};

@@ -4,10 +4,11 @@ import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { AutoImportDialogProps, AutoImportDialogState } from "./interface";
-import { supportedFormats } from "../../../utils/common";
+import {
+  AUTO_IMPORT_FOLDERS_KEY,
+  scanFolderForNewBooks,
+} from "../../../utils/common";
 declare var window: any;
-
-const FOLDER_CONFIG_KEY = "autoImportFolders";
 
 class AutoImportDialog extends React.Component<
   AutoImportDialogProps,
@@ -23,108 +24,22 @@ class AutoImportDialog extends React.Component<
 
   loadFolders(): string[] {
     try {
-      return ConfigService.getAllListConfig(FOLDER_CONFIG_KEY) || [];
+      return ConfigService.getAllListConfig(AUTO_IMPORT_FOLDERS_KEY) || [];
     } catch {
       return [];
     }
   }
 
   saveFolders(folders: string[]) {
-    ConfigService.setAllListConfig(folders, FOLDER_CONFIG_KEY);
+    ConfigService.setAllListConfig(folders, AUTO_IMPORT_FOLDERS_KEY);
   }
 
   handleClose = () => {
     this.props.handleAutoImportDialog(false);
   };
 
-  getAllFilesRecursively = (
-    fs: any,
-    path: any,
-    dirPath: string
-  ): string[] => {
-    let files: string[] = [];
-    try {
-      const items = fs.readdirSync(dirPath);
-      for (const item of items) {
-        const fullPath = path.join(dirPath, item);
-        const stat = fs.statSync(fullPath);
-        if (stat.isDirectory && !stat.isFile) {
-          files = files.concat(this.getAllFilesRecursively(fs, path, fullPath));
-        } else if (stat.isFile) {
-          const ext = path.extname(item).toLowerCase();
-          if (supportedFormats.includes(ext)) {
-            files.push(fullPath);
-          }
-        }
-      }
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      toast.error(errorMessage);
-    }
-    return files;
-  };
-
-  getExistingBookPaths(): Set<string> {
-    const paths = new Set<string>();
-    if (this.props.books && this.props.books.length > 0) {
-      for (const book of this.props.books) {
-        if (book.path) paths.add(book.path);
-      }
-    }
-    return paths;
-  }
-
   scanAndImportFolder = async (folderPath: string) => {
-    const fs = window.electronAPI.fs;
-    const path = window.electronAPI.path;
-    const ipcRenderer = window.electronAPI;
-    // Lightweight dedup: only read db size/path, no file read, no md5.
-    // A path match means already imported; falling back to size+path filter
-    // avoids re-importing an existing book whose stored path is empty.
-    const existingPaths = new Set<string>();
-    const sizeByPath = new Map<string, number>();
-    const bookListResult = await ipcRenderer.invoke("custom-database-command", {
-      query: `SELECT path, size FROM books`,
-      dbName: "books",
-      storagePath: ConfigService.getItem("storageLocation"),
-      executeType: "all",
-    });
-    (bookListResult || []).forEach((item: any) => {
-      if (item.path) existingPaths.add(item.path);
-      if (item.path && item.size != null) sizeByPath.set(item.path, item.size);
-    });
-    const files = this.getAllFilesRecursively(fs, path, folderPath);
-    let imported = 0;
-    for (const filePath of files) {
-      const fileName = path.basename(filePath);
-      try {
-        const stat = fs.statSync(filePath);
-        if (!stat.isFile) continue;
-        if (existingPaths.has(filePath)) continue;
-        if (
-          sizeByPath.has(filePath) &&
-          sizeByPath.get(filePath) === stat.size
-        ) {
-          continue;
-        }
-        const buffer = await fs.promises.readFile(filePath);
-        const arraybuffer = new Uint8Array(buffer).buffer;
-        const blob = new Blob([arraybuffer]);
-        let file: any = new File([blob], fileName);
-        file.path = filePath;
-        await this.props.importBookFunc(file);
-        existingPaths.add(filePath);
-        imported++;
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        toast.error(
-          this.props.t("Import failed") + ": " + fileName + " - " + errorMessage
-        );
-      }
-    }
-    return imported;
+    return scanFolderForNewBooks(folderPath, this.props.importBookFunc);
   };
 
   handleAddFolder = async () => {

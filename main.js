@@ -1112,8 +1112,7 @@ const createMainWin = () => {
       throw new TypeError("Invalid file operation");
     }
     const operation = args.operation;
-    const filePath =
-      args.path === undefined ? undefined : args.path;
+    const filePath = args.path === undefined ? undefined : args.path;
     switch (operation) {
       case "exists":
         return fs.existsSync(filePath);
@@ -1155,24 +1154,15 @@ const createMainWin = () => {
       case "unlink":
         return fs.unlinkSync(filePath);
       case "copyFile":
-        return fs.copyFileSync(
-          args.source,
-          args.destination
-        );
+        return fs.copyFileSync(args.source, args.destination);
       case "rename":
-        return fs.renameSync(
-          args.source,
-          args.destination
-        );
+        return fs.renameSync(args.source, args.destination);
       case "rm":
         return fs.rmSync(filePath, args.options || {});
       case "emptyDir":
         return fsExtra.emptyDirSync(filePath);
       case "copy":
-        return fsExtra.copy(
-          args.source,
-          args.destination
-        );
+        return fsExtra.copy(args.source, args.destination);
       default:
         throw new Error(`Unsupported file operation: ${operation}`);
     }
@@ -1240,7 +1230,7 @@ const createMainWin = () => {
           break;
         case "os-homedir":
           value = os.homedir();
-          break; 
+          break;
         case "crypto-md5":
           value = nodeCrypto
             .createHash("md5")
