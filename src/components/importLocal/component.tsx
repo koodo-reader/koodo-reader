@@ -598,8 +598,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   // Scan configured auto-import folders for new books on startup
   autoScanFoldersOnStart = async () => {
     try {
-      const folders =
-        ConfigService.getAllListConfig("autoImportFolders") || [];
+      const folders = ConfigService.getAllListConfig("autoImportFolders") || [];
       if (folders.length === 0) return;
       // Wait for any pending sync task to finish before auto importing
       try {
@@ -624,7 +623,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       );
       (bookListResult || []).forEach((item: any) => {
         if (item.path) existingPaths.add(item.path);
-        if (item.path && item.size != null) sizeByPath.set(item.path, item.size);
+        if (item.path && item.size != null)
+          sizeByPath.set(item.path, item.size);
       });
       for (const folderPath of folders) {
         await this.scanFolderForNewBooks(
@@ -682,7 +682,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         const stat = fs.statSync(filePath);
         if (!stat.isFile) continue;
         if (existingPaths.has(filePath)) continue;
-        if (sizeByPath.has(filePath) && sizeByPath.get(filePath) === stat.size) {
+        if (
+          sizeByPath.has(filePath) &&
+          sizeByPath.get(filePath) === stat.size
+        ) {
           continue;
         }
         const buffer = await fs.promises.readFile(filePath);
@@ -997,16 +1000,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         <Trans>From cloud storage</Trans>
                       </span>
                     </div>
-                    {isElectron && (
-                      <div
-                        className="more-option-item"
-                        onClick={this.handleAutoImport}
-                      >
-                        <span className="more-option-text">
-                          <Trans>Auto import folder</Trans>
-                        </span>
-                      </div>
-                    )}
                     <div
                       className="more-option-item"
                       onClick={this.handleOPDSImport}
@@ -1023,6 +1016,16 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                         <Trans>From URL</Trans>
                       </span>
                     </div>
+                    {isElectron && (
+                      <div
+                        className="more-option-item"
+                        onClick={this.handleAutoImport}
+                      >
+                        <span className="more-option-text">
+                          <Trans>Auto import folder</Trans>
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
