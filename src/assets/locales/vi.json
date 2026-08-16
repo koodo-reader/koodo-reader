@@ -710,7 +710,7 @@
   "The 115 cloud is only recommended for VIP users, as it is nearly unusable for free users. Additionally, due to API issues with 115 cloud, synchronization can be very slow. If you insist on using 115 cloud storage for syncing, it is recommended to enable Koodo Sync simultaneously, which will significantly improve the synchronization speed.": "Đám mây 115 chỉ được khuyến nghị cho người dùng VIP, vì gần như không thể sử dụng với người dùng miễn phí. Ngoài ra, do các vấn đề API với đám mây 115, việc đồng bộ có thể rất chậm. Nếu bạn vẫn muốn sử dụng lưu trữ đám mây 115 để đồng bộ, bạn nên bật Koodo Sync đồng thời, điều này sẽ cải thiện đáng kể tốc độ đồng bộ.",
   "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account": "Yêu cầu đã hết thời gian chờ. Bạn có thể đổi vùng máy chủ sang Trung Quốc để giải quyết vấn đề kết nối ở Trung Quốc đại lục. Vào Cài đặt > Tài khoản",
   "Dubox": "Baidu Netdisk",
-  "115 Yun": "115网盘",
+  "115 Yun": "115 Yun",
   "Please add a data source in Setting-Sync and backup": "Vui lòng thêm nguồn dữ liệu trong Cài đặt > Đồng bộ và sao lưu",
   "Failed to read file, please refresh and grant directory access again": "Không thể đọc tệp, vui lòng làm mới và cấp lại quyền truy cập thư mục",
   "OneDrive (full access)": "OneDrive (toàn quyền truy cập)",

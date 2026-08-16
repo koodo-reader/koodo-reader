@@ -705,7 +705,7 @@
   "The 115 cloud is only recommended for VIP users, as it is nearly unusable for free users. Additionally, due to API issues with 115 cloud, synchronization can be very slow. If you insist on using 115 cloud storage for syncing, it is recommended to enable Koodo Sync simultaneously, which will significantly improve the synchronization speed.": "115 மேகம் VIP பயனர்களுக்கே பரிந்துரைக்கப்படுகிறது, ஏனெனில் இது இலவச பயனர்களுக்கு கிட்டத்தட்ட பயன்படுத்த முடியாதது. மேலும் 115 மேகத்தின் API பிரச்சினைகளால் ஒத்திசைவு மிகவும் மெதுவாக இருக்கலாம். நீங்கள் 115 மேக சேமிப்பை ஒத்திசைவு செய்யத் தவறாமல் பயன்படுத்த விரும்பினால், ஒரே நேரத்தில் Koodo Sync ஐ இயக்க பரிந்துரைக்கப்படுகிறது, இது ஒத்திசைவு வேகத்தை குறிப்பிடத்தக்க அளவில் மேம்படுத்தும்.",
   "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account": "கோரிக்கையின் நேரம் முடிந்தது. சீனாவின் பெரும்பகுதியில் உள்ள இணைப்பு சிக்கலை தீர்க்க, சர்வர் பிராந்தியத்தை சீனாவாக மாற்றலாம். அமைப்புகள் > கணக்கு என்பதற்கு செல்லவும்",
   "Dubox": "DuBox",
-  "115 Yun": "115 网盘",
+  "115 Yun": "115 Yun",
   "Please add a data source in Setting-Sync and backup": "அமைப்புகள் > ஒத்திசைவு மற்றும் காப்புப்பிரதி பகுதியில் ஒரு தரவூற்றைச் சேர்க்கவும்",
   "Failed to read file, please refresh and grant directory access again": "கோப்பை படிக்க முடியவில்லை, தயவுசெய்து புதுப்பித்து மீண்டும் அடைவு அணுகலை வழங்கவும்",
   "OneDrive (full access)": "OneDrive (முழு அணுகல்)",

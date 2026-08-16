@@ -704,7 +704,7 @@
   "The 115 cloud is only recommended for VIP users, as it is nearly unusable for free users. Additionally, due to API issues with 115 cloud, synchronization can be very slow. If you insist on using 115 cloud storage for syncing, it is recommended to enable Koodo Sync simultaneously, which will significantly improve the synchronization speed.": "115 ደመና ለVIP ተጠቃሚዎች ብቻ ይመከራል፣ ለነፃ ተጠቃሚዎች ግን ለመጠቀም በጣም አይቻልም። በተጨማሪም በ115 ደመና የAPI ችግኝ ምክንያት ማመሳሰል በጣም ዝግ ሊሆን ይችላል። 115 ደመናን ለማመሳሰል ቢጠናከሩ በተመሳሳይ ጊዜ Koodo Sync ማንቃት ይመከራል፣ ይህም የማመሳሰል ፍጥነትን በጣም ያሻሽላል",
   "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account": "ጥያቄው ጊዜው አበቃ። በቻይና መሬት ውስጥ ያለውን ግንኙነት ችግኝ ለመፍታት የአገልጋይ ክልልን ወደ ቻይና ማቀየር ይችላሉ። ወደ ቅንብሮች > መለያ",
   "Dubox": "Baidu Netdisk",
-  "115 Yun": "115网盘",
+  "115 Yun": "115 Yun",
   "Please add a data source in Setting-Sync and backup": "እባክዎ በቅንብሮች-ማመሳሰል እና ምትኬ ውስጥ የውሂብ ምንጭ ያክሉ",
   "Failed to read file, please refresh and grant directory access again": "ፋይል ማንበብ አልተሳካም፣ እባክዎ ያድሱ እና የአቃፊ መዳረሻ ፈቃድ ደግሞ ይስጡ",
   "OneDrive (full access)": "OneDrive (ሙሉ መዳረሻ)",
