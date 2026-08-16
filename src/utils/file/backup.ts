@@ -183,99 +183,56 @@ export const backupFromPath = async (
     });
   }
 
-  const zip = new JSZip();
-
-  // Recursively add a directory from disk into the zip
-  const addDirectoryToZip = (
-    zipFolder: any,
-    sourceDir: string,
-    zipDir: string
-  ) => {
-    const entries: any[] = fs.readdirSync(sourceDir, { withFileTypes: true });
-    if (entries.length === 0) {
-      zip.file(zipDir, null, { dir: true, createFolders: true });
-      return;
-    }
-    for (const entry of entries) {
-      const sourcePath = path.join(sourceDir, entry.name);
-      const zipPath = path.posix.join(zipDir, entry.name);
-      if (entry.isDirectory) {
-        addDirectoryToZip(zipFolder, sourcePath, zipPath);
-      } else if (entry.isFile) {
-        zip.file(zipPath, fs.readFileSync(sourcePath), {
-          binary: true,
-          createFolders: true,
-        });
-      }
-    }
-  };
-
-  // Add book, cover, dict, background, snapshot directories
+  // 由主进程用 yazl 流式打包，避免在渲染进程把整个图书库读入内存。
+  // 目录按 ZIP 内层级逐层加入，config 目录下的 *.db / config.json / sync.json
+  // 通过 configFiles 单独传入 —— 主进程只读取 backupPath 参数指定的源，
+  // 渲染进程不再向主进程透传任意文件内容。
+  const dirs: string[] = [];
   for (const dir of ["book", "cover", "dict", "background", "snapshot"]) {
-    const sourceDir = path.join(dataPath, dir);
-    if (fs.existsSync(sourceDir)) {
-      addDirectoryToZip(zip, sourceDir, dir);
+    if (fs.existsSync(path.join(dataPath, dir))) {
+      dirs.push(dir);
     }
   }
 
-  // Add config JSON files
+  // config 目录下需要入包的相对路径（*.db / config.json / sync.json）
+  const configFiles: string[] = [];
   for (const configFile of ["config.json", "sync.json"]) {
     const sourcePath = path.join(dataPath, "config", configFile);
     if (fs.existsSync(sourcePath)) {
-      zip.file(
-        path.posix.join("config", configFile),
-        fs.readFileSync(sourcePath),
-        {
-          binary: true,
-          createFolders: true,
-        }
-      );
+      configFiles.push(path.posix.join("config", configFile));
     }
   }
-
-  // Add database files
   for (const dbName of databaseList) {
-    const sourcePath = path.join(dataPath, "config", `${dbName}.db`);
-    if (fs.existsSync(sourcePath)) {
-      zip.file(
-        path.posix.join("config", `${dbName}.db`),
-        fs.readFileSync(sourcePath),
-        { binary: true, createFolders: true }
-      );
+    if (fs.existsSync(path.join(dataPath, "config", `${dbName}.db`))) {
+      configFiles.push(path.posix.join("config", `${dbName}.db`));
     }
   }
 
-  const destinationPath = path.join(targetPath, fileName);
-  const tempPath = destinationPath + ".tmp";
-
+  const progressListener = (payload: { percent: number }) => {
+    onProgress && onProgress(payload.percent);
+  };
+  ipcRenderer.on("backup-progress", progressListener);
   try {
-    const buffer = await zip.generateAsync(
-      {
-        type: "uint8array",
-        compression: "DEFLATE",
-        compressionOptions: { level: 6 },
-      },
-      (metadata: { percent: number }) => {
-        onProgress && onProgress(Math.round(metadata.percent));
-      }
-    );
-    fs.writeFileSync(tempPath, buffer);
-    if (fs.existsSync(destinationPath)) {
-      fs.unlinkSync(destinationPath);
+    const result = await ipcRenderer.invoke("backup-path", {
+      targetPath,
+      fileName,
+      dataPath,
+      dirs,
+      files: configFiles,
+    });
+    if (!result || result.ok !== true) {
+      const message = (result && result.error) || "Backup failed";
+      toast.error(message, { id: "backup" });
+      return false;
     }
-    fs.renameSync(tempPath, destinationPath);
+    return true;
   } catch (error) {
-    if (fs.existsSync(tempPath)) {
-      try {
-        fs.unlinkSync(tempPath);
-      } catch (_) {}
-    }
     const errorMessage = error instanceof Error ? error.message : String(error);
     toast.error(errorMessage, { id: "backup" });
     return false;
+  } finally {
+    ipcRenderer.removeListener("backup-progress", progressListener);
   }
-
-  return true;
 };
 export const backupFromStorage = async () => {
   let zip = new JSZip();
