@@ -4,7 +4,6 @@ import localforage from "localforage";
 import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
 import { getStorageLocation, showDownloadProgress } from "../common";
-import { Buffer } from "buffer";
 import SyncService from "../storage/syncService";
 import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
@@ -42,7 +41,7 @@ class BookUtil {
         } else {
           fs.writeFileSync(
             path.join(dataPath, "book", key + "." + format),
-            Buffer.from(buffer)
+            buffer
           );
         }
         await this.uploadBook(key, format);
@@ -139,7 +138,7 @@ class BookUtil {
           `book`,
           key + "." + format
         );
-        var data;
+        var data: any;
         if (fs.existsSync(_bookPath)) {
           data = fs.readFileSync(_bookPath);
         } else if (bookPath && fs.existsSync(bookPath)) {
