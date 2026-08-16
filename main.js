@@ -1290,6 +1290,18 @@ const createMainWin = () => {
       fs.closeSync(fd);
     }
   });
+  ipcMain.handle("crypto-file-md5", (event, filePath) => {
+    if (typeof filePath !== "string" || !filePath) {
+      throw new TypeError("Invalid file path");
+    }
+    return new Promise((resolve, reject) => {
+      const hash = nodeCrypto.createHash("md5");
+      const stream = fs.createReadStream(filePath);
+      stream.on("error", reject);
+      stream.on("data", (chunk) => hash.update(chunk));
+      stream.on("end", () => resolve(hash.digest("hex")));
+    });
+  });
   ipcMain.handle("cancel-download-app", (event, arg) => {
     // Implement cancellation logic here
     // Note: In this example, we are not keeping a reference to the request,

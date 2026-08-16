@@ -46,7 +46,7 @@ interface ElectronAPI {
   };
   os: { platform(): string; homedir(): string };
   runtime: { platform: string; windowsStore: boolean };
-  crypto: { md5(data: ArrayBuffer | ArrayBufferView): string; partialMd5(path: string): Promise<string> };
+  crypto: { md5(data: ArrayBuffer | ArrayBufferView): string; partialMd5(path: string): Promise<string>; fileMd5(path: string): Promise<string> };
   shell: { openExternal(url: string): Promise<void> };
   clipboard: { readText(): string };
 }

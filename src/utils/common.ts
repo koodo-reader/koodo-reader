@@ -63,15 +63,36 @@ export interface HighlightValue {
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     if (isElectron) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const arrayBuffer = event.target?.result as ArrayBuffer;
-        resolve(
-          window.electronAPI?.crypto.md5(new Uint8Array(arrayBuffer)) || ""
-        );
-      };
-      reader.onerror = (error) => reject(error);
-      reader.readAsArrayBuffer(file);
+      // Use the file path to compute md5 via streaming, avoid loading the
+      // whole file into memory with FileReader.
+      const filePath = (file as any).path;
+      if (filePath && window.electronAPI?.crypto?.fileMd5) {
+        window.electronAPI.crypto
+          .fileMd5(filePath)
+          .then(resolve)
+          .catch(() => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const arrayBuffer = event.target?.result as ArrayBuffer;
+              resolve(
+                window.electronAPI?.crypto.md5(new Uint8Array(arrayBuffer)) ||
+                  ""
+              );
+            };
+            reader.onerror = (error) => reject(error);
+            reader.readAsArrayBuffer(file);
+          });
+      } else {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const arrayBuffer = event.target?.result as ArrayBuffer;
+          resolve(
+            window.electronAPI?.crypto.md5(new Uint8Array(arrayBuffer)) || ""
+          );
+        };
+        reader.onerror = (error) => reject(error);
+        reader.readAsArrayBuffer(file);
+      }
     } else {
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -446,7 +467,8 @@ export const fetchFileFromPath = (filePath: string) => {
         {
           lastModified: new Date().getTime(),
         }
-      );
+      ) as any;
+      file.path = filePath;
       resolve(file);
     });
   });
