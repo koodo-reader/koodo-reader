@@ -1092,12 +1092,10 @@ const createMainWin = () => {
       mainView.webContents.focus();
     }
   });
-  mainWin.webContents.on(
-    "console-message",
-    (event, level, message, line, sourceId) => {
-      console.log(`[Renderer Console] Message: ${message}`);
-    }
-  );
+  mainWin.webContents.on("console-message", (_event, level, message) => {
+    const lvl = { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
+    log[lvl](`[Renderer] ${message}`);
+  });
   //cancel-download-app
   const normalizeFileData = (value) => {
     if (value instanceof Uint8Array) return Buffer.from(value);
@@ -1435,6 +1433,11 @@ const createMainWin = () => {
     }
     if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
       readerWindow = new BrowserWindow(options);
+      readerWindow.webContents.on("console-message", (_event, level, message) => {
+        const lvl =
+          { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
+        log[lvl](`[Renderer] ${message}`);
+      });
       readerWindow.loadURL(url);
       if (isAutoFullscreen === "yes") {
         readerWindow.setFullScreen(true);
@@ -1458,6 +1461,11 @@ const createMainWin = () => {
         frame: isMergeWord === "yes" ? false : true,
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
+      });
+      readerWindow.webContents.on("console-message", (_event, level, message) => {
+        const lvl =
+          { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
+        log[lvl](`[Renderer] ${message}`);
       });
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
@@ -2329,6 +2337,11 @@ const createMainWin = () => {
       let { width, height } = mainWin.getContentBounds();
       mainView.setBounds({ x: 0, y: 0, width: width, height: height });
       mainView.webContents.loadURL(config.url);
+      mainView.webContents.on("console-message", (_event, level, message) => {
+        const lvl =
+          { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
+        log[lvl](`[Renderer] ${message}`);
+      });
     }
   });
   ipcMain.handle("reload-tab", (event, config) => {
@@ -2457,7 +2470,11 @@ const createMainWin = () => {
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);
       }
-
+      readerWindow.webContents.on("console-message", (_event, level, message) => {
+        const lvl =
+          { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
+        log[lvl](`[Renderer] ${message}`);
+      });
       readerWindow.loadURL(store.get("url"));
       readerWindowReadyToClose = false;
       readerWindow.on("close", (event) => {
