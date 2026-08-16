@@ -2233,9 +2233,19 @@ const createMainWin = () => {
         const output = fs.createWriteStream(tempPath);
         let totalBytes = 0;
         let writtenBytes = 0;
-        output.on("error", reject);
-        zip.outputStream.on("error", reject);
-        zip.on("error", reject);
+        // 条目源文件由 yazl 内部以 createReadStream 读取，读写出错时 yazl 虽会
+        // 触发 emit("error")，但 outputStream 的 "end" 不再走到，导致 promise
+        // 永久悬挂、进度 toast 卡死。统一收集错误：完成后销毁输出流再 reject，
+        // 主进程 catch 会清理 .tmp 并向渲染进程返回失败。
+        const errored = (err) => {
+          try {
+            output.destroy();
+          } catch (_) {}
+          reject(err);
+        };
+        output.on("error", errored);
+        zip.outputStream.on("error", errored);
+        zip.on("error", errored);
         const finish = () => {
           output.end();
         };
@@ -2303,7 +2313,7 @@ const createMainWin = () => {
             : 100;
           sendProgress(percent);
         }, 100);
-        zip.on("end", () => {
+        zip.outputStream.on("end", () => {
           clearInterval(report);
         });
       });
