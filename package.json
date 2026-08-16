@@ -56,13 +56,14 @@
     "react-sortablejs": "^6.1.4",
     "react-tooltip": "^5.28.0",
     "recharts": "^3.8.1",
-    "sortablejs": "^1.15.6",
     "socks-proxy-agent": "^8.0.3",
+    "sortablejs": "^1.15.6",
     "sse.js": "^2.6.0",
     "ssh2-sftp-client": "^11.0.0",
     "underscore": "^1.13.7",
     "uuid": "^11.0.5",
-    "webdav": "^5.7.1"
+    "webdav": "^5.7.1",
+    "yazl": "^3.3.1"
   },
   "devDependencies": {
     "@types/copy-text-to-clipboard": "^2.0.4",

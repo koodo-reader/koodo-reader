@@ -16,7 +16,7 @@ const INVOKE_CHANNELS = new Set([
   "enter-tab-fullscreen", "exit-tab-fullscreen", "enter-fullscreen", "exit-fullscreen",
   "open-url", "switch-moyu", "set-native-theme-source", "system-ocr", "file-command",
   "open-external", "dict-lookup", "partial-md5", "get-cover-url",
-  "crypto-file-md5",
+  "crypto-file-md5", "backup-path",
   "ai-request", "ai-chat-stream"
 ]);
 const SEND_CHANNELS = new Set(["reader-close-ready", "tab-close-ready"]);
@@ -27,7 +27,7 @@ const SEND_SYNC_CHANNELS = new Set([
 const EVENT_CHANNELS = new Set([
   "oauth-callback", "before-reader-close", "before-tab-close", "reading-finished",
   "chat-message", "import-url-from-link", "open-book-from-link", "open-note-from-link",
-  "picker-finished", "download-app-progress",
+  "picker-finished", "download-app-progress", "backup-progress",
   "ai-chat-chunk", "ai-chat-done", "ai-chat-error"
 ]);
 

@@ -28,6 +28,7 @@ const store = new Store();
 const fs = require("fs");
 const fsExtra = require("fs-extra");
 const nodeCrypto = require("crypto");
+const yazl = require("yazl");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
@@ -2184,6 +2185,151 @@ const createMainWin = () => {
       console.error("failed to checkpoint/switch journal mode:", error);
     }
     db.close();
+  });
+  // 流式打包备份：遍历 dataPath 下的固定目录与配置文件，
+  // 用 yazl 逐文件 addFile 直接写入目标 zip，避免将整库读入内存。
+  ipcMain.handle("backup-path", async (event, config) => {
+    if (!config || typeof config !== "object") {
+      throw new TypeError("Invalid backup config");
+    }
+    const { targetPath, fileName, dataPath, dirs, files } = config;
+    if (
+      [targetPath, dataPath].some((v) => typeof v !== "string" || !v) ||
+      typeof fileName !== "string" ||
+      !fileName ||
+      !Array.isArray(dirs) ||
+      !Array.isArray(files)
+    ) {
+      throw new TypeError("Invalid backup arguments");
+    }
+    const sendProgress = (percent) => {
+      if (mainWin && !mainWin.isDestroyed()) {
+        mainWin.webContents.send("backup-progress", { percent });
+      }
+    };
+    // 校验 dirs/files 路径均位于 dataPath 之内，防止路径穿越
+    const base = path.resolve(dataPath);
+    const assertInside = (p) => {
+      const resolved = path.resolve(p);
+      const rel = path.relative(base, resolved);
+      if (
+        rel.startsWith(".." + path.sep) ||
+        path.isAbsolute(rel) ||
+        rel.split(path.sep).includes("..")
+      ) {
+        throw new Error("Backup source path is outside the data directory");
+      }
+      return resolved;
+    };
+    try {
+      if (!fs.existsSync(targetPath)) {
+        fs.mkdirSync(targetPath, { recursive: true });
+      }
+      const destinationPath = path.join(targetPath, fileName);
+      const tempPath = destinationPath + ".tmp";
+      await new Promise((resolve, reject) => {
+        const zip = new yazl.ZipFile();
+        zip.level = 6;
+        const output = fs.createWriteStream(tempPath);
+        let totalBytes = 0;
+        let writtenBytes = 0;
+        output.on("error", reject);
+        zip.outputStream.on("error", reject);
+        zip.on("error", reject);
+        const finish = () => {
+          output.end();
+        };
+        output.on("close", resolve);
+        // 列出所有待打包的源文件并累计总字节数（用于进度估算）
+        const entries = [];
+        const collect = (zipDir, sourceDir) => {
+          let direntNames;
+          try {
+            direntNames = fs.readdirSync(sourceDir, { withFileTypes: true });
+          } catch (_) {
+            return;
+          }
+          if (direntNames.length === 0) return;
+          for (const entry of direntNames) {
+            const sourcePath = path.join(sourceDir, entry.name);
+            const entryZip = path.posix.join(zipDir, entry.name);
+            if (entry.isDirectory()) {
+              collect(entryZip, sourcePath);
+            } else if (entry.isFile()) {
+              try {
+                totalBytes += fs.statSync(sourcePath).size;
+              } catch (_) {}
+              entries.push({ sourcePath, entryZip });
+            }
+          }
+        };
+        for (const dir of dirs) {
+          const sourceDir = assertInside(path.join(dataPath, dir));
+          if (fs.existsSync(sourceDir)) {
+            zip.addEmptyDirectory(dir);
+            collect(dir, sourceDir);
+          }
+        }
+        for (const filePath of files) {
+          const sourcePath = assertInside(
+            path.resolve(dataPath, filePath.replace(/^[/\\]/, ""))
+          );
+          if (fs.existsSync(sourcePath)) {
+            try {
+              totalBytes += fs.statSync(sourcePath).size;
+            } catch (_) {}
+            entries.push({
+              sourcePath,
+              entryZip: path.posix.normalize(filePath.replace(/^[/\\]/, "")),
+            });
+          }
+        }
+        for (const entry of entries) {
+          zip.addFile(entry.sourcePath, entry.entryZip);
+        }
+        zip.end();
+        zip.outputStream.on("data", (chunk) => {
+          writtenBytes += chunk.length;
+        });
+        zip.outputStream.on("end", () => {
+          finish();
+        });
+        // 进度估算：zip.outputStream 无内建进度，按“已写入条目的源字节”
+        // 与总字节数的比例上报（压缩前后差异不影响 UI 展示）
+        zip.outputStream.pipe(output);
+        const report = setInterval(() => {
+          const percent = totalBytes
+            ? Math.min(100, Math.round((writtenBytes / totalBytes) * 100))
+            : 100;
+          sendProgress(percent);
+        }, 100);
+        zip.on("end", () => {
+          clearInterval(report);
+        });
+      });
+      let tempStat;
+      try {
+        tempStat = fs.statSync(tempPath);
+      } catch (_) {
+        throw new Error("Backup output file was not created");
+      }
+      if (fs.existsSync(destinationPath)) {
+        fs.unlinkSync(destinationPath);
+      }
+      fs.renameSync(tempPath, destinationPath);
+      sendProgress(100);
+      return { ok: true, size: tempStat.size };
+    } catch (error) {
+      try {
+        const tempPath = path.join(targetPath, fileName) + ".tmp";
+        if (fs.existsSync(tempPath)) {
+          fs.unlinkSync(tempPath);
+        }
+      } catch (_) {}
+      const message = error instanceof Error ? error.message : String(error);
+      console.error("backup-path failed:", message);
+      return { ok: false, error: message };
+    }
   });
   ipcMain.handle("set-always-on-top", async (event, config) => {
     store.set("isAlwaysOnTop", config.isAlwaysOnTop);
