@@ -97,11 +97,11 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   }
   handleFilePath = async (filePath: string) => {
     clickFilePath = filePath;
-    const tempFile: any = new File(
-      [],
-      window.electronAPI.path.basename(filePath)
-    );
+    const fileName = window.electronAPI.path.basename(filePath);
+    const stat = window.electronAPI.fs.statSync(filePath);
+    const tempFile: any = new File([], fileName);
     tempFile.path = filePath;
+    tempFile.size = stat.size;
     let md5 = await calculateFileMD5(tempFile);
 
     let repeatBook: BookModel | null = await BookUtil.getBookByMd5(md5);
@@ -110,11 +110,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       return;
     }
 
-    const stat = window.electronAPI.fs.statSync(filePath);
-    const fileTemp: any = new File(
-      [],
-      window.electronAPI.path.basename(filePath)
-    );
+    const fileTemp: any = new File([], fileName);
     fileTemp.path = filePath;
     fileTemp.size = stat.size;
 
@@ -305,14 +301,15 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         if (sourcePath) {
           try {
             const content = window.electronAPI.fs.readFileSync(sourcePath);
-            const file_content = new Uint8Array(content).buffer;
+            const file_content = content.buffer as ArrayBuffer;
+            const realSize = content.byteLength;
             await this.processBookContent(
               file,
               bookName,
               extension,
               md5,
               file_content,
-              file.size,
+              file.size || realSize,
               sourcePath,
               resolve
             );
@@ -881,12 +878,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                           for (const filePath of allFiles) {
                             try {
                               const path = window.electronAPI.path;
-                              const stat = window.electronAPI.fs.statSync(filePath);
                               const fileName = path.basename(filePath);
 
                               let file: any = new File([], fileName);
                               file.path = filePath;
-                              file.size = stat.size;
 
                               await this.getMd5WithBrowser(file);
                             } catch (error) {
@@ -1033,10 +1028,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   for (let filePath of filePaths) {
                     try {
                       const path = window.electronAPI.path;
-                      const stat = window.electronAPI.fs.statSync(filePath);
                       let file: any = new File([], path.basename(filePath));
                       file.path = filePath;
-                      file.size = stat.size;
 
                       await this.getMd5WithBrowser(file);
                     } catch (error) {
