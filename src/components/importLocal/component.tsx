@@ -326,32 +326,34 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           return;
         }
         let reader = new FileReader();
-        reader.readAsArrayBuffer(file);
-
-        reader.onload = async (e) => {
-          if (!e.target) {
+        reader.onload = async (event) => {
+          if (!event.target) {
             console.error("e.target error", bookName);
             toast.error(this.props.t("Import failed") + ": " + bookName, {
               duration: 4000,
             });
             return resolve();
           }
-          let reader = new FileReader();
-          reader.onload = async (event) => {
-            const file_content = (event.target as any).result;
-            await this.processBookContent(
-              file,
-              bookName,
-              extension,
-              md5,
-              file_content,
-              file.size,
-              file.path || clickFilePath,
-              resolve
-            );
-          };
-          reader.readAsArrayBuffer(file);
+          const file_content = (event.target as any).result;
+          await this.processBookContent(
+            file,
+            bookName,
+            extension,
+            md5,
+            file_content,
+            file.size,
+            file.path || clickFilePath,
+            resolve
+          );
         };
+        reader.onerror = () => {
+          console.error("reader error", bookName);
+          toast.error(this.props.t("Import failed") + ": " + bookName, {
+            duration: 4000,
+          });
+          return resolve();
+        };
+        reader.readAsArrayBuffer(file);
       }
     });
   };
