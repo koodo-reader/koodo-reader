@@ -26,7 +26,9 @@ let year = new Date().getFullYear(),
   day = new Date().getDate();
 
 export const exportBooks = async (books: Book[]) => {
-  if (isElectron && books.length > 50) {
+  let totalSize = books.reduce((acc, book) => acc + book.size, 0);
+  console.log("Total size of books to export:", totalSize);
+  if (isElectron && totalSize > 500 * 1024 * 1024) {
     const ipcRenderer = window.electronAPI;
     const fs = window.electronAPI.fs;
     const path = window.electronAPI.path;
@@ -74,9 +76,6 @@ export const exportBooks = async (books: Book[]) => {
         toast.error(i18n.t("Failed to export") + `: ${books[i].name}`);
       }
     }
-    toast.success(i18n.t("Export successful"), {
-      id: "exporting",
-    });
     return true;
   }
   let fetchPromises = BookUtil.fetchAllBooks(books);
