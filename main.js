@@ -1093,7 +1093,8 @@ const createMainWin = () => {
     }
   });
   mainWin.webContents.on("console-message", (_event, level, message) => {
-    const lvl = { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
+    const lvl =
+      { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
     log[lvl](`[Renderer] ${message}`);
   });
   //cancel-download-app
@@ -1433,11 +1434,14 @@ const createMainWin = () => {
     }
     if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
       readerWindow = new BrowserWindow(options);
-      readerWindow.webContents.on("console-message", (_event, level, message) => {
-        const lvl =
-          { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
-        log[lvl](`[Renderer] ${message}`);
-      });
+      readerWindow.webContents.on(
+        "console-message",
+        (_event, level, message) => {
+          const lvl =
+            { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
+          log[lvl](`[Renderer] ${message}`);
+        }
+      );
       readerWindow.loadURL(url);
       if (isAutoFullscreen === "yes") {
         readerWindow.setFullScreen(true);
@@ -1462,11 +1466,14 @@ const createMainWin = () => {
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
       });
-      readerWindow.webContents.on("console-message", (_event, level, message) => {
-        const lvl =
-          { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
-        log[lvl](`[Renderer] ${message}`);
-      });
+      readerWindow.webContents.on(
+        "console-message",
+        (_event, level, message) => {
+          const lvl =
+            { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
+          log[lvl](`[Renderer] ${message}`);
+        }
+      );
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
     }
@@ -2470,11 +2477,14 @@ const createMainWin = () => {
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);
       }
-      readerWindow.webContents.on("console-message", (_event, level, message) => {
-        const lvl =
-          { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
-        log[lvl](`[Renderer] ${message}`);
-      });
+      readerWindow.webContents.on(
+        "console-message",
+        (_event, level, message) => {
+          const lvl =
+            { 0: "info", 1: "info", 2: "warn", 3: "error" }[level] || "info";
+          log[lvl](`[Renderer] ${message}`);
+        }
+      );
       readerWindow.loadURL(store.get("url"));
       readerWindowReadyToClose = false;
       readerWindow.on("close", (event) => {
