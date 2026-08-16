@@ -17,7 +17,7 @@ import TokenService from "../storage/tokenService";
 declare var window: any;
 
 class BookUtil {
-  static async addBook(key: string, format: string, buffer: ArrayBuffer) {
+  static async addBook(key: string, format: string, buffer: ArrayBuffer, sourcePath?: string) {
     // for both original books and cached boks
     if (ConfigService.getItem("defaultSyncOption")) {
       toast.loading(i18n.t("Uploading book"), {
@@ -32,10 +32,19 @@ class BookUtil {
         if (!fs.existsSync(path.join(dataPath, "book"))) {
           fs.mkdirSync(path.join(dataPath, "book"), { recursive: true });
         }
-        fs.writeFileSync(
-          path.join(dataPath, "book", key + "." + format),
-          Buffer.from(buffer)
-        );
+        if (sourcePath && sourcePath === path.join(dataPath, "book", key + "." + format)) {
+          // Source already targets the book library, skip IO entirely.
+        } else if (sourcePath && fs.existsSync(sourcePath)) {
+          fs.copyFileSync(
+            sourcePath,
+            path.join(dataPath, "book", key + "." + format)
+          );
+        } else {
+          fs.writeFileSync(
+            path.join(dataPath, "book", key + "." + format),
+            Buffer.from(buffer)
+          );
+        }
         await this.uploadBook(key, format);
       } catch (error) {
         const errorMessage =

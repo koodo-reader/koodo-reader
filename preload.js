@@ -16,6 +16,7 @@ const INVOKE_CHANNELS = new Set([
   "enter-tab-fullscreen", "exit-tab-fullscreen", "enter-fullscreen", "exit-fullscreen",
   "open-url", "switch-moyu", "set-native-theme-source", "system-ocr", "file-command",
   "open-external", "dict-lookup", "partial-md5", "get-cover-url",
+  "crypto-file-md5",
   "ai-request", "ai-chat-stream"
 ]);
 const SEND_CHANNELS = new Set(["reader-close-ready", "tab-close-ready"]);
@@ -153,6 +154,7 @@ const pathApi = {
 const cryptoApi = {
   md5: (data) => nodeSync("crypto-md5", { data: bytes(data) }),
   partialMd5: (filePath) => invoke("partial-md5", filePath),
+  fileMd5: (filePath) => invoke("crypto-file-md5", filePath),
 };
 
 contextBridge.exposeInMainWorld("electronAPI", {
