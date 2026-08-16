@@ -721,7 +721,7 @@
   "The 115 cloud is only recommended for VIP users, as it is nearly unusable for free users. Additionally, due to API issues with 115 cloud, synchronization can be very slow. If you insist on using 115 cloud storage for syncing, it is recommended to enable Koodo Sync simultaneously, which will significantly improve the synchronization speed.": "Cloud 115 hanya direkomendasikan untuk pengguna VIP, karena hampir tidak dapat digunakan oleh pengguna gratis. Selain itu, karena masalah API pada cloud 115, sinkronisasi bisa sangat lambat. Jika Anda tetap ingin menggunakan penyimpanan cloud 115 untuk sinkronisasi, disarankan mengaktifkan Koodo Sync secara bersamaan, yang akan meningkatkan kecepatan sinkronisasi secara signifikan.",
   "Request timed out, You may change the server region to China to solve the connection issue in mainland China. Go to Settings > Account": "Permintaan kehabisan waktu. Anda dapat mengubah wilayah server ke China untuk mengatasi masalah koneksi di Tiongkok daratan. Buka Pengaturan > Akun",
   "Dubox": "Baidu Netdisk",
-  "115 Yun": "115网盘",
+  "115 Yun": "115 Yun",
   "Please add a data source in Setting-Sync and backup": "Silakan tambahkan sumber data di Pengaturan > Sinkronisasi dan cadangan",
   "Failed to read file, please refresh and grant directory access again": "Gagal membaca file, silakan segarkan dan berikan akses direktori lagi",
   "OneDrive (full access)": "OneDrive (akses penuh)",
