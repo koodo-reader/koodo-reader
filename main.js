@@ -86,8 +86,6 @@ let chatWindow;
 let dbConnection = {};
 let syncUtilCache = {};
 let pickerUtilCache = {};
-let cloudProgressCache = {};
-let pickerProgressCache = {};
 let downloadRequest = null;
 
 const RESIZE_THROTTLE_MS = 300;
@@ -1706,11 +1704,9 @@ const createMainWin = () => {
     return result;
   });
   ipcMain.handle("cloud-progress", async (event, config) => {
-    let key = config.service + "-" + (config.fileName || "global");
-    if (!cloudProgressCache) cloudProgressCache = {};
     let syncUtil = await getSyncUtil(config);
     let result = syncUtil.getDownloadedSize();
-    return { key: key, downloadedSize: result };
+    return result;
   });
   ipcMain.handle("picker-download", async (event, config) => {
     let pickerUtil = await getPickerUtil(config);
@@ -1721,10 +1717,9 @@ const createMainWin = () => {
     return result;
   });
   ipcMain.handle("picker-progress", async (event, config) => {
-    let key = config.service + "-" + (config.sourcePath || "global");
     let pickerUtil = await getPickerUtil(config);
     let result = await pickerUtil.getDownloadedSize();
-    return { key: key, downloadedSize: result };
+    return result;
   });
   ipcMain.handle("cloud-reset", async (event, config) => {
     let syncUtil = await getSyncUtil(config);

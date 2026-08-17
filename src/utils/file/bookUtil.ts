@@ -16,7 +16,30 @@ import TokenService from "../storage/tokenService";
 declare var window: any;
 
 class BookUtil {
-  static async addBook(key: string, format: string, buffer: ArrayBuffer, sourcePath?: string) {
+  private static isDownloading = false;
+  private static downloadResolvers: Array<() => void> = [];
+
+  static async waitForDownload(): Promise<void> {
+    return new Promise((resolve) => {
+      BookUtil.downloadResolvers.push(resolve);
+    });
+  }
+
+  static startNextDownload(): void {
+    if (BookUtil.downloadResolvers.length > 0) {
+      const next = BookUtil.downloadResolvers.shift();
+      if (next) next();
+    } else {
+      BookUtil.isDownloading = false;
+    }
+  }
+
+  static async addBook(
+    key: string,
+    format: string,
+    buffer: ArrayBuffer,
+    sourcePath?: string
+  ) {
     // for both original books and cached boks
     if (ConfigService.getItem("defaultSyncOption")) {
       toast.loading(i18n.t("Uploading book"), {
@@ -31,7 +54,10 @@ class BookUtil {
         if (!fs.existsSync(path.join(dataPath, "book"))) {
           fs.mkdirSync(path.join(dataPath, "book"), { recursive: true });
         }
-        if (sourcePath && sourcePath === path.join(dataPath, "book", key + "." + format)) {
+        if (
+          sourcePath &&
+          sourcePath === path.join(dataPath, "book", key + "." + format)
+        ) {
           // Source already targets the book library, skip IO entirely.
         } else if (sourcePath && fs.existsSync(sourcePath)) {
           fs.copyFileSync(
@@ -201,7 +227,17 @@ class BookUtil {
   }
   static async redirectBook(book: BookModel) {
     let toastId = "offline-book-" + book.key;
-    let fileKey = book.key;
+
+    // Wait for any ongoing download to complete before starting a new one
+    if (BookUtil.isDownloading) {
+      toast.loading(i18n.t("Waiting for download..."), {
+        id: toastId,
+      });
+      await BookUtil.waitForDownload();
+    }
+
+    BookUtil.isDownloading = true;
+
     if (
       !(await this.isBookExist(
         book.key,
@@ -214,6 +250,7 @@ class BookUtil {
         toast(
           i18n.t("Please add data source in the setting-Sync and backup first")
         );
+        BookUtil.startNextDownload();
         return;
       }
       toast.loading(i18n.t("Downloading"), {
@@ -227,8 +264,7 @@ class BookUtil {
           ConfigService.getItem("defaultSyncOption") || "",
           "cloud",
           book.size,
-          toastId,
-          fileKey
+          toastId
         );
         let result = await this.downloadBook(book.key, book.format);
         clearInterval(timer);
@@ -265,6 +301,7 @@ class BookUtil {
                 }
               );
             }
+            BookUtil.startNextDownload();
             return;
           }
         }
@@ -272,9 +309,13 @@ class BookUtil {
         toast.error(i18n.t("Book not exists"), {
           id: toastId,
         });
+        BookUtil.startNextDownload();
         return;
       }
     }
+
+    BookUtil.startNextDownload();
+
     let ref = book.format.toLowerCase();
 
     if (isElectron) {
@@ -312,9 +353,7 @@ class BookUtil {
   static reloadBooks(currentBook: BookModel) {
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-        window
-          .electronAPI
-          .invoke("reload-tab", { bookKey: currentBook.key });
+        window.electronAPI.invoke("reload-tab", { bookKey: currentBook.key });
       } else {
         window.electronAPI.invoke("reload-reader", {
           bookKey: currentBook.key,
