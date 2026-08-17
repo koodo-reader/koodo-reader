@@ -136,7 +136,7 @@ class ImportDialog extends React.Component<
       return;
     }
     toast.loading(this.props.t("Downloading"), {
-      id: "offline-book",
+      id: "offline-book-import",
     });
     let destPath = "temp/" + item.path.split("/").pop();
     let file: any = null;
@@ -154,7 +154,8 @@ class ImportDialog extends React.Component<
       let timer = showDownloadProgress(
         this.state.currentDrive,
         "picker",
-        item.size
+        item.size,
+        "offline-book-import"
       );
       await ipcRenderer.invoke("picker-download", {
         ...tokenConfig,
@@ -165,7 +166,7 @@ class ImportDialog extends React.Component<
         storagePath: dataPath,
       });
       clearInterval(timer);
-      toast.dismiss("offline-book");
+      toast.dismiss("offline-book-import");
       const buffer = fs.readFileSync(path.join(dataPath, destPath));
 
       let arraybuffer = new Uint8Array(buffer).buffer;
@@ -179,7 +180,8 @@ class ImportDialog extends React.Component<
       let timer = showDownloadProgress(
         this.state.currentDrive,
         "picker",
-        item.size
+        item.size,
+        "offline-book-import"
       );
       let pickerUtil = await SyncService.getPickerUtil(this.state.currentDrive);
 
@@ -187,7 +189,7 @@ class ImportDialog extends React.Component<
         item.path.substring(1)
       );
       clearInterval(timer);
-      toast.dismiss("offline-book");
+      toast.dismiss("offline-book-import");
       let blob = new Blob([arraybuffer]);
       let fileName = item.path.split("/").pop() || "file";
       file = new File([blob], fileName);

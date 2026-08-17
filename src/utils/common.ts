@@ -1144,7 +1144,8 @@ export const getPdfPassword = (book: Book) => {
 export const showDownloadProgress = (
   service: string,
   type: string,
-  bookSize: number
+  bookSize: number,
+  toastId: string = "offline-book"
 ) => {
   if (bookSize === 0) {
     return setTimeout(() => {
@@ -1184,7 +1185,7 @@ export const showDownloadProgress = (
       toast.loading(
         i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
         {
-          id: "offline-book",
+          id: toastId,
         }
       );
     } else {
@@ -1203,7 +1204,7 @@ export const showDownloadProgress = (
       toast.loading(
         i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
         {
-          id: "offline-book",
+          id: toastId,
         }
       );
     }

@@ -200,6 +200,7 @@ class BookUtil {
     });
   }
   static async redirectBook(book: BookModel) {
+    let toastId = "offline-book-" + book.key;
     if (
       !(await this.isBookExist(
         book.key,
@@ -215,7 +216,7 @@ class BookUtil {
         return;
       }
       toast.loading(i18n.t("Downloading"), {
-        id: "offline-book",
+        id: toastId,
       });
       if (
         (await TokenService.getToken("is_authed")) === "yes" &&
@@ -224,11 +225,12 @@ class BookUtil {
         let timer = showDownloadProgress(
           ConfigService.getItem("defaultSyncOption") || "",
           "cloud",
-          book.size
+          book.size,
+          toastId
         );
         let result = await this.downloadBook(book.key, book.format);
         clearInterval(timer);
-        toast.dismiss("offline-book");
+        toast.dismiss(toastId);
 
         let covers = await CoverUtil.getCloudCoverList();
         for (let cover of covers) {
@@ -239,17 +241,17 @@ class BookUtil {
 
         if (result) {
           toast.success(i18n.t("Download successful"), {
-            id: "offline-book",
+            id: toastId,
           });
         } else {
           let result = await this.downloadCacheBook(book.key);
           if (result) {
             toast.success(i18n.t("Download successful"), {
-              id: "offline-book",
+              id: toastId,
             });
           } else {
             toast.error(i18n.t("Download failed"), {
-              id: "offline-book",
+              id: toastId,
             });
             if (ConfigService.getItem("defaultSyncOption") === "adrive") {
               toast.error(
@@ -257,7 +259,7 @@ class BookUtil {
                   "Aliyun Drive imposes strict limits on concurrent downloads. It is recommended that you wait 10 seconds before attempting to download again."
                 ),
                 {
-                  id: "offline-book",
+                  id: toastId,
                 }
               );
             }
@@ -266,7 +268,7 @@ class BookUtil {
         }
       } else {
         toast.error(i18n.t("Book not exists"), {
-          id: "offline-book",
+          id: toastId,
         });
         return;
       }
