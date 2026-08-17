@@ -19,6 +19,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22
+      - name: Install dependencies
+        run: yarn install
+      - name: TypeScript type check
+        run: npx tsc --noEmit --noUnusedLocals false --noUnusedParameters false
       - name: Set environment variable USE_HARD_LINKS
         run: echo "USE_HARD_LINKS=false" >> $GITHUB_ENV
       - name: Modify package.json for Windows Store build
