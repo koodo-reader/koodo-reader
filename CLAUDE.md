@@ -84,6 +84,7 @@ yarn rebuild
 
 ## 开发规范
 
+- **不要主动提交代码**：修改完代码后，只展示改动内容和说明，由用户自行决定是否提交。除非用户明确要求提交，否则不要执行 `git commit`、`git push` 等操作。
 - 用户可见文本必须使用 `react-i18next` 的 `t("key")`，不得硬编码
 - TypeScript 避免 `any`，在 `interface.tsx` 中定义类型
 - 状态类型用 `stateType`（`src/store/index.tsx`）
