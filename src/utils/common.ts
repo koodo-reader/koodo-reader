@@ -1145,7 +1145,8 @@ export const showDownloadProgress = (
   service: string,
   type: string,
   bookSize: number,
-  toastId: string = "offline-book"
+  toastId: string = "offline-book",
+  fileKey?: string
 ) => {
   if (bookSize === 0) {
     return setTimeout(() => {
@@ -1162,20 +1163,23 @@ export const showDownloadProgress = (
           ...tokenConfig,
           service: service,
           storagePath: getStorageLocation(),
+          fileName: fileKey,
         };
-        downloadedSize = await window.electronAPI.invoke(
+        let result = await window.electronAPI.invoke(
           "cloud-progress",
           config
         );
+        downloadedSize = result.downloadedSize;
       } else {
         let tokenConfig = await getCloudConfig(service);
-        downloadedSize = await window.electronAPI.invoke("picker-progress", {
+        let result = await window.electronAPI.invoke("picker-progress", {
           ...tokenConfig,
           baseFolder: "",
           service: service,
-          currentPath: "",
+          currentPath: fileKey || "",
           storagePath: getStorageLocation(),
         });
+        downloadedSize = result.downloadedSize;
       }
       if (isFirst && downloadedSize > 0) {
         downloadedSize = 0;

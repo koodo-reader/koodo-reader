@@ -201,6 +201,7 @@ class BookUtil {
   }
   static async redirectBook(book: BookModel) {
     let toastId = "offline-book-" + book.key;
+    let fileKey = book.key;
     if (
       !(await this.isBookExist(
         book.key,
@@ -226,7 +227,8 @@ class BookUtil {
           ConfigService.getItem("defaultSyncOption") || "",
           "cloud",
           book.size,
-          toastId
+          toastId,
+          fileKey
         );
         let result = await this.downloadBook(book.key, book.format);
         clearInterval(timer);
