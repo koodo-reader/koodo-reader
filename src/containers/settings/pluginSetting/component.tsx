@@ -56,7 +56,15 @@ class SettingDialog extends React.Component<
     const installedPluginKeys = this.props.plugins.map((item) => item.key);
     const pluginList = getBuiltinPluginMarket(
       ConfigService.getReaderConfig("lang") || navigator.language
-    ).filter((item) => !installedPluginKeys.includes(item.plugin.identifier));
+    ).filter((item) => {
+      if (!installedPluginKeys.includes(item.plugin.identifier)) {
+        if (!isElectron && item.plugin.type === "voice") {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    });
     const typeOrder: Record<string, number> = {
       translation: 0,
       dictionary: 1,
@@ -338,17 +346,19 @@ class SettingDialog extends React.Component<
           </span>
         </div>
         <div className="plugin-tab-bar">
-          {(["translation", "dictionary", "voice"] as const).map((type) => {
-            const labelMap: Record<string, string> = {
-              translation: this.props.t("Translation"),
-              dictionary: this.props.t("Dictionary"),
-              voice: this.props.t("Voice"),
-            };
-            const refMap: Record<string, React.RefObject<HTMLDivElement>> = {
-              translation: this.translationRef,
-              dictionary: this.dictionaryRef,
-              voice: this.voiceRef,
-            };
+          {(["translation", "dictionary", "voice"] as const)
+            .filter((type) => isElectron || type !== "voice")
+            .map((type) => {
+              const labelMap: Record<string, string> = {
+                translation: this.props.t("Translation"),
+                dictionary: this.props.t("Dictionary"),
+                voice: this.props.t("Voice"),
+              };
+              const refMap: Record<string, React.RefObject<HTMLDivElement>> = {
+                translation: this.translationRef,
+                dictionary: this.dictionaryRef,
+                voice: this.voiceRef,
+              };
             return (
               <div
                 key={type}
