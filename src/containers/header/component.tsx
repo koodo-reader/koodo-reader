@@ -431,37 +431,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       toast.error(this.props.t("Cannot get sync config"));
       return false;
     }
-    if (
-      ConfigService.getItem("defaultSyncOption") === "google" &&
-      !config.version
-    ) {
-      let targetDrive = "google";
-      await TokenService.setToken(targetDrive + "_token", "");
-      SyncService.removeSyncUtil(targetDrive);
-      removeCloudConfig(targetDrive);
-      if (isElectron) {
-        const ipcRenderer = window.electronAPI;
-        await ipcRenderer.invoke("cloud-close", {
-          service: targetDrive,
-        });
-      }
-      ConfigService.deleteListConfig(targetDrive, "dataSourceList");
-      this.props.handleFetchDataSourceList();
-      if (targetDrive === ConfigService.getItem("defaultSyncOption")) {
-        ConfigService.removeItem("defaultSyncOption");
-        this.props.handleFetchDefaultSyncOption();
-      }
-      if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
-        resetKoodoSync();
-      }
-      toast(
-        this.props.t(
-          "In order to let you directly manage your data in Google Drive, we have deprecated the old Google Drive token. Please reauthorize Google Drive in the settings. Your new data will be stored in the root directory of your Google Drive, and you can manage it directly in the Google Drive web interface."
-        ),
-        { duration: 4000 }
-      );
-      return false;
-    }
     await checkMissingBook();
     let checkResult = await checkBrokenDatabase();
     if (checkResult) {
