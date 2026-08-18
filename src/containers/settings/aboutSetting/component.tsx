@@ -92,6 +92,7 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             }}
           >
             {[
+              {value:"",label: "Please select"},
               { value: "dev", label: "Developer version" },
               { value: "stable", label: "Stable version" },
             ].map((item) => (
