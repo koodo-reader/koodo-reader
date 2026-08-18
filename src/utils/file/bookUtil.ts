@@ -109,7 +109,12 @@ class BookUtil {
       throw error;
     }
   }
-  static isBookExist(key: string, format: string, bookPath: string) {
+  static isBookExist(
+    key: string,
+    format: string,
+    bookPath: string,
+    bookSize?: number
+  ) {
     return new Promise<boolean>((resolve) => {
       if (isElectron) {
         var fs = window.electronAPI.fs;
@@ -125,6 +130,15 @@ class BookUtil {
         } else if (bookPath && fs.existsSync(bookPath)) {
           resolve(true);
         } else if (fs.existsSync(libraryBookPath)) {
+          // 校验文件大小，如果大小不匹配则删除损坏文件
+          if (bookSize !== undefined && bookSize > 0) {
+            let stat = fs.statSync(libraryBookPath);
+            if (stat && stat.size !== bookSize) {
+              fs.rmSync(libraryBookPath, { force: true });
+              resolve(false);
+              return;
+            }
+          }
           resolve(true);
         } else {
           resolve(false);
@@ -241,7 +255,8 @@ class BookUtil {
       !(await this.isBookExist(
         book.key,
         book.format.toLowerCase(),
-        book.path
+        book.path,
+        book.size
       )) &&
       !(await this.isBookExist("cache-" + book.key, "zip", book.path))
     ) {
@@ -550,13 +565,25 @@ class BookUtil {
   }
   static async isBookOffline(key: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
-    return await this.isBookExist(key, book.format.toLowerCase(), book.path);
+    return await this.isBookExist(
+      key,
+      book.format.toLowerCase(),
+      book.path,
+      book.size
+    );
   }
   static async getLocalBookList() {
     let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
     let fileList: string[] = [];
     for (let book of books) {
-      if (await this.isBookExist(book.key, book.format.toLowerCase(), "")) {
+      if (
+        await this.isBookExist(
+          book.key,
+          book.format.toLowerCase(),
+          "",
+          book.size
+        )
+      ) {
         fileList.push(book.key + "." + book.format.toLowerCase());
       }
       if (await this.isBookExist("cache-" + book.key, "zip", "")) {
