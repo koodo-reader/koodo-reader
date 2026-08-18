@@ -114,18 +114,17 @@ class BookUtil {
       if (isElectron) {
         var fs = window.electronAPI.fs;
         var path = window.electronAPI.path;
-        let _bookPath = path.join(
+        let libraryBookPath = path.join(
           getStorageLocation() || "",
           `book`,
           key + "." + format
         );
 
         if (key.startsWith("cache")) {
-          resolve(fs.existsSync(_bookPath));
-        } else if (
-          (bookPath && fs.existsSync(bookPath)) ||
-          fs.existsSync(_bookPath)
-        ) {
+          resolve(fs.existsSync(libraryBookPath));
+        } else if (bookPath && fs.existsSync(bookPath)) {
+          resolve(true);
+        } else if (fs.existsSync(libraryBookPath)) {
           resolve(true);
         } else {
           resolve(false);
