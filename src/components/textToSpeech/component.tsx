@@ -566,19 +566,13 @@ class TextToSpeech extends React.Component<
     );
     console.log("nodeTextList", nodeTextList);
     let rawNodeList: string[][] = [];
-    if (
-      this.props.currentBook.format === "PDF" &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      )
-    ) {
-    } else {
-      rawNodeList = nodeTextList.map((text) => {
-        return splitSentences(text);
-      });
 
-      nodeTextList = rawNodeList.flat();
-    }
+    rawNodeList = nodeTextList.map((text) => {
+      return splitSentences(text);
+    });
+
+    nodeTextList = rawNodeList.flat();
+
     const speechStartIndex = this.getSpeechStartIndex(nodeTextList);
     if (speechStartIndex > -1) {
       nodeTextList = nodeTextList.slice(speechStartIndex);
@@ -710,7 +704,7 @@ class TextToSpeech extends React.Component<
         speed * 100 - 100,
         this.props.plugins,
         this.nodeList,
-        20,
+        10,
         false,
         node.voiceEngine === "official-ai-voice-plugin"
       );
@@ -724,19 +718,13 @@ class TextToSpeech extends React.Component<
       if (this.state.isPaused || !this.state.isAudioOn) return;
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
       let lastVisibleTextList = visibleTextList;
-      if (
-        this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        )
-      ) {
-      } else {
-        let rawNodeList = visibleTextList.map((text) => {
-          return splitSentences(text);
-        });
 
-        lastVisibleTextList = rawNodeList.flat();
-      }
+      let rawNodeList = visibleTextList.map((text) => {
+        return splitSentences(text);
+      });
+
+      lastVisibleTextList = rawNodeList.flat();
+
       let isReachPageEnd = checkReachPageEnd(
         index,
         this.nodeList,
@@ -812,19 +800,12 @@ class TextToSpeech extends React.Component<
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
 
       let lastVisibleTextList = visibleTextList;
-      if (
-        this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        )
-      ) {
-      } else {
-        let rawNodeList = visibleTextList.map((text) => {
-          return splitSentences(text);
-        });
 
-        lastVisibleTextList = rawNodeList.flat();
-      }
+      let rawNodeList = visibleTextList.map((text) => {
+        return splitSentences(text);
+      });
+
+      lastVisibleTextList = rawNodeList.flat();
 
       let isReachPageEnd = checkReachPageEnd(
         index,
