@@ -162,8 +162,9 @@ class TextToSpeech extends React.Component<
       }
       if (!voiceName && !voiceEngine && this.voices.length > 0) {
         let defaultVoice =
-          this.voices.find((item) => item.plugin !== "official-ai-voice-plugin") ||
-          this.voices[0];
+          this.voices.find(
+            (item) => item.plugin !== "official-ai-voice-plugin"
+          ) || this.voices[0];
         ConfigService.setReaderConfig("voiceName", defaultVoice.name);
         ConfigService.setReaderConfig(
           "voiceEngine",
@@ -563,6 +564,7 @@ class TextToSpeech extends React.Component<
     let nodeTextList = (await this.props.htmlBook.rendition.audioText()).filter(
       (item: string) => item && item.trim()
     );
+    console.log("nodeTextList", nodeTextList);
     let rawNodeList: string[][] = [];
     if (
       this.props.currentBook.format === "PDF" &&
@@ -1157,7 +1159,9 @@ class TextToSpeech extends React.Component<
                 newEngine === "official-ai-voice-plugin" &&
                 !this.props.isAuthed
               ) {
-                toast(this.props.t("Please upgrade to Pro to use this feature"));
+                toast(
+                  this.props.t("Please upgrade to Pro to use this feature")
+                );
                 this.props.handleSetting(true);
                 this.props.handleSettingMode("account");
                 return;
