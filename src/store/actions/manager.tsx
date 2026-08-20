@@ -470,7 +470,7 @@ export function handleFetchPlugins() {
                   i18n.t("Official AI Voice") +
                   " - " +
                   (KookitConfig.UnlimitedVoiceList.includes(item.name)
-                    ? i18n.t("Unlimited quota") + " - "
+                    ? i18n.t("Limited free") + " - "
                     : "") +
                   item.displayName +
                   " - " +
@@ -488,7 +488,7 @@ export function handleFetchPlugins() {
                   "Azure TTS" +
                   " - " +
                   (KookitConfig.UnlimitedVoiceList.includes(item.name)
-                    ? i18n.t("Unlimited quota") + " - "
+                    ? i18n.t("Limited free") + " - "
                     : "") +
                   item.displayName +
                   " - " +
