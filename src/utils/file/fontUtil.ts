@@ -171,7 +171,7 @@ class FontUtil {
   }
 
   static deleteFontMeta(fontKey: string): void {
-    ConfigService.setObjectConfig(fontKey, null, "customFonts");
+    ConfigService.deleteObjectConfig(fontKey, "customFonts");
   }
 
   static getFontIds(): string[] {

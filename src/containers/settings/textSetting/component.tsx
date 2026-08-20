@@ -226,7 +226,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
 
   handleDelete = (ruleId: string) => {
     ConfigService.deleteListConfig(ruleId, "textRuleList");
-    ConfigService.setObjectConfig(ruleId, null, "textRules");
+    ConfigService.deleteObjectConfig(ruleId, "textRules");
     this.fetchRuleList();
     toast.success(this.props.t("Deletion successful"));
   };

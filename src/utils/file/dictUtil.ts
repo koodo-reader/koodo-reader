@@ -84,7 +84,10 @@ class DictUtil {
       try {
         const filePath = this.getDictFilePath(id);
         if (!filePath) return "";
-        const result = await window.electronAPI.invoke("dict-lookup", { filePath, word });
+        const result = await window.electronAPI.invoke("dict-lookup", {
+          filePath,
+          word,
+        });
         if (!result) {
           toast.error(i18n.t("Word not found in dictionary"));
           return "";
@@ -112,7 +115,7 @@ class DictUtil {
 
   /** Delete dict metadata */
   static deleteDictMeta(id: string): void {
-    ConfigService.setObjectConfig(id, null, "customDicts");
+    ConfigService.deleteObjectConfig(id, "customDicts");
   }
 
   /** Return all stored dict ids */
