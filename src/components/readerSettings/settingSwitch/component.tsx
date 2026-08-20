@@ -250,6 +250,14 @@ class SettingSwitch extends React.Component<
                   ConfigService.setReaderConfig("fullTranslationMode", "no");
                   return;
                 }
+                if (this.state.isBionic) {
+                  toast.error(
+                    this.props.t(
+                      "Word definitions and fast reading mode cannot be enabled at the same time"
+                    )
+                  );
+                  return;
+                }
                 let lang = "";
                 if (this.props.htmlBook?.rendition) {
                   try {
@@ -404,7 +412,17 @@ class SettingSwitch extends React.Component<
                     isShowPageBorder: this.props.handleShowBorder,
                   };
 
-                  if (propName === "isShowPageBorder") {
+                  if (propName === "isBionic") {
+                    if (!this.state.isBionic && this.state.isWordDefinition) {
+                      toast.error(
+                        this.props.t(
+                          "Word definitions and fast reading mode cannot be enabled at the same time"
+                        )
+                      );
+                      return;
+                    }
+                    this._handleChange(propName);
+                  } else if (propName === "isShowPageBorder") {
                     this.props.handleShowBorder(!this.state.isShowPageBorder);
                     if (!this.state.isShowPageBorder) {
                       this.props.handleHideBackground(true);

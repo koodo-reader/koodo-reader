@@ -1122,6 +1122,7 @@
   "Refreshing": "刷新中",
   "Refresh successful": "刷新成功",
   "Enable word definitions": "启用生词释义",
+  "Word definitions and fast reading mode cannot be enabled at the same time": "生词释义功能和快速阅读模式无法同时开启",
   "Add definition next to the English, Chinese, Japanese words": "在英文、中文、日文生词旁边添加释义",
   "If you didn't receive the verification code, please check the spam folder or use another email provider": "如果您没有收到验证码，请检查垃圾邮件文件夹或使用其他邮箱",
   "Chinese words level": "中文生词水平",
