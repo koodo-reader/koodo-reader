@@ -173,7 +173,7 @@ class BackgroundUtil {
   }
 
   static deleteImageMeta(id: string): void {
-    ConfigService.setObjectConfig(id, null, "customBackgrounds");
+    ConfigService.deleteObjectConfig(id, "customBackgrounds");
   }
 
   /** Return all stored image ids using ConfigService list config */
