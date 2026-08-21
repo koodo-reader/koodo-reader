@@ -55,6 +55,11 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
       if (window.electronAPI?.runtime?.windowsStore) {
         return;
       }
+      if (!ConfigService.getReaderConfig("updateChannel")) {
+        if (compareVersions(packageInfo.version, stableVersion) > 0) {
+          ConfigService.setReaderConfig("updateChannel", "dev");
+        }
+      }
       if (
         stableVersion === packageInfo.version &&
         ConfigService.getReaderConfig("updateChannel") !== "dev"
