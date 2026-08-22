@@ -27,7 +27,6 @@ let year = new Date().getFullYear(),
 
 export const exportBooks = async (books: Book[]) => {
   let totalSize = books.reduce((acc, book) => acc + book.size, 0);
-  console.log("Total size of books to export:", totalSize);
   if (isElectron && totalSize > 500 * 1024 * 1024) {
     const ipcRenderer = window.electronAPI;
     const fs = window.electronAPI.fs;

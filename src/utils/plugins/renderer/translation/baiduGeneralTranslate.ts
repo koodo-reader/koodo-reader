@@ -1,6 +1,12 @@
 import type { TranslatePlugin } from "../../types";
 
-export const translate: TranslatePlugin = async (text, from, to, axios, config) => {
+export const translate: TranslatePlugin = async (
+  text,
+  from,
+  to,
+  axios,
+  config
+) => {
   var appId = config.appId || "";
   var secretKey = config.secretKey || "";
 
@@ -31,7 +37,10 @@ export const translate: TranslatePlugin = async (text, from, to, axios, config) 
     }
 
     function md5cycle(x, k) {
-      var a = x[0], b = x[1], c = x[2], d = x[3];
+      var a = x[0],
+        b = x[1],
+        c = x[2],
+        d = x[3];
       a = ff(a, b, c, d, k[0], 7, -680876936);
       d = ff(d, a, b, c, k[1], 12, -389564586);
       c = ff(c, d, a, b, k[2], 17, 606105819);
@@ -103,7 +112,8 @@ export const translate: TranslatePlugin = async (text, from, to, axios, config) 
     }
 
     function md5blk(s) {
-      var blks: number[] = [], i;
+      var blks: number[] = [],
+        i;
       for (i = 0; i < 64; i += 4) {
         blks[i >> 2] =
           s.charCodeAt(i) |
@@ -137,7 +147,9 @@ export const translate: TranslatePlugin = async (text, from, to, axios, config) 
     }
 
     function rhex(n) {
-      var h = "0123456789abcdef", s = "", j;
+      var h = "0123456789abcdef",
+        s = "",
+        j;
       for (j = 0; j < 4; j++) {
         s += h[(n >> (j * 8 + 4)) & 0xf] + h[(n >> (j * 8)) & 0xf];
       }
@@ -167,10 +179,9 @@ export const translate: TranslatePlugin = async (text, from, to, axios, config) 
     { params: params }
   );
 
-  console.log(transRes);
   if (transRes.status === 200 && transRes.data.trans_result) {
     return transRes.data.trans_result[0].dst;
   } else {
     return "Error happened";
   }
-}
+};

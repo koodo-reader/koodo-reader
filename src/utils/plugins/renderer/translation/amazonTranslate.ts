@@ -1,6 +1,12 @@
 import type { TranslatePlugin } from "../../types";
 
-export const translate: TranslatePlugin = async (text, from, to, axios, config) => {
+export const translate: TranslatePlugin = async (
+  text,
+  from,
+  to,
+  axios,
+  config
+) => {
   let accessKeyId = config.accessKeyId || "";
   let secretAccessKey = config.secretAccessKey || "";
   let region = config.region || "us-east-1";
@@ -25,14 +31,14 @@ export const translate: TranslatePlugin = async (text, from, to, axios, config) 
         typeof key === "string" ? new TextEncoder().encode(key) : key,
         { name: "HMAC", hash: "SHA-256" },
         false,
-        ["sign"],
+        ["sign"]
       )
       .then((cryptoKey) =>
         crypto.subtle.sign(
           "HMAC",
           cryptoKey,
-          typeof data === "string" ? new TextEncoder().encode(data) : data,
-        ),
+          typeof data === "string" ? new TextEncoder().encode(data) : data
+        )
       )
       .then((sig) => {
         if (encoding === "hex") {
@@ -47,7 +53,7 @@ export const translate: TranslatePlugin = async (text, from, to, axios, config) 
   async function sha256Hex(data) {
     let buf = await crypto.subtle.digest(
       "SHA-256",
-      new TextEncoder().encode(data),
+      new TextEncoder().encode(data)
     );
     return Array.from(new Uint8Array(buf))
       .map((b) => b.toString(16).padStart(2, "0"))
@@ -136,10 +142,9 @@ export const translate: TranslatePlugin = async (text, from, to, axios, config) 
     headers: requestHeaders,
   });
 
-  console.log(transRes);
   if (transRes.status === 200) {
     return transRes.data.TranslatedText;
   } else {
     return "Error happened";
   }
-}
+};
