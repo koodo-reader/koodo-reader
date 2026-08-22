@@ -1,6 +1,12 @@
 import type { TranslatePlugin } from "../../types";
 
-export const translate: TranslatePlugin = async (text, from, to, axios, config) => {
+export const translate: TranslatePlugin = async (
+  text,
+  from,
+  to,
+  axios,
+  config
+) => {
   let endpoint =
     config.endpoint || "https://api.cognitive.microsofttranslator.com";
   let apiKey = config.apiKey || "";
@@ -26,10 +32,9 @@ export const translate: TranslatePlugin = async (text, from, to, axios, config) 
     headers,
     params,
   });
-  console.log(transRes);
   if (transRes.status === 200) {
     return transRes.data[0].translations[0].text;
   } else {
     return "Error happened";
   }
-}
+};

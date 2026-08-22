@@ -2132,7 +2132,6 @@ export const scanFolderForNewBooks = async (
   importFile: (file: any) => Promise<void>,
   index?: BookPathIndex
 ): Promise<number> => {
-  console.log(`Scanning folder for new books: ${folderPath}`);
   const fs = window.electronAPI.fs;
   const path = window.electronAPI.path;
   const { existingPaths, sizeSet } = index || (await getBookPathIndex());
