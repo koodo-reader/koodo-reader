@@ -469,7 +469,7 @@ export function handleFetchPlugins() {
                 label:
                   i18n.t("Official AI Voice") +
                   " - " +
-                  (KookitConfig.UnlimitedVoiceList.includes(item.name)
+                  (KookitConfig.SelfHostedVoiceList.includes(item.name)
                     ? i18n.t("Limited free") + " - "
                     : "") +
                   item.displayName +
@@ -487,7 +487,7 @@ export function handleFetchPlugins() {
                 label:
                   "Azure TTS" +
                   " - " +
-                  (KookitConfig.UnlimitedVoiceList.includes(item.name)
+                  (KookitConfig.SelfHostedVoiceList.includes(item.name)
                     ? i18n.t("Limited free") + " - "
                     : "") +
                   item.displayName +
