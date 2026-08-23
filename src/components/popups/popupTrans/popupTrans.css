@@ -17,7 +17,7 @@
   overflow-y: scroll;
   height: calc(100% - 40px);
   margin: 5px;
-  margin-top: 35px;
+  margin-top: 5px;
   word-break: break-word;
   overflow-wrap: break-word;
 }
@@ -47,9 +47,9 @@
 .trans-lang-box,
 .original-lang-box {
   width: calc(50%);
-  height: 100%;
   padding-left: 7px;
   box-sizing: border-box;
+  flex-direction: column;
 }
 .original-text-box {
   /* margin-right: 10px; */
