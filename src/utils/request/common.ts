@@ -59,6 +59,9 @@ export const handleClearToken = async () => {
   }
   ConfigService.removeItem("defaultSyncOption");
   ConfigService.removeItem("dataSourceList");
+  ConfigService.setReaderConfig("dictService", "");
+  ConfigService.setReaderConfig("transService", "");
+  ConfigService.setReaderConfig("aiService", "");
   resetReaderRequest();
   resetUserRequest();
   resetThirdpartyRequest();
