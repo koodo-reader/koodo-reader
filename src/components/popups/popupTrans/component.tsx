@@ -74,7 +74,10 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           transService: "official-ai-trans-plugin",
           isAddNew: false,
         });
-        ConfigService.setReaderConfig("transService", "official-ai-trans-plugin");
+        ConfigService.setReaderConfig(
+          "transService",
+          "official-ai-trans-plugin"
+        );
       } else {
         this.setState({
           isAddNew: true,
@@ -84,11 +87,19 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
 
     this.handleTrans(originalText);
   }
+  UNSAFE_componentWillReceiveProps(nextProps: PopupTransProps) {
+    if (nextProps.originalText !== this.props.originalText) {
+      let originalText = nextProps.originalText.replace(/(\r\n|\n|\r)/gm, "");
+      this.setState({ originalText: originalText, translatedText: "" });
+      this.handleTrans(originalText);
+    }
+  }
 
   handleTrans = async (text: string) => {
     if (
       ConfigService.getReaderConfig("transService") &&
-      ConfigService.getReaderConfig("transService") !== "official-ai-trans-plugin" &&
+      ConfigService.getReaderConfig("transService") !==
+        "official-ai-trans-plugin" &&
       ConfigService.getReaderConfig("transService") !== "custom-ai-trans-plugin"
     ) {
       let plugin = this.props.plugins.find(
@@ -105,13 +116,13 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           : undefined;
       if (!translate) return;
       translate(
-          text,
-          ConfigService.getReaderConfig("transSource") || "",
-          ConfigService.getReaderConfig("transTarget") ||
-            getDefaultTransTarget(plugin.langList),
-          axios,
-          plugin.config as PluginConfig
-        )
+        text,
+        ConfigService.getReaderConfig("transSource") || "",
+        ConfigService.getReaderConfig("transTarget") ||
+          getDefaultTransTarget(plugin.langList),
+        axios,
+        plugin.config as PluginConfig
+      )
         .then((res: string) => {
           if (res.startsWith("https://")) {
             openExternalUrl(res, true, "trans");
@@ -135,7 +146,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           );
           console.error(err);
         });
-    } else if (ConfigService.getReaderConfig("transService") === "custom-ai-trans-plugin") {
+    } else if (
+      ConfigService.getReaderConfig("transService") === "custom-ai-trans-plugin"
+    ) {
       this.setState({
         transService: "custom-ai-trans-plugin",
         isAddNew: false,
@@ -330,9 +343,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           )}
           {!this.state.isAddNew && (
             <>
-              <div
-                className="trans-lang-selector-container"
-              >
+              <div className="trans-lang-selector-container">
                 <div className="original-lang-box">
                   <select
                     className="original-lang-selector"
@@ -433,7 +444,14 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                   className="original-text-box"
                   style={
                     this.props.isDockedRight
-                      ? { flex: 1, minHeight: 0, borderRight: "1px solid rgba(0,0,0,0.05)", borderBottom: "1px solid rgba(0,0,0,0.05)", borderBottomLeftRadius: 0, borderTopRightRadius: "7px" }
+                      ? {
+                          flex: 1,
+                          minHeight: 0,
+                          borderRight: "1px solid rgba(0,0,0,0.05)",
+                          borderBottom: "1px solid rgba(0,0,0,0.05)",
+                          borderBottomLeftRadius: 0,
+                          borderTopRightRadius: "7px",
+                        }
                       : undefined
                   }
                 >
@@ -441,7 +459,11 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                 </div>
                 <div
                   className="trans-text-box"
-                  style={this.props.isDockedRight ? { flex: 1, minHeight: 0 } : undefined}
+                  style={
+                    this.props.isDockedRight
+                      ? { flex: 1, minHeight: 0 }
+                      : undefined
+                  }
                 >
                   <div className="trans-text">
                     {this.state.translatedText}

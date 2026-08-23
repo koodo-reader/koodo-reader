@@ -73,12 +73,15 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     }
   }
   componentDidMount() {
-    this.handleLookUp();
+    this.handleLookUp(this.props.originalText);
   }
-  async handleLookUp() {
-    let originalText = this.props.originalText
-      .replace(/(\r\n|\n|\r)/gm, "")
-      .replace(/-/gm, "");
+  UNSAFE_componentWillReceiveProps(nextProps: PopupDictProps) {
+    if (nextProps.originalText !== this.props.originalText) {
+      this.handleLookUp(nextProps.originalText);
+    }
+  }
+  async handleLookUp(text: string) {
+    let originalText = text.replace(/(\r\n|\n|\r)/gm, "").replace(/-/gm, "");
     this.setState({ word: originalText });
     // let prototype = "";
     this.setState({ prototype: originalText });
@@ -337,7 +340,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           },
           () => {
             ConfigService.setReaderConfig("dictTarget", "en");
-            this.handleLookUp();
+            this.handleLookUp(this.state.word);
           }
         );
       }
@@ -434,7 +437,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       "dictTarget",
                       event.target.value
                     );
-                    this.handleLookUp();
+                    this.handleLookUp(this.state.word);
                   }
                 );
               }}
