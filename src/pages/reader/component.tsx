@@ -106,7 +106,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenBottomPanel: false,
       hoverPanel: "",
       isOpenLeftPanel: this.props.isNavLocked,
-      isOpenRightPanel: this.props.isSettingLocked || this.props.isDockedRight,
+      isOpenRightPanel: this.props.isSettingLocked,
       totalDuration: 0,
       currentDuration: 0,
       scale: ConfigService.getReaderConfig("scale") || "1",
@@ -317,7 +317,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.cancelLeaveReader(position);
     switch (position) {
       case "right":
-        if (this.props.isSettingLocked || this.props.isDockedRight) {
+        if (this.props.isSettingLocked) {
           break;
         } else {
           this.setState({ isOpenRightPanel: false });
@@ -684,7 +684,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           className="right-panel"
           onMouseEnter={() => this.handleEdgeMouseEnter("right")}
           onMouseLeave={() => this.handleEdgeMouseLeave("right")}
-          style={this.state.hoverPanel === "right" ? { opacity: 0.5 } : {}}
+          style={
+            this.state.hoverPanel === "right"
+              ? {
+                  opacity: 0.5,
+                  right: this.props.isDockedRight ? "299px" : "0px",
+                }
+              : { right: this.props.isDockedRight ? "299px" : "0px" }
+          }
           onClick={() => {
             this.handleEnterReader("right");
           }}
@@ -761,8 +768,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.scheduleLeaveReader("right");
           }}
           style={
-            this.state.isOpenRightPanel &&
-            (this.props.isSettingLocked || !this.props.isDockedRight)
+            this.state.isOpenRightPanel
               ? {}
               : {
                   transform: "translateX(309px)",
