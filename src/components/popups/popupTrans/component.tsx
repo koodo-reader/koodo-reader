@@ -69,6 +69,12 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         });
         ConfigService.setReaderConfig("transService", pluginList[0].key);
         await new Promise((resolve) => setTimeout(resolve, 100));
+      } else if (this.props.isAuthed) {
+        this.setState({
+          transService: "official-ai-trans-plugin",
+          isAddNew: false,
+        });
+        ConfigService.setReaderConfig("transService", "official-ai-trans-plugin");
       } else {
         this.setState({
           isAddNew: true,
@@ -81,12 +87,12 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
 
   handleTrans = async (text: string) => {
     if (
-      this.state.transService &&
-      this.state.transService !== "official-ai-trans-plugin" &&
-      this.state.transService !== "custom-ai-trans-plugin"
+      ConfigService.getReaderConfig("transService") &&
+      ConfigService.getReaderConfig("transService") !== "official-ai-trans-plugin" &&
+      ConfigService.getReaderConfig("transService") !== "custom-ai-trans-plugin"
     ) {
       let plugin = this.props.plugins.find(
-        (item) => item.key === this.state.transService
+        (item) => item.key === ConfigService.getReaderConfig("transService")
       );
       if (!plugin) {
         return;
@@ -129,7 +135,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           );
           console.error(err);
         });
-    } else if (this.state.transService === "custom-ai-trans-plugin") {
+    } else if (ConfigService.getReaderConfig("transService") === "custom-ai-trans-plugin") {
       this.setState({
         transService: "custom-ai-trans-plugin",
         isAddNew: false,
