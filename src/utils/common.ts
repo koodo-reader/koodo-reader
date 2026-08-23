@@ -450,30 +450,6 @@ export const getFileNameWithoutExtension = (
   return baseName;
 };
 
-export const fetchFileFromPath = (filePath: string) => {
-  return new Promise<File>((resolve) => {
-    const fs = window.electronAPI.fs;
-
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      const file = new File(
-        [data],
-        window.navigator.platform.indexOf("Win") > -1
-          ? filePath.split("\\").reverse()[0]
-          : filePath.split("/").reverse()[0],
-        {
-          lastModified: new Date().getTime(),
-        }
-      ) as any;
-      file.path = filePath;
-      resolve(file);
-    });
-  });
-};
-
 export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
