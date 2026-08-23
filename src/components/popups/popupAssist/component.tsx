@@ -155,6 +155,12 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
           aiService: pluginList[0].key,
         });
         ConfigService.setReaderConfig("aiService", pluginList[0].key);
+      } else if (this.props.isAuthed) {
+        this.setState({
+          aiService: "official-ai-assistant-plugin",
+          isAddNew: false,
+        });
+        ConfigService.setReaderConfig("aiService", "official-ai-assistant-plugin");
       } else {
         this.setState({
           isAddNew: true,
@@ -235,9 +241,9 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             .trim()
         : "";
     if (
-      (!this.state.aiService ||
+      (!ConfigService.getReaderConfig("aiService") ||
         this.props.plugins.findIndex(
-          (item) => item.key === this.state.aiService
+          (item) => item.key === ConfigService.getReaderConfig("aiService")
         ) === -1) &&
       !this.props.isAuthed
     ) {
@@ -251,8 +257,8 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
   handleDoAnswer = async (text: string) => {
     try {
       if (
-        this.state.aiService &&
-        this.state.aiService === "custom-ai-assistant-plugin"
+        ConfigService.getReaderConfig("aiService") &&
+        ConfigService.getReaderConfig("aiService") === "custom-ai-assistant-plugin"
       ) {
         let plugin = this.props.plugins.find(
           (item) => item.key === "custom-ai-assistant-plugin"
@@ -329,8 +335,8 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
           this.scrollToBottom();
         }
       } else if (
-        this.state.aiService &&
-        this.state.aiService !== "official-ai-assistant-plugin"
+        ConfigService.getReaderConfig("aiService") &&
+        ConfigService.getReaderConfig("aiService") !== "official-ai-assistant-plugin"
       ) {
       } else if (this.props.isAuthed) {
         let plugin = this.props.plugins.find(
