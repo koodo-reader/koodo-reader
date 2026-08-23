@@ -96,6 +96,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         });
         ConfigService.setReaderConfig("dictService", pluginList[0].key);
         await new Promise((resolve) => setTimeout(resolve, 100));
+      } else if (this.props.isAuthed) {
+        this.setState({
+          dictService: "official-ai-dict-plugin",
+          isAddNew: false,
+        });
+        ConfigService.setReaderConfig("dictService", "official-ai-dict-plugin");
       } else {
         this.setState({ isAddNew: true });
         return;
@@ -133,7 +139,9 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
     let dictText = "";
     let isFullAnalysis = true;
     try {
-      if (this.state.dictService === "custom-ai-dict-plugin") {
+      if (
+        ConfigService.getReaderConfig("dictService") === "custom-ai-dict-plugin"
+      ) {
         this.setState({ isAddNew: false });
         let plugin = this.props.plugins.find(
           (item) => item.key === "custom-ai-dict-plugin"
@@ -176,12 +184,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         this.setState({ isAiWaiting: false, dictText: " " });
         return "";
       } else if (
-        this.state.dictService &&
-        this.state.dictService.startsWith("dict-")
+        ConfigService.getReaderConfig("dictService") &&
+        ConfigService.getReaderConfig("dictService")?.startsWith("dict-")
       ) {
         this.setState({ isAddNew: false });
         const plugin = this.props.plugins.find(
-          (item) => item.key === this.state.dictService
+          (item) => item.key === ConfigService.getReaderConfig("dictService")
         );
         if (!plugin) return "";
         const config: any = plugin.config || {};
@@ -189,11 +197,29 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         if (!dictId) return "";
         dictText = await DictUtil.lookupWord(dictId, text);
       } else if (
-        this.state.dictService &&
-        this.state.dictService !== "official-ai-dict-plugin"
+        this.props.isAuthed &&
+        ConfigService.getReaderConfig("isDisableAI") !== "yes" &&
+        ConfigService.getReaderConfig("dictService") ===
+          "official-ai-dict-plugin"
+      ) {
+        dictText = await getDictText(
+          text,
+          ConfigService.getReaderConfig("dictTarget") || "auto",
+          ConfigService.getReaderConfig("lang") &&
+            ConfigService.getReaderConfig("lang").startsWith("zh")
+            ? "chs"
+            : "eng"
+        );
+        if (dictText) {
+          isFullAnalysis = false;
+        }
+      } else if (
+        ConfigService.getReaderConfig("dictService") &&
+        ConfigService.getReaderConfig("dictService") !==
+          "official-ai-dict-plugin"
       ) {
         let plugin = this.props.plugins.find(
-          (item) => item.key === this.state.dictService
+          (item) => item.key === ConfigService.getReaderConfig("dictService")
         );
         if (!plugin) return "";
         const builtinDictionary = getBuiltinDictionary(plugin.key);
@@ -211,25 +237,6 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
           this.props.t,
           plugin.config as PluginConfig
         );
-      } else if (
-        this.props.isAuthed &&
-        ConfigService.getReaderConfig("isDisableAI") !== "yes"
-      ) {
-        this.setState({
-          dictService: "official-ai-dict-plugin",
-          isAddNew: false,
-        });
-        dictText = await getDictText(
-          text,
-          ConfigService.getReaderConfig("dictTarget") || "auto",
-          ConfigService.getReaderConfig("lang") &&
-            ConfigService.getReaderConfig("lang").startsWith("zh")
-            ? "chs"
-            : "eng"
-        );
-        if (dictText) {
-          isFullAnalysis = false;
-        }
       }
 
       if (dictText.startsWith("https://")) {
@@ -259,7 +266,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       if (
         this.props.isAuthed &&
         ConfigService.getReaderConfig("isDisableAI") !== "yes" &&
-        this.state.dictService === "official-ai-dict-plugin"
+        ConfigService.getReaderConfig("dictService") ===
+          "official-ai-dict-plugin"
       ) {
         this.handleDictionaryStream(text, isFullAnalysis);
       }
