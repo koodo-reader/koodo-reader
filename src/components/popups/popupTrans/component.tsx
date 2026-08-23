@@ -343,95 +343,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
           )}
           {!this.state.isAddNew && (
             <>
-              <div className="trans-lang-selector-container">
-                <div className="original-lang-box">
-                  <select
-                    className="original-lang-selector"
-                    style={{ maxWidth: "120px", margin: 0 }}
-                    value={ConfigService.getReaderConfig("transSource")}
-                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                      let targetLang = event.target.value;
-                      ConfigService.setReaderConfig("transSource", targetLang);
-                      this.handleTrans(
-                        this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-                      );
-                      this.forceUpdate();
-                    }}
-                  >
-                    {this.props.plugins.find(
-                      (item) => item.key === this.state.transService
-                    )?.langList &&
-                      Object.keys(
-                        this.props.plugins.find(
-                          (item) => item.key === this.state.transService
-                        )?.langList as any
-                      ).map((item, index) => {
-                        return (
-                          <option
-                            value={item}
-                            key={index}
-                            className="add-dialog-shelf-list-option"
-                          >
-                            {this.props.t(
-                              Object.values(
-                                this.props.plugins.find(
-                                  (item) => item.key === this.state.transService
-                                )?.langList as any[]
-                              )[index]
-                            )}
-                          </option>
-                        );
-                      })}
-                  </select>
-                </div>
-                <div className="trans-lang-box">
-                  <select
-                    className="trans-lang-selector"
-                    style={{ maxWidth: "120px", margin: 0 }}
-                    value={
-                      ConfigService.getReaderConfig("transTarget") ||
-                      getDefaultTransTarget(
-                        this.props.plugins.find(
-                          (item) => item.key === this.state.transService
-                        )?.langList
-                      )
-                    }
-                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                      let targetLang = event.target.value;
-                      ConfigService.setReaderConfig("transTarget", targetLang);
-                      this.handleTrans(
-                        this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-                      );
-                      this.forceUpdate();
-                    }}
-                  >
-                    {this.props.plugins.find(
-                      (item) => item.key === this.state.transService
-                    )?.langList &&
-                      Object.keys(
-                        this.props.plugins.find(
-                          (item) => item.key === this.state.transService
-                        )?.langList as any
-                      ).map((item, index) => {
-                        return (
-                          <option
-                            value={item}
-                            key={index}
-                            className="add-dialog-shelf-list-option"
-                          >
-                            {this.props.t(
-                              Object.values(
-                                this.props.plugins.find(
-                                  (item) => item.key === this.state.transService
-                                )?.langList as any[]
-                              )[index]
-                            )}
-                          </option>
-                        );
-                      })}
-                  </select>
-                </div>
-              </div>
               <div
                 className="trans-box"
                 style={
@@ -455,6 +366,52 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                       : undefined
                   }
                 >
+                  <div className="original-lang-box">
+                    <select
+                      className="original-lang-selector"
+                      style={{ maxWidth: "120px", margin: 0 }}
+                      value={ConfigService.getReaderConfig("transSource")}
+                      onChange={(
+                        event: React.ChangeEvent<HTMLSelectElement>
+                      ) => {
+                        let targetLang = event.target.value;
+                        ConfigService.setReaderConfig(
+                          "transSource",
+                          targetLang
+                        );
+                        this.handleTrans(
+                          this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
+                        );
+                        this.forceUpdate();
+                      }}
+                    >
+                      {this.props.plugins.find(
+                        (item) => item.key === this.state.transService
+                      )?.langList &&
+                        Object.keys(
+                          this.props.plugins.find(
+                            (item) => item.key === this.state.transService
+                          )?.langList as any
+                        ).map((item, index) => {
+                          return (
+                            <option
+                              value={item}
+                              key={index}
+                              className="add-dialog-shelf-list-option"
+                            >
+                              {this.props.t(
+                                Object.values(
+                                  this.props.plugins.find(
+                                    (item) =>
+                                      item.key === this.state.transService
+                                  )?.langList as any[]
+                                )[index]
+                              )}
+                            </option>
+                          );
+                        })}
+                    </select>
+                  </div>
                   <div className="original-text">{this.state.originalText}</div>
                 </div>
                 <div
@@ -465,6 +422,59 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                       : undefined
                   }
                 >
+                  <div className="trans-lang-box">
+                    <select
+                      className="trans-lang-selector"
+                      style={{ maxWidth: "120px", margin: 0 }}
+                      value={
+                        ConfigService.getReaderConfig("transTarget") ||
+                        getDefaultTransTarget(
+                          this.props.plugins.find(
+                            (item) => item.key === this.state.transService
+                          )?.langList
+                        )
+                      }
+                      onChange={(
+                        event: React.ChangeEvent<HTMLSelectElement>
+                      ) => {
+                        let targetLang = event.target.value;
+                        ConfigService.setReaderConfig(
+                          "transTarget",
+                          targetLang
+                        );
+                        this.handleTrans(
+                          this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
+                        );
+                        this.forceUpdate();
+                      }}
+                    >
+                      {this.props.plugins.find(
+                        (item) => item.key === this.state.transService
+                      )?.langList &&
+                        Object.keys(
+                          this.props.plugins.find(
+                            (item) => item.key === this.state.transService
+                          )?.langList as any
+                        ).map((item, index) => {
+                          return (
+                            <option
+                              value={item}
+                              key={index}
+                              className="add-dialog-shelf-list-option"
+                            >
+                              {this.props.t(
+                                Object.values(
+                                  this.props.plugins.find(
+                                    (item) =>
+                                      item.key === this.state.transService
+                                  )?.langList as any[]
+                                )[index]
+                              )}
+                            </option>
+                          );
+                        })}
+                    </select>
+                  </div>
                   <div className="trans-text">
                     {this.state.translatedText}
                     {this.state.transService.includes("ai-trans") &&
