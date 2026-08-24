@@ -398,17 +398,14 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
             style={
               isDockedRight
                 ? {
-                    right: "30px",
+                    right: "40px",
                   }
                 : {
                     right: "50px",
                   }
             }
           >
-            <span
-              className="icon-sidebar"
-              style={{ fontWeight: "bold", fontSize: "18px" }}
-            ></span>
+            <span className="icon-sidebar" style={{ fontSize: "18px" }}></span>
           </div>
           <div
             className="popup-drag-handle"
@@ -422,7 +419,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
                 : {}
             }
           >
-            <span className="icon-menu" style={{ fontWeight: "bold" }}></span>
+            <span className="icon-menu" style={{}}></span>
           </div>
           {!isDockedRight && (
             <div

@@ -28,8 +28,8 @@
   right: 4px;
   width: 10px;
   height: 10px;
-  border-top: 3px solid rgba(128, 128, 128, 0.6);
-  border-right: 3px solid rgba(128, 128, 128, 0.6);
+  border-top: 2.5px solid rgba(128, 128, 128, 0.6);
+  border-right: 2.5px solid rgba(128, 128, 128, 0.6);
   border-radius: 0 6px 0 0;
 }
 .popup-drag-handle {
