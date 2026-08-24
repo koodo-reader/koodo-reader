@@ -315,12 +315,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             );
           } catch (error) {
             console.error(error, bookName);
-            toast.error(
-              this.props.t("Import failed") + ": " + bookName,
-              {
-                duration: 4000,
-              }
-            );
+            toast.error(this.props.t("Import failed") + ": " + bookName, {
+              duration: 4000,
+            });
             return resolve();
           }
           return;
@@ -376,17 +373,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           format: extension.toUpperCase(),
           readerMode: "",
           charset: "",
-          animation:
-            ConfigService.getReaderConfig("animation") || "none",
-          convertChinese:
-            ConfigService.getReaderConfig("convertChinese"),
+          animation: ConfigService.getReaderConfig("animation") || "none",
+          convertChinese: ConfigService.getReaderConfig("convertChinese"),
           bookLayout: ConfigService.getReaderConfig("bookLayout"),
           textRules: getTextRules(),
-          codeHighlight:
-            ConfigService.getReaderConfig("codeHighlight") || "",
+          codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
           fullTranslationMode: "no",
-          textOrientation:
-            ConfigService.getReaderConfig("textOrientation"),
+          textOrientation: ConfigService.getReaderConfig("textOrientation"),
           parserRegex: "",
           isDarkMode: "no",
           isMobile: "no",
@@ -562,6 +555,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       const pct = Math.round(((i + 1) / total) * 100);
       toast.loading(this.props.t("Downloading") + ": " + pct + "%", {
         id: toastId,
+        position: "bottom-center",
       });
     }
   };
@@ -571,7 +565,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     urlFileName: string,
     toastId: string
   ) => {
-    toast.loading(this.props.t("Downloading") + ": 0%", { id: toastId });
+    toast.loading(this.props.t("Downloading") + ": 0%", {
+      id: toastId,
+      position: "bottom-center",
+    });
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
@@ -718,7 +715,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       return;
     }
 
-    toast.loading(this.props.t("Downloading") + ": 0%", { id: toastId });
+    toast.loading(this.props.t("Downloading") + ": 0%", {
+      id: toastId,
+      position: "bottom-center",
+    });
     try {
       const response = await fetch(trimmedUrl);
       if (!response.ok) {
@@ -738,6 +738,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           const percent = Math.round((received / total) * 100);
           toast.loading(this.props.t("Downloading") + ": " + percent + "%", {
             id: toastId,
+            position: "bottom-center",
           });
         } else {
           toast.loading(
@@ -745,7 +746,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               ": " +
               (received / 1024).toFixed(1) +
               " KB",
-            { id: toastId }
+            { id: toastId, position: "bottom-center" }
           );
         }
       }

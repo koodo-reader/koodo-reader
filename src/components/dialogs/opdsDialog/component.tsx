@@ -697,6 +697,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     }
     toast.loading(this.props.t("Downloading") + ": " + entry.title, {
       id: "opds-download",
+      position: "bottom-center",
     });
     try {
       const response = await fetchWithCatalogAuth(

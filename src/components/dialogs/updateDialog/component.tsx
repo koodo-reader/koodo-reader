@@ -180,7 +180,10 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                             toast.loading(
                               this.props.t("Downloading") +
                                 `(${config.downloadedMB} / ${config.totalMB} MB)`,
-                              { id: "download-progress" }
+                              {
+                                id: "download-progress",
+                                position: "bottom-center",
+                              }
                             );
                           }
                         );
