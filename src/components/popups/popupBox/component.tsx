@@ -299,6 +299,28 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     }
   };
 
+  handleToggleDock = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (this.state.isDockedRight) {
+      // 当前已固定 → 取消固定，恢复到之前保存的位置
+      const savedPos = this.getSavedPosition();
+      const savedSize = this.getSavedSize();
+      this.setState({
+        isDockedRight: false,
+        popupLeft: savedPos ? savedPos.left : 50,
+        popupBottom: savedPos ? savedPos.bottom : 0,
+        popupWidth: savedSize ? savedSize.width : DEFAULT_WIDTH,
+        popupHeight: savedSize ? savedSize.height : getDefaultHeight(this.mode),
+      });
+      this.syncDockedToRedux(false);
+      this.props.renderBookFunc();
+    } else {
+      // 当前未固定 → 直接固定到右侧
+      this.syncDockedToRedux(true);
+    }
+  };
+
   handleClose() {
     this.props.handleOpenMenu(false);
     this.props.handleNoteKey("");
@@ -391,26 +413,22 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
                 : { top: "-30px", left: "calc(50% - 10px)" }),
             }}
           ></span>
-          <div
-            className="popup-drag-handle"
-            onMouseDown={this.handleDragStart}
+          <span
+            className="icon-sidebar popup-pin-handle"
+            onClick={this.handleToggleDock}
             title={this.props.t(isDockedRight ? "Unpin" : "Pin to right")}
             style={
               isDockedRight
                 ? {
                     right: "40px",
-                    cursor: "pointer",
                   }
                 : {
                     right: "50px",
-                    cursor: "pointer",
                   }
             }
-          >
-            <span className="icon-sidebar" style={{ fontSize: "18px" }}></span>
-          </div>
-          <div
-            className="popup-drag-handle"
+          ></span>
+          <span
+            className="icon-menu popup-drag-handle"
             onMouseDown={this.handleDragStart}
             title={this.props.t("Move")}
             style={
@@ -420,9 +438,8 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
                   }
                 : {}
             }
-          >
-            <span className="icon-menu" style={{}}></span>
-          </div>
+          ></span>
+
           {!isDockedRight && (
             <div
               className="popup-resize-handle"
