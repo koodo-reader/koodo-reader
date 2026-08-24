@@ -32,6 +32,10 @@
   border-right: 2.5px solid rgba(128, 128, 128, 0.6);
   border-radius: 0 6px 0 0;
 }
+.sidebar-icon {
+  cursor: pointer;
+  font-size: 18px;
+}
 .popup-drag-handle {
   position: absolute;
   top: 0;
@@ -44,12 +48,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.popup-drag-handle {
   font-size: 14px;
   margin-top: 2px;
   opacity: 0.6;
-  font-weight: bold !important;
+}
+.popup-pin-handle {
+  position: absolute;
+  top: 0;
+  right: 24px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  z-index: 20;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-top: 2px;
+  opacity: 0.6;
 }
 @media screen and (max-width: 576px) {
   .popup-box-container {
