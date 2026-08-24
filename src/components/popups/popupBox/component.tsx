@@ -215,6 +215,8 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
       this.wasDocked = true;
       this.dragStartX = e.clientX;
       this.dragStartY = e.clientY;
+      this.props.handleMenuMode("assistant");
+      this.props.handleOpenMenu(true);
       this.setState({
         isDockedRight: false,
         popupLeft: newLeft,
