@@ -394,14 +394,16 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
           <div
             className="popup-drag-handle"
             onMouseDown={this.handleDragStart}
-            title={this.props.t("Move")}
+            title={this.props.t(isDockedRight ? "Unpin" : "Pin to right")}
             style={
               isDockedRight
                 ? {
                     right: "40px",
+                    cursor: "pointer",
                   }
                 : {
                     right: "50px",
+                    cursor: "pointer",
                   }
             }
           >
