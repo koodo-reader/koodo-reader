@@ -137,6 +137,7 @@ class ImportDialog extends React.Component<
     }
     toast.loading(this.props.t("Downloading"), {
       id: "offline-book-import",
+      position: "bottom-center",
     });
     let destPath = "temp/" + item.path.split("/").pop();
     let file: any = null;
@@ -351,6 +352,7 @@ class ImportDialog extends React.Component<
 
       toast.loading(this.props.t("Downloading") + ": " + googleFile.name, {
         id: "google-download-" + googleFile.id,
+        position: "bottom-center",
       });
 
       // 下载文件

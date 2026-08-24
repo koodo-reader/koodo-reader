@@ -269,6 +269,7 @@ class BookUtil {
       }
       toast.loading(i18n.t("Downloading"), {
         id: toastId,
+        position: "bottom-center",
       });
       if (
         (await TokenService.getToken("is_authed")) === "yes" &&

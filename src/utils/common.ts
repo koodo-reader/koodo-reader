@@ -1162,6 +1162,7 @@ export const showDownloadProgress = (
         i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
         {
           id: toastId,
+          position: "bottom-center",
         }
       );
     } else {
@@ -1181,6 +1182,7 @@ export const showDownloadProgress = (
         i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
         {
           id: toastId,
+          position: "bottom-center",
         }
       );
     }
