@@ -40,9 +40,9 @@
   position: absolute;
   top: 0;
   right: 24px;
-  width: 18px;
-  height: 18px;
-  cursor: move;
+  width: 20px;
+  height: 20px;
+  cursor: move !important;
   z-index: 20;
   background: transparent;
   display: flex;
@@ -50,15 +50,14 @@
   justify-content: center;
   font-size: 14px;
   margin-top: 2px;
-  opacity: 0.6;
 }
 .popup-pin-handle {
   position: absolute;
   top: 0;
   right: 24px;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  cursor: pointer !important;
   z-index: 20;
   background: transparent;
   display: flex;
@@ -66,7 +65,6 @@
   justify-content: center;
   font-size: 18px;
   margin-top: 2px;
-  opacity: 0.6;
 }
 @media screen and (max-width: 576px) {
   .popup-box-container {

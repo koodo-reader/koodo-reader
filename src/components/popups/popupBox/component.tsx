@@ -414,7 +414,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
             }}
           ></span>
           <span
-            className="icon-sidebar popup-pin-handle"
+            className={`icon-sidebar popup-pin-handle ${isDockedRight ? "" : "popup-close"}`}
             onClick={this.handleToggleDock}
             title={this.props.t(isDockedRight ? "Unpin" : "Pin to right")}
             style={
@@ -423,12 +423,13 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
                     right: "40px",
                   }
                 : {
-                    right: "50px",
+                    top: "-30px",
+                    right: "40px",
                   }
             }
           ></span>
           <span
-            className="icon-menu popup-drag-handle"
+            className={`icon-menu popup-drag-handle ${isDockedRight ? "" : "popup-close"}`}
             onMouseDown={this.handleDragStart}
             title={this.props.t("Move")}
             style={
@@ -436,7 +437,10 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
                 ? {
                     right: "10px",
                   }
-                : {}
+                : {
+                    top: "-30px",
+                    right: "10px",
+                  }
             }
           ></span>
 
