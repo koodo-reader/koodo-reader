@@ -1559,7 +1559,6 @@ const createMainWin = () => {
     };
   });
   ipcMain.handle("ai-chat-stream", async (event, payload) => {
-    console.log("Received ai-chat-stream request:", payload);
     const { streamId, url, headers, body } = payload || {};
     let response;
     try {
