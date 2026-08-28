@@ -46,6 +46,7 @@ export const backup = async (service: string): Promise<Boolean> => {
     }
     toast.loading(i18n.t("Backup...") + " (0%)", {
       id: "backup",
+      position: "bottom-center",
     });
     // 让 UI 有时间渲染 toast
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -55,6 +56,7 @@ export const backup = async (service: string): Promise<Boolean> => {
       (percent) => {
         toast.loading(i18n.t("Backup...") + ` (${percent}%)`, {
           id: "backup",
+          position: "bottom-center",
         });
       }
     );
@@ -107,14 +109,22 @@ export const generateSnapshot = async () => {
         dbName: databaseList[i],
         storagePath: getStorageLocation(),
       });
-      const databasePath = path.join(dataPath, "config", databaseList[i] + ".db");
+      const databasePath = path.join(
+        dataPath,
+        "config",
+        databaseList[i] + ".db"
+      );
       if (fs.existsSync(databasePath)) {
-        zip.file(path.posix.join("config", databaseList[i] + ".db"), fs.readFileSync(databasePath));
+        zip.file(
+          path.posix.join("config", databaseList[i] + ".db"),
+          fs.readFileSync(databasePath)
+        );
       }
     }
     const configStr = JSON.stringify(await ConfigUtil.dumpConfig("config"));
     zip.file("config/config.json", configStr);
-    if (!fs.existsSync(snapshotPath)) fs.mkdirSync(snapshotPath, { recursive: true });
+    if (!fs.existsSync(snapshotPath))
+      fs.mkdirSync(snapshotPath, { recursive: true });
     const output = await zip.generateAsync({ type: "uint8array" });
     fs.writeFileSync(path.join(snapshotPath, fileName), output);
     const snapshots = getSnapshots();

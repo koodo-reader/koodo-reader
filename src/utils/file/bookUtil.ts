@@ -44,6 +44,7 @@ class BookUtil {
     if (ConfigService.getItem("defaultSyncOption")) {
       toast.loading(i18n.t("Uploading book"), {
         id: "add-book",
+        position: "bottom-center",
       });
     }
     if (isElectron) {
@@ -245,6 +246,7 @@ class BookUtil {
     if (BookUtil.isDownloading) {
       toast.loading(i18n.t("Waiting for download..."), {
         id: toastId,
+        position: "bottom-center",
       });
       await BookUtil.waitForDownload();
     }
