@@ -53,7 +53,6 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
       }
       toast.loading(i18n.t("Restoring..."), {
         id: "backup",
-        position: "bottom-center",
       });
       await new Promise((r) => setTimeout(r, 100));
       try {
@@ -77,7 +76,6 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
           );
           toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, {
             id: "backup",
-            position: "bottom-center",
           });
         };
         const configFiles = Object.keys(zip.files).filter(
@@ -193,7 +191,6 @@ export const restore = async (service: string): Promise<Boolean> => {
     if (!filePath) return false;
     toast.loading(i18n.t("Restoring..."), {
       id: "backup",
-      position: "bottom-center",
     });
     // 让 UI 有时间渲染 toast
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -203,7 +200,6 @@ export const restore = async (service: string): Promise<Boolean> => {
   } else {
     toast.loading(i18n.t("Restoring..."), {
       id: "backup",
-      position: "bottom-center",
     });
     let tokenConfig = await getCloudConfig(service);
     let result = await ipcRenderer.invoke("cloud-download", {
@@ -302,7 +298,6 @@ export const restoreFromfilePath = async (filePath: string) => {
     );
     toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, {
       id: "backup",
-      position: "bottom-center",
     });
   };
 
