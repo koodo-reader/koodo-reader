@@ -51,7 +51,10 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
         resolve(false);
         return;
       }
-      toast.loading(i18n.t("Restoring..."), { id: "backup" });
+      toast.loading(i18n.t("Restoring..."), {
+        id: "backup",
+        position: "bottom-center",
+      });
       await new Promise((r) => setTimeout(r, 100));
       try {
         const fileBuffer = await file.arrayBuffer();
@@ -74,6 +77,7 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
           );
           toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, {
             id: "backup",
+            position: "bottom-center",
           });
         };
         const configFiles = Object.keys(zip.files).filter(
@@ -106,10 +110,7 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
               const cloudRecords = await sqlUtil.dbBufferToJson(buf, dbName);
               const localRecords = await DatabaseService.getAllRecords(dbName);
               const mergedRecords = mergeRecords(localRecords, cloudRecords);
-              await DatabaseService.saveAllRecords(
-                mergedRecords,
-                dbName
-              );
+              await DatabaseService.saveAllRecords(mergedRecords, dbName);
             }
             updateProgress();
           } catch {
@@ -192,6 +193,7 @@ export const restore = async (service: string): Promise<Boolean> => {
     if (!filePath) return false;
     toast.loading(i18n.t("Restoring..."), {
       id: "backup",
+      position: "bottom-center",
     });
     // 让 UI 有时间渲染 toast
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -201,6 +203,7 @@ export const restore = async (service: string): Promise<Boolean> => {
   } else {
     toast.loading(i18n.t("Restoring..."), {
       id: "backup",
+      position: "bottom-center",
     });
     let tokenConfig = await getCloudConfig(service);
     let result = await ipcRenderer.invoke("cloud-download", {
@@ -241,7 +244,11 @@ export const restoreFromSnapshot = async (fileName: string) => {
       const entryName = "config/" + databaseList[i] + ".db";
       const entry = zip.file(entryName);
       if (!entry) continue;
-      const destination = path.join(dataPath, "config", databaseList[i] + ".db");
+      const destination = path.join(
+        dataPath,
+        "config",
+        databaseList[i] + ".db"
+      );
       if (fs.existsSync(destination)) fs.unlinkSync(destination);
       fs.mkdirSync(path.dirname(destination), { recursive: true });
       fs.writeFileSync(destination, await entry.async("uint8array"));
@@ -284,12 +291,19 @@ export const restoreFromfilePath = async (filePath: string) => {
   const dataPath = getStorageLocation() || "";
   let failed = false;
   let processedCount = 0;
-  const allFiles = Object.keys(zip.files).filter((name) => !zip.files[name].dir);
+  const allFiles = Object.keys(zip.files).filter(
+    (name) => !zip.files[name].dir
+  );
   const totalFiles = allFiles.length;
   const updateProgress = () => {
     processedCount++;
-    const percent = Math.round((processedCount / Math.max(totalFiles, 1)) * 100);
-    toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, { id: "backup" });
+    const percent = Math.round(
+      (processedCount / Math.max(totalFiles, 1)) * 100
+    );
+    toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, {
+      id: "backup",
+      position: "bottom-center",
+    });
   };
 
   const configFiles = Object.keys(zip.files).filter(
@@ -319,10 +333,7 @@ export const restoreFromfilePath = async (filePath: string) => {
         const sqlUtil = new SqlUtil();
         const dbName = entryName.split(".")[0];
         const cloudRecords = await sqlUtil.dbBufferToJson(buf, dbName);
-        await DatabaseService.saveAllRecords(
-          cloudRecords,
-          dbName
-        );
+        await DatabaseService.saveAllRecords(cloudRecords, dbName);
       }
       updateProgress();
     } catch {
@@ -338,13 +349,16 @@ export const restoreFromfilePath = async (filePath: string) => {
     (name) =>
       isSafeArchiveName(name) &&
       !zip.files[name].dir &&
-      ["book/", "cover/", "dict/", "background/", "font/", "snapshot/"].some((prefix) => name.startsWith(prefix))
+      ["book/", "cover/", "dict/", "background/", "font/", "snapshot/"].some(
+        (prefix) => name.startsWith(prefix)
+      )
   );
   for (const name of assetFiles) {
     try {
       const destination = path.join(dataPath, name);
       const directory = path.dirname(destination);
-      if (!fs.existsSync(directory)) fs.mkdirSync(directory, { recursive: true });
+      if (!fs.existsSync(directory))
+        fs.mkdirSync(directory, { recursive: true });
       fs.writeFileSync(destination, await zip.file(name)!.async("uint8array"));
       updateProgress();
     } catch {

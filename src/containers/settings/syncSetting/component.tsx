@@ -343,7 +343,9 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       return;
     }
     toast.dismiss("backup");
-    toast(this.props.t("Uploading, please wait"));
+    toast(this.props.t("Uploading, please wait"), {
+      position: "bottom-center",
+    });
     this.props.handleLoadingDialog(true);
     let result = await backup(name);
     if (result) {
