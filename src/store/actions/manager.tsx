@@ -467,7 +467,7 @@ export function handleFetchPlugins() {
               return {
                 ...item,
                 label:
-                  i18n.t("Official AI Voice") +
+                  i18n.t("Kokoro") +
                   " - " +
                   (KookitConfig.SelfHostedVoiceList.includes(item.name)
                     ? i18n.t("Limited free") + " - "
