@@ -353,7 +353,7 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
       });
       if (res && res.ok) {
         this.setState({ proxyEditing: false });
-        toast.success(this.props.t("Save"));
+        toast.success(this.props.t("Added successfully"));
       } else {
         toast.error(this.props.t("Save failed"));
       }
@@ -589,6 +589,17 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
                     placeholder={this.props.t("Proxy host")}
                   />
                 </div>
+                <div
+                  style={{
+                    marginTop: "5px",
+                    marginBottom: "2px",
+                    marginLeft: "2px",
+                    fontSize: "12px",
+                    opacity: 0.8,
+                  }}
+                >
+                  {this.props.t("Example")}: {"127.0.0.1"}
+                </div>
                 <div key="proxy-port">
                   <input
                     className="token-dialog-username-box"
@@ -599,6 +610,17 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
                     }
                     placeholder={this.props.t("Proxy port")}
                   />
+                </div>
+                <div
+                  style={{
+                    marginTop: "5px",
+                    marginBottom: "2px",
+                    marginLeft: "2px",
+                    fontSize: "12px",
+                    opacity: 0.8,
+                  }}
+                >
+                  {this.props.t("Example")}: {"1080"}
                 </div>
                 <div key="proxy-username">
                   <input
