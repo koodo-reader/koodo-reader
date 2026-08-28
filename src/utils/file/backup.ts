@@ -46,7 +46,6 @@ export const backup = async (service: string): Promise<Boolean> => {
     }
     toast.loading(i18n.t("Backup...") + " (0%)", {
       id: "backup",
-      position: "bottom-center",
     });
     // 让 UI 有时间渲染 toast
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -56,7 +55,6 @@ export const backup = async (service: string): Promise<Boolean> => {
       (percent) => {
         toast.loading(i18n.t("Backup...") + ` (${percent}%)`, {
           id: "backup",
-          position: "bottom-center",
         });
       }
     );

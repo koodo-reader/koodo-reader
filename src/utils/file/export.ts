@@ -38,7 +38,6 @@ export const exportBooks = async (books: Book[]) => {
     }
     toast.loading(i18n.t("Exporting..."), {
       id: "exporting",
-      position: "bottom-center",
     });
 
     // 让 UI 有时间渲染 toast
