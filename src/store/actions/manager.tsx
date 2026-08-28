@@ -485,7 +485,7 @@ export function handleFetchPlugins() {
               return {
                 ...item,
                 label:
-                  "Azure TTS" +
+                  "Azure" +
                   " - " +
                   (KookitConfig.SelfHostedVoiceList.includes(item.name)
                     ? i18n.t("Limited free") + " - "
