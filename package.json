@@ -63,6 +63,7 @@
     "underscore": "^1.13.7",
     "uuid": "^11.0.5",
     "webdav": "^5.7.1",
+    "yauzl": "^3.4.0",
     "yazl": "^3.3.1"
   },
   "devDependencies": {
