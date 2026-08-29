@@ -272,44 +272,56 @@ export const restoreFromfilePath = async (filePath: string) => {
   const fs = window.electronAPI.fs;
   const path = window.electronAPI.path;
   if (!fs.existsSync(filePath)) return false;
-  const zip = await JSZip.loadAsync(fs.readFileSync(filePath));
-  const isNewBackup = zip.file("config/config.json") !== null;
-  if (!isNewBackup) {
-    const oldEntries = Object.keys(zip.files)
-      .filter((name) => !zip.files[name].dir)
-      .map((name) => ({
-        name,
-        getData: () => zip.files[name].async("uint8array"),
-      }));
-    return await restoreFromOldBackup(oldEntries);
-  }
-
   const dataPath = getStorageLocation() || "";
-  let failed = false;
-  let processedCount = 0;
-  const allFiles = Object.keys(zip.files).filter(
-    (name) => !zip.files[name].dir
-  );
-  const totalFiles = allFiles.length;
-  const updateProgress = () => {
-    processedCount++;
-    const percent = Math.round(
-      (processedCount / Math.max(totalFiles, 1)) * 100
-    );
-    toast.loading(i18n.t("Restoring...") + ` (${percent}%)`, {
+  const ipcRenderer = window.electronAPI;
+
+  const progressListener = (payload: { percent: number }) => {
+    toast.loading(i18n.t("Restoring...") + ` (${payload.percent}%)`, {
       id: "backup",
     });
   };
+  ipcRenderer.on("restore-progress", progressListener);
+  let result: any;
+  try {
+    result = await ipcRenderer.invoke("restore-path", {
+      filePath,
+      dataPath,
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    toast.error(errorMessage, { id: "backup" });
+    return false;
+  } finally {
+    ipcRenderer.removeListener("restore-progress", progressListener);
+  }
 
-  const configFiles = Object.keys(zip.files).filter(
-    (name) => name.startsWith("config/") && !zip.files[name].dir
-  );
-  for (const fileName of configFiles) {
+  if (!result || result.ok !== true) {
+    if (result && result.isNewBackup === false) {
+      // 旧备份格式：主进程不流式处理，回退到 JSZip（遗留兼容路径）
+      const zip = await JSZip.loadAsync(fs.readFileSync(filePath));
+      const oldEntries = Object.keys(zip.files)
+        .filter((name) => !zip.files[name].dir)
+        .map((name) => ({
+          name,
+          getData: () => zip.files[name].async("uint8array"),
+        }));
+      return await restoreFromOldBackup(oldEntries);
+    }
+    const message = (result && result.error) || "Restore failed";
+    toast.error(message, { id: "backup" });
+    return false;
+  }
+
+  // 主进程已流式写盘资产文件、合并写入 .db 记录，并回传 config.json / sync.json
+  // 纯文本缓冲，在此由 ConfigService 处理。
+  const configFiles: { name: string; buffer: ArrayBuffer }[] =
+    result.configFiles || [];
+  let failed = false;
+  for (const file of configFiles) {
     try {
-      const entryName = path.basename(fileName);
-      const entry = zip.file(fileName)!;
+      const entryName = path.basename(file.name);
       if (entryName === "config.json") {
-        const text = await entry.async("string");
+        const text = new TextDecoder().decode(file.buffer);
         if (!text) {
           failed = true;
           break;
@@ -317,47 +329,16 @@ export const restoreFromfilePath = async (filePath: string) => {
         const config = JSON.parse(text);
         for (const key in config) ConfigService.setItem(key, config[key]);
       } else if (entryName === "sync.json") {
-        const text = await entry.async("string");
+        const text = new TextDecoder().decode(file.buffer);
         if (!text) {
           failed = true;
           break;
         }
         ConfigService.setItem("syncRecord", text);
-      } else if (entryName.endsWith(".db")) {
-        const buf = await entry.async("arraybuffer");
-        const sqlUtil = new SqlUtil();
-        const dbName = entryName.split(".")[0];
-        const cloudRecords = await sqlUtil.dbBufferToJson(buf, dbName);
-        await DatabaseService.saveAllRecords(cloudRecords, dbName);
       }
-      updateProgress();
     } catch {
       failed = true;
       break;
-    }
-  }
-  if (failed) return false;
-
-  const isSafeArchiveName = (name: string) =>
-    !name.startsWith("/") && !name.split(/[\\/]/).includes("..");
-  const assetFiles = Object.keys(zip.files).filter(
-    (name) =>
-      isSafeArchiveName(name) &&
-      !zip.files[name].dir &&
-      ["book/", "cover/", "dict/", "background/", "font/", "snapshot/"].some(
-        (prefix) => name.startsWith(prefix)
-      )
-  );
-  for (const name of assetFiles) {
-    try {
-      const destination = path.join(dataPath, name);
-      const directory = path.dirname(destination);
-      if (!fs.existsSync(directory))
-        fs.mkdirSync(directory, { recursive: true });
-      fs.writeFileSync(destination, await zip.file(name)!.async("uint8array"));
-      updateProgress();
-    } catch {
-      failed = true;
     }
   }
   return !failed;
