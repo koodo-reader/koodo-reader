@@ -1145,17 +1145,6 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("file-command", async (event, args) => runFileCommand(args));
-  ipcMain.handle("get-cover-url", (event, config) => {
-    if (
-      !config ||
-      typeof config.filePath !== "string" ||
-      !config.filePath ||
-      config.filePath.includes("\0")
-    ) {
-      throw new TypeError("Invalid cover URL config");
-    }
-    return pathToFileURL(path.resolve(config.filePath)).toString();
-  });
   ipcMain.on("node-command-sync", (event, args) => {
     try {
       if (!args || typeof args.operation !== "string") {
@@ -2337,7 +2326,9 @@ const createMainWin = () => {
         path.isAbsolute(rel) ||
         rel.split(path.sep).includes("..")
       ) {
-        throw new Error("Restore destination path is outside the data directory");
+        throw new Error(
+          "Restore destination path is outside the data directory"
+        );
       }
       return resolved;
     };
@@ -2354,9 +2345,7 @@ const createMainWin = () => {
       const rest = name.slice("config/".length);
       if (rest.includes("/")) return false;
       return (
-        rest.endsWith(".db") ||
-        rest === "config.json" ||
-        rest === "sync.json"
+        rest.endsWith(".db") || rest === "config.json" || rest === "sync.json"
       );
     };
     const isAssetFile = (name) =>
@@ -2365,9 +2354,8 @@ const createMainWin = () => {
 
     // .db 文件在主进程用 better-sqlite3 解析并 merge 写入本地库，
     // 不再把缓冲回传渲染进程（渲染进程加载 sql.js WASM 受 file:// 协议限制）。
-    const { SqlStatement } = await import(
-      "./src/assets/lib/kookit-extra.min.mjs"
-    );
+    const { SqlStatement } =
+      await import("./src/assets/lib/kookit-extra.min.mjs");
     const mergeDatabaseFromBuffer = (dbName, buffer) => {
       const localDb = getDBConnection(
         dbName,
@@ -2376,20 +2364,16 @@ const createMainWin = () => {
       );
       const cloudDb = new Database(buffer);
       try {
-        const selectSql =
-          SqlStatement.sqlStatement.getAllStatement[dbName];
+        const selectSql = SqlStatement.sqlStatement.getAllStatement[dbName];
         const rows = cloudDb.prepare(selectSql).all();
-        const insertSql =
-          SqlStatement.sqlStatement.saveStatement[dbName];
+        const insertSql = SqlStatement.sqlStatement.saveStatement[dbName];
         const insertStmt = localDb.prepare(insertSql);
         const insertMany = localDb.transaction((records) => {
           for (const record of records) {
             insertStmt.run(SqlStatement.jsonToSqlite[dbName](record));
           }
         });
-        insertMany(
-          rows.map((row) => SqlStatement.sqliteToJson[dbName](row))
-        );
+        insertMany(rows.map((row) => SqlStatement.sqliteToJson[dbName](row)));
       } finally {
         cloudDb.close();
       }
