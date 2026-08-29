@@ -22,4 +22,5 @@ export interface PopupTransState {
   transSource: string;
   isAddNew: boolean;
   isFinishOutput: boolean;
+  isAiWaiting: boolean;
 }

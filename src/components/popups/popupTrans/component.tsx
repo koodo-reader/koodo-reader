@@ -32,6 +32,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       transSource: ConfigService.getReaderConfig("transSource"),
       isAddNew: false,
       isFinishOutput: false,
+      isAiWaiting: false,
     };
   }
 
@@ -176,6 +177,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       systemPrompt = systemPrompt.replace("{text}", text);
       let config: any = plugin.config || {};
       this.textAccumulator = "";
+      this.setState({ isAiWaiting: true });
       this.startUpdateInterval();
       await chatStream(
         config.endpoint,
@@ -189,13 +191,16 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
             return;
           }
           if (result && result.text) {
+            if (!this.textAccumulator) {
+              this.setState({ isAiWaiting: false });
+            }
             this.textAccumulator += result.text;
           }
         }
       );
       this.stopUpdateInterval();
       this.textAccumulator = "";
-      this.setState({ isFinishOutput: true });
+      this.setState({ isFinishOutput: true, isAiWaiting: false });
     } else if (
       this.props.isAuthed &&
       ConfigService.getReaderConfig("isDisableAI") !== "yes"
@@ -476,7 +481,16 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
                     </select>
                   </div>
                   <div className="trans-text">
-                    {this.state.translatedText}
+                    {this.state.isAiWaiting && !this.state.translatedText ? (
+                      <div className="dict-ai-answer-waiting">
+                        <span className="icon-loading popup-assistant-loading"></span>
+                        <span>
+                          {this.props.t("Thinking, please wait...")}
+                        </span>
+                      </div>
+                    ) : (
+                      this.state.translatedText
+                    )}
                     {this.state.transService.includes("ai-trans") &&
                       this.state.isFinishOutput && (
                         <p
