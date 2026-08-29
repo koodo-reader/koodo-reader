@@ -2352,33 +2352,6 @@ const createMainWin = () => {
       ASSET_PREFIXES.some((prefix) => name.startsWith(prefix));
     const isFileEntry = (entry) => !/\/$/.test(entry.fileName);
 
-    // .db 文件在主进程用 better-sqlite3 解析并 merge 写入本地库，
-    // 不再把缓冲回传渲染进程（渲染进程加载 sql.js WASM 受 file:// 协议限制）。
-    const { SqlStatement } =
-      await import("./src/assets/lib/kookit-extra.min.mjs");
-    const mergeDatabaseFromBuffer = (dbName, buffer) => {
-      const localDb = getDBConnection(
-        dbName,
-        dataPath,
-        SqlStatement.sqlStatement
-      );
-      const cloudDb = new Database(buffer);
-      try {
-        const selectSql = SqlStatement.sqlStatement.getAllStatement[dbName];
-        const rows = cloudDb.prepare(selectSql).all();
-        const insertSql = SqlStatement.sqlStatement.saveStatement[dbName];
-        const insertStmt = localDb.prepare(insertSql);
-        const insertMany = localDb.transaction((records) => {
-          for (const record of records) {
-            insertStmt.run(SqlStatement.jsonToSqlite[dbName](record));
-          }
-        });
-        insertMany(rows.map((row) => SqlStatement.sqliteToJson[dbName](row)));
-      } finally {
-        cloudDb.close();
-      }
-    };
-
     // 用 yauzl 回调式 API 遍历（其 eachEntry() 迭代器与 FdSlicer 的 ref/unref
     // 时序存在冲突，遍历结束后 fd 会被提前关闭，故不使用 for await 形式）。
     const scanEntries = () =>
@@ -2487,23 +2460,9 @@ const createMainWin = () => {
                   readStream.on("error", reject);
                   output.on("close", advance);
                   readStream.pipe(output);
-                } else if (name.startsWith("config/") && name.endsWith(".db")) {
-                  // .db 在主进程用 better-sqlite3 解析并 merge 写入本地库
-                  const chunks = [];
-                  readStream.on("data", (chunk) => chunks.push(chunk));
-                  readStream.on("error", reject);
-                  readStream.on("end", () => {
-                    const buf = Buffer.concat(chunks);
-                    const dbName = path.basename(name, ".db");
-                    try {
-                      mergeDatabaseFromBuffer(dbName, buf);
-                    } catch (e3) {
-                      return reject(e3);
-                    }
-                    advance();
-                  });
                 } else if (isConfigFile(name)) {
-                  // config.json / sync.json：纯文本回传渲染进程由 ConfigService 处理
+                  // config 类文件（*.db / config.json / sync.json）累积为 Buffer
+                  // 回传渲染进程处理：.db 经 sql.js 解析合并，json 写入 ConfigService
                   const chunks = [];
                   readStream.on("data", (chunk) => chunks.push(chunk));
                   readStream.on("error", reject);
