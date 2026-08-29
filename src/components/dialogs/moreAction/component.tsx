@@ -56,7 +56,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
       ).filter(filterFn);
       if (notes.length > 0) {
         exportFn(notes, books, format);
-        toast.success(this.props.t("Export successful"));
+        toast.success(this.props.t("Export successful"), { id: "exporting" });
       } else {
         toast(this.props.t("Nothing to export"));
       }
@@ -177,7 +177,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                   true,
                   this.props.currentBook.path
                 ).then((result: any) => {
-                  toast.success(this.props.t("Export successful"));
+                  toast.success(this.props.t("Export successful"), { id: "exporting" });
                   saveAs(
                     new Blob([result]),
                     getBookName(this.props.currentBook)
@@ -227,7 +227,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                     `${this.props.currentBook.name}.${ext}`
                   );
                 }
-                toast.success(this.props.t("Export successful"));
+                toast.success(this.props.t("Export successful"), { id: "exporting" });
               }}
             >
               <p className="action-name">
@@ -275,7 +275,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                 let books = await DatabaseService.getAllRecords("books");
                 if (dictHistory.length > 0) {
                   exportDictionaryHistory(dictHistory, books);
-                  toast.success(this.props.t("Export successful"));
+                  toast.success(this.props.t("Export successful"), { id: "exporting" });
                 } else {
                   toast(this.props.t("Nothing to export"));
                 }

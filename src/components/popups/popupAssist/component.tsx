@@ -503,7 +503,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       }),
       `KoodoReader-${modeLabel}-Assistant-${bookName}-${dateStr}.json`
     );
-    toast.success(this.props.t("Export successful"));
+    toast.success(this.props.t("Export successful"), { id: "exporting" });
   };
   handleDeleteChatHistory = () => {
     this.clearHistory(
