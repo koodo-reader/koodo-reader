@@ -71,6 +71,7 @@ const INVOKE_CHANNELS = new Set([
   "crypto-file-md5",
   "backup-path",
   "restore-path",
+  "zip-command",
   "ai-request",
   "ai-chat-stream",
 ]);
@@ -257,6 +258,16 @@ const cryptoApi = {
   partialMd5: (filePath) => invoke("partial-md5", filePath),
   fileMd5: (filePath) => invoke("crypto-file-md5", filePath),
 };
+// adm-zip：snapshot 生成/还原与旧备份格式回退统一走主进程的 adm-zip
+// （渲染进程的 CRA webpack 构建无法打包这个 Node-only 库，经 IPC 调用）。
+const zipApi = {
+  list: (filePath) =>
+    invoke("zip-command", { operation: "list", filePath }),
+  read: (filePath, entryName) =>
+    invoke("zip-command", { operation: "read", filePath, entryName }),
+  create: (outputPath, entries) =>
+    invoke("zip-command", { operation: "create", outputPath, entries }),
+};
 
 contextBridge.exposeInMainWorld("electronAPI", {
   invoke,
@@ -276,6 +287,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     windowsStore: process.windowsStore === true,
   },
   crypto: cryptoApi,
+  admZip: zipApi,
   shell: { openExternal: (url) => invoke("open-external", url) },
   clipboard: {
     readText: () => sendSync("clipboard-read-text-sync"),

@@ -97,11 +97,12 @@ export const generateSnapshot = async () => {
   try {
     const path = window.electronAPI.path;
     const fs = window.electronAPI.fs;
-    const zip = new JSZip();
     const dataPath = getStorageLocation() || "";
     const snapshotPath = path.join(dataPath, "snapshot");
     const fileName = `${new Date().getTime()}.zip`;
     const databaseList = CommonTool.databaseList;
+    // 经 preload 用 adm-zip 打包（snapshot 仅含配置类小文件）
+    const entries: { name: string; data: Uint8Array }[] = [];
     for (let i = 0; i < databaseList.length; i++) {
       await window.electronAPI.invoke("close-database", {
         dbName: databaseList[i],
@@ -113,18 +114,20 @@ export const generateSnapshot = async () => {
         databaseList[i] + ".db"
       );
       if (fs.existsSync(databasePath)) {
-        zip.file(
-          path.posix.join("config", databaseList[i] + ".db"),
-          fs.readFileSync(databasePath)
-        );
+        entries.push({
+          name: path.posix.join("config", databaseList[i] + ".db"),
+          data: fs.readFileSync(databasePath),
+        });
       }
     }
     const configStr = JSON.stringify(await ConfigUtil.dumpConfig("config"));
-    zip.file("config/config.json", configStr);
+    entries.push({ name: "config/config.json", data: new TextEncoder().encode(configStr) });
     if (!fs.existsSync(snapshotPath))
       fs.mkdirSync(snapshotPath, { recursive: true });
-    const output = await zip.generateAsync({ type: "uint8array" });
-    fs.writeFileSync(path.join(snapshotPath, fileName), output);
+    await window.electronAPI.admZip.create(
+      path.join(snapshotPath, fileName),
+      entries
+    );
     const snapshots = getSnapshots();
     for (let i = 30; i < snapshots.length; i++) {
       fs.unlinkSync(path.join(snapshotPath, snapshots[i].file));
