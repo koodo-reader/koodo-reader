@@ -312,8 +312,7 @@ export const restoreFromfilePath = async (filePath: string) => {
     return false;
   }
 
-  // 主进程已流式写盘资产文件、合并写入 .db 记录，并回传 config.json / sync.json
-  // 纯文本缓冲，在此由 ConfigService 处理。
+  // 主进程已流式写盘资产文件，并回传 config 类文件 Buffer，在此处理。
   const configFiles: { name: string; buffer: ArrayBuffer }[] =
     result.configFiles || [];
   let failed = false;
@@ -335,6 +334,11 @@ export const restoreFromfilePath = async (filePath: string) => {
           break;
         }
         ConfigService.setItem("syncRecord", text);
+      } else if (entryName.endsWith(".db")) {
+        const sqlUtil = new SqlUtil();
+        const dbName = entryName.split(".")[0];
+        const cloudRecords = await sqlUtil.dbBufferToJson(file.buffer, dbName);
+        await DatabaseService.saveAllRecords(cloudRecords, dbName);
       }
     } catch {
       failed = true;
