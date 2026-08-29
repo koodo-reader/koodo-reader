@@ -294,9 +294,18 @@ export const restoreFromfilePath = async (filePath: string) => {
   } finally {
     ipcRenderer.removeListener("restore-progress", progressListener);
   }
+  console.info(
+    "restoreFromfilePath result:",
+    result,
+    !result || result.ok !== true,
+    result && result.isNewBackup === false
+  );
 
   if (!result || result.ok !== true) {
     if (result && result.isNewBackup === false) {
+      console.warn(
+        "Old backup format detected, falling back to JSZip restoration."
+      );
       // 旧备份格式：主进程不流式处理，回退到 JSZip（遗留兼容路径）
       const zip = await JSZip.loadAsync(fs.readFileSync(filePath));
       const oldEntries = Object.keys(zip.files)
