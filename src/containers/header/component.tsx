@@ -671,17 +671,22 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             onClick={async () => {
               this.setState({ notificationCount: 0 });
               let deviceUuid = await TokenService.getFingerprint();
-              window.electronAPI.invoke("new-chat", {
-                url:
-                  getWebsiteUrl() +
-                  (ConfigService.getReaderConfig("lang").startsWith("zh")
-                    ? "/zh/faq"
-                    : "/en/faq") +
-                  "?referer=app&version=" +
-                  packageJson.version +
-                  "&client=web&device=" +
-                  deviceUuid,
-              });
+              let url =
+                getWebsiteUrl() +
+                (ConfigService.getReaderConfig("lang").startsWith("zh")
+                  ? "/zh/faq"
+                  : "/en/faq") +
+                "?referer=app&version=" +
+                packageJson.version +
+                "&client=web&device=" +
+                deviceUuid;
+              if (isElectron) {
+                window.electronAPI?.invoke("new-chat", {
+                  url: url,
+                });
+              } else {
+                openInBrowser(url);
+              }
             }}
           >
             <img
