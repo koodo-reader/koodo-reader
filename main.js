@@ -9,7 +9,6 @@ const {
   dialog,
   powerSaveBlocker,
   nativeTheme: electronNativeTheme,
-  protocol,
   screen,
   systemPreferences,
   shell,
@@ -33,43 +32,6 @@ const yauzl = require("yauzl");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
-const assetProtocolFiles = new Map();
-const ASSET_PROTOCOL = "asset";
-const assetProtocolSecret = nodeCrypto.randomBytes(32);
-const COVER_MIME_TYPES = {
-  ".bmp": "image/bmp",
-  ".gif": "image/gif",
-  ".ico": "image/x-icon",
-  ".jpeg": "image/jpeg",
-  ".jpg": "image/jpeg",
-  ".png": "image/png",
-  ".svg": "image/svg+xml",
-  ".tif": "image/tiff",
-  ".tiff": "image/tiff",
-  ".webp": "image/webp",
-};
-const COVER_EXTENSIONS = new Set(Object.keys(COVER_MIME_TYPES));
-const AUDIO_MIME_TYPES = {
-  ".aac": "audio/aac",
-  ".flac": "audio/flac",
-  ".m4a": "audio/mp4",
-  ".mp3": "audio/mpeg",
-  ".ogg": "audio/ogg",
-  ".opus": "audio/ogg",
-  ".wav": "audio/wav",
-};
-const AUDIO_EXTENSIONS = new Set(Object.keys(AUDIO_MIME_TYPES));
-protocol.registerSchemesAsPrivileged([
-  {
-    scheme: ASSET_PROTOCOL,
-    privileges: {
-      standard: true,
-      secure: true,
-      supportFetchAPI: true,
-      corsEnabled: true,
-    },
-  },
-]);
 const packageJson = require("./package.json");
 let mainWin;
 let tray = null;
@@ -757,7 +719,7 @@ let options = {
   minWidth: 300,
   minHeight: 100,
   webPreferences: {
-    webSecurity: true,
+    webSecurity: !isDev,
     nodeIntegration: false,
     contextIsolation: true,
     preload: path.join(__dirname, "preload.js"),
@@ -1184,10 +1146,15 @@ const createMainWin = () => {
   });
   ipcMain.handle("file-command", async (event, args) => runFileCommand(args));
   ipcMain.handle("get-cover-url", (event, config) => {
-    if (!config || typeof config !== "object") {
+    if (
+      !config ||
+      typeof config.filePath !== "string" ||
+      !config.filePath ||
+      config.filePath.includes("\0")
+    ) {
       throw new TypeError("Invalid cover URL config");
     }
-    return getCoverProtocolUrl(config.filePath, config.storagePath);
+    return pathToFileURL(path.resolve(config.filePath)).toString();
   });
   ipcMain.on("node-command-sync", (event, args) => {
     try {
@@ -1662,7 +1629,7 @@ const createMainWin = () => {
       path.isAbsolute(audioPath) &&
       fs.existsSync(audioPath)
     ) {
-      return getAssetProtocolUrl(audioPath, path.join(dirPath, "tts"), "audio");
+      return pathToFileURL(audioPath).toString();
     }
     return audioPath;
   });
@@ -1763,11 +1730,6 @@ const createMainWin = () => {
   });
 
   ipcMain.handle("clear-tts", async (event, config) => {
-    for (const [token, asset] of assetProtocolFiles) {
-      if (asset.assetType === "audio") {
-        assetProtocolFiles.delete(token);
-      }
-    }
     if (!fs.existsSync(path.join(dirPath, "tts"))) {
       return "pong";
     } else {
@@ -3056,111 +3018,6 @@ const createMainWin = () => {
   });
 };
 
-const registerAssetProtocol = () => {
-  protocol.handle(ASSET_PROTOCOL, async (request) => {
-    const requestUrl = new URL(request.url);
-    if (requestUrl.hostname !== "local") {
-      return new Response(null, { status: 404 });
-    }
-    const token = requestUrl.pathname.slice(1);
-    const asset = assetProtocolFiles.get(token);
-    if (!asset) {
-      return new Response(null, { status: 404 });
-    }
-    let filePath;
-    try {
-      filePath = fs.realpathSync(asset.filePath);
-      const allowedDirectory = fs.realpathSync(asset.allowedDirectory);
-      const relativePath = path.relative(allowedDirectory, filePath);
-      if (
-        !relativePath ||
-        relativePath.startsWith(".." + path.sep) ||
-        path.isAbsolute(relativePath) ||
-        path.extname(filePath).toLowerCase() !== asset.extension
-      ) {
-        return new Response(null, { status: 403 });
-      }
-    } catch {
-      return new Response(null, { status: 404 });
-    }
-    const response = await net.fetch(pathToFileURL(filePath).toString());
-    const headers = new Headers(response.headers);
-    headers.set("Content-Type", asset.contentType);
-    headers.set("Access-Control-Allow-Origin", "*");
-    headers.set("X-Content-Type-Options", "nosniff");
-    return new Response(response.body, {
-      status: response.status,
-      statusText: response.statusText,
-      headers,
-    });
-  });
-};
-
-const getAssetProtocolUrl = (value, allowedDirectoryValue, assetType) => {
-  if (
-    typeof value !== "string" ||
-    !value ||
-    value.includes("\0") ||
-    typeof allowedDirectoryValue !== "string" ||
-    !allowedDirectoryValue ||
-    allowedDirectoryValue.includes("\0")
-  ) {
-    throw new TypeError("Invalid asset path");
-  }
-  const mimeTypes = assetType === "audio" ? AUDIO_MIME_TYPES : COVER_MIME_TYPES;
-  const extensions =
-    assetType === "audio" ? AUDIO_EXTENSIONS : COVER_EXTENSIONS;
-  const filePath = path.resolve(value);
-  const allowedDirectory = path.resolve(allowedDirectoryValue);
-  const stat = fs.statSync(filePath);
-  if (!stat.isFile()) {
-    throw new Error("Asset file does not exist");
-  }
-  if (!fs.existsSync(allowedDirectory)) {
-    throw new Error("Asset directory does not exist");
-  }
-  const realFilePath = fs.realpathSync(filePath);
-  const realAllowedDirectory = fs.realpathSync(allowedDirectory);
-  const relativePath = path.relative(realAllowedDirectory, realFilePath);
-  const extension = path.extname(realFilePath).toLowerCase();
-  if (
-    !relativePath ||
-    relativePath.startsWith(".." + path.sep) ||
-    path.isAbsolute(relativePath) ||
-    !extensions.has(extension)
-  ) {
-    throw new Error("Asset path is outside the allowed directory");
-  }
-  const token = nodeCrypto
-    .createHmac("sha256", assetProtocolSecret)
-    .update(`${realFilePath}\0${stat.mtimeMs}\0${stat.size}`)
-    .digest("hex");
-  const assetToken = `${token}${extension}`;
-  assetProtocolFiles.set(assetToken, {
-    filePath: realFilePath,
-    allowedDirectory: realAllowedDirectory,
-    extension,
-    contentType: mimeTypes[extension],
-    assetType,
-  });
-  return `${ASSET_PROTOCOL}://local/${assetToken}`;
-};
-
-const getCoverProtocolUrl = (value, storagePath) => {
-  if (
-    typeof storagePath !== "string" ||
-    !storagePath ||
-    storagePath.includes("\0")
-  ) {
-    throw new TypeError("Invalid cover path");
-  }
-  return getAssetProtocolUrl(
-    value,
-    path.resolve(storagePath, "cover"),
-    "cover"
-  );
-};
-
 const applyCorsToRendererRequests = () => {
   const filter = {
     urls: ["http://*/*", "https://*/*"],
@@ -3208,7 +3065,6 @@ const spoofOriginForLocalDev = () => {
 };
 
 app.on("ready", async () => {
-  registerAssetProtocol();
   applyCorsToRendererRequests();
   spoofOriginForLocalDev();
   await applyProxyToSession();
