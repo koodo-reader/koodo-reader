@@ -59,10 +59,7 @@ class CoverUtil {
       if (!fs.existsSync(imageFilePath)) {
         return book.cover;
       }
-      return window.electronAPI.invoke("get-cover-url", {
-        filePath: imageFilePath,
-        storagePath: getStorageLocation(),
-      }) as Promise<string>;
+      return imageFilePath;
     } else {
       if (ConfigService.getItem("isUseLocal") === "yes") {
         let coverList = await this.getLocalCoverList();

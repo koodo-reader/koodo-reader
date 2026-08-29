@@ -1,38 +1,112 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 const INVOKE_CHANNELS = new Set([
-  "cancel-download-app", "discord-rpc-update", "discord-rpc-clear", "update-win-app",
-  "open-book", "generate-tts", "get-tts-voices", "cloud-upload", "cloud-download", "cloud-progress",
-  "picker-download", "picker-progress", "cloud-reset", "cloud-stats", "cloud-delete",
-  "cloud-list", "picker-list", "cloud-exist", "cloud-close", "clear-tts", "select-path",
-  "select-file", "encrypt-data", "decrypt-data", "check-cloud-url", "get-proxy-config",
-  "set-proxy-config", "test-proxy-connection", "get-mac",
-  "get-device-name", "get-biometric-capability", "prompt-biometric-auth",
-  "reset-reader-position", "reset-main-position", "select-zip-file", "select-book",
-  "custom-database-command", "database-command", "close-database", "set-always-on-top",
-  "set-auto-maximize", "toggle-auto-launch", "toggle-minimize-to-tray", "open-explorer-folder",
-  "get-debug-logs", "hide-reader", "open-console", "reload-reader", "reload-main", "new-chat",
-  "clear-all-data", "new-tab", "reload-tab", "adjust-tab-size", "exit-tab",
-  "enter-tab-fullscreen", "exit-tab-fullscreen", "enter-fullscreen", "exit-fullscreen",
-  "open-url", "switch-moyu", "set-native-theme-source", "system-ocr", "file-command",
-  "open-external", "dict-lookup", "partial-md5", "get-cover-url",
-  "crypto-file-md5", "backup-path", "restore-path",
-  "ai-request", "ai-chat-stream"
+  "cancel-download-app",
+  "discord-rpc-update",
+  "discord-rpc-clear",
+  "update-win-app",
+  "open-book",
+  "generate-tts",
+  "get-tts-voices",
+  "cloud-upload",
+  "cloud-download",
+  "cloud-progress",
+  "picker-download",
+  "picker-progress",
+  "cloud-reset",
+  "cloud-stats",
+  "cloud-delete",
+  "cloud-list",
+  "picker-list",
+  "cloud-exist",
+  "cloud-close",
+  "clear-tts",
+  "select-path",
+  "select-file",
+  "encrypt-data",
+  "decrypt-data",
+  "check-cloud-url",
+  "get-proxy-config",
+  "set-proxy-config",
+  "test-proxy-connection",
+  "get-mac",
+  "get-device-name",
+  "get-biometric-capability",
+  "prompt-biometric-auth",
+  "reset-reader-position",
+  "reset-main-position",
+  "select-zip-file",
+  "select-book",
+  "custom-database-command",
+  "database-command",
+  "close-database",
+  "set-always-on-top",
+  "set-auto-maximize",
+  "toggle-auto-launch",
+  "toggle-minimize-to-tray",
+  "open-explorer-folder",
+  "get-debug-logs",
+  "hide-reader",
+  "open-console",
+  "reload-reader",
+  "reload-main",
+  "new-chat",
+  "clear-all-data",
+  "new-tab",
+  "reload-tab",
+  "adjust-tab-size",
+  "exit-tab",
+  "enter-tab-fullscreen",
+  "exit-tab-fullscreen",
+  "enter-fullscreen",
+  "exit-fullscreen",
+  "open-url",
+  "switch-moyu",
+  "set-native-theme-source",
+  "system-ocr",
+  "file-command",
+  "open-external",
+  "dict-lookup",
+  "partial-md5",
+  "crypto-file-md5",
+  "backup-path",
+  "restore-path",
+  "ai-request",
+  "ai-chat-stream",
 ]);
 const SEND_CHANNELS = new Set(["reader-close-ready", "tab-close-ready"]);
 const SEND_SYNC_CHANNELS = new Set([
-  "storage-location", "url-window-status", "get-dirname", "system-color",
-  "get-file-data", "check-file-data", "user-data", "file-command-sync", "clipboard-read-text-sync"
+  "storage-location",
+  "url-window-status",
+  "get-dirname",
+  "system-color",
+  "get-file-data",
+  "check-file-data",
+  "user-data",
+  "file-command-sync",
+  "clipboard-read-text-sync",
 ]);
 const EVENT_CHANNELS = new Set([
-  "oauth-callback", "before-reader-close", "before-tab-close", "reading-finished",
-  "chat-message", "import-url-from-link", "open-book-from-link", "open-note-from-link",
-  "picker-finished", "download-app-progress", "backup-progress", "restore-progress",
-  "ai-chat-chunk", "ai-chat-done", "ai-chat-error"
+  "oauth-callback",
+  "before-reader-close",
+  "before-tab-close",
+  "reading-finished",
+  "chat-message",
+  "import-url-from-link",
+  "open-book-from-link",
+  "open-note-from-link",
+  "picker-finished",
+  "download-app-progress",
+  "backup-progress",
+  "restore-progress",
+  "ai-chat-chunk",
+  "ai-chat-done",
+  "ai-chat-error",
 ]);
 
 const assertChannel = (set, channel) => {
-  if (!set.has(channel)) throw new Error(`IPC channel is not allowed: ${channel}`);
+  if (!set.has(channel))
+    throw new Error(`IPC channel is not allowed: ${channel}`);
 };
 const invoke = (channel, ...args) => {
   assertChannel(INVOKE_CHANNELS, channel);
@@ -79,7 +153,10 @@ const removeListener = (channel, listener, handler) => {
 
 const fileArgs = (args) => (args && typeof args === "object" ? args : {});
 const fileSync = (operation, args) => {
-  const result = sendSync("file-command-sync", { operation, ...fileArgs(args) });
+  const result = sendSync("file-command-sync", {
+    operation,
+    ...fileArgs(args),
+  });
   if (!result || result.ok !== true) {
     const error = new Error(result?.error?.message || "File command failed");
     if (result?.error?.code) error.code = result.error.code;
@@ -87,27 +164,38 @@ const fileSync = (operation, args) => {
   }
   return result.value;
 };
-const fileInvoke = (operation, args) => invoke("file-command", { operation, ...fileArgs(args) });
+const fileInvoke = (operation, args) =>
+  invoke("file-command", { operation, ...fileArgs(args) });
 const bytes = (value) => {
   if (value instanceof ArrayBuffer) return new Uint8Array(value);
-  if (ArrayBuffer.isView(value)) return new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+  if (ArrayBuffer.isView(value))
+    return new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
   return value;
 };
 const callbackResult = (promise, callback) => {
-  promise.then((value) => callback(null, bytes(value))).catch((error) => callback(error));
+  promise
+    .then((value) => callback(null, bytes(value)))
+    .catch((error) => callback(error));
 };
 
 const file = {
   existsSync: (filePath) => fileSync("exists", { path: filePath }),
-  mkdirSync: (filePath, options) => fileSync("mkdir", { path: filePath, options }),
-  writeFileSync: (filePath, data, options) => fileSync("write", { path: filePath, data: bytes(data), options }),
-  appendFileSync: (filePath, data, options) => fileSync("append", { path: filePath, data: bytes(data), options }),
-  readFileSync: (filePath, options) => bytes(fileSync("read", { path: filePath, options })),
-  readdirSync: (filePath, options) => fileSync("readdir", { path: filePath, options }),
+  mkdirSync: (filePath, options) =>
+    fileSync("mkdir", { path: filePath, options }),
+  writeFileSync: (filePath, data, options) =>
+    fileSync("write", { path: filePath, data: bytes(data), options }),
+  appendFileSync: (filePath, data, options) =>
+    fileSync("append", { path: filePath, data: bytes(data), options }),
+  readFileSync: (filePath, options) =>
+    bytes(fileSync("read", { path: filePath, options })),
+  readdirSync: (filePath, options) =>
+    fileSync("readdir", { path: filePath, options }),
   statSync: (filePath) => fileSync("stat", { path: filePath }),
   unlinkSync: (filePath) => fileSync("unlink", { path: filePath }),
-  copyFileSync: (source, destination) => fileSync("copyFile", { source, destination }),
-  renameSync: (source, destination) => fileSync("rename", { source, destination }),
+  copyFileSync: (source, destination) =>
+    fileSync("copyFile", { source, destination }),
+  renameSync: (source, destination) =>
+    fileSync("rename", { source, destination }),
   rmSync: (filePath, options) => fileSync("rm", { path: filePath, options }),
   emptyDirSync: (filePath) => fileSync("emptyDir", { path: filePath }),
   copy: (source, destination) => fileInvoke("copy", { source, destination }),
@@ -115,27 +203,40 @@ const file = {
   readFile: (filePath, options, callback) => {
     const cb = typeof options === "function" ? options : callback;
     const readOptions = typeof options === "function" ? undefined : options;
-    const promise = fileInvoke("read", { path: filePath, options: readOptions });
+    const promise = fileInvoke("read", {
+      path: filePath,
+      options: readOptions,
+    });
     if (cb) callbackResult(promise, cb);
     return cb ? undefined : promise.then(bytes);
   },
   writeFile: (filePath, data, options, callback) => {
     const cb = typeof options === "function" ? options : callback;
     const writeOptions = typeof options === "function" ? undefined : options;
-    const promise = fileInvoke("write", { path: filePath, data: bytes(data), options: writeOptions });
+    const promise = fileInvoke("write", {
+      path: filePath,
+      data: bytes(data),
+      options: writeOptions,
+    });
     if (cb) promise.then(() => cb(null)).catch((error) => cb(error));
     return cb ? undefined : promise;
   },
   promises: {
-    readFile: (filePath, options) => fileInvoke("read", { path: filePath, options }).then(bytes),
-    readdir: (filePath, options) => fileInvoke("readdir", { path: filePath, options }),
+    readFile: (filePath, options) =>
+      fileInvoke("read", { path: filePath, options }).then(bytes),
+    readdir: (filePath, options) =>
+      fileInvoke("readdir", { path: filePath, options }),
     stat: (filePath) => fileInvoke("stat", { path: filePath }),
-    mkdir: (filePath, options) => fileInvoke("mkdir", { path: filePath, options }),
+    mkdir: (filePath, options) =>
+      fileInvoke("mkdir", { path: filePath, options }),
   },
 };
 
 const nodeSync = (operation, args = {}) => {
-  const result = ipcRenderer.sendSync("node-command-sync", { operation, ...args });
+  const result = ipcRenderer.sendSync("node-command-sync", {
+    operation,
+    ...args,
+  });
   if (!result || result.ok !== true) {
     const error = new Error(result?.error?.message || "Node command failed");
     if (result?.error?.code) error.code = result.error.code;
@@ -170,7 +271,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
     platform: () => process.platform,
     homedir: () => nodeSync("os-homedir"),
   },
-  runtime: { platform: process.platform, windowsStore: process.windowsStore === true },
+  runtime: {
+    platform: process.platform,
+    windowsStore: process.windowsStore === true,
+  },
   crypto: cryptoApi,
   shell: { openExternal: (url) => invoke("open-external", url) },
   clipboard: {
