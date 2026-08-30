@@ -73,7 +73,6 @@ const INVOKE_CHANNELS = new Set([
   "restore-path",
   "zip-command",
   "ai-request",
-  "ai-chat-stream",
 ]);
 const SEND_CHANNELS = new Set(["reader-close-ready", "tab-close-ready"]);
 const SEND_SYNC_CHANNELS = new Set([
@@ -100,9 +99,6 @@ const EVENT_CHANNELS = new Set([
   "download-app-progress",
   "backup-progress",
   "restore-progress",
-  "ai-chat-chunk",
-  "ai-chat-done",
-  "ai-chat-error",
 ]);
 
 const assertChannel = (set, channel) => {

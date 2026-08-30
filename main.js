@@ -1563,89 +1563,6 @@ const createMainWin = () => {
       body: responseText,
     };
   });
-  ipcMain.handle("ai-chat-stream", async (event, payload) => {
-    const { streamId, url, headers, body } = payload || {};
-    let response;
-    try {
-      response = await net.fetch(url, {
-        method: "POST",
-        headers: headers || undefined,
-        body: body || undefined,
-      });
-    } catch (err) {
-      event.sender.send("ai-chat-error", {
-        streamId,
-        error: String(err?.message || err),
-      });
-      return { ok: false };
-    }
-    if (!response.ok) {
-      const errorBody = await response.text().catch(() => "");
-      event.sender.send("ai-chat-error", {
-        streamId,
-        status: response.status,
-        statusText: response.statusText,
-        body: errorBody,
-      });
-      return { ok: false };
-    }
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-    let buffer = "";
-    let dataLines = [];
-    let finished = false;
-    const flush = () => {
-      if (dataLines.length === 0) return;
-      const data = dataLines.join("\n");
-      dataLines = [];
-      if (data === "[DONE]") {
-        finished = true;
-        return;
-      }
-      try {
-        const json = JSON.parse(data);
-        const text = json?.choices?.[0]?.delta?.content;
-        if (text) {
-          event.sender.send("ai-chat-chunk", { streamId, text });
-        }
-      } catch {
-        // 忽略无法解析的 data 行
-      }
-    };
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        let idx;
-        while ((idx = buffer.indexOf("\n")) >= 0) {
-          const line = buffer.slice(0, idx).replace(/\r$/, "");
-          buffer = buffer.slice(idx + 1);
-          if (line === "") {
-            flush();
-            if (finished) break;
-          } else if (line.startsWith("data:")) {
-            dataLines.push(line.slice(5).replace(/^ /, ""));
-          }
-        }
-        if (finished) break;
-      }
-      if (!finished) flush();
-      event.sender.send("ai-chat-done", { streamId });
-    } catch (err) {
-      event.sender.send("ai-chat-error", {
-        streamId,
-        error: String(err?.message || err),
-      });
-    } finally {
-      try {
-        reader.releaseLock();
-      } catch {
-        // 忽略释放锁失败
-      }
-    }
-    return { ok: true };
-  });
   ipcMain.handle("generate-tts", async (event, voiceConfig) => {
     const { text, speed, pluginKey, config } = voiceConfig || {};
     const plugin = getVoicePlugin(pluginKey);
@@ -3040,24 +2957,8 @@ const applyCorsToRendererRequests = () => {
   );
 };
 
-// 这里在请求发出前统一移除 Origin 头，按非浏览器请求处理。
-const spoofOriginForLocalDev = () => {
-  const filter = {
-    urls: ["http://*/*", "https://*/*"],
-  };
-  session.defaultSession.webRequest.onBeforeSendHeaders(
-    filter,
-    (details, callback) => {
-      const requestHeaders = { ...details.requestHeaders };
-      delete requestHeaders["Origin"];
-      callback({ requestHeaders });
-    }
-  );
-};
-
 app.on("ready", async () => {
   applyCorsToRendererRequests();
-  spoofOriginForLocalDev();
   await applyProxyToSession();
   createMainWin();
 });
