@@ -122,59 +122,6 @@ export const chatStream = async (
     ...CommonTool.getDisableThinkingParams(providerId || ""),
   });
 
-  if (isElectron) {
-    return new Promise<{ done: boolean }>((resolve, reject) => {
-      const ipcRenderer = window.electronAPI;
-      const streamId =
-        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
-          ? crypto.randomUUID()
-          : Math.random().toString(36).slice(2) + Date.now().toString(36);
-
-      const onChunk = (data: any) => {
-        if (data && data.streamId === streamId && data.text) {
-          onMessage({ text: data.text });
-        }
-      };
-      const onDone = (data: any) => {
-        if (data && data.streamId === streamId) {
-          cleanup();
-          resolve({ done: true });
-        }
-      };
-      const onError = (data: any) => {
-        if (data && data.streamId === streamId) {
-          cleanup();
-          const errMsg =
-            data.error ||
-            (data.status ? `HTTP ${data.status}` : "Unknown error");
-          toast.error(errMsg, { id: "chat-stream-error", duration: 5000 });
-          reject(new Error(errMsg));
-        }
-      };
-      const cleanup = () => {
-        ipcRenderer.removeListener("ai-chat-chunk", onChunk);
-        ipcRenderer.removeListener("ai-chat-done", onDone);
-        ipcRenderer.removeListener("ai-chat-error", onError);
-      };
-
-      ipcRenderer.on("ai-chat-chunk", onChunk);
-      ipcRenderer.on("ai-chat-done", onDone);
-      ipcRenderer.on("ai-chat-error", onError);
-
-      ipcRenderer
-        .invoke("ai-chat-stream", {
-          streamId,
-          url: chatUrl,
-          headers,
-          body: payload,
-        })
-        .catch((err: any) => {
-          cleanup();
-          reject(err);
-        });
-    });
-  }
-
   return new Promise<{ done: boolean }>((resolve, reject) => {
     const source = new SSE(chatUrl, {
       headers,
