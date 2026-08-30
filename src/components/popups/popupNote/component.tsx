@@ -125,7 +125,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
       }
       let bookKey = this.props.currentBook.key;
       let range = JSON.stringify(
-        await this.props.htmlBook.rendition.getHightlightCoords(
+        await this.props.htmlBook.rendition.getHighlightCoords(
           this.props.chapterDocIndex
         )
       );
