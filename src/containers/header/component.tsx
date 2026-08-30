@@ -775,12 +775,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 let userInfo = await this.props.handleFetchUserInfo();
                 await this.handleCloudSync(userInfo);
               } else {
-                toast(
-                  this.props.t("Please upgrade to Pro to use this feature")
-                );
-                this.props.handleSetting(true);
-                this.props.handleSettingMode("account");
-                this.setState({ isSync: false });
+                if (
+                  ConfigService.getReaderConfig("isEnableKoReaderSync") !==
+                  "yes"
+                ) {
+                  toast(
+                    this.props.t("Please upgrade to Pro to use this feature")
+                  );
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("account");
+                  this.setState({ isSync: false });
+                } else {
+                  this.setState({ isSync: true });
+                  await this.handleKOReaderSync();
+                  this.setState({ isSync: false });
+                }
               }
             }}
             style={{ marginTop: "2px" }}
