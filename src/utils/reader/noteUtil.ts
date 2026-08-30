@@ -64,7 +64,7 @@ export async function createHighlight(params: DigestParams): Promise<void> {
   text = text.replace(/\f/g, "");
 
   let range = JSON.stringify(
-    await htmlBook.rendition.getHightlightCoords(chapterDocIndex)
+    await htmlBook.rendition.getHighlightCoords(chapterDocIndex)
   );
 
   let highlight = new Note(
