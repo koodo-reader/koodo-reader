@@ -1462,11 +1462,13 @@ export const getParserRegex = (extension: string, bookKey?: string) => {
     }
     //历史bug，部分parser的取值为null
     let txtParsers: any[] = [
-      ...Object.values(ConfigService.getAllObjectConfig("txtParsers")),
+      ...Object.values(ConfigService.getAllObjectConfig("txtParsers")).filter(
+        (parser) => parser
+      ),
       ...KookitConfig.ContentRegxConfig,
-    ].filter((parser) => parser);
+    ];
     let txtParser = txtParsers.find(
-      (parser) => parser.value === defaultTxtParser
+      (parser) => parser && parser.value === defaultTxtParser
     );
     if (txtParser) {
       parserRegex = txtParser.regex;
