@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const axios = require("axios");
-const AdmZip = require("adm-zip");
+const JSZip = require("jszip");
 const getAudioPath = async (text, speed, dirPath, config) => {
     let audioName = new Date().getTime() + ".mp3";
     if (!fs.existsSync(path.join(dirPath, "tts"))) {
@@ -29,10 +29,10 @@ const getTTSAudio = async (text, speed, config) => {
     body.stream = false;
     return new Promise((resolve, reject) => {
         axios.post(url, body, { responseType: "arraybuffer" })
-            .then(response => {
-            var zip = new AdmZip(response.data);
-            var zipEntries = zip.getEntries();
-            resolve(zipEntries[0].getData());
+            .then(async (response) => {
+            const zip = await JSZip.loadAsync(response.data);
+            const firstEntry = Object.values(zip.files)[0];
+            resolve(await firstEntry.async("nodebuffer"));
         })
             .catch(error => {
             reject("");
