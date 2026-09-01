@@ -101,7 +101,7 @@ export const generateSnapshot = async () => {
     const snapshotPath = path.join(dataPath, "snapshot");
     const fileName = `${new Date().getTime()}.zip`;
     const databaseList = CommonTool.databaseList;
-    // 经 preload 用 adm-zip 打包（snapshot 仅含配置类小文件）
+    // 渲染进程用 JSZip 打包（snapshot 仅含配置类小文件）
     const entries: { name: string; data: Uint8Array }[] = [];
     for (let i = 0; i < databaseList.length; i++) {
       await window.electronAPI.invoke("close-database", {
@@ -124,10 +124,15 @@ export const generateSnapshot = async () => {
     entries.push({ name: "config/config.json", data: new TextEncoder().encode(configStr) });
     if (!fs.existsSync(snapshotPath))
       fs.mkdirSync(snapshotPath, { recursive: true });
-    await window.electronAPI.admZip.create(
-      path.join(snapshotPath, fileName),
-      entries
-    );
+    const zip = new JSZip();
+    for (const entry of entries) {
+      zip.file(entry.name, entry.data);
+    }
+    const zipData = await zip.generateAsync({
+      type: "uint8array",
+      compression: "DEFLATE",
+    });
+    fs.writeFileSync(path.join(snapshotPath, fileName), zipData);
     const snapshots = getSnapshots();
     for (let i = 30; i < snapshots.length; i++) {
       fs.unlinkSync(path.join(snapshotPath, snapshots[i].file));
