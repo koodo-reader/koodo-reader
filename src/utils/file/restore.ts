@@ -230,7 +230,9 @@ export const restoreFromSnapshot = async (fileName: string) => {
     const dataPath = getStorageLocation() || "";
     const filePath = path.join(dataPath, "snapshot", fileName);
     if (!fs.existsSync(filePath)) return false;
-    const zip = await JSZip.loadAsync(new Uint8Array(fs.readFileSync(filePath)));
+    const zip = await JSZip.loadAsync(
+      new Uint8Array(fs.readFileSync(filePath))
+    );
     const databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
       await window.electronAPI.invoke("close-database", {
@@ -386,7 +388,6 @@ export const restoreFromOldBackup = async (zipEntries: any) => {
 };
 
 export const unzipOldConfig = async (zipEntries: any) => {
-  console.log("unzipOldConfig zipEntries", zipEntries);
   for (let i = 0; i < zipEntries.length; i++) {
     let zipEntry = zipEntries[i];
     if (oldConfigArr.indexOf(zipEntry.name) > -1) {
@@ -420,7 +421,6 @@ export const unzipOldConfig = async (zipEntries: any) => {
   return true;
 };
 export const unzipOldBook = async (zipEntries: any): Promise<boolean> => {
-  console.log("unzipOldBook zipEntries", zipEntries);
   const value: any = await localforage.getItem("books");
   if (!value || value.length === 0) {
     return true;
