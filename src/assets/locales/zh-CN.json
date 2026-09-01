@@ -610,6 +610,7 @@
   "From URL": "从 URL 导入",
   "Auto import folder": "自动导入文件夹",
   "Add local folder": "添加本地文件夹",
+  "Scan for new books": "扫描新图书",
   "No auto import folder added yet": "尚未添加自动导入文件夹",
   "Folder already added": "文件夹已添加",
   "Auto import complete": "自动导入完成",

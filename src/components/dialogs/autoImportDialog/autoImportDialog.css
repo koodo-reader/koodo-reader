@@ -28,16 +28,31 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding-right: 10px;
-  width: 100%;
   height: 40px;
+  text-align: right;
 }
 
 .auto-import-add-button .cloud-drive-label {
   width: auto;
   font-size: 16px;
   color: #f16464;
+}
+
+.auto-import-scan-button {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding-left: 10px;
+  height: 40px;
+  min-width: 150px;
+}
+
+.auto-import-scan-button .cloud-drive-label {
+  font-size: 16px;
+  color: #f16464;
+}
+
+.auto-import-scan-icon {
+  margin-right: 6px;
+  font-size: 15px;
 }
