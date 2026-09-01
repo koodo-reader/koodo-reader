@@ -2329,6 +2329,7 @@ const createMainWin = () => {
             let hasNewConfig = false;
             let totalEntries = 0;
             zf.on("entry", (entry) => {
+              console.log("Scanning entry:", entry);
               if (entry.fileName === "config/config.json") hasNewConfig = true;
               totalEntries++;
               zf.readEntry();
@@ -2347,6 +2348,7 @@ const createMainWin = () => {
       const message = error instanceof Error ? error.message : String(error);
       return { ok: false, error: message };
     }
+    console.log("Scan result:", scanResult);
     if (!scanResult.hasNewConfig) {
       return { ok: false, isNewBackup: false };
     }
