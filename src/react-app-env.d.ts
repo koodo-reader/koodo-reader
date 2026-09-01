@@ -28,12 +28,6 @@ interface ElectronFileAPI {
   };
 }
 
-interface ElectronZipAPI {
-  list(filePath: string): Promise<string[]>;
-  read(filePath: string, entryName: string): Promise<Uint8Array | null>;
-  create(outputPath: string, entries: { name: string; data: ArrayBuffer | ArrayBufferView }[]): Promise<void>;
-}
-
 interface ElectronAPI {
   invoke<T = any>(channel: string, ...args: unknown[]): Promise<T>;
   send(channel: string, ...args: unknown[]): void;
@@ -53,7 +47,6 @@ interface ElectronAPI {
   os: { platform(): string; homedir(): string };
   runtime: { platform: string; windowsStore: boolean };
   crypto: { md5(data: ArrayBuffer | ArrayBufferView): string; partialMd5(path: string): Promise<string>; fileMd5(path: string): Promise<string> };
-  admZip: ElectronZipAPI;
   shell: { openExternal(url: string): Promise<void> };
   clipboard: { readText(): string };
 }

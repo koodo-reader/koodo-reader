@@ -29,7 +29,6 @@ const fsExtra = require("fs-extra");
 const nodeCrypto = require("crypto");
 const yazl = require("yazl");
 const yauzl = require("yauzl");
-const AdmZip = require("adm-zip");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
@@ -1146,53 +1145,6 @@ const createMainWin = () => {
     }
   });
   ipcMain.handle("file-command", async (event, args) => runFileCommand(args));
-  // adm-zip：snapshot 生成/还原与旧备份格式回退使用（与备份主流程的
-  // yazl/yauzl 流式处理并存；此处处理的均为配置类小文件，同步解压即可）。
-  ipcMain.handle("zip-command", async (event, args) => {
-    if (!args || typeof args.operation !== "string") {
-      throw new TypeError("Invalid zip operation");
-    }
-    const stringValue = (value, key) => {
-      if (typeof value !== "string" || !value) {
-        throw new TypeError(`${key} must be a non-empty string`);
-      }
-      return value;
-    };
-    switch (args.operation) {
-      case "list": {
-        const filePath = stringValue(args.filePath, "filePath");
-        return new AdmZip(filePath)
-          .getEntries()
-          .filter((entry) => !entry.isDirectory)
-          .map((entry) => entry.entryName);
-      }
-      case "read": {
-        const filePath = stringValue(args.filePath, "filePath");
-        const entryName = stringValue(args.entryName, "entryName");
-        const entry = new AdmZip(filePath)
-          .getEntries()
-          .find((e) => e.entryName === entryName);
-        return entry && !entry.isDirectory ? entry.getData() : null;
-      }
-      case "create": {
-        const outputPath = stringValue(args.outputPath, "outputPath");
-        if (!Array.isArray(args.entries)) {
-          throw new TypeError("entries must be an array");
-        }
-        const zip = new AdmZip();
-        for (const entry of args.entries) {
-          if (!entry || typeof entry.name !== "string") {
-            throw new TypeError("Invalid zip entry");
-          }
-          zip.addFile(entry.name, Buffer.from(normalizeFileData(entry.data)));
-        }
-        zip.writeZip(outputPath);
-        return true;
-      }
-      default:
-        throw new Error(`Unsupported zip operation: ${args.operation}`);
-    }
-  });
   ipcMain.on("node-command-sync", (event, args) => {
     try {
       if (!args || typeof args.operation !== "string") {
