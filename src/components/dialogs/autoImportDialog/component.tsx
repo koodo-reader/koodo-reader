@@ -60,9 +60,7 @@ class AutoImportDialog extends React.Component<
       () => {
         this.saveFolders(this.state.folders);
         if (imported > 0) {
-          toast.success(
-            this.props.t("Auto import complete") + ": " + imported
-          );
+          toast.success(this.props.t("Auto import complete") + ": " + imported);
           this.props.handleFetchBooks();
         } else {
           toast.success(this.props.t("No new books found"));
@@ -99,18 +97,18 @@ class AutoImportDialog extends React.Component<
               <div className="loader"></div>
             </div>
           ) : this.state.folders.length === 0 ? (
-            <div
-              className="auto-import-empty"
-            >
-              {this.props.t("No auto import folder added yet")}
+            <div className="auto-import-empty">
+              <div>{this.props.t("No auto import folder added yet")}</div>
+              <div style={{ fontSize: "12px", opacity: 1, marginTop: "8px" }}>
+                {this.props.t(
+                  "Auto scan and import books when starting the app or when clicking Scan"
+                )}
+              </div>
             </div>
           ) : (
             this.state.folders.map((folder, index) => (
               <div key={index} className="cloud-drive-item auto-import-item">
-                <span
-                  className="cloud-drive-label"
-                  title={folder}
-                >
+                <span className="cloud-drive-label" title={folder}>
                   <span className="icon-folder auto-import-folder-icon"></span>
                   {folder}
                 </span>
