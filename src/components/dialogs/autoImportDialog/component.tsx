@@ -70,7 +70,6 @@ class AutoImportDialog extends React.Component<
   };
 
   handleScanAllFolders = async () => {
-    console.log("handleScanAllFolders", this.state.folders);
     if (this.state.folders.length === 0) {
       toast.error(this.props.t("No auto import folder added yet"));
       return;
