@@ -78,14 +78,6 @@ export const aiRequest = async (
   statusText: string;
   body: string;
 }> => {
-  if (isElectron) {
-    return await window.electronAPI.invoke("ai-request", {
-      url,
-      method,
-      headers,
-      body,
-    });
-  }
   const response = await fetch(url, {
     method,
     headers,

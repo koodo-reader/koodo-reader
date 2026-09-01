@@ -1500,21 +1500,6 @@ const createMainWin = () => {
 
     event.returnValue = "success";
   });
-  ipcMain.handle("ai-request", async (event, payload) => {
-    const { url, method, headers, body } = payload || {};
-    const response = await net.fetch(url, {
-      method,
-      headers: headers || undefined,
-      body: method === "POST" ? body : undefined,
-    });
-    const responseText = await response.text();
-    return {
-      ok: response.ok,
-      status: response.status,
-      statusText: response.statusText,
-      body: responseText,
-    };
-  });
   ipcMain.handle("generate-tts", async (event, voiceConfig) => {
     const { text, speed, pluginKey, config } = voiceConfig || {};
     const plugin = getVoicePlugin(pluginKey);

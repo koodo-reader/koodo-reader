@@ -71,7 +71,6 @@ const INVOKE_CHANNELS = new Set([
   "crypto-file-md5",
   "backup-path",
   "restore-path",
-  "ai-request",
 ]);
 const SEND_CHANNELS = new Set(["reader-close-ready", "tab-close-ready"]);
 const SEND_SYNC_CHANNELS = new Set([
