@@ -304,15 +304,20 @@ export const restoreFromfilePath = async (filePath: string) => {
   if (!result || result.ok !== true) {
     if (result && result.isNewBackup === false) {
       console.warn(
-        "Old backup format detected, falling back to AdmZip restoration."
+        "Old backup format detected, falling back to JSZip restoration."
       );
-      // 旧备份格式：主进程不流式处理，回退到 adm-zip（遗留兼容路径）
-      const admZip = window.electronAPI.admZip;
-      const oldNames = await admZip.list(filePath);
-      const oldEntries = oldNames.map((name: string) => ({
-        name,
-        getData: async () => (await admZip.read(filePath, name))!,
-      }));
+      // 旧备份格式：主进程不流式处理，回退到渲染进程 JSZip 解压（遗留兼容路径）
+      const fileBuffer = fs.readFileSync(filePath);
+      const zip = await JSZip.loadAsync(new Uint8Array(fileBuffer));
+      const oldEntries = Object.keys(zip.files)
+        .filter((name) => !zip.files[name].dir)
+        .map((name) => {
+          const entryName = name.split("/").pop() || "";
+          return {
+            name: entryName,
+            getData: async () => await zip.files[name].async("arraybuffer"),
+          };
+        });
       return await restoreFromOldBackup(oldEntries);
     }
     const message = (result && result.error) || "Restore failed";
@@ -377,6 +382,7 @@ export const restoreFromOldBackup = async (zipEntries: any) => {
 };
 
 export const unzipOldConfig = async (zipEntries: any) => {
+  console.log("unzipOldConfig zipEntries", zipEntries);
   for (let i = 0; i < zipEntries.length; i++) {
     let zipEntry = zipEntries[i];
     if (oldConfigArr.indexOf(zipEntry.name) > -1) {
@@ -410,6 +416,7 @@ export const unzipOldConfig = async (zipEntries: any) => {
   return true;
 };
 export const unzipOldBook = async (zipEntries: any): Promise<boolean> => {
+  console.log("unzipOldBook zipEntries", zipEntries);
   const value: any = await localforage.getItem("books");
   if (!value || value.length === 0) {
     return true;
