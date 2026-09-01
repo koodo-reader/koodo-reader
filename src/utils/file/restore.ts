@@ -230,7 +230,7 @@ export const restoreFromSnapshot = async (fileName: string) => {
     const dataPath = getStorageLocation() || "";
     const filePath = path.join(dataPath, "snapshot", fileName);
     if (!fs.existsSync(filePath)) return false;
-    const admZip = window.electronAPI.admZip;
+    const zip = await JSZip.loadAsync(new Uint8Array(fs.readFileSync(filePath)));
     const databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
       await window.electronAPI.invoke("close-database", {
@@ -238,7 +238,8 @@ export const restoreFromSnapshot = async (fileName: string) => {
         storagePath: getStorageLocation(),
       });
       const entryName = "config/" + databaseList[i] + ".db";
-      const data = await admZip.read(filePath, entryName);
+      const entry = zip.file(entryName);
+      const data = entry ? await entry.async("uint8array") : null;
       if (!data) continue;
       const destination = path.join(
         dataPath,
@@ -249,7 +250,10 @@ export const restoreFromSnapshot = async (fileName: string) => {
       fs.mkdirSync(path.dirname(destination), { recursive: true });
       fs.writeFileSync(destination, data);
     }
-    const configData = await admZip.read(filePath, "config/config.json");
+    const configEntry = zip.file("config/config.json");
+    const configData = configEntry
+      ? await configEntry.async("uint8array")
+      : null;
     if (configData) {
       try {
         const config = JSON.parse(new TextDecoder().decode(configData));
