@@ -115,11 +115,21 @@ export const chatStream = async (
   });
 
   return new Promise<{ done: boolean }>((resolve, reject) => {
+    let settled = false;
     const source = new SSE(chatUrl, {
       headers,
       payload,
       method: "POST",
     });
+
+    const finish = () => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      source.close();
+      resolve({ done: true });
+    };
 
     source.addEventListener("open", () => {
       console.info("ChatStream connection established.");
@@ -127,9 +137,8 @@ export const chatStream = async (
 
     source.addEventListener("message", (e: any) => {
       if (!e.data) return;
-      if (e.data === "[DONE]") {
-        source.close();
-        resolve({ done: true });
+      if (e.data.trim() === "[DONE]") {
+        finish();
         return;
       }
       try {
@@ -144,6 +153,10 @@ export const chatStream = async (
     });
 
     source.addEventListener("error", (e: any) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
       console.error("ChatStream error:", e);
       toast.error(e.data ? JSON.stringify(e.data) : "Unknown error", {
         id: "chat-stream-error",
@@ -151,6 +164,14 @@ export const chatStream = async (
       });
       source.close();
       reject(e);
+    });
+
+    // SSE 连接结束时（无论服务端是否发送 [DONE]）都要结束流，
+    // 否则上层 stopUpdateInterval 不会被调用，自动滚底定时器会一直运行
+    source.addEventListener("readystatechange", () => {
+      if (source.readyState === SSE.CLOSED) {
+        finish();
+      }
     });
   });
 };
