@@ -147,6 +147,10 @@ export const chatStream = async (
         if (text) {
           onMessage({ text });
         }
+        const finishReason = json?.choices?.[0]?.finish_reason;
+        if (finishReason) {
+          finish();
+        }
       } catch (err) {
         console.error("ChatStream parse error:", err);
       }
