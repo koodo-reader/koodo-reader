@@ -1,13 +1,9 @@
-import {
-  ConfigService,
-  TokenService,
-} from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import localforage from "localforage";
 import BookModel from "../../models/Book";
 import toast from "react-hot-toast";
 import { getStorageLocation, showDownloadProgress } from "../common";
-import { Buffer } from "buffer";
 import SyncService from "../storage/syncService";
 import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../storage/databaseService";
@@ -16,28 +12,65 @@ import i18n from "../../i18n";
 import { getCloudConfig } from "./common";
 import CoverUtil from "./coverUtil";
 import { LocalFileManager } from "./localFile";
+import TokenService from "../storage/tokenService";
 declare var window: any;
 
 class BookUtil {
-  static async addBook(key: string, format: string, buffer: ArrayBuffer) {
+  private static isDownloading = false;
+  private static downloadResolvers: Array<() => void> = [];
+
+  static async waitForDownload(): Promise<void> {
+    return new Promise((resolve) => {
+      BookUtil.downloadResolvers.push(resolve);
+    });
+  }
+
+  static startNextDownload(): void {
+    if (BookUtil.downloadResolvers.length > 0) {
+      const next = BookUtil.downloadResolvers.shift();
+      if (next) next();
+    } else {
+      BookUtil.isDownloading = false;
+    }
+  }
+
+  static async addBook(
+    key: string,
+    format: string,
+    buffer: ArrayBuffer,
+    sourcePath?: string
+  ) {
     // for both original books and cached boks
     if (ConfigService.getItem("defaultSyncOption")) {
       toast.loading(i18n.t("Uploading book"), {
         id: "add-book",
+        position: "bottom-center",
       });
     }
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dataPath = getStorageLocation() || "";
       try {
         if (!fs.existsSync(path.join(dataPath, "book"))) {
           fs.mkdirSync(path.join(dataPath, "book"), { recursive: true });
         }
-        fs.writeFileSync(
-          path.join(dataPath, "book", key + "." + format),
-          Buffer.from(buffer)
-        );
+        if (
+          sourcePath &&
+          sourcePath === path.join(dataPath, "book", key + "." + format)
+        ) {
+          // Source already targets the book library, skip IO entirely.
+        } else if (sourcePath && fs.existsSync(sourcePath)) {
+          fs.copyFileSync(
+            sourcePath,
+            path.join(dataPath, "book", key + "." + format)
+          );
+        } else {
+          fs.writeFileSync(
+            path.join(dataPath, "book", key + "." + format),
+            buffer
+          );
+        }
         await this.uploadBook(key, format);
       } catch (error) {
         const errorMessage =
@@ -54,26 +87,16 @@ class BookUtil {
       await this.uploadBook(key, format);
     }
   }
-  static deleteBook(key: string, format: string) {
+  static async deleteBook(key: string, format: string) {
     try {
       if (isElectron) {
-        const fs_extra = window.require("fs-extra");
-        const path = window.require("path");
+        const fs = window.electronAPI.fs;
+        const path = window.electronAPI.path;
         const dataPath = getStorageLocation() || "";
-        return new Promise<void>((resolve, reject) => {
-          try {
-            fs_extra.remove(
-              path.join(dataPath, `book`, key + "." + format),
-              (err) => {
-                if (err) throw err;
-                this.deleteCloudBook(key, format);
-                resolve();
-              }
-            );
-          } catch (e) {
-            reject();
-          }
+        await fs.rm(path.join(dataPath, "book", key + "." + format), {
+          force: true,
         });
+        await this.deleteCloudBook(key, format);
       } else {
         this.deleteCloudBook(key, format);
         if (ConfigService.getItem("isUseLocal") === "yes") {
@@ -84,25 +107,39 @@ class BookUtil {
       }
     } catch (error) {
       console.error("delete book error:", error);
+      throw error;
     }
   }
-  static isBookExist(key: string, format: string, bookPath: string) {
+  static isBookExist(
+    key: string,
+    format: string,
+    bookPath: string,
+    bookSize?: number
+  ) {
     return new Promise<boolean>((resolve) => {
       if (isElectron) {
-        var fs = window.require("fs");
-        var path = window.require("path");
-        let _bookPath = path.join(
+        var fs = window.electronAPI.fs;
+        var path = window.electronAPI.path;
+        let libraryBookPath = path.join(
           getStorageLocation() || "",
           `book`,
           key + "." + format
         );
 
         if (key.startsWith("cache")) {
-          resolve(fs.existsSync(_bookPath));
-        } else if (
-          (bookPath && fs.existsSync(bookPath)) ||
-          fs.existsSync(_bookPath)
-        ) {
+          resolve(fs.existsSync(libraryBookPath));
+        } else if (bookPath && fs.existsSync(bookPath)) {
+          resolve(true);
+        } else if (fs.existsSync(libraryBookPath)) {
+          // 校验文件大小，如果大小不匹配则删除损坏文件
+          if (bookSize !== undefined && bookSize > 0) {
+            let stat = fs.statSync(libraryBookPath);
+            if (stat && stat.size !== bookSize) {
+              fs.rmSync(libraryBookPath, { force: true });
+              resolve(false);
+              return;
+            }
+          }
           resolve(true);
         } else {
           resolve(false);
@@ -134,14 +171,14 @@ class BookUtil {
   ) {
     if (isElectron) {
       return new Promise<File | ArrayBuffer | boolean>((resolve) => {
-        var fs = window.require("fs");
-        var path = window.require("path");
+        var fs = window.electronAPI.fs;
+        var path = window.electronAPI.path;
         let _bookPath = path.join(
           getStorageLocation() || "",
           `book`,
           key + "." + format
         );
-        var data;
+        var data: any;
         if (fs.existsSync(_bookPath)) {
           data = fs.readFileSync(_bookPath);
         } else if (bookPath && fs.existsSync(bookPath)) {
@@ -174,8 +211,8 @@ class BookUtil {
   }
   static getBookPath(book: Book) {
     if (isElectron) {
-      var fs = window.require("fs");
-      var path = window.require("path");
+      var fs = window.electronAPI.fs;
+      var path = window.electronAPI.path;
       let _bookPath = path.join(
         getStorageLocation() || "",
         `book`,
@@ -203,11 +240,25 @@ class BookUtil {
     });
   }
   static async redirectBook(book: BookModel) {
+    let toastId = "offline-book-" + book.key;
+
+    // Wait for any ongoing download to complete before starting a new one
+    if (BookUtil.isDownloading) {
+      toast.loading(i18n.t("Waiting for download..."), {
+        id: toastId,
+        position: "bottom-center",
+      });
+      await BookUtil.waitForDownload();
+    }
+
+    BookUtil.isDownloading = true;
+
     if (
       !(await this.isBookExist(
         book.key,
         book.format.toLowerCase(),
-        book.path
+        book.path,
+        book.size
       )) &&
       !(await this.isBookExist("cache-" + book.key, "zip", book.path))
     ) {
@@ -215,10 +266,12 @@ class BookUtil {
         toast(
           i18n.t("Please add data source in the setting-Sync and backup first")
         );
+        BookUtil.startNextDownload();
         return;
       }
       toast.loading(i18n.t("Downloading"), {
-        id: "offline-book",
+        id: toastId,
+        position: "bottom-center",
       });
       if (
         (await TokenService.getToken("is_authed")) === "yes" &&
@@ -227,11 +280,12 @@ class BookUtil {
         let timer = showDownloadProgress(
           ConfigService.getItem("defaultSyncOption") || "",
           "cloud",
-          book.size
+          book.size,
+          toastId
         );
         let result = await this.downloadBook(book.key, book.format);
         clearInterval(timer);
-        toast.dismiss("offline-book");
+        toast.dismiss(toastId);
 
         let covers = await CoverUtil.getCloudCoverList();
         for (let cover of covers) {
@@ -242,17 +296,17 @@ class BookUtil {
 
         if (result) {
           toast.success(i18n.t("Download successful"), {
-            id: "offline-book",
+            id: toastId,
           });
         } else {
           let result = await this.downloadCacheBook(book.key);
           if (result) {
             toast.success(i18n.t("Download successful"), {
-              id: "offline-book",
+              id: toastId,
             });
           } else {
             toast.error(i18n.t("Download failed"), {
-              id: "offline-book",
+              id: toastId,
             });
             if (ConfigService.getItem("defaultSyncOption") === "adrive") {
               toast.error(
@@ -260,31 +314,36 @@ class BookUtil {
                   "Aliyun Drive imposes strict limits on concurrent downloads. It is recommended that you wait 10 seconds before attempting to download again."
                 ),
                 {
-                  id: "offline-book",
+                  id: toastId,
                 }
               );
             }
+            BookUtil.startNextDownload();
             return;
           }
         }
       } else {
         toast.error(i18n.t("Book not exists"), {
-          id: "offline-book",
+          id: toastId,
         });
+        BookUtil.startNextDownload();
         return;
       }
     }
+
+    BookUtil.startNextDownload();
+
     let ref = book.format.toLowerCase();
 
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-        window.require("electron").ipcRenderer.invoke("new-tab", {
+        window.electronAPI.invoke("new-tab", {
           url: `${window.location.href.split("#")[0]}#/${ref}/${
             book.key
           }?title=${book.name}&file=${book.key}`,
         });
       } else {
-        const { ipcRenderer } = window.require("electron");
+        const ipcRenderer = window.electronAPI;
         ipcRenderer.invoke("open-book", {
           url: `${window.location.href.split("#")[0]}#/${ref}/${
             book.key
@@ -311,11 +370,9 @@ class BookUtil {
   static reloadBooks(currentBook: BookModel) {
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-        window
-          .require("electron")
-          .ipcRenderer.invoke("reload-tab", { bookKey: currentBook.key });
+        window.electronAPI.invoke("reload-tab", { bookKey: currentBook.key });
       } else {
-        window.require("electron").ipcRenderer.invoke("reload-reader", {
+        window.electronAPI.invoke("reload-reader", {
           bookKey: currentBook.key,
         });
       }
@@ -329,7 +386,7 @@ class BookUtil {
       return false;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
 
@@ -351,7 +408,7 @@ class BookUtil {
       return false;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
 
@@ -385,7 +442,7 @@ class BookUtil {
       return;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
 
@@ -428,7 +485,7 @@ class BookUtil {
       return;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
       let result = await ipcRenderer.invoke("cloud-upload", {
@@ -473,7 +530,7 @@ class BookUtil {
       return;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
 
@@ -511,13 +568,25 @@ class BookUtil {
   }
   static async isBookOffline(key: string) {
     let book: Book = await DatabaseService.getRecord(key, "books");
-    return await this.isBookExist(key, book.format.toLowerCase(), book.path);
+    return await this.isBookExist(
+      key,
+      book.format.toLowerCase(),
+      book.path,
+      book.size
+    );
   }
   static async getLocalBookList() {
     let books: Book[] = (await DatabaseService.getAllRecords("books")) || [];
     let fileList: string[] = [];
     for (let book of books) {
-      if (await this.isBookExist(book.key, book.format.toLowerCase(), "")) {
+      if (
+        await this.isBookExist(
+          book.key,
+          book.format.toLowerCase(),
+          "",
+          book.size
+        )
+      ) {
         fileList.push(book.key + "." + book.format.toLowerCase());
       }
       if (await this.isBookExist("cache-" + book.key, "zip", "")) {
@@ -532,7 +601,7 @@ class BookUtil {
       return [];
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
 
       let tokenConfig = await getCloudConfig(service);
 
@@ -553,7 +622,7 @@ class BookUtil {
       return {};
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let placeholders = bookKeys.map(() => "?").join(",");
       let query = `SELECT key, name FROM books WHERE key IN (${placeholders})`;
       let results = await ipcRenderer.invoke("custom-database-command", {
@@ -581,7 +650,7 @@ class BookUtil {
   }
   static async getBookKeysWithSort(sortField: string, orderField: string) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       // Get all books first, then sort in JavaScript for natural sorting
       let results = await ipcRenderer.invoke("custom-database-command", {
         query: `SELECT key, ${sortField} FROM books`,
@@ -656,7 +725,7 @@ class BookUtil {
   }
   static async getBookByMd5(md5: string) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
         query: `SELECT * FROM books WHERE md5=? LIMIT 1`,
         data: [md5],
@@ -679,7 +748,7 @@ class BookUtil {
       return null;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
         query: `SELECT * FROM books WHERE md5 LIKE ? LIMIT 1`,
         data: [`%${md5}%`],
@@ -699,7 +768,7 @@ class BookUtil {
   }
   static async searchBooksByKeyword(keyword: string) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
         query: `SELECT * FROM books WHERE name LIKE ? OR author LIKE ?`,
         data: [`%${keyword}%`, `%${keyword}%`],
@@ -724,7 +793,7 @@ class BookUtil {
   }
   static async getBookList() {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
         query: `SELECT key, format, md5, path FROM books`,
         dbName: "books",

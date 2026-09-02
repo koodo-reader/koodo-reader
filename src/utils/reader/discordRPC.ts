@@ -14,7 +14,7 @@ export function updateDiscordPresence(book: BookModel): void {
   const percentage = getBookPercentage(book.key);
 
   try {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     ipcRenderer.invoke("discord-rpc-update", {
       bookTitle: book.name || "Unknown title",
       author: book.author || "Unknown author",
@@ -33,7 +33,7 @@ export function clearDiscordPresence(): void {
   if (!isDiscordRPCEnabled()) return;
 
   try {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     ipcRenderer.invoke("discord-rpc-clear");
   } catch (e) {
     console.warn("Failed to clear Discord RPC:", e);
@@ -42,7 +42,7 @@ export function clearDiscordPresence(): void {
 
 function isDiscordRPCEnabled(): boolean {
   try {
-    if (!window || !window.require) return false;
+    if (!window || !window.electronAPI) return false;
     return ConfigService.getReaderConfig("isEnableDiscordRPC") === "yes";
   } catch {
     return false;

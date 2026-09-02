@@ -64,7 +64,7 @@ export async function createHighlight(params: DigestParams): Promise<void> {
   text = text.replace(/\f/g, "");
 
   let range = JSON.stringify(
-    await htmlBook.rendition.getHightlightCoords(chapterDocIndex)
+    await htmlBook.rendition.getHighlightCoords(chapterDocIndex)
   );
 
   let highlight = new Note(
@@ -82,7 +82,12 @@ export async function createHighlight(params: DigestParams): Promise<void> {
 
   await DatabaseService.saveRecord(highlight, "notes");
   await htmlBook.rendition.createOneNote(highlight, onNoteClick ?? (() => {}));
-  let noteSyncManager = new NoteSyncManager(DatabaseService, ConfigService);
+  let noteSyncManager = new NoteSyncManager(
+    DatabaseService,
+    ConfigService,
+    window.electronAPI?.fs,
+    window.electronAPI?.path
+  );
   noteSyncManager.syncNote(highlight, bookKey);
   onSuccess?.();
 }

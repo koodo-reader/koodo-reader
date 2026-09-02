@@ -13,7 +13,12 @@ import PopupBox from "../../components/popups/popupBox";
 import Note from "../../models/Note";
 import PageWidget from "../pageWidget";
 import {
+  BRUSH_COLORS,
   BRUSH_WIDTHS,
+  HIGHLIGHTER_COLORS,
+  HIGHLIGHTER_WIDTHS,
+  SHAPE_TYPES,
+  TEXT_COLORS,
   getDefaultOcrEngine,
   getDefaultOcrLang,
   getPageWidth,
@@ -83,9 +88,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.scale,
         parseInt(this.props.margin),
         this.props.isNavLocked,
-        this.props.isSettingLocked
+        this.props.isSettingLocked || this.props.isDockedRight
       )
     );
+    // 刷新页面后，若 popupBox 处于固定右侧状态，自动恢复显示 popupAssist
+    if (this.props.isDockedRight) {
+      this.props.handleMenuMode("assistant");
+      this.props.handleOpenMenu(true);
+    }
     this.props.handleRenderBookFunc(this.handleRenderBook);
     this.resizeHandler = throttle(() => {
       this.setState(
@@ -94,7 +104,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           this.props.scale,
           parseInt(this.props.margin),
           this.props.isNavLocked,
-          this.props.isSettingLocked
+          this.props.isSettingLocked || this.props.isDockedRight
         )
       );
       if (lock) {
@@ -117,7 +127,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       nextProps.scale !== this.props.scale ||
       nextProps.readerMode !== this.props.readerMode ||
       nextProps.isNavLocked !== this.props.isNavLocked ||
-      nextProps.isSettingLocked !== this.props.isSettingLocked
+      nextProps.isSettingLocked !== this.props.isSettingLocked ||
+      nextProps.isDockedRight !== this.props.isDockedRight
     ) {
       this.setState(
         getPageWidth(
@@ -125,7 +136,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           nextProps.scale,
           parseInt(nextProps.margin),
           nextProps.isNavLocked,
-          nextProps.isSettingLocked
+          nextProps.isSettingLocked || nextProps.isDockedRight
         )
       );
     }
@@ -318,10 +329,45 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             this.props.currentBook.description.indexOf("scanned") > -1
               ? "yes"
               : "no",
-          brushColor: ConfigService.getReaderConfig("brushColor") || "#FF0000",
+          brushColor:
+            ConfigService.getReaderConfig("annotationBrushColor") ||
+            BRUSH_COLORS[0],
           brushWidth: parseFloat(
-            ConfigService.getReaderConfig("brushWidth") || BRUSH_WIDTHS[1] + ""
+            ConfigService.getReaderConfig("annotationBrushWidth") ||
+              BRUSH_WIDTHS[1] + ""
           ),
+          annotationStyle:
+            ConfigService.getReaderConfig("annotationStyle") || "brush",
+          highlighterColor:
+            ConfigService.getReaderConfig("annotationHighlighterColor") ||
+            HIGHLIGHTER_COLORS[0],
+          highlighterWidth: parseFloat(
+            ConfigService.getReaderConfig("annotationHighlighterWidth") ||
+              HIGHLIGHTER_WIDTHS[1] + ""
+          ),
+          highlighterOpacity: parseFloat(
+            ConfigService.getReaderConfig("annotationHighlighterOpacity") ||
+              "0.4"
+          ),
+          shapeType:
+            ConfigService.getReaderConfig("annotationShapeType") ||
+            SHAPE_TYPES[0],
+          shapeColor:
+            ConfigService.getReaderConfig("annotationShapeColor") ||
+            BRUSH_COLORS[0],
+          shapeWidth: parseFloat(
+            ConfigService.getReaderConfig("annotationShapeWidth") ||
+              BRUSH_WIDTHS[1] + ""
+          ),
+          textSize: parseFloat(
+            ConfigService.getReaderConfig("annotationTextSize") || "24"
+          ),
+          textFont:
+            ConfigService.getReaderConfig("annotationTextFont") ||
+            "sans-serif",
+          textColor:
+            ConfigService.getReaderConfig("annotationTextColor") ||
+            TEXT_COLORS[0],
           isKeepPDFBackground: ConfigService.getReaderConfig(
             "isKeepPDFBackground"
           ),
@@ -620,12 +666,13 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             } as any)}
           />
         ) : null}
-        {this.props.isOpenMenu &&
-        this.props.htmlBook &&
-        (this.props.menuMode === "dict" ||
-          this.props.menuMode === "trans" ||
-          this.props.menuMode === "assistant" ||
-          this.props.menuMode === "note") ? (
+        {this.props.htmlBook &&
+        (this.props.isDockedRight ||
+          (this.props.isOpenMenu &&
+            (this.props.menuMode === "dict" ||
+              this.props.menuMode === "trans" ||
+              this.props.menuMode === "assistant" ||
+              this.props.menuMode === "note"))) ? (
           <PopupBox
             {...({
               rendition: this.props.htmlBook.rendition,

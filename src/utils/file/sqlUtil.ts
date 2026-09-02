@@ -15,8 +15,8 @@ class SqlUtil {
       let config = {
         locateFile: (filename) => {
           if (isElectron) {
-            const path = window.require("path");
-            const { ipcRenderer } = window.require("electron");
+            const path = window.electronAPI.path;
+            const ipcRenderer = window.electronAPI;
             return `${path.join(
               ipcRenderer.sendSync("get-dirname", "ping"),
               "/build/lib/sqljs-wasm/" + filename

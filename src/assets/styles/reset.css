@@ -26,6 +26,10 @@ canvas {
   font: inherit;
   vertical-align: baseline;
 }
+strong,
+b {
+  font-weight: bold;
+}
 html {
   width: 100%;
 }
@@ -75,8 +79,18 @@ body {
 
 html,
 body {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif !important;
   overflow-x: hidden !important;
   /* font-weight: 500; */
 }
@@ -100,8 +114,18 @@ input,
 textarea,
 input::placeholder,
 textarea::placeholder {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif !important;
   font-weight: 500 !important;
   line-height: 1.25 !important;
 }

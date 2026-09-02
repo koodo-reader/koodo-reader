@@ -8,7 +8,6 @@ import {
 import {
   ConfigService,
   KookitConfig,
-  TokenService,
   UserRequest,
 } from "../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../package.json";
@@ -16,6 +15,7 @@ import toast from "react-hot-toast";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
 import { getServerRegion, vexComfirmAsync } from "../common";
+import TokenService from "../storage/tokenService";
 declare var window: any;
 let userRequest: UserRequest | undefined;
 
@@ -23,7 +23,7 @@ const checkCloudUrlViaElectron = async (
   url: string
 ): Promise<string | null> => {
   try {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     const result = await ipcRenderer.invoke("check-cloud-url", { url });
     if (result.ok) return null;
     const reasonMap: Record<string, string> = {
@@ -54,7 +54,7 @@ const checkCloudUrlViaElectron = async (
 export const getDeviceName = async (): Promise<string> => {
   if (isElectron) {
     try {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       const name = await ipcRenderer.invoke("get-device-name");
       return name?.trim() || "Desktop";
     } catch (e) {

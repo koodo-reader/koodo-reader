@@ -75,7 +75,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     isElectron
       ? {
           registerUnloadHandler(callback: () => void): () => void {
-            const { ipcRenderer } = (window as any).require("electron");
+            const ipcRenderer = window.electronAPI;
             // Separate reader window close
             ipcRenderer.on("before-reader-close", callback);
             // In-app tab (WebContentsView) close
@@ -86,7 +86,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             };
           },
           onBeforeClose(): void {
-            const { ipcRenderer } = (window as any).require("electron");
+            const ipcRenderer = window.electronAPI;
             // Reply to whichever close signal is active
             ipcRenderer.send("reader-close-ready");
             ipcRenderer.send("tab-close-ready");
@@ -401,7 +401,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           style={{
             position: "absolute",
             bottom: 10,
-            right: this.props.isSettingLocked ? 315 : 15,
+            right:
+              this.props.isSettingLocked || this.props.isDockedRight ? 315 : 15,
             display: "flex",
             flexDirection: "column-reverse",
             alignItems: "center",
@@ -495,8 +496,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           style={{
             position: "absolute",
             top: "0px",
-            right: this.props.isSettingLocked ? 300 : 5,
-            zIndex: 11,
+            right:
+              this.props.isSettingLocked || this.props.isDockedRight ? 300 : 5,
+            zIndex: 10,
             width: "120px",
             display: "flex",
             alignItems: "center",
@@ -644,7 +646,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               this.handleEnterReader("top");
             }}
           >
-            <span className="icon-grid reader-setting-icon"></span>
+            <span
+              className="icon-grid reader-setting-icon"
+              style={{ opacity: 1 }}
+            ></span>
           </div>
         </div>
         {this.props.isSettingOpen && (
@@ -679,7 +684,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           className="right-panel"
           onMouseEnter={() => this.handleEdgeMouseEnter("right")}
           onMouseLeave={() => this.handleEdgeMouseLeave("right")}
-          style={this.state.hoverPanel === "right" ? { opacity: 0.5 } : {}}
+          style={
+            this.state.hoverPanel === "right"
+              ? {
+                  opacity: 0.5,
+                  right: this.props.isDockedRight ? "299px" : "0px",
+                }
+              : { right: this.props.isDockedRight ? "299px" : "0px" }
+          }
           onClick={() => {
             this.handleEnterReader("right");
           }}
@@ -694,13 +706,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               ? {
                   opacity: 0.5,
                   marginLeft:
-                    this.props.isNavLocked && !this.props.isSettingLocked
+                    this.props.isNavLocked &&
+                    !this.props.isSettingLocked &&
+                    !this.props.isDockedRight
                       ? 150
                       : 0,
                 }
               : {
                   marginLeft:
-                    this.props.isNavLocked && !this.props.isSettingLocked
+                    this.props.isNavLocked &&
+                    !this.props.isSettingLocked &&
+                    !this.props.isDockedRight
                       ? 150
                       : 0,
                 }
@@ -724,13 +740,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               ? {
                   opacity: 0.5,
                   marginLeft:
-                    this.props.isNavLocked && !this.props.isSettingLocked
+                    this.props.isNavLocked &&
+                    !this.props.isSettingLocked &&
+                    !this.props.isDockedRight
                       ? 150
                       : 0,
                 }
               : {
                   marginLeft:
-                    this.props.isNavLocked && !this.props.isSettingLocked
+                    this.props.isNavLocked &&
+                    !this.props.isSettingLocked &&
+                    !this.props.isDockedRight
                       ? 150
                       : 0,
                 }
@@ -793,7 +813,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   marginLeft:
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
-                      : !this.props.isNavLocked && this.props.isSettingLocked
+                      : !this.props.isNavLocked &&
+                          (this.props.isSettingLocked ||
+                            this.props.isDockedRight)
                         ? -150
                         : 0,
                 }
@@ -802,7 +824,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   marginLeft:
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
-                      : !this.props.isNavLocked && this.props.isSettingLocked
+                      : !this.props.isNavLocked &&
+                          (this.props.isSettingLocked ||
+                            this.props.isDockedRight)
                         ? -150
                         : 0,
                 }
@@ -824,7 +848,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   marginLeft:
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
-                      : !this.props.isNavLocked && this.props.isSettingLocked
+                      : !this.props.isNavLocked &&
+                          (this.props.isSettingLocked ||
+                            this.props.isDockedRight)
                         ? -150
                         : 0,
                 }
@@ -833,7 +859,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   marginLeft:
                     this.props.isNavLocked && !this.props.isSettingLocked
                       ? 150
-                      : !this.props.isNavLocked && this.props.isSettingLocked
+                      : !this.props.isNavLocked &&
+                          (this.props.isSettingLocked ||
+                            this.props.isDockedRight)
                         ? -150
                         : 0,
                 }

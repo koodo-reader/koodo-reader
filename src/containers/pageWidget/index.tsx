@@ -16,6 +16,7 @@ const mapStateToProps = (state: stateType) => {
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
     isSettingLocked: state.reader.isSettingLocked,
+    isDockedRight: state.reader.isDockedRight,
     backgroundColor: state.reader.backgroundColor,
     isHideFooter: state.reader.isHideFooter,
     isHideHeader: state.reader.isHideHeader,

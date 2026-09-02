@@ -234,7 +234,7 @@ const handleShortcut = (
   if (matchShortcut(event, shortcuts.bossKey)) {
     if (isElectron) {
       event.preventDefault();
-      window.require("electron").ipcRenderer.invoke("hide-reader", "ping");
+      window.electronAPI.invoke("hide-reader", "ping");
     }
   }
   if (matchShortcut(event, shortcuts.exitReader)) {
@@ -247,7 +247,7 @@ const handleShortcut = (
       TTSUtil.pauseAudio();
       if (isElectron) {
         if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-          window.require("electron").ipcRenderer.invoke("exit-tab", "ping");
+          window.electronAPI.invoke("exit-tab", "ping");
         } else {
           window.close();
         }
@@ -270,7 +270,7 @@ const handleShortcut = (
         "isMergeWord",
         ConfigService.getReaderConfig("isMergeWord") === "yes" ? "no" : "yes"
       );
-      window.require("electron").ipcRenderer.invoke("switch-moyu", "ping");
+      window.electronAPI.invoke("switch-moyu", "ping");
     }
   }
   if (matchShortcut(event, shortcuts.searchInBook)) {

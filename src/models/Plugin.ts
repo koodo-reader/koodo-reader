@@ -8,8 +8,8 @@ class Plugin {
   config: object;
   langList: object | any[];
   voiceList: object | any[];
-  scriptSHA256: string;
-  script: string;
+  scriptSHA256?: string;
+  script?: string;
   constructor(
     key: string,
     type: string,
@@ -20,8 +20,8 @@ class Plugin {
     config: object,
     langList: any,
     voiceList: any,
-    scriptSHA256: string,
-    script: string
+    scriptSHA256?: string,
+    script?: string
   ) {
     this.key = key;
     this.type = type;

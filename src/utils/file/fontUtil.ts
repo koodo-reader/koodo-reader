@@ -72,8 +72,8 @@ class FontUtil {
     const filename = `${fontKey}.${type}`;
 
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dir = path.join(getStorageLocation() || "", FONT_FOLDER);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
@@ -98,8 +98,8 @@ class FontUtil {
     const filename = `${fontKey}.${ext}`;
 
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dir = path.join(getStorageLocation() || "", FONT_FOLDER);
       if (!fs.existsSync(dir)) return null;
       const files: string[] = fs.readdirSync(dir);
@@ -139,8 +139,8 @@ class FontUtil {
     const ext = meta?.type;
 
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dir = path.join(getStorageLocation() || "", FONT_FOLDER);
       if (!fs.existsSync(dir)) return;
       const files: string[] = fs.readdirSync(dir);
@@ -171,7 +171,7 @@ class FontUtil {
   }
 
   static deleteFontMeta(fontKey: string): void {
-    ConfigService.setObjectConfig(fontKey, null, "customFonts");
+    ConfigService.deleteObjectConfig(fontKey, "customFonts");
   }
 
   static getFontIds(): string[] {

@@ -181,6 +181,12 @@
   word-break: break-all;
   word-wrap: break-word;
 }
+.nav-search-total {
+  padding: 4px 8px 8px;
+  font-size: 14px;
+  opacity: 0.7;
+  font-weight: 500;
+}
 .content-search-text {
   color: red !important;
   font-weight: 600 !important;

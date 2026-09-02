@@ -21,6 +21,22 @@ class NavList extends React.Component<NavListProps, NavListState> {
   constructor(props: NavListProps) {
     super(props);
     this.highlightUtil = new HighlightUtil(ConfigService);
+    let sortCode = 1;
+    let orderCode = 2;
+    const navSortCode = ConfigService.getReaderConfig("navSortCode");
+    if (navSortCode) {
+      try {
+        const parsed = JSON.parse(navSortCode);
+        if (parsed && (parsed.sort === 1 || parsed.sort === 2)) {
+          sortCode = parsed.sort;
+        }
+        if (parsed && (parsed.order === 1 || parsed.order === 2)) {
+          orderCode = parsed.order;
+        }
+      } catch {
+        // ignore malformed config, fall back to defaults
+      }
+    }
     this.state = {
       deleteIndex: -1,
       currentData: [],
@@ -28,6 +44,9 @@ class NavList extends React.Component<NavListProps, NavListState> {
       searchKeyword: "",
       searchResults: [],
       isComposing: false,
+      isSortOpen: false,
+      sortCode,
+      orderCode,
     };
     this.searchInputRef = React.createRef<HTMLInputElement>();
   }
@@ -143,6 +162,8 @@ class NavList extends React.Component<NavListProps, NavListState> {
 
   handleCompositionStart = () => {
     this.setState({ isComposing: true });
+    ConfigService.setReaderConfig("isTempLocked", "yes");
+    ConfigService.setReaderConfig("isNavLocked", "yes");
   };
 
   handleCompositionEnd = (event: React.CompositionEvent<HTMLInputElement>) => {
@@ -150,6 +171,10 @@ class NavList extends React.Component<NavListProps, NavListState> {
     this.setState({ isComposing: false, searchKeyword: keyword }, () => {
       this.handleSearch(keyword);
     });
+    if (ConfigService.getReaderConfig("isTempLocked") === "yes") {
+      ConfigService.setReaderConfig("isNavLocked", "");
+      ConfigService.setReaderConfig("isTempLocked", "");
+    }
   };
 
   async handleJump(cfi: string) {
@@ -197,9 +222,9 @@ class NavList extends React.Component<NavListProps, NavListState> {
     if (currentTab === "bookmarks") {
       this.setState(
         {
-          currentData: bookmarks
-            .filter((item) => item.bookKey === currentBook.key)
-            .reverse(),
+          currentData: bookmarks.filter(
+            (item) => item.bookKey === currentBook.key
+          ),
         },
         () => {
           if (this.state.searchKeyword.trim()) {
@@ -284,6 +309,35 @@ class NavList extends React.Component<NavListProps, NavListState> {
 
     return this.highlightUtil.buildHighlightPreviewStyle(styleType, color);
   };
+  toggleSortOpen = () => {
+    this.setState({ isSortOpen: !this.state.isSortOpen });
+  };
+  handleSortSelect = (code: number) => {
+    this.setState({ sortCode: code, isSortOpen: false }, () => {
+      ConfigService.setReaderConfig(
+        "navSortCode",
+        JSON.stringify({ sort: code, order: this.state.orderCode })
+      );
+    });
+  };
+  handleOrderSelect = (code: number) => {
+    this.setState({ orderCode: code, isSortOpen: false }, () => {
+      ConfigService.setReaderConfig(
+        "navSortCode",
+        JSON.stringify({ sort: this.state.sortCode, order: code })
+      );
+    });
+  };
+  getSortedData = (data: (Bookmark | Note)[]) => {
+    const { sortCode, orderCode } = this.state;
+    return [...data].sort((a: any, b: any) => {
+      const diff =
+        sortCode === 1
+          ? (Number(a.key) || 0) - (Number(b.key) || 0)
+          : (Number(a.percentage) || 0) - (Number(b.percentage) || 0);
+      return orderCode === 1 ? diff : -diff;
+    });
+  };
   renderBookNavList = (displayData: (Bookmark | Note)[]) => {
     return displayData.map((item: any, index: number) => {
       const bookmarkProps = {
@@ -349,9 +403,10 @@ class NavList extends React.Component<NavListProps, NavListState> {
   render() {
     const isSearching =
       this.state.searchKeyword.trim().length > 0 && !this.state.isComposing;
-    const displayData = isSearching
+    const baseList = isSearching
       ? this.state.searchResults
       : this.state.currentData;
+    const displayData = this.getSortedData(baseList);
 
     return (
       <div className="book-bookmark-container">
@@ -359,12 +414,90 @@ class NavList extends React.Component<NavListProps, NavListState> {
           <div>
             <Trans>Total</Trans>: {this.state.currentData.length}
           </div>
-          <div onClick={this.toggleSearch} className="book-nav-expand">
-            <span
-              className="icon-search"
-              style={{ paddingRight: "5px" }}
-            ></span>
-            <Trans>{this.state.isSearchOpen ? "Cancel" : "Search"}</Trans>
+          <div className="book-nav-actions">
+            <div className="nav-sort-wrap">
+              <div className="book-nav-expand" onClick={this.toggleSortOpen}>
+                <span
+                  className="icon-sort-desc"
+                  style={{ paddingRight: "5px" }}
+                ></span>
+                <Trans>Sort</Trans>
+              </div>
+              {this.state.isSortOpen && (
+                <div className="sort-dialog-container nav-sort-dialog-container">
+                  <ul className="sort-by-category">
+                    {["Sort by Date", "Reading progress"].map((item, index) => {
+                      return (
+                        <li
+                          className="sort-by-category-list"
+                          onClick={() => {
+                            this.handleSortSelect(index + 1);
+                          }}
+                          style={
+                            this.state.sortCode === index + 1
+                              ? {}
+                              : { opacity: 0.34 }
+                          }
+                          key={index + 1}
+                        >
+                          <Trans>{item}</Trans>
+                          {this.state.sortCode === index + 1 && (
+                            <span
+                              className="icon-check"
+                              style={{ fontWeight: "bold" }}
+                            ></span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <div className="sort-dialog-seperator"></div>
+                  <ul className="sort-by-order">
+                    <li
+                      className="sort-by-order-list"
+                      onClick={() => {
+                        this.handleOrderSelect(1);
+                      }}
+                      style={
+                        this.state.orderCode === 1 ? {} : { opacity: 0.34 }
+                      }
+                    >
+                      <Trans>Ascend</Trans>
+                      {this.state.orderCode === 1 && (
+                        <span
+                          className="icon-check"
+                          style={{ fontWeight: "bold" }}
+                        ></span>
+                      )}
+                    </li>
+                    <li
+                      className="sort-by-order-list"
+                      onClick={() => {
+                        this.handleOrderSelect(2);
+                      }}
+                      style={
+                        this.state.orderCode === 2 ? {} : { opacity: 0.34 }
+                      }
+                    >
+                      <Trans>Descend</Trans>
+                      {this.state.orderCode === 2 && (
+                        <span
+                          className="icon-check"
+                          style={{ fontWeight: "bold" }}
+                        ></span>
+                      )}
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div onClick={this.toggleSearch} className="book-nav-expand">
+              <span
+                className="icon-search"
+                style={{ paddingRight: "5px" }}
+              ></span>
+              <Trans>{this.state.isSearchOpen ? "Cancel" : "Search"}</Trans>
+            </div>
           </div>
         </div>
         {this.state.isSearchOpen && (

@@ -247,13 +247,13 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
               ? ConfigService.getReaderConfig("textColor")
               : "",
             width:
-              !this.props.isNavLocked && !this.props.isSettingLocked
+              !this.props.isNavLocked && !this.props.isSettingLocked && !this.props.isDockedRight
                 ? "100%"
-                : this.props.isNavLocked && this.props.isSettingLocked
+                : this.props.isNavLocked && (this.props.isSettingLocked || this.props.isDockedRight)
                   ? "calc(100% - 600px)"
                   : "calc(100% - 300px)",
             left: !this.props.isNavLocked ? "0" : "300px",
-            right: !this.props.isSettingLocked ? "0" : "300px",
+            right: !this.props.isSettingLocked && !this.props.isDockedRight ? "0" : "300px",
             backgroundColor: this.props.backgroundColor,
             filter: `brightness(${
               ConfigService.getReaderConfig("brightness") || 1

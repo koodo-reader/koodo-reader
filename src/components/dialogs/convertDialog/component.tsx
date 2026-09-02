@@ -111,7 +111,8 @@ class ConvertDialog extends React.Component<
             left: "auto",
             top: "50px",
             width: "240px",
-            right: this.props.isSettingLocked ? 325 : 20,
+            right:
+              this.props.isSettingLocked || this.props.isDockedRight ? 325 : 20,
           }}
         >
           <ul className="sort-by-category">
@@ -175,9 +176,20 @@ class ConvertDialog extends React.Component<
                       this.props.currentBook.description.indexOf("scanned") > -1
                         ? "scannedOcrLang"
                         : "textOcrLang",
-                      ocrEngineList.find(
-                        (item) => item.value === event.target.value
-                      )?.lang || "general"
+                      ocrEngineList
+                        .filter((item) => {
+                          if (
+                            !isElectron &&
+                            this.props.currentBook.description.indexOf(
+                              "scanned"
+                            ) !== -1
+                          ) {
+                            return item.value !== "system-ocr";
+                          }
+                          return true;
+                        })
+                        .find((item) => item.value === event.target.value)
+                        ?.lang || "general"
                     );
                   }
                   if (
@@ -190,19 +202,31 @@ class ConvertDialog extends React.Component<
                   this.forceUpdate();
                 }}
               >
-                {ocrEngineList.map((item) => (
-                  <option
-                    value={item.value}
-                    key={item.value}
-                    className="lang-setting-option"
-                  >
-                    {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
-                  </option>
-                ))}
+                {ocrEngineList
+                  .filter((item) => {
+                    if (
+                      !isElectron &&
+                      this.props.currentBook.description.indexOf("scanned") !==
+                        -1
+                    ) {
+                      return item.value !== "system-ocr";
+                    }
+                    return true;
+                  })
+                  .map((item) => (
+                    <option
+                      value={item.value}
+                      key={item.value}
+                      className="lang-setting-option"
+                    >
+                      {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+                    </option>
+                  ))}
               </select>
             </div>
             {this.props.currentBook.description.indexOf("scanned") === -1 &&
-            ConfigService.getReaderConfig("textOcrEngine") === "system-ocr" ? (
+            (ConfigService.getReaderConfig("textOcrEngine") === "system-ocr" ||
+              !ConfigService.getReaderConfig("textOcrEngine")) ? (
               <>
                 <div>
                   <div

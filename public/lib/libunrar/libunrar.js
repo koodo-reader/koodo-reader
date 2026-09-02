@@ -403,8 +403,18 @@ var _readRARContent = function (data, password,type,callbackFn) {
   //console.log(res)
   if (res !== ERAR_END_ARCHIVE) {
     cleanup(data,handle,cb,type)
-    reportReadHeaderError(res)
-    return null
+    // 读到结束标记之前发生非正常中断(典型：归档尾部记录了库无法识别的
+    // 追加数据 / recovery record，旧 RAR4 引擎会判为 ERAR_BAD_DATA)。
+    // 此时若已经成功解出文件，这些文件仍是有效的，不应随尾部一起整体丢弃。
+    // 若连第一个文件头都没解出来，仍是致命错误，保留原有抛错。
+    if (returnVal.length === 0) {
+      reportReadHeaderError(res)
+      return null
+    }
+    if (typeof console !== 'undefined' && console.warn) {
+      console.warn('libunrar: trailing read error (code ' + res + '), returning ' + returnVal.length + ' extracted file(s)')
+    }
+    return makeDirTree(returnVal)
   }
 
   cleanup(data,handle,cb,type)

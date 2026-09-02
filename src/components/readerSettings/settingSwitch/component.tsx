@@ -234,6 +234,7 @@ class SettingSwitch extends React.Component<
         <div className="single-control-switch-container" key="isWordDefinition">
           <span className="single-control-switch-title">
             <Trans>Enable word definitions</Trans>
+            <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
           </span>
           <span
             className="single-control-switch"
@@ -247,6 +248,14 @@ class SettingSwitch extends React.Component<
                   this.props.handleSetting(true);
                   this.props.handleSettingMode("account");
                   ConfigService.setReaderConfig("fullTranslationMode", "no");
+                  return;
+                }
+                if (this.state.isBionic) {
+                  toast.error(
+                    this.props.t(
+                      "Word definitions and fast reading mode cannot be enabled at the same time"
+                    )
+                  );
                   return;
                 }
                 let lang = "";
@@ -403,7 +412,17 @@ class SettingSwitch extends React.Component<
                     isShowPageBorder: this.props.handleShowBorder,
                   };
 
-                  if (propName === "isShowPageBorder") {
+                  if (propName === "isBionic") {
+                    if (!this.state.isBionic && this.state.isWordDefinition) {
+                      toast.error(
+                        this.props.t(
+                          "Word definitions and fast reading mode cannot be enabled at the same time"
+                        )
+                      );
+                      return;
+                    }
+                    this._handleChange(propName);
+                  } else if (propName === "isShowPageBorder") {
                     this.props.handleShowBorder(!this.state.isShowPageBorder);
                     if (!this.state.isShowPageBorder) {
                       this.props.handleHideBackground(true);

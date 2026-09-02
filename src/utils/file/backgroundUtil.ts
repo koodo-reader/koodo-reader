@@ -34,8 +34,8 @@ class BackgroundUtil {
     const filename = `${id}.${extension}`;
 
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dir = path.join(getStorageLocation() || "", BG_FOLDER);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
@@ -54,8 +54,8 @@ class BackgroundUtil {
   /** Load image data URL by id. Returns empty string if not found. */
   static async loadImage(id: string, extension?: string): Promise<string> {
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dir = path.join(getStorageLocation() || "", BG_FOLDER);
       if (!fs.existsSync(dir)) return "";
       const files: string[] = fs.readdirSync(dir);
@@ -64,7 +64,7 @@ class BackgroundUtil {
       const filePath = path.join(dir, file);
       const ext = file.split(".").pop() || "png";
       const buf: Buffer = fs.readFileSync(filePath);
-      const base64 = buf.toString("base64");
+      const base64 = Buffer.from(buf).toString("base64");
       const mime = ext === "jpg" ? "image/jpeg" : `image/${ext}`;
       return `data:${mime};base64,${base64}`;
     } else {
@@ -86,8 +86,8 @@ class BackgroundUtil {
   /** Delete image file by id. */
   static async deleteImage(id: string): Promise<void> {
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dir = path.join(getStorageLocation() || "", BG_FOLDER);
       if (!fs.existsSync(dir)) return;
       const files: string[] = fs.readdirSync(dir);
@@ -173,7 +173,7 @@ class BackgroundUtil {
   }
 
   static deleteImageMeta(id: string): void {
-    ConfigService.setObjectConfig(id, null, "customBackgrounds");
+    ConfigService.deleteObjectConfig(id, "customBackgrounds");
   }
 
   /** Return all stored image ids using ConfigService list config */

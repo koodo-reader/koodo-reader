@@ -107,7 +107,6 @@
   max-height: 60vh;
   border-radius: 10px;
   object-fit: contain;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 .background-preview-actions {

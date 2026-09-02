@@ -7,6 +7,11 @@ import EmptyCover from "../emptyCover";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useBookItem } from "../bookItem/useBookItem";
 import { getFileNameWithoutExtension } from "../../utils/common";
+import {
+  clampMenuPosition,
+  estimateMenuHeight,
+  CONTEXT_MENU_WIDTH,
+} from "../../utils/common";
 
 declare var window: any;
 
@@ -40,12 +45,18 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
     } else {
       x = x - 10;
     }
-    setLeft(x);
-    setTop(
+    const y =
       document.body.clientHeight - e.clientY > 250
         ? e.clientY - 10
-        : e.clientY - 220
+        : e.clientY - 220;
+    const pos = clampMenuPosition(
+      x,
+      y,
+      CONTEXT_MENU_WIDTH,
+      estimateMenuHeight(9)
     );
+    setLeft(pos.left);
+    setTop(pos.top);
     props.handleActionDialog(true);
     props.handleReadingBook(props.book);
   };

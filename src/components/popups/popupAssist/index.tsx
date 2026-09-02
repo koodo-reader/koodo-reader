@@ -9,12 +9,13 @@ import {
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
-import PopupTrans from "./component";
+import PopupAssist from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     originalText: state.reader.originalText,
     quoteText: state.reader.quoteText,
+    htmlBook: state.reader.htmlBook,
     plugins: state.manager.plugins,
     isAuthed: state.manager.isAuthed,
   };
@@ -30,4 +31,4 @@ const actionCreator = {
 export default connect(
   mapStateToProps,
   actionCreator
-)(withTranslation()(PopupTrans as any) as any);
+)(withTranslation()(PopupAssist as any) as any);

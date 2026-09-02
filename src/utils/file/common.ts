@@ -12,8 +12,11 @@ import Bookmark from "../../models/Bookmark";
 import DictHistory from "../../models/DictHistory";
 import { decryptToken } from "../request/thirdparty";
 import toast from "react-hot-toast";
+import { Buffer } from "buffer";
 import i18n from "../../i18n";
 import BookUtil from "./bookUtil";
+import { isCustomRendererPlugin } from "../plugins/customPlugin";
+import { isBuiltinPluginKey } from "../plugins/catalog";
 declare var window: any;
 
 // File System Access API type declarations
@@ -26,11 +29,11 @@ export const changePath = async (newPath: string) => {
     return false;
   }
   let oldPath = getStorageLocation() || "";
-  const fs = window.require("fs-extra");
+  const fs = window.electronAPI.fs;
   let databaseList = CommonTool.databaseList;
 
   for (let i = 0; i < databaseList.length; i++) {
-    await window.require("electron").ipcRenderer.invoke("close-database", {
+    await window.electronAPI.invoke("close-database", {
       dbName: databaseList[i],
       storagePath: getStorageLocation(),
     });
@@ -55,7 +58,7 @@ export const changeLibrary = async (newPath: string) => {
   let databaseList = CommonTool.databaseList;
 
   for (let i = 0; i < databaseList.length; i++) {
-    await window.require("electron").ipcRenderer.invoke("close-database", {
+    await window.electronAPI.invoke("close-database", {
       dbName: databaseList[i],
       storagePath: getStorageLocation(),
     });
@@ -63,7 +66,7 @@ export const changeLibrary = async (newPath: string) => {
   return true;
 };
 const isFolderContainsFile = (folderPath: string) => {
-  const fs = window.require("fs");
+  const fs = window.electronAPI.fs;
   if (!fs.existsSync(folderPath)) {
     return false;
   }
@@ -71,7 +74,7 @@ const isFolderContainsFile = (folderPath: string) => {
   return files.length > 0;
 };
 const isKoodoLibrary = (folderPath: string) => {
-  const fs = window.require("fs");
+  const fs = window.electronAPI.fs;
   if (!fs.existsSync(folderPath)) {
     return false;
   }
@@ -108,8 +111,8 @@ export const upgradeStorage = async (
     let dataPath = getStorageLocation() || "";
     // ConfigService.setItem("isUpgraded", "yes");
     //check if folder named cover exsits
-    const fs = window.require("fs");
-    const path = window.require("path");
+    const fs = window.electronAPI.fs;
+    const path = window.electronAPI.path;
     // upgrage cover and book
     if (ConfigService.getItem("isUpgradedStorage") === "yes") {
       return true;
@@ -168,12 +171,24 @@ export const upgradeStorage = async (
         ? JSON.parse(ConfigService.getItem("pluginList") || "")
         : [];
     if (plugins.length > 0) {
-      plugins = plugins.map((item: any) => {
-        if (!item.key) {
-          item.key = item.identifier;
-        }
-        return item;
-      });
+      plugins = plugins
+        .map((item: unknown) => {
+          if (item && typeof item === "object") {
+            const record = item as Record<string, unknown>;
+            const key =
+              typeof record.key === "string"
+                ? record.key
+                : typeof record.identifier === "string"
+                  ? record.identifier
+                  : "";
+            const plugin = { ...record, key };
+            if (isBuiltinPluginKey(key)) return plugin;
+            if (isCustomRendererPlugin(plugin)) return plugin;
+            if (record.type === "voice") return plugin;
+          }
+          return undefined;
+        })
+        .filter(Boolean);
       await DatabaseService.saveAllRecords(plugins, "plugins");
     }
 

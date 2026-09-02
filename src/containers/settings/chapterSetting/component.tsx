@@ -93,7 +93,7 @@ class ChapterSetting extends React.Component<
     if (isEditing && editingLabel) {
       if (label !== editingLabel) {
         ConfigService.deleteListConfig(editingLabel, "txtParserList");
-        ConfigService.setObjectConfig(editingLabel, null, "txtParsers");
+        ConfigService.deleteObjectConfig(editingLabel, "txtParsers");
       }
       ConfigService.setObjectConfig(
         label,
@@ -120,7 +120,7 @@ class ChapterSetting extends React.Component<
 
   handleDelete = (parserLabel: string) => {
     ConfigService.deleteListConfig(parserLabel, "txtParserList");
-    ConfigService.setObjectConfig(parserLabel, null, "txtParsers");
+    ConfigService.deleteObjectConfig(parserLabel, "txtParsers");
     this.fetchParserList();
     toast.success(this.props.t("Deletion successful"));
   };

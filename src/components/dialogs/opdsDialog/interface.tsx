@@ -60,6 +60,7 @@ export interface OPDSDialogState {
   } | null;
   selectedBook: OPDSEntry | null;
   isLoading: boolean;
+  isLoadingMore: boolean;
   error: string;
   searchQuery: string;
   isAddingCatalog: boolean;

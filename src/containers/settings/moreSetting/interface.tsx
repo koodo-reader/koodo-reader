@@ -11,4 +11,12 @@ export interface MoreSettingState {
   pinValue: string;
   pinFirstValue: string;
   pinCallback: ((pin: string | false) => void) | null;
+  proxyEnabled: boolean;
+  proxyType: "none" | "http" | "socks5";
+  proxyHost: string;
+  proxyPort: string;
+  proxyUsername: string;
+  proxyPassword: string;
+  isTestingProxy: boolean;
+  proxyEditing: boolean;
 }

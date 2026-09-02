@@ -6,6 +6,7 @@ export interface PopupBoxProps {
   menuMode: string;
   isNavLocked: boolean;
   isSettingLocked: boolean;
+  isDockedRight: boolean;
   rendition: any;
   // cfiRange: any;
   rect: any;
@@ -14,10 +15,12 @@ export interface PopupBoxProps {
   chapter: string;
   handleNoteKey: (key: string) => void;
   t: (title: string) => string;
+  renderBookFunc: () => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleChangeDirection: (isChangeDirection: boolean) => void;
   handleRenderNoteFunc: (renderNoteFunc: () => void) => void;
+  handleDockedRight: (isDockedRight: boolean) => void;
 }
 export interface PopupBoxStates {
   deleteKey: string;
@@ -25,4 +28,12 @@ export interface PopupBoxStates {
   isShowUrl: boolean;
   popupWidth: number;
   popupHeight: number;
+  popupLeft: number;
+  popupBottom: number;
+  isDragging: boolean;
+  dragStartX: number;
+  dragStartY: number;
+  isNearBottom: boolean;
+  isNearRight: boolean;
+  isDockedRight: boolean;
 }

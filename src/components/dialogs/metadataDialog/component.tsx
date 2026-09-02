@@ -34,7 +34,10 @@ class MetadataDialog extends React.Component<
 
   handleSearch = async () => {
     const { searchName, searchAuthor } = this.state;
-    if (!searchName.trim() && !searchAuthor.trim()) return;
+    if (!searchName.trim()) {
+      toast(this.props.t("Please enter book name"));
+      return;
+    }
 
     if (!this.props.isAuthed) {
       toast(this.props.t("Please upgrade to Pro to use this feature"));
@@ -111,6 +114,7 @@ class MetadataDialog extends React.Component<
       <div className="metadata-dialog-container edit-dialog-container">
         <div className="metadata-dialog-title">
           <Trans>Get metadata</Trans>
+          <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
         </div>
 
         {/* Search inputs */}

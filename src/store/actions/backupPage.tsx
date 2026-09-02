@@ -15,6 +15,9 @@ export function handleImportDialog(mode: boolean) {
 export function handleOPDSDialog(mode: boolean) {
   return { type: "HANDLE_OPDS_DIALOG", payload: mode };
 }
+export function handleAutoImportDialog(mode: boolean) {
+  return { type: "HANDLE_AUTO_IMPORT_DIALOG", payload: mode };
+}
 export function handleSortShelfDialog(isOpen: boolean) {
   return { type: "HANDLE_SORT_SHELF_DIALOG", payload: isOpen };
 }

@@ -1,6 +1,6 @@
 .dict-container {
   width: calc(100% - 50px);
-  height: calc(100% - 65px);
+  height: 100%;
   padding: 25px;
   padding-top: 5px;
 }

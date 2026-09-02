@@ -22,6 +22,12 @@ import {
   getTextRules,
 } from "../../../utils/common";
 import { BookHelper } from "../../../assets/lib/kookit.min";
+import {
+  clampMenuPosition,
+  CONTEXT_MENU_WIDTH,
+  estimateMenuHeight,
+  SUBMENU_GAP,
+} from "../../../utils/common";
 declare var window: any;
 class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
   constructor(props: MoreActionProps) {
@@ -50,7 +56,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
       ).filter(filterFn);
       if (notes.length > 0) {
         exportFn(notes, books, format);
-        toast.success(this.props.t("Export successful"));
+        toast.success(this.props.t("Export successful"), { id: "exporting" });
       } else {
         toast(this.props.t("Nothing to export"));
       }
@@ -59,22 +65,39 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
       this.props.handleActionDialog(false);
     };
 
-    const baseLeft = this.props.left + (this.props.isExceed ? -195 : 195) + 195;
     const noteOffset = isNotes ? 1 : 2;
     const itemHeight = 33;
-    const baseTop = this.props.top + 103 + noteOffset * itemHeight;
+    // 主菜单渲染时会被 clampMenuPosition 校正到视口内（靠近底部时会整体上移），
+    // 格式子菜单必须以主菜单“实际渲染后的 top”为基准水平对齐，而不是用未校正的 top，
+    // 否则主菜单上移后子菜单仍贴在底部边缘，无法点击。
+    const mainMenuPos = clampMenuPosition(
+      this.props.left + (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
+      this.props.top + 103,
+      CONTEXT_MENU_WIDTH,
+      estimateMenuHeight(isElectron ? 9 : 8)
+    );
 
     return (
       <div
         className="action-dialog-container export-format-submenu-action"
         style={
           isVisible
-            ? {
-                position: "fixed",
-                left: `${baseLeft}px`,
-                top: `${baseTop}px`,
-                zIndex: 10,
-              }
+            ? (() => {
+                const pos = clampMenuPosition(
+                  this.props.left +
+                    (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP) +
+                    195,
+                  mainMenuPos.top + noteOffset * itemHeight,
+                  120,
+                  estimateMenuHeight(5)
+                );
+                return {
+                  position: "fixed",
+                  left: pos.left,
+                  top: pos.top,
+                  zIndex: 10,
+                };
+              })()
             : { display: "none" }
         }
         onMouseEnter={() => {
@@ -130,11 +153,16 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
           }}
           style={
             this.props.isShowExport
-              ? {
-                  position: "fixed",
-                  left: this.props.left + (this.props.isExceed ? -195 : 195),
-                  top: this.props.top + 103,
-                }
+              ? (() => {
+                  const pos = clampMenuPosition(
+                    this.props.left +
+                      (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
+                    this.props.top + 103,
+                    CONTEXT_MENU_WIDTH,
+                    estimateMenuHeight(isElectron ? 9 : 8)
+                  );
+                  return { position: "fixed", left: pos.left, top: pos.top };
+                })()
               : { display: "none" }
           }
         >
@@ -149,7 +177,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                   true,
                   this.props.currentBook.path
                 ).then((result: any) => {
-                  toast.success(this.props.t("Export successful"));
+                  toast.success(this.props.t("Export successful"), { id: "exporting" });
                   saveAs(
                     new Blob([result]),
                     getBookName(this.props.currentBook)
@@ -173,9 +201,11 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                   return;
                 }
                 const cover = await CoverUtil.getCover(this.props.currentBook);
-                if (cover.startsWith("blob:")) {
-                  const ext = "jpg";
-                  saveAs(cover, `${this.props.currentBook.name}.${ext}`);
+                if (cover.startsWith("blob:") || cover.startsWith("asset:")) {
+                  const response = await fetch(cover);
+                  const blob = await response.blob();
+                  const ext = blob.type.split("/")[1] || "jpg";
+                  saveAs(blob, `${this.props.currentBook.name}.${ext}`);
                 } else if (cover.startsWith("data:")) {
                   const mimeMatch = cover.match(/data:(image\/\w+);base64,/);
                   const mime = mimeMatch ? mimeMatch[1] : "image/jpeg";
@@ -189,7 +219,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                     `${this.props.currentBook.name}.${ext}`
                   );
                 } else if (isElectron) {
-                  const fs = window.require("fs");
+                  const fs = window.electronAPI.fs;
                   const ext = cover.split(".").pop() || "jpg";
                   const buffer = fs.readFileSync(cover);
                   saveAs(
@@ -197,7 +227,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                     `${this.props.currentBook.name}.${ext}`
                   );
                 }
-                toast.success(this.props.t("Export successful"));
+                toast.success(this.props.t("Export successful"), { id: "exporting" });
               }}
             >
               <p className="action-name">
@@ -245,7 +275,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                 let books = await DatabaseService.getAllRecords("books");
                 if (dictHistory.length > 0) {
                   exportDictionaryHistory(dictHistory, books);
-                  toast.success(this.props.t("Export successful"));
+                  toast.success(this.props.t("Export successful"), { id: "exporting" });
                 } else {
                   toast(this.props.t("Nothing to export"));
                 }
@@ -354,8 +384,8 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                 className="action-dialog-edit"
                 style={{ paddingLeft: "0px" }}
                 onClick={async () => {
-                  const fs = window.require("fs");
-                  const path = window.require("path");
+                  const fs = window.electronAPI.fs;
+                  const path = window.electronAPI.path;
                   const localBookPath = this.props.currentBook.path;
 
                   const libraryBookPath = path.join(
@@ -373,13 +403,13 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                     return;
                   }
                   if (fs.existsSync(localBookPath)) {
-                    const { ipcRenderer } = window.require("electron");
+                    const ipcRenderer = window.electronAPI;
                     ipcRenderer.invoke("open-explorer-folder", {
                       path: localBookPath,
                       isFolder: false,
                     });
                   } else {
-                    const { ipcRenderer } = window.require("electron");
+                    const ipcRenderer = window.electronAPI;
                     ipcRenderer.invoke("open-explorer-folder", {
                       path: libraryBookPath,
                       isFolder: false,

@@ -2,12 +2,21 @@ import React from "react";
 import { TextRule, TextSettingProps, TextSettingState } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  KookitConfig,
+  HighlightUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import BookUtil from "../../../utils/file/bookUtil";
 
+const HIGHLIGHT_STYLE_TYPES = KookitConfig.HighlightStyleTypes;
+const HIGHLIGHT_PRESET_COLORS = KookitConfig.HighlightPresetColors;
+
 class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
+  highlightUtil: any;
   constructor(props: TextSettingProps) {
     super(props);
+    this.highlightUtil = new HighlightUtil(ConfigService);
     this.state = {
       ruleList: ConfigService.getAllListConfig("textRuleList") || [],
       bookNamesMap: {},
@@ -20,6 +29,8 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
       formMatchType: "plain",
       formScope: "all",
       formBookKey: "",
+      formHighlightStyle: "background",
+      formHighlightColor: "#F3C9C9",
     };
   }
 
@@ -86,10 +97,12 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
       formMatchType: "plain",
       formScope: "all",
       formBookKey: "",
+      formHighlightStyle: "background",
+      formHighlightColor: "#F3C9C9",
     });
   };
 
-  openAddForm = (type: "replace" | "delete") => {
+  openAddForm = (type: "replace" | "delete" | "highlight") => {
     this.setState(
       {
         isFormOpen: true,
@@ -101,6 +114,8 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
         formMatchType: "plain",
         formScope: "all",
         formBookKey: "",
+        formHighlightStyle: "background",
+        formHighlightColor: "#F3C9C9",
       },
       () => this.scrollFormToTop()
     );
@@ -120,6 +135,8 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
         formMatchType: rule.matchType,
         formScope: rule.scope,
         formBookKey: rule.bookKey || "",
+        formHighlightStyle: rule.highlightStyle || "background",
+        formHighlightColor: rule.highlightColor || "#F3C9C9",
       },
       () => this.scrollFormToTop()
     );
@@ -149,6 +166,8 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
       isEditing,
       editingId,
       bookNamesMap,
+      formHighlightStyle,
+      formHighlightColor,
     } = this.state;
 
     const pattern = formPattern.trim();
@@ -183,6 +202,10 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
     if (formType === "replace") {
       rule.replacement = replacement;
     }
+    if (formType === "highlight") {
+      rule.highlightStyle = formHighlightStyle;
+      rule.highlightColor = formHighlightColor;
+    }
     if (formScope === "book") {
       rule.bookKey = formBookKey;
       rule.bookName = selectedBookName || "";
@@ -203,7 +226,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
 
   handleDelete = (ruleId: string) => {
     ConfigService.deleteListConfig(ruleId, "textRuleList");
-    ConfigService.setObjectConfig(ruleId, null, "textRules");
+    ConfigService.deleteObjectConfig(ruleId, "textRules");
     this.fetchRuleList();
     toast.success(this.props.t("Deletion successful"));
   };
@@ -231,10 +254,15 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
       formScope,
       formBookKey,
       bookNamesMap,
+      formHighlightStyle,
+      formHighlightColor,
     } = this.state;
 
     const scopeValue = formScope === "all" ? "all" : formBookKey;
     const bookKeys = (this.props.books || []).map((book) => book.key);
+    const presetColors =
+      HIGHLIGHT_PRESET_COLORS[formHighlightStyle] ||
+      HIGHLIGHT_PRESET_COLORS["background"];
 
     return (
       <div
@@ -297,6 +325,76 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
           </div>
         )}
 
+        {formType === "highlight" && (
+          <>
+            <div className="ai-setting-form-row">
+              <label className="ai-setting-label">
+                <Trans>Highlight style</Trans>
+              </label>
+            </div>
+            <ul
+              className="tts-highlight-style-tabs"
+              style={{ marginLeft: "-10px", marginTop: "8px" }}
+            >
+              {HIGHLIGHT_STYLE_TYPES.map(
+                (item: { value: string; label: string }) => {
+                  const previewColor =
+                    item.value === formHighlightStyle
+                      ? formHighlightColor
+                      : HIGHLIGHT_PRESET_COLORS[item.value][0];
+                  return (
+                    <li
+                      key={item.value}
+                      className={
+                        formHighlightStyle === item.value
+                          ? "tts-highlight-style-tab active-tts-highlight-tab"
+                          : "tts-highlight-style-tab"
+                      }
+                      onClick={() => {
+                        const color = HIGHLIGHT_PRESET_COLORS[item.value][0];
+                        this.setState({
+                          formHighlightStyle: item.value,
+                          formHighlightColor: color,
+                        });
+                      }}
+                    >
+                      <span
+                        className="tts-highlight-style-preview"
+                        style={this.highlightUtil.buildHighlightPreviewStyle(
+                          item.value,
+                          previewColor
+                        )}
+                      >
+                        Aa
+                      </span>
+                      <span className="tts-highlight-style-label">
+                        <Trans>{item.label}</Trans>
+                      </span>
+                    </li>
+                  );
+                }
+              )}
+            </ul>
+            <ul
+              className="tts-highlight-color-container"
+              style={{ marginLeft: "10px" }}
+            >
+              {presetColors.map((color: string, index: number) => (
+                <li
+                  key={color}
+                  className={
+                    presetColors.indexOf(formHighlightColor) === index
+                      ? "tts-highlight-color-item active-tts-highlight-color"
+                      : "tts-highlight-color-item"
+                  }
+                  style={{ backgroundColor: color }}
+                  onClick={() => this.setState({ formHighlightColor: color })}
+                />
+              ))}
+            </ul>
+          </>
+        )}
+
         <div className="ai-setting-form-row">
           <label className="ai-setting-label">
             <Trans>Scope</Trans>
@@ -342,7 +440,10 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
     );
   };
 
-  renderRuleList = (type: "replace" | "delete", emptyMessage: string) => {
+  renderRuleList = (
+    type: "replace" | "delete" | "highlight",
+    emptyMessage: string
+  ) => {
     const { ruleList } = this.state;
     const rules = ruleList
       .map((id) => this.getRule(id))
@@ -431,6 +532,26 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                   {this.props.t("Replacement")}: {rule.replacement} ·{" "}
                 </span>
               )}
+              {type === "highlight" &&
+                rule.highlightStyle &&
+                rule.highlightColor && (
+                  <span>
+                    <span
+                      style={{
+                        ...this.highlightUtil.buildHighlightPreviewStyle(
+                          rule.highlightStyle,
+                          rule.highlightColor
+                        ),
+                        padding: "0 4px",
+                        marginRight: "4px",
+                      }}
+                    >
+                      Aa
+                    </span>
+                    {this.props.t("Highlight style")}: {rule.highlightStyle}{" "}
+                    ·{" "}
+                  </span>
+                )}
             </p>
             <p
               style={{
@@ -467,9 +588,9 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             marginTop: "20px",
           }}
         >
-          <Trans>Replace rules</Trans>
+          <Trans>Replacement rules</Trans>
         </div>
-        {this.renderRuleList("replace", "No replace rules added")}
+        {this.renderRuleList("replace", "No replacement rules added")}
 
         <div
           style={{
@@ -480,9 +601,22 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             marginTop: "20px",
           }}
         >
-          <Trans>Delete rules</Trans>
+          <Trans>Deletion rules</Trans>
         </div>
-        {this.renderRuleList("delete", "No delete rules added")}
+        {this.renderRuleList("delete", "No deletion rules added")}
+
+        <div
+          style={{
+            fontWeight: "bold",
+            textAlign: "left",
+            marginBottom: "20px",
+            marginLeft: "20px",
+            marginTop: "20px",
+          }}
+        >
+          <Trans>Highlight rules</Trans>
+        </div>
+        {this.renderRuleList("highlight", "No highlight rules added")}
 
         <div
           className="setting-dialog-new-plugin"
@@ -492,13 +626,19 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             style={{ fontWeight: "bold" }}
             onClick={() => this.openAddForm("replace")}
           >
-            <Trans>Add replace rule</Trans>
+            <Trans>Add replacement rule</Trans>
           </span>
           <span
             style={{ fontWeight: "bold" }}
             onClick={() => this.openAddForm("delete")}
           >
-            <Trans>Add delete rule</Trans>
+            <Trans>Add deletion rule</Trans>
+          </span>
+          <span
+            style={{ fontWeight: "bold" }}
+            onClick={() => this.openAddForm("highlight")}
+          >
+            <Trans>Add highlight rule</Trans>
           </span>
         </div>
       </>

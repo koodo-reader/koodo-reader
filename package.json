@@ -20,7 +20,6 @@
   "dependencies": {
     "@aws-sdk/client-s3": "3.564.0",
     "@mozilla/readability": "^0.6.0",
-    "adm-zip": "^0.5.2",
     "axios": "0.31.1",
     "basic-ftp": "5.3.1",
     "better-sqlite3": "^11.6.0",
@@ -40,6 +39,7 @@
     "fs-extra": "^9.1.0",
     "hammerjs": "^2.0.8",
     "howler": "^2.2.3",
+    "https-proxy-agent": "^7.0.6",
     "js-mdict": "6.0.8",
     "js-untar": "^2.0.0",
     "jszip": "^3.10.1",
@@ -55,12 +55,15 @@
     "react-sortablejs": "^6.1.4",
     "react-tooltip": "^5.28.0",
     "recharts": "^3.8.1",
+    "socks-proxy-agent": "^8.0.3",
     "sortablejs": "^1.15.6",
     "sse.js": "^2.6.0",
     "ssh2-sftp-client": "^11.0.0",
     "underscore": "^1.13.7",
     "uuid": "^11.0.5",
-    "webdav": "^5.7.1"
+    "webdav": "^5.7.1",
+    "yauzl": "^3.4.0",
+    "yazl": "^3.3.1"
   },
   "devDependencies": {
     "@types/copy-text-to-clipboard": "^2.0.4",
@@ -108,9 +111,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ele": "electron .",
-    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://127.0.0.1:3000/ && nodemon --watch main.js --exec electron .\"",
+    "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://127.0.0.1:3000/ && nodemon --watch main.js --watch src/utils/plugins/main --ext js --exec electron .\"",
     "release": "electron-builder",
-    "prerelease": "react-scripts build",
+    "prerelease": "yarn build",
     "postinstall": "node scripts/patch-nan.js && electron-builder install-app-deps",
     "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
@@ -124,8 +127,10 @@
       "node_modules/**/*",
       "package.json",
       "src/assets/lib/kookit-extra.min.mjs",
+      "src/utils/plugins/main/**/*.js",
       "main.js",
-      "preload.js"
+      "preload.js",
+      "chat-preload.js"
     ],
     "extraResources": [
       {
