@@ -131,6 +131,62 @@ export const chatStream = async (
       resolve({ done: true });
     };
 
+    // 流式剔除 <think>...</think> 思考内容，只透传最终回答
+    const OPEN_TAG = "<think>";
+    const CLOSE_TAG = "</think>";
+    let inThink = false;
+    let thinkPassed = false;
+    let tagBuffer = "";
+
+    const flushText = (text: string) => {
+      if (text) {
+        onMessage({ text });
+      }
+    };
+
+    const processDelta = (raw: string) => {
+      if (thinkPassed) {
+        flushText(raw);
+        return;
+      }
+      tagBuffer += raw;
+      let output = "";
+      while (tagBuffer) {
+        const tag = inThink ? CLOSE_TAG : OPEN_TAG;
+        const idx = tagBuffer.indexOf(tag);
+        if (idx !== -1) {
+          if (!inThink) {
+            output += tagBuffer.slice(0, idx);
+          }
+          tagBuffer = tagBuffer.slice(idx + tag.length);
+          inThink = !inThink;
+          thinkPassed = !inThink;
+          if (thinkPassed) {
+            tagBuffer = tagBuffer.replace(/^\s+/, "");
+          }
+          continue;
+        }
+        // 保留可能是半个标签的尾部，等下一个分片拼齐后再判断
+        let keep = 0;
+        for (
+          let len = Math.min(tagBuffer.length, tag.length - 1);
+          len > 0;
+          len--
+        ) {
+          if (tag.startsWith(tagBuffer.slice(-len))) {
+            keep = len;
+            break;
+          }
+        }
+        if (!inThink) {
+          output += tagBuffer.slice(0, tagBuffer.length - keep);
+        }
+        tagBuffer = tagBuffer.slice(tagBuffer.length - keep);
+        break;
+      }
+      flushText(output);
+    };
+
     source.addEventListener("open", () => {
       console.info("ChatStream connection established.");
     });
@@ -145,7 +201,7 @@ export const chatStream = async (
         const json = JSON.parse(e.data);
         const text = json?.choices?.[0]?.delta?.content;
         if (text) {
-          onMessage({ text });
+          processDelta(text);
         }
         const finishReason = json?.choices?.[0]?.finish_reason;
         if (finishReason) {
