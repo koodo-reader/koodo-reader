@@ -34,9 +34,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
   private scrollContainer: React.RefObject<HTMLUListElement>;
   private visibilityChangeHandler: ((event: Event) => void) | null = null;
   private resizeHandler: (() => void) | null = null;
-  private readingFinishedHandler:
-    | ((event: any, config: any) => void)
-    | null = null;
+  private readingFinishedHandler: ((config: any) => void) | null = null;
 
   constructor(props: BookListProps) {
     super(props);
@@ -85,8 +83,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
     document.addEventListener("visibilitychange", this.visibilityChangeHandler);
 
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
-      this.readingFinishedHandler = async (event: any, config: any) => {
+      const ipcRenderer = window.electronAPI;
+      this.readingFinishedHandler = async (config: any) => {
         this.handleFinishReading();
       };
       ipcRenderer.on("reading-finished", this.readingFinishedHandler);
@@ -117,7 +115,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
 
     // 清理 IPC 监听器（只移除自身，避免误删 Header 等其他组件的监听器）
     if (isElectron && this.readingFinishedHandler) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       ipcRenderer.removeListener(
         "reading-finished",
         this.readingFinishedHandler

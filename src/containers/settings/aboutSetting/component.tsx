@@ -25,7 +25,7 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <div style={{ display: "flex", alignItems: "center" }}>
             <span>{packageJson.version}</span>
 
-            {isElectron && !(process as any).windowsStore && (
+            {isElectron && !window.electronAPI?.runtime?.windowsStore && (
               <span
                 className="change-location-button"
                 style={{ marginLeft: "10px", cursor: "pointer" }}
@@ -92,6 +92,7 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             }}
           >
             {[
+              {value:"",label: "Please select"},
               { value: "dev", label: "Developer version" },
               { value: "stable", label: "Stable version" },
             ].map((item) => (
@@ -111,7 +112,7 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <span
               className="change-location-button"
               onClick={async () => {
-                const { ipcRenderer } = window.require("electron");
+                const ipcRenderer = window.electronAPI;
                 ipcRenderer.invoke("get-debug-logs", "ping");
               }}
             >
@@ -127,8 +128,8 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               className="change-location-button"
               onClick={async () => {
                 window
-                  .require("electron")
-                  .ipcRenderer.invoke("open-console", "ping");
+                  .electronAPI
+                  .invoke("open-console", "ping");
               }}
             >
               <Trans>View</Trans>

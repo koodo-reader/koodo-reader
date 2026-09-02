@@ -6,7 +6,6 @@ import {
   ConfigService,
   KookitConfig,
   SyncUtil,
-  TokenService,
 } from "../assets/lib/kookit-extra-browser.min";
 import Book from "../models/Book";
 import BookUtil from "./file/bookUtil";
@@ -35,6 +34,7 @@ import {
   getOcrPaddleLangList,
   ocrTesseractLangList,
 } from "../constants/dropdownList";
+import TokenService from "./storage/tokenService";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -63,16 +63,36 @@ export interface HighlightValue {
 export const calculateFileMD5 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     if (isElectron) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const arrayBuffer = event.target?.result as ArrayBuffer;
-        const crypto = window.require("crypto");
-        const hash = crypto.createHash("md5");
-        hash.update(Buffer.from(arrayBuffer));
-        resolve(hash.digest("hex"));
-      };
-      reader.onerror = (error) => reject(error);
-      reader.readAsArrayBuffer(file);
+      // Use the file path to compute md5 via streaming, avoid loading the
+      // whole file into memory with FileReader.
+      const filePath = (file as any).path;
+      if (filePath && window.electronAPI?.crypto?.fileMd5) {
+        window.electronAPI.crypto
+          .fileMd5(filePath)
+          .then(resolve)
+          .catch(() => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const arrayBuffer = event.target?.result as ArrayBuffer;
+              resolve(
+                window.electronAPI?.crypto.md5(new Uint8Array(arrayBuffer)) ||
+                  ""
+              );
+            };
+            reader.onerror = (error) => reject(error);
+            reader.readAsArrayBuffer(file);
+          });
+      } else {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const arrayBuffer = event.target?.result as ArrayBuffer;
+          resolve(
+            window.electronAPI?.crypto.md5(new Uint8Array(arrayBuffer)) || ""
+          );
+        };
+        reader.onerror = (error) => reject(error);
+        reader.readAsArrayBuffer(file);
+      }
     } else {
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -430,29 +450,6 @@ export const getFileNameWithoutExtension = (
   return baseName;
 };
 
-export const fetchFileFromPath = (filePath: string) => {
-  return new Promise<File>((resolve) => {
-    const fs = window.require("fs");
-
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      const file = new File(
-        [data],
-        window.navigator.platform.indexOf("Win") > -1
-          ? filePath.split("\\").reverse()[0]
-          : filePath.split("/").reverse()[0],
-        {
-          lastModified: new Date().getTime(),
-        }
-      );
-      resolve(file);
-    });
-  });
-};
-
 export const sleep = (time: number) => {
   return new Promise((resolve) => setTimeout(resolve, time));
 };
@@ -517,11 +514,9 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
 export const handleFullScreen = () => {
   if (isElectron) {
     if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-      window
-        .require("electron")
-        .ipcRenderer.invoke("enter-tab-fullscreen", "ping");
+      window.electronAPI.invoke("enter-tab-fullscreen", "ping");
     } else {
-      window.require("electron").ipcRenderer.invoke("enter-fullscreen", "ping");
+      window.electronAPI.invoke("enter-fullscreen", "ping");
     }
   } else {
     const el = document.documentElement as any;
@@ -536,11 +531,9 @@ export const handleFullScreen = () => {
 export const handleExitFullScreen = () => {
   if (isElectron) {
     if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
-      window
-        .require("electron")
-        .ipcRenderer.invoke("exit-tab-fullscreen", "ping");
+      window.electronAPI.invoke("exit-tab-fullscreen", "ping");
     } else {
-      window.require("electron").ipcRenderer.invoke("exit-fullscreen", "ping");
+      window.electronAPI.invoke("exit-fullscreen", "ping");
     }
   } else {
     const doc = document as any;
@@ -567,9 +560,7 @@ export const getStorageLocation = () => {
   if (isElectron) {
     return ConfigService.getItem("storageLocation")
       ? ConfigService.getItem("storageLocation")
-      : window
-          .require("electron")
-          .ipcRenderer.sendSync("storage-location", "ping");
+      : window.electronAPI.sendSync("storage-location", "ping");
   } else {
     return ConfigService.getItem("storageLocation");
   }
@@ -586,18 +577,9 @@ export const getAllVoices = (pluginList: Plugin[]) => {
   }
   return voiceList;
 };
-export const checkPlugin = async (plugin: Plugin) => {
-  if (
-    (await CommonTool.generateSHA256Hash(plugin.script)) !== plugin.scriptSHA256
-  ) {
-    return false;
-  } else {
-    return true;
-  }
-};
 export const reloadManager = () => {
   if (isElectron) {
-    window.require("electron").ipcRenderer.invoke("reload-main", "ping");
+    window.electronAPI.invoke("reload-main", "ping");
   } else {
     window.location.reload();
   }
@@ -609,14 +591,12 @@ export const openExternalUrl = (
 ) => {
   isElectron
     ? ConfigService.getReaderConfig("isUseBuiltIn") === "yes" || isPlugin
-      ? window.require("electron").ipcRenderer.invoke("open-url", { url, type })
-      : window.require("electron").shell.openExternal(url)
+      ? window.electronAPI.invoke("open-url", { url, type })
+      : window.electronAPI.shell.openExternal(url)
     : window.open(url);
 };
 export const openInBrowser = (url: string) => {
-  isElectron
-    ? window.require("electron").shell.openExternal(url)
-    : window.open(url);
+  isElectron ? window.electronAPI.shell.openExternal(url) : window.open(url);
 };
 export const getPageWidth = (
   readerMode: string,
@@ -853,7 +833,8 @@ export const generateSyncRecord = async () => {
 };
 export const handleContextMenu = (id: string, isInput: boolean = false) => {
   if (!isElectron) return;
-  const clipboard = window.require("electron").clipboard;
+  if (!window.electronAPI?.clipboard) return "";
+  const clipboard = window.electronAPI.clipboard;
   const text = clipboard.readText();
   // fill the text into the box
   if (!isInput) {
@@ -947,8 +928,8 @@ export const formatTimestamp = (timestamp) => {
 };
 export const checkMissingBook = async () => {
   if (!isElectron) return;
-  var fs = window.require("fs");
-  var path = window.require("path");
+  var fs = window.electronAPI.fs;
+  var path = window.electronAPI.path;
   let bookList = (await BookUtil.getBookList()) as Book[];
   for (let index = 0; index < bookList.length; index++) {
     const book = bookList[index];
@@ -971,8 +952,8 @@ export const checkMissingBook = async () => {
 export const deleteBrokenCovers = () => {
   try {
     if (!isElectron) return;
-    var fs = window.require("fs");
-    var path = window.require("path");
+    var fs = window.electronAPI.fs;
+    var path = window.electronAPI.path;
     const storageLocation = getStorageLocation();
     if (!storageLocation) return;
     const dirPath = path.join(storageLocation, "cover");
@@ -1010,8 +991,8 @@ export const testConnection = async (driveName: string, driveConfig: any) => {
     id: "testing-connection-id",
   });
   if (isElectron) {
-    const { ipcRenderer } = window.require("electron");
-    const fs = window.require("fs");
+    const ipcRenderer = window.electronAPI;
+    const fs = window.electronAPI.fs;
     if (!fs.existsSync(getStorageLocation() + "/config")) {
       fs.mkdirSync(getStorageLocation() + "/config", { recursive: true });
     }
@@ -1139,7 +1120,8 @@ export const getPdfPassword = (book: Book) => {
 export const showDownloadProgress = (
   service: string,
   type: string,
-  bookSize: number
+  bookSize: number,
+  toastId: string = "offline-book"
 ) => {
   if (bookSize === 0) {
     return setTimeout(() => {
@@ -1157,20 +1139,19 @@ export const showDownloadProgress = (
           service: service,
           storagePath: getStorageLocation(),
         };
-        downloadedSize = await window
-          .require("electron")
-          .ipcRenderer.invoke("cloud-progress", config);
+        downloadedSize = await window.electronAPI.invoke(
+          "cloud-progress",
+          config
+        );
       } else {
         let tokenConfig = await getCloudConfig(service);
-        downloadedSize = await window
-          .require("electron")
-          .ipcRenderer.invoke("picker-progress", {
-            ...tokenConfig,
-            baseFolder: "",
-            service: service,
-            currentPath: "",
-            storagePath: getStorageLocation(),
-          });
+        downloadedSize = await window.electronAPI.invoke("picker-progress", {
+          ...tokenConfig,
+          baseFolder: "",
+          service: service,
+          currentPath: "",
+          storagePath: getStorageLocation(),
+        });
       }
       if (isFirst && downloadedSize > 0) {
         downloadedSize = 0;
@@ -1180,7 +1161,8 @@ export const showDownloadProgress = (
       toast.loading(
         i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
         {
-          id: "offline-book",
+          id: toastId,
+          position: "bottom-center",
         }
       );
     } else {
@@ -1199,7 +1181,8 @@ export const showDownloadProgress = (
       toast.loading(
         i18n.t("Downloading") + " (" + parseInt(progress * 100 + "") + "%)",
         {
-          id: "offline-book",
+          id: toastId,
+          position: "bottom-center",
         }
       );
     }
@@ -1225,16 +1208,14 @@ export const showTaskProgress = async (
       service: service,
       storagePath: getStorageLocation(),
     };
-    await window.require("electron").ipcRenderer.invoke("cloud-reset", config);
+    await window.electronAPI.invoke("cloud-reset", config);
   } else {
     let syncUtil = await SyncService.getSyncUtil();
     syncUtil.resetCounters();
   }
   timer = setInterval(async () => {
     if (isElectron) {
-      let stats = await window
-        .require("electron")
-        .ipcRenderer.invoke("cloud-stats", config);
+      let stats = await window.electronAPI.invoke("cloud-stats", config);
       if (
         stats.total > 0 &&
         ConfigService.getReaderConfig("hideSyncProgress") !== "yes"
@@ -1307,9 +1288,7 @@ export const getTaskStats = async () => {
       service: service,
       storagePath: getStorageLocation(),
     };
-    return await window
-      .require("electron")
-      .ipcRenderer.invoke("cloud-stats", config);
+    return await window.electronAPI.invoke("cloud-stats", config);
   } else {
     let syncUtil = await SyncService.getSyncUtil();
     return await syncUtil.getStats();
@@ -1352,10 +1331,10 @@ export const clearAllData = async () => {
 
   if (isElectron) {
     let storageLocation = getStorageLocation();
-    const fs = window.require("fs");
+    const fs = window.electronAPI.fs;
     let databaseList = CommonTool.databaseList;
     for (let i = 0; i < databaseList.length; i++) {
-      await window.require("electron").ipcRenderer.invoke("close-database", {
+      await window.electronAPI.invoke("close-database", {
         dbName: databaseList[i],
         storagePath: getStorageLocation(),
       });
@@ -1363,7 +1342,7 @@ export const clearAllData = async () => {
     if (fs.existsSync(storageLocation)) {
       fs.rmSync(storageLocation, { recursive: true, force: true });
     }
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     ipcRenderer.invoke("clear-all-data", {});
   }
   await localforage.clear();
@@ -1481,12 +1460,15 @@ export const getParserRegex = (extension: string, bookKey?: string) => {
         defaultTxtParser = rule.defaultTxtParser;
       }
     }
+    //历史bug，部分parser的取值为null
     let txtParsers: any[] = [
-      ...Object.values(ConfigService.getAllObjectConfig("txtParsers")),
+      ...Object.values(ConfigService.getAllObjectConfig("txtParsers")).filter(
+        (parser) => parser
+      ),
       ...KookitConfig.ContentRegxConfig,
     ];
     let txtParser = txtParsers.find(
-      (parser) => parser.value === defaultTxtParser
+      (parser) => parser && parser.value === defaultTxtParser
     );
     if (txtParser) {
       parserRegex = txtParser.regex;
@@ -1673,14 +1655,14 @@ export const findLastMatchIndex = (a: string[], b: string[]) => {
 };
 export const getICloudDrivePath = () => {
   if (!isElectron) return "";
-  const fs = window.require("fs");
-  const path = window.require("path");
-  const os = window.require("os");
+  const fs = window.electronAPI.fs;
+  const path = window.electronAPI.path;
+  const os = window.electronAPI.os;
 
   let iCloudPath = "";
 
   // 自动检测iCloud Drive路径
-  if (isElectron && process.platform === "darwin") {
+  if (isElectron && window.electronAPI?.runtime?.platform === "darwin") {
     // macOS
     const possiblePath = path.join(
       os.homedir(),
@@ -1743,7 +1725,7 @@ export const prepareThirdConfig = async (service: string, config: any) => {
       SyncService.removeSyncUtil(targetDrive);
       removeCloudConfig(targetDrive);
       if (isElectron) {
-        const { ipcRenderer } = window.require("electron");
+        const ipcRenderer = window.electronAPI;
         await ipcRenderer.invoke("cloud-close", {
           service: targetDrive,
         });
@@ -1785,7 +1767,7 @@ export const prepareThirdConfig = async (service: string, config: any) => {
     SyncService.removeSyncUtil(service);
     removeCloudConfig(service);
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       await ipcRenderer.invoke("cloud-close", {
         service: service,
       });
@@ -1849,44 +1831,13 @@ export const langToName = (lang: string) => {
 };
 export const getBookPartialMd5 = async (book: Book) => {
   if (isElectron) {
-    const fs = window.require("fs");
-    const crypto = window.require("crypto");
-    function partialMD5(filepath) {
-      if (!filepath) return;
-
-      try {
-        const fd = fs.openSync(filepath, "r");
-        const step = 1024;
-        const size = 1024;
-        const hash = crypto.createHash("md5");
-        const buffer = Buffer.alloc(size);
-
-        for (let i = -1; i <= 10; i++) {
-          const position = step << (2 * i);
-
-          try {
-            const bytesRead = fs.readSync(fd, buffer, 0, size, position);
-            if (bytesRead > 0) {
-              hash.update(buffer.slice(0, bytesRead));
-            } else {
-              break;
-            }
-          } catch (err) {
-            break;
-          }
-        }
-
-        fs.closeSync(fd);
-        return hash.digest("hex");
-      } catch (err) {
-        return;
-      }
+    const filePath = BookUtil.getBookPath(book);
+    if (!filePath || !window.electronAPI?.crypto) return null;
+    try {
+      return await window.electronAPI.crypto.partialMd5(filePath);
+    } catch (error) {
+      return;
     }
-    let filePath = BookUtil.getBookPath(book);
-    if (!filePath) {
-      return null;
-    }
-    return partialMD5(filePath);
   } else {
     function partialMD5(arrayBuffer) {
       if (!arrayBuffer) return;
@@ -1960,6 +1911,31 @@ export const BRUSH_COLORS = [
 ];
 
 export const BRUSH_WIDTHS = [2, 4, 8, 14];
+export const HIGHLIGHTER_COLORS = [
+  "#FFE54C",
+  "#6FFB6B",
+  "#FF8AD1",
+  "#FFB05C",
+  "#6CF2FF",
+  "#C9A3FF",
+  "#FF8A8A",
+  "#7AB5FF",
+];
+export const HIGHLIGHTER_WIDTHS = [4, 8, 14, 20];
+export const SHAPE_TYPES = ["rect", "circle", "ellipse", "line", "arrow"];
+export const TEXT_SIZE_MIN = 12;
+export const TEXT_SIZE_MAX = 72;
+export const TEXT_SIZE_STEP = 1;
+export const TEXT_COLORS = [
+  "#E53131",
+  "#F08C00",
+  "#F5C400",
+  "#1FA861",
+  "#1B8CF0",
+  "#6C5CE7",
+  "#E54394",
+  "#2C2C2C",
+];
 export const getDefaultOcrEngine = (currentBook: any) => {
   const engine = ConfigService.getReaderConfig(
     currentBook.description.indexOf("scanned") > -1
@@ -2023,4 +1999,149 @@ export const getDefaultOcrLang = (engine: string, currentBook: any) => {
   } else if (engine === "paddle") {
     return "standard_v5_mobile";
   }
+};
+export const CONTEXT_MENU_WIDTH = 200;
+export const CONTEXT_MENU_ITEM_HEIGHT = 33;
+export const CONTEXT_MENU_PADDING = 10;
+export const CONTEXT_MENU_MARGIN = 8;
+export const SUBMENU_GAP = 195; // 子菜单相对主菜单的水平偏移（约等于主菜单宽度）
+
+export interface Viewport {
+  width: number;
+  height: number;
+}
+
+export function estimateMenuHeight(itemCount: number): number {
+  return itemCount * CONTEXT_MENU_ITEM_HEIGHT + CONTEXT_MENU_PADDING * 2;
+}
+
+// 将菜单左上角 (left, top) 校正到视口内，菜单宽 menuWidth 高 menuHeight。
+export function clampMenuPosition(
+  left: number,
+  top: number,
+  menuWidth: number,
+  menuHeight: number,
+  viewport?: Viewport
+): { left: number; top: number } {
+  const vw = viewport || {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  };
+  const clampedLeft = Math.max(
+    CONTEXT_MENU_MARGIN,
+    Math.min(left, vw.width - menuWidth - CONTEXT_MENU_MARGIN)
+  );
+  const clampedTop = Math.max(
+    CONTEXT_MENU_MARGIN,
+    Math.min(top, vw.height - menuHeight - CONTEXT_MENU_MARGIN)
+  );
+  return { left: clampedLeft, top: clampedTop };
+}
+
+// 子菜单(宽 subWidth)从 anchorLeft 处向右(先叠 SUBMENU_GAP)展开是否会超右缘。
+// 若超界应改为向左展开。
+export function shouldSubmenuOpenLeft(
+  anchorLeft: number,
+  subWidth: number,
+  viewport?: Viewport
+): boolean {
+  const vw = viewport || {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  };
+  return anchorLeft + SUBMENU_GAP + subWidth + CONTEXT_MENU_MARGIN > vw.width;
+}
+
+export const AUTO_IMPORT_FOLDERS_KEY = "autoImportFolders";
+
+export interface BookPathIndex {
+  existingPaths: Set<string>;
+  sizeSet: Set<number>;
+}
+
+export const getBookPathIndex = async (): Promise<BookPathIndex> => {
+  const existingPaths = new Set<string>();
+  const sizeSet = new Set<number>();
+  const bookListResult = await window.electronAPI.invoke(
+    "custom-database-command",
+    {
+      query: `SELECT path, size FROM books`,
+      dbName: "books",
+      storagePath: ConfigService.getItem("storageLocation"),
+      executeType: "all",
+    }
+  );
+  (bookListResult || []).forEach((item: any) => {
+    if (item.path) existingPaths.add(item.path);
+    if (item.size != null) sizeSet.add(item.size);
+  });
+  return { existingPaths, sizeSet };
+};
+
+export const collectSupportedFiles = (
+  fs: any,
+  path: any,
+  dirPath: string
+): string[] => {
+  let files: string[] = [];
+  try {
+    const items = fs.readdirSync(dirPath);
+    for (const item of items) {
+      const fullPath = path.join(dirPath, item);
+      const stat = fs.statSync(fullPath);
+      if (stat.isDirectory && !stat.isFile) {
+        files = files.concat(collectSupportedFiles(fs, path, fullPath));
+      } else if (stat.isFile) {
+        const ext = path.extname(item).toLowerCase();
+        if (supportedFormats.includes(ext)) {
+          files.push(fullPath);
+        }
+      }
+    }
+  } catch (error) {
+    console.error(`Error reading directory ${dirPath}:`, error);
+  }
+  return files;
+};
+
+// Lightweight dedup: only read db size/path, no file read, no md5.
+// A path match means already imported; a size match against any book in
+// the library also counts as already imported, regardless of path.
+export const scanFolderForNewBooks = async (
+  folderPath: string,
+  importFile: (file: any) => Promise<void>,
+  index?: BookPathIndex
+): Promise<number> => {
+  const fs = window.electronAPI.fs;
+  const path = window.electronAPI.path;
+  const { existingPaths, sizeSet } = index || (await getBookPathIndex());
+  const files = collectSupportedFiles(fs, path, folderPath);
+  let imported = 0;
+  for (const filePath of files) {
+    const fileName = path.basename(filePath);
+    try {
+      const stat = fs.statSync(filePath);
+      if (!stat.isFile) continue;
+      if (existingPaths.has(filePath)) continue;
+      if (sizeSet.has(stat.size)) {
+        continue;
+      }
+      const buffer = await fs.promises.readFile(filePath);
+      const arraybuffer = new Uint8Array(buffer).buffer;
+      const blob = new Blob([arraybuffer]);
+      const file: any = new File([blob], fileName);
+      file.path = filePath;
+      await importFile(file);
+      existingPaths.add(filePath);
+      imported++;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      toast.error(
+        i18n.t("Import failed") + ": " + fileName + " - " + errorMessage
+      );
+      console.error(`Error processing file ${filePath}:`, error);
+    }
+  }
+  return imported;
 };

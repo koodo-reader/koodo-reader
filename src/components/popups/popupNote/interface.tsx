@@ -7,6 +7,7 @@ export interface PopupNoteProps {
 
   highlight: HighlightValue;
   noteKey: string;
+  isDockedRight: boolean;
 
   chapterDocIndex: number;
   chapter: string;

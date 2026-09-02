@@ -7,9 +7,11 @@ export type AiChatMessage = {
 export interface PopupAssistProps {
   currentBook: BookModel;
   originalText: string;
+  htmlBook: any;
   quoteText: string;
   plugins: PluginModel[];
   isAuthed: boolean;
+  isDockedRight: boolean;
   handleQuoteText: (quoteText: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;

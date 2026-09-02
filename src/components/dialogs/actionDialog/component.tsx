@@ -6,6 +6,10 @@ import toast from "react-hot-toast";
 import MoreAction from "../moreAction";
 import MarkAction from "../markAction";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  CONTEXT_MENU_WIDTH,
+  shouldSubmenuOpenLeft,
+} from "../../../utils/common";
 declare var window: any;
 class ActionDialog extends React.Component<
   ActionDialogProps,
@@ -17,7 +21,7 @@ class ActionDialog extends React.Component<
       isShowExport: false,
       isShowMark: false,
       isShowDetail: false,
-      isExceed: false,
+      isExceed: shouldSubmenuOpenLeft(this.props.left, CONTEXT_MENU_WIDTH),
     };
   }
   handleDeleteBook = () => {
@@ -246,7 +250,14 @@ class ActionDialog extends React.Component<
             <div
               className="action-dialog-edit"
               onMouseEnter={(event) => {
-                this.setState({ isShowMark: true, isShowExport: false });
+                this.setState({
+                  isShowMark: true,
+                  isShowExport: false,
+                  isExceed: shouldSubmenuOpenLeft(
+                    this.props.left,
+                    CONTEXT_MENU_WIDTH
+                  ),
+                });
                 const e = event || window.event;
                 let x = e.clientX;
                 if (x > document.body.clientWidth - 300) {
@@ -295,7 +306,14 @@ class ActionDialog extends React.Component<
             <div
               className="action-dialog-edit"
               onMouseEnter={(event) => {
-                this.setState({ isShowExport: true, isShowMark: false });
+                this.setState({
+                  isShowExport: true,
+                  isShowMark: false,
+                  isExceed: shouldSubmenuOpenLeft(
+                    this.props.left,
+                    CONTEXT_MENU_WIDTH
+                  ),
+                });
                 const e = event || window.event;
                 let x = e.clientX;
                 if (x > document.body.clientWidth - 300) {

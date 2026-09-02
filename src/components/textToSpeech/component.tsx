@@ -161,10 +161,14 @@ class TextToSpeech extends React.Component<
         }
       }
       if (!voiceName && !voiceEngine && this.voices.length > 0) {
-        ConfigService.setReaderConfig("voiceName", this.voices[0].name);
+        let defaultVoice =
+          this.voices.find(
+            (item) => item.plugin !== "official-ai-voice-plugin"
+          ) || this.voices[0];
+        ConfigService.setReaderConfig("voiceName", defaultVoice.name);
         ConfigService.setReaderConfig(
           "voiceEngine",
-          this.voices[0].plugin || "system"
+          defaultVoice.plugin || "system"
         );
       }
     }
@@ -561,19 +565,13 @@ class TextToSpeech extends React.Component<
       (item: string) => item && item.trim()
     );
     let rawNodeList: string[][] = [];
-    if (
-      this.props.currentBook.format === "PDF" &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      )
-    ) {
-    } else {
-      rawNodeList = nodeTextList.map((text) => {
-        return splitSentences(text);
-      });
 
-      nodeTextList = rawNodeList.flat();
-    }
+    rawNodeList = nodeTextList.map((text) => {
+      return splitSentences(text);
+    });
+
+    nodeTextList = rawNodeList.flat();
+
     const speechStartIndex = this.getSpeechStartIndex(nodeTextList);
     if (speechStartIndex > -1) {
       nodeTextList = nodeTextList.slice(speechStartIndex);
@@ -705,7 +703,7 @@ class TextToSpeech extends React.Component<
         speed * 100 - 100,
         this.props.plugins,
         this.nodeList,
-        20,
+        10,
         false,
         node.voiceEngine === "official-ai-voice-plugin"
       );
@@ -719,19 +717,13 @@ class TextToSpeech extends React.Component<
       if (this.state.isPaused || !this.state.isAudioOn) return;
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
       let lastVisibleTextList = visibleTextList;
-      if (
-        this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        )
-      ) {
-      } else {
-        let rawNodeList = visibleTextList.map((text) => {
-          return splitSentences(text);
-        });
 
-        lastVisibleTextList = rawNodeList.flat();
-      }
+      let rawNodeList = visibleTextList.map((text) => {
+        return splitSentences(text);
+      });
+
+      lastVisibleTextList = rawNodeList.flat();
+
       let isReachPageEnd = checkReachPageEnd(
         index,
         this.nodeList,
@@ -807,19 +799,12 @@ class TextToSpeech extends React.Component<
       let visibleTextList = await this.props.htmlBook.rendition.visibleText();
 
       let lastVisibleTextList = visibleTextList;
-      if (
-        this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        )
-      ) {
-      } else {
-        let rawNodeList = visibleTextList.map((text) => {
-          return splitSentences(text);
-        });
 
-        lastVisibleTextList = rawNodeList.flat();
-      }
+      let rawNodeList = visibleTextList.map((text) => {
+        return splitSentences(text);
+      });
+
+      lastVisibleTextList = rawNodeList.flat();
 
       let isReachPageEnd = checkReachPageEnd(
         index,
@@ -1150,6 +1135,17 @@ class TextToSpeech extends React.Component<
                 return;
               }
               const newEngine = voice.plugin || "system";
+              if (
+                newEngine === "official-ai-voice-plugin" &&
+                !this.props.isAuthed
+              ) {
+                toast(
+                  this.props.t("Please upgrade to Pro to use this feature")
+                );
+                this.props.handleSetting(true);
+                this.props.handleSettingMode("account");
+                return;
+              }
               ConfigService.setReaderConfig("voiceEngine", newEngine);
               if (
                 voice.plugin === "official-ai-voice-plugin" &&
@@ -1244,6 +1240,7 @@ class TextToSpeech extends React.Component<
         >
           <span style={{ width: "calc(100% - 50px)" }}>
             <Trans>AI multi-role speech</Trans>
+            <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
           </span>
 
           <span

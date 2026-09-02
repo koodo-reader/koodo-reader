@@ -19,7 +19,6 @@ import { LocalFileManager } from "../../../utils/file/localFile";
 import {
   ConfigService,
   KOReaderUtil,
-  TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { changeLibrary, changePath } from "../../../utils/file/common";
 import { getSnapshots } from "../../../utils/file/backup";
@@ -36,6 +35,7 @@ import {
   noteSyncSettingList,
   wordSyncSettingList,
 } from "../../../constants/settingList";
+import TokenService from "../../../utils/storage/tokenService";
 declare var window: any;
 class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -222,7 +222,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
       // Special case: Markdown sync uses a folder picker in Electron
       if (item.propName === "isEnableMarkdownSync" && isElectron) {
-        const { ipcRenderer } = window.require("electron");
+        const ipcRenderer = window.electronAPI;
         const folder = await ipcRenderer.invoke("select-path");
         if (!folder) return;
         ConfigService.setObjectConfig(
@@ -447,7 +447,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   };
 
   handleChangeLocation = async () => {
-    const { ipcRenderer } = window.require("electron");
+    const ipcRenderer = window.electronAPI;
     const newPath = await ipcRenderer.invoke("select-path");
     if (!newPath) {
       return;
@@ -469,7 +469,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   };
   handleSwitchLibrary = async () => {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       const newPath = await ipcRenderer.invoke("select-path");
       if (!newPath) {
         return;
@@ -482,9 +482,9 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       ConfigService.setItem("storageLocation", newPath);
       this.setState({ storageLocation: newPath });
       try {
-        let fs = window.require("fs");
+        let fs = window.electronAPI.fs;
         let text = fs.readFileSync(
-          window.require("path").join(newPath, "config", "config.json"),
+          window.electronAPI.path.join(newPath, "config", "config.json"),
           "utf-8"
         );
         let config = JSON.parse(text);
@@ -574,7 +574,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 <span
                   className="change-location-button"
                   onClick={() => {
-                    const { ipcRenderer } = window.require("electron");
+                    const ipcRenderer = window.electronAPI;
                     ipcRenderer.invoke("open-explorer-folder", {
                       path: this.state.storageLocation,
                       isFolder: true,
@@ -615,7 +615,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   <span
                     className="change-location-button"
                     onClick={() => {
-                      const { ipcRenderer } = window.require("electron");
+                      const ipcRenderer = window.electronAPI;
                       ipcRenderer.invoke("open-explorer-folder", {
                         path: this.state.storageLocation,
                         isFolder: true,
@@ -639,7 +639,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <p className="setting-option-subtitle">
               <Trans>
                 {
-                  "Switch between multiple libraries without affecting the original library. For multi-device synchronization in the free version, please refer to the documentation"
+                  "Switch between multiple libraries without affecting the original library."
                 }
               </Trans>
             </p>
@@ -695,7 +695,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               let books = await DatabaseService.getAllRecords("books");
               if (books.length > 0) {
                 await exportBooks(books);
-                toast.success(this.props.t("Export successful"));
+                toast.success(this.props.t("Export successful"), { id: "exporting" });
               } else {
                 toast(this.props.t("Nothing to export"));
               }
@@ -729,7 +729,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               );
               if (notes.length > 0) {
                 exportNotes(notes, books, fmt);
-                toast.success(this.props.t("Export successful"));
+                toast.success(this.props.t("Export successful"), { id: "exporting" });
               } else {
                 toast(this.props.t("Nothing to export"));
               }
@@ -775,7 +775,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               notes = notes.filter((note: any) => note.notes === "");
               if (notes.length > 0) {
                 exportHighlights(notes, books, fmt);
-                toast.success(this.props.t("Export successful"));
+                toast.success(this.props.t("Export successful"), { id: "exporting" });
               } else {
                 toast(this.props.t("Nothing to export"));
               }
@@ -810,7 +810,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               let books = await DatabaseService.getAllRecords("books");
               if (dictHistory.length > 0) {
                 exportDictionaryHistory(dictHistory, books);
-                toast.success(this.props.t("Export successful"));
+                toast.success(this.props.t("Export successful"), { id: "exporting" });
               } else {
                 toast(this.props.t("Nothing to export"));
               }

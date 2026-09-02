@@ -19,7 +19,6 @@ import {
   ConfigService,
   KookitConfig,
   LoginHelper,
-  TokenService,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { loginList } from "../../../constants/loginList";
 import {
@@ -32,6 +31,7 @@ import { handleClearToken, handleExitApp } from "../../../utils/request/common";
 import copyTextToClipboard from "copy-text-to-clipboard";
 import { resetReaderRequest } from "../../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../../utils/request/thirdparty";
+import TokenService from "../../../utils/storage/tokenService";
 declare var window: any;
 class AccountSetting extends React.Component<
   SettingInfoProps,
@@ -626,9 +626,34 @@ class AccountSetting extends React.Component<
           </div>
         )}
         <div className="setting-dialog-new-title">
-          <Trans>
-            {this.props.isAuthed ? "Server region" : "Select server region"}
-          </Trans>
+          <div>
+            <Trans>
+              {this.props.isAuthed ? "Server region" : "Select server region"}
+            </Trans>
+            {ConfigService.getReaderConfig("lang").startsWith("zh") && (
+              <span
+                style={{
+                  textDecoration: "underline",
+                  marginLeft: "10px",
+                  cursor: "pointer",
+                  opacity: 0.7,
+                  fontSize: "13px",
+                  lineHeight: "16px",
+                }}
+                onClick={() => {
+                  openInBrowser(
+                    getWebsiteUrl() +
+                      (ConfigService.getReaderConfig("lang").startsWith("zh")
+                        ? "/zh"
+                        : "/en") +
+                      "/server-region"
+                  );
+                }}
+              >
+                <Trans>Learn more</Trans>
+              </span>
+            )}
+          </div>
           {this.props.isAuthed ? (
             <div
               className="lang-setting-option"

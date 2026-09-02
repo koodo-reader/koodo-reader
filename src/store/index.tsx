@@ -78,6 +78,7 @@ export type stateType = {
     isOpenLocalFileDialog: boolean;
     isOpenImportDialog: boolean;
     isOpenOPDSDialog: boolean;
+    isOpenAutoImportDialog: boolean;
     isOpenSortShelfDialog: boolean;
     isOpenPopupOptionDialog: boolean;
     popupOptionUpdateIndex: number;
@@ -104,6 +105,7 @@ export type stateType = {
     isSpeechAutoStart: boolean;
     isNavLocked: boolean;
     isSettingLocked: boolean;
+    isDockedRight: boolean;
     isConvertOpen: boolean;
     isPdfCropOpen: boolean;
     isSpeechOpen: boolean;

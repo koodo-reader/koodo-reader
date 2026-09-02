@@ -110,6 +110,30 @@
   background-color: rgba(241, 100, 100, 0.28);
 }
 
+/* Infinite scroll "loading more" indicator */
+.opds-load-more {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 0;
+}
+
+.loader-mini {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(128, 128, 128, 0.25);
+  border-top-color: #f16464;
+  animation: opds-spin 0.7s linear infinite;
+}
+
+@keyframes opds-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Download buttons bar (detail view, bottom-left) */
 .opds-bottom-bar {
   position: absolute;

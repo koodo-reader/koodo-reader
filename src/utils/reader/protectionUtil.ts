@@ -1,5 +1,5 @@
 import { isElectron } from "react-device-detect";
-import { TokenService } from "../../assets/lib/kookit-extra-browser.min";
+import TokenService from "../storage/tokenService";
 
 declare var window: any;
 
@@ -43,8 +43,8 @@ export async function getBiometricCapability(): Promise<BiometricCapability> {
   }
 
   return await window
-    .require("electron")
-    .ipcRenderer.invoke("get-biometric-capability");
+    .electronAPI
+    .invoke("get-biometric-capability");
 }
 
 export async function promptBiometricAuth(
@@ -59,8 +59,8 @@ export async function promptBiometricAuth(
   }
 
   return await window
-    .require("electron")
-    .ipcRenderer.invoke("prompt-biometric-auth", {
+    .electronAPI
+    .invoke("prompt-biometric-auth", {
       message,
     });
 }

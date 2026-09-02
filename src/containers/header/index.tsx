@@ -36,6 +36,7 @@ const mapStateToProps = (state: stateType) => {
     isLoadMore: state.manager.isLoadMore,
     isSortDisplay: state.manager.isSortDisplay,
     bookSortCode: state.manager.bookSortCode,
+    importBookFunc: state.book.importBookFunc,
   };
 };
 const actionCreator = {

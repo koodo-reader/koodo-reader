@@ -8,6 +8,7 @@ const mapStateToProps = (state: stateType) => {
   return {
     isAnnotationOpen: state.reader.isAnnotationOpen,
     isSettingLocked: state.reader.isSettingLocked,
+    isDockedRight: state.reader.isDockedRight,
     htmlBook: state.reader.htmlBook,
   };
 };

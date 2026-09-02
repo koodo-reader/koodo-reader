@@ -213,7 +213,6 @@
   padding: 32px 40px;
   border-radius: 12px;
   background: var(--color-card-bg, #fff);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
 

@@ -4,11 +4,11 @@ import {
   KookitConfig,
   SyncUtil,
   ThirdpartyRequest,
-  TokenService,
 } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";
 import { handleExitApp } from "./common";
 import { getServerRegion } from "../common";
+import TokenService from "../storage/tokenService";
 let thirdpartyRequest: ThirdpartyRequest | undefined;
 export const getThirdpartyRequest = async () => {
   if (thirdpartyRequest) {

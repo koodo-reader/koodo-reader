@@ -6,7 +6,6 @@ import { HeaderProps, HeaderState } from "./interface";
 import {
   ConfigService,
   KookitConfig,
-  TokenService,
   KOReaderUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
@@ -35,9 +34,11 @@ import {
   getWebsiteUrl,
   openInBrowser,
   resetKoodoSync,
+  scanFolderForNewBooks,
   showTaskProgress,
   throttle,
   vexComfirmAsync,
+  AUTO_IMPORT_FOLDERS_KEY,
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
@@ -47,15 +48,16 @@ import packageJson from "../../../package.json";
 import { getTempToken, updateUserConfig } from "../../utils/request/user";
 import i18n from "../../i18n";
 import { getNotification } from "../../utils/request/common";
+import TokenService from "../../utils/storage/tokenService";
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   timer: any;
   scheduledSyncTimer: any;
   private isSyncing: boolean = false;
+  private hasRunAutoImport: boolean = false;
   private resizeHandler: (() => void) | null = null;
-  private readingFinishedHandler: ((event: any, config: any) => void) | null =
-    null;
+  private readingFinishedHandler: ((config: any) => void) | null = null;
   constructor(props: HeaderProps) {
     super(props);
 
@@ -81,9 +83,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.props.handleFetchDefaultSyncOption();
     this.props.handleFetchDataSourceList();
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
-      const { ipcRenderer } = window.require("electron");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
+      const ipcRenderer = window.electronAPI;
       const dirPath = ipcRenderer.sendSync("user-data", "ping");
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(path.join(dirPath, "data", "book"), { recursive: true });
@@ -110,46 +112,40 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         console.error("upgrade failed");
       }
 
-      this.readingFinishedHandler = async (event: any, config: any) => {
+      this.readingFinishedHandler = async (config: any) => {
         this.handleFinishReading();
       };
       ipcRenderer.on("reading-finished", this.readingFinishedHandler);
-      ipcRenderer.on(
-        "open-book-from-link",
-        async (_event: any, config: any) => {
-          const book = await DatabaseService.getRecord(config.bookKey, "books");
-          if (book) {
-            BookUtil.redirectBook(book);
-          }
-        }
-      );
-      ipcRenderer.on(
-        "open-note-from-link",
-        async (_event: any, config: any) => {
-          const note = await DatabaseService.getRecord(config.noteKey, "notes");
-          if (!note) return;
-          const book = await DatabaseService.getRecord(note.bookKey, "books");
-          if (!book) return;
-          let bookLocation: any = {};
-          try {
-            bookLocation = JSON.parse(note.cfi) || {};
-          } catch (error) {
-            bookLocation.cfi = note.cfi;
-            bookLocation.chapterTitle = note.chapter;
-          }
-          if (bookLocation.fingerprint) {
-            bookLocation.chapterDocIndex = bookLocation.page - 1 + "";
-            bookLocation.chapterHref = "title" + (bookLocation.page - 1);
-          }
-          ConfigService.setObjectConfig(
-            note.bookKey,
-            bookLocation,
-            "recordLocation"
-          );
+      ipcRenderer.on("open-book-from-link", async (config: any) => {
+        const book = await DatabaseService.getRecord(config.bookKey, "books");
+        if (book) {
           BookUtil.redirectBook(book);
         }
-      );
-      ipcRenderer.on("chat-message", async (_event: any, msg: any) => {
+      });
+      ipcRenderer.on("open-note-from-link", async (config: any) => {
+        const note = await DatabaseService.getRecord(config.noteKey, "notes");
+        if (!note) return;
+        const book = await DatabaseService.getRecord(note.bookKey, "books");
+        if (!book) return;
+        let bookLocation: any = {};
+        try {
+          bookLocation = JSON.parse(note.cfi) || {};
+        } catch (error) {
+          bookLocation.cfi = note.cfi;
+          bookLocation.chapterTitle = note.chapter;
+        }
+        if (bookLocation.fingerprint) {
+          bookLocation.chapterDocIndex = bookLocation.page - 1 + "";
+          bookLocation.chapterHref = "title" + (bookLocation.page - 1);
+        }
+        ConfigService.setObjectConfig(
+          note.bookKey,
+          bookLocation,
+          "recordLocation"
+        );
+        BookUtil.redirectBook(book);
+      });
+      ipcRenderer.on("chat-message", async (msg: any) => {
         if (msg.payload.event === "new-message") {
           ConfigService.setReaderConfig("isAllowNotification", "yes");
         }
@@ -194,6 +190,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ConfigService.getItem("defaultSyncOption");
     if (!willAutoSync) {
       this.handleOpenLastReadBook();
+      this.autoScanFoldersOnStart();
     }
     this.startScheduledSync();
   }
@@ -207,7 +204,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.resizeHandler = null;
     }
     if (isElectron && this.readingFinishedHandler) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       ipcRenderer.removeListener(
         "reading-finished",
         this.readingFinishedHandler
@@ -283,14 +280,36 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         this.setState({ isSync: true });
         await this.handleCloudSync(userInfo);
         await this.handleOpenLastReadBook();
+        await this.autoScanFoldersOnStart();
+      } else {
+        await this.autoScanFoldersOnStart();
       }
     }
   }
+  autoScanFoldersOnStart = async () => {
+    if (!isElectron || this.hasRunAutoImport) return;
+    this.hasRunAutoImport = true;
+    try {
+      const folders =
+        ConfigService.getAllListConfig(AUTO_IMPORT_FOLDERS_KEY) || [];
+      if (folders.length === 0) return;
+      const importBookFunc = this.props.importBookFunc;
+      if (!importBookFunc) {
+        console.error("Auto import: no import function available");
+        return;
+      }
+      for (const folderPath of folders) {
+        await scanFolderForNewBooks(folderPath, importBookFunc);
+      }
+    } catch (error) {
+      console.error("Auto import folder scan error:", error);
+    }
+  };
   handleOpenLastReadBook = async () => {
     let filePath = "";
     //open book when app start
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       filePath = ipcRenderer.sendSync("check-file-data");
     }
     if (
@@ -410,37 +429,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     );
     if (Object.keys(config).length === 0) {
       toast.error(this.props.t("Cannot get sync config"));
-      return false;
-    }
-    if (
-      ConfigService.getItem("defaultSyncOption") === "google" &&
-      !config.version
-    ) {
-      let targetDrive = "google";
-      await TokenService.setToken(targetDrive + "_token", "");
-      SyncService.removeSyncUtil(targetDrive);
-      removeCloudConfig(targetDrive);
-      if (isElectron) {
-        const { ipcRenderer } = window.require("electron");
-        await ipcRenderer.invoke("cloud-close", {
-          service: targetDrive,
-        });
-      }
-      ConfigService.deleteListConfig(targetDrive, "dataSourceList");
-      this.props.handleFetchDataSourceList();
-      if (targetDrive === ConfigService.getItem("defaultSyncOption")) {
-        ConfigService.removeItem("defaultSyncOption");
-        this.props.handleFetchDefaultSyncOption();
-      }
-      if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
-        resetKoodoSync();
-      }
-      toast(
-        this.props.t(
-          "In order to let you directly manage your data in Google Drive, we have deprecated the old Google Drive token. Please reauthorize Google Drive in the settings. Your new data will be stored in the root directory of your Google Drive, and you can manage it directly in the Google Drive web interface."
-        ),
-        { duration: 4000 }
-      );
       return false;
     }
     await checkMissingBook();
@@ -683,30 +671,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             onClick={async () => {
               this.setState({ notificationCount: 0 });
               let deviceUuid = await TokenService.getFingerprint();
+              let url =
+                getWebsiteUrl() +
+                (ConfigService.getReaderConfig("lang").startsWith("zh")
+                  ? "/zh/faq"
+                  : "/en/faq") +
+                "?referer=app&version=" +
+                packageJson.version +
+                "&client=web&device=" +
+                deviceUuid;
               if (isElectron) {
-                window.require("electron").ipcRenderer.invoke("new-chat", {
-                  url:
-                    getWebsiteUrl() +
-                    (ConfigService.getReaderConfig("lang").startsWith("zh")
-                      ? "/zh/faq"
-                      : "/en/faq") +
-                    "?referer=app&version=" +
-                    packageJson.version +
-                    "&client=desktop&device=" +
-                    deviceUuid,
-                  locale: getChatLocale(),
+                window.electronAPI?.invoke("new-chat", {
+                  url: url,
                 });
               } else {
-                openInBrowser(
-                  getWebsiteUrl() +
-                    (ConfigService.getReaderConfig("lang").startsWith("zh")
-                      ? "/zh/faq"
-                      : "/en/faq") +
-                    "?referer=app&version=" +
-                    packageJson.version +
-                    "&client=web&device=" +
-                    deviceUuid
-                );
+                openInBrowser(url);
               }
             }}
           >
@@ -796,12 +775,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 let userInfo = await this.props.handleFetchUserInfo();
                 await this.handleCloudSync(userInfo);
               } else {
-                toast(
-                  this.props.t("Please upgrade to Pro to use this feature")
-                );
-                this.props.handleSetting(true);
-                this.props.handleSettingMode("account");
-                this.setState({ isSync: false });
+                if (
+                  ConfigService.getReaderConfig("isEnableKoReaderSync") !==
+                  "yes"
+                ) {
+                  toast(
+                    this.props.t("Please upgrade to Pro to use this feature")
+                  );
+                  this.props.handleSetting(true);
+                  this.props.handleSettingMode("account");
+                  this.setState({ isSync: false });
+                } else {
+                  this.setState({ isSync: true });
+                  await this.handleKOReaderSync();
+                  this.setState({ isSync: false });
+                }
               }
             }}
             style={{ marginTop: "2px" }}

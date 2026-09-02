@@ -4,6 +4,7 @@ const initState = {
   isOpenTokenDialog: false,
   isOpenImportDialog: false,
   isOpenOPDSDialog: false,
+  isOpenAutoImportDialog: false,
   isOpenSortShelfDialog: false,
   isOpenPopupOptionDialog: false,
   popupOptionUpdateIndex: 0,
@@ -35,6 +36,11 @@ export function backupPage(
       return {
         ...state,
         isOpenOPDSDialog: action.payload,
+      };
+    case "HANDLE_AUTO_IMPORT_DIALOG":
+      return {
+        ...state,
+        isOpenAutoImportDialog: action.payload,
       };
     case "HANDLE_SORT_SHELF_DIALOG":
       return {

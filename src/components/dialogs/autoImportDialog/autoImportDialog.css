@@ -1,0 +1,58 @@
+.auto-import-container {
+  width: 454px !important;
+}
+
+.auto-import-empty {
+  text-align: center;
+  opacity: 0.5;
+  padding: 30px 0;
+  font-size: 14px;
+}
+
+.auto-import-item {
+  padding: 12px 10px !important;
+}
+
+.auto-import-folder-icon {
+  margin-right: 8px;
+  font-size: 15px;
+}
+
+.auto-import-item .cloud-drive-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auto-import-add-button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 40px;
+  text-align: right;
+}
+
+.auto-import-add-button .cloud-drive-label {
+  width: auto;
+  font-size: 16px;
+  color: #f16464;
+}
+
+.auto-import-scan-button {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding-left: 10px;
+  height: 40px;
+  min-width: 150px;
+}
+
+.auto-import-scan-button .cloud-drive-label {
+  font-size: 16px;
+  color: #f16464;
+}
+
+.auto-import-scan-icon {
+  margin-right: 6px;
+  font-size: 15px;
+}

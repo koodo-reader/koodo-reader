@@ -4,6 +4,7 @@ export interface BackgroundProps {
   margin: string;
   isNavLocked: boolean;
   isSettingLocked: boolean;
+  isDockedRight: boolean;
   backgroundColor: string;
   readerBackgroundImage?: string;
 }

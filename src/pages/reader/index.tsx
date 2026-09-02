@@ -35,6 +35,7 @@ const mapStateToProps = (state: stateType) => {
     isAnnotationOpen: state.reader.isAnnotationOpen,
     isOpenPopupOptionDialog: state.backupPage.isOpenPopupOptionDialog,
     isSettingLocked: state.reader.isSettingLocked,
+    isDockedRight: state.reader.isDockedRight,
     isAuthed: state.manager.isAuthed,
     isSearch: state.manager.isSearch,
     isSettingOpen: state.manager.isSettingOpen,

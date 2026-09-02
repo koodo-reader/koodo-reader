@@ -68,8 +68,8 @@ class ReadingSetting extends React.Component<
 
   handleResetReaderPosition = () => {
     window
-      .require("electron")
-      .ipcRenderer.invoke("reset-reader-position", "ping");
+      .electronAPI
+      .invoke("reset-reader-position", "ping");
     toast.success(this.props.t("Reset successful"));
   };
 

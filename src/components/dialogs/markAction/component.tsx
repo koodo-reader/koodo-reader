@@ -4,6 +4,12 @@ import { Trans } from "react-i18next";
 import { MarkActionProps } from "./interface";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  clampMenuPosition,
+  CONTEXT_MENU_WIDTH,
+  estimateMenuHeight,
+  SUBMENU_GAP,
+} from "../../../utils/common";
 
 const MENU_ITEM_HEIGHT = 33;
 const MENU_CONTAINER_PADDING = 5;
@@ -52,11 +58,20 @@ class MarkAction extends React.Component<MarkActionProps> {
         }}
         style={
           this.props.isShowMark
-            ? {
-                position: "fixed",
-                left: this.props.left + (this.props.isExceed ? -195 : 195),
-                top: this.props.top + SUBMENU_TOP_OFFSET,
-              }
+            ? (() => {
+                const pos = clampMenuPosition(
+                  this.props.left +
+                    (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
+                  this.props.top + SUBMENU_TOP_OFFSET,
+                  CONTEXT_MENU_WIDTH,
+                  estimateMenuHeight(2)
+                );
+                return {
+                  position: "fixed",
+                  left: pos.left,
+                  top: pos.top,
+                };
+              })()
             : { display: "none" }
         }
       >

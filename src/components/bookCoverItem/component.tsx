@@ -9,6 +9,11 @@ import toast from "react-hot-toast";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useBookItem } from "../bookItem/useBookItem";
 import { getFileNameWithoutExtension } from "../../utils/common";
+import {
+  clampMenuPosition,
+  estimateMenuHeight,
+  CONTEXT_MENU_WIDTH,
+} from "../../utils/common";
 
 declare var window: any;
 
@@ -41,10 +46,16 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     if (x > document.body.clientWidth - 300 && !props.isCollapsed) {
       x = x - 180;
     }
-    setLeft(x);
-    setTop(
-      document.body.clientHeight - e.clientY > 250 ? e.clientY : e.clientY - 200
+    const pos = clampMenuPosition(
+      x,
+      document.body.clientHeight - e.clientY > 250
+        ? e.clientY
+        : e.clientY - 200,
+      CONTEXT_MENU_WIDTH,
+      estimateMenuHeight(9)
     );
+    setLeft(pos.left);
+    setTop(pos.top);
     props.handleActionDialog(true);
     props.handleReadingBook(props.book);
   };

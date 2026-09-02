@@ -20,8 +20,8 @@ export interface DictMeta {
 class DictUtil {
   /** Copy dict file directly from a local path (Electron only, avoids loading into memory) */
   static saveDictFromPath(id: string, sourcePath: string): void {
-    const fs = window.require("fs");
-    const path = window.require("path");
+    const fs = window.electronAPI.fs;
+    const path = window.electronAPI.path;
     const ext = sourcePath.split(".").pop()?.toLowerCase() || "mdx";
     const dir = path.join(getStorageLocation() || "", DICT_FOLDER);
     if (!fs.existsSync(dir)) {
@@ -40,8 +40,8 @@ class DictUtil {
     const filename = `${id}.${ext}`;
 
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dir = path.join(getStorageLocation() || "", DICT_FOLDER);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
@@ -53,8 +53,8 @@ class DictUtil {
   /** Delete dict file by id */
   static async deleteDict(id: string): Promise<void> {
     if (isElectron) {
-      const fs = window.require("fs");
-      const path = window.require("path");
+      const fs = window.electronAPI.fs;
+      const path = window.electronAPI.path;
       const dir = path.join(getStorageLocation() || "", DICT_FOLDER);
       if (!fs.existsSync(dir)) return;
       const files: string[] = fs.readdirSync(dir);
@@ -69,8 +69,8 @@ class DictUtil {
   /** Get file path for Electron only */
   static getDictFilePath(id: string): string | null {
     if (!isElectron) return null;
-    const fs = window.require("fs");
-    const path = window.require("path");
+    const fs = window.electronAPI.fs;
+    const path = window.electronAPI.path;
     const dir = path.join(getStorageLocation() || "", DICT_FOLDER);
     if (!fs.existsSync(dir)) return null;
     const files: string[] = fs.readdirSync(dir);
@@ -84,18 +84,15 @@ class DictUtil {
       try {
         const filePath = this.getDictFilePath(id);
         if (!filePath) return "";
-        const { MDX } = window.require("js-mdict");
-        const mdict = new MDX(filePath);
-        const result = mdict.lookup(word);
-        if (
-          !result ||
-          result.definition === null ||
-          result.definition === undefined
-        ) {
+        const result = await window.electronAPI.invoke("dict-lookup", {
+          filePath,
+          word,
+        });
+        if (!result) {
           toast.error(i18n.t("Word not found in dictionary"));
           return "";
         }
-        return String(result.definition);
+        return String(result);
       } catch (e) {
         console.error("Dict lookup error:", e);
         return "";
@@ -118,7 +115,7 @@ class DictUtil {
 
   /** Delete dict metadata */
   static deleteDictMeta(id: string): void {
-    ConfigService.setObjectConfig(id, null, "customDicts");
+    ConfigService.deleteObjectConfig(id, "customDicts");
   }
 
   /** Return all stored dict ids */

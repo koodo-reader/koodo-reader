@@ -17,6 +17,7 @@ dist/
 /.vscode
 /.claude
 /.superpowers
+/.playwright-mcp
 
 # misc
 .DS_Store

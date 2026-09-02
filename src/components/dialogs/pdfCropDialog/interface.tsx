@@ -4,6 +4,7 @@ export interface PdfCropDialogProps {
   currentBook: BookModel;
   handlePdfCropDialog: (isPdfCropOpen: boolean) => void;
   isSettingLocked: boolean;
+  isDockedRight: boolean;
   t: (title: string) => string;
 }
 

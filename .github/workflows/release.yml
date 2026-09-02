@@ -23,6 +23,12 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install dependencies
+        run: yarn install
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit --noUnusedLocals false --noUnusedParameters false
+
       - name: Install Snapcraft
         uses: samuelmeuli/action-snapcraft@v3
         # Only install Snapcraft on Ubuntu

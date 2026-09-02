@@ -6,6 +6,7 @@ export interface PopupTransProps {
   plugins: Plugin[];
   currentBook: BookModel;
   isAuthed: boolean;
+  isDockedRight: boolean;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleFetchPlugins: () => void;
@@ -21,4 +22,5 @@ export interface PopupTransState {
   transSource: string;
   isAddNew: boolean;
   isFinishOutput: boolean;
+  isAiWaiting: boolean;
 }

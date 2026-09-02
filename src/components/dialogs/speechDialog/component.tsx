@@ -31,7 +31,7 @@ class SpeechDialog extends React.Component<
             width: "300px",
             height: "340px",
             overflowY: "scroll",
-            right: this.props.isSettingLocked ? 370 : 65,
+            right: this.props.isSettingLocked || this.props.isDockedRight ? 370 : 65,
           }}
         >
           <div className="speech-dialog-header">

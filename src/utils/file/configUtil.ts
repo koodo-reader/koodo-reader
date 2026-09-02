@@ -20,7 +20,7 @@ class ConfigUtil {
   public static updateData: any = {};
   static async downloadConfig(type: string) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
@@ -37,7 +37,7 @@ class ConfigUtil {
         console.error("no config file");
         return "{}";
       }
-      let fs = window.require("fs");
+      let fs = window.electronAPI.fs;
       if (!fs.existsSync(getStorageLocation() + "/config/" + type + ".json")) {
         return "{}";
       }
@@ -77,13 +77,13 @@ class ConfigUtil {
       return;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
       }
       let tokenConfig = await getCloudConfig(service);
-      let fs = window.require("fs");
+      let fs = window.electronAPI.fs;
       if (!fs.existsSync(getStorageLocation() + "/config")) {
         fs.mkdirSync(getStorageLocation() + "/config", { recursive: true });
       }
@@ -169,7 +169,7 @@ class ConfigUtil {
       return data || [];
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let service = ConfigService.getItem("defaultSyncOption");
       if (!service) {
         return;
@@ -220,7 +220,7 @@ class ConfigUtil {
       return;
     }
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       await ipcRenderer.invoke("close-database", {
         dbName: type,
         storagePath: getStorageLocation(),
@@ -275,7 +275,7 @@ class ConfigUtil {
       } else {
         queryString = `SELECT key, bookKey, chapterIndex FROM notes ORDER BY ${sort} ${order}`;
       }
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
         dbName: "notes",
         storagePath: getStorageLocation(),
@@ -322,7 +322,7 @@ class ConfigUtil {
     type: string
   ) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let queryString = "";
       let data: any[] = [];
       if (type === "note" && bookKey) {
@@ -382,7 +382,7 @@ class ConfigUtil {
   }
   static async searchBookmarksByKeyword(keyword: string, bookKey: string) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let queryString = "";
       let data: any[] = [];
       if (bookKey) {
@@ -417,7 +417,7 @@ class ConfigUtil {
   }
   static async getNoteWithTags(tags: string[]) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let queryString = "";
       let data: any[] = [];
       if (tags.length > 0) {
@@ -450,7 +450,7 @@ class ConfigUtil {
   }
   static async deleteTagFromNotes(tagName: string) {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let rawNotes: any[] = await ipcRenderer.invoke(
         "custom-database-command",
         {
@@ -495,7 +495,7 @@ class ConfigUtil {
   }
   static async getNoteList() {
     if (isElectron) {
-      const { ipcRenderer } = window.require("electron");
+      const ipcRenderer = window.electronAPI;
       let queryString = `SELECT key, bookKey, chapterIndex FROM notes ORDER BY key DESC`;
       return await ipcRenderer.invoke("custom-database-command", {
         dbName: "notes",
