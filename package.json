@@ -59,6 +59,7 @@
     "sortablejs": "^1.15.6",
     "sse.js": "^2.6.0",
     "ssh2-sftp-client": "^11.0.0",
+    "tar-stream": "^3.2.1",
     "underscore": "^1.13.7",
     "uuid": "^11.0.5",
     "webdav": "^5.7.1",
