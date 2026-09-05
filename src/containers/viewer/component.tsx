@@ -25,7 +25,10 @@ import {
   getParserRegex,
   getPdfPassword,
   getServerRegion,
+  getTarBuffer,
+  getTarEntries,
   getTextRules,
+  getZipEntries,
   throttle,
 } from "../../utils/common";
 import _ from "underscore";
@@ -363,14 +366,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             ConfigService.getReaderConfig("annotationTextSize") || "24"
           ),
           textFont:
-            ConfigService.getReaderConfig("annotationTextFont") ||
-            "sans-serif",
+            ConfigService.getReaderConfig("annotationTextFont") || "sans-serif",
           textColor:
             ConfigService.getReaderConfig("annotationTextColor") ||
             TEXT_COLORS[0],
           isKeepPDFBackground: ConfigService.getReaderConfig(
             "isKeepPDFBackground"
           ),
+          getTarBuffer: getTarBuffer,
+          getZipBuffer: getTarBuffer,
+          getTarEntries: getTarEntries,
+          getZipEntries: getZipEntries,
         },
         Kookit
       );

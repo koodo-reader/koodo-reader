@@ -410,21 +410,30 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       const fs = window.electronAPI.fs;
       const isZip = extension.toUpperCase() === "CBZ";
       // 只读取归档索引，不解压完整文件
-      const entryList: string[] = await ipcRenderer.invoke(
+      const entryList: {
+        entryPath: string;
+        size: number;
+        fileName: string;
+      }[] = await ipcRenderer.invoke(
         isZip ? "list-zip-file" : "list-tar-file",
         { filePath: sourcePath }
       );
       const images = entryList
-        .filter((name) =>
-          COMIC_IMAGE_EXTS.some((ext) => name.toLowerCase().endsWith(ext))
+        .filter((entry) =>
+          COMIC_IMAGE_EXTS.some((ext) =>
+            entry.entryPath.toLowerCase().endsWith(ext)
+          )
         )
         .sort((a, b) =>
-          a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" })
+          a.entryPath.localeCompare(b.entryPath, undefined, {
+            numeric: true,
+            sensitivity: "base",
+          })
         );
       if (images.length === 0) {
         throw new Error(this.props.t("No image found in archive"));
       }
-      const coverEntry = images[0];
+      const coverEntry = images[0].entryPath;
       const extracted: string[] = await ipcRenderer.invoke(
         isZip ? "unzip-file" : "untar-file",
         { filePath: sourcePath, entries: [coverEntry] }
