@@ -29,6 +29,7 @@ const fsExtra = require("fs-extra");
 const nodeCrypto = require("crypto");
 const yazl = require("yazl");
 const yauzl = require("yauzl");
+const tarStream = require("tar-stream");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
@@ -2406,6 +2407,208 @@ const createMainWin = () => {
       isNewBackup: true,
       configFiles: configBuffers,
     };
+  });
+  // ---- Comic 压缩包（CBZ / CBT / CBR 等）按需解压 ----
+  // list-*-file：列出压缩包内的条目名；*-file：把指定的条目按需解压到
+  // dirPath/comic 目录，返回解压后的绝对路径列表。条目路径统一做穿越校验。
+  const normalizeArchiveEntryName = (name) =>
+    String(name || "")
+      .replace(/\\/g, "/")
+      .replace(/^\.\/+/, "");
+  const assertExistingArchiveFile = (config, label) => {
+    const filePath = config && config.filePath;
+    if (typeof filePath !== "string" || !filePath) {
+      throw new TypeError(`Invalid ${label} path`);
+    }
+    if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+      throw new Error(`${label} not found: ${filePath}`);
+    }
+    return filePath;
+  };
+  const parseArchiveEntries = (entries) => {
+    if (entries === undefined || entries === null) return null;
+    if (!Array.isArray(entries) || entries.some((e) => typeof e !== "string")) {
+      throw new TypeError("Invalid entries: expected an array of entry names");
+    }
+    return new Set(entries.map(normalizeArchiveEntryName));
+  };
+  const ensureEntryInside = (baseDir, entryName) => {
+    const normalized = normalizeArchiveEntryName(entryName);
+    if (!normalized) throw new Error("Invalid empty archive entry name");
+    const base = path.resolve(baseDir);
+    const target = path.resolve(base, normalized);
+    const rel = path.relative(base, target);
+    if (
+      rel.startsWith(".." + path.sep) ||
+      path.isAbsolute(rel) ||
+      rel.split(path.sep).includes("..")
+    ) {
+      throw new Error("Archive entry path escapes the extraction directory");
+    }
+    return target;
+  };
+  ipcMain.handle("list-zip-file", async (event, config) => {
+    const filePath = assertExistingArchiveFile(config, "zip file");
+    return new Promise((resolve, reject) => {
+      const names = [];
+      yauzl.open(
+        filePath,
+        { lazyEntries: true, autoClose: true },
+        (err, zipfile) => {
+          if (err) return reject(err);
+          zipfile.on("error", reject);
+          zipfile.on("entry", (entry) => {
+            if (!/[/\\]$/.test(entry.fileName)) {
+              names.push(normalizeArchiveEntryName(entry.fileName));
+            }
+            zipfile.readEntry();
+          });
+          zipfile.on("end", () => resolve(names));
+          zipfile.readEntry();
+        }
+      );
+    });
+  });
+  ipcMain.handle("unzip-file", async (event, config) => {
+    const filePath = assertExistingArchiveFile(config, "zip file");
+    const wanted = parseArchiveEntries(config && config.entries);
+    const baseDir = path.join(dirPath, "comic");
+    fs.mkdirSync(baseDir, { recursive: true });
+    return new Promise((resolve, reject) => {
+      const results = [];
+      const fail = (err) => reject(err);
+      yauzl.open(
+        filePath,
+        { lazyEntries: true, autoClose: true },
+        (err, zipfile) => {
+          if (err) return fail(err);
+          zipfile.on("error", fail);
+          zipfile.on("end", () => resolve(results));
+          const advance = () => zipfile.readEntry();
+          zipfile.on("entry", (entry) => {
+            const name = normalizeArchiveEntryName(entry.fileName);
+            const isDir = /[/\\]$/.test(entry.fileName);
+            const matches = !wanted || wanted.has(name);
+            if (isDir) {
+              if (matches) {
+                try {
+                  fs.mkdirSync(ensureEntryInside(baseDir, name), {
+                    recursive: true,
+                  });
+                } catch (e) {
+                  return fail(e);
+                }
+              }
+              advance();
+              return;
+            }
+            if (matches) {
+              zipfile.openReadStream(entry, (openErr, readStream) => {
+                if (openErr) return fail(openErr);
+                let dest;
+                try {
+                  dest = ensureEntryInside(baseDir, name);
+                  fs.mkdirSync(path.dirname(dest), { recursive: true });
+                } catch (e) {
+                  return fail(e);
+                }
+                const output = fs.createWriteStream(dest);
+                output.on("error", fail);
+                readStream.on("error", fail);
+                output.on("close", () => {
+                  results.push(dest);
+                  advance();
+                });
+                readStream.pipe(output);
+              });
+            } else {
+              advance();
+            }
+          });
+          zipfile.readEntry();
+        }
+      );
+    });
+  });
+  ipcMain.handle("list-tar-file", async (event, config) => {
+    const filePath = assertExistingArchiveFile(config, "tar file");
+    return new Promise((resolve, reject) => {
+      const names = [];
+      const extract = tarStream.extract();
+      extract.on("error", reject);
+      extract.on("finish", () => resolve(names));
+      extract.on("entry", (header, stream, next) => {
+        if (header.type === "file") {
+          names.push(normalizeArchiveEntryName(header.name));
+        }
+        stream.resume();
+        stream.on("end", next);
+      });
+      fs.createReadStream(filePath).on("error", reject).pipe(extract);
+    });
+  });
+  ipcMain.handle("untar-file", async (event, config) => {
+    const filePath = assertExistingArchiveFile(config, "tar file");
+    const wanted = parseArchiveEntries(config && config.entries);
+    const baseDir = path.join(dirPath, "comic");
+    fs.mkdirSync(baseDir, { recursive: true });
+    return new Promise((resolve, reject) => {
+      const results = [];
+      let settled = false;
+      const fail = (err) => {
+        if (!settled) {
+          settled = true;
+          reject(err);
+        }
+      };
+      const extract = tarStream.extract();
+      extract.on("error", fail);
+      extract.on("finish", () => {
+        if (!settled) {
+          settled = true;
+          resolve(results);
+        }
+      });
+      extract.on("entry", (header, stream, next) => {
+        const name = normalizeArchiveEntryName(header.name);
+        const matches = !wanted || wanted.has(name);
+        if (header.type === "directory") {
+          if (matches) {
+            try {
+              fs.mkdirSync(ensureEntryInside(baseDir, name), {
+                recursive: true,
+              });
+            } catch (e) {
+              return fail(e);
+            }
+          }
+          stream.resume();
+          stream.on("end", next);
+          return;
+        }
+        if (header.type === "file" && matches) {
+          let dest;
+          try {
+            dest = ensureEntryInside(baseDir, name);
+            fs.mkdirSync(path.dirname(dest), { recursive: true });
+          } catch (e) {
+            return fail(e);
+          }
+          const output = fs.createWriteStream(dest);
+          output.on("error", fail);
+          stream.on("error", fail);
+          output.on("close", () => {
+            results.push(dest);
+            next();
+          });
+          stream.pipe(output);
+          return;
+        }
+        stream.resume();
+        stream.on("end", next);
+      });
+      fs.createReadStream(filePath).on("error", fail).pipe(extract);
+    });
   });
   ipcMain.handle("set-always-on-top", async (event, config) => {
     store.set("isAlwaysOnTop", config.isAlwaysOnTop);

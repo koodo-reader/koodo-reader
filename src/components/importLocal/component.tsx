@@ -300,6 +300,12 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           : "";
         if (sourcePath) {
           try {
+            if (
+              extension.toUpperCase() === "CBZ" ||
+              extension.toUpperCase() === "CBT"
+            ) {
+              return;
+            }
             const content = window.electronAPI.fs.readFileSync(sourcePath);
             const file_content = content.buffer as ArrayBuffer;
             const realSize = content.byteLength;
