@@ -18,7 +18,7 @@ import CoverUtil from "../../utils/file/coverUtil";
 import { Readability } from "@mozilla/readability";
 import {
   calculateFileMD5,
-  getStorageLocation,
+  clearComicTemp,
   getTextRules,
   supportedFormats,
   throttle,
@@ -61,31 +61,6 @@ const COMIC_IMAGE_EXTS = [
 const getComicImageExt = (name: string) => {
   const ext = name.split(".").pop()?.toLowerCase() || "png";
   return ext === "jpg" ? "jpeg" : ext;
-};
-// 解压出的封面位于 <uploads>/comic，读完转 base64 后删除并清理空目录
-const cleanupComicTemp = (extractedPath: string) => {
-  try {
-    const fs = window.electronAPI.fs;
-    const path = window.electronAPI.path;
-    fs.rmSync(extractedPath, { force: true });
-    const base = path.join(path.dirname(getStorageLocation() || ""), "comic");
-    let dir = path.dirname(extractedPath);
-    while (dir.startsWith(base) && dir.length > base.length) {
-      try {
-        fs.rmSync(dir, { force: true });
-        dir = path.dirname(dir);
-      } catch (e) {
-        break;
-      }
-    }
-    try {
-      fs.rmSync(base, { force: true });
-    } catch (e) {
-      /* base 非空则保留 */
-    }
-  } catch (e) {
-    console.error("cleanup comic temp error", e);
-  }
 };
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
@@ -460,7 +435,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         throw new Error(this.props.t("Extract cover failed"));
       }
       const buf = fs.readFileSync(extractedPath);
-      cleanupComicTemp(extractedPath);
+      clearComicTemp();
       const cover = `data:image/${getComicImageExt(
         coverEntry
       )};base64,${CommonTool.arrayBufferToBase64(buf)}`;
