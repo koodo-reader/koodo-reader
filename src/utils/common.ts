@@ -2162,7 +2162,7 @@ export const getZipEntries = async (
   }
   return await window.electronAPI.invoke("list-zip-file", { filePath });
 };
-export const clearComicTemp = async () => {
+export const clearComicTemp = () => {
   try {
     const fs = window.electronAPI.fs;
     const path = window.electronAPI.path;
