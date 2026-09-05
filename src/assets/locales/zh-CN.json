@@ -1142,6 +1142,8 @@
   "Enter your API Key": "请输入您的 API Key",
   "Loading...": "加载中...",
   "Fetch models": "获取模型列表",
+  "No image found in archive": "在压缩包中未找到图片",
+  "Extract cover failed": "提取封面失败",
   "Select model": "选择模型",
   "Please select a model": "请选择一个模型",
   "Model name": "模型名称",

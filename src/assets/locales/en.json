@@ -803,6 +803,8 @@
   "Failed to read file, please refresh and grant directory access again": "Failed to read file, please refresh and grant directory access again",
   "OneDrive (full access)": "OneDrive (full access)",
   "Import folder": "Import folder",
+  "No image found in archive": "No image found in archive",
+  "Extract cover failed": "Extract cover failed",
   "Error scanning folder": "Error scanning folder",
   "No files found in this folder": "No files found in this folder",
   "Scanning folder": "Scanning folder",
