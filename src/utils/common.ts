@@ -2145,3 +2145,52 @@ export const scanFolderForNewBooks = async (
   }
   return imported;
 };
+
+export const getTarEntries = async (filePath: string): Promise<string[]> => {
+  return await window.electronAPI.invoke("list-tar-file", { filePath });
+};
+export const getZipEntries = async (filePath: string): Promise<string[]> => {
+  return await window.electronAPI.invoke("list-zip-file", { filePath });
+};
+export const clearComicTemp = async () => {
+  try {
+    const fs = window.electronAPI.fs;
+    const path = window.electronAPI.path;
+    const base = path.join(path.dirname(getStorageLocation() || ""), "comic");
+    if (fs.existsSync(base)) {
+      fs.rmSync(base, { recursive: true, force: true });
+    }
+  } catch (e) {
+    console.error("clear comic temp error", e);
+  }
+};
+const readArchiveBuffer = async (
+  channel: string,
+  entryPath: string,
+  filePath: string
+): Promise<ArrayBuffer> => {
+  const extracted: string[] = await window.electronAPI.invoke(channel, {
+    filePath,
+    entries: [entryPath],
+  });
+  const extractedPath =
+    Array.isArray(extracted) && extracted.length > 0 ? extracted[0] : "";
+  if (!extractedPath) {
+    throw new Error("Failed to extract archive entry");
+  }
+  const fs = window.electronAPI.fs;
+  const buf: Buffer = fs.readFileSync(extractedPath);
+  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+};
+export const getTarBuffer = async (
+  entryPath: string,
+  filePath: string
+): Promise<ArrayBuffer> => {
+  return readArchiveBuffer("untar-file", entryPath, filePath);
+};
+export const getZipBuffer = async (
+  entryPath: string,
+  filePath: string
+): Promise<ArrayBuffer> => {
+  return readArchiveBuffer("unzip-file", entryPath, filePath);
+};
