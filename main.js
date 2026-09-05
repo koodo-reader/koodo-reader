@@ -2459,7 +2459,12 @@ const createMainWin = () => {
           zipfile.on("error", reject);
           zipfile.on("entry", (entry) => {
             if (!/[/\\]$/.test(entry.fileName)) {
-              names.push(normalizeArchiveEntryName(entry.fileName));
+              const entryPath = normalizeArchiveEntryName(entry.fileName);
+              names.push({
+                entryPath,
+                size: entry.uncompressedSize ?? 0,
+                fileName: path.posix.basename(entryPath),
+              });
             }
             zipfile.readEntry();
           });
@@ -2539,7 +2544,12 @@ const createMainWin = () => {
       extract.on("finish", () => resolve(names));
       extract.on("entry", (header, stream, next) => {
         if (header.type === "file") {
-          names.push(normalizeArchiveEntryName(header.name));
+          const entryPath = normalizeArchiveEntryName(header.name);
+          names.push({
+            entryPath,
+            size: header.size ?? 0,
+            fileName: path.posix.basename(entryPath),
+          });
         }
         stream.resume();
         stream.on("end", next);

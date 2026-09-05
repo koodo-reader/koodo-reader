@@ -2146,10 +2146,20 @@ export const scanFolderForNewBooks = async (
   return imported;
 };
 
-export const getTarEntries = async (filePath: string): Promise<string[]> => {
+export const getTarEntries = async (
+  filePath: string
+): Promise<{ entryPath: string; size: number; fileName: string }[]> => {
+  if (!isElectron) {
+    throw new Error("getTarEntries is only supported in Electron");
+  }
   return await window.electronAPI.invoke("list-tar-file", { filePath });
 };
-export const getZipEntries = async (filePath: string): Promise<string[]> => {
+export const getZipEntries = async (
+  filePath: string
+): Promise<{ entryPath: string; size: number; fileName: string }[]> => {
+  if (!isElectron) {
+    throw new Error("getZipEntries is only supported in Electron");
+  }
   return await window.electronAPI.invoke("list-zip-file", { filePath });
 };
 export const clearComicTemp = async () => {
@@ -2186,11 +2196,17 @@ export const getTarBuffer = async (
   entryPath: string,
   filePath: string
 ): Promise<ArrayBuffer> => {
+  if (!isElectron) {
+    throw new Error("getTarBuffer is only supported in Electron");
+  }
   return readArchiveBuffer("untar-file", entryPath, filePath);
 };
 export const getZipBuffer = async (
   entryPath: string,
   filePath: string
 ): Promise<ArrayBuffer> => {
+  if (!isElectron) {
+    throw new Error("getZipBuffer is only supported in Electron");
+  }
   return readArchiveBuffer("unzip-file", entryPath, filePath);
 };
