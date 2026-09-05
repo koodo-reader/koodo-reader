@@ -19,6 +19,7 @@ import {
   HIGHLIGHTER_WIDTHS,
   SHAPE_TYPES,
   TEXT_COLORS,
+  clearComicTemp,
   getDefaultOcrEngine,
   getDefaultOcrLang,
   getPageWidth,
@@ -28,6 +29,7 @@ import {
   getTarBuffer,
   getTarEntries,
   getTextRules,
+  getZipBuffer,
   getZipEntries,
   throttle,
 } from "../../utils/common";
@@ -39,6 +41,7 @@ import DatabaseService from "../../utils/storage/databaseService";
 import { getOcrResult, getOcrResultV2 } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
 import { parseWithSystemOCR } from "../../utils/request/common";
+import { isElectron } from "react-device-detect";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -239,167 +242,177 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     if (this.state.rendition) {
       this.state.rendition.removeContent();
     }
+    let result;
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, "zip", path);
-    BookUtil.fetchBook(
-      isCacheExsit ? "cache-" + key : key,
-      isCacheExsit ? "zip" : format.toLowerCase(),
-      true,
-      path
-    ).then(async (result: any) => {
-      const crop = ConfigService.getObjectConfig(
-        this.props.currentBook.key,
-        "pdfCrop",
-        null
+    if (
+      isElectron &&
+      (this.props.currentBook.format === "CBZ" ||
+        this.props.currentBook.format === "CBT")
+    ) {
+      result = new ArrayBuffer(0);
+      clearComicTemp();
+    } else {
+      result = await BookUtil.fetchBook(
+        isCacheExsit ? "cache-" + key : key,
+        isCacheExsit ? "zip" : format.toLowerCase(),
+        true,
+        path
       );
-      let pdfCrop;
-      if (crop) {
-        const top = Number(crop.top) || 0;
-        const bottom = Number(crop.bottom) || 0;
-        const left = Number(crop.left) || 0;
-        const right = Number(crop.right) || 0;
-        if (top !== 0 || bottom !== 0 || left !== 0 || right !== 0) {
-          pdfCrop = { top, bottom, left, right };
-        }
+    }
+
+    const crop = ConfigService.getObjectConfig(
+      this.props.currentBook.key,
+      "pdfCrop",
+      null
+    );
+    let pdfCrop;
+    if (crop) {
+      const top = Number(crop.top) || 0;
+      const bottom = Number(crop.bottom) || 0;
+      const left = Number(crop.left) || 0;
+      const right = Number(crop.right) || 0;
+      if (top !== 0 || bottom !== 0 || left !== 0 || right !== 0) {
+        pdfCrop = { top, bottom, left, right };
       }
-      const ocrLangKey =
-        this.props.currentBook.description.indexOf("scanned") > -1
-          ? "scannedOcrLang"
-          : "textOcrLang";
-      let rendition = BookHelper.getRendition(
-        result,
-        {
-          format: isCacheExsit ? "CACHE" : format,
-          readerMode: this.props.readerMode,
-          charset: this.props.currentBook.charset,
-          animation: ConfigService.getReaderConfig("animation") || "none",
-          convertChinese: ConfigService.getReaderConfig("convertChinese"),
-          bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
-          textRules: getTextRules(this.props.currentBook.key),
-          codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
-          parserRegex: getParserRegex(
-            this.props.currentBook.format,
+    }
+    const ocrLangKey =
+      this.props.currentBook.description.indexOf("scanned") > -1
+        ? "scannedOcrLang"
+        : "textOcrLang";
+    let rendition = BookHelper.getRendition(
+      result,
+      {
+        format: isCacheExsit ? "CACHE" : format,
+        readerMode: this.props.readerMode,
+        charset: this.props.currentBook.charset,
+        animation: ConfigService.getReaderConfig("animation") || "none",
+        convertChinese: ConfigService.getReaderConfig("convertChinese"),
+        bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
+        textRules: getTextRules(this.props.currentBook.key),
+        codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
+        parserRegex: getParserRegex(
+          this.props.currentBook.format,
+          this.props.currentBook.key
+        ),
+        fullTranslationMode:
+          ConfigService.getAllListConfig("fullTranslationBooks").includes(
             this.props.currentBook.key
-          ),
-          fullTranslationMode:
-            ConfigService.getAllListConfig("fullTranslationBooks").includes(
-              this.props.currentBook.key
-            ) && this.props.isAuthed
-              ? ConfigService.getReaderConfig("fullTranslationMode")
-              : "no",
-          textOrientation: ConfigService.getReaderConfig("textOrientation"),
-          isDarkMode:
-            ConfigService.getReaderConfig("backgroundColor") ===
-            "rgba(44,47,49,1)"
-              ? "yes"
-              : "no",
-          backgroundColor: ConfigService.getReaderConfig("backgroundColor"),
-          isMobile: "no",
-          isIndent: ConfigService.getReaderConfig("isIndent"),
-          isHyphenation: ConfigService.getReaderConfig("isHyphenation"),
-          isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
-          isAllowScript: ConfigService.getReaderConfig("isAllowScript"),
-          isBionic: ConfigService.getReaderConfig("isBionic"),
-          password: getPdfPassword(this.props.currentBook),
-          pdfCrop,
-          scale: parseFloat(this.props.scale),
-          isConvertPDF: ConfigService.getAllListConfig(
-            "convertPDFBooks"
-          ).includes(this.props.currentBook.key)
+          ) && this.props.isAuthed
+            ? ConfigService.getReaderConfig("fullTranslationMode")
+            : "no",
+        textOrientation: ConfigService.getReaderConfig("textOrientation"),
+        isDarkMode:
+          ConfigService.getReaderConfig("backgroundColor") ===
+          "rgba(44,47,49,1)"
             ? "yes"
             : "no",
-          ocrLang: getDefaultOcrLang(
-            getDefaultOcrEngine(this.props.currentBook),
-            this.props.currentBook
-          ),
-          externalWorker: {
-            recognize:
-              getDefaultOcrEngine(this.props.currentBook) === "system-ocr"
-                ? parseWithSystemOCR
-                : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
-                  ? getOcrResultV2
-                  : getOcrResult,
-          },
-          ocrEngine: getDefaultOcrEngine(this.props.currentBook),
-          serverRegion:
-            getServerRegion() === "china" && this.props.isAuthed
-              ? "china"
-              : "global",
-          paraSpacingValue:
-            ConfigService.getReaderConfig("paraSpacingValue") || "1.5",
-          titleSizeValue:
-            ConfigService.getReaderConfig("titleSizeValue") || "1.2",
-          isScannedPDF:
-            this.props.currentBook.description.indexOf("scanned") > -1
-              ? "yes"
-              : "no",
-          brushColor:
-            ConfigService.getReaderConfig("annotationBrushColor") ||
-            BRUSH_COLORS[0],
-          brushWidth: parseFloat(
-            ConfigService.getReaderConfig("annotationBrushWidth") ||
-              BRUSH_WIDTHS[1] + ""
-          ),
-          annotationStyle:
-            ConfigService.getReaderConfig("annotationStyle") || "brush",
-          highlighterColor:
-            ConfigService.getReaderConfig("annotationHighlighterColor") ||
-            HIGHLIGHTER_COLORS[0],
-          highlighterWidth: parseFloat(
-            ConfigService.getReaderConfig("annotationHighlighterWidth") ||
-              HIGHLIGHTER_WIDTHS[1] + ""
-          ),
-          highlighterOpacity: parseFloat(
-            ConfigService.getReaderConfig("annotationHighlighterOpacity") ||
-              "0.4"
-          ),
-          shapeType:
-            ConfigService.getReaderConfig("annotationShapeType") ||
-            SHAPE_TYPES[0],
-          shapeColor:
-            ConfigService.getReaderConfig("annotationShapeColor") ||
-            BRUSH_COLORS[0],
-          shapeWidth: parseFloat(
-            ConfigService.getReaderConfig("annotationShapeWidth") ||
-              BRUSH_WIDTHS[1] + ""
-          ),
-          textSize: parseFloat(
-            ConfigService.getReaderConfig("annotationTextSize") || "24"
-          ),
-          textFont:
-            ConfigService.getReaderConfig("annotationTextFont") || "sans-serif",
-          textColor:
-            ConfigService.getReaderConfig("annotationTextColor") ||
-            TEXT_COLORS[0],
-          isKeepPDFBackground: ConfigService.getReaderConfig(
-            "isKeepPDFBackground"
-          ),
-          getTarBuffer: getTarBuffer,
-          getZipBuffer: getTarBuffer,
-          getTarEntries: getTarEntries,
-          getZipEntries: getZipEntries,
+        backgroundColor: ConfigService.getReaderConfig("backgroundColor"),
+        isMobile: "no",
+        isIndent: ConfigService.getReaderConfig("isIndent"),
+        isHyphenation: ConfigService.getReaderConfig("isHyphenation"),
+        isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
+        isAllowScript: ConfigService.getReaderConfig("isAllowScript"),
+        isBionic: ConfigService.getReaderConfig("isBionic"),
+        password: getPdfPassword(this.props.currentBook),
+        pdfCrop,
+        scale: parseFloat(this.props.scale),
+        isConvertPDF: ConfigService.getAllListConfig(
+          "convertPDFBooks"
+        ).includes(this.props.currentBook.key)
+          ? "yes"
+          : "no",
+        ocrLang: getDefaultOcrLang(
+          getDefaultOcrEngine(this.props.currentBook),
+          this.props.currentBook
+        ),
+        externalWorker: {
+          recognize:
+            getDefaultOcrEngine(this.props.currentBook) === "system-ocr"
+              ? parseWithSystemOCR
+              : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
+                ? getOcrResultV2
+                : getOcrResult,
         },
-        Kookit
+        ocrEngine: getDefaultOcrEngine(this.props.currentBook),
+        serverRegion:
+          getServerRegion() === "china" && this.props.isAuthed
+            ? "china"
+            : "global",
+        paraSpacingValue:
+          ConfigService.getReaderConfig("paraSpacingValue") || "1.5",
+        titleSizeValue:
+          ConfigService.getReaderConfig("titleSizeValue") || "1.2",
+        isScannedPDF:
+          this.props.currentBook.description.indexOf("scanned") > -1
+            ? "yes"
+            : "no",
+        brushColor:
+          ConfigService.getReaderConfig("annotationBrushColor") ||
+          BRUSH_COLORS[0],
+        brushWidth: parseFloat(
+          ConfigService.getReaderConfig("annotationBrushWidth") ||
+            BRUSH_WIDTHS[1] + ""
+        ),
+        annotationStyle:
+          ConfigService.getReaderConfig("annotationStyle") || "brush",
+        highlighterColor:
+          ConfigService.getReaderConfig("annotationHighlighterColor") ||
+          HIGHLIGHTER_COLORS[0],
+        highlighterWidth: parseFloat(
+          ConfigService.getReaderConfig("annotationHighlighterWidth") ||
+            HIGHLIGHTER_WIDTHS[1] + ""
+        ),
+        highlighterOpacity: parseFloat(
+          ConfigService.getReaderConfig("annotationHighlighterOpacity") || "0.4"
+        ),
+        shapeType:
+          ConfigService.getReaderConfig("annotationShapeType") ||
+          SHAPE_TYPES[0],
+        shapeColor:
+          ConfigService.getReaderConfig("annotationShapeColor") ||
+          BRUSH_COLORS[0],
+        shapeWidth: parseFloat(
+          ConfigService.getReaderConfig("annotationShapeWidth") ||
+            BRUSH_WIDTHS[1] + ""
+        ),
+        textSize: parseFloat(
+          ConfigService.getReaderConfig("annotationTextSize") || "24"
+        ),
+        textFont:
+          ConfigService.getReaderConfig("annotationTextFont") || "sans-serif",
+        textColor:
+          ConfigService.getReaderConfig("annotationTextColor") ||
+          TEXT_COLORS[0],
+        isKeepPDFBackground: ConfigService.getReaderConfig(
+          "isKeepPDFBackground"
+        ),
+        getTarBuffer: getTarBuffer,
+        getZipBuffer: getZipBuffer,
+        getTarEntries: getTarEntries,
+        getZipEntries: getZipEntries,
+        filePath: BookUtil.getBookPath(this.props.currentBook),
+      },
+      Kookit
+    );
+    if (this.props.currentBook.format === "TXT") {
+      let bookLocation = ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
       );
-      if (this.props.currentBook.format === "TXT") {
-        let bookLocation = ConfigService.getObjectConfig(
-          this.props.currentBook.key,
-          "recordLocation",
-          {}
-        );
-        await rendition.renderTo(
-          document.getElementById("page-area"),
-          bookLocation
-        );
-      } else {
-        await rendition.renderTo(document.getElementById("page-area"));
-      }
+      await rendition.renderTo(
+        document.getElementById("page-area"),
+        bookLocation
+      );
+    } else {
+      await rendition.renderTo(document.getElementById("page-area"));
+    }
 
-      await this.handleRest(rendition);
-      this.props.handleReadingState(true);
+    await this.handleRest(rendition);
+    this.props.handleReadingState(true);
 
-      ConfigService.setListConfig(this.props.currentBook.key, "recentBooks");
-      document.title = name + " - Koodo Reader";
-    });
+    ConfigService.setListConfig(this.props.currentBook.key, "recentBooks");
+    document.title = name + " - Koodo Reader";
   };
 
   handleRest = async (rendition: any) => {
