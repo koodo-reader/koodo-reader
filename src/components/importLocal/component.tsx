@@ -426,10 +426,9 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   ) => {
     try {
       if (!isElectron) {
-        toast.error(
-          this.props.t("Import failed") + ": " + bookName,
-          { duration: 4000 }
-        );
+        toast.error(this.props.t("Import failed") + ": " + bookName, {
+          duration: 4000,
+        });
         return resolve();
       }
       const ipcRenderer = window.electronAPI;
@@ -488,29 +487,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       toast.error(this.props.t("Import failed") + ": " + bookName, {
         duration: 4000,
       });
-      return resolve();
-    }
-  };
-
-  streamProcessBookContent = async (
-    file: any,
-    bookName: string,
-    extension: string,
-    md5: string,
-    fileSize: number,
-    filePath: string,
-    resolve: (value: void) => void
-  ) => {
-    if (!isElectron) {
-      toast.error(
-        this.props.t("Streaming import is only supported in Electron.")
-      );
-      return resolve();
-    }
-    if (extension.toUpperCase() === "CBZ") {
-      return resolve();
-    }
-    if (extension.toUpperCase() === "CBT") {
       return resolve();
     }
   };
