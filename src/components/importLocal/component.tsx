@@ -18,6 +18,7 @@ import CoverUtil from "../../utils/file/coverUtil";
 import { Readability } from "@mozilla/readability";
 import {
   calculateFileMD5,
+  getStorageLocation,
   getTextRules,
   supportedFormats,
   throttle,
@@ -40,6 +41,52 @@ const supportedFormatsAccept = supportedFormats.reduce<
 }, {});
 declare var window: any;
 let clickFilePath = "";
+// Comic 封面规则与 kookit comic-book.js 保持一致：取自然排序后的第一张图片
+const COMIC_IMAGE_EXTS = [
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".gif",
+  ".bmp",
+  ".webp",
+  ".svg",
+  ".avif",
+  ".apng",
+  ".ico",
+  ".cur",
+  ".jfif",
+  ".pjpeg",
+  ".pjp",
+];
+const getComicImageExt = (name: string) => {
+  const ext = name.split(".").pop()?.toLowerCase() || "png";
+  return ext === "jpg" ? "jpeg" : ext;
+};
+// 解压出的封面位于 <uploads>/comic，读完转 base64 后删除并清理空目录
+const cleanupComicTemp = (extractedPath: string) => {
+  try {
+    const fs = window.electronAPI.fs;
+    const path = window.electronAPI.path;
+    fs.rmSync(extractedPath, { force: true });
+    const base = path.join(path.dirname(getStorageLocation() || ""), "comic");
+    let dir = path.dirname(extractedPath);
+    while (dir.startsWith(base) && dir.length > base.length) {
+      try {
+        fs.rmSync(dir, { force: true });
+        dir = path.dirname(dir);
+      } catch (e) {
+        break;
+      }
+    }
+    try {
+      fs.rmSync(base, { force: true });
+    } catch (e) {
+      /* base 非空则保留 */
+    }
+  } catch (e) {
+    console.error("cleanup comic temp error", e);
+  }
+};
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   resizeHandler: (() => void) | null = null;
@@ -304,6 +351,14 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               extension.toUpperCase() === "CBZ" ||
               extension.toUpperCase() === "CBT"
             ) {
+              await this.handleComicImport(
+                file,
+                bookName,
+                extension,
+                md5,
+                sourcePath,
+                resolve
+              );
               return;
             }
             const content = window.electronAPI.fs.readFileSync(sourcePath);
@@ -359,6 +414,82 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         reader.readAsArrayBuffer(file);
       }
     });
+  };
+
+  handleComicImport = async (
+    file: any,
+    bookName: string,
+    extension: string,
+    md5: string,
+    sourcePath: string,
+    resolve: (value: void) => void
+  ) => {
+    try {
+      if (!isElectron) {
+        toast.error(
+          this.props.t("Import failed") + ": " + bookName,
+          { duration: 4000 }
+        );
+        return resolve();
+      }
+      const ipcRenderer = window.electronAPI;
+      const fs = window.electronAPI.fs;
+      const isZip = extension.toUpperCase() === "CBZ";
+      // 只读取归档索引，不解压完整文件
+      const entryList: string[] = await ipcRenderer.invoke(
+        isZip ? "list-zip-file" : "list-tar-file",
+        { filePath: sourcePath }
+      );
+      const images = entryList
+        .filter((name) =>
+          COMIC_IMAGE_EXTS.some((ext) => name.toLowerCase().endsWith(ext))
+        )
+        .sort((a, b) =>
+          a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" })
+        );
+      if (images.length === 0) {
+        throw new Error(this.props.t("No image found in archive"));
+      }
+      const coverEntry = images[0];
+      const extracted: string[] = await ipcRenderer.invoke(
+        isZip ? "unzip-file" : "untar-file",
+        { filePath: sourcePath, entries: [coverEntry] }
+      );
+      const extractedPath =
+        Array.isArray(extracted) && extracted.length > 0 ? extracted[0] : "";
+      if (!extractedPath || !fs.existsSync(extractedPath)) {
+        throw new Error(this.props.t("Extract cover failed"));
+      }
+      const buf = fs.readFileSync(extractedPath);
+      cleanupComicTemp(extractedPath);
+      const cover = `data:image/${getComicImageExt(
+        coverEntry
+      )};base64,${CommonTool.arrayBufferToBase64(buf)}`;
+      const stat = fs.statSync(sourcePath);
+      const key = new Date().getTime() + "" + Math.floor(Math.random() * 1000);
+      const book = new BookModel(
+        key,
+        bookName,
+        "",
+        "",
+        md5,
+        cover,
+        extension.toUpperCase(),
+        "",
+        stat.size || file.size || 0,
+        images.length,
+        sourcePath,
+        ""
+      );
+      await this.handleAddBook(book, new ArrayBuffer(0), sourcePath);
+      return resolve();
+    } catch (error) {
+      console.error(error, bookName);
+      toast.error(this.props.t("Import failed") + ": " + bookName, {
+        duration: 4000,
+      });
+      return resolve();
+    }
   };
 
   streamProcessBookContent = async (
