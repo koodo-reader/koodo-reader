@@ -355,6 +355,29 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
 
+  streamProcessBookContent = async (
+    file: any,
+    bookName: string,
+    extension: string,
+    md5: string,
+    fileSize: number,
+    filePath: string,
+    resolve: (value: void) => void
+  ) => {
+    if (!isElectron) {
+      toast.error(
+        this.props.t("Streaming import is only supported in Electron.")
+      );
+      return resolve();
+    }
+    if (extension.toUpperCase() === "CBZ") {
+      return resolve();
+    }
+    if (extension.toUpperCase() === "CBT") {
+      return resolve();
+    }
+  };
+
   processBookContent = async (
     file: any,
     bookName: string,
