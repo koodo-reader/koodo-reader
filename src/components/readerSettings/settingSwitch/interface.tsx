@@ -39,6 +39,9 @@ export interface SettingSwitchState {
   customBookCSS: string;
   isWordDefinition: boolean;
   isSeperateStyle: boolean;
+  isReadingRuler: boolean;
+  readingRulerLineHeight: string;
+  readingRulerBackgroundOpacity: string;
   wordDefinitionLang: string;
   currentChineseLevel: string;
   currentJapaneseLevel: string;

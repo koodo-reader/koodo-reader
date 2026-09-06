@@ -16,7 +16,14 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       paraSpacing: ConfigService.getReaderConfig("paraSpacing") || "0",
       brightness: ConfigService.getReaderConfig("brightness") || "1",
       margin: ConfigService.getReaderConfig("margin") || "0",
-    };
+    } as SliderListState;
+    const mode = (this.props.item?.mode || "") as string;
+    if (mode && !(mode in this.state)) {
+      (this.state as any)[mode] =
+        ConfigService.getReaderConfig(mode) ||
+        this.props.item.defaultValue?.toString() ||
+        this.props.item.minValue.toString();
+    }
   }
 
   getClampedValue = (rawValue: string) => {

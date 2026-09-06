@@ -532,11 +532,6 @@ export const readerSettingList = [
     isPDF: false,
   },
   {
-    title: "Enable paragraph mode",
-    propName: "isParagraphMode",
-    isPDF: false,
-  },
-  {
     title: "Fast reading mode (make the first half of the word bold)",
     propName: "isBionic",
     isPDF: false,
@@ -591,6 +586,16 @@ export const readerSettingList = [
     title: "Hide mimical background",
     propName: "isHideBackground",
     isPDF: true,
+  },
+  {
+    title: "Enable paragraph mode",
+    propName: "isParagraphMode",
+    isPDF: false,
+  },
+  {
+    title: "Enable reading ruler",
+    propName: "isReadingRuler",
+    isPDF: false,
   },
 ];
 export const officialTranList = {
