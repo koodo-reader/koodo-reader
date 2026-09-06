@@ -4,7 +4,12 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { Buffer } from "buffer";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
-import { CloudDictItem } from "../../constants/dictConfig";
+export interface CloudDictItem {
+  id: string;
+  name: string;
+  translation: string;
+  source: string;
+}
 
 declare var window: any;
 

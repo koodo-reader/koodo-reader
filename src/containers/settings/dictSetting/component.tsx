@@ -3,9 +3,12 @@ import "./dictSetting.css";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import DictUtil, { DictMeta } from "../../../utils/file/dictUtil";
+import DictUtil, {
+  CloudDictItem,
+  DictMeta,
+} from "../../../utils/file/dictUtil";
 import { getFileNameWithoutExtension } from "../../../utils/common";
-import { CloudDictList, CloudDictItem } from "../../../constants/dictConfig";
+import { KookitConfig } from "../../../assets/lib/kookit-extra-browser.min";
 
 class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -127,7 +130,7 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <Trans>Download open dictionaries</Trans>
         </div>
         <div className="dict-cloud-list">
-          {CloudDictList.map((dict) => {
+          {KookitConfig.CloudDictList.map((dict) => {
             const installed = this.isCloudDictInstalled(dict.id);
             const isDownloading = downloadingId === dict.id;
             return (
