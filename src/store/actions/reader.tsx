@@ -104,6 +104,9 @@ export function handleHideBackground(isHideBackground: boolean) {
 export function handleParagraphMode(isParagraphMode: boolean) {
   return { type: "HANDLE_PARAGRAPH_MODE", payload: isParagraphMode };
 }
+export function handleReadingRuler(isReadingRuler: boolean) {
+  return { type: "HANDLE_READING_RULER", payload: isReadingRuler };
+}
 export function handleShowBorder(isShowPageBorder: boolean) {
   return { type: "HANDLE_SHOW_BORDER", payload: isShowPageBorder };
 }
