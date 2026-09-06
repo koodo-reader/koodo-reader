@@ -17,4 +17,6 @@ export interface SliderListState {
   brightness: string;
   scale: string;
   margin: string;
+  readingRulerLineHeight?: string;
+  readingRulerBackgroundOpacity?: string;
 }

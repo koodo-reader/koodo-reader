@@ -314,6 +314,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         isAllowScript: ConfigService.getReaderConfig("isAllowScript"),
         isBionic: ConfigService.getReaderConfig("isBionic"),
         isParagraphMode: ConfigService.getReaderConfig("isParagraphMode"),
+        isReadingRuler: ConfigService.getReaderConfig("isReadingRuler"),
+        readingRulerLineHeight: parseFloat(
+          ConfigService.getReaderConfig("readingRulerLineHeight") || "3"
+        ),
+        readingRulerBackgroundOpacity: parseFloat(
+          ConfigService.getReaderConfig("readingRulerBackgroundOpacity") ||
+            "0.5"
+        ),
+        isEnableKoReaderSync:
+          ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes",
         password: getPdfPassword(this.props.currentBook),
         pdfCrop,
         scale: parseFloat(this.props.scale),
@@ -737,11 +747,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           }
         ></div>
         <PageWidget />
-        {this.props.isHideBackground || this.props.isParagraphMode
-          ? null
-          : this.props.currentBook.key
-          ? <Background />
-          : null}
+        {this.props.isHideBackground || this.props.isParagraphMode ? null : this
+            .props.currentBook.key ? (
+          <Background />
+        ) : null}
       </>
     );
   }

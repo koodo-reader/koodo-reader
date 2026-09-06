@@ -7,6 +7,32 @@ import { wordFrequencyList } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
 import { detectLocalLanguage } from "../../../utils/common";
 import BookUtil from "../../../utils/file/bookUtil";
+import SliderList from "../sliderList";
+
+const readingRulerSliderConfigs = [
+  {
+    maxValue: 20,
+    minValue: 0,
+    mode: "readingRulerLineHeight",
+    minLabel: "0",
+    maxLabel: "20",
+    step: 1,
+    title: "Line height",
+    isPDF: false,
+    defaultValue: 3,
+  },
+  {
+    maxValue: 1,
+    minValue: 0,
+    mode: "readingRulerBackgroundOpacity",
+    minLabel: "0",
+    maxLabel: "1",
+    step: 0.05,
+    title: "Background opacity",
+    isPDF: false,
+    defaultValue: 0.5,
+  },
+];
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
   SettingSwitchState
@@ -39,6 +65,11 @@ class SettingSwitch extends React.Component<
       isCustomBookCSS:
         ConfigService.getReaderConfig("isCustomBookCSS") === "yes",
       customBookCSS: ConfigService.getReaderConfig("customBookCSS") || "",
+      isReadingRuler: ConfigService.getReaderConfig("isReadingRuler") === "yes",
+      readingRulerLineHeight:
+        ConfigService.getReaderConfig("readingRulerLineHeight") || "3",
+      readingRulerBackgroundOpacity:
+        ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.3",
       isWordDefinition: ConfigService.getAllListConfig(
         "wordDefinitionBooks"
       ).includes(props.currentBook?.key),
@@ -446,6 +477,28 @@ class SettingSwitch extends React.Component<
                   } else if (propName in renderProps) {
                     renderProps[propName]!(!this.state[propName]);
                     this.handleChange(propName);
+                  } else if (propName === "isReadingRuler") {
+                    this.handleChange(propName);
+                    if (!this.state[propName]) {
+                      if (
+                        !ConfigService.getReaderConfig("readingRulerLineHeight")
+                      ) {
+                        ConfigService.setReaderConfig(
+                          "readingRulerLineHeight",
+                          "3"
+                        );
+                      }
+                      if (
+                        !ConfigService.getReaderConfig(
+                          "readingRulerBackgroundOpacity"
+                        )
+                      ) {
+                        ConfigService.setReaderConfig(
+                          "readingRulerBackgroundOpacity",
+                          "0.3"
+                        );
+                      }
+                    }
                   } else {
                     this._handleChange(propName);
                   }
@@ -468,6 +521,10 @@ class SettingSwitch extends React.Component<
                 ></span>
               </span>
             </div>
+          ))}
+        {this.state.isReadingRuler &&
+          readingRulerSliderConfigs.map((item) => (
+            <SliderList key={item.mode} {...{ item }} />
           ))}
       </>
     );
