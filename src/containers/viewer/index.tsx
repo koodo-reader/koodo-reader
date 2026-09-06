@@ -44,6 +44,7 @@ const mapStateToProps = (state: stateType) => {
     margin: state.reader.margin,
     isHideBackground: state.reader.isHideBackground,
     isParagraphMode: state.reader.isParagraphMode,
+    isReadingRuler: state.reader.isReadingRuler,
     renderBookFunc: state.book.renderBookFunc,
   };
 };

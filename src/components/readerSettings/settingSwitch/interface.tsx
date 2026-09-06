@@ -12,6 +12,7 @@ export interface SettingSwitchProps {
   t: (title: string) => string;
   handleHideBackground: (isHideBackground: boolean) => void;
   handleParagraphMode: (isParagraphMode: boolean) => void;
+  handleReadingRuler: (isReadingRuler: boolean) => void;
   handleShowBorder: (isShowPageBorder: boolean) => void;
   handleSetting: (isOpenSetting: boolean) => void;
   handleSettingMode: (mode: string) => void;

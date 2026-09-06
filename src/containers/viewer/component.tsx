@@ -747,8 +747,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           }
         ></div>
         <PageWidget />
-        {this.props.isHideBackground || this.props.isParagraphMode ? null : this
-            .props.currentBook.key ? (
+        {this.props.isHideBackground ||
+        this.props.isParagraphMode ||
+        this.props.isReadingRuler
+          ? null
+          : this.props.currentBook.key ? (
           <Background />
         ) : null}
       </>

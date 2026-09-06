@@ -478,6 +478,7 @@ class SettingSwitch extends React.Component<
                     renderProps[propName]!(!this.state[propName]);
                     this.handleChange(propName);
                   } else if (propName === "isReadingRuler") {
+                    this.props.handleReadingRuler(!this.state.isReadingRuler);
                     this.handleChange(propName);
                     if (!this.state[propName]) {
                       if (

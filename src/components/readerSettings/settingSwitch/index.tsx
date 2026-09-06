@@ -11,6 +11,7 @@ import {
   handleSettingMode,
   handleBackgroundColor,
   handleParagraphMode,
+  handleReadingRuler,
 } from "../../../store/actions";
 
 const mapStateToProps = (state: stateType) => {
@@ -31,6 +32,7 @@ const actionCreator = {
   handleSettingMode,
   handleBackgroundColor,
   handleParagraphMode,
+  handleReadingRuler,
 };
 export default connect(
   mapStateToProps,
