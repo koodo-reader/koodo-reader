@@ -5,6 +5,7 @@ import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import DictUtil, { DictMeta } from "../../../utils/file/dictUtil";
 import { getFileNameWithoutExtension } from "../../../utils/common";
+import { CloudDictList, CloudDictItem } from "../../../constants/dictConfig";
 
 class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
   constructor(props: SettingInfoProps) {
@@ -12,6 +13,8 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     this.state = {
       dicts: [],
       isLoading: true,
+      downloadingId: "",
+      downloadProgress: 0,
     };
   }
 
@@ -80,6 +83,110 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
   };
 
+  isCloudDictInstalled = (dictId: string) => {
+    return DictUtil.getDictIds().includes(dictId);
+  };
+
+  handleDownloadCloudDict = async (dict: CloudDictItem) => {
+    if (this.isCloudDictInstalled(dict.id)) {
+      toast.success(this.props.t("Dictionary already downloaded"));
+      return;
+    }
+    if (this.state.downloadingId) return;
+
+    this.setState({ downloadingId: dict.id, downloadProgress: 0 });
+    try {
+      const success = await DictUtil.downloadCloudDict(
+        dict,
+        this.props.isAuthed,
+        (progress) => {
+          this.setState({ downloadProgress: progress });
+        }
+      );
+      if (success) {
+        this.loadDicts();
+        this.props.handleFetchPlugins();
+        toast.success(this.props.t("Download successful"));
+      } else {
+        toast.error(this.props.t("Download failed"));
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(this.props.t("Download failed"));
+    } finally {
+      this.setState({ downloadingId: "", downloadProgress: 0 });
+    }
+  };
+
+  renderCloudDictSection = () => {
+    const { downloadingId, downloadProgress } = this.state;
+
+    return (
+      <div className="dict-cloud-section">
+        <div className="dict-cloud-section-title">
+          <Trans>Download open dictionaries</Trans>
+        </div>
+        <div className="dict-cloud-list">
+          {CloudDictList.map((dict) => {
+            const installed = this.isCloudDictInstalled(dict.id);
+            const isDownloading = downloadingId === dict.id;
+            return (
+              <div key={dict.id} className="dict-cloud-item">
+                <div className="dict-cloud-item-row">
+                  <div className="dict-cloud-item-info">
+                    <span className="dict-cloud-item-name">
+                      {DictUtil.getCloudDictDisplayName(dict)}
+                    </span>
+                    <span className="dict-cloud-item-source">
+                      <Trans>Source</Trans>
+                      {": "}
+                      {dict.source}
+                    </span>
+                  </div>
+                  {installed ? (
+                    <span
+                      style={{
+                        opacity: 0.5,
+                        fontSize: 13,
+                        padding: "4px 10px",
+                        borderRadius: 6,
+                        background: "transparent",
+                      }}
+                    >
+                      <Trans>Installed</Trans>
+                    </span>
+                  ) : (
+                    <button
+                      className="dict-cloud-download-btn"
+                      disabled={!!downloadingId && !isDownloading}
+                      onClick={() => this.handleDownloadCloudDict(dict)}
+                    >
+                      {isDownloading ? (
+                        <Trans>Downloading</Trans>
+                      ) : (
+                        <Trans>Download</Trans>
+                      )}
+                    </button>
+                  )}
+                </div>
+                {isDownloading && (
+                  <div className="dict-cloud-progress">
+                    <div
+                      className="dict-cloud-progress-bar"
+                      style={{
+                        width: `${Math.round(downloadProgress * 100)}%`,
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   render() {
     const { dicts, isLoading } = this.state;
     return (
@@ -129,6 +236,8 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             ))
           )}
         </div>
+
+        {this.renderCloudDictSection()}
 
         {/* Import button */}
         <div
