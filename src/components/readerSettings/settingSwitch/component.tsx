@@ -412,7 +412,6 @@ class SettingSwitch extends React.Component<
                     isHideHeader: this.props.handleHideHeader,
                     isHideBackground: this.props.handleHideBackground,
                     isShowPageBorder: this.props.handleShowBorder,
-                    isParagraphMode: this.props.handleParagraphMode,
                   };
 
                   if (propName === "isBionic") {
@@ -437,6 +436,12 @@ class SettingSwitch extends React.Component<
                     this.handleChange(propName);
                     setTimeout(() => {
                       BookUtil.reloadBooks(this.props.currentBook);
+                    }, 500);
+                  } else if (propName === "isParagraphMode") {
+                    this.props.handleParagraphMode(!this.state.isParagraphMode);
+                    this.handleChange(propName);
+                    setTimeout(async () => {
+                      await this.props.renderBookFunc();
                     }, 500);
                   } else if (propName in renderProps) {
                     renderProps[propName]!(!this.state[propName]);
