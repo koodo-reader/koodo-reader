@@ -30,6 +30,12 @@ const nodeCrypto = require("crypto");
 const yazl = require("yazl");
 const yauzl = require("yauzl");
 const tarStream = require("tar-stream");
+const {
+  normalizeArchiveEntryName,
+  ensureEntryInside,
+  ensureTarIndex,
+  extractTarByOffsets,
+} = require("./tar-index");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
@@ -2411,10 +2417,6 @@ const createMainWin = () => {
   // ---- Comic 压缩包（CBZ / CBT / CBR 等）按需解压 ----
   // list-*-file：列出压缩包内的条目名；*-file：把指定的条目按需解压到
   // dirPath/comic 目录，返回解压后的绝对路径列表。条目路径统一做穿越校验。
-  const normalizeArchiveEntryName = (name) =>
-    String(name || "")
-      .replace(/\\/g, "/")
-      .replace(/^\.\/+/, "");
   const assertExistingArchiveFile = (config, label) => {
     const filePath = config && config.filePath;
     if (typeof filePath !== "string" || !filePath) {
@@ -2431,21 +2433,6 @@ const createMainWin = () => {
       throw new TypeError("Invalid entries: expected an array of entry names");
     }
     return new Set(entries.map(normalizeArchiveEntryName));
-  };
-  const ensureEntryInside = (baseDir, entryName) => {
-    const normalized = normalizeArchiveEntryName(entryName);
-    if (!normalized) throw new Error("Invalid empty archive entry name");
-    const base = path.resolve(baseDir);
-    const target = path.resolve(base, normalized);
-    const rel = path.relative(base, target);
-    if (
-      rel.startsWith(".." + path.sep) ||
-      path.isAbsolute(rel) ||
-      rel.split(path.sep).includes("..")
-    ) {
-      throw new Error("Archive entry path escapes the extraction directory");
-    }
-    return target;
   };
   ipcMain.handle("list-zip-file", async (event, config) => {
     const filePath = assertExistingArchiveFile(config, "zip file");
@@ -2537,6 +2524,8 @@ const createMainWin = () => {
   });
   ipcMain.handle("list-tar-file", async (event, config) => {
     const filePath = assertExistingArchiveFile(config, "tar file");
+    const index = await ensureTarIndex(filePath);
+    if (index.ok) return index.list;
     return new Promise((resolve, reject) => {
       const names = [];
       const extract = tarStream.extract();
@@ -2562,6 +2551,20 @@ const createMainWin = () => {
     const wanted = parseArchiveEntries(config && config.entries);
     const baseDir = path.join(dirPath, "comic");
     fs.mkdirSync(baseDir, { recursive: true });
+    try {
+      const index = await ensureTarIndex(filePath);
+      if (index.ok) {
+        const extracted = await extractTarByOffsets(
+          filePath,
+          index,
+          wanted,
+          baseDir
+        );
+        if (extracted) return extracted;
+      }
+    } catch (e) {
+      console.error("tar offset extract failed, fallback to stream:", e);
+    }
     return new Promise((resolve, reject) => {
       const results = [];
       let settled = false;
