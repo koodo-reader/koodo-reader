@@ -507,6 +507,11 @@ export const skinList = [
 
 export const readerSettingList = [
   {
+    title: "Enable paragraph mode",
+    propName: "isParagraphMode",
+    isPDF: false,
+  },
+  {
     title: "Render PDF from even page",
     propName: "isStartFromEven",
     isPDF: true,
@@ -586,16 +591,6 @@ export const readerSettingList = [
     title: "Hide mimical background",
     propName: "isHideBackground",
     isPDF: true,
-  },
-  {
-    title: "Enable paragraph mode",
-    propName: "isParagraphMode",
-    isPDF: false,
-  },
-  {
-    title: "Enable reading ruler",
-    propName: "isReadingRuler",
-    isPDF: false,
   },
 ];
 export const officialTranList = {

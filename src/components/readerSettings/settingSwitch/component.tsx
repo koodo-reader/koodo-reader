@@ -414,6 +414,62 @@ class SettingSwitch extends React.Component<
               </li>
             );
           })()}
+        <div className="single-control-switch-container" key="isReadingRuler">
+          <span className="single-control-switch-title">
+            <Trans>Enable reading ruler</Trans>
+          </span>
+          <span
+            className="single-control-switch"
+            onClick={() => {
+              const next = !this.state.isReadingRuler;
+              this.setState({ isReadingRuler: next });
+              ConfigService.setReaderConfig(
+                "isReadingRuler",
+                next ? "yes" : "no"
+              );
+              this.props.handleReadingRuler(next);
+              if (next) {
+                if (!ConfigService.getReaderConfig("readingRulerLineHeight")) {
+                  ConfigService.setReaderConfig("readingRulerLineHeight", "3");
+                }
+                if (
+                  !ConfigService.getReaderConfig(
+                    "readingRulerBackgroundOpacity"
+                  )
+                ) {
+                  ConfigService.setReaderConfig(
+                    "readingRulerBackgroundOpacity",
+                    "0.3"
+                  );
+                }
+              }
+              toast(this.props.t("Change successful"));
+              setTimeout(async () => {
+                await this.props.renderBookFunc();
+              }, 500);
+            }}
+            style={this.state.isReadingRuler ? {} : { opacity: 0.6 }}
+          >
+            <span
+              className="single-control-button"
+              style={
+                !this.state.isReadingRuler
+                  ? {
+                      transform: "translateX(0px)",
+                      transition: "transform 0.5s ease",
+                    }
+                  : {
+                      transform: "translateX(20px)",
+                      transition: "transform 0.5s ease",
+                    }
+              }
+            ></span>
+          </span>
+        </div>
+        {this.state.isReadingRuler &&
+          readingRulerSliderConfigs.map((item) => (
+            <SliderList key={item.mode} {...{ item }} />
+          ))}
         {readerSettingList
           .filter((item) => {
             if (
@@ -477,29 +533,6 @@ class SettingSwitch extends React.Component<
                   } else if (propName in renderProps) {
                     renderProps[propName]!(!this.state[propName]);
                     this.handleChange(propName);
-                  } else if (propName === "isReadingRuler") {
-                    this.props.handleReadingRuler(!this.state.isReadingRuler);
-                    this.handleChange(propName);
-                    if (!this.state[propName]) {
-                      if (
-                        !ConfigService.getReaderConfig("readingRulerLineHeight")
-                      ) {
-                        ConfigService.setReaderConfig(
-                          "readingRulerLineHeight",
-                          "3"
-                        );
-                      }
-                      if (
-                        !ConfigService.getReaderConfig(
-                          "readingRulerBackgroundOpacity"
-                        )
-                      ) {
-                        ConfigService.setReaderConfig(
-                          "readingRulerBackgroundOpacity",
-                          "0.3"
-                        );
-                      }
-                    }
                   } else {
                     this._handleChange(propName);
                   }
@@ -522,10 +555,6 @@ class SettingSwitch extends React.Component<
                 ></span>
               </span>
             </div>
-          ))}
-        {this.state.isReadingRuler &&
-          readingRulerSliderConfigs.map((item) => (
-            <SliderList key={item.mode} {...{ item }} />
           ))}
       </>
     );
