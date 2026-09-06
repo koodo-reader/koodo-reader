@@ -32,30 +32,32 @@ const {
   ensureEntryInside,
   ensureTarIndex,
   extractTarByOffsets,
-} = require("./tar-index");
-const { runPowerShellScript } = require("./powershell-util");
+} = require("./src/utils/main/tar-index");
+const { runPowerShellScript } = require("./src/utils/main/powershell-util");
 const {
   buildProxyUrl,
   checkCloudUrl,
   testProxyConnection,
-} = require("./network-util");
-const { backupToPath, restoreFromPath } = require("./backup-util");
+} = require("./src/utils/main/network-util");
+const { backupToPath, restoreFromPath } = require(
+  "./src/utils/main/backup-util"
+);
 const {
   setDiscordActivity,
   clearDiscordActivity,
   destroyDiscordRPC,
-} = require("./discord-rpc-util");
+} = require("./src/utils/main/discord-rpc-util");
 const {
   resolveOcrLang,
   parseOcrImageInput,
   writeOcrTempImage,
   runWindowsOcr,
   runMacosOcr,
-} = require("./ocr-util");
+} = require("./src/utils/main/ocr-util");
 const {
   getBiometricCapability,
   promptBiometricAuth,
-} = require("./biometric-util");
+} = require("./src/utils/main/biometric-util");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
