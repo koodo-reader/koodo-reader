@@ -313,6 +313,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
         isAllowScript: ConfigService.getReaderConfig("isAllowScript"),
         isBionic: ConfigService.getReaderConfig("isBionic"),
+        isParagraphMode: ConfigService.getReaderConfig("isParagraphMode"),
         password: getPdfPassword(this.props.currentBook),
         pdfCrop,
         scale: parseFloat(this.props.scale),
@@ -736,9 +737,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           }
         ></div>
         <PageWidget />
-        {this.props.isHideBackground ? null : this.props.currentBook.key ? (
-          <Background />
-        ) : null}
+        {this.props.isHideBackground || this.props.isParagraphMode
+          ? null
+          : this.props.currentBook.key
+          ? <Background />
+          : null}
       </>
     );
   }

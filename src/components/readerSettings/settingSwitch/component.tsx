@@ -21,6 +21,8 @@ class SettingSwitch extends React.Component<
       isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
       isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
       isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
+      isParagraphMode:
+        ConfigService.getReaderConfig("isParagraphMode") === "yes",
       isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
       isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
       isKeepPDFBackground:
@@ -410,6 +412,7 @@ class SettingSwitch extends React.Component<
                     isHideHeader: this.props.handleHideHeader,
                     isHideBackground: this.props.handleHideBackground,
                     isShowPageBorder: this.props.handleShowBorder,
+                    isParagraphMode: this.props.handleParagraphMode,
                   };
 
                   if (propName === "isBionic") {

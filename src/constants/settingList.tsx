@@ -532,6 +532,11 @@ export const readerSettingList = [
     isPDF: false,
   },
   {
+    title: "Enable paragraph mode",
+    propName: "isParagraphMode",
+    isPDF: false,
+  },
+  {
     title: "Fast reading mode (make the first half of the word bold)",
     propName: "isBionic",
     isPDF: false,
