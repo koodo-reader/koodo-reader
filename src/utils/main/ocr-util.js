@@ -173,7 +173,7 @@ const runMacosOcr = (imagePath, macosLang) => {
   const archName =
     arch === "arm64" ? "aarch64" : arch === "x64" ? "x86_64" : arch;
   const binPath = isDev
-    ? path.join(__dirname, "assets/macos/ocr-" + archName + "-apple-darwin")
+    ? path.join(__dirname, "../../..", "assets/macos/ocr-" + archName + "-apple-darwin")
     : path.join(
         process.resourcesPath,
         "assets/macos/ocr-" + archName + "-apple-darwin"
