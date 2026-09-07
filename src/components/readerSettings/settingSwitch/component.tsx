@@ -33,6 +33,20 @@ const readingRulerSliderConfigs = [
     defaultValue: 0.5,
   },
 ];
+
+const speedReadingSliderConfigs = [
+  {
+    maxValue: 900,
+    minValue: 100,
+    mode: "speedReadingSpeed",
+    minLabel: "100",
+    maxLabel: "900",
+    step: 50,
+    title: "Reading speed (WPM)",
+    isPDF: false,
+    defaultValue: 300,
+  },
+];
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
   SettingSwitchState
@@ -70,6 +84,9 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("readingRulerLineHeight") || "3",
       readingRulerBackgroundOpacity:
         ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.3",
+      isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
+      speedReadingSpeed:
+        ConfigService.getReaderConfig("speedReadingSpeed") || "300",
       isWordDefinition: ConfigService.getAllListConfig(
         "wordDefinitionBooks"
       ).includes(props.currentBook?.key),
@@ -468,6 +485,52 @@ class SettingSwitch extends React.Component<
         </div>
         {this.state.isReadingRuler &&
           readingRulerSliderConfigs.map((item) => (
+            <SliderList key={item.mode} {...{ item }} />
+          ))}
+        <div className="single-control-switch-container" key="isSpeedReading">
+          <span className="single-control-switch-title">
+            <Trans>Enable speed reading</Trans>
+          </span>
+          <span
+            className="single-control-switch"
+            onClick={() => {
+              const next = !this.state.isSpeedReading;
+              this.setState({ isSpeedReading: next });
+              ConfigService.setReaderConfig(
+                "isSpeedReading",
+                next ? "yes" : "no"
+              );
+              this.props.handleSpeedReading(next);
+              if (next) {
+                if (!ConfigService.getReaderConfig("speedReadingSpeed")) {
+                  ConfigService.setReaderConfig("speedReadingSpeed", "300");
+                }
+              }
+              toast(this.props.t("Change successful"));
+              setTimeout(async () => {
+                await this.props.renderBookFunc();
+              }, 500);
+            }}
+            style={this.state.isSpeedReading ? {} : { opacity: 0.6 }}
+          >
+            <span
+              className="single-control-button"
+              style={
+                !this.state.isSpeedReading
+                  ? {
+                      transform: "translateX(0px)",
+                      transition: "transform 0.5s ease",
+                    }
+                  : {
+                      transform: "translateX(20px)",
+                      transition: "transform 0.5s ease",
+                    }
+              }
+            ></span>
+          </span>
+        </div>
+        {this.state.isSpeedReading &&
+          speedReadingSliderConfigs.map((item) => (
             <SliderList key={item.mode} {...{ item }} />
           ))}
         {readerSettingList
