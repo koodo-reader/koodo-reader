@@ -44,6 +44,7 @@ export const exportBooks = async (books: Book[]) => {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     // 逐个获取并写入图书文件
+    let exportedSize = 0;
     for (let i = 0; i < books.length; i++) {
       try {
         const book = books[i];
@@ -68,6 +69,14 @@ export const exportBooks = async (books: Book[]) => {
                 else resolve(null);
               }
             );
+          });
+          exportedSize += book.size;
+          const percent =
+            totalSize > 0
+              ? Math.min(100, Math.floor((exportedSize / totalSize) * 100))
+              : 100;
+          toast.loading(i18n.t("Exporting...") + ` ${percent}%`, {
+            id: "exporting",
           });
         }
       } catch (error) {
