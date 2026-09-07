@@ -46,6 +46,7 @@ const mapStateToProps = (state: stateType) => {
     isParagraphMode: state.reader.isParagraphMode,
     isReadingRuler: state.reader.isReadingRuler,
     isSpeedReading: state.reader.isSpeedReading,
+    isMergeWord: state.reader.isMergeWord,
     isShowPageBorder: state.reader.isShowPageBorder,
     textOrientation: state.reader.textOrientation,
     renderBookFunc: state.book.renderBookFunc,

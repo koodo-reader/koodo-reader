@@ -14,6 +14,7 @@ export interface SettingSwitchProps {
   handleParagraphMode: (isParagraphMode: boolean) => void;
   handleReadingRuler: (isReadingRuler: boolean) => void;
   handleSpeedReading: (isSpeedReading: boolean) => void;
+  handleMergeWord: (isMergeWord: boolean) => void;
   handleShowBorder: (isShowPageBorder: boolean) => void;
   handleSetting: (isOpenSetting: boolean) => void;
   handleSettingMode: (mode: string) => void;
@@ -46,6 +47,7 @@ export interface SettingSwitchState {
   readingRulerBackgroundOpacity: string;
   isSpeedReading: boolean;
   speedReadingSpeed: string;
+  isMergeWord: boolean;
   wordDefinitionLang: string;
   currentChineseLevel: string;
   currentJapaneseLevel: string;
