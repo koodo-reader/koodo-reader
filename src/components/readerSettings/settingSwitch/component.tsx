@@ -576,11 +576,6 @@ class SettingSwitch extends React.Component<
                     this._handleChange(propName);
                   } else if (propName === "isShowPageBorder") {
                     this.props.handleShowBorder(!this.state.isShowPageBorder);
-                    if (!this.state.isShowPageBorder) {
-                      this.props.handleHideBackground(true);
-                      this.handleChange("isHideBackground");
-                    }
-
                     this.handleChange("isShowPageBorder");
                   } else if (propName === "isAllowScript") {
                     this.handleChange(propName);
