@@ -42,6 +42,7 @@ const initState = {
   isParagraphMode: ConfigService.getReaderConfig("isParagraphMode") === "yes",
   isReadingRuler: ConfigService.getReaderConfig("isReadingRuler") === "yes",
   isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
+  isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
   isShowPageBorder: ConfigService.getReaderConfig("isShowPageBorder") === "yes",
   textOrientation: ConfigService.getReaderConfig("textOrientation") || "",
   jumpPosition: null as object | null,
@@ -168,6 +169,11 @@ export function reader(
       return {
         ...state,
         isSpeedReading: action.payload,
+      };
+    case "HANDLE_MERGE_WORD":
+      return {
+        ...state,
+        isMergeWord: action.payload,
       };
     case "HANDLE_SHOW_BORDER":
       return {

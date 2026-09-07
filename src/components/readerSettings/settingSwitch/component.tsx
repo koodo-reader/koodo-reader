@@ -87,6 +87,7 @@ class SettingSwitch extends React.Component<
       isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
       speedReadingSpeed:
         ConfigService.getReaderConfig("speedReadingSpeed") || "300",
+      isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
       isWordDefinition: ConfigService.getAllListConfig(
         "wordDefinitionBooks"
       ).includes(props.currentBook?.key),
@@ -588,6 +589,9 @@ class SettingSwitch extends React.Component<
                     setTimeout(async () => {
                       await this.props.renderBookFunc();
                     }, 500);
+                  } else if (propName === "isMergeWord") {
+                    this.props.handleMergeWord(!this.state.isMergeWord);
+                    this._handleChange(propName);
                   } else if (propName in renderProps) {
                     renderProps[propName]!(!this.state[propName]);
                     this.handleChange(propName);

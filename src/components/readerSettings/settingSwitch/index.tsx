@@ -13,6 +13,7 @@ import {
   handleParagraphMode,
   handleReadingRuler,
   handleSpeedReading,
+  handleMergeWord,
 } from "../../../store/actions";
 
 const mapStateToProps = (state: stateType) => {
@@ -35,6 +36,7 @@ const actionCreator = {
   handleParagraphMode,
   handleReadingRuler,
   handleSpeedReading,
+  handleMergeWord,
 };
 export default connect(
   mapStateToProps,

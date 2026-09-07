@@ -19,6 +19,7 @@ export interface ViewerProps {
   isParagraphMode: boolean;
   isReadingRuler: boolean;
   isSpeedReading: boolean;
+  isMergeWord: boolean;
   isShowPageBorder: boolean;
   textOrientation: string;
   defaultSyncOption: string;
