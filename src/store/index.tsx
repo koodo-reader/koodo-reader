@@ -115,6 +115,7 @@ export type stateType = {
     isHideBackground: boolean;
     isParagraphMode: boolean;
     isReadingRuler: boolean;
+    isSpeedReading: boolean;
     isShowPageBorder: boolean;
     textOrientation: string;
     noteKey: string;

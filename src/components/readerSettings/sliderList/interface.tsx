@@ -19,4 +19,5 @@ export interface SliderListState {
   margin: string;
   readingRulerLineHeight?: string;
   readingRulerBackgroundOpacity?: string;
+  speedReadingSpeed?: string;
 }
