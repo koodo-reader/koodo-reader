@@ -39,9 +39,10 @@ const {
   checkCloudUrl,
   testProxyConnection,
 } = require("./src/utils/main/network-util");
-const { backupToPath, restoreFromPath } = require(
-  "./src/utils/main/backup-util"
-);
+const {
+  backupToPath,
+  restoreFromPath,
+} = require("./src/utils/main/backup-util");
 const {
   setDiscordActivity,
   clearDiscordActivity,
