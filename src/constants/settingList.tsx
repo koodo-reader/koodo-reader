@@ -509,7 +509,7 @@ export const readerSettingList = [
   {
     title: "Enable paragraph mode",
     propName: "isParagraphMode",
-    isPDF: false,
+    isPDF: true,
   },
   {
     title: "Render PDF from even page",
