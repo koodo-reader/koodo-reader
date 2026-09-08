@@ -2210,3 +2210,10 @@ export const getZipBuffer = async (
   }
   return readArchiveBuffer("unzip-file", entryPath, filePath);
 };
+export const isReadingAidMode = () => {
+  return (
+    ConfigService.getReaderConfig("isParagraphMode") === "yes" ||
+    ConfigService.getReaderConfig("isSpeedReading") === "yes" ||
+    ConfigService.getReaderConfig("isReadingRuler") === "yes"
+  );
+};
