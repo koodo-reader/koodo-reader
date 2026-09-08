@@ -192,6 +192,11 @@ const NAV_TAB_SHORTCUTS: Array<{
   { shortcut: "openToc", tab: "contents" },
 ];
 let lock = false; //prevent from clicking too fasts
+const isPreventScroll = () =>
+  ConfigService.getReaderConfig("isParagraphMode") === "yes" ||
+  ConfigService.getReaderConfig("isSpeedReading") === "yes" ||
+  ConfigService.getReaderConfig("isReadingRuler") === "yes";
+
 const arrowKeys = async (
   rendition: any,
   event: any,
@@ -204,6 +209,22 @@ const arrowKeys = async (
     event.target.tagName.toLowerCase() === "input"
   ) {
     return;
+  }
+  if (readerMode === "scroll" && isPreventScroll()) {
+    // 段落模式下拦截滚动模式的原生滚动按键，改为逐段导航
+    const shortcutConfig = getShortcutConfig();
+    if (matchShortcut(event, shortcutConfig.prevPage)) {
+      event.preventDefault();
+      await rendition.prev();
+      handleShortcut(event, format, bookKey, rendition);
+      return;
+    }
+    if (matchShortcut(event, shortcutConfig.nextPage)) {
+      event.preventDefault();
+      await rendition.next();
+      handleShortcut(event, format, bookKey, rendition);
+      return;
+    }
   }
   if (isPrevPageKey(event, readerMode)) {
     event.preventDefault();
@@ -392,14 +413,20 @@ export const bindHtmlEvent = (
       if (lock) return;
       lock = true;
       if (readerMode === "scroll") {
-        await sleep(200);
-        await rendition.record();
-        if (
-          Math.abs(event.deltaX) === 0 &&
-          ConfigService.getReaderConfig("isDisableAutoScroll") !== "yes"
-        ) {
-          let srollElement = document.getElementById("page-area");
-          await scrollChapter(srollElement, rendition, event.deltaY);
+        if (Math.abs(event.deltaX) === 0 && isPreventScroll()) {
+          // 段落模式下阻止原生滚动导致遮罩漂移，改为逐段导航
+          event.preventDefault();
+          await mouseChrome(rendition, event.deltaY);
+        } else {
+          await sleep(200);
+          await rendition.record();
+          if (
+            Math.abs(event.deltaX) === 0 &&
+            ConfigService.getReaderConfig("isDisableAutoScroll") !== "yes"
+          ) {
+            let srollElement = document.getElementById("page-area");
+            await scrollChapter(srollElement, rendition, event.deltaY);
+          }
         }
       } else {
         if (Math.abs(event.deltaX) === 0) {

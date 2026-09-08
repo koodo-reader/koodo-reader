@@ -31,6 +31,7 @@ import {
   getTextRules,
   getZipBuffer,
   getZipEntries,
+  isReadingAidMode,
   throttle,
 } from "../../utils/common";
 import _ from "underscore";
@@ -728,7 +729,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         )}
         <div
           className={
-            this.props.readerMode === "scroll"
+            this.props.readerMode === "scroll" && !isReadingAidMode()
               ? "html-viewer-page scrolling-html-viewer-page"
               : "html-viewer-page"
           }
