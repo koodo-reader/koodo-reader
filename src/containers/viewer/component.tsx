@@ -317,6 +317,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         isParagraphMode: ConfigService.getReaderConfig("isParagraphMode"),
         isReadingRuler: ConfigService.getReaderConfig("isReadingRuler"),
         isSpeedReading: ConfigService.getReaderConfig("isSpeedReading"),
+        isShowTotalPage: "yes",
         speedReadingSpeed: parseFloat(
           ConfigService.getReaderConfig("speedReadingSpeed") || "300"
         ),

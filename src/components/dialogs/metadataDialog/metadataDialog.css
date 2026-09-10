@@ -158,6 +158,36 @@
   float: right;
 }
 
+.metadata-book-publisher {
+  font-size: 11px;
+  opacity: 0.65;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 2px;
+}
+
+.metadata-book-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.metadata-book-rating-stars {
+  color: #f5a623;
+  letter-spacing: 1px;
+}
+
+.metadata-book-rating-value {
+  opacity: 0.75;
+}
+
+.metadata-book-rating-count {
+  opacity: 0.55;
+}
+
 .metadata-book-detail {
   padding: 0 10px 10px 70px;
   font-size: 12px;
