@@ -1,6 +1,8 @@
 import React from "react";
 import "./metadataDialog.css";
 import { Trans } from "react-i18next";
+import Parser from "html-react-parser";
+import DOMPurify from "dompurify";
 import {
   MetadataDialogProps,
   MetadataDialogState,
@@ -208,7 +210,7 @@ class MetadataDialog extends React.Component<
                             {stars}
                           </span>
                           <span className="metadata-book-rating-value">
-                            {rating} / {maxRating}
+                            {rating.toFixed(1)} / {maxRating}
                           </span>
                           {ratingCount > 0 && (
                             <span className="metadata-book-rating-count">
@@ -269,7 +271,7 @@ class MetadataDialog extends React.Component<
                             <Trans>Description</Trans>:
                           </span>
                           <span className="metadata-book-detail-value">
-                            {description}
+                            {Parser(DOMPurify.sanitize(description))}
                           </span>
                         </div>
                       )}
