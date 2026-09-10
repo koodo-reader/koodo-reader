@@ -215,6 +215,32 @@
   text-overflow: ellipsis;
 }
 
+.metadata-book-detail-isbn {
+  flex: none;
+}
+
+.metadata-book-copy-btn {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.4;
+  background: transparent;
+  color: inherit;
+}
+
+.metadata-book-copy-btn:hover {
+  opacity: 0.5;
+}
+
 .metadata-dialog-apply-row {
   display: flex;
   justify-content: flex-end;
