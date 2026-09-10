@@ -171,7 +171,7 @@ class MetadataDialog extends React.Component<
               const author = item.author;
               const publisher = item.publisher || "";
               const description = item.description || "";
-              const source = "Cloud";
+              const ratingSource = item.rating_source || "";
               return (
                 <div
                   key={id}
@@ -191,11 +191,6 @@ class MetadataDialog extends React.Component<
                     <div className="metadata-book-basic">
                       <div className="metadata-book-name">{title}</div>
                       <div className="metadata-book-author">{author}</div>
-                      <div className="metadata-book-source">
-                        {this.props.t("Data source") +
-                          ": " +
-                          this.props.t(source)}
-                      </div>
                     </div>
                   </div>
 
