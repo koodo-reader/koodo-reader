@@ -10,6 +10,7 @@ import {
   BookResultItem,
 } from "./interface";
 import toast from "react-hot-toast";
+import copy from "copy-text-to-clipboard";
 import { getBookMetadata } from "../../../utils/request/reader";
 
 class MetadataDialog extends React.Component<
@@ -225,6 +226,26 @@ class MetadataDialog extends React.Component<
                   {/* Expanded detail */}
                   {isSelected && (
                     <div className="metadata-book-detail">
+                      {item.isbn && (
+                        <div className="metadata-book-detail-row">
+                          <span className="metadata-book-detail-label">
+                            <Trans>ISBN</Trans>:
+                          </span>
+                          <span className="metadata-book-detail-value metadata-book-detail-isbn">
+                            {item.isbn}
+                          </span>
+                          <button
+                            className="metadata-book-copy-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              copy(item.isbn || "");
+                              toast(this.props.t("Copying successful"));
+                            }}
+                          >
+                            <span className="icon-copy"></span>
+                          </button>
+                        </div>
+                      )}
                       {item.pub_date && (
                         <div className="metadata-book-detail-row">
                           <span className="metadata-book-detail-label">
