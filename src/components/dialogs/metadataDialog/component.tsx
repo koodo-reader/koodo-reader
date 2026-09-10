@@ -172,6 +172,12 @@ class MetadataDialog extends React.Component<
               const publisher = item.publisher || "";
               const description = item.description || "";
               const ratingSource = item.rating_source || "";
+              const rating = item.rating || 0;
+              const ratingCount = item.rating_count || 0;
+              const maxRating = ratingSource === "Douban" ? 10 : 5;
+              const filledStars = Math.round((rating / maxRating) * 5);
+              const stars =
+                "★".repeat(filledStars) + "☆".repeat(5 - filledStars);
               return (
                 <div
                   key={id}
@@ -191,19 +197,69 @@ class MetadataDialog extends React.Component<
                     <div className="metadata-book-basic">
                       <div className="metadata-book-name">{title}</div>
                       <div className="metadata-book-author">{author}</div>
+                      {publisher && (
+                        <div className="metadata-book-publisher">
+                          {publisher}
+                        </div>
+                      )}
+                      {item.rating ? (
+                        <div className="metadata-book-rating">
+                          <span className="metadata-book-rating-stars">
+                            {stars}
+                          </span>
+                          <span className="metadata-book-rating-value">
+                            {rating} / {maxRating}
+                          </span>
+                          {ratingCount > 0 && (
+                            <span className="metadata-book-rating-count">
+                              ({ratingCount})
+                            </span>
+                          )}
+                        </div>
+                      ) : null}
                     </div>
                   </div>
 
                   {/* Expanded detail */}
                   {isSelected && (
                     <div className="metadata-book-detail">
-                      {publisher && (
+                      {item.pub_date && (
                         <div className="metadata-book-detail-row">
                           <span className="metadata-book-detail-label">
-                            <Trans>Publisher</Trans>:
+                            <Trans>Publish date</Trans>:
                           </span>
                           <span className="metadata-book-detail-value">
-                            {publisher}
+                            {item.pub_date}
+                          </span>
+                        </div>
+                      )}
+                      {item.categories && (
+                        <div className="metadata-book-detail-row">
+                          <span className="metadata-book-detail-label">
+                            <Trans>Categories</Trans>:
+                          </span>
+                          <span className="metadata-book-detail-value">
+                            {item.categories}
+                          </span>
+                        </div>
+                      )}
+                      {item.language && (
+                        <div className="metadata-book-detail-row">
+                          <span className="metadata-book-detail-label">
+                            <Trans>Language</Trans>:
+                          </span>
+                          <span className="metadata-book-detail-value">
+                            {item.language}
+                          </span>
+                        </div>
+                      )}
+                      {item.pages && (
+                        <div className="metadata-book-detail-row">
+                          <span className="metadata-book-detail-label">
+                            <Trans>Pages</Trans>:
+                          </span>
+                          <span className="metadata-book-detail-value">
+                            {item.pages}
                           </span>
                         </div>
                       )}
