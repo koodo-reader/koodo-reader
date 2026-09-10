@@ -144,7 +144,8 @@
 }
 
 .metadata-book-author {
-  font-size: 12px;
+  font-size: 10px;
+  line-height: 1.5;
   opacity: 0.65;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -159,7 +160,8 @@
 }
 
 .metadata-book-publisher {
-  font-size: 11px;
+  font-size: 10px;
+  line-height: 1.5;
   opacity: 0.65;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -222,7 +224,7 @@
 .metadata-book-copy-btn {
   flex-shrink: 0;
   width: 18px;
-  height: 18px;
+  height: 20px;
   padding: 0;
   font-size: 12px;
   display: flex;
