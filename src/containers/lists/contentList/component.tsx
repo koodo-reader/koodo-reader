@@ -305,17 +305,22 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
                 ></span>
               )}
 
-            <span
+            <div
               onClick={() => {
                 this.handleJump(item);
               }}
-              className="book-content-name"
+              className="book-content-name content-chapter-title"
               data-href={item.href}
             >
-              {item.label}
-              {this.state.chapterPages[item.index] !== undefined &&
-                ` (${this.state.chapterPages[item.index]})`}
-            </span>
+              <span>{item.label}</span>
+              <span
+                style={{ marginRight: "10px", opacity: 0.6, fontSize: "12px" }}
+              >
+                {this.state.chapterPages[item.index]
+                  ? this.state.chapterPages[item.index]
+                  : ""}
+              </span>
+            </div>
             {item.subitems &&
             item.subitems.length > 0 &&
             (isExpanded || this.state.isExpandContent) ? (
