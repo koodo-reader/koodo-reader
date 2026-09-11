@@ -3,6 +3,11 @@
   width: calc(100% - 15px);
   margin-left: 15px;
 }
+.content-chapter-title {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+}
 .book-content-name {
   display: block;
   padding: 10px 0px;
