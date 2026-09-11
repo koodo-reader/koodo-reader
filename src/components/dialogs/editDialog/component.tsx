@@ -107,9 +107,11 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
         if (this.authorRef.current && response.data.author) {
           this.authorRef.current.value = response.data.author;
         }
+        toast.success(this.props.t("Title recognized successfully"));
       }
     } catch (error) {
       console.error(error, title);
+      toast.error(this.props.t("Failed to recognize title"));
     } finally {
       this.setState({ isAnalyzing: false });
     }
