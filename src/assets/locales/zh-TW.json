@@ -702,6 +702,8 @@
   "Download in Browser": "在瀏覽器中下載",
   "Shelf location": "書架位置",
   "Use file name as book title": "使用檔名作為書名",
+  "Recognize book title and author with AI on import": "匯入圖書時自動使用 AI 辨識書名和作者",
+  "When importing books, if no book title is parsed from the book metadata, AI will be used to recognize the book title and author": "匯入圖書時，如果未能從圖書中繼資料解析出書名，將使用 AI 辨識書名和作者",
   "With the integration of popular cloud storage services, WebDAV, FTP, SFTP, SMB, Docker, and object storage, all your data remains securely in your control": "整合了常見雲端儲存服務、WebDAV、FTP、SFTP、SMB、Docker 和物件儲存，所有資料仍安全地由你掌控",
   "Only recommended for VIP users": "僅推薦給 VIP 用戶",
   "The 115 cloud is only recommended for VIP users, as it is nearly unusable for free users. Additionally, due to API issues with 115 cloud, synchronization can be very slow. If you insist on using 115 cloud storage for syncing, it is recommended to enable Koodo Sync simultaneously, which will significantly improve the synchronization speed.": "115 雲端僅推薦給 VIP 用戶，對免費用戶幾乎不可用。此外，因 115 雲端的 API 問題，同步可能非常緩慢。如果你堅持使用 115 雲端同步，建議同時啟用 Koodo Sync，可大幅提升同步速度。",

@@ -43,6 +43,7 @@ export interface SettingInfoState {
   isExportOriginalName: boolean;
   isDisableAI: boolean;
   isUseOriginalName: boolean;
+  isAIAnalyzeTitle: boolean;
   isPrecacheBook: boolean;
   isUseBuiltIn: boolean;
   isDeleteOriginal: boolean;

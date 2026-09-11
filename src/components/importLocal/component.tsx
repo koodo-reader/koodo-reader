@@ -26,6 +26,7 @@ import {
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit.min";
+import { analyzeBookTitle } from "../../utils/request/reader";
 
 // Convert supportedFormats to react-dropzone v14+ accept format
 // Key is MIME type, value is array of file extensions
@@ -261,6 +262,25 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
 
+  analyzeBookMetadata = async (book: BookModel, bookName: string) => {
+    if (
+      ConfigService.getReaderConfig("isAIAnalyzeTitle") !== "yes" ||
+      !this.props.isAuthed ||
+      book.name !== bookName
+    ) {
+      return;
+    }
+    try {
+      const response = await analyzeBookTitle(book.name);
+      if (response && response.code === 200 && response.data?.name) {
+        book.name = response.data.name;
+        book.author = response.data.author || book.author;
+      }
+    } catch (error) {
+      console.error(error, bookName);
+    }
+  };
+
   getMd5WithBrowser = async (file: any) => {
     return new Promise<void>(async (resolve) => {
       const md5 = await calculateFileMD5(file);
@@ -464,6 +484,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         sourcePath,
         ""
       );
+      await this.analyzeBookMetadata(book, bookName);
       await this.handleAddBook(book, new ArrayBuffer(0), sourcePath);
       return resolve();
     } catch (error) {
@@ -546,6 +567,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       });
       return resolve();
     }
+    await this.analyzeBookMetadata(result as BookModel, bookName);
     await this.handleAddBook(
       result as BookModel,
       file_content as ArrayBuffer,
