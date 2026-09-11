@@ -322,6 +322,19 @@ export const getBookMetadata = async (name: string, author: string) => {
   }
   return response;
 };
+export const analyzeBookTitle = async (title: string) => {
+  let readerRequest = await getReaderRequest();
+  let response = await readerRequest.analyzeBookTitle({ title });
+  if (response.code === 200) {
+    return response;
+  } else if (response.code === 401) {
+    handleExitApp();
+    return;
+  } else {
+    toast.error(i18n.t("Fetch failed, error code") + ": " + response.msg);
+  }
+  return response;
+};
 export const getSplitSentence = async (
   texts: { text: string; index: number }[]
 ) => {
