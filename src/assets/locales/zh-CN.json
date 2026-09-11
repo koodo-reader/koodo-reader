@@ -719,6 +719,8 @@
   "Not bound": "未绑定",
   "Shelf location": "所在书架",
   "Use file name as book title": "使用文件名作为书名",
+  "Recognize book title and author with AI on import": "导入图书时自动使用 AI 识别书名和作者",
+  "When importing books, if no book title is parsed from the book metadata, AI will be used to recognize the book title and author": "导入图书时，如果未能从图书元数据中解析出书名，将使用 AI 识别书名和作者",
   "Bound": "已绑定",
   "Document": "帮助文档",
   "Feedback": "反馈建议",
