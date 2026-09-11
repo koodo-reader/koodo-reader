@@ -12,7 +12,6 @@ import MetadataDialog from "../metadataDialog";
 import { MetadataResult } from "../metadataDialog/interface";
 import { trimSpecialCharacters } from "../../../utils/common";
 import { analyzeBookTitle } from "../../../utils/request/reader";
-import { Tooltip } from "react-tooltip";
 declare var window: any;
 
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
@@ -181,7 +180,6 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     const { coverPreview } = this.state;
     return (
       <div className="edit-dialog-container">
-        <Tooltip id="edit-dialog-tooltip" style={{ zIndex: 30 }} />
         {this.state.isMetadataDialogOpen && (
           <MetadataDialog
             {...({
@@ -268,8 +266,6 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
               </span>
               <span
                 className="edit-dialog-ai-button"
-                data-tooltip-id="edit-dialog-tooltip"
-                data-tooltip-content={this.props.t("Analyze title with AI")}
                 onClick={this.handleAnalyzeTitle}
               >
                 <svg
@@ -285,6 +281,9 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
                 >
                   <path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z" />
                 </svg>
+                <span className="edit-dialog-ai-text">
+                  <Trans>Recognize title with AI</Trans>
+                </span>
               </span>
             </div>
             <input className="edit-dialog-input" ref={this.nameRef} />
