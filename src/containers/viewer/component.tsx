@@ -312,12 +312,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         isIndent: ConfigService.getReaderConfig("isIndent"),
         isHyphenation: ConfigService.getReaderConfig("isHyphenation"),
         isStartFromEven: ConfigService.getReaderConfig("isStartFromEven"),
+        isShowTotalPage: ConfigService.getReaderConfig("isShowTotalPage"),
         isAllowScript: ConfigService.getReaderConfig("isAllowScript"),
         isBionic: ConfigService.getReaderConfig("isBionic"),
         isParagraphMode: ConfigService.getReaderConfig("isParagraphMode"),
         isReadingRuler: ConfigService.getReaderConfig("isReadingRuler"),
         isSpeedReading: ConfigService.getReaderConfig("isSpeedReading"),
-        isShowTotalPage: "yes",
         speedReadingSpeed: parseFloat(
           ConfigService.getReaderConfig("speedReadingSpeed") || "300"
         ),

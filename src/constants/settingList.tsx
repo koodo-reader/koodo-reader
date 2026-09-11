@@ -523,6 +523,11 @@ export const readerSettingList = [
     isPDF: true,
   },
   {
+    title: "Show total page number (Experimental)",
+    propName: "isShowTotalPage",
+    isPDF: true,
+  },
+  {
     title: "Allow Javascript in the books",
     propName: "isAllowScript",
     isPDF: false,

@@ -68,6 +68,8 @@ class SettingSwitch extends React.Component<
       isKeepPDFBackground:
         ConfigService.getReaderConfig("isKeepPDFBackground") === "yes",
       isAllowScript: ConfigService.getReaderConfig("isAllowScript") === "yes",
+      isShowTotalPage:
+        ConfigService.getReaderConfig("isShowTotalPage") === "yes",
       isStartFromEven:
         ConfigService.getReaderConfig("isStartFromEven") === "yes",
       isHideBackground:

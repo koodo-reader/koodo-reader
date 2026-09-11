@@ -30,6 +30,7 @@ export interface SettingSwitchState {
   isItalic: boolean;
   isInvert: boolean;
   isStartFromEven: boolean;
+  isShowTotalPage: boolean;
   isAllowScript: boolean;
   isHyphenation: boolean;
   isOrphanWidow: boolean;
