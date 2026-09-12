@@ -19,7 +19,9 @@ import i18n from "../../i18n";
 
 declare var window: any;
 
-export const backup = async (service: string): Promise<Boolean> => {
+export type BackupResult = "success" | "failed" | "cancel";
+
+export const backup = async (service: string): Promise<BackupResult> => {
   await checkMissingBook();
   let fileName = "data.zip";
   if (service === "local") {
@@ -36,8 +38,7 @@ export const backup = async (service: string): Promise<Boolean> => {
     if (service === "local") {
       const backupPath = await ipcRenderer.invoke("select-path");
       if (!backupPath) {
-        toast.error(i18n.t("Please select a backup path"));
-        return false;
+        return "cancel";
       }
       targetPath = backupPath;
     } else {
@@ -59,37 +60,35 @@ export const backup = async (service: string): Promise<Boolean> => {
       }
     );
     if (!backupResult) {
-      return false;
+      return "failed";
     }
     if (service === "local") {
-      return true;
+      return "success";
     } else {
       let tokenConfig = await getCloudConfig(service);
 
-      return await ipcRenderer.invoke("cloud-upload", {
+      return (await ipcRenderer.invoke("cloud-upload", {
         ...tokenConfig,
         fileName: "data.zip",
         service: service,
         type: "backup",
         storagePath: getStorageLocation(),
-      });
+      }))
+        ? "success"
+        : "failed";
     }
   } else {
     let blob: Blob | boolean = await backupFromStorage();
     if (!blob) {
-      return false;
+      return "failed";
     }
     if (service === "local") {
       saveAs(blob as Blob, fileName);
-      return true;
+      return "success";
     } else {
       let syncUtil = await SyncService.getSyncUtil();
       let result = await syncUtil.uploadFile(fileName, "backup", blob as Blob);
-      if (result) {
-        return true;
-      } else {
-        return false;
-      }
+      return result ? "success" : "failed";
     }
   }
 };
@@ -121,7 +120,10 @@ export const generateSnapshot = async () => {
       }
     }
     const configStr = JSON.stringify(await ConfigUtil.dumpConfig("config"));
-    entries.push({ name: "config/config.json", data: new TextEncoder().encode(configStr) });
+    entries.push({
+      name: "config/config.json",
+      data: new TextEncoder().encode(configStr),
+    });
     if (!fs.existsSync(snapshotPath))
       fs.mkdirSync(snapshotPath, { recursive: true });
     const zip = new JSZip();
