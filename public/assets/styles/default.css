@@ -106,13 +106,12 @@ a {
 .message-box-container,
 .popup-close,
 .only-local-icon,
-.active-page,
 .sk-chase-dot:before,
 .biometric-auth-button,
 .font-featured-progress-bar,
 .pin-dot.pin-dot-filled {
-  background-color: rgba(75, 75, 75, 1) !important;
-  color: rgba(255, 255, 255, 1) !important;
+  background-color: rgba(75, 75, 75, 1);
+  color: rgba(255, 255, 255, 1);
 }
 
 .header-search-box,
@@ -223,10 +222,6 @@ a {
 .message-box-container {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.3);
 }
-
-.tag-list-item {
-  background-color: white;
-}
 .add-bookmark-button,
 .exit-reading-button,
 .add-bookmark-button,
@@ -274,10 +269,7 @@ a {
 .enter-fullscreen-text,
 .book-love-icon,
 .image-operation,
-.popup-menu-triangle-up,
-.popup-menu-triangle-down,
 .add-bookmark-icon,
-.active-page,
 .exit-reading-icon,
 .message-box-icon,
 .active-icon,

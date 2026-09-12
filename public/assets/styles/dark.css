@@ -266,7 +266,6 @@ a {
 ::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb:hover,
 .active-tag,
-.active-page,
 .sk-chase-dot:before {
   background-color: rgba(235, 235, 235, 0.5);
 }
@@ -324,9 +323,6 @@ input,
 .card-list-item-card {
   border: 1px solid rgba(235, 235, 235, 0.1);
 }
-.popup-menu-triangle-up,
-.active-tag,
-.active-page,
-.popup-menu-triangle-down {
-  color: rgba(47, 52, 55, 1) !important;
+.active-tag {
+  color: rgba(47, 52, 55, 1);
 }
