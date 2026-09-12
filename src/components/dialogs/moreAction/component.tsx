@@ -93,7 +93,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
       this.props.handleActionDialog(false);
     };
 
-    const noteOffset = isNotes ? 1 : 2;
+    const noteOffset = isWords ? 3 : isNotes ? 1 : 2;
     const itemHeight = 33;
     // 主菜单渲染时会被 clampMenuPosition 校正到视口内（靠近底部时会整体上移），
     // 格式子菜单必须以主菜单“实际渲染后的 top”为基准水平对齐，而不是用未校正的 top，

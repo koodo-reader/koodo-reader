@@ -200,7 +200,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                     className="select-more-actions select-export-format-submenu"
                     style={
                       this.state.exportSubmenu === "notes"
-                        ? { left: "160px", bottom: "auto", top: "0px" }
+                        ? { left: "160px", top: "auto", bottom: "0px" }
                         : { display: "none" }
                     }
                     onMouseEnter={() => {
@@ -285,7 +285,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                     className="select-more-actions select-export-format-submenu"
                     style={
                       this.state.exportSubmenu === "highlights"
-                        ? { left: "160px", bottom: "auto", top: "0px" }
+                        ? { left: "160px", top: "auto", bottom: "0px" }
                         : { display: "none" }
                     }
                     onMouseEnter={() => {
@@ -366,7 +366,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                     className="select-more-actions select-export-format-submenu"
                     style={
                       this.state.exportSubmenu === "words"
-                        ? { left: "160px", bottom: "auto", top: "0px" }
+                        ? { left: "160px", top: "auto", bottom: "0px" }
                         : { display: "none" }
                     }
                     onMouseEnter={() => {
