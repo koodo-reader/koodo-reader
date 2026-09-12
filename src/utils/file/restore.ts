@@ -40,7 +40,9 @@ let oldConfigArr = [
   "pdfjs.history.json",
   "recordLocation.json",
 ];
-export const restoreFromBrowser = async (): Promise<Boolean> => {
+export const restoreFromBrowser = async (): Promise<
+  "success" | "failed" | "cancel"
+> => {
   return new Promise((resolve) => {
     const input = document.createElement("input");
     input.type = "file";
@@ -48,7 +50,7 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
     input.onchange = async (e: any) => {
       const file: File = e.target.files[0];
       if (!file) {
-        resolve(false);
+        resolve("cancel");
         return;
       }
       toast.loading(i18n.t("Restoring..."), {
@@ -60,7 +62,7 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
         const zip = await JSZip.loadAsync(fileBuffer);
         const isNewBackup = zip.file("config/config.json") !== null;
         if (!isNewBackup) {
-          resolve(false);
+          resolve("failed");
           return;
         }
         let failed = false;
@@ -117,7 +119,7 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
           }
         }
         if (failed) {
-          resolve(false);
+          resolve("failed");
           return;
         }
         const isUseLocal = ConfigService.getItem("isUseLocal") === "yes";
@@ -169,26 +171,30 @@ export const restoreFromBrowser = async (): Promise<Boolean> => {
             }
           })
         );
-        resolve(!failed);
+        resolve(failed ? "failed" : "success");
       } catch (error) {
         console.error("restoreFromBrowser error:", error);
-        resolve(false);
+        resolve("failed");
       }
     };
     input.click();
   });
 };
 
-export const restore = async (service: string): Promise<Boolean> => {
+export const restore = async (
+  service: string
+): Promise<"success" | "failed" | "cancel"> => {
   if (service === "local" && !isElectron) {
     let restoreRes = await restoreFromBrowser();
-    await generateSyncRecord();
+    if (restoreRes !== "cancel") {
+      await generateSyncRecord();
+    }
     return restoreRes;
   }
   const ipcRenderer = window.electronAPI;
   if (service === "local") {
     let filePath = await ipcRenderer.invoke("select-zip-file", "ping");
-    if (!filePath) return false;
+    if (!filePath) return "cancel";
     toast.loading(i18n.t("Restoring..."), {
       id: "backup",
     });
@@ -196,7 +202,7 @@ export const restore = async (service: string): Promise<Boolean> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
     let restoreRes = await restoreFromfilePath(filePath);
     await generateSyncRecord();
-    return restoreRes;
+    return restoreRes ? "success" : "failed";
   } else {
     toast.loading(i18n.t("Restoring..."), {
       id: "backup",
@@ -211,7 +217,7 @@ export const restore = async (service: string): Promise<Boolean> => {
     });
     if (!result) {
       console.error("no backup file");
-      return false;
+      return "failed";
     }
     const path = window.electronAPI.path;
     let filePath = path.join(getStorageLocation(), "backup", "data.zip");
@@ -220,7 +226,7 @@ export const restore = async (service: string): Promise<Boolean> => {
     await new Promise((resolve) => setTimeout(resolve, 100));
     let restoreRes = await restoreFromfilePath(filePath);
     await generateSyncRecord();
-    return restoreRes;
+    return restoreRes ? "success" : "failed";
   }
 };
 export const restoreFromSnapshot = async (fileName: string) => {
