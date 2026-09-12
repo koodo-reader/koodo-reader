@@ -18,6 +18,7 @@ import {
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
 import TTSUtil from "../../utils/reader/ttsUtil";
+import { getTextRules } from "../../utils/common";
 import "./textToSpeech.css";
 import { fetchUserInfo } from "../../utils/request/user";
 import { getSplitSentence } from "../../utils/request/reader";
@@ -398,6 +399,8 @@ class TextToSpeech extends React.Component<
     ) {
       ConfigService.setReaderConfig("voiceEngine", "system");
     }
+    // 每次开始朗读前刷新文本规则（replace / delete）
+    TTSUtil.setTextRules(getTextRules(this.props.currentBook?.key));
     this.handleStartSpeech();
   };
   handlePauseAudio = async () => {
@@ -886,13 +889,15 @@ class TextToSpeech extends React.Component<
   ) => {
     return new Promise<string>(async (resolve) => {
       var msg = new SpeechSynthesisUtterance();
-      msg.text = this.nodeList[index].text
-        .replace(/\s\s/g, "")
-        .replace(/\r/g, "")
-        .replace(/\n/g, "")
-        .replace(/\t/g, "")
-        .replace(/&/g, "")
-        .replace(/\f/g, "");
+      msg.text = TTSUtil.applyTextRules(
+        this.nodeList[index].text
+          .replace(/\s\s/g, "")
+          .replace(/\r/g, "")
+          .replace(/\n/g, "")
+          .replace(/\t/g, "")
+          .replace(/&/g, "")
+          .replace(/\f/g, "")
+      );
       if (!voiceName) {
         voiceName = this.nativeVoices[0]?.name;
       }
