@@ -35,27 +35,51 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
     this.state = { exportSubmenu: "" };
   }
 
-  renderFormatSubmenu(type: "notes" | "highlights") {
+  renderFormatSubmenu(type: "notes" | "highlights" | "words") {
     const isVisible = this.state.exportSubmenu === type;
     const isNotes = type === "notes";
-    const filterFn = isNotes
-      ? (note: any) =>
-          note.notes && note.notes.length > 0 && note.notes !== "annotation"
-      : (note: any) => note.notes === "";
-    const exportFn = isNotes ? exportNotes : exportHighlights;
+    const isWords = type === "words";
+    const filterFn = isWords
+      ? () => true
+      : isNotes
+        ? (note: any) =>
+            note.notes && note.notes.length > 0 && note.notes !== "annotation"
+        : (note: any) => note.notes === "";
+    const exportFn = (
+      isWords
+        ? exportDictionaryHistory
+        : isNotes
+          ? exportNotes
+          : exportHighlights
+    ) as (
+      records: any[],
+      books: any[],
+      format: "csv" | "md" | "txt" | "html" | "pdf" | "json"
+    ) => Promise<"success" | "failed" | "cancel">;
+    const formats = isWords
+      ? (["csv", "json"] as const)
+      : (["csv", "md", "txt", "html", "pdf", "json"] as const);
+    const formatLabels: Record<string, string> = {
+      csv: "CSV",
+      md: "Markdown",
+      txt: "TXT",
+      html: "HTML",
+      pdf: "PDF",
+      json: "JSON",
+    };
 
     const handleExport = async (
-      format: "csv" | "md" | "txt" | "html" | "pdf"
+      format: "csv" | "md" | "txt" | "html" | "pdf" | "json"
     ) => {
       let books = await DatabaseService.getAllRecords("books");
-      let notes = (
+      let records = (
         await DatabaseService.getRecordsByBookKey(
           this.props.currentBook.key,
-          "notes"
+          isWords ? "words" : "notes"
         )
       ).filter(filterFn);
-      if (notes.length > 0) {
-        const result = await exportFn(notes, books, format);
+      if (records.length > 0) {
+        const result = await exportFn(records, books, format);
         if (result === "success") {
           toast.success(this.props.t("Export successful"), { id: "exporting" });
         } else if (result === "failed") {
@@ -93,7 +117,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                     195,
                   mainMenuPos.top + noteOffset * itemHeight,
                   120,
-                  estimateMenuHeight(5)
+                  estimateMenuHeight(isWords ? 2 : 6)
                 );
                 return {
                   position: "fixed",
@@ -114,24 +138,14 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
         }}
       >
         <div className="action-dialog-actions-container">
-          {(["csv", "md", "txt", "html", "pdf"] as const).map((fmt) => (
+          {formats.map((fmt) => (
             <div
               key={fmt}
               className="action-dialog-edit"
               style={{ paddingLeft: "0px" }}
               onClick={() => handleExport(fmt)}
             >
-              <p className="action-name">
-                {fmt === "csv"
-                  ? "CSV"
-                  : fmt === "md"
-                    ? "Markdown"
-                    : fmt === "txt"
-                      ? "TXT"
-                      : fmt === "html"
-                        ? "HTML"
-                        : "PDF"}
-              </p>
+              <p className="action-name">{formatLabels[fmt]}</p>
             </div>
           ))}
         </div>
@@ -271,26 +285,16 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
             <div
               className="action-dialog-edit"
               style={{ paddingLeft: "0px" }}
-              onClick={async () => {
-                let dictHistory = await DatabaseService.getRecordsByBookKey(
-                  this.props.currentBook.key,
-                  "words"
-                );
-                let books = await DatabaseService.getAllRecords("books");
-                if (dictHistory.length > 0) {
-                  const result = await exportDictionaryHistory(dictHistory, books);
-                  if (result === "success") {
-                    toast.success(this.props.t("Export successful"), { id: "exporting" });
-                  } else if (result === "failed") {
-                    toast.error(this.props.t("Failed to export"), { id: "exporting" });
-                  }
-                } else {
-                  toast(this.props.t("Nothing to export"));
-                }
+              onMouseEnter={() => {
+                this.setState({ exportSubmenu: "words" });
+              }}
+              onMouseLeave={() => {
+                this.setState({ exportSubmenu: "" });
               }}
             >
-              <p className="action-name">
+              <p className="action-name export-action-name">
                 <Trans>Export dictionary history</Trans>
+                <span className="icon-dropdown icon-export-all"></span>
               </p>
             </div>
             <div
@@ -434,6 +438,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
         </div>
         {this.renderFormatSubmenu("notes")}
         {this.renderFormatSubmenu("highlights")}
+        {this.renderFormatSubmenu("words")}
       </>
     );
   }

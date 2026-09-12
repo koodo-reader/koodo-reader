@@ -27,6 +27,8 @@ let year = new Date().getFullYear(),
 
 export type ExportResult = "success" | "failed" | "cancel";
 
+export type ExportFormat = "csv" | "md" | "txt" | "html" | "pdf" | "json";
+
 export const exportBooks = async (
   books: Book[]
 ): Promise<ExportResult> => {
@@ -135,6 +137,7 @@ const toBlob = (content: string, format: string): Blob => {
     txt: "text/plain,charset=UTF-8",
     html: "text/html,charset=UTF-8",
     csv: "text/csv,charset=UTF-8",
+    json: "application/json,charset=UTF-8",
   };
   return new Blob([content], { type: mimeMap[format] || "text/plain" });
 };
@@ -157,18 +160,19 @@ const sanitizeFileName = (name: string): string =>
 // 根据 format 将 data 转为文本内容
 const convertNotesData = (
   data: any[],
-  format: "csv" | "md" | "txt" | "html"
+  format: "csv" | "md" | "txt" | "html" | "json"
 ): string => {
   if (format === "md") return convertNotesToMarkdown(data);
   if (format === "txt") return convertNotesToTxt(data);
   if (format === "html") return convertNotesToHTML(data);
+  if (format === "json") return JSON.stringify(data, null, 2);
   return convertArrayToCSV(data);
 };
 
 export const exportNotes = async (
   notes: Note[],
   books: Book[],
-  format: "csv" | "md" | "txt" | "html" | "pdf" = "csv"
+  format: ExportFormat = "csv"
 ): Promise<ExportResult> => {
   let data = notes.map((item) => {
     let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
@@ -272,6 +276,11 @@ export const exportNotes = async (
         convertNotesToHTML(data),
         `KoodoReader-Note-${fileDate}.pdf`
       );
+    } else if (format === "json") {
+      saveAs(
+        toBlob(JSON.stringify(data, null, 2), "json"),
+        `KoodoReader-Note-${fileDate}.json`
+      );
     } else {
       saveAs(
         toBlob(convertArrayToCSV(data), "csv"),
@@ -288,18 +297,19 @@ export const exportNotes = async (
 // 根据 format 将 data 转为文本内容
 const convertHighlightsData = (
   data: any[],
-  format: "csv" | "md" | "txt" | "html"
+  format: "csv" | "md" | "txt" | "html" | "json"
 ): string => {
   if (format === "md") return convertHighlightsToMarkdown(data);
   if (format === "txt") return convertHighlightsToTxt(data);
   if (format === "html") return convertHighlightsToHTML(data);
+  if (format === "json") return JSON.stringify(data, null, 2);
   return convertArrayToCSV(data);
 };
 
 export const exportHighlights = async (
   highlights: Note[],
   books: Book[],
-  format: "csv" | "md" | "txt" | "html" | "pdf" = "csv"
+  format: ExportFormat = "csv"
 ): Promise<ExportResult> => {
   let data = highlights.map((item) => {
     let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
@@ -406,6 +416,11 @@ export const exportHighlights = async (
         convertHighlightsToHTML(data),
         `KoodoReader-Highlight-${fileDate}.pdf`
       );
+    } else if (format === "json") {
+      saveAs(
+        toBlob(JSON.stringify(data, null, 2), "json"),
+        `KoodoReader-Highlight-${fileDate}.json`
+      );
     } else {
       saveAs(
         toBlob(convertArrayToCSV(data), "csv"),
@@ -420,7 +435,8 @@ export const exportHighlights = async (
 };
 export const exportDictionaryHistory = async (
   dictHistory: DictHistory[],
-  books: Book[]
+  books: Book[],
+  format: "csv" | "json" = "csv"
 ): Promise<ExportResult> => {
   let data = dictHistory.map((item) => {
     let book = books.filter((subitem) => subitem.key === item.bookKey)[0];
@@ -440,11 +456,13 @@ export const exportDictionaryHistory = async (
 
   try {
     saveAs(
-      new Blob([convertArrayToCSV(data)], { type: "text/csv,charset=UTF-8" }),
+      format === "json"
+        ? toBlob(JSON.stringify(data, null, 2), "json")
+        : new Blob([convertArrayToCSV(data)], { type: "text/csv,charset=UTF-8" }),
       "KoodoReader-Dictionary-History-" +
         `${year}-${month <= 9 ? "0" + month : month}-${
           day <= 9 ? "0" + day : day
-        }.csv`
+        }.${format}`
     );
     return "success";
   } catch (error) {

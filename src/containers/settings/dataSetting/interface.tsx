@@ -9,6 +9,7 @@ export interface SettingInfoState {
   snapshotList: { file: string; time: number }[];
   exportNotesFormat: string;
   exportHighlightsFormat: string;
+  exportWordsFormat: string;
   isEnableDiscordRPC: boolean;
   isEnableKoReaderSync: boolean;
   isEnableNotionSync: boolean;
