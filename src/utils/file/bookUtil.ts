@@ -767,11 +767,12 @@ class BookUtil {
     }
   }
   static async searchBooksByKeyword(keyword: string) {
+    console.log("Searching books with keyword:", keyword);
     if (isElectron) {
       const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
-        query: `SELECT * FROM books WHERE name LIKE ? OR author LIKE ?`,
-        data: [`%${keyword}%`, `%${keyword}%`],
+        query: `SELECT * FROM books WHERE name LIKE ? OR author LIKE ? OR key LIKE ?`,
+        data: [`%${keyword}%`, `%${keyword}%`, `%${keyword}%`],
         dbName: "books",
         storagePath: getStorageLocation(),
         executeType: "all",
@@ -783,7 +784,8 @@ class BookUtil {
       for (let book of books) {
         if (
           book.name.toLowerCase().includes(lowerKeyword) ||
-          book.author.toLowerCase().includes(lowerKeyword)
+          book.author.toLowerCase().includes(lowerKeyword) ||
+          (book.key || "").toLowerCase().includes(lowerKeyword)
         ) {
           results.push(book);
         }
