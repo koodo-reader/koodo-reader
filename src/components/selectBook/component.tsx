@@ -166,7 +166,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                       "books"
                     );
                     if (books.length > 0) {
-                      await exportBooks(books);
+                      const result = await exportBooks(books);
+                      if (result === "success") {
+                        toast.success(this.props.t("Export successful"), { id: "exporting" });
+                      } else if (result === "failed") {
+                        toast.dismiss("exporting");
+                        toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                      }
                     } else {
                       toast(this.props.t("Nothing to export"));
                     }
@@ -229,8 +235,12 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                                 note.notes !== "annotation"
                             );
                             if (notes.length > 0) {
-                              exportNotes(notes, selectedBooks, fmt);
-                              toast.success(this.props.t("Export successful"), { id: "exporting" });
+                              const result = await exportNotes(notes, selectedBooks, fmt);
+                              if (result === "success") {
+                                toast.success(this.props.t("Export successful"), { id: "exporting" });
+                              } else if (result === "failed") {
+                                toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                              }
                             } else {
                               toast(this.props.t("Nothing to export"));
                             }
@@ -305,8 +315,12 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                               )
                             ).filter((note) => note.notes === "");
                             if (highlights.length > 0) {
-                              exportHighlights(highlights, selectedBooks, fmt);
-                              toast.success(this.props.t("Export successful"), { id: "exporting" });
+                              const result = await exportHighlights(highlights, selectedBooks, fmt);
+                              if (result === "success") {
+                                toast.success(this.props.t("Export successful"), { id: "exporting" });
+                              } else if (result === "failed") {
+                                toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                              }
                             } else {
                               toast(this.props.t("Nothing to export"));
                             }
@@ -343,8 +357,12 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                         "words"
                       );
                     if (dictHistory.length > 0) {
-                      exportDictionaryHistory(dictHistory, selectedBooks);
-                      toast.success(this.props.t("Export successful"), { id: "exporting" });
+                      const result = await exportDictionaryHistory(dictHistory, selectedBooks);
+                      if (result === "success") {
+                        toast.success(this.props.t("Export successful"), { id: "exporting" });
+                      } else if (result === "failed") {
+                        toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                      }
                     } else {
                       toast(this.props.t("Nothing to export"));
                     }
