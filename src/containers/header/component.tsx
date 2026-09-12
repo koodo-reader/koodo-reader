@@ -29,11 +29,9 @@ import {
   checkMissingBook,
   generateSyncRecord,
   getBookPartialMd5,
-  getChatLocale,
   getTaskStats,
   getWebsiteUrl,
   openInBrowser,
-  resetKoodoSync,
   scanFolderForNewBooks,
   showTaskProgress,
   throttle,
@@ -42,7 +40,6 @@ import {
 } from "../../utils/common";
 import { driveList } from "../../constants/driveList";
 import SupportDialog from "../../components/dialogs/supportDialog";
-import SyncService from "../../utils/storage/syncService";
 import { LocalFileManager } from "../../utils/file/localFile";
 import packageJson from "../../../package.json";
 import { getTempToken, updateUserConfig } from "../../utils/request/user";
