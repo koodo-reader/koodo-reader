@@ -2217,3 +2217,23 @@ export const isReadingAidMode = () => {
     ConfigService.getReaderConfig("isReadingRuler") === "yes"
   );
 };
+export const getOfficialDictLang = () => {
+  const lang = ConfigService.getReaderConfig("lang");
+  if (lang.startsWith("zh")) {
+    return "chs";
+  } else if (lang.startsWith("ja")) {
+    return "jpn";
+  } else if (lang.startsWith("ko")) {
+    return "kor";
+  } else if (lang.startsWith("fr")) {
+    return "fra";
+  } else if (lang.startsWith("de")) {
+    return "deu";
+  } else if (lang.startsWith("es")) {
+    return "spa";
+  } else if (lang.startsWith("pt")) {
+    return "por";
+  } else {
+    return "eng";
+  }
+};

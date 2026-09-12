@@ -703,11 +703,6 @@ export const officialDictList = [
   { lang: "Automatic", code: "auto", nativeLang: "Automatic" },
   { lang: "English", code: "eng", nativeLang: "English" },
   { lang: "Simplified Chinese", code: "chs", nativeLang: "Simplified Chinese" },
-  {
-    lang: "Traditional Chinese",
-    code: "cht",
-    nativeLang: "Traditional Chinese",
-  },
   { lang: "Japanese", code: "jpn", nativeLang: "Japanese" },
   { lang: "Korean", code: "kor", nativeLang: "Korean" },
   { lang: "French", code: "fra", nativeLang: "French" },
