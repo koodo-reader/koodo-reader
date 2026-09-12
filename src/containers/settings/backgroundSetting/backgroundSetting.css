@@ -4,7 +4,12 @@
   gap: 10px;
   margin: 10px 25px 60px 25px;
 }
-
+.background-apple-button {
+  font-size: 14px;
+  padding: 6px 16px;
+  height: 32px;
+  background-color: transparent;
+}
 .background-setting-item {
   width: 120px;
   height: 80px;
