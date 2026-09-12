@@ -687,13 +687,6 @@ export function removeSearchParams() {
   const url = new URL(window.location.href.split("?")[0]);
   window.history.replaceState({}, document.title, url.toString());
 }
-export const getChatLocale = () => {
-  if (navigator.language.startsWith("zh")) {
-    return "zh_CN";
-  } else {
-    return "en";
-  }
-};
 export const preCacheAllBooks = async (bookList: Book[]) => {
   for (let index = 0; index < bookList.length; index++) {
     const selectedBook = bookList[index];
