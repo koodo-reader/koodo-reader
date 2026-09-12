@@ -8,7 +8,7 @@
   font-size: 14px;
   padding: 6px 16px;
   height: 32px;
-  background-color: transparent;
+  background-color: transparent !important;
 }
 .background-setting-item {
   width: 120px;
