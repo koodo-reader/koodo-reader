@@ -779,6 +779,7 @@
   "Failed to recognize title": "书名识别失败",
   "Show total page number (Experimental)": "显示总页数（实验性功能）",
   "Publish date": "出版日期",
+  "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "当前 Koodo Reader 版本过低，请前往设置 - 关于 - 检查更新，将 Koodo Reader 更新到最新版本后重试。",
   "Categories": "分类",
   "Search": "搜索",
   "Search chapters...": "搜索章节...",
