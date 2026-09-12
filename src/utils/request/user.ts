@@ -109,6 +109,13 @@ export const loginRegister = async (service: string, code: string) => {
       )
     );
   }
+  if (response.code === 10007) {
+    vexComfirmAsync(
+      i18n.t(
+        "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again."
+      )
+    );
+  }
   return response;
 };
 export const getTempToken = async () => {
