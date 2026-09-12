@@ -13,6 +13,7 @@ import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
 import {
   getFullTranslationTarget,
+  getOfficialDictLang,
   getWebsiteUrl,
   openExternalUrl,
 } from "../../../utils/common";
@@ -208,10 +209,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         dictText = await getDictText(
           text,
           ConfigService.getReaderConfig("dictTarget") || "auto",
-          ConfigService.getReaderConfig("lang") &&
-            ConfigService.getReaderConfig("lang").startsWith("zh")
-            ? "chs"
-            : "eng"
+          getOfficialDictLang()
         );
         if (dictText) {
           isFullAnalysis = false;
