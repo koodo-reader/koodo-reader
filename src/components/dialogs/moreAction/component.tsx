@@ -55,8 +55,12 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
         )
       ).filter(filterFn);
       if (notes.length > 0) {
-        exportFn(notes, books, format);
-        toast.success(this.props.t("Export successful"), { id: "exporting" });
+        const result = await exportFn(notes, books, format);
+        if (result === "success") {
+          toast.success(this.props.t("Export successful"), { id: "exporting" });
+        } else if (result === "failed") {
+          toast.error(this.props.t("Failed to export"), { id: "exporting" });
+        }
       } else {
         toast(this.props.t("Nothing to export"));
       }
@@ -274,8 +278,12 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                 );
                 let books = await DatabaseService.getAllRecords("books");
                 if (dictHistory.length > 0) {
-                  exportDictionaryHistory(dictHistory, books);
-                  toast.success(this.props.t("Export successful"), { id: "exporting" });
+                  const result = await exportDictionaryHistory(dictHistory, books);
+                  if (result === "success") {
+                    toast.success(this.props.t("Export successful"), { id: "exporting" });
+                  } else if (result === "failed") {
+                    toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                  }
                 } else {
                   toast(this.props.t("Nothing to export"));
                 }

@@ -694,8 +694,13 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             onClick={async () => {
               let books = await DatabaseService.getAllRecords("books");
               if (books.length > 0) {
-                await exportBooks(books);
-                toast.success(this.props.t("Export successful"), { id: "exporting" });
+                const result = await exportBooks(books);
+                if (result === "success") {
+                  toast.success(this.props.t("Export successful"), { id: "exporting" });
+                } else if (result === "failed") {
+                  toast.dismiss("exporting");
+                  toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                }
               } else {
                 toast(this.props.t("Nothing to export"));
               }
@@ -728,8 +733,12 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   note.notes !== "annotation"
               );
               if (notes.length > 0) {
-                exportNotes(notes, books, fmt);
-                toast.success(this.props.t("Export successful"), { id: "exporting" });
+                const result = await exportNotes(notes, books, fmt);
+                if (result === "success") {
+                  toast.success(this.props.t("Export successful"), { id: "exporting" });
+                } else if (result === "failed") {
+                  toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                }
               } else {
                 toast(this.props.t("Nothing to export"));
               }
@@ -774,8 +783,12 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               let notes = await DatabaseService.getAllRecords("notes");
               notes = notes.filter((note: any) => note.notes === "");
               if (notes.length > 0) {
-                exportHighlights(notes, books, fmt);
-                toast.success(this.props.t("Export successful"), { id: "exporting" });
+                const result = await exportHighlights(notes, books, fmt);
+                if (result === "success") {
+                  toast.success(this.props.t("Export successful"), { id: "exporting" });
+                } else if (result === "failed") {
+                  toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                }
               } else {
                 toast(this.props.t("Nothing to export"));
               }
@@ -809,8 +822,12 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               let dictHistory = await DatabaseService.getAllRecords("words");
               let books = await DatabaseService.getAllRecords("books");
               if (dictHistory.length > 0) {
-                exportDictionaryHistory(dictHistory, books);
-                toast.success(this.props.t("Export successful"), { id: "exporting" });
+                const result = await exportDictionaryHistory(dictHistory, books);
+                if (result === "success") {
+                  toast.success(this.props.t("Export successful"), { id: "exporting" });
+                } else if (result === "failed") {
+                  toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                }
               } else {
                 toast(this.props.t("Nothing to export"));
               }
