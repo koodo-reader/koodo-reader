@@ -66,7 +66,13 @@ export const calculateFileMD5 = (file: File): Promise<string> => {
       // Use the file path to compute md5 via streaming, avoid loading the
       // whole file into memory with FileReader.
       const filePath = (file as any).path;
-      if (filePath && window.electronAPI?.crypto?.fileMd5) {
+      // Only use disk-path fast path when the file actually exists on disk
+      // (file.path may also carry a virtual/cloud path).
+      if (
+        filePath &&
+        window.electronAPI?.crypto?.fileMd5 &&
+        window.electronAPI.fs.existsSync(filePath)
+      ) {
         window.electronAPI.crypto
           .fileMd5(filePath)
           .then(resolve)

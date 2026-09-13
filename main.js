@@ -717,6 +717,9 @@ const createMainWin = () => {
     if (typeof filePath !== "string" || !filePath) {
       throw new TypeError("Invalid file path");
     }
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File not found: ${path.basename(filePath)}`);
+    }
     return new Promise((resolve, reject) => {
       const hash = nodeCrypto.createHash("md5");
       const stream = fs.createReadStream(filePath);
