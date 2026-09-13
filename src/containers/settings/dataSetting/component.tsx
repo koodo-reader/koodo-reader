@@ -29,6 +29,7 @@ import {
   exportHighlights,
   exportNotes,
 } from "../../../utils/file/export";
+import { importNotesData } from "../../../utils/file/importData";
 import DatabaseService from "../../../utils/storage/databaseService";
 import {
   dataSettingList,
@@ -560,6 +561,23 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     event.target.value = "";
   };
+  handleImportNotesData = async () => {
+    const result = await importNotesData();
+    if (result === "cancel" || result === "failed") {
+      return;
+    }
+    const { imported, skipped } = result as {
+      imported: number;
+      skipped: number;
+    };
+    toast.success(
+      this.props.t(
+        "Imported {{imported}} records, skipped {{skipped}} existing records",
+        { imported, skipped }
+      )
+    );
+    this.props.handleFetchBooks();
+  };
   render() {
     return (
       <>
@@ -857,6 +875,22 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             </option>
           </select>
         </div>
+        <div className="setting-dialog-new-title">
+          <Trans>Import notes, highlights and dictionary history</Trans>
+          <span
+            className="change-location-button"
+            onClick={this.handleImportNotesData}
+          >
+            <Trans>Select</Trans>
+          </span>
+        </div>
+        <p className="setting-option-subtitle">
+          <Trans>
+            {
+              "Select previously exported CSV or JSON files to import notes, highlights and dictionary history back to the library"
+            }
+          </Trans>
+        </p>
         <div className="setting-dialog-new-title">
           <Trans>Clear all data</Trans>
           <span

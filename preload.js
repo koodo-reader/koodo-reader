@@ -23,6 +23,7 @@ const INVOKE_CHANNELS = new Set([
   "clear-tts",
   "select-path",
   "select-file",
+  "select-import-file",
   "encrypt-data",
   "decrypt-data",
   "check-cloud-url",
