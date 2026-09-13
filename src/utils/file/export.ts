@@ -21,9 +21,14 @@ export const zipFilesToBlob = (buffers: ArrayBuffer[], names: string[]) => {
   return zip.generateAsync({ type: "blob" });
 };
 
-let year = new Date().getFullYear(),
-  month = new Date().getMonth() + 1,
-  day = new Date().getDate();
+const getFileTimestamp = (): string => {
+  const now = new Date();
+  const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+  return `${date}-${Date.now()}`;
+};
+
+const getZipFileName = (type: string, format: string): string =>
+  `KoodoReader-${type}-${getFileTimestamp()}-${format.toUpperCase()}.zip`;
 
 export type ExportResult = "success" | "failed" | "cancel";
 
@@ -109,10 +114,7 @@ export const exportBooks = async (
 
     saveAs(
       await zipFilesToBlob(booksBuffers, bookNames),
-      "KoodoReader-Book-" +
-        `${year}-${month <= 9 ? "0" + month : month}-${
-          day <= 9 ? "0" + day : day
-        }.zip`
+      `KoodoReader-Book-${getFileTimestamp()}.zip`
     );
     return "success";
   } catch (error) {
@@ -204,9 +206,7 @@ export const exportNotes = async (
       exportType: "note",
     };
   });
-  const fileDate = `${year}-${month <= 9 ? "0" + month : month}-${
-    day <= 9 ? "0" + day : day
-  }`;
+  const fileDate = getFileTimestamp();
 
   // 涉及多本书时导出压缩包
   const bookNames = Object.keys(groupByBook(data));
@@ -225,7 +225,7 @@ export const exportNotes = async (
       });
       saveAs(
         await zip.generateAsync({ type: "blob" }),
-        `KoodoReader-Note-${fileDate}.zip`
+        getZipFileName("Note", format)
       );
       return "success";
     } catch (error) {
@@ -248,7 +248,7 @@ export const exportNotes = async (
       }
       saveAs(
         await zip.generateAsync({ type: "blob" }),
-        `KoodoReader-Note-${fileDate}.zip`
+        getZipFileName("Note", format)
       );
       return "success";
     } catch (error) {
@@ -346,9 +346,7 @@ export const exportHighlights = async (
     const { notes, ...rest } = highlight;
     return rest;
   });
-  const fileDate = `${year}-${month <= 9 ? "0" + month : month}-${
-    day <= 9 ? "0" + day : day
-  }`;
+  const fileDate = getFileTimestamp();
 
   // 涉及多本书时导出压缩包
   const bookNames = Object.keys(groupByBook(data));
@@ -365,7 +363,7 @@ export const exportHighlights = async (
       });
       saveAs(
         await zip.generateAsync({ type: "blob" }),
-        `KoodoReader-Highlight-${fileDate}.zip`
+        getZipFileName("Highlight", format)
       );
       return "success";
     } catch (error) {
@@ -390,7 +388,7 @@ export const exportHighlights = async (
       }
       saveAs(
         await zip.generateAsync({ type: "blob" }),
-        `KoodoReader-Highlight-${fileDate}.zip`
+        getZipFileName("Highlight", format)
       );
       return "success";
     } catch (error) {
@@ -465,10 +463,7 @@ export const exportDictionaryHistory = async (
       format === "json"
         ? toBlob(JSON.stringify(data, null, 2), "json")
         : new Blob([convertArrayToCSV(data)], { type: "text/csv,charset=UTF-8" }),
-      "KoodoReader-Dictionary-History-" +
-        `${year}-${month <= 9 ? "0" + month : month}-${
-          day <= 9 ? "0" + day : day
-        }.${format}`
+      `KoodoReader-Dictionary-History-${getFileTimestamp()}.${format}`
     );
     return "success";
   } catch (error) {
