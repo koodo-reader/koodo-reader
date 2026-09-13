@@ -25,12 +25,10 @@ export const backup = async (service: string): Promise<BackupResult> => {
   await checkMissingBook();
   let fileName = "data.zip";
   if (service === "local") {
-    let year = new Date().getFullYear(),
-      month = new Date().getMonth() + 1,
-      day = new Date().getDate();
-    fileName = `${year}-${month <= 9 ? "0" + month : month}-${
-      day <= 9 ? "0" + day : day
-    }.zip`;
+    let now = new Date();
+    fileName = `KoodoReader-Backup-${now.getFullYear()}-${
+      now.getMonth() + 1
+    }-${now.getDate()}-${Date.now()}.zip`;
   }
   if (isElectron) {
     const ipcRenderer = window.electronAPI;
