@@ -255,6 +255,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             dictText: dictText,
           },
           () => {
+            const audioPlayers = document.querySelectorAll(
+              "audio.audio-player"
+            );
+            audioPlayers.forEach((item) => {
+              (item as HTMLAudioElement).load();
+            });
             let moreElement = document.querySelector(".dict-learn-more");
             if (moreElement) {
               moreElement.addEventListener("click", () => {
