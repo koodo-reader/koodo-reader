@@ -201,6 +201,7 @@ export const exportNotes = async (
       bookName: bookName,
       bookAuthor: bookAuthor,
       bookMd5: book ? book.md5 : "",
+      exportType: "note",
     };
   });
   const fileDate = `${year}-${month <= 9 ? "0" + month : month}-${
@@ -340,6 +341,7 @@ export const exportHighlights = async (
       bookName: bookName,
       bookAuthor: bookAuthor,
       bookMd5: book ? book.md5 : "",
+      exportType: "highlight",
     };
     const { notes, ...rest } = highlight;
     return rest;
@@ -453,6 +455,7 @@ export const exportDictionaryHistory = async (
       bookName: bookName,
       bookAuthor: bookAuthor,
       bookMd5: book ? book.md5 : "",
+      exportType: "dictionaryHistory",
     };
     return history;
   });
