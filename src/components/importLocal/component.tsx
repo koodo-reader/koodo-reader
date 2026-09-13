@@ -377,7 +377,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             const file_content = content.buffer as ArrayBuffer;
             const realSize = content.byteLength;
             await this.processBookContent(
-              file,
               bookName,
               extension,
               md5,
@@ -406,7 +405,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           }
           const file_content = (event.target as any).result;
           await this.processBookContent(
-            file,
             bookName,
             extension,
             md5,
@@ -514,7 +512,6 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
 
   processBookContent = async (
-    file: any,
     bookName: string,
     extension: string,
     md5: string,
@@ -797,7 +794,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     const blob = new Blob([new TextEncoder().encode(finalHtml)], {
       type: "text/html",
     });
-    const file: any = new File([blob], finalHtmlFileName);
+    const file = new File([blob], finalHtmlFileName);
     file.path = url; // Helps bookkeeping; works in Electron, no harm in browser.
 
     toast.dismiss(toastId);
@@ -1042,7 +1039,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                               const path = window.electronAPI.path;
                               const fileName = path.basename(filePath);
 
-                              let file: any = new File([], fileName);
+                              let file = new File([], fileName);
                               file.path = filePath;
 
                               await this.getMd5WithBrowser(file);
@@ -1190,7 +1187,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
                   for (let filePath of filePaths) {
                     try {
                       const path = window.electronAPI.path;
-                      let file: any = new File([], path.basename(filePath));
+                      let file = new File([], path.basename(filePath));
                       file.path = filePath;
 
                       await this.getMd5WithBrowser(file);
