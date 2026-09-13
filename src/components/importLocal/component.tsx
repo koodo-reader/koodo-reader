@@ -343,11 +343,20 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         return resolve();
       }
       if (!isRepeat) {
-        // Electron: read the file content from disk directly to avoid
-        // keeping the whole file in memory via FileReader.
-        const sourcePath: string = isElectron
-          ? (file as any).path || clickFilePath
-          : "";
+        // Pick the first candidate path that actually exists on disk.
+        // There are two candidates:
+        // 1. file.path - real disk path for drag & drop / dialog import,
+        //    but a virtual cloud path for cloud import;
+        // 2. clickFilePath - path captured when opening a book by click.
+        const fs = isElectron ? window.electronAPI.fs : null;
+        const candidates = [(file as any).path, clickFilePath];
+        let sourcePath = "";
+        for (const candidate of candidates) {
+          if (isElectron && candidate && fs.existsSync(candidate)) {
+            sourcePath = candidate;
+            break;
+          }
+        }
         if (sourcePath) {
           try {
             if (
@@ -403,7 +412,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             md5,
             file_content,
             file.size,
-            file.path || clickFilePath,
+            sourcePath,
             resolve
           );
         };
@@ -579,7 +588,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     await this.handleAddBook(
       result as BookModel,
       file_content as ArrayBuffer,
-      file.path || filePath
+      filePath
     );
 
     return resolve();
