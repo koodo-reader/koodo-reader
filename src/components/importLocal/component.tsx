@@ -122,7 +122,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     clickFilePath = filePath;
     const fileName = window.electronAPI.path.basename(filePath);
     const stat = window.electronAPI.fs.statSync(filePath);
-    const tempFile: any = new File([], fileName);
+    const tempFile = new File([], fileName);
     tempFile.path = filePath;
     Object.defineProperty(tempFile, "size", {
       value: stat.size,
@@ -137,7 +137,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       return;
     }
 
-    const fileTemp: any = new File([], fileName);
+    const fileTemp = new File([], fileName);
     fileTemp.path = filePath;
     Object.defineProperty(fileTemp, "size", {
       value: stat.size,
@@ -289,7 +289,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     }
   };
 
-  getMd5WithBrowser = async (file: any) => {
+  getMd5WithBrowser = async (file: File) => {
     return new Promise<void>(async (resolve) => {
       const md5 = await calculateFileMD5(file);
       if (!md5) {
@@ -313,7 +313,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     });
   };
 
-  handleBook = (file: any, md5: string) => {
+  handleBook = (file: File, md5: string) => {
     let extension = (file.name as string)
       .split(".")
       .reverse()[0]
@@ -349,7 +349,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         //    but a virtual cloud path for cloud import;
         // 2. clickFilePath - path captured when opening a book by click.
         const fs = isElectron ? window.electronAPI.fs : null;
-        const candidates = [(file as any).path, clickFilePath];
+        const candidates = [file.path, clickFilePath];
         let sourcePath = "";
         for (const candidate of candidates) {
           if (isElectron && candidate && fs.existsSync(candidate)) {
@@ -403,7 +403,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             });
             return resolve();
           }
-          const file_content = (event.target as any).result;
+          const file_content = event.target.result as ArrayBuffer;
           await this.processBookContent(
             bookName,
             extension,
@@ -427,7 +427,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   };
 
   handleComicImport = async (
-    file: any,
+    file: File,
     bookName: string,
     extension: string,
     md5: string,
@@ -756,7 +756,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     // 1) Try better main-content extraction (more aggressive clipping).
     let extracted: any = null;
     try {
-      const reader = new Readability(doc as any);
+      const reader = new Readability(doc);
       extracted = reader.parse();
     } catch (e) {
       extracted = null;
@@ -914,7 +914,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         offset += chunk.length;
       }
       const blob = new Blob([arrayBuffer.buffer]);
-      const file: any = new File([blob], fileName);
+      const file = new File([blob], fileName);
       await this.getMd5WithBrowser(file);
     } catch (error) {
       const errorMessage =
