@@ -9,14 +9,21 @@ import {
   getFullTranslationTarget,
 } from "../../utils/common";
 import toast from "react-hot-toast";
+import { isElectron } from "react-device-detect";
 import DatabaseService from "../../utils/storage/databaseService";
 import Note from "../../models/Note";
 import ConfigUtil from "../../utils/file/configUtil";
+declare var window: any;
+
+type TransCache = Record<string, Record<string, string>>;
+
 class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
   isFirst: Boolean;
   timeInterval: any;
   lastBatchTranslationTriggerAt: number;
   batchTranslationLock: Promise<any>;
+  transCache: TransCache | null;
+  transCachePath: string;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -30,6 +37,8 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
     this.isFirst = true;
     this.lastBatchTranslationTriggerAt = 0;
     this.batchTranslationLock = Promise.resolve();
+    this.transCache = null;
+    this.transCachePath = "";
   }
 
   getFormattedTime() {
@@ -137,6 +146,60 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
       this.setState({ ignoreNextPageChange: true });
     }
   }
+  getTransCachePath(): string {
+    if (this.transCachePath) {
+      return this.transCachePath;
+    }
+    const electron = window.electronAPI;
+    const dirPath = electron.sendSync("user-data", "ping");
+    const transDir = electron.path.join(dirPath, "trans");
+    if (!electron.fs.existsSync(transDir)) {
+      electron.fs.mkdirSync(transDir, { recursive: true });
+    }
+    this.transCachePath = electron.path.join(
+      transDir,
+      this.props.currentBook.key + ".json"
+    );
+    return this.transCachePath;
+  }
+
+  getTransCache(): TransCache {
+    if (this.transCache) {
+      return this.transCache;
+    }
+    let cache: TransCache = {};
+    if (isElectron && window.electronAPI && window.electronAPI.fs) {
+      try {
+        const cachePath = this.getTransCachePath();
+        const fs = window.electronAPI.fs;
+        if (fs.existsSync(cachePath)) {
+          cache = JSON.parse(fs.readFileSync(cachePath, "utf-8")) || {};
+        }
+      } catch (error) {
+        console.error("Failed to load translation cache:", error);
+        cache = {};
+      }
+    }
+    this.transCache = cache;
+    return cache;
+  }
+
+  saveTransCache(cache: TransCache) {
+    if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
+      return;
+    }
+    try {
+      const cachePath = this.getTransCachePath();
+      window.electronAPI.fs.writeFileSync(
+        cachePath,
+        JSON.stringify(cache),
+        "utf-8"
+      );
+    } catch (error) {
+      console.error("Failed to save translation cache:", error);
+    }
+  }
+
   async handleBatchTranslation(rendition) {
     const prev = this.batchTranslationLock;
     const next = prev.then(async () => {
@@ -150,15 +213,37 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
         return;
       }
 
-      let batchTransTexts = await rendition.getBatchTransTexts();
+      let batchTransTexts: string[] = await rendition.getBatchTransTexts();
       if (batchTransTexts && batchTransTexts.length > 0) {
-        let res = await getBatchTrans(
-          batchTransTexts,
-          "Automatic",
-          getFullTranslationTarget()
-        );
-        if (res && res.data && res.data.texts) {
-          rendition.handleBatchTransResult(batchTransTexts, res.data.texts);
+        let targetLang = getFullTranslationTarget();
+        let cache = this.getTransCache();
+        let translatedTexts: string[] = new Array(batchTransTexts.length);
+        let pendingIndexes: number[] = [];
+        let pendingTexts: string[] = [];
+        batchTransTexts.forEach((text, index) => {
+          let cachedText = cache[targetLang] && cache[targetLang][text];
+          if (cachedText !== undefined) {
+            translatedTexts[index] = cachedText;
+          } else {
+            pendingIndexes.push(index);
+            pendingTexts.push(text);
+          }
+        });
+        if (pendingTexts.length > 0) {
+          let res = await getBatchTrans(pendingTexts, "Automatic", targetLang);
+          if (res && res.data && res.data.texts) {
+            pendingIndexes.forEach((index, i) => {
+              translatedTexts[index] = res.data.texts[i];
+              if (!cache[targetLang]) {
+                cache[targetLang] = {};
+              }
+              cache[targetLang][batchTransTexts[index]] = res.data.texts[i];
+            });
+            this.saveTransCache(cache);
+          }
+        }
+        if (translatedTexts.every((text) => text !== undefined)) {
+          rendition.handleBatchTransResult(batchTransTexts, translatedTexts);
         }
       }
     });
@@ -247,13 +332,19 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
               ? ConfigService.getReaderConfig("textColor")
               : "",
             width:
-              !this.props.isNavLocked && !this.props.isSettingLocked && !this.props.isDockedRight
+              !this.props.isNavLocked &&
+              !this.props.isSettingLocked &&
+              !this.props.isDockedRight
                 ? "100%"
-                : this.props.isNavLocked && (this.props.isSettingLocked || this.props.isDockedRight)
+                : this.props.isNavLocked &&
+                    (this.props.isSettingLocked || this.props.isDockedRight)
                   ? "calc(100% - 600px)"
                   : "calc(100% - 300px)",
             left: !this.props.isNavLocked ? "0" : "300px",
-            right: !this.props.isSettingLocked && !this.props.isDockedRight ? "0" : "300px",
+            right:
+              !this.props.isSettingLocked && !this.props.isDockedRight
+                ? "0"
+                : "300px",
             backgroundColor: this.props.backgroundColor,
             filter: `brightness(${
               ConfigService.getReaderConfig("brightness") || 1
