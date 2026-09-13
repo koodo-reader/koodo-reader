@@ -357,6 +357,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             break;
           }
         }
+        // Path only used for the database record, never for file IO.
+        // Keeps the original path (or URL) when it can't be verified on disk,
+        // falling back to the original file name, so book.path is never empty.
+        const recordPath = sourcePath || file.path || file.name;
         if (sourcePath) {
           try {
             if (
@@ -383,6 +387,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
               file_content,
               file.size || realSize,
               sourcePath,
+              recordPath,
               resolve
             );
           } catch (error) {
@@ -411,6 +416,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
             file_content,
             file.size,
             sourcePath,
+            recordPath,
             resolve
           );
         };
@@ -518,6 +524,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     file_content: ArrayBuffer,
     fileSize: number,
     filePath: string,
+    recordPath: string,
     resolve: (value: void) => void
   ) => {
     let result: BookModel;
@@ -549,7 +556,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         extension,
         md5,
         fileSize,
-        filePath,
+        recordPath,
         file_content,
         rendition
       );
