@@ -344,17 +344,17 @@ export const importNotesData = async (): Promise<ImportResult> => {
   }
 
   // 按 key 去重后写入数据库
+  // 注意：Electron 下 getKeysStatement 只查询 key 列，结果会被
+  // sqliteToJson 统一转换导致 JSON.parse(undefined) 报错，
+  // 因此这里改用全量记录获取已存在的 key
   let imported = 0;
   let skipped = 0;
   const savedKeys = new Map<string, Set<string>>();
   for (const item of preparedRecords) {
     const dbName = item.dbName;
     if (!savedKeys.has(dbName)) {
-      const keys = await DatabaseService.getAllRecordKeys(dbName);
-      savedKeys.set(
-        dbName,
-        new Set(keys.filter((key) => typeof key === "string"))
-      );
+      const records = await DatabaseService.getAllRecords(dbName);
+      savedKeys.set(dbName, new Set(records.map((r: any) => String(r.key))));
     }
     const existingKeys = savedKeys.get(dbName)!;
     if (existingKeys.has(item.record.key)) {
