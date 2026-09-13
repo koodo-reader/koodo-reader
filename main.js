@@ -1198,9 +1198,7 @@ const createMainWin = () => {
     return result.filePaths.filter(
       (filePath) =>
         typeof filePath === "string" &&
-        ["csv", "json"].includes(
-          filePath.split(".").pop().toLowerCase()
-        )
+        ["csv", "json"].includes(filePath.split(".").pop().toLowerCase())
     );
   });
 
