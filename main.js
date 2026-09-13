@@ -1187,6 +1187,23 @@ const createMainWin = () => {
     return "success";
   });
 
+  ipcMain.handle("select-import-file", async (event) => {
+    const result = await dialog.showOpenDialog({
+      properties: ["openFile", "multiSelections"],
+      filters: [{ name: "Data Files", extensions: ["csv", "json"] }],
+    });
+    if (result.canceled || !Array.isArray(result.filePaths)) {
+      return [];
+    }
+    return result.filePaths.filter(
+      (filePath) =>
+        typeof filePath === "string" &&
+        ["csv", "json"].includes(
+          filePath.split(".").pop().toLowerCase()
+        )
+    );
+  });
+
   ipcMain.handle("select-zip-file", async (event, config) => {
     const result = await dialog.showOpenDialog({
       properties: ["openFile"],
