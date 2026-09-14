@@ -751,20 +751,19 @@ class AccountSetting extends React.Component<
         )}
         {!this.props.isAuthed && (
           <>
-            <div className="account-login-tips">
+            <div
+              className="account-login-tips"
+              style={{
+                opacity: 1,
+                color: "#f16464",
+              }}
+            >
               {this.props.t(
-                "7-day free trial upon registration, then billed annually"
+                "7-day free trial upon registration, then billed $4.99 per Year"
               )}
             </div>
             <div
               className="account-login-tips"
-              style={{
-                marginTop: "10px",
-                opacity: 1,
-                fontWeight: "bold",
-                cursor: "pointer",
-                textDecoration: "underline",
-              }}
               onClick={() => {
                 openInBrowser(
                   getWebsiteUrl() +
@@ -773,6 +772,13 @@ class AccountSetting extends React.Component<
                       : "/en") +
                     "/pricing"
                 );
+              }}
+              style={{
+                marginTop: "10px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                textDecoration: "underline",
+                opacity: 1,
               }}
             >
               {this.props.t("Compare Free and Pro features")}
