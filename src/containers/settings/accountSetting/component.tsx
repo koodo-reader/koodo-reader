@@ -755,7 +755,6 @@ class AccountSetting extends React.Component<
               className="account-login-tips"
               style={{
                 opacity: 1,
-                color: "#f16464",
               }}
             >
               {this.props.t(
