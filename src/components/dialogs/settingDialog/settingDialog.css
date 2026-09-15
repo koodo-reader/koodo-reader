@@ -551,6 +551,13 @@
   display: flex;
   flex-direction: column;
 }
+:root[data-theme="dark"] .pro-banner {
+  background: linear-gradient(
+    175deg,
+    rgba(64, 70, 76, 0.95) 0%,
+    rgba(47, 52, 55, 1) 100%
+  );
+}
 .pro-banner-overlay {
   position: absolute;
   inset: 0;
