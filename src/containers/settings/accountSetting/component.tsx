@@ -679,7 +679,7 @@ class AccountSetting extends React.Component<
                       this.props.history.push("/login");
                     }}
                   >
-                    <Trans>Member login</Trans>
+                    <Trans>Register / Login</Trans>
                   </div>
                   <div
                     className="pro-banner-btn pro-banner-btn-trial"
