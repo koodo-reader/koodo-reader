@@ -48,6 +48,7 @@ class AccountSetting extends React.Component<
       isSendingCode: false,
       countdown: 0,
       serverRegion: getServerRegion(),
+      showLoginOptions: false,
     };
   }
   componentDidMount(): void {
@@ -624,7 +625,7 @@ class AccountSetting extends React.Component<
             </div>
           </div>
         )}
-        {!this.props.isAuthed && (
+        {!this.props.isAuthed && !this.state.showLoginOptions && (
           <div className="pro-banner-container">
             <div className="pro-banner">
               <div className="pro-banner-overlay"></div>
@@ -676,7 +677,7 @@ class AccountSetting extends React.Component<
                   <div
                     className="pro-banner-btn pro-banner-btn-login"
                     onClick={() => {
-                      this.props.history.push("/login");
+                      this.setState({ showLoginOptions: true });
                     }}
                   >
                     <Trans>Register / Login</Trans>
@@ -684,15 +685,7 @@ class AccountSetting extends React.Component<
                   <div
                     className="pro-banner-btn pro-banner-btn-trial"
                     onClick={() => {
-                      openInBrowser(
-                        getWebsiteUrl() +
-                          (ConfigService.getReaderConfig("lang").startsWith(
-                            "zh"
-                          )
-                            ? "/zh"
-                            : "/en") +
-                          "/pricing"
-                      );
+                      this.setState({ showLoginOptions: true });
                     }}
                   >
                     <Trans>Start 7-day free trial</Trans>
@@ -702,11 +695,12 @@ class AccountSetting extends React.Component<
             </div>
           </div>
         )}
-        <div className="setting-dialog-new-title">
-          <div>
-            <Trans>
-              {this.props.isAuthed ? "Server region" : "Select server region"}
-            </Trans>
+        {(this.props.isAuthed || this.state.showLoginOptions) && (
+          <div className="setting-dialog-new-title">
+            <div>
+              <Trans>
+                {this.props.isAuthed ? "Server region" : "Select server region"}
+              </Trans>
             {ConfigService.getReaderConfig("lang").startsWith("zh") && (
               <span
                 style={{
@@ -797,8 +791,9 @@ class AccountSetting extends React.Component<
               ))}
             </select>
           )}
-        </div>
-        {!this.props.isAuthed && (
+          </div>
+        )}
+        {!this.props.isAuthed && this.state.showLoginOptions && (
           <>
             <div className="setting-dialog-new-title">
               <Trans>Select login method</Trans>
@@ -826,7 +821,7 @@ class AccountSetting extends React.Component<
             </div>
           </>
         )}
-        {!this.props.isAuthed && (
+        {!this.props.isAuthed && this.state.showLoginOptions && (
           <>
             <div
               className="account-login-tips"
