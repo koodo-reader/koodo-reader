@@ -624,6 +624,9 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px 16px;
 }
+.pro-banner-feature-icon {
+  margin-top: 2px;
+}
 :root[data-theme="dark"] .pro-banner-features {
   background: rgba(255, 255, 255, 0.12);
 }
