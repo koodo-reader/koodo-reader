@@ -625,52 +625,15 @@ class AccountSetting extends React.Component<
           </div>
         )}
         {!this.props.isAuthed && (
-          <div style={{ margin: "0 25px 20px" }}>
-            <div
-              style={{
-                position: "relative",
-                zIndex: 1,
-                borderRadius: "16px",
-                overflow: "hidden",
-                background: "linear-gradient(175deg, #131b31 0%, #1b2745 100%",
-                color: "#fff",
-                padding: "18px 28px 16px",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  pointerEvents: "none",
-                }}
-              ></div>
-              <div
-                style={{
-                  position: "relative",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <div style={{ fontSize: "18px", fontWeight: 700 }}>
+          <div className="pro-banner-container">
+            <div className="pro-banner">
+              <div className="pro-banner-overlay"></div>
+              <div className="pro-banner-content">
+                <div className="pro-banner-header">
+                  <div className="pro-banner-title">
                     <Trans>Pro version</Trans>
                   </div>
-                  <div
-                    style={{
-                      marginLeft: "auto",
-                      background: "rgba(255,255,255,0.16)",
-                      borderRadius: "14px",
-                      padding: "3px",
-                      display: "flex",
-                    }}
-                  >
+                  <div className="pro-banner-tabs">
                     {(
                       [
                         { key: "yearly", label: "Yearly" },
@@ -679,65 +642,30 @@ class AccountSetting extends React.Component<
                     ).map((item) => (
                       <div
                         key={item.key}
-                        style={{
-                          padding: "4px 12px",
-                          borderRadius: "12px",
-                          fontSize: "11px",
-                          cursor: "pointer",
-                          background:
-                            item.key === "yearly"
-                              ? "rgba(255,255,255,0.22)"
-                              : "transparent",
-                        }}
+                        className={
+                          item.key === "yearly"
+                            ? "pro-banner-tab active-pro-banner-tab"
+                            : "pro-banner-tab"
+                        }
                       >
                         <Trans>{item.label}</Trans>
                       </div>
                     ))}
                   </div>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "baseline",
-                    marginTop: "6px",
-                  }}
-                >
-                  <span style={{ fontSize: "26px", fontWeight: 700 }}>
+                <div className="pro-banner-price">
+                  <span className="pro-banner-price-value">
                     <Trans>{"$4.99"}</Trans>
                   </span>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      opacity: 0.9,
-                      marginLeft: "8px",
-                    }}
-                  >
+                  <span className="pro-banner-price-unit">
                     {" / "}
                     <Trans>{"Year"}</Trans>
                   </span>
                 </div>
-                <div
-                  style={{
-                    background: "rgba(255,255,255,0.12)",
-                    borderRadius: "14px",
-                    padding: "14px 16px",
-                    marginTop: "12px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
-                  }}
-                >
+                <div className="pro-banner-features">
                   {proFeatures.map((item) => (
-                    <div
-                      key={item}
-                      style={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: "10px",
-                        fontSize: "13px",
-                        lineHeight: "18px",
-                      }}
-                    >
+                    <div key={item} className="pro-banner-feature-item">
+                      <span className="icon-check pro-banner-feature-icon"></span>
                       <span>
                         <Trans>{item}</Trans>
                       </span>
