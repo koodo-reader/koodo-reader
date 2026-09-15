@@ -22,8 +22,8 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
   timeInterval: any;
   lastBatchTranslationTriggerAt: number;
   batchTranslationLock: Promise<any>;
-  transCache: TransCache | null;
-  transCachePath: string;
+  transCacheMap: Map<string, TransCache>;
+  transCacheDirPath: string;
   constructor(props: any) {
     super(props);
     this.state = {
@@ -37,8 +37,8 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
     this.isFirst = true;
     this.lastBatchTranslationTriggerAt = 0;
     this.batchTranslationLock = Promise.resolve();
-    this.transCache = null;
-    this.transCachePath = "";
+    this.transCacheMap = new Map();
+    this.transCacheDirPath = "";
   }
 
   getFormattedTime() {
@@ -146,31 +146,28 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
       this.setState({ ignoreNextPageChange: true });
     }
   }
-  getTransCachePath(): string {
-    if (this.transCachePath) {
-      return this.transCachePath;
-    }
+  getTransCachePath(chapterDocIndex: string): string {
     const electron = window.electronAPI;
     const dirPath = electron.sendSync("user-data", "ping");
     const transDir = electron.path.join(dirPath, "trans");
     if (!electron.fs.existsSync(transDir)) {
       electron.fs.mkdirSync(transDir, { recursive: true });
     }
-    this.transCachePath = electron.path.join(
+    this.transCacheDirPath = transDir;
+    return electron.path.join(
       transDir,
-      this.props.currentBook.key + ".json"
+      this.props.currentBook.key + "_" + chapterDocIndex + ".json"
     );
-    return this.transCachePath;
   }
 
-  getTransCache(): TransCache {
-    if (this.transCache) {
-      return this.transCache;
+  getTransCache(chapterDocIndex: string): TransCache {
+    if (this.transCacheMap.has(chapterDocIndex)) {
+      return this.transCacheMap.get(chapterDocIndex)!;
     }
     let cache: TransCache = {};
     if (isElectron && window.electronAPI && window.electronAPI.fs) {
       try {
-        const cachePath = this.getTransCachePath();
+        const cachePath = this.getTransCachePath(chapterDocIndex);
         const fs = window.electronAPI.fs;
         if (fs.existsSync(cachePath)) {
           cache = JSON.parse(fs.readFileSync(cachePath, "utf-8")) || {};
@@ -180,16 +177,16 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
         cache = {};
       }
     }
-    this.transCache = cache;
+    this.transCacheMap.set(chapterDocIndex, cache);
     return cache;
   }
 
-  saveTransCache(cache: TransCache) {
+  saveTransCache(chapterDocIndex: string, cache: TransCache) {
     if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
       return;
     }
     try {
-      const cachePath = this.getTransCachePath();
+      const cachePath = this.getTransCachePath(chapterDocIndex);
       window.electronAPI.fs.writeFileSync(
         cachePath,
         JSON.stringify(cache),
@@ -216,7 +213,17 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
       let batchTransTexts: string[] = await rendition.getBatchTransTexts();
       if (batchTransTexts && batchTransTexts.length > 0) {
         let targetLang = getFullTranslationTarget();
-        let cache = this.getTransCache();
+        let chapterDocIndex = "";
+        if (typeof rendition.getPosition === "function") {
+          chapterDocIndex = rendition.getPosition()?.chapterDocIndex || "";
+        }
+        if (!chapterDocIndex && rendition.tempLocation) {
+          chapterDocIndex = rendition.tempLocation.chapterDocIndex || "";
+        }
+        if (!chapterDocIndex) {
+          chapterDocIndex = "0";
+        }
+        let cache = this.getTransCache(chapterDocIndex);
         let translatedTexts: string[] = new Array(batchTransTexts.length);
         let pendingIndexes: number[] = [];
         let pendingTexts: string[] = [];
@@ -239,7 +246,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
               }
               cache[targetLang][batchTransTexts[index]] = res.data.texts[i];
             });
-            this.saveTransCache(cache);
+            this.saveTransCache(chapterDocIndex, cache);
           }
         }
         if (translatedTexts.every((text) => text !== undefined)) {
