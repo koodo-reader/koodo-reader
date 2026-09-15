@@ -681,12 +681,24 @@
 :root[data-theme="dark"] .pro-banner-btn-trial {
   color: rgba(235, 235, 235, 1);
 }
-@keyframes pro-banner-btn-trial-glow {
-  to {
-    box-shadow: 0 0 10px 2px rgba(90, 120, 220, 0.45);
-  }
-}
 .pro-banner-btn-trial::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(120deg, #4d70eb 0%, #965aeb 100%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+:root[data-theme="light"] .pro-banner-btn-trial::after {
   content: "";
   position: absolute;
   inset: -2px;
@@ -694,12 +706,10 @@
   padding: 2px;
   background: conic-gradient(
     from var(--pro-banner-btn-trial-angle),
-    rgba(32, 33, 36, 0.4),
-    rgba(32, 33, 36, 1) 60deg,
-    rgba(32, 33, 36, 0.4) 130deg,
-    rgba(77, 112, 235, 1) 230deg,
-    rgba(150, 90, 235, 1) 270deg,
-    rgba(32, 33, 36, 0.4)
+    rgba(255, 255, 255, 0) 0deg,
+    rgba(255, 255, 255, 0) 220deg,
+    rgba(255, 255, 255, 1) 290deg,
+    rgba(255, 255, 255, 0) 360deg
   );
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -721,14 +731,12 @@
     rgba(139, 180, 255, 0.9) 270deg,
     rgba(255, 255, 255, 0.35)
   );
+  animation: pro-banner-btn-trial-shine 3s linear infinite;
 }
 @keyframes pro-banner-btn-trial-shine {
   to {
     --pro-banner-btn-trial-angle: 360deg;
   }
-}
-:root[data-theme="light"] .pro-banner-btn-trial {
-  animation: pro-banner-btn-trial-glow 1.8s ease-in-out infinite alternate;
 }
 
 /* AI Setting styles */
