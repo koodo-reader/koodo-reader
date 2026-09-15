@@ -616,6 +616,40 @@
   font-size: 13px;
   line-height: 18px;
 }
+.pro-banner-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+  gap: 12px;
+}
+.pro-banner-btn {
+  padding: 0 16px;
+  height: 42px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+  transition: opacity 0.15s;
+}
+.pro-banner-btn:hover {
+  opacity: 0.85;
+}
+.pro-banner-btn-login {
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  color: #fff;
+  background: transparent;
+}
+.pro-banner-btn-trial {
+  padding: 0 16px;
+  background: #fff;
+  color: #1b2745;
+  border: none;
+}
 
 /* AI Setting styles */
 .ai-setting-form-row {
