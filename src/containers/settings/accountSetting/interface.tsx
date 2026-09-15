@@ -36,5 +36,4 @@ export interface SettingInfoState {
   serverRegion: string;
   isSendingCode: boolean;
   countdown: number;
-  isPremiumModalVisible: boolean;
 }
