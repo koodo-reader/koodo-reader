@@ -640,15 +640,15 @@
   opacity: 0.85;
 }
 .pro-banner-btn-login {
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  color: #fff;
-  background: transparent;
-}
-.pro-banner-btn-trial {
   padding: 0 16px;
   background: #fff;
   color: #1b2745;
   border: none;
+}
+.pro-banner-btn-trial {
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  color: #fff;
+  background: transparent;
 }
 
 /* AI Setting styles */
