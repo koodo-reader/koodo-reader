@@ -645,10 +645,46 @@
   color: #1b2745;
   border: none;
 }
+@property --pro-banner-btn-trial-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
 .pro-banner-btn-trial {
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  position: relative;
+  border: 1px solid transparent;
   color: #fff;
   background: transparent;
+}
+.pro-banner-btn-trial::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--pro-banner-btn-trial-angle),
+    rgba(255, 255, 255, 0.35),
+    rgba(255, 255, 255, 1) 90deg,
+    rgba(255, 255, 255, 0.35) 180deg,
+    rgba(139, 180, 255, 0.9) 270deg,
+    rgba(255, 255, 255, 0.35)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: pro-banner-btn-trial-shine 3s linear infinite;
+  pointer-events: none;
+}
+@keyframes pro-banner-btn-trial-shine {
+  to {
+    --pro-banner-btn-trial-angle: 360deg;
+  }
 }
 
 /* AI Setting styles */
