@@ -1,7 +1,6 @@
 import React from "react";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
-import { isElectron } from "react-device-detect";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import {
@@ -48,6 +47,7 @@ class AccountSetting extends React.Component<
       redeemCode: "",
       isSendingCode: false,
       countdown: 0,
+      isPremiumModalVisible: true,
       serverRegion: getServerRegion(),
     };
   }
@@ -620,6 +620,135 @@ class AccountSetting extends React.Component<
                   }}
                 >
                   <Trans>Cancel</Trans>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {!this.props.isAuthed && this.state.isPremiumModalVisible && (
+          <div style={{ margin: "0 25px 20px" }}>
+            <div
+              style={{
+                position: "relative",
+                zIndex: 1,
+                borderRadius: "16px",
+                overflow: "hidden",
+                background: "linear-gradient(175deg, #131b31 0%, #1b2745 100%",
+                color: "#fff",
+                padding: "18px 28px 16px",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  pointerEvents: "none",
+                }}
+              ></div>
+              <div
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <div style={{ fontSize: "18px", fontWeight: 700 }}>
+                    <Trans>Pro version</Trans>
+                  </div>
+                  <div
+                    style={{
+                      marginLeft: "auto",
+                      background: "rgba(255,255,255,0.16)",
+                      borderRadius: "14px",
+                      padding: "3px",
+                      display: "flex",
+                    }}
+                  >
+                    {(
+                      [
+                        { key: "yearly", label: "Yearly" },
+                        { key: "limited", label: "Limited offer" },
+                      ] as const
+                    ).map((item) => (
+                      <div
+                        key={item.key}
+                        style={{
+                          padding: "4px 12px",
+                          borderRadius: "12px",
+                          fontSize: "11px",
+                          cursor: "pointer",
+                          background:
+                            item.key === "yearly"
+                              ? "rgba(255,255,255,0.22)"
+                              : "transparent",
+                        }}
+                      >
+                        <Trans>{item.label}</Trans>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "baseline",
+                    marginTop: "6px",
+                  }}
+                >
+                  <span style={{ fontSize: "26px", fontWeight: 700 }}>
+                    <Trans>{"$4.99"}</Trans>
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      opacity: 0.9,
+                      marginLeft: "8px",
+                    }}
+                  >
+                    {" / "}
+                    <Trans>{"Year"}</Trans>
+                  </span>
+                </div>
+                <div
+                  style={{
+                    background: "rgba(255,255,255,0.12)",
+                    borderRadius: "14px",
+                    padding: "14px 16px",
+                    marginTop: "12px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  }}
+                >
+                  {[
+                    "Explore 100,000+ high-resolution 3D videos",
+                    "Unlimited daily video watching",
+                    "Enhanced ultra-sharp video clarity",
+                    "Pure, ad-free experience",
+                  ].map((item) => (
+                    <div
+                      key={item}
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: "10px",
+                        fontSize: "13px",
+                        lineHeight: "18px",
+                      }}
+                    >
+                      <span>
+                        <Trans>{item}</Trans>
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
