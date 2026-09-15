@@ -672,6 +672,32 @@ class AccountSetting extends React.Component<
                     </div>
                   ))}
                 </div>
+                <div className="pro-banner-actions">
+                  <div
+                    className="pro-banner-btn pro-banner-btn-login"
+                    onClick={() => {
+                      this.props.history.push("/login");
+                    }}
+                  >
+                    <Trans>Member login</Trans>
+                  </div>
+                  <div
+                    className="pro-banner-btn pro-banner-btn-trial"
+                    onClick={() => {
+                      openInBrowser(
+                        getWebsiteUrl() +
+                          (ConfigService.getReaderConfig("lang").startsWith(
+                            "zh"
+                          )
+                            ? "/zh"
+                            : "/en") +
+                          "/pricing"
+                      );
+                    }}
+                  >
+                    <Trans>Start 7-day free trial</Trans>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
