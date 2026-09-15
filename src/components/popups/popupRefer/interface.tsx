@@ -8,6 +8,7 @@ export interface PopupReferProps {
   chapterDocIndex: number;
   readerMode: string;
   t: (title: string) => string;
+  handleJumpPosition: (jumpPosition: object | null) => void;
 }
 export interface PopupReferStates {
   rect: any;

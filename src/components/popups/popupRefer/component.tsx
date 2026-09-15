@@ -70,6 +70,14 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       openExternalUrl(href);
       return true;
     }
+    if (result.redirectChapter) {
+      let prevPosition = ConfigService.getObjectConfig(
+        this.props.currentBook.key,
+        "recordLocation",
+        {}
+      );
+      this.props.handleJumpPosition(prevPosition);
+    }
     if (result.isJump) {
       this.setState({
         isJump: true,
