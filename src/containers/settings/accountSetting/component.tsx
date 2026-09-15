@@ -19,7 +19,7 @@ import {
   KookitConfig,
   LoginHelper,
 } from "../../../assets/lib/kookit-extra-browser.min";
-import { loginList } from "../../../constants/loginList";
+import { loginList, proFeatures } from "../../../constants/loginList";
 import {
   getTempToken,
   getUserRequest,
@@ -47,7 +47,6 @@ class AccountSetting extends React.Component<
       redeemCode: "",
       isSendingCode: false,
       countdown: 0,
-      isPremiumModalVisible: true,
       serverRegion: getServerRegion(),
     };
   }
@@ -625,7 +624,7 @@ class AccountSetting extends React.Component<
             </div>
           </div>
         )}
-        {!this.props.isAuthed && this.state.isPremiumModalVisible && (
+        {!this.props.isAuthed && (
           <div style={{ margin: "0 25px 20px" }}>
             <div
               style={{
@@ -728,12 +727,7 @@ class AccountSetting extends React.Component<
                     gap: "8px",
                   }}
                 >
-                  {[
-                    "Explore 100,000+ high-resolution 3D videos",
-                    "Unlimited daily video watching",
-                    "Enhanced ultra-sharp video clarity",
-                    "Pure, ad-free experience",
-                  ].map((item) => (
+                  {proFeatures.map((item) => (
                     <div
                       key={item}
                       style={{
