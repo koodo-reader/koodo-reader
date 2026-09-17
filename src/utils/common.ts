@@ -2236,3 +2236,53 @@ export const getOfficialDictLang = () => {
     return "eng";
   }
 };
+export const getOcrCachePath = (
+  bookKey: string,
+  chapterDocIndex: string
+): string => {
+  const electron = window.electronAPI;
+  const dirPath = electron.sendSync("user-data", "ping");
+  const ocrDir = electron.path.join(dirPath, "ocr");
+  if (!electron.fs.existsSync(ocrDir)) {
+    electron.fs.mkdirSync(ocrDir, { recursive: true });
+  }
+  return electron.path.join(ocrDir, bookKey + "_" + chapterDocIndex + ".json");
+};
+export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {
+  if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
+    return null;
+  }
+  let cache = null;
+  if (isElectron && window.electronAPI && window.electronAPI.fs) {
+    try {
+      const cachePath = getOcrCachePath(bookKey, chapterDocIndex);
+      const fs = window.electronAPI.fs;
+      if (fs.existsSync(cachePath)) {
+        cache = JSON.parse(fs.readFileSync(cachePath, "utf-8")) || {};
+      }
+    } catch (error) {
+      console.error("Failed to load ocr cache:", error);
+    }
+  }
+  return cache;
+};
+
+export const saveOcrCache = (
+  bookKey: string,
+  chapterDocIndex: string,
+  cache: { src: string }
+) => {
+  if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
+    return;
+  }
+  try {
+    const cachePath = getOcrCachePath(bookKey, chapterDocIndex);
+    window.electronAPI.fs.writeFileSync(
+      cachePath,
+      JSON.stringify(cache),
+      "utf-8"
+    );
+  } catch (error) {
+    console.error("Failed to save ocr cache:", error);
+  }
+};
