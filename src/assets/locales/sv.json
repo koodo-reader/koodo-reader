@@ -1295,7 +1295,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "När du avslutar Pro kommer du omedelbart att förlora följande medlemsförmåner",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "I framtiden kommer vi att introducera fler medlemsexklusiva funktioner, inklusive lässtatistik och automatisk synkronisering av dina anteckningar, höjdpunkter, läsförlopp och ordförrådslistor till plattformar som Notion, Obsidian, Logseq, Anki och mer.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Platsöverskridande datasynkronisering (molnenheter, WebDAV, Docker, objektlagring)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Importera böcker från molnenheter (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Importera böcker från molnenheter (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Officiell översättning på 90+ språk",
   "Official dictionary with definitions, examples & pronunciation": "Officiell ordbok med definitioner, exempel och uttal",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI läshjälpmedel (kapitelsammanfattningar, disposition, berättande med flera roller)",

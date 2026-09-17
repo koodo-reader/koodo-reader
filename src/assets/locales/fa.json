@@ -1290,7 +1290,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "پس از خروج از Pro، دیگر نمی‌توانید از همگام‌سازی و سایر ویژگی‌های پریمیوم استفاده کنید",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "در آینده ویژگی‌های اختصاصی بیشتری برای اعضا معرفی خواهیم کرد، از جمله آمار مطالعه و همگام‌سازی خودکار یادداشت‌ها، هایلایت‌ها، پیشرفت مطالعه و فهرست واژگان شما به پلتفرم‌هایی مانند Notion، Obsidian، Logseq، Anki و موارد دیگر.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "همگام‌سازی داده بین‌پلتفرمی (درایوهای ابری، WebDAV، Docker، ذخیره‌سازی اشیاء)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "واردکردن کتاب از درایوهای ابری (Baidu Netdisk، Google Drive، WebDAV، FTP، SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "واردکردن کتاب از درایوهای ابری (OneDrive، Google Drive، WebDAV، FTP، SMB)",
   "Official translation in 90+ languages": "ترجمه رسمی به ۹۰+ زبان",
   "Official dictionary with definitions, examples & pronunciation": "فرهنگ لغت رسمی (تعاریف، مثال‌ها و تلفظ)",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "کمک‌های مطالعه با هوش مصنوعی (خلاصه فصل، طرح کلی، روایت چندنقشه)",

@@ -1290,7 +1290,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "เมื่อคุณออกจาก Pro จะไม่สามารถใช้การซิงค์และฟีเจอร์พรีเมียมอื่นๆ ได้อีกต่อไป",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "ในอนาคต เราจะเปิดตัวฟีเจอร์เฉพาะสมาชิกเพิ่มเติม เช่น สถิติการอ่าน และการซิงค์บันทึก ส่วนที่เน้นข้อความ ความคืบหน้าการอ่าน และรายการคำศัพท์ของคุณไปยังแพลตฟอร์มอย่าง Notion, Obsidian, Logseq, Anki และอื่นๆ โดยอัตโนมัติ",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "การซิงค์ข้อมูลข้ามแพลตฟอร์ม (คลาวด์ไดรฟ์, WebDAV, Docker, Object Storage)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "นำเข้าหนังสือจากคลาวด์ไดรฟ์ (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "นำเข้าหนังสือจากคลาวด์ไดรฟ์ (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "คำแปลอย่างเป็นทางการใน 90+ ภาษา",
   "Official dictionary with definitions, examples & pronunciation": "พจนานุกรมอย่างเป็นทางการ (คำนิยาม, ตัวอย่าง และการออกเสียง)",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "เครื่องช่วยอ่านด้วย AI (สรุปบท, โครงเรื่อง, เล่าแบบหลายตัวละคร)",

@@ -1288,7 +1288,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Kapag umalis ka sa Pro, hindi mo na magagamit ang pag-sync at iba pang premium na feature",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "Sa hinaharap, magpapakilala kami ng mas maraming eksklusibong tampok para sa mga miyembro, kabilang ang mga istatistika sa pagbasa at awtomatikong pag-sync ng iyong mga tala, highlights, progreso sa pagbasa, at mga listahan ng bokabularyo sa mga platform tulad ng Notion, Obsidian, Logseq, Anki, at iba pa.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Sync ng data sa iba't ibang platform (cloud drives, WebDAV, Docker, object storage)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Mag-import ng mga aklat mula sa cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Mag-import ng mga aklat mula sa cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Opisyal na pagsasalin sa 90+ wika",
   "Official dictionary with definitions, examples & pronunciation": "Opisyal na diksyunaryo (mga depinisyon, halimbawa at pagbigkas)",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "Tulong sa pagbasa gamit ang AI (buod ng kabanata, balangkas, pagsasalaysay ng maraming tauhan)",

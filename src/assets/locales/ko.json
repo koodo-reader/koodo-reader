@@ -1290,7 +1290,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Pro에서 나가면 동기화 및 기타 프리미엄 기능을 더 이상 사용할 수 없습니다",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "향후 읽기 통계, 메모·하이라이트·읽기 진행률·단어 목록을 Notion, Obsidian, Logseq, Anki 등 플랫폼에 자동 동기화하는 기능 등 더 많은 멤버 전용 기능을 도입할 예정입니다.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "크로스 플랫폼 데이터 동기화(클라우드 드라이브, WebDAV, Docker, 객체 스토리지)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "클라우드 드라이브(바이두 클라우드, Google Drive, WebDAV, FTP, SMB)에서 책 가져오기",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "클라우드 드라이브(OneDrive, Google Drive, WebDAV, FTP, SMB)에서 책 가져오기",
   "Official translation in 90+ languages": "공식 번역(90+ 언어)",
   "Official dictionary with definitions, examples & pronunciation": "공식 사전(정의, 예문, 발음)",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI 읽기 보조(장요약, 개요, 다중 역할 낭독)",

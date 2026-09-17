@@ -1290,7 +1290,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Pro ནས་ཕྱིར་འདོང་དུས། ཁྱེད་ཀྱིས་སྙོམ་སྒྲིག་དང་གཞན་པའི་གཙོ་བོའི་ནུས་པ་རྣམས་ཡང་བེད་སྤྱོད་བྱེད་ཐུབ་མི་ཉན།",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "མ་འོངས་པར་ང་ཚོས་རྒྱུད་མཐའ་ཁོ་ནར་གཏོགས་པའི་ནུས་པ་གཞན་ཡང་འདྲེན་འོང་། དེ་དག་ནང་དུ་ཀློག་གི་གྲངས་སྟངས་དང་། ཁྱེད་ཀྱི་བསྟན་བྱང་། གསལ་སྟོན། ཀློག་མཐོང་གི་མདུན་སྐྱོད། ཚིག་གཞིའི་ཐོ་ཡོད། Notion, Obsidian, Logseq, Anki སོགས་ཀྱི་རྟེན་ཁང་ལ་རང་འབྲེལ་སྙོམ་སྒྲིག་བྱེད་པ།",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "ཐད་ཀ་འཛིན་གྱི་གཞི་གྲངས་སྙོམ་སྒྲིག (སྤྲིན་གྱི་ཡིག་མཛོད།, WebDAV, Docker, ཡུལ་རྟགས་གཞི་མཛོད།)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "སྤྲིན་གྱི་ཡིག་མཛོད་ནས་དཔེ་དེབ་ཁ་འདྲེན། (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "སྤྲིན་གྱི་ཡིག་མཛོད་ནས་དཔེ་དེབ་ཁ་འདྲེན། (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "ཆ་ཤོད 90+ ནང་གི་གཞུང་གི་ཡིག་སྒྱུར།",
   "Official dictionary with definitions, examples & pronunciation": "གཞུང་གི་ཚིག་མཛོད། (མཚན་བཤད།, དཔེ་གཞི།, སྐད་སྒྲ།)",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI ཀློག་ཡོ་ཆས། (ལེའུ་མདོ་བསྡུས།, འགོ་ཁྲིད།, མི་སྣ་མང་པོའི་གཏམ་བཤད།)",

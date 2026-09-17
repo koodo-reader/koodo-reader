@@ -1297,7 +1297,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Kun poistut Prosta, menetät välittömästi seuraavat jäsenedut",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "Tulevaisuudessa esittelemme enemmän jäsenille tarkoitettuja ominaisuuksia, kuten lukutilastojen ja muistiinpanojesi, kohokohtiesi, lukemisen edistymisen ja sanastoluetteloiden automaattisen synkronoinnin alustoihin, kuten Notion, Obsidian, Logseq, Anki ja muihin.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Eri alustojen tietojen synkronointi (pilviasemat, WebDAV, Docker, objektin tallennus)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Tuo kirjoja pilviasemista (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Tuo kirjoja pilviasemista (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Virallinen käännös yli 90 kielelle",
   "Official dictionary with definitions, examples & pronunciation": "Virallinen sanakirja, jossa on määritelmiä, esimerkkejä ja ääntäminen",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI lukuapuvälineet (lukujen yhteenvedot, hahmotelma, monirooliselostus)",

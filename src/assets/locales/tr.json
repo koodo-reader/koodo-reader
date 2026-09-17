@@ -1291,7 +1291,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Pro'dan çıktığınızda, senkronizasyon ve diğer premium özellikleri kaybedersiniz",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "Gelecekte, notlarınızın, vurgularınızın, okuma ilerlemenizin ve kelime listenizin Notion, Obsidian, Logseq, Anki ve daha fazlası gibi platformlara otomatik senkronizasyonu ve okuma istatistikleri dahil olmak üzere daha fazla üyeye özel özellik sunacağız.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Çapraz platform veri senkronizasyonu (bulut sürücüleri, WebDAV, Docker, nesne depolama)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Bulut sürücülerinden kitap içe aktar (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Bulut sürücülerinden kitap içe aktar (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "90'dan fazla dilde resmi çeviri",
   "Official dictionary with definitions, examples & pronunciation": "Tanımlar, örnekler ve telaffuz içeren resmi sözlük",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI okuma yardımcıları (bölüm özetleri, ana hat, çoklu rol anlatım)",

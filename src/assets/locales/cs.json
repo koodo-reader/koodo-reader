@@ -1290,7 +1290,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Jakmile opustíte Pro, okamžitě ztratíte následující členské výhody",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "V budoucnu zavedeme více funkcí exkluzivních pro členy, včetně statistik čtení a automatické synchronizace vašich poznámek, zvýraznění, průběhu čtení a seznamů slovní zásoby na platformy jako Notion, Obsidian, Logseq, Anki a další.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Synchronizace dat mezi platformami (cloudové jednotky, WebDAV, Docker, úložiště objektů)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Import knih z cloudových disků (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Import knih z cloudových disků (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Oficiální překlad do 90+ jazyků",
   "Official dictionary with definitions, examples & pronunciation": "Oficiální slovník s definicemi, příklady a výslovností",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI pomůcky ke čtení (souhrny kapitol, osnova, vyprávění ve více rolích)",

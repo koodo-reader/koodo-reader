@@ -1305,7 +1305,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Setelah keluar dari Pro, Anda tidak lagi dapat menggunakan sinkronisasi dan fitur premium lainnya",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "Di masa mendatang, kami akan memperkenalkan lebih banyak fitur eksklusif anggota, termasuk statistik membaca dan sinkronisasi otomatis catatan, penyorotan, progres membaca, dan daftar kosakata Anda ke platform seperti Notion, Obsidian, Logseq, Anki, dan lainnya.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Sinkronisasi data lintas platform (cloud drive, WebDAV, Docker, penyimpanan objek)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Impor buku dari cloud drive (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Impor buku dari cloud drive (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Terjemahan resmi dalam 90+ bahasa",
   "Official dictionary with definitions, examples & pronunciation": "Kamus resmi (definisi, contoh, dan pelafalan)",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "Bantuan baca AI (ringkasan bab, kerangka, narasi multi-peran)",

@@ -1288,7 +1288,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Ha kilép a Pro-ból, azonnal elveszíti a következő tagsági előnyöket",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "A jövőben további, a tagok számára kizárólagos funkciókat vezetünk be, beleértve az olvasási statisztikákat, valamint a jegyzetek, kiemelések, olvasási folyamat és szókincslisták automatikus szinkronizálását olyan platformokon, mint a Notion, Obsidian, Logseq, Anki stb.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Platformok közötti adatszinkronizálás (felhőmeghajtók, WebDAV, Docker, objektumtárolás)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Könyvek importálása felhőmeghajtókról (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Könyvek importálása felhőmeghajtókról (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Hivatalos fordítás több mint 90 nyelven",
   "Official dictionary with definitions, examples & pronunciation": "Hivatalos szótár definíciókkal, példákkal és kiejtéssel",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI olvasási segédletek (fejezetösszefoglalók, vázlat, többszereplős elbeszélés)",

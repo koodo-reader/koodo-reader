@@ -1296,7 +1296,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "退出專業版後，您將立即失去以下會員權益",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "未來我們還會推出更多會員專屬功能，包括閱讀統計，自動同步您的筆記、高亮、閱讀進度和生詞本到 Notion、Obsidian、Logseq、Anki 等平台。",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "跨平台數據同步（網盤、WebDAV、Docker、對象存儲）",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "從網盤/服務器導入書籍（百度網盤、阿里雲盤、Google Drive、WebDAV、FTP、SMB）",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "從網盤/服務器導入書籍（OneDrive、Google Drive、WebDAV、FTP、SMB）",
   "Official translation in 90+ languages": "官方翻譯（90+ 語言）",
   "Official dictionary with definitions, examples & pronunciation": "官方詞典（釋義、例句、發音）",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI 閱讀輔助（章節總結、大綱、多角色朗讀）",

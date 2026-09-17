@@ -1294,7 +1294,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Khi rời khỏi Pro, bạn sẽ không còn sử dụng được tính năng đồng bộ và các tính năng cao cấp khác nữa",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "Trong tương lai, chúng tôi sẽ giới thiệu thêm nhiều tính năng dành riêng cho thành viên, bao gồm thống kê đọc và tự động đồng bộ ghi chú, phần nổi bật, tiến độ đọc và danh sách từ vựng của bạn lên các nền tảng như Notion, Obsidian, Logseq, Anki và nhiều nền tảng khác.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Đồng bộ dữ liệu đa nền tảng (dịch vụ đám mây, WebDAV, Docker, bộ lưu trữ đối tượng)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Nhập sách từ dịch vụ đám mây (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Nhập sách từ dịch vụ đám mây (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Bản dịch chính thức trong hơn 90 ngôn ngữ",
   "Official dictionary with definitions, examples & pronunciation": "Từ điển chính thức (định nghĩa, ví dụ và phát âm)",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "Trợ giúp đọc AI (tóm tắt chương, dàn bài, thuật lại đa vai)",

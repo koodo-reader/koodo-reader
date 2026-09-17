@@ -1291,7 +1291,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "عند الخروج من الإصدار الاحترافي، لن تتمكن من استخدام المزامنة والميزات المميزة الأخرى",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "في المستقبل، سوف نقدم المزيد من الميزات الحصرية للأعضاء، بما في ذلك إحصائيات القراءة والمزامنة التلقائية لملاحظاتك وتمييزاتك وتقدم قراءتك وقوائم المفردات إلى منصات مثل Notion وObsidian وLogseq وAnki وغيرها.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "مزامنة البيانات عبر الأنظمة الأساسية (محركات الأقراص السحابية، WebDAV، Docker، تخزين الكائنات)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "استيراد الكتب من محركات الأقراص السحابية (Baidu Netdisk، Google Drive، WebDAV، FTP، SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "استيراد الكتب من محركات الأقراص السحابية (OneDrive، Google Drive، WebDAV، FTP، SMB)",
   "Official translation in 90+ languages": "ترجمة رسمية بأكثر من 90 لغة",
   "Official dictionary with definitions, examples & pronunciation": "قاموس رسمي (تعريفات وأمثلة ونطق)",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "وسائل قراءة بالذكاء الاصطناعي (ملخصات الفصول، مخطط تفصيلي، سرد متعدد الأدوار)",

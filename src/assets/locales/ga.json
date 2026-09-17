@@ -1288,7 +1288,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Nuair a fhágfaidh tú Pro, caillfidh tú na sochair bhall seo a leanas láithreach",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "Sa todhchaí, tabharfaimid isteach níos mó gnéithe eisiacha do bhaill, lena n-áirítear staitisticí léitheoireachta agus sioncrónú uathoibríoch ar do nótaí, buaicphointí, dul chun cinn léitheoireachta, agus liostaí stór focal chuig ardáin mar Notion, Obsidian, Logseq, Anki, agus níos mó.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Sioncronú sonraí tras-ardáin (tiomántáin scamall, WebDAV, Docker, stóráil réad)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Iompórtáil leabhair ó thiomáineann néil (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Iompórtáil leabhair ó thiomáineann néil (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Aistriúchán oifigiúil i 90+ teanga",
   "Official dictionary with definitions, examples & pronunciation": "Foclóir oifigiúil le sainmhínithe, samplaí & fuaimniú",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "Áiseanna léitheoireachta AI (achoimrí caibidle, breac-chuntas, insint ilróil)",
