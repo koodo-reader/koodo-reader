@@ -22,6 +22,7 @@ import {
   clearComicTemp,
   getDefaultOcrEngine,
   getDefaultOcrLang,
+  getOcrCache,
   getPageWidth,
   getParserRegex,
   getPdfPassword,
@@ -32,6 +33,7 @@ import {
   getZipBuffer,
   getZipEntries,
   isReadingAidMode,
+  saveOcrCache,
   throttle,
 } from "../../utils/common";
 import _ from "underscore";
@@ -408,6 +410,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         getTarEntries: getTarEntries,
         getZipEntries: getZipEntries,
         filePath: BookUtil.getBookPath(this.props.currentBook),
+        bookKey: this.props.currentBook.key,
+        getOcrCache: getOcrCache,
+        saveOcrCache: saveOcrCache,
       },
       Kookit
     );
