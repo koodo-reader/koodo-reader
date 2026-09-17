@@ -1291,7 +1291,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Dopo aver abbandonato la versione Pro, non potrai più usare la sincronizzazione e le altre funzioni premium",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "In futuro introdurremo altre funzioni esclusive per i membri, tra cui statistiche di lettura e sincronizzazione automatica di note, evidenziazioni, progressi di lettura ed elenchi di vocaboli con piattaforme come Notion, Obsidian, Logseq, Anki e altre.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Sincronizzazione dei dati multipiattaforma (unità cloud, WebDAV, Docker, archiviazione a oggetti)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Importa libri da unità cloud (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Importa libri da unità cloud (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Traduzione ufficiale in oltre 90 lingue",
   "Official dictionary with definitions, examples & pronunciation": "Dizionario ufficiale con definizioni, esempi e pronuncia",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "Strumenti di lettura AI (riassunti dei capitoli, scaletta, narrazione multi-ruolo)",

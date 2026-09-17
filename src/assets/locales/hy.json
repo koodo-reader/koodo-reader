@@ -1291,7 +1291,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Pro ռեժիմից դուրս գալուց հետո այլևս չեք կարողանա օգտագործել համաժամեցումը և այլ պրեմիում հնարավորություններ",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "Ապագայում մենք կներկայացնենք անդամների բացառիկ ավելի շատ հնարավորություններ, ներառյալ ընթերցման վիճակագրությունը և ձեր գրառումների, ընդգծումների, ընթերցման առաջընթացի և բառապաշարի ցուցակների ավտոմատ համաժամեցումը այնպիսի հարթակների հետ, ինչպիսիք են Notion-ը, Obsidian-ը, Logseq-ը, Anki-ն և այլն:",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Միջհարթակային տվյալների համաժամեցում (ամպային սկավառակներ, WebDAV, Docker, օբյեկտային պահեստ)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Ներմուծել գրքեր ամպային սկավառակներից (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Ներմուծել գրքեր ամպային սկավառակներից (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Պաշտոնական թարգմանություն 90+ լեզուներով",
   "Official dictionary with definitions, examples & pronunciation": "Պաշտոնական բառարան (սահմանումներ, օրինակներ և արտասանություն)",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI ընթերցման օժանդակ գործիքներ (գլուխների ամփոփումներ, ուրվագիծ, բազմադեր ասմունք)",

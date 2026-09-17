@@ -1288,7 +1288,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Ko zapustite Pro, boste takoj izgubili naslednje članske ugodnosti",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "V prihodnosti bomo uvedli več ekskluzivnih funkcij za člane, vključno s statistiko branja in samodejno sinhronizacijo vaših zapiskov, poudarkov, napredka pri branju in seznamov besedišča na platformah, kot so Notion, Obsidian, Logseq, Anki in druge.",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "Sinhronizacija podatkov med platformami (pogoni v oblaku, WebDAV, Docker, shranjevanje predmetov)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "Uvoz knjig iz diskov v oblaku (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "Uvoz knjig iz diskov v oblaku (OneDrive, Google Drive, WebDAV, FTP, SMB)",
   "Official translation in 90+ languages": "Uradni prevod v več kot 90 jezikov",
   "Official dictionary with definitions, examples & pronunciation": "Uradni slovar z definicijami, primeri in izgovorjavo",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI bralni pripomočki (povzetki poglavij, oris, pripovedovanje v več vlogah)",

@@ -1288,7 +1288,7 @@
   "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features": "Pro से बाहर निकलने के बाद, आप सिंक्रोनाइज़ेशन और अन्य प्रीमियम सुविधाएँ नहीं उपयोग कर पाएंगे",
   "In the future, we will introduce more member-exclusive features, including reading statistics and automatic synchronization of your notes, highlights, reading progress, and vocabulary lists to platforms like Notion, Obsidian, Logseq, Anki, and more.": "भविष्य में हम और सदस्य-विशेष सुविधाएँ पेश करेंगे, जिनमें पठन आँकड़े और आपके नोट्स, हाइलाइट्स, पठन प्रगति तथा शब्द सूचियों का Notion, Obsidian, Logseq, Anki जैसे प्लेटफ़ॉर्म पर स्वचालित सिंक शामिल है।",
   "Cross-platform data sync (cloud drives, WebDAV, Docker, object storage)": "क्रॉस-प्लेटफ़ॉर्म डेटा सिंक (क्लाउड ड्राइव, WebDAV, Docker, ऑब्जेक्ट स्टोरेज)",
-  "Import books from cloud drives (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB)": "क्लाउड ड्राइव (Baidu Netdisk, Google Drive, WebDAV, FTP, SMB) से पुस्तकें आयात करें",
+  "Import books from cloud drives (OneDrive, Google Drive, WebDAV, FTP, SMB)": "क्लाउड ड्राइव (OneDrive, Google Drive, WebDAV, FTP, SMB) से पुस्तकें आयात करें",
   "Official translation in 90+ languages": "90+ भाषाओं में आधिकारिक अनुवाद",
   "Official dictionary with definitions, examples & pronunciation": "आधिकारिक शब्दकोश (परिभाषाएँ, उदाहरण और उच्चारण)",
   "AI reading aids (chapter summaries, outline, multi-role narration)": "AI पठन सहायता (अध्याय सारांश, रूपरेखा, बहु-भूमिका वाचन)",
