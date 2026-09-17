@@ -33,5 +33,4 @@ export const proFeatures = [
   "Natural text-to-speech (82 languages, 569 voices)",
   "OCR text recognition for scanned PDFs",
   "Send to Kindle",
-  "Email & live-chat priority support",
 ];
