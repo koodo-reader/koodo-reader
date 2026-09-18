@@ -690,7 +690,7 @@
   inset: -2px;
   border-radius: inherit;
   padding: 2px;
-  background: linear-gradient(120deg, #4d70eb 0%, #965aeb 100%);
+  background: #c0c4cc;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -709,10 +709,10 @@
   padding: 2px;
   background: conic-gradient(
     from var(--pro-banner-btn-trial-angle),
-    rgba(255, 255, 255, 0) 0deg,
-    rgba(255, 255, 255, 0) 220deg,
-    rgba(255, 255, 255, 1) 290deg,
-    rgba(255, 255, 255, 0) 360deg
+    rgba(139, 180, 255, 0) 0deg,
+    rgba(139, 180, 255, 0) 220deg,
+    rgba(57, 100, 254, 1) 290deg,
+    rgba(139, 180, 255, 0) 360deg
   );
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
