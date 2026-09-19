@@ -62,6 +62,41 @@ const {
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
+const customVoicePluginCache = new Map();
+const resolveCustomVoicePlugin = ({ script, scriptSHA256, pluginKey } = {}) => {
+  if (
+    typeof script !== "string" ||
+    !script ||
+    typeof scriptSHA256 !== "string" ||
+    !scriptSHA256
+  ) {
+    return undefined;
+  }
+  const cached = customVoicePluginCache.get(scriptSHA256);
+  if (cached && cached.script === script && cached.pluginKey === pluginKey) {
+    return cached;
+  }
+  const hash = nodeCrypto.createHash("sha256").update(script).digest("hex");
+  if (hash !== scriptSHA256.toLowerCase()) {
+    throw new Error("Custom voice plugin verification failed");
+  }
+  delete global.getAudioPath;
+  delete global.getTTSVoice;
+  // eslint-disable-next-line no-eval
+  eval(script);
+  if (typeof global.getAudioPath !== "function") {
+    throw new Error("Invalid custom voice plugin script");
+  }
+  const resolved = {
+    script,
+    scriptSHA256: hash,
+    pluginKey,
+    getAudioPath: global.getAudioPath,
+    getTTSVoice: typeof global.getTTSVoice === "function" ? global.getTTSVoice : undefined,
+  };
+  customVoicePluginCache.set(scriptSHA256, resolved);
+  return resolved;
+};
 const packageJson = require("./package.json");
 let mainWin;
 let tray = null;
@@ -936,7 +971,9 @@ const createMainWin = () => {
   });
   ipcMain.handle("generate-tts", async (event, voiceConfig) => {
     const { text, speed, pluginKey, config } = voiceConfig || {};
-    const plugin = getVoicePlugin(pluginKey);
+    const plugin =
+      getVoicePlugin(pluginKey) ||
+      resolveCustomVoicePlugin(voiceConfig || {});
     if (
       !plugin ||
       typeof text !== "string" ||
@@ -960,7 +997,8 @@ const createMainWin = () => {
   });
   ipcMain.handle("get-tts-voices", async (event, request) => {
     const { pluginKey, config } = request || {};
-    const plugin = getVoicePlugin(pluginKey);
+    const plugin =
+      getVoicePlugin(pluginKey) || resolveCustomVoicePlugin(request || {});
     if (
       !plugin ||
       typeof plugin.getTTSVoice !== "function" ||

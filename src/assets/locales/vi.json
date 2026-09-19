@@ -1148,8 +1148,6 @@
   "None": "Không có",
   "Slide": "Trượt",
   "Flip": "Lật",
-  "Custom voice plugins are not supported": "Không hỗ trợ phần bổ trợ giọng đọc tùy chỉnh",
-  "Custom voice plugins have been disabled": "Phần bổ trợ giọng đọc tùy chỉnh đã bị vô hiệu hóa",
   "Paste voice list JSON": "Dán JSON danh sách giọng đọc",
   "Invalid voice list JSON": "Nhập mảng JSON không rỗng chứa cấu hình giọng đọc hợp lệ",
   "Failed to load more": "Tải thêm thất bại",

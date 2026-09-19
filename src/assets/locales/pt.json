@@ -1151,8 +1151,6 @@
   "None": "Nenhum",
   "Slide": "Deslizar",
   "Flip": "Virar",
-  "Custom voice plugins are not supported": "Os plugins de voz personalizados não são suportados",
-  "Custom voice plugins have been disabled": "Os plugins de voz personalizados foram desativados",
   "Paste voice list JSON": "Cole o JSON da lista de vozes",
   "Invalid voice list JSON": "Insira uma matriz JSON não vazia contendo configurações de voz válidas",
   "Failed to load more": "Falha ao carregar mais",

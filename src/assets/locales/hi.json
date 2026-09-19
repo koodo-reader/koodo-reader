@@ -1142,8 +1142,6 @@
   "None": "कोई नहीं",
   "Slide": "स्लाइड",
   "Flip": "पलटें",
-  "Custom voice plugins are not supported": "कस्टम वॉइस प्लगइन समर्थित नहीं हैं",
-  "Custom voice plugins have been disabled": "कस्टम वॉइस प्लगइन अक्षम कर दिए गए हैं",
   "Paste voice list JSON": "वॉइस सूची JSON चिपकाएँ",
   "Invalid voice list JSON": "मान्य वॉइस कॉन्फ़िगरेशन वाला गैर-रिक्त JSON एरे दर्ज करें",
   "Failed to load more": "और लोड करने में विफल",

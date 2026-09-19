@@ -1144,8 +1144,6 @@
   "None": "ไม่มี",
   "Slide": "เลื่อน",
   "Flip": "พลิก",
-  "Custom voice plugins are not supported": "ไม่รองรับปลั๊กอินเสียงที่กำหนดเอง",
-  "Custom voice plugins have been disabled": "ปลั๊กอินเสียงที่กำหนดเองถูกปิดใช้งานแล้ว",
   "Paste voice list JSON": "วาง JSON รายการเสียง",
   "Invalid voice list JSON": "กรอก JSON อาร์เรย์ที่ไม่ว่างซึ่งมีคอนฟิกเสียงที่ถูกต้อง",
   "Failed to load more": "โหลดเพิ่มเติมล้มเหลว",

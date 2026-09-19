@@ -1145,8 +1145,6 @@
   "None": "Nessuna",
   "Slide": "Scorrimento",
   "Flip": "Sfoglia",
-  "Custom voice plugins are not supported": "I plugin vocali personalizzati non sono supportati",
-  "Custom voice plugins have been disabled": "I plugin vocali personalizzati sono stati disabilitati",
   "Paste voice list JSON": "Incolla il JSON dell'elenco delle voci",
   "Invalid voice list JSON": "Inserisci un array JSON non vuoto contenente configurazioni vocali valide",
   "Failed to load more": "Impossibile caricare altri elementi",

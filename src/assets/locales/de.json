@@ -1144,8 +1144,6 @@
   "None": "Keine",
   "Slide": "Schieben",
   "Flip": "Umblättern",
-  "Custom voice plugins are not supported": "Benutzerdefinierte Sprach-Plugins werden nicht unterstützt",
-  "Custom voice plugins have been disabled": "Benutzerdefinierte Sprach-Plugins wurden deaktiviert",
   "Paste voice list JSON": "Sprachlisten-JSON einfügen",
   "Invalid voice list JSON": "Geben Sie ein nicht leeres JSON-Array mit gültigen Sprachkonfigurationen ein",
   "Failed to load more": "Weitere Elemente konnten nicht geladen werden",

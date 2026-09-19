@@ -1145,8 +1145,6 @@
   "None": "Yok",
   "Slide": "Kaydır",
   "Flip": "Çevir",
-  "Custom voice plugins are not supported": "Özel ses eklentileri desteklenmiyor",
-  "Custom voice plugins have been disabled": "Özel ses eklentileri devre dışı bırakıldı",
   "Paste voice list JSON": "Ses listesi JSON'ını yapıştırın",
   "Invalid voice list JSON": "Geçerli ses yapılandırmaları içeren boş olmayan bir JSON dizisi girin",
   "Failed to load more": "Daha fazla yükleme başarısız",

@@ -1142,8 +1142,6 @@
   "None": "Wala",
   "Slide": "I-slide",
   "Flip": "I-flip",
-  "Custom voice plugins are not supported": "Hindi sinusuportahan ang mga custom na voice plugin",
-  "Custom voice plugins have been disabled": "Na-disable na ang mga custom na voice plugin",
   "Paste voice list JSON": "I-paste ang JSON ng listahan ng boses",
   "Invalid voice list JSON": "Maglagay ng hindi-bakanteng JSON array na naglalaman ng wastong mga config ng boses",
   "Failed to load more": "Nabigo ang pag-load ng karagdagan",

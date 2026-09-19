@@ -1142,8 +1142,6 @@
   "None": "የለም",
   "Slide": "ስላይድ",
   "Flip": "ገልብጥ",
-  "Custom voice plugins are not supported": "ብጁ የድምጽ ተሰኪዎች አይደገፉም",
-  "Custom voice plugins have been disabled": "ብጁ የድምጽ ተሰኪዎች ተሰናክለዋል",
   "Paste voice list JSON": "የድምጽ ዝርዝር JSON ይለጥፉ",
   "Invalid voice list JSON": "ልክ የሆኑ የድምጽ ውቅሮችን የያዘ ባዶ ያልሆነ የ JSON ድርድር ያስገቡ",
   "Failed to load more": "ተጨማሪ መጫን አልተሳካም",

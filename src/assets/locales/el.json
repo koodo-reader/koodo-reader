@@ -1145,8 +1145,6 @@
   "None": "Κανένα",
   "Slide": "Ολίσθηση",
   "Flip": "Αναστροφή",
-  "Custom voice plugins are not supported": "Δεν υποστηρίζονται προσαρμοσμένες φωνητικές προσθήκες",
-  "Custom voice plugins have been disabled": "Οι προσαρμοσμένες προσθήκες φωνής έχουν απενεργοποιηθεί",
   "Paste voice list JSON": "Επικόλληση φωνητικής λίστας JSON",
   "Invalid voice list JSON": "Εισαγάγετε έναν μη κενό πίνακα JSON που περιέχει έγκυρες διαμορφώσεις φωνής",
   "Failed to load more": "Αποτυχία φόρτωσης περισσότερων",

@@ -1145,8 +1145,6 @@
   "None": "Ոչինչ",
   "Slide": "Սլայդ",
   "Flip": "Շրջել",
-  "Custom voice plugins are not supported": "Անհատական ձայնային հավելումները չեն աջակցվում",
-  "Custom voice plugins have been disabled": "Անհատական ձայնային հավելումներն անջատվել են",
   "Paste voice list JSON": "Տեղադրել ձայների ցուցակի JSON-ը",
   "Invalid voice list JSON": "Մուտքագրեք ոչ դատարկ JSON զանգված՝ վավեր ձայնային կոնֆիգուրացիաներով",
   "Failed to load more": "Չհաջողվեց բեռնել ավելին",

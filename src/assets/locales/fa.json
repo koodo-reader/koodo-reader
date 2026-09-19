@@ -1144,8 +1144,6 @@
   "None": "هیچ‌کدام",
   "Slide": "اسلاید",
   "Flip": "چرخش",
-  "Custom voice plugins are not supported": "افزونه‌های صوتی سفارشی پشتیبانی نمی‌شوند",
-  "Custom voice plugins have been disabled": "افزونه‌های صوتی سفارشی غیرفعال شده‌اند",
   "Paste voice list JSON": "چسباندن JSON فهرست صداها",
   "Invalid voice list JSON": "یک آرایه JSON غیرخالی حاوی پیکربندی‌های صوتی معتبر وارد کنید",
   "Failed to load more": "بارگذاری بیشتر ناموفق بود",

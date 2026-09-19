@@ -1145,8 +1145,6 @@
   "None": "কিছুই না",
   "Slide": "স্লাইড",
   "Flip": "উল্টান",
-  "Custom voice plugins are not supported": "কাস্টম ভয়েস প্লাগইন সমর্থিত নয়",
-  "Custom voice plugins have been disabled": "কাস্টম ভয়েস প্লাগইন বন্ধ করা হয়েছে",
   "Paste voice list JSON": "ভয়েস তালিকার JSON পেস্ট করুন",
   "Invalid voice list JSON": "সঠিক ভয়েস কনফিগারেশনসহ একটি খালি নয় এমন JSON অ্যারে লিখুন",
   "Failed to load more": "আরও লোড করা ব্যর্থ হয়েছে",

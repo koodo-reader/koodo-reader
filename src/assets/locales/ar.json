@@ -1145,8 +1145,6 @@
   "None": "لا شيء",
   "Slide": "انزلاق",
   "Flip": "قلب",
-  "Custom voice plugins are not supported": "لا يتم دعم إضافات الصوت المخصصة",
-  "Custom voice plugins have been disabled": "تم تعطيل إضافات الصوت المخصصة",
   "Paste voice list JSON": "لصق JSON قائمة الأصوات",
   "Invalid voice list JSON": "أدخل مصفوفة JSON غير فارغة تحتوي على إعدادات صوتية صالحة",
   "Failed to load more": "فشل تحميل المزيد",

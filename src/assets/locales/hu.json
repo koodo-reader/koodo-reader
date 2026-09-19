@@ -1142,8 +1142,6 @@
   "None": "Nincs",
   "Slide": "Csúsztatás",
   "Flip": "Lapozás",
-  "Custom voice plugins are not supported": "Az egyéni hangbeépülő modulok nem támogatottak",
-  "Custom voice plugins have been disabled": "Az egyéni hangbeépülő modulok le vannak tiltva",
   "Paste voice list JSON": "Hanglista beillesztése JSON",
   "Invalid voice list JSON": "Adjon meg egy nem üres JSON tömböt, amely érvényes hangkonfigurációkat tartalmaz",
   "Failed to load more": "Nem sikerült többet betölteni",

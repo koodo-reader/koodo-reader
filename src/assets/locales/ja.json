@@ -1155,8 +1155,6 @@
   "None": "なし",
   "Slide": "スライド",
   "Flip": "フリップ",
-  "Custom voice plugins are not supported": "カスタム音声プラグインはサポートされていません",
-  "Custom voice plugins have been disabled": "カスタム音声プラグインは無効化されています",
   "Paste voice list JSON": "音声リストの JSON を貼り付け",
   "Invalid voice list JSON": "有効な音声設定を含む空でない JSON 配列を入力してください",
   "Failed to load more": "追加の読み込みに失敗しました",

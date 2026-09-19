@@ -1144,8 +1144,6 @@
   "None": "Žádné",
   "Slide": "Posunutí",
   "Flip": "Přetočení",
-  "Custom voice plugins are not supported": "Vlastní hlasové pluginy nejsou podporovány",
-  "Custom voice plugins have been disabled": "Vlastní hlasové pluginy byly zakázány",
   "Paste voice list JSON": "Vložte seznam hlasů JSON",
   "Invalid voice list JSON": "Zadejte neprázdné pole JSON obsahující platné hlasové konfigurace",
   "Failed to load more": "Nepodařilo se načíst další",

@@ -1151,8 +1151,6 @@
   "None": "Ei mitään",
   "Slide": "Liuku",
   "Flip": "Käännä",
-  "Custom voice plugins are not supported": "Mukautettuja äänilaajennuksia ei tueta",
-  "Custom voice plugins have been disabled": "Mukautetut äänilaajennukset on poistettu käytöstä",
   "Paste voice list JSON": "Liitä ääniluettelo JSON",
   "Invalid voice list JSON": "Syötä ei-tyhjä JSON-taulukko, joka sisältää kelvolliset äänimääritykset",
   "Failed to load more": "Enemmän lataus epäonnistui",

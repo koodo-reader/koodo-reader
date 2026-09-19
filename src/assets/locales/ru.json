@@ -1145,8 +1145,6 @@
   "None": "Нет",
   "Slide": "Плавно",
   "Flip": "С переворотом",
-  "Custom voice plugins are not supported": "Пользовательские голосовые плагины не поддерживаются",
-  "Custom voice plugins have been disabled": "Пользовательские голосовые плагины отключены",
   "Paste voice list JSON": "Вставить JSON списка голосов",
   "Invalid voice list JSON": "Введите непустой массив JSON с корректными настройками голосов",
   "Failed to load more": "Не удалось загрузить ещё",

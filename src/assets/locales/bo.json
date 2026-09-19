@@ -1144,8 +1144,6 @@
   "None": "གང་ཡང་མེད།",
   "Slide": "སྐྱིད་ཤོག། (Slide)",
   "Flip": "གཡས་གཡོན་བསྐོར།",
-  "Custom voice plugins are not supported": "ཁྱད་ཇུས་ཀྱི་སྒྲ་རྩིས་ཚར་སྦྱོར་མི་རྒྱབ།",
-  "Custom voice plugins have been disabled": "ཁྱད་ཇུས་ཀྱི་སྒྲ་རྩིས་ཚར་སྦྱོར་དབྱུང་མེད་བཟོ་འདུག།",
   "Paste voice list JSON": "སྒྲ་ཐོའི་ JSON ཚར་ཤོར།",
   "Invalid voice list JSON": "ཁེངས་པའི་སྒྲ་ཡི་གཞི་སྒྲིག་ཡོད་པའི་སྟོང་མིན་གྱི་ JSON ཐོ་ཁང་འཇུག་རོགས།",
   "Failed to load more": "དེ་ཡན་མང་ངུ་མ་ཐོན།",

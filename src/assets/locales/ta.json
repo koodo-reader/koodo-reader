@@ -1143,8 +1143,6 @@
   "None": "எதுவும் இல்லை",
   "Slide": "ஸ்லைடு",
   "Flip": "புரட்டு",
-  "Custom voice plugins are not supported": "தனிப்பயன் குரல் பிளக்க-இன்கள் ஆதரிக்கப்படவில்லை",
-  "Custom voice plugins have been disabled": "தனிப்பயன் குரல் பிளக்க-இன்கள் முடக்கப்பட்டுள்ளன",
   "Paste voice list JSON": "குரல் பட்டியல் JSON-ஐ ஒட்டவும்",
   "Invalid voice list JSON": "சரியான குரல் கட்டமைப்புகளைக் கொண்ட காலியற்ற JSON அணியை உள்ளிடவும்",
   "Failed to load more": "மேலும் ஏற்ற முடியவில்லை",
