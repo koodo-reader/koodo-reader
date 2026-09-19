@@ -1,99 +1,99 @@
 import type { DictionaryPlugin, TranslatePlugin } from "./types";
-import { translate as translate0 } from "./renderer/translation/potTranslate";
-import { translate as translate1 } from "./renderer/translation/libreTranslate";
-import { translate as translate2 } from "./renderer/translation/ollamaTranslate";
-import { translate as translate3 } from "./renderer/translation/googleEmbedTranslate";
-import { translate as translate4 } from "./renderer/translation/bingEmbedTranslate";
-import { translate as translate5 } from "./renderer/translation/baiduEmbedTranslate";
-import { translate as translate6 } from "./renderer/translation/deeplTranslate";
-import { translate as translate7 } from "./renderer/translation/azureTranslate";
-import { translate as translate8 } from "./renderer/translation/amazonTranslate";
-import { translate as translate9 } from "./renderer/translation/volcengineTranslate";
-import { translate as translate10 } from "./renderer/translation/caiyunTranslate";
-import { translate as translate11 } from "./renderer/translation/googleTranslate";
-import { translate as translate12 } from "./renderer/translation/niutransTranslate";
-import { translate as translate13 } from "./renderer/translation/tencentTranslate";
-import { translate as translate14 } from "./renderer/translation/youdaoGeneralTranslate";
-import { translate as translate15 } from "./renderer/translation/youdaoLlmTranslate";
-import { translate as translate16 } from "./renderer/translation/aliyunTranslate";
-import { translate as translate17 } from "./renderer/translation/baiduGeneralTranslate";
-import { translate as translate18 } from "./renderer/translation/baiduLlmTranslate";
-import { translate as translate19 } from "./renderer/translation/yandexEmbedTranslate";
-import { translate as translate20 } from "./renderer/translation/reversoEmbedTranslate";
-import { translate as translate21 } from "./renderer/translation/sogouEmbedTranslate";
-import { translate as translate22 } from "./renderer/translation/360EmbedTranslate";
-import { translate as translate23 } from "./renderer/translation/transmartEmbedTranslate";
-import { getDictText as getDictText0 } from "./renderer/dictionary/wikipediaDict";
-import { getDictText as getDictText1 } from "./renderer/dictionary/dictionaryapiDict";
-import { getDictText as getDictText2 } from "./renderer/dictionary/wiktionaryDict";
-import { getDictText as getDictText3 } from "./renderer/dictionary/cambridgeEmbedDict";
-import { getDictText as getDictText4 } from "./renderer/dictionary/youdaoEmbedDict";
-import { getDictText as getDictText5 } from "./renderer/dictionary/bingEmbedDict";
-import { getDictText as getDictText6 } from "./renderer/dictionary/eudicEmbedDict";
-import { getDictText as getDictText7 } from "./renderer/dictionary/esdictEmbedDict";
-import { getDictText as getDictText8 } from "./renderer/dictionary/frdicEmbedDict";
-import { getDictText as getDictText9 } from "./renderer/dictionary/godicEmbedDict";
-import { getDictText as getDictText10 } from "./renderer/dictionary/merriamWebsterEmbedDict";
-import { getDictText as getDictText11 } from "./renderer/dictionary/baiduEmbedDict";
-import { getDictText as getDictText12 } from "./renderer/dictionary/googleEmbedDict";
-import { getDictText as getDictText13 } from "./renderer/dictionary/jishoEmbedDict";
-import { getDictText as getDictText14 } from "./renderer/dictionary/collinsEmbedDict";
-import { getDictText as getDictText15 } from "./renderer/dictionary/cuteslatorEmbedDict";
-import { getDictText as getDictText16 } from "./renderer/dictionary/hanyuguoxueEmbedDict";
-import { getDictText as getDictText17 } from "./renderer/dictionary/zdicEmbedDict";
-import { getDictText as getDictText18 } from "./renderer/dictionary/cedictEmbedDict";
-import { getDictText as getDictText19 } from "./renderer/dictionary/weblioEmbedDict";
-import { getDictText as getDictText20 } from "./renderer/dictionary/openrussianEmbedDict";
+import { translate as potTranslate } from "./renderer/translation/potTranslate";
+import { translate as libreTranslate } from "./renderer/translation/libreTranslate";
+import { translate as ollamaTranslate } from "./renderer/translation/ollamaTranslate";
+import { translate as googleEmbedTranslate } from "./renderer/translation/googleEmbedTranslate";
+import { translate as bingEmbedTranslate } from "./renderer/translation/bingEmbedTranslate";
+import { translate as baiduEmbedTranslate } from "./renderer/translation/baiduEmbedTranslate";
+import { translate as deeplTranslate } from "./renderer/translation/deeplTranslate";
+import { translate as azureTranslate } from "./renderer/translation/azureTranslate";
+import { translate as amazonTranslate } from "./renderer/translation/amazonTranslate";
+import { translate as volcengineTranslate } from "./renderer/translation/volcengineTranslate";
+import { translate as caiyunTranslate } from "./renderer/translation/caiyunTranslate";
+import { translate as googleTranslate } from "./renderer/translation/googleTranslate";
+import { translate as niutransTranslate } from "./renderer/translation/niutransTranslate";
+import { translate as tencentTranslate } from "./renderer/translation/tencentTranslate";
+import { translate as youdaoGeneralTranslate } from "./renderer/translation/youdaoGeneralTranslate";
+import { translate as youdaoLlmTranslate } from "./renderer/translation/youdaoLlmTranslate";
+import { translate as aliyunTranslate } from "./renderer/translation/aliyunTranslate";
+import { translate as baiduGeneralTranslate } from "./renderer/translation/baiduGeneralTranslate";
+import { translate as baiduLlmTranslate } from "./renderer/translation/baiduLlmTranslate";
+import { translate as yandexEmbedTranslate } from "./renderer/translation/yandexEmbedTranslate";
+import { translate as reversoEmbedTranslate } from "./renderer/translation/reversoEmbedTranslate";
+import { translate as sogouEmbedTranslate } from "./renderer/translation/sogouEmbedTranslate";
+import { translate as qihoo360EmbedTranslate } from "./renderer/translation/360EmbedTranslate";
+import { translate as transmartEmbedTranslate } from "./renderer/translation/transmartEmbedTranslate";
+import { getDictText as wikipediaDictText } from "./renderer/dictionary/wikipediaDict";
+import { getDictText as dictionaryapiDictText } from "./renderer/dictionary/dictionaryapiDict";
+import { getDictText as wiktionaryDictText } from "./renderer/dictionary/wiktionaryDict";
+import { getDictText as cambridgeEmbedDictText } from "./renderer/dictionary/cambridgeEmbedDict";
+import { getDictText as youdaoEmbedDictText } from "./renderer/dictionary/youdaoEmbedDict";
+import { getDictText as bingEmbedDictText } from "./renderer/dictionary/bingEmbedDict";
+import { getDictText as eudicEmbedDictText } from "./renderer/dictionary/eudicEmbedDict";
+import { getDictText as esdictEmbedDictText } from "./renderer/dictionary/esdictEmbedDict";
+import { getDictText as frdicEmbedDictText } from "./renderer/dictionary/frdicEmbedDict";
+import { getDictText as godicEmbedDictText } from "./renderer/dictionary/godicEmbedDict";
+import { getDictText as merriamWebsterEmbedDictText } from "./renderer/dictionary/merriamWebsterEmbedDict";
+import { getDictText as baiduEmbedDictText } from "./renderer/dictionary/baiduEmbedDict";
+import { getDictText as googleEmbedDictText } from "./renderer/dictionary/googleEmbedDict";
+import { getDictText as jishoEmbedDictText } from "./renderer/dictionary/jishoEmbedDict";
+import { getDictText as collinsEmbedDictText } from "./renderer/dictionary/collinsEmbedDict";
+import { getDictText as cuteslatorEmbedDictText } from "./renderer/dictionary/cuteslatorEmbedDict";
+import { getDictText as hanyuguoxueEmbedDictText } from "./renderer/dictionary/hanyuguoxueEmbedDict";
+import { getDictText as zdicEmbedDictText } from "./renderer/dictionary/zdicEmbedDict";
+import { getDictText as cedictEmbedDictText } from "./renderer/dictionary/cedictEmbedDict";
+import { getDictText as weblioEmbedDictText } from "./renderer/dictionary/weblioEmbedDict";
+import { getDictText as openrussianEmbedDictText } from "./renderer/dictionary/openrussianEmbedDict";
 
 const translations: Partial<Record<string, TranslatePlugin>> = {
-  "pot-translate-plugin": translate0,
-  "libre-translate-plugin": translate1,
-  "ollama-translate-plugin": translate2,
-  "google-embed-translate-plugin": translate3,
-  "bing-embed-translate-plugin": translate4,
-  "baidu-embed-translate-plugin": translate5,
-  "deepl-translate-plugin": translate6,
-  "azure-translate-plugin": translate7,
-  "amazon-translate-plugin": translate8,
-  "volcengine-translate-plugin": translate9,
-  "caiyun-translate-plugin": translate10,
-  "google-translate-plugin": translate11,
-  "niutrans-translate-plugin": translate12,
-  "tencent-translate-plugin": translate13,
-  "youdao-general-translate-plugin": translate14,
-  "youdao-llm-translate-plugin": translate15,
-  "aliyun-translate-plugin": translate16,
-  "baidu-general-translate-plugin": translate17,
-  "baidu-llm-translate-plugin": translate18,
-  "yandex-embed-translate-plugin": translate19,
-  "reverso-embed-translate-plugin": translate20,
-  "sogou-embed-translate-plugin": translate21,
-  "360-embed-translate-plugin": translate22,
-  "transmart-embed-translate-plugin": translate23,
+  "pot-translate-plugin": potTranslate,
+  "libre-translate-plugin": libreTranslate,
+  "ollama-translate-plugin": ollamaTranslate,
+  "google-embed-translate-plugin": googleEmbedTranslate,
+  "bing-embed-translate-plugin": bingEmbedTranslate,
+  "baidu-embed-translate-plugin": baiduEmbedTranslate,
+  "deepl-translate-plugin": deeplTranslate,
+  "azure-translate-plugin": azureTranslate,
+  "amazon-translate-plugin": amazonTranslate,
+  "volcengine-translate-plugin": volcengineTranslate,
+  "caiyun-translate-plugin": caiyunTranslate,
+  "google-translate-plugin": googleTranslate,
+  "niutrans-translate-plugin": niutransTranslate,
+  "tencent-translate-plugin": tencentTranslate,
+  "youdao-general-translate-plugin": youdaoGeneralTranslate,
+  "youdao-llm-translate-plugin": youdaoLlmTranslate,
+  "aliyun-translate-plugin": aliyunTranslate,
+  "baidu-general-translate-plugin": baiduGeneralTranslate,
+  "baidu-llm-translate-plugin": baiduLlmTranslate,
+  "yandex-embed-translate-plugin": yandexEmbedTranslate,
+  "reverso-embed-translate-plugin": reversoEmbedTranslate,
+  "sogou-embed-translate-plugin": sogouEmbedTranslate,
+  "360-embed-translate-plugin": qihoo360EmbedTranslate,
+  "transmart-embed-translate-plugin": transmartEmbedTranslate,
 };
 
 const dictionaries: Partial<Record<string, DictionaryPlugin>> = {
-  "wikipedia-dict-plugin": getDictText0,
-  "dictionaryapi-dict-plugin": getDictText1,
-  "wiktionary-dict-plugin": getDictText2,
-  "cambridge-embed-dict-plugin": getDictText3,
-  "youdao-embed-dict-plugin": getDictText4,
-  "bing-embed-dict-plugin": getDictText5,
-  "eudic-embed-dict-plugin": getDictText6,
-  "esdict-embed-dict-plugin": getDictText7,
-  "frdic-embed-dict-plugin": getDictText8,
-  "godic-embed-dict-plugin": getDictText9,
-  "merriam-webster-embed-dict-plugin": getDictText10,
-  "baidu-embed-dict-plugin": getDictText11,
-  "google-embed-dict-plugin": getDictText12,
-  "jisho-embed-dict-plugin": getDictText13,
-  "collins-embed-dict-plugin": getDictText14,
-  "cuteslator-embed-dict-plugin": getDictText15,
-  "hanyuguoxue-embed-dict-plugin": getDictText16,
-  "zdic-embed-dict-plugin": getDictText17,
-  "cedict-embed-dict-plugin": getDictText18,
-  "weblio-embed-dict-plugin": getDictText19,
-  "openrussian-embed-dict-plugin": getDictText20,
+  "wikipedia-dict-plugin": wikipediaDictText,
+  "dictionaryapi-dict-plugin": dictionaryapiDictText,
+  "wiktionary-dict-plugin": wiktionaryDictText,
+  "cambridge-embed-dict-plugin": cambridgeEmbedDictText,
+  "youdao-embed-dict-plugin": youdaoEmbedDictText,
+  "bing-embed-dict-plugin": bingEmbedDictText,
+  "eudic-embed-dict-plugin": eudicEmbedDictText,
+  "esdict-embed-dict-plugin": esdictEmbedDictText,
+  "frdic-embed-dict-plugin": frdicEmbedDictText,
+  "godic-embed-dict-plugin": godicEmbedDictText,
+  "merriam-webster-embed-dict-plugin": merriamWebsterEmbedDictText,
+  "baidu-embed-dict-plugin": baiduEmbedDictText,
+  "google-embed-dict-plugin": googleEmbedDictText,
+  "jisho-embed-dict-plugin": jishoEmbedDictText,
+  "collins-embed-dict-plugin": collinsEmbedDictText,
+  "cuteslator-embed-dict-plugin": cuteslatorEmbedDictText,
+  "hanyuguoxue-embed-dict-plugin": hanyuguoxueEmbedDictText,
+  "zdic-embed-dict-plugin": zdicEmbedDictText,
+  "cedict-embed-dict-plugin": cedictEmbedDictText,
+  "weblio-embed-dict-plugin": weblioEmbedDictText,
+  "openrussian-embed-dict-plugin": openrussianEmbedDictText,
 };
 
 export const getBuiltinTranslation = (key: string) =>
