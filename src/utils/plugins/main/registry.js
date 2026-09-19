@@ -1,35 +1,37 @@
-const voice0 = require("./voice/azureTTSVoice");
-const voice1 = require("./voice/amazonPollyVoice");
-const voice2 = require("./voice/minimaxTTSVoice");
-const voice3 = require("./voice/openaiTTSVoice");
-const voice4 = require("./voice/qwenTTSVoice");
-const voice5 = require("./voice/zhipuTTSVoice");
-const voice6 = require("./voice/elevenlabsTTSVoice");
-const voice7 = require("./voice/grokTTSVoice");
-const voice8 = require("./voice/mimoTTSVoice");
-const voice9 = require("./voice/volcengineTTSVoice");
-const voice10 = require("./voice/multiTTSVoice");
-const voice11 = require("./voice/ttsServerVoice");
-const voice12 = require("./voice/chatTTSUIVoice");
-const voice13 = require("./voice/chatTTSVoice");
-const voice15 = require("./voice/coquiTTSVoice");
+const azureTTSVoice = require("./voice/azureTTSVoice");
+const amazonPollyVoice = require("./voice/amazonPollyVoice");
+const minimaxTTSVoice = require("./voice/minimaxTTSVoice");
+const openaiTTSVoice = require("./voice/openaiTTSVoice");
+const qwenTTSVoice = require("./voice/qwenTTSVoice");
+const zhipuTTSVoice = require("./voice/zhipuTTSVoice");
+const elevenlabsTTSVoice = require("./voice/elevenlabsTTSVoice");
+const grokTTSVoice = require("./voice/grokTTSVoice");
+const mimoTTSVoice = require("./voice/mimoTTSVoice");
+const volcengineTTSVoice = require("./voice/volcengineTTSVoice");
+const multiTTSVoice = require("./voice/multiTTSVoice");
+const ttsServerVoice = require("./voice/ttsServerVoice");
+const chatTTSUIVoice = require("./voice/chatTTSUIVoice");
+const chatTTSVoice = require("./voice/chatTTSVoice");
+const coquiTTSVoice = require("./voice/coquiTTSVoice");
+
 const voicePlugins = {
-  "azure-tts-voice-plugin": voice0,
-  "amazon-polly-voice-plugin": voice1,
-  "minimax-tts-voice-plugin": voice2,
-  "openai-tts-voice-plugin": voice3,
-  "qwen-tts-voice-plugin": voice4,
-  "zhipu-tts-voice-plugin": voice5,
-  "elevenlabs-tts-voice-plugin": voice6,
-  "grok-tts-voice-plugin": voice7,
-  "mimo-tts-voice-plugin": voice8,
-  "volcengine-tts-voice-plugin": voice9,
-  "multitts-voice-plugin": voice10,
-  "ttsserver-voice-plugin": voice11,
-  "chatttsui-voice-plugin": voice12,
-  "chattts-voice-plugin": voice13,
-  "coquitts-voice-plugin": voice15,
+  "azure-tts-voice-plugin": azureTTSVoice,
+  "amazon-polly-voice-plugin": amazonPollyVoice,
+  "minimax-tts-voice-plugin": minimaxTTSVoice,
+  "openai-tts-voice-plugin": openaiTTSVoice,
+  "qwen-tts-voice-plugin": qwenTTSVoice,
+  "zhipu-tts-voice-plugin": zhipuTTSVoice,
+  "elevenlabs-tts-voice-plugin": elevenlabsTTSVoice,
+  "grok-tts-voice-plugin": grokTTSVoice,
+  "mimo-tts-voice-plugin": mimoTTSVoice,
+  "volcengine-tts-voice-plugin": volcengineTTSVoice,
+  "multitts-voice-plugin": multiTTSVoice,
+  "ttsserver-voice-plugin": ttsServerVoice,
+  "chatttsui-voice-plugin": chatTTSUIVoice,
+  "chattts-voice-plugin": chatTTSVoice,
+  "coquitts-voice-plugin": coquiTTSVoice,
 };
+
 const getVoicePlugin = (key) =>
   Object.prototype.hasOwnProperty.call(voicePlugins, key)
     ? voicePlugins[key]
