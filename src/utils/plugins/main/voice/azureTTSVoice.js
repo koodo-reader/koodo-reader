@@ -21,7 +21,7 @@ const getTTSAudio = async (text, speed, config) => {
   let region = config.region || "eastus";
   let apiKey = config.apiKey || "";
   let voiceName = config.voiceName || "en-US-AvaMultilingualNeural";
-  let outputFormat = "audio-16khz-128kbitrate-mono-mp3";
+  let outputFormat = "audio-24khz-48kbitrate-mono-mp3";
   // speed is a multiplier: 1.0 = normal, e.g. 0.5 = slow, 2.0 = fast
   let rate = speed ? `${Math.round((speed - 1) * 100)}%` : "0%";
   let ssml = `<speak version='1.0' xml:lang='en-US'><voice name='${voiceName}'><prosody rate='${rate}'>${text}</prosody></voice></speak>`;
