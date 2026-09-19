@@ -589,6 +589,48 @@ class TextToSpeech extends React.Component<
         };
       });
     } else {
+      // 多角色朗读的所有角色统一使用 multiRoleVoiceType 约束的引擎类型，
+      // 并校验 voice/engine 组合在声音列表中真实存在（自动修复遗留的混合组合）
+      const voiceType =
+        ConfigService.getReaderConfig("multiRoleVoiceType") || "";
+      const resolveVoice = (voiceName: string, voiceEngine: string) => {
+        if (!voiceName) return null;
+        const matched =
+          this.getVoiceByNameAndEngine(voiceName, voiceEngine) ||
+          this.voices.find((item: any) => item.name === voiceName);
+        if (!matched) return null;
+        const matchedEngine = matched.plugin || "system";
+        if (
+          voiceType === "" ||
+          (voiceType === "custom"
+            ? matchedEngine !== "system" &&
+              matchedEngine !== "official-ai-voice-plugin"
+            : matchedEngine === voiceType)
+        ) {
+          return { voiceName, voiceEngine: matchedEngine };
+        }
+        return null;
+      };
+      const globalVoice = resolveVoice(
+        ConfigService.getReaderConfig("voiceName"),
+        ConfigService.getReaderConfig("voiceEngine") || "system"
+      );
+      const narratorVoiceInfo =
+        resolveVoice(
+          this.state.multiRoleNarratorVoice,
+          this.state.multiRoleNarratorEngine || "system"
+        ) || globalVoice;
+      if (voiceType !== "" && voiceType !== "system" && !narratorVoiceInfo) {
+        // AI/自定义类型下没有任何可用声音时，回退到全局单语音朗读
+        nodeList = nodeTextList.map((text: string) => {
+          return {
+            text,
+            voiceName: ConfigService.getReaderConfig("voiceName"),
+            voiceEngine: ConfigService.getReaderConfig("voiceEngine"),
+          };
+        });
+        return nodeList;
+      }
       toast.loading(this.props.t("Analyzing roles, please wait..."), {
         id: "tts-load",
       });
@@ -605,32 +647,39 @@ class TextToSpeech extends React.Component<
       let res = await getSplitSentence(splitTextList);
       toast.dismiss("tts-load");
 
-      let narratorVoice = this.state.multiRoleNarratorVoice;
-      let narratorEngine = this.state.multiRoleNarratorEngine;
-      let maleVoice = this.state.multiRoleMaleVoice;
-      let maleEngine = this.state.multiRoleMaleEngine;
-      let femaleVoice = this.state.multiRoleFemaleVoice;
-      let femaleEngine = this.state.multiRoleFemaleEngine;
-      let childVoice = this.state.multiRoleChildVoice;
-      let childEngine = this.state.multiRoleChildEngine;
+      const narratorVoice = narratorVoiceInfo || {
+        voiceName: "",
+        voiceEngine: "system",
+      };
+      const maleVoice =
+        resolveVoice(
+          this.state.multiRoleMaleVoice,
+          this.state.multiRoleMaleEngine || "system"
+        ) || narratorVoice;
+      const femaleVoice =
+        resolveVoice(
+          this.state.multiRoleFemaleVoice,
+          this.state.multiRoleFemaleEngine || "system"
+        ) || narratorVoice;
+      const childVoice =
+        resolveVoice(
+          this.state.multiRoleChildVoice,
+          this.state.multiRoleChildEngine || "system"
+        ) || narratorVoice;
       if (res && res.data && res.data.sentences) {
         nodeList = res.data.sentences.map((item: any) => {
-          let voiceName = narratorVoice;
-          let voiceEngine = narratorEngine;
+          let voice = narratorVoice;
           if (item.role === "male") {
-            voiceName = maleVoice || narratorVoice;
-            voiceEngine = maleEngine || narratorEngine;
+            voice = maleVoice;
           } else if (item.role === "female") {
-            voiceName = femaleVoice || narratorVoice;
-            voiceEngine = femaleEngine || narratorEngine;
+            voice = femaleVoice;
           } else if (item.role === "child") {
-            voiceName = childVoice || narratorVoice;
-            voiceEngine = childEngine || narratorEngine;
+            voice = childVoice;
           }
           return {
             text: item.text,
-            voiceName,
-            voiceEngine,
+            voiceName: voice.voiceName,
+            voiceEngine: voice.voiceEngine,
           };
         });
       } else {
@@ -1295,11 +1344,30 @@ class TextToSpeech extends React.Component<
                 id="multi-role-voice-type"
                 value={this.state.multiRoleVoiceType}
                 onChange={(event) => {
+                  if (event.target.value === this.state.multiRoleVoiceType)
+                    return;
                   this.setState({ multiRoleVoiceType: event.target.value });
                   ConfigService.setReaderConfig(
                     "multiRoleVoiceType",
                     event.target.value
                   );
+                  // 切换声音类型后清除各角色旧类型的 voice/engine 配置，
+                  // 避免遗留“系统声音 + AI 引擎”之类的混合组合
+                  ["Narrator", "Male", "Female", "Child"].forEach((role) => {
+                    ConfigService.setReaderConfig(`multiRole${role}Voice`, "");
+                    ConfigService.setReaderConfig(`multiRole${role}Engine`, "");
+                  });
+                  this.setState({
+                    multiRoleNarratorVoice: "",
+                    multiRoleNarratorEngine: "",
+                    multiRoleMaleVoice: "",
+                    multiRoleMaleEngine: "",
+                    multiRoleFemaleVoice: "",
+                    multiRoleFemaleEngine: "",
+                    multiRoleChildVoice: "",
+                    multiRoleChildEngine: "",
+                  });
+                  toast(this.props.t("Please reselect voices for all roles"));
                 }}
               >
                 <option value="" className="lang-setting-option">
