@@ -710,6 +710,8 @@
   background: conic-gradient(
     from var(--pro-banner-btn-trial-angle),
     rgba(139, 180, 255, 0) 0deg,
+    rgba(57, 100, 254, 1) 110deg,
+    rgba(139, 180, 255, 0) 180deg,
     rgba(139, 180, 255, 0) 220deg,
     rgba(57, 100, 254, 1) 290deg,
     rgba(139, 180, 255, 0) 360deg
