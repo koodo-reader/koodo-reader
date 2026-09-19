@@ -899,6 +899,7 @@
   "Not installed": "Not installed",
   "Install": "Install",
   "Add custom plugin": "Add custom plugin",
+  "Custom plugin security warning": "⚠️ <b>Severe Security Warning</b><br><br>Custom plugins have full access to and control over your computer, especially custom TTS plugins, which can execute arbitrary code.<br>This means they could:<br>• Read, modify, or delete your files<br>• Steal accounts, passwords, and browser data<br>• Install malware<br>• Remotely control your device<br><br>Only add a plugin after you are certain you fully trust it and have carefully reviewed all of its code.<br>Never add plugins from unknown websites, unknown sources, or unofficial channels.",
   "How to custom plugin": "How to custom plugin",
   "Plugin market": "Plugin market",
   "Bookmark already exists": "Bookmark already exists",

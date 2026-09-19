@@ -8,6 +8,7 @@ import {
   getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
+  vexComfirmAsync,
   vexOpenAsync,
 } from "../../../utils/common";
 
@@ -82,6 +83,16 @@ class SettingDialog extends React.Component<
     (ConfigService.getReaderConfig("lang")?.startsWith("zh")
       ? "/zh/plugin"
       : "/en/plugin");
+  handleOpenAddNew = async (scrollToTop = false) => {
+    const result = await vexComfirmAsync("Custom plugin security warning");
+    if (!result) return;
+    this.setState({ isAddNew: true }, () => {
+      if (scrollToTop) {
+        const infoEl = document.querySelector(".setting-dialog-info");
+        if (infoEl) infoEl.scrollTop = 0;
+      }
+    });
+  };
   handleFillVoiceList = (pluginKey: string, example: PluginVoice[]) =>
     new Promise<PluginVoice[] | false>((resolve) => {
       window.vex.dialog.buttons.YES.text = this.props.t("Confirm");
@@ -342,9 +353,7 @@ class SettingDialog extends React.Component<
         >
           <span
             style={{}}
-            onClick={async () => {
-              this.setState({ isAddNew: true });
-            }}
+            onClick={() => this.handleOpenAddNew(false)}
           >
             <Trans>Installed</Trans>
           </span>
@@ -405,9 +414,7 @@ class SettingDialog extends React.Component<
         >
           <span
             style={{}}
-            onClick={async () => {
-              this.setState({ isAddNew: true });
-            }}
+            onClick={() => this.handleOpenAddNew(false)}
           >
             <Trans>Plugin market</Trans>
           </span>
@@ -689,10 +696,7 @@ class SettingDialog extends React.Component<
           <span
             style={{ marginLeft: "20px", fontWeight: "bold" }}
             onClick={async () => {
-              const infoEl = document.querySelector(".setting-dialog-info");
-              this.setState({ isAddNew: true }, () => {
-                if (infoEl) infoEl.scrollTop = 0;
-              });
+              this.handleOpenAddNew(true);
             }}
           >
             <Trans>Add custom plugin</Trans>
