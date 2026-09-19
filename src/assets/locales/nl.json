@@ -1145,8 +1145,6 @@
   "None": "Geen",
   "Slide": "Schuiven",
   "Flip": "Omslaan",
-  "Custom voice plugins are not supported": "Aangepaste spraakplugins worden niet ondersteund",
-  "Custom voice plugins have been disabled": "Aangepaste spraakplugins zijn uitgeschakeld",
   "Paste voice list JSON": "Spraaklijst-JSON plakken",
   "Invalid voice list JSON": "Voer een niet-lege JSON-array in met geldige spraakconfiguraties",
   "Failed to load more": "Laden van meer mislukt",

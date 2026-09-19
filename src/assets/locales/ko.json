@@ -1144,8 +1144,6 @@
   "None": "없음",
   "Slide": "슬라이드",
   "Flip": "플립",
-  "Custom voice plugins are not supported": "사용자 지정 음성 플러그인을 지원하지 않습니다",
-  "Custom voice plugins have been disabled": "사용자 지정 음성 플러그인이 비활성화되었습니다",
   "Paste voice list JSON": "음성 목록 JSON 붙여넣기",
   "Invalid voice list JSON": "유효한 음성 구성을 포함한 비어 있지 않은 JSON 배열을 입력하세요",
   "Failed to load more": "추가 로드에 실패했습니다",

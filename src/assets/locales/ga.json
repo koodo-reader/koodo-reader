@@ -1142,8 +1142,6 @@
   "None": "Dada",
   "Slide": "Sleamhnán",
   "Flip": "Smeach",
-  "Custom voice plugins are not supported": "Ní thacaítear le breiseáin gutha saincheaptha",
-  "Custom voice plugins have been disabled": "Díchumasaíodh forlíontáin gutha saincheaptha",
   "Paste voice list JSON": "Greamaigh liosta gutha JSON",
   "Invalid voice list JSON": "Cuir isteach eagar JSON neamhfholam le cumraíochtaí gutha bailí",
   "Failed to load more": "Theip ar lódáil níos mó",

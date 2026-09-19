@@ -1147,8 +1147,6 @@
   "None": "Ingen",
   "Slide": "Glid",
   "Flip": "Bladr",
-  "Custom voice plugins are not supported": "Brugerdefinerede stemme-plugins understøttes ikke",
-  "Custom voice plugins have been disabled": "Tilpassede stemme-plugins er blevet deaktiveret",
   "Paste voice list JSON": "Indsæt stemmeliste JSON",
   "Invalid voice list JSON": "Indtast et ikke-tomt JSON-array, der indeholder gyldige stemmekonfigurationer",
   "Failed to load more": "Kunne ikke indlæse flere",

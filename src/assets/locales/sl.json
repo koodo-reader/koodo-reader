@@ -1142,8 +1142,6 @@
   "None": "Brez",
   "Slide": "Drsenje",
   "Flip": "Listanje",
-  "Custom voice plugins are not supported": "Glasovni vtičniki po meri niso podprti",
-  "Custom voice plugins have been disabled": "Glasovni vtičniki po meri so bili onemogočeni",
   "Paste voice list JSON": "Prilepite glasovni seznam JSON",
   "Invalid voice list JSON": "Vnesite neprazen niz JSON, ki vsebuje veljavne glasovne konfiguracije",
   "Failed to load more": "Več ni bilo mogoče naložiti",

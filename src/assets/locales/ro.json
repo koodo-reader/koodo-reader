@@ -1144,8 +1144,6 @@
   "None": "Niciuna",
   "Slide": "Glisare",
   "Flip": "Răsfoire",
-  "Custom voice plugins are not supported": "Pluginurile vocale personalizate nu sunt acceptate",
-  "Custom voice plugins have been disabled": "Pluginurile vocale personalizate au fost dezactivate",
   "Paste voice list JSON": "Lipiți lista de voci JSON",
   "Invalid voice list JSON": "Introduceți o matrice JSON nevidă care conține configurații de voce valide",
   "Failed to load more": "Nu s-au încărcat mai multe",

@@ -1159,8 +1159,6 @@
   "None": "Tidak ada",
   "Slide": "Geser",
   "Flip": "Balik",
-  "Custom voice plugins are not supported": "Plugin suara kustom tidak didukung",
-  "Custom voice plugins have been disabled": "Plugin suara kustom telah dinonaktifkan",
   "Paste voice list JSON": "Tempel JSON daftar suara",
   "Invalid voice list JSON": "Masukkan larik JSON tidak kosong yang berisi konfigurasi suara yang valid",
   "Failed to load more": "Gagal memuat lebih banyak",

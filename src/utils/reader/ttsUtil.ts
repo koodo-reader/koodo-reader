@@ -259,14 +259,19 @@ class TTSUtil {
       }
       return "";
     } else {
-      let audioPath = await window
-        .electronAPI
-        .invoke("generate-tts", {
-          text: text,
-          speed,
-          pluginKey: plugin.key,
-          config: voice.config,
-        });
+      const payload: Record<string, unknown> = {
+        text: text,
+        speed,
+        pluginKey: plugin.key,
+        config: voice.config,
+      };
+      if (plugin.script) {
+        payload.script = plugin.script;
+        if (plugin.scriptSHA256) {
+          payload.scriptSHA256 = plugin.scriptSHA256;
+        }
+      }
+      let audioPath = await window.electronAPI.invoke("generate-tts", payload);
       return audioPath;
     }
   }

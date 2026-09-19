@@ -155,6 +155,20 @@ export interface CustomRendererPluginRecord {
   script: string;
 }
 
+export interface CustomVoicePluginRecord {
+  key: string;
+  type: "voice";
+  displayName: string;
+  icon: string;
+  version: string;
+  autoValue: string;
+  config: PluginConfig;
+  langList: PluginLanguageList;
+  voiceList: PluginVoice[];
+  scriptSHA256: string;
+  script: string;
+}
+
 export type TranslatePlugin = (
   text: string,
   from: string,

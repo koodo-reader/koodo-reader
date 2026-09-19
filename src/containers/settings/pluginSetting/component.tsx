@@ -22,6 +22,8 @@ import { createBuiltinPluginRecord } from "../../../utils/plugins/records";
 import {
   verifyCustomRendererPlugin,
   isCustomRendererPlugin,
+  isCustomVoicePlugin,
+  verifyCustomVoicePlugin,
 } from "../../../utils/plugins/customPlugin";
 import type { PluginConfig, PluginVoice } from "../../../utils/plugins/types";
 
@@ -193,22 +195,87 @@ class SettingDialog extends React.Component<
                   if (value) {
                     try {
                       const parsed = JSON.parse(value);
-                      if (parsed?.type === "voice") {
-                        toast.error(
-                          this.props.t("Custom voice plugins are not supported")
-                        );
-                        return;
-                      }
                       const plugin = {
                         ...parsed,
                         key: parsed.identifier || parsed.key,
                       };
-                      if (
-                        !isCustomRendererPlugin(plugin) ||
-                        !(await verifyCustomRendererPlugin(plugin))
-                      ) {
-                        toast.error(this.props.t("Plugin verification failed"));
+                      if (plugin.type === "voice" && !isElectron) {
+                        toast.error(
+                          this.props.t(
+                            "Only desktop version supports TTS plugin"
+                          )
+                        );
                         return;
+                      }
+                      if (plugin.type === "voice") {
+                        if (
+                          !isCustomVoicePlugin(plugin) ||
+                          !(await verifyCustomVoicePlugin(plugin))
+                        ) {
+                          toast.error(
+                            this.props.t("Plugin verification failed")
+                          );
+                          return;
+                        }
+                        if (
+                          !Array.isArray(plugin.voiceList) ||
+                          plugin.voiceList.length === 0
+                        ) {
+                          try {
+                            const voiceList = await window.electronAPI.invoke<
+                              PluginVoice[]
+                            >("get-tts-voices", {
+                              pluginKey: plugin.key,
+                              config: plugin.config || {},
+                              script: plugin.script,
+                              scriptSHA256: plugin.scriptSHA256,
+                            });
+                            if (
+                              !Array.isArray(voiceList) ||
+                              voiceList.length === 0 ||
+                              voiceList.some(
+                                (voice) =>
+                                  !voice ||
+                                  typeof voice !== "object" ||
+                                  typeof voice.name !== "string" ||
+                                  !voice.name ||
+                                  typeof voice.displayName !== "string" ||
+                                  !voice.displayName ||
+                                  !voice.config ||
+                                  typeof voice.config !== "object" ||
+                                  Array.isArray(voice.config)
+                              )
+                            ) {
+                              throw new Error();
+                            }
+                            plugin.voiceList = voiceList.map((voice) => ({
+                              ...voice,
+                              plugin: plugin.key,
+                            }));
+                          } catch {
+                            toast.error(
+                              this.props.t("Failed to get TTS voice list")
+                            );
+                            return;
+                          }
+                        } else {
+                          plugin.voiceList = plugin.voiceList.map(
+                            (voice: PluginVoice) => ({
+                              ...voice,
+                              plugin: plugin.key,
+                            })
+                          );
+                        }
+                      } else {
+                        if (
+                          !isCustomRendererPlugin(plugin) ||
+                          !(await verifyCustomRendererPlugin(plugin))
+                        ) {
+                          toast.error(
+                            this.props.t("Plugin verification failed")
+                          );
+                          return;
+                        }
                       }
                       if (
                         this.props.plugins.find(

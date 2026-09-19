@@ -1146,8 +1146,6 @@
   "None": "Null",
   "Slide": "Glissar",
   "Flip": "Reverter",
-  "Custom voice plugins are not supported": "Plugines de voces personal ne es supportat",
-  "Custom voice plugins have been disabled": "Plugines de voces personal ha esset desactivat",
   "Paste voice list JSON": "Incolar li liste JSON de voces",
   "Invalid voice list JSON": "Insi inserter un liste JSON non-vacui con configurationes de voces valid",
   "Failed to load more": "Ne successat cargar plu",

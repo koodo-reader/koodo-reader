@@ -1144,8 +1144,6 @@
   "None": "Brak",
   "Slide": "Przesuwanie",
   "Flip": "Przerzucanie",
-  "Custom voice plugins are not supported": "Niestandardowe wtyczki głosowe nie są obsługiwane",
-  "Custom voice plugins have been disabled": "Niestandardowe wtyczki głosowe zostały wyłączone",
   "Paste voice list JSON": "Wklej JSON listy głosów",
   "Invalid voice list JSON": "Wprowadź niepustą tablicę JSON zawierającą prawidłowe konfiguracje głosów",
   "Failed to load more": "Nie udało się załadować więcej",

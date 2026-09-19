@@ -1149,8 +1149,6 @@
   "None": "Ingen",
   "Slide": "Glid",
   "Flip": "Vänd",
-  "Custom voice plugins are not supported": "Anpassade röstinsticksprogram stöds inte",
-  "Custom voice plugins have been disabled": "Anpassade röstinsticksprogram har inaktiverats",
   "Paste voice list JSON": "Klistra in röstlistan JSON",
   "Invalid voice list JSON": "Ange en icke-tom JSON-array som innehåller giltiga röstkonfigurationer",
   "Failed to load more": "Det gick inte att ladda fler",

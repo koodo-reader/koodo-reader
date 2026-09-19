@@ -1155,8 +1155,6 @@
   "None": "Відсутня",
   "Slide": "Прокрутка",
   "Flip": "Перегортання",
-  "Custom voice plugins are not supported": "Спеціальні голосові плагіни не підтримуються",
-  "Custom voice plugins have been disabled": "Спеціальні голосові плагіни вимкнено",
   "Paste voice list JSON": "Вставте JSON-список голосів",
   "Invalid voice list JSON": "Введіть непорожній JSON-масив із дійсними налаштуваннями голосів",
   "Failed to load more": "Не вдалося завантажити більше",

@@ -1145,8 +1145,6 @@
   "None": "Няма",
   "Slide": "Плъзгане",
   "Flip": "Прелистване",
-  "Custom voice plugins are not supported": "Персонализирани гласови добавки не се поддържат",
-  "Custom voice plugins have been disabled": "Персонализираните гласови добавки са деактивирани",
   "Paste voice list JSON": "Поставете гласов списък JSON",
   "Invalid voice list JSON": "Въведете непразен JSON масив, съдържащ валидни гласови конфигурации",
   "Failed to load more": "Неуспешно зареждане на повече",

@@ -1143,8 +1143,6 @@
   "None": "Nijedan",
   "Slide": "Slajd",
   "Flip": "Okreni",
-  "Custom voice plugins are not supported": "Prilagođeni glasovni dodaci nisu podržani",
-  "Custom voice plugins have been disabled": "Prilagođeni glasovni dodaci su onemogućeni",
   "Paste voice list JSON": "Nalepite glasovnu listu ZZPROT0ZZ",
   "Invalid voice list JSON": "Unesite neprazan JSON niz sa važećim konfiguracijama glasova",
   "Failed to load more": "Učitavanje više nije uspelo",
