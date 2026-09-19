@@ -15,6 +15,45 @@ import { LocalFileManager } from "./localFile";
 import CoverUtil from "./coverUtil";
 declare var window: any;
 
+const VALID_BOOK_FORMATS = new Set([
+  "epub",
+  "pdf",
+  "mobi",
+  "azw3",
+  "azw",
+  "txt",
+  "fb2",
+  "cbr",
+  "cbz",
+  "cbt",
+  "cb7",
+  "md",
+  "docx",
+  "html",
+  "xhtml",
+  "htm",
+  "xml",
+  "mhtml",
+]);
+
+const isValidBookKey = (key: string) =>
+  typeof key === "string" &&
+  key.length > 0 &&
+  key.length <= 255 &&
+  !/[\\/:*?"<>|\x00-\x1f]/.test(key) &&
+  !key.includes("..") &&
+  key !== "." &&
+  key !== "..";
+
+const VALID_COVER_EXTS = new Set([
+  "jpg",
+  "jpeg",
+  "png",
+  "webp",
+  "gif",
+  "bmp",
+]);
+
 const mergeRecords = (localRecords: any[], backupRecords: any[]): any[] => {
   const recordMap = new Map(localRecords.map((r) => [r.key, r]));
   for (const record of backupRecords) {
@@ -93,7 +132,13 @@ export const restoreFromBrowser = async (): Promise<
                 break;
               }
               const config = JSON.parse(text);
-              for (const key in config) ConfigService.setItem(key, config[key]);
+              for (const key in config) {
+                if (typeof config[key] !== "string") {
+                  console.warn("Skipping non-string config value:", key);
+                  continue;
+                }
+                ConfigService.setItem(key, config[key]);
+              }
             } else if (entryName === "sync.json") {
               const text = await zip.file(fileName)!.async("string");
               if (!text) {
@@ -161,6 +206,9 @@ export const restoreFromBrowser = async (): Promise<
                 await LocalFileManager.saveFile(entryName, buf, "cover");
               } else {
                 const ext = entryName.split(".").reverse()[0];
+                if (!VALID_COVER_EXTS.has(ext.toLowerCase())) {
+                  throw new Error("Invalid cover format");
+                }
                 const base64Str = CommonTool.arrayBufferToBase64(buf);
                 const base64 = `data:image/${ext};base64,${base64Str}`;
                 await CoverUtil.saveCover(entryName, base64);
@@ -351,7 +399,13 @@ export const restoreFromfilePath = async (filePath: string) => {
           break;
         }
         const config = JSON.parse(text);
-        for (const key in config) ConfigService.setItem(key, config[key]);
+        for (const key in config) {
+          if (typeof config[key] !== "string") {
+            console.warn("Skipping non-string config value:", key);
+            continue;
+          }
+          ConfigService.setItem(key, config[key]);
+        }
       } else if (entryName === "sync.json") {
         const text = new TextDecoder().decode(file.buffer);
         if (!text) {
@@ -428,30 +482,46 @@ export const unzipOldConfig = async (zipEntries: any) => {
 };
 export const unzipOldBook = async (zipEntries: any): Promise<boolean> => {
   const value: any = await localforage.getItem("books");
-  if (!value || value.length === 0) {
+  if (!value || !Array.isArray(value) || value.length === 0) {
     return true;
   }
   const fs = window.electronAPI.fs;
   const path = window.electronAPI.path;
   const dataPath = getStorageLocation() || "";
   const bookPath = path.join(dataPath, "book");
-  if (!fs.existsSync(bookPath)) {
-    fs.mkdirSync(bookPath, { recursive: true });
+  const resolvedBase = path.resolve(bookPath);
+  const separator = resolvedBase.includes("\\") ? "\\" : "/";
+  const assertInsideBookDir = (target: string) => {
+    const resolved = path.resolve(resolvedBase, target);
+    const inside =
+      resolved === resolvedBase ||
+      resolved.startsWith(resolvedBase + separator);
+    if (!inside) {
+      throw new Error(
+        "Restore destination path is outside the book directory"
+      );
+    }
+    return resolved;
+  };
+  if (!fs.existsSync(resolvedBase)) {
+    fs.mkdirSync(resolvedBase, { recursive: true });
   }
   for (let i = 0; i < value.length; i++) {
     const item = value[i];
+    if (!item || typeof item !== "object") continue;
+    const format = String(item.format || "").toLowerCase();
+    if (!isValidBookKey(item.key) || !VALID_BOOK_FORMATS.has(format)) {
+      console.warn("Skipping untrusted book entry:", item.key, item.format);
+      continue;
+    }
     for (let j = 0; j < zipEntries.length; j++) {
       const zipEntry = zipEntries[j];
       if (zipEntry.name === item.key) {
         let buffer = await zipEntry.getData();
-        fs.writeFileSync(
-          path.join(
-            dataPath,
-            "book",
-            item.key + "." + item.format.toLowerCase()
-          ),
-          buffer
+        const destination = assertInsideBookDir(
+          path.join(resolvedBase, item.key + "." + format)
         );
+        fs.writeFileSync(destination, buffer);
         break;
       }
     }
