@@ -767,7 +767,6 @@ class BookUtil {
     }
   }
   static async searchBooksByKeyword(keyword: string) {
-    console.log("Searching books with keyword:", keyword);
     if (isElectron) {
       const ipcRenderer = window.electronAPI;
       return await ipcRenderer.invoke("custom-database-command", {
