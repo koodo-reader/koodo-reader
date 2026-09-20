@@ -84,6 +84,9 @@ class SettingDialog extends React.Component<
       ? "/zh/plugin"
       : "/en/plugin");
   handleOpenAddNew = async (scrollToTop = false) => {
+    if (window.electronAPI?.runtime?.windowsStore) {
+      return;
+    }
     const result = await vexComfirmAsync("Custom plugin security warning");
     if (!result) return;
     this.setState({ isAddNew: true }, () => {

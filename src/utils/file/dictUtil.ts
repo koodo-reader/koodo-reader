@@ -143,10 +143,7 @@ class DictUtil {
 
   /** Build download url of a cloud dict */
   static getCloudDictUrl(dictId: string, isAuthed: boolean): string {
-    const base =
-      getServerRegion() === "china" && isAuthed
-        ? "https://storage.koodoreader.cn"
-        : "https://storage.koodoreader.com";
+    const base = "https://storage.koodoreader.com";
     return `${base}/dicts/${dictId}.mdx`;
   }
 
