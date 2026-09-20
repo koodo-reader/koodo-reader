@@ -48,16 +48,14 @@ const COMIC_IMAGE_EXTS = [
   ".jpeg",
   ".png",
   ".gif",
-  ".bmp",
   ".webp",
   ".svg",
-  ".avif",
-  ".apng",
-  ".ico",
-  ".cur",
+  ".bmp",
+  ".tif",
+  ".tiff",
   ".jfif",
-  ".pjpeg",
-  ".pjp",
+  ".jpe",
+  ".heic",
 ];
 const getComicImageExt = (name: string) => {
   const ext = name.split(".").pop()?.toLowerCase() || "png";
