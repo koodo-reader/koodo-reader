@@ -83,7 +83,7 @@
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
     "electron": "^34.0.1",
-    "electron-builder": "^26.0.12",
+    "electron-builder": "^26.16.1",
     "electron-rebuild": "^3.2.9",
     "hard-source-webpack-plugin": "^0.13.1",
     "html-react-parser": "^5.1.10",
