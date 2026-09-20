@@ -178,7 +178,10 @@ class MetadataDialog extends React.Component<
               const rating = item.rating || 0;
               const ratingCount = item.rating_count || 0;
               const maxRating = ratingSource === "Douban" ? 10 : 5;
-              const filledStars = Math.round((rating / maxRating) * 5);
+              const filledStars = Math.max(
+                0,
+                Math.round((rating / maxRating) * 5)
+              );
               const stars =
                 "★".repeat(filledStars) + "☆".repeat(5 - filledStars);
               return (
