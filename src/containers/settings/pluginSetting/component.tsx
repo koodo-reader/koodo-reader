@@ -351,10 +351,7 @@ class SettingDialog extends React.Component<
             marginTop: "20px",
           }}
         >
-          <span
-            style={{}}
-            onClick={() => this.handleOpenAddNew(false)}
-          >
+          <span style={{}} onClick={() => this.handleOpenAddNew(false)}>
             <Trans>Installed</Trans>
           </span>
         </div>
@@ -412,10 +409,7 @@ class SettingDialog extends React.Component<
             marginTop: "20px",
           }}
         >
-          <span
-            style={{}}
-            onClick={() => this.handleOpenAddNew(false)}
-          >
+          <span style={{}} onClick={() => this.handleOpenAddNew(false)}>
             <Trans>Plugin market</Trans>
           </span>
         </div>
@@ -433,32 +427,32 @@ class SettingDialog extends React.Component<
                 dictionary: this.dictionaryRef,
                 voice: this.voiceRef,
               };
-            return (
-              <div
-                key={type}
-                className={`plugin-tab-item${this.state.activePluginTab === type ? " plugin-tab-item-active" : ""}`}
-                onClick={() => {
-                  this.setState({ activePluginTab: type });
-                  const ref = refMap[type].current;
-                  if (ref) {
-                    const scrollContainer = document.querySelector(
-                      ".setting-dialog-info"
-                    ) as HTMLElement;
-                    if (scrollContainer) {
-                      const containerRect =
-                        scrollContainer.getBoundingClientRect();
-                      const refRect = ref.getBoundingClientRect();
-                      const tabBarHeight = 40;
-                      scrollContainer.scrollTop +=
-                        refRect.top - containerRect.top - tabBarHeight;
+              return (
+                <div
+                  key={type}
+                  className={`plugin-tab-item${this.state.activePluginTab === type ? " plugin-tab-item-active" : ""}`}
+                  onClick={() => {
+                    this.setState({ activePluginTab: type });
+                    const ref = refMap[type].current;
+                    if (ref) {
+                      const scrollContainer = document.querySelector(
+                        ".setting-dialog-info"
+                      ) as HTMLElement;
+                      if (scrollContainer) {
+                        const containerRect =
+                          scrollContainer.getBoundingClientRect();
+                        const refRect = ref.getBoundingClientRect();
+                        const tabBarHeight = 40;
+                        scrollContainer.scrollTop +=
+                          refRect.top - containerRect.top - tabBarHeight;
+                      }
                     }
-                  }
-                }}
-              >
-                {labelMap[type]}
-              </div>
-            );
-          })}
+                  }}
+                >
+                  {labelMap[type]}
+                </div>
+              );
+            })}
         </div>
         {this.state.availablePlugins &&
           this.state.availablePlugins.map((item, index: number) => {
@@ -665,43 +659,45 @@ class SettingDialog extends React.Component<
             );
           })}
 
-        <div className="setting-dialog-new-plugin">
-          <span
-            style={{ textDecoration: "underline", marginRight: "20px" }}
-            onClick={() => {
-              openExternalUrl(this.getPluginTutorialUrl());
-            }}
-          >
-            <Trans>Visit online version</Trans>
-          </span>
-          <span
-            style={{ textDecoration: "underline" }}
-            onClick={() => {
-              if (
-                ConfigService.getReaderConfig("lang") &&
-                ConfigService.getReaderConfig("lang").startsWith("zh")
-              ) {
-                openExternalUrl(
-                  "https://github.com/koodo-reader/plugins/blob/main/README_CN.md"
-                );
-              } else {
-                openExternalUrl(
-                  "https://github.com/koodo-reader/plugins/blob/main/README.md"
-                );
-              }
-            }}
-          >
-            <Trans>How to custom plugin</Trans>
-          </span>
-          <span
-            style={{ marginLeft: "20px", fontWeight: "bold" }}
-            onClick={async () => {
-              this.handleOpenAddNew(true);
-            }}
-          >
-            <Trans>Add custom plugin</Trans>
-          </span>
-        </div>
+        {!window.electronAPI?.runtime?.windowsStore && (
+          <div className="setting-dialog-new-plugin">
+            <span
+              style={{ textDecoration: "underline", marginRight: "20px" }}
+              onClick={() => {
+                openExternalUrl(this.getPluginTutorialUrl());
+              }}
+            >
+              <Trans>Visit online version</Trans>
+            </span>
+            <span
+              style={{ textDecoration: "underline" }}
+              onClick={() => {
+                if (
+                  ConfigService.getReaderConfig("lang") &&
+                  ConfigService.getReaderConfig("lang").startsWith("zh")
+                ) {
+                  openExternalUrl(
+                    "https://github.com/koodo-reader/plugins/blob/main/README_CN.md"
+                  );
+                } else {
+                  openExternalUrl(
+                    "https://github.com/koodo-reader/plugins/blob/main/README.md"
+                  );
+                }
+              }}
+            >
+              <Trans>How to custom plugin</Trans>
+            </span>
+            <span
+              style={{ marginLeft: "20px", fontWeight: "bold" }}
+              onClick={async () => {
+                this.handleOpenAddNew(true);
+              }}
+            >
+              <Trans>Add custom plugin</Trans>
+            </span>
+          </div>
+        )}
       </>
     );
   }
