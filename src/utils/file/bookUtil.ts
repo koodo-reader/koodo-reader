@@ -782,9 +782,9 @@ class BookUtil {
       const lowerKeyword = keyword.toLowerCase();
       for (let book of books) {
         if (
-          book.name.toLowerCase().includes(lowerKeyword) ||
-          book.author.toLowerCase().includes(lowerKeyword) ||
-          (book.key || "").toLowerCase().includes(lowerKeyword)
+          book.name?.toLowerCase().includes(lowerKeyword) ||
+          book.author?.toLowerCase().includes(lowerKeyword) ||
+          book.key?.toLowerCase().includes(lowerKeyword)
         ) {
           results.push(book);
         }
