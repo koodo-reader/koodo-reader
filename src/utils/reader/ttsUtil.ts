@@ -299,11 +299,11 @@ class TTSUtil {
     if (!text || this.textRules.length === 0) return text;
     let result = text;
     for (const rule of this.textRules) {
-      const regex =
-        rule.matchType === "regex"
-          ? new RegExp(rule.pattern, "g")
-          : new RegExp(escapeRegExp(rule.pattern), "g");
       try {
+        const regex =
+          rule.matchType === "regex"
+            ? new RegExp(rule.pattern, "g")
+            : new RegExp(escapeRegExp(rule.pattern), "g");
         if (rule.type === "delete") {
           result = result.replace(regex, "");
         } else {
