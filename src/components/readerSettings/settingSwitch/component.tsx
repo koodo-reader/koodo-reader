@@ -17,7 +17,7 @@ const readingRulerSliderConfigs = [
     minLabel: "0",
     maxLabel: "20",
     step: 1,
-    title: "Line height",
+    title: "Reading ruler height",
     isPDF: false,
     defaultValue: 3,
   },

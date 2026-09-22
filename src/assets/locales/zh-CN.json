@@ -84,6 +84,7 @@
   "Not installed": "未安装",
   "Install": "安装",
   "Add custom plugin": "添加自定义插件",
+  "Reading ruler height": "阅读尺高度（行）",
   "Custom plugin security warning": "⚠️ <b>严重安全警告</b><br><br>自定义插件拥有对您电脑的完整访问与控制权限，尤其是自定义听书插件，可执行任意代码。<br><br>这意味着它可能：<br>• 读取、修改或删除您的文件<br>• 窃取账号、密码、浏览器数据<br>• 安装恶意程序<br>• 远程控制您的设备<br>请务必确认您完全信任并已仔细审查过插件的全部代码后，再进行添加。<br><br>严禁添加任何来自陌生网站、未知来源、非官方渠道的插件。",
   "How to custom plugin": "如何自定义插件",
   "Plugin market": "插件市场",
