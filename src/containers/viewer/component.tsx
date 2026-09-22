@@ -689,7 +689,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   render() {
     return (
       <>
-        {this.props.htmlBook ? (
+        {this.props.htmlBook &&
+        !this.props.isParagraphMode &&
+        !this.props.isSpeedReading ? (
           <PopupMenu
             {...({
               rendition: this.props.htmlBook.rendition,
