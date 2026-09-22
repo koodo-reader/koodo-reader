@@ -11,7 +11,7 @@
 .book-content-name {
   display: block;
   padding: 10px 0px;
-  width: 90%;
+  width: calc(100% - 15px);
   font-size: 15px;
   line-height: 18px;
   opacity: 1;
@@ -38,7 +38,7 @@
 }
 .content-dropdown {
   float: right;
-  margin-top: 15px;
+  margin-top: 13px;
   position: relative;
   right: 15px;
   opacity: 0.5;
