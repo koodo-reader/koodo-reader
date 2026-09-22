@@ -19,7 +19,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       readingRulerLineHeight:
         ConfigService.getReaderConfig("readingRulerLineHeight") || "3",
       readingRulerBackgroundOpacity:
-        ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.5",
+        ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.6",
       speedReadingSpeed:
         ConfigService.getReaderConfig("speedReadingSpeed") || "300",
     } as SliderListState;
