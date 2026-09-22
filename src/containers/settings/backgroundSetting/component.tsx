@@ -327,7 +327,7 @@ class BackgroundSetting extends React.Component<
       >
         {isApp ? (
           <span
-            className="change-location-button"
+            className="change-location-button background-apple-button"
             style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
             onClick={this.handleClearAppBackground}
           >
@@ -335,7 +335,7 @@ class BackgroundSetting extends React.Component<
           </span>
         ) : (
           <span
-            className="change-location-button"
+            className="change-location-button background-apple-button"
             style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
             onClick={() => this.handleSetAppBackground(previewImage)}
           >
@@ -344,7 +344,7 @@ class BackgroundSetting extends React.Component<
         )}
         {isReader ? (
           <span
-            className="change-location-button"
+            className="change-location-button background-apple-button"
             style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
             onClick={this.handleClearReaderBackground}
           >
@@ -352,7 +352,7 @@ class BackgroundSetting extends React.Component<
           </span>
         ) : (
           <span
-            className="change-location-button"
+            className="change-location-button background-apple-button"
             style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
             onClick={() => this.handleSetReaderBackground(previewImage)}
           >

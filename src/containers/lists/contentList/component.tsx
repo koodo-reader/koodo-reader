@@ -314,7 +314,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
             >
               <span>{item.label}</span>
               <span
-                style={{ marginRight: "10px", opacity: 0.6, fontSize: "12px" }}
+                style={{ marginRight: "20px", opacity: 0.6, fontSize: "12px" }}
               >
                 {this.state.chapterPages[item.index]
                   ? this.state.chapterPages[item.index]
