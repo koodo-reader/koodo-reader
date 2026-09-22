@@ -30,7 +30,7 @@ const readingRulerSliderConfigs = [
     step: 0.05,
     title: "Background opacity",
     isPDF: false,
-    defaultValue: 0.5,
+    defaultValue: 0.6,
   },
 ];
 
@@ -85,7 +85,7 @@ class SettingSwitch extends React.Component<
       readingRulerLineHeight:
         ConfigService.getReaderConfig("readingRulerLineHeight") || "3",
       readingRulerBackgroundOpacity:
-        ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.3",
+        ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.6",
       isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
       speedReadingSpeed:
         ConfigService.getReaderConfig("speedReadingSpeed") || "300",
@@ -496,7 +496,7 @@ class SettingSwitch extends React.Component<
                 ) {
                   ConfigService.setReaderConfig(
                     "readingRulerBackgroundOpacity",
-                    "0.3"
+                    "0.6"
                   );
                 }
               }

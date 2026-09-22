@@ -328,7 +328,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ),
         readingRulerBackgroundOpacity: parseFloat(
           ConfigService.getReaderConfig("readingRulerBackgroundOpacity") ||
-            "0.5"
+            "0.6"
         ),
         isEnableKoReaderSync:
           ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes",
