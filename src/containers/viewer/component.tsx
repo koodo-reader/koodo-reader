@@ -664,11 +664,12 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
   };
   render() {
+    let isReadingAid =
+      !isReadingRawPDF(this.props.currentBook) &&
+      (this.props.isParagraphMode || this.props.isSpeedReading);
     return (
       <>
-        {this.props.htmlBook &&
-        !this.props.isParagraphMode &&
-        !this.props.isSpeedReading ? (
+        {this.props.htmlBook && !isReadingAid ? (
           <PopupMenu
             {...({
               rendition: this.props.htmlBook.rendition,
@@ -714,7 +715,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         )}
         <div
           className={
-            this.props.readerMode === "scroll" && !isReadingAidMode()
+            this.props.readerMode === "scroll" &&
+            !isReadingAidMode(
+              this.props.currentBook.format,
+              this.props.currentBook.key
+            )
               ? "html-viewer-page scrolling-html-viewer-page"
               : "html-viewer-page"
           }
@@ -740,9 +745,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         {this.props.isHideBackground ||
         this.props.textOrientation === "vertical" ||
         this.props.isShowPageBorder ||
-        this.props.isParagraphMode ||
-        this.props.isReadingRuler ||
-        this.props.isSpeedReading ||
+        ((this.props.isParagraphMode ||
+          this.props.isReadingRuler ||
+          this.props.isSpeedReading) &&
+          !isReadingRawPDF(this.props.currentBook)) ||
         this.props.isMergeWord ? null : this.props.currentBook.key ? (
           <Background />
         ) : null}
