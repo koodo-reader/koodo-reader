@@ -35,7 +35,7 @@ const getTTSAudio = async (text, speed, config) => {
             resolve(await firstEntry.async("nodebuffer"));
         })
             .catch(error => {
-            reject("");
+            reject(error);
         });
     });
 };

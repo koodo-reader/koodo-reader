@@ -29,7 +29,7 @@ const getAudioPath = async (text, speed, dirPath, config) => {
             }
         })
             .catch(error => {
-            reject("");
+            reject(error);
         });
     });
 };
