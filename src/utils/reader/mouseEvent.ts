@@ -4,6 +4,7 @@ import { getIframeDoc, getIframeWin } from "./docUtil";
 import {
   handleExitFullScreen,
   handleFullScreen,
+  isReadingAidMode,
   sleep,
   throttle,
 } from "../common";
@@ -192,10 +193,6 @@ const NAV_TAB_SHORTCUTS: Array<{
   { shortcut: "openToc", tab: "contents" },
 ];
 let lock = false; //prevent from clicking too fasts
-const isPreventScroll = () =>
-  ConfigService.getReaderConfig("isParagraphMode") === "yes" ||
-  ConfigService.getReaderConfig("isSpeedReading") === "yes" ||
-  ConfigService.getReaderConfig("isReadingRuler") === "yes";
 
 const arrowKeys = async (
   rendition: any,
@@ -210,7 +207,7 @@ const arrowKeys = async (
   ) {
     return;
   }
-  if (readerMode === "scroll" && isPreventScroll()) {
+  if (readerMode === "scroll" && isReadingAidMode()) {
     // 段落模式下拦截滚动模式的原生滚动按键，改为逐段导航
     const shortcutConfig = getShortcutConfig();
     if (matchShortcut(event, shortcutConfig.prevPage)) {
@@ -413,7 +410,7 @@ export const bindHtmlEvent = (
       if (lock) return;
       lock = true;
       if (readerMode === "scroll") {
-        if (Math.abs(event.deltaX) === 0 && isPreventScroll()) {
+        if (Math.abs(event.deltaX) === 0 && isReadingAidMode()) {
           // 段落模式下阻止原生滚动导致遮罩漂移，改为逐段导航
           event.preventDefault();
           await mouseChrome(rendition, event.deltaY);
