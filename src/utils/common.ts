@@ -2248,6 +2248,12 @@ export const getOcrCachePath = (
   }
   return electron.path.join(ocrDir, bookKey + "_" + chapterDocIndex + ".json");
 };
+export const isReadingRawPDF = (book: Book) => {
+  return (
+    book.format === "PDF" &&
+    !ConfigService.getAllListConfig("convertPDFBooks").includes(book.key)
+  );
+};
 export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
     return null;

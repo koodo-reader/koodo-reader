@@ -19,7 +19,7 @@ import {
 } from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import { openExternalUrl } from "../../../utils/common";
+import { isReadingRawPDF, openExternalUrl } from "../../../utils/common";
 import { createHighlight } from "../../../utils/reader/noteUtil";
 import { Tooltip } from "react-tooltip";
 
@@ -39,12 +39,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
     const format = this.props.currentBook.format;
     let text = getSelection(format);
     if (!text) return;
-    if (
-      format === "PDF" &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      )
-    ) {
+    if (isReadingRawPDF(this.props.currentBook)) {
       text = text.split("\n").join(" ").trim();
     }
     let copied = false;

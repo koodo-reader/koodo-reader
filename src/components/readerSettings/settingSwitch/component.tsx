@@ -5,7 +5,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
 import { wordFrequencyList } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
-import { detectLocalLanguage } from "../../../utils/common";
+import { detectLocalLanguage, isReadingRawPDF } from "../../../utils/common";
 import BookUtil from "../../../utils/file/bookUtil";
 import SliderList from "../sliderList";
 
@@ -578,12 +578,7 @@ class SettingSwitch extends React.Component<
           ))}
         {readerSettingList
           .filter((item) => {
-            if (
-              this.props.currentBook.format === "PDF" &&
-              !ConfigService.getAllListConfig("convertPDFBooks").includes(
-                this.props.currentBook.key
-              )
-            ) {
+            if (isReadingRawPDF(this.props.currentBook)) {
               return item.isPDF;
             }
             return true;

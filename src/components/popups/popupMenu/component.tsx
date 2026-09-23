@@ -1,5 +1,6 @@
 import React from "react";
 import "./popupMenu.css";
+import { isReadingRawPDF } from "../../../utils/common";
 import PopupOption from "../popupOption";
 import ColorOption from "../../colorOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
@@ -101,21 +102,15 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     }
     posX = posX - MENU_WIDTH / 2 + pageSize.left;
     if (
-      this.props.currentBook.format === "PDF" &&
+      isReadingRawPDF(this.props.currentBook) &&
       this.props.readerMode === "double" &&
-      this.props.chapterDocIndex % 2 === 1 &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      )
+      this.props.chapterDocIndex % 2 === 1
     ) {
       posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
-      this.props.currentBook.format === "PDF" &&
+      isReadingRawPDF(this.props.currentBook) &&
       this.props.readerMode === "scroll" &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      ) &&
       posY < 0
     ) {
       posY = posY + pageSize.offsetTop;
@@ -145,12 +140,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
-      if (
-        this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        )
-      ) {
+      if (isReadingRawPDF(this.props.currentBook)) {
         let targetIframe = doc?.defaultView?.frameElement;
         let id = targetIframe?.getAttribute("id") || "";
         let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;

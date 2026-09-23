@@ -27,7 +27,7 @@ import {
 } from "../../utils/reader/discordRPC";
 import SupportDialog from "../../components/dialogs/supportDialog";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
-import { throttle } from "../../utils/common";
+import { isReadingRawPDF, throttle } from "../../utils/common";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
@@ -192,11 +192,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
       this.props.handleFetchPercentage(book);
       let readerMode =
-        (book.format === "PDF" &&
-          !ConfigService.getAllListConfig("convertPDFBooks").includes(
-            book.key
-          )) ||
-        book.format.startsWith("CB")
+        isReadingRawPDF(book) || book.format.startsWith("CB")
           ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
           : ConfigService.getReaderConfig("readerMode") || "double";
       this.props.handleReaderMode(readerMode);
@@ -464,10 +460,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             </div>
           )}
           {this.props.currentBook &&
-            this.props.currentBook.format === "PDF" &&
-            !ConfigService.getAllListConfig("convertPDFBooks").includes(
-              this.props.currentBook.key
-            ) &&
+            isReadingRawPDF(this.props.currentBook) &&
             this.props.currentBook.description.indexOf("scanned") > -1 && (
               <div
                 className="next-chapter-single-container"
