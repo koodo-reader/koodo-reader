@@ -47,13 +47,13 @@ const getTTSAudio = async (text, speed, config) => {
             .then((response) => {
             let hexAudio = response.data && response.data.data && response.data.data.audio;
             if (!hexAudio) {
-                reject("");
+                reject("No audio data in response");
                 return;
             }
             resolve(Buffer.from(hexAudio, "hex"));
         })
             .catch((error) => {
-            reject("");
+            reject(error);
         });
     });
 };
@@ -178,7 +178,7 @@ const getTTSVoice = async (config) => {
             })));
         })
             .catch((error) => {
-            reject("");
+            reject(error);
         });
     });
 };

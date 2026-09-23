@@ -83,7 +83,7 @@ const getTTSAudio = async (text, speed, config) => {
             resolve(audioBuffer);
         })
             .catch((error) => {
-            reject("");
+            reject(error);
         });
     });
 };

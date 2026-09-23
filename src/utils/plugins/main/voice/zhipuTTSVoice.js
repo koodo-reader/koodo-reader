@@ -34,7 +34,7 @@ const getTTSAudio = async (text, speed, config) => {
             resolve(Buffer.from(response.data));
         })
             .catch((error) => {
-            reject("");
+            reject(error);
         });
     });
 };
