@@ -11,6 +11,7 @@ import {
   checkReachPageEnd,
   getAllVoices,
   getFormatFromAudioPath,
+  isReadingRawPDF,
   langToName,
   sleep,
   splitSentences,
@@ -690,12 +691,7 @@ class TextToSpeech extends React.Component<
     }
 
     if (nodeList.length === 0) {
-      if (
-        this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        )
-      ) {
+      if (isReadingRawPDF(this.props.currentBook)) {
         let currentPosition = this.props.htmlBook.rendition.getPosition();
         await this.props.htmlBook.rendition.goToChapterIndex(
           parseInt(currentPosition.chapterDocIndex) +
@@ -720,10 +716,7 @@ class TextToSpeech extends React.Component<
       this.setState({ currentIndex: index });
       let node = this.nodeList[index];
       let style = this.highlightUtil.buildTtsHighlightStyle(
-        this.props.currentBook.format === "PDF" &&
-          !ConfigService.getAllListConfig("convertPDFBooks").includes(
-            this.props.currentBook.key
-          ),
+        isReadingRawPDF(this.props.currentBook),
         ConfigService.getReaderConfig("textOrientation") === "vertical"
       );
       this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
@@ -787,12 +780,7 @@ class TextToSpeech extends React.Component<
       }
 
       if (isReachPageEnd) {
-        if (
-          this.props.currentBook.format === "PDF" &&
-          !ConfigService.getAllListConfig("convertPDFBooks").includes(
-            this.props.currentBook.key
-          )
-        ) {
+        if (isReadingRawPDF(this.props.currentBook)) {
           let currentPosition = this.props.htmlBook.rendition.getPosition();
           await this.props.htmlBook.rendition.goToChapterIndex(
             parseInt(currentPosition.chapterDocIndex) +
@@ -833,10 +821,7 @@ class TextToSpeech extends React.Component<
     this.setState({ currentIndex: index });
     let node = this.nodeList[index];
     let style = this.highlightUtil.buildTtsHighlightStyle(
-      this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        ),
+      isReadingRawPDF(this.props.currentBook),
       ConfigService.getReaderConfig("textOrientation") === "vertical"
     );
     this.props.htmlBook.rendition.highlightAudioNode(node.text, style);
@@ -868,12 +853,7 @@ class TextToSpeech extends React.Component<
         isReachPageEnd = true;
       }
       if (isReachPageEnd) {
-        if (
-          this.props.currentBook.format === "PDF" &&
-          !ConfigService.getAllListConfig("convertPDFBooks").includes(
-            this.props.currentBook.key
-          )
-        ) {
+        if (isReadingRawPDF(this.props.currentBook)) {
           let currentPosition = this.props.htmlBook.rendition.getPosition();
           await this.props.htmlBook.rendition.goToChapterIndex(
             parseInt(currentPosition.chapterDocIndex) +

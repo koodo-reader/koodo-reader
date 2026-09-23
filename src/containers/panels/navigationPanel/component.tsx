@@ -1,5 +1,6 @@
 import React from "react";
 import "./navigationPanel.css";
+import { isReadingRawPDF } from "../../../utils/common";
 import ContentList from "../../lists/contentList";
 import BookNavList from "../../lists/navList";
 import { Trans } from "react-i18next";
@@ -215,10 +216,7 @@ class NavigationPanel extends React.Component<
       })
     );
     let style = this.highlightUtil.buildSearchHighlightStyle(
-      this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        ),
+      isReadingRawPDF(this.props.currentBook),
       ConfigService.getReaderConfig("textOrientation") === "vertical"
     );
     this.props.htmlBook.rendition.highlightSearchNode(
@@ -281,7 +279,9 @@ class NavigationPanel extends React.Component<
                           this.handleSearchItemClick(entry.item);
                         }}
                       >
-                        <div>{Parser(DOMPurify.sanitize(entry.item.excerpt))}</div>
+                        <div>
+                          {Parser(DOMPurify.sanitize(entry.item.excerpt))}
+                        </div>
                       </li>
                     );
                   })}

@@ -2,7 +2,7 @@ import React from "react";
 import "./popupRefer.css";
 import { PopupReferProps, PopupReferStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import { openExternalUrl } from "../../../utils/common";
+import { isReadingRawPDF, openExternalUrl } from "../../../utils/common";
 import Parser from "html-react-parser";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
@@ -123,21 +123,15 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
     }
     posX = posX - 135 + pageSize.left;
     if (
-      this.props.currentBook.format === "PDF" &&
+      isReadingRawPDF(this.props.currentBook) &&
       this.props.readerMode === "double" &&
-      this.props.chapterDocIndex % 2 === 1 &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      )
+      this.props.chapterDocIndex % 2 === 1
     ) {
       posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
-      this.props.currentBook.format === "PDF" &&
-      this.props.readerMode === "scroll" &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      )
+      isReadingRawPDF(this.props.currentBook) &&
+      this.props.readerMode === "scroll"
     ) {
       posY = posY + this.props.chapterDocIndex * pageSize.sectionHeight;
     }

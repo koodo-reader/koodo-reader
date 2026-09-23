@@ -7,6 +7,7 @@ import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
 import {
   detectLocalLanguage,
   getFullTranslationTarget,
+  isReadingRawPDF,
 } from "../../utils/common";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
@@ -305,12 +306,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
     if (!pageInfo) {
       return;
     }
-    if (
-      this.props.currentBook.format === "PDF" &&
-      !ConfigService.getAllListConfig("convertPDFBooks").includes(
-        this.props.currentBook.key
-      )
-    ) {
+    if (isReadingRawPDF(this.props.currentBook)) {
       this.setState({
         prevPage: pageInfo.currentPage,
         nextPage: pageInfo.currentPage + 1,
