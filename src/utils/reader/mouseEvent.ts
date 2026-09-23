@@ -207,7 +207,7 @@ const arrowKeys = async (
   ) {
     return;
   }
-  if (readerMode === "scroll" && isReadingAidMode()) {
+  if (readerMode === "scroll" && isReadingAidMode(format, bookKey)) {
     // 段落模式下拦截滚动模式的原生滚动按键，改为逐段导航
     const shortcutConfig = getShortcutConfig();
     if (matchShortcut(event, shortcutConfig.prevPage)) {
@@ -410,7 +410,7 @@ export const bindHtmlEvent = (
       if (lock) return;
       lock = true;
       if (readerMode === "scroll") {
-        if (Math.abs(event.deltaX) === 0 && isReadingAidMode()) {
+        if (Math.abs(event.deltaX) === 0 && isReadingAidMode(format, key)) {
           // 段落模式下阻止原生滚动导致遮罩漂移，改为逐段导航
           event.preventDefault();
           await mouseChrome(rendition, event.deltaY);

@@ -2209,11 +2209,15 @@ export const getZipBuffer = async (
   }
   return readArchiveBuffer("unzip-file", entryPath, filePath);
 };
-export const isReadingAidMode = () => {
+export const isReadingAidMode = (format: string, bookKey: string) => {
+  let isReadingRawPDF =
+    format === "PDF" &&
+    !ConfigService.getAllListConfig("convertPDFBooks").includes(bookKey);
   return (
-    ConfigService.getReaderConfig("isParagraphMode") === "yes" ||
-    ConfigService.getReaderConfig("isSpeedReading") === "yes" ||
-    ConfigService.getReaderConfig("isReadingRuler") === "yes"
+    (ConfigService.getReaderConfig("isParagraphMode") === "yes" ||
+      ConfigService.getReaderConfig("isSpeedReading") === "yes" ||
+      ConfigService.getReaderConfig("isReadingRuler") === "yes") &&
+    !isReadingRawPDF
   );
 };
 export const getOfficialDictLang = () => {
