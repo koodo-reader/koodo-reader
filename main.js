@@ -92,7 +92,8 @@ const resolveCustomVoicePlugin = ({ script, scriptSHA256, pluginKey } = {}) => {
     scriptSHA256: hash,
     pluginKey,
     getAudioPath: global.getAudioPath,
-    getTTSVoice: typeof global.getTTSVoice === "function" ? global.getTTSVoice : undefined,
+    getTTSVoice:
+      typeof global.getTTSVoice === "function" ? global.getTTSVoice : undefined,
   };
   customVoicePluginCache.set(scriptSHA256, resolved);
   return resolved;
@@ -972,8 +973,7 @@ const createMainWin = () => {
   ipcMain.handle("generate-tts", async (event, voiceConfig) => {
     const { text, speed, pluginKey, config } = voiceConfig || {};
     const plugin =
-      getVoicePlugin(pluginKey) ||
-      resolveCustomVoicePlugin(voiceConfig || {});
+      getVoicePlugin(pluginKey) || resolveCustomVoicePlugin(voiceConfig || {});
     if (
       !plugin ||
       typeof text !== "string" ||
@@ -1008,10 +1008,17 @@ const createMainWin = () => {
     ) {
       throw new Error("Invalid TTS voice request");
     }
-    const voices = await plugin.getTTSVoice(config);
-    if (!Array.isArray(voices)) {
-      throw new Error("Invalid TTS voice list");
+    let voices = [];
+    try {
+      voices = await plugin.getTTSVoice(config);
+      if (!Array.isArray(voices)) {
+        throw new Error("Invalid TTS voice list");
+      }
+    } catch (error) {
+      console.error("Error getting TTS voices:", error);
+      throw new Error(`Failed to get TTS voices: ${error.message}`);
     }
+
     return voices;
   });
   ipcMain.handle("cloud-upload", async (event, config) => {

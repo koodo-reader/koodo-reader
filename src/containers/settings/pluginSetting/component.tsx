@@ -260,7 +260,7 @@ class SettingDialog extends React.Component<
                                   Array.isArray(voice.config)
                               )
                             ) {
-                              throw new Error();
+                              throw new Error("Invalid voice list");
                             }
                             plugin.voiceList = voiceList.map((voice) => ({
                               ...voice,
