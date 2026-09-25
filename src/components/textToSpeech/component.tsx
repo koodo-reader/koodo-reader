@@ -748,7 +748,7 @@ class TextToSpeech extends React.Component<
         speed * 100 - 100,
         this.props.plugins,
         this.nodeList,
-        10,
+        20,
         false,
         node.voiceEngine === "official-ai-voice-plugin"
       );
