@@ -1366,5 +1366,8 @@
   "Natural text-to-speech (82 languages, 569 voices)": "真人语音朗读（支持 82 门语言、569 种语音）",
   "OCR text recognition for scanned PDFs": "OCR 文字识别",
   "Send to Kindle": "发送到 Kindle",
-  "Email & live-chat priority support": "邮件与实时聊天支持"
+  "Email & live-chat priority support": "邮件与实时聊天支持",
+  "Reading ruler height (lines)": "Reading ruler height (lines)",
+  "Reading ruler background opacity": "Reading ruler background opacity",
+  "ISBN": "ISBN"
 }
