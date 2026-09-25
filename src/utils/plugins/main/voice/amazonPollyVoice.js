@@ -181,7 +181,6 @@ const getTTSVoice = async (config) => {
       })
       .then((response) => {
         let voices = response.data.Voices;
-        console.log("Amazon Polly voices fetched:", voices);
         resolve(
           voices.map((voice) => {
             return {

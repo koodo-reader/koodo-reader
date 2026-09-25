@@ -57,6 +57,7 @@ const INVOKE_CHANNELS = new Set([
   "reload-tab",
   "adjust-tab-size",
   "exit-tab",
+  "exit-reader",
   "enter-tab-fullscreen",
   "exit-tab-fullscreen",
   "enter-fullscreen",
