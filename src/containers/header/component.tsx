@@ -110,7 +110,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
 
       this.readingFinishedHandler = async (config: any) => {
-        console.log("reading-finished event received:", config);
         this.handleFinishReading();
       };
       ipcRenderer.on("reading-finished", this.readingFinishedHandler);
@@ -329,12 +328,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   };
   handleFinishReading = async () => {
-    console.log(
-      "handleFinishReading called",
-      ConfigService.getReaderConfig("isDisableAutoSync"),
-      ConfigService.getItem("defaultSyncOption"),
-      this.state.isSync
-    );
     if (
       ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
       ConfigService.getItem("defaultSyncOption") &&
@@ -343,7 +336,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       ConfigService.setItem("isFinshReading", "yes");
       let userInfo = await this.props.handleFetchUserInfo();
       this.setState({ isSync: true }, async () => {
-        console.log("Starting sync after reading finished");
         await this.handleCloudSync(userInfo);
         ConfigService.setItem("isFinshReading", "no");
       });

@@ -267,7 +267,7 @@ const handleShortcut = (
         if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
           window.electronAPI.invoke("exit-tab", "ping");
         } else {
-          window.close();
+          window.electronAPI.invoke("exit-reader", "ping");
         }
       } else {
         ConfigService.setReaderConfig("isFinishWebReading", "yes");

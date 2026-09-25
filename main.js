@@ -916,12 +916,6 @@ const createMainWin = () => {
     }
     readerWindowReadyToClose = false;
     readerWindow.on("close", (event) => {
-      console.log(
-        "Reader window close event triggered",
-        readerWindow,
-        readerWindow.isDestroyed(),
-        readerWindowReadyToClose
-      );
       // --- Step 1: ask renderer to flush reading-time data first ---
       if (
         !readerWindowReadyToClose &&
@@ -961,7 +955,6 @@ const createMainWin = () => {
       if (isPreventSleep && !readerWindow.isDestroyed()) {
         id && powerSaveBlocker.stop(id);
       }
-      console.log("Reader window closed", mainWin, mainWin.isDestroyed());
       if (mainWin && !mainWin.isDestroyed()) {
         mainWin.webContents.send("reading-finished", {});
       }
@@ -969,11 +962,6 @@ const createMainWin = () => {
     });
     // Renderer finished flushing reading-time data — proceed with actual close
     ipcMain.once("reader-close-ready", () => {
-      console.log(
-        "Reader window ready to close",
-        readerWindow,
-        readerWindow.isDestroyed()
-      );
       if (readerWindow && !readerWindow.isDestroyed()) {
         readerWindowReadyToClose = true;
         readerWindow.close();
@@ -1830,6 +1818,11 @@ const createMainWin = () => {
     if (readerWindow && !readerWindow.isDestroyed()) {
       readerWindow.setFullScreen(false);
       console.info("exit full");
+    }
+  });
+  ipcMain.handle("exit-reader", () => {
+    if (readerWindow && !readerWindow.isDestroyed()) {
+      readerWindow.close();
     }
   });
   ipcMain.handle("open-url", async (event, config) => {
