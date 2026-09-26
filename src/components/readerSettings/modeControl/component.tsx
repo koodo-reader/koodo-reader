@@ -2,6 +2,7 @@ import React from "react";
 import "./modeControl.css";
 import { ModeControlProps, ModeControlState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { isReadingRawPDF } from "../../../utils/common";
 import { Trans } from "react-i18next";
 
 class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
@@ -12,10 +13,7 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
 
   handleChangeMode = (mode: string) => {
     if (
-      (this.props.currentBook.format === "PDF" &&
-        !ConfigService.getAllListConfig("convertPDFBooks").includes(
-          this.props.currentBook.key
-        )) ||
+      isReadingRawPDF(this.props.currentBook) ||
       this.props.currentBook.format.startsWith("CB")
     ) {
       ConfigService.setReaderConfig("pdfReaderMode", mode);

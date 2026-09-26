@@ -29,6 +29,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
       isSearchOpen: false,
       searchKeyword: "",
       isComposing: false,
+      chapterPages: [],
     };
     this.handleJump = this.handleJump.bind(this);
     this.searchInputRef = React.createRef<HTMLInputElement>();
@@ -178,6 +179,7 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     this.setState(
       {
         chapters: htmlBook.chapters,
+        chapterPages: htmlBook.rendition.getPages(),
       },
       () => {
         let bookLocation: {
@@ -234,6 +236,9 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
   UNSAFE_componentWillReceiveProps(nextProps: ContentListProps) {
     if (nextProps.htmlBook !== this.props.htmlBook && nextProps.htmlBook) {
       this.handleScrollToChapter(nextProps.htmlBook);
+      nextProps.htmlBook.rendition.on("chapter-pages", () => {
+        this.handleScrollToChapter(nextProps.htmlBook);
+      });
     }
     if (
       nextProps.currentChapterIndex !== this.props.currentChapterIndex &&
@@ -300,15 +305,22 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
                 ></span>
               )}
 
-            <span
+            <div
               onClick={() => {
                 this.handleJump(item);
               }}
-              className="book-content-name"
+              className="book-content-name content-chapter-title"
               data-href={item.href}
             >
-              {item.label}
-            </span>
+              <span>{item.label}</span>
+              <span
+                style={{ marginRight: "20px", opacity: 0.6, fontSize: "12px" }}
+              >
+                {this.state.chapterPages[item.index]
+                  ? this.state.chapterPages[item.index]
+                  : ""}
+              </span>
+            </div>
             {item.subitems &&
             item.subitems.length > 0 &&
             (isExpanded || this.state.isExpandContent) ? (
@@ -321,7 +333,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     const searchResults = this.getSearchResults();
     const isSearching =
       this.state.searchKeyword.trim().length > 0 && !this.state.isComposing;
-
     const renderSearchResults = () => {
       if (searchResults.length === 0) {
         return (

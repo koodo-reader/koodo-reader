@@ -7,3 +7,89 @@
   color: #888;
   font-size: 14px;
 }
+
+.dict-cloud-section {
+  margin: 0 25px 80px 25px;
+}
+
+.dict-cloud-section-title {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.dict-cloud-list {
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dict-cloud-item {
+  position: relative;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(128, 128, 128, 0.12);
+  font-size: 14px;
+}
+
+.dict-cloud-item:first-child {
+  border-top: none;
+}
+
+.dict-cloud-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.dict-cloud-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dict-cloud-item-name {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dict-cloud-item-source {
+  font-size: 12px;
+  opacity: 0.55;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dict-cloud-download-btn {
+  cursor: pointer;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: transparent;
+  white-space: nowrap;
+}
+
+.dict-cloud-download-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dict-cloud-progress {
+  height: 3px;
+  background: rgba(128, 128, 128, 0.15);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.dict-cloud-progress-bar {
+  height: 100%;
+  transition: width 0.15s;
+  background: var(--color-theme-color, #0179ca);
+}

@@ -23,6 +23,7 @@ const INVOKE_CHANNELS = new Set([
   "clear-tts",
   "select-path",
   "select-file",
+  "select-import-file",
   "encrypt-data",
   "decrypt-data",
   "check-cloud-url",
@@ -56,6 +57,7 @@ const INVOKE_CHANNELS = new Set([
   "reload-tab",
   "adjust-tab-size",
   "exit-tab",
+  "exit-reader",
   "enter-tab-fullscreen",
   "exit-tab-fullscreen",
   "enter-fullscreen",
@@ -71,6 +73,10 @@ const INVOKE_CHANNELS = new Set([
   "crypto-file-md5",
   "backup-path",
   "restore-path",
+  "list-tar-file",
+  "untar-file",
+  "list-zip-file",
+  "unzip-file",
 ]);
 const SEND_CHANNELS = new Set(["reader-close-ready", "tab-close-ready"]);
 const SEND_SYNC_CHANNELS = new Set([

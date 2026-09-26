@@ -25,4 +25,5 @@ export interface EditDialogState {
   pendingDescription: string;
   pendingPublishedDate: string;
   pendingCover: string;
+  isAnalyzing: boolean;
 }

@@ -3,9 +3,15 @@ import PluginModel from "../../models/Plugin";
 import { getAllVoices, getFormatFromAudioPath } from "../common";
 import { getTTSAudio } from "../request/reader";
 import { isElectron } from "react-device-detect";
+import { TextRule } from "../common";
+
+const escapeRegExp = (pattern: string) =>
+  pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 class TTSUtil {
   static player: any;
+  // 听书文本规则（replace / delete），朗读前应用到文本
+  static textRules: TextRule[] = [];
   static audioPaths: { index: number; audioPath: string }[] = [];
   static isPaused: boolean = false;
   static pausedMidSentence: boolean = false;
@@ -237,6 +243,8 @@ class TTSUtil {
     voice,
     isFirst: boolean
   ) {
+    // 朗读前应用文本替换 / 删除规则
+    text = this.applyTextRules(text);
     if (voiceEngine === "official-ai-voice-plugin") {
       let res = await getTTSAudio(
         text,
@@ -251,14 +259,19 @@ class TTSUtil {
       }
       return "";
     } else {
-      let audioPath = await window
-        .electronAPI
-        .invoke("generate-tts", {
-          text: text,
-          speed,
-          pluginKey: plugin.key,
-          config: voice.config,
-        });
+      const payload: Record<string, unknown> = {
+        text: text,
+        speed,
+        pluginKey: plugin.key,
+        config: voice.config,
+      };
+      if (plugin.script) {
+        payload.script = plugin.script;
+        if (plugin.scriptSHA256) {
+          payload.scriptSHA256 = plugin.scriptSHA256;
+        }
+      }
+      let audioPath = await window.electronAPI.invoke("generate-tts", payload);
       return audioPath;
     }
   }
@@ -274,6 +287,39 @@ class TTSUtil {
     let voices = getAllVoices(plugins);
 
     return voices;
+  }
+  // 设置听书文本规则（仅 replace / delete 生效）
+  static setTextRules(rules: TextRule[]) {
+    this.textRules = rules.filter(
+      (rule) => rule.type === "replace" || rule.type === "delete"
+    );
+  }
+  // 对文本应用替换 / 删除规则
+  static applyTextRules(text: string): string {
+    if (!text || this.textRules.length === 0) return text;
+    let result = text;
+    for (const rule of this.textRules) {
+      try {
+        const regex =
+          rule.matchType === "regex"
+            ? new RegExp(rule.pattern, "g")
+            : new RegExp(escapeRegExp(rule.pattern), "g");
+        if (rule.type === "delete") {
+          result = result.replace(regex, "");
+        } else {
+          // regex 模式保留 $1 分组引用（由 String.replace 原生处理）；
+          // plain 模式转义 $ 防止被解释为分组引用
+          const replacement =
+            rule.matchType === "regex"
+              ? rule.replacement || ""
+              : (rule.replacement || "").replace(/\$/g, "$$$$");
+          result = result.replace(regex, replacement);
+        }
+      } catch (e) {
+        console.error("Invalid text rule pattern:", rule.pattern, e);
+      }
+    }
+    return result;
   }
 }
 export default TTSUtil;

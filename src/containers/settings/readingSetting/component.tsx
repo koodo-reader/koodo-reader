@@ -67,9 +67,7 @@ class ReadingSetting extends React.Component<
   };
 
   handleResetReaderPosition = () => {
-    window
-      .electronAPI
-      .invoke("reset-reader-position", "ping");
+    window.electronAPI.invoke("reset-reader-position", "ping");
     toast.success(this.props.t("Reset successful"));
   };
 
@@ -83,9 +81,9 @@ class ReadingSetting extends React.Component<
       return;
     }
     this.handleSetting("isMergeWord");
-    if (ConfigService.getReaderConfig("isMergeWord") === "yes") {
-      ConfigService.setReaderConfig("isHideBackground", "yes");
-    }
+    this.props.handleMergeWord(
+      ConfigService.getReaderConfig("isMergeWord") === "yes"
+    );
   };
 
   handleOpenInMain = () => {

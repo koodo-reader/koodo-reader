@@ -71,9 +71,10 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
     const image = this.imageRef.current;
     if (!image) return;
 
+    // 先恢复默认宽度约束，避免换图时 img 以原始尺寸闪现
+    image.style.width = "60vw";
     image.style.removeProperty("margin-top");
     image.style.removeProperty("transform");
-    image.style.removeProperty("width");
     image.style.removeProperty("height");
 
     if (this.previewRef.current) {

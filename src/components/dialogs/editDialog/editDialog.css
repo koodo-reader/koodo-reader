@@ -53,6 +53,38 @@
   outline: none;
   background: transparent;
 }
+/* Book name label row with AI button */
+.edit-dialog-input-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+.edit-dialog-ai-button {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin-bottom: 4px;
+  margin-left: 6px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.edit-dialog-ai-button:hover {
+  color: #f16464;
+}
+@keyframes edit-dialog-ai-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 .edit-dialog-textarea {
   width: 100%;
   box-sizing: border-box;

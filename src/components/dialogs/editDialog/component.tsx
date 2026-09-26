@@ -11,6 +11,7 @@ import { isElectron } from "react-device-detect";
 import MetadataDialog from "../metadataDialog";
 import { MetadataResult } from "../metadataDialog/interface";
 import { trimSpecialCharacters } from "../../../utils/common";
+import { analyzeBookTitle } from "../../../utils/request/reader";
 declare var window: any;
 
 class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
@@ -33,6 +34,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
       pendingDescription: "",
       pendingPublishedDate: "",
       pendingCover: "",
+      isAnalyzing: false,
     };
   }
 
@@ -81,6 +83,38 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
         ? metadata.cover.replace(/^http:/, "https:")
         : this.state.coverPreview,
     });
+  };
+
+  handleAnalyzeTitle = async () => {
+    if (!this.props.isAuthed) {
+      toast(this.props.t("Please upgrade to Pro to use this feature"));
+      this.props.handleSetting(true);
+      this.props.handleSettingMode("account");
+      return;
+    }
+    if (this.state.isAnalyzing) return;
+    const title = trimSpecialCharacters(
+      this.nameRef.current?.value || this.props.currentBook.name || ""
+    );
+    if (!title) return;
+    this.setState({ isAnalyzing: true });
+    try {
+      const response = await analyzeBookTitle(title);
+      if (response && response.code === 200 && response.data?.name) {
+        if (this.nameRef.current) {
+          this.nameRef.current.value = response.data.name;
+        }
+        if (this.authorRef.current && response.data.author) {
+          this.authorRef.current.value = response.data.author;
+        }
+        toast.success(this.props.t("Title recognized successfully"));
+      }
+    } catch (error) {
+      console.error(error, title);
+      toast.error(this.props.t("Failed to recognize title"));
+    } finally {
+      this.setState({ isAnalyzing: false });
+    }
   };
 
   handleCancel = () => {
@@ -228,9 +262,32 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
 
           {/* Book name */}
           <div className="edit-dialog-field">
-            <span className="edit-dialog-label">
-              <Trans>Book name</Trans>
-            </span>
+            <div className="edit-dialog-input-row">
+              <span className="edit-dialog-label">
+                <Trans>Book name</Trans>
+              </span>
+              <span
+                className="edit-dialog-ai-button"
+                onClick={this.handleAnalyzeTitle}
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="14"
+                  height="14"
+                  fill="currentColor"
+                  style={{
+                    animation: this.state.isAnalyzing
+                      ? "edit-dialog-ai-spin 1s linear infinite"
+                      : undefined,
+                  }}
+                >
+                  <path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z" />
+                </svg>
+                <span className="edit-dialog-ai-text">
+                  <Trans>Recognize title with AI</Trans>
+                </span>
+              </span>
+            </div>
             <input className="edit-dialog-input" ref={this.nameRef} />
           </div>
 

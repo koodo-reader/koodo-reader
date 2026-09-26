@@ -11,13 +11,14 @@ export const getIframeDoc = (format: string, bookKey?: string) => {
   if (!doc) {
     return [];
   }
-  if (
-    format === "PDF" &&
+  const isPaginated =
+    (format === "PDF" || format?.startsWith("CB")) &&
     !(
       bookKey &&
+      format === "PDF" &&
       ConfigService.getAllListConfig("convertPDFBooks").includes(bookKey)
-    )
-  ) {
+    );
+  if (isPaginated) {
     let subIframes = doc.querySelectorAll("iframe");
     return [
       doc,

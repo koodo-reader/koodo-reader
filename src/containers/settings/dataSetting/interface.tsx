@@ -1,6 +1,6 @@
 import { RouteComponentProps } from "react-router-dom";
 export interface SettingInfoProps extends RouteComponentProps<any> {
-  t: (title: string) => string;
+  t: (title: string, options?: any) => string;
   isAuthed: boolean;
   handleFetchBooks: () => void;
 }
@@ -9,6 +9,7 @@ export interface SettingInfoState {
   snapshotList: { file: string; time: number }[];
   exportNotesFormat: string;
   exportHighlightsFormat: string;
+  exportWordsFormat: string;
   isEnableDiscordRPC: boolean;
   isEnableKoReaderSync: boolean;
   isEnableNotionSync: boolean;

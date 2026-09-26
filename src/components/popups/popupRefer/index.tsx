@@ -1,4 +1,4 @@
-import { handleSelection } from "../../../store/actions";
+import { handleSelection, handleJumpPosition } from "../../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import PopupRefer from "./component";
@@ -13,6 +13,7 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleSelection,
+  handleJumpPosition,
 };
 export default connect(
   mapStateToProps,
