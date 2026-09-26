@@ -92,7 +92,7 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             }}
           >
             {[
-              {value:"",label: "Please select"},
+              { value: "", label: "Please select" },
               { value: "dev", label: "Developer version" },
               { value: "stable", label: "Stable version" },
             ].map((item) => (
@@ -127,9 +127,7 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <span
               className="change-location-button"
               onClick={async () => {
-                window
-                  .electronAPI
-                  .invoke("open-console", "ping");
+                window.electronAPI.invoke("open-console", "ping");
               }}
             >
               <Trans>View</Trans>
@@ -149,6 +147,25 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 openExternalUrl(getWebsiteUrl() + "/zh/document");
               } else {
                 openExternalUrl(getWebsiteUrl() + "/en/document");
+              }
+            }}
+          >
+            <Trans>Visit</Trans>
+          </span>
+        </div>
+        <div className="setting-dialog-new-title">
+          <Trans>FAQ</Trans>
+
+          <span
+            className="change-location-button"
+            onClick={async () => {
+              if (
+                ConfigService.getReaderConfig("lang") &&
+                ConfigService.getReaderConfig("lang").startsWith("zh")
+              ) {
+                openExternalUrl(getWebsiteUrl() + "/zh/faq");
+              } else {
+                openExternalUrl(getWebsiteUrl() + "/en/faq");
               }
             }}
           >

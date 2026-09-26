@@ -72,22 +72,6 @@
     left: 5%;
   }
 }
-.popup-menu-triangle-down {
-  float: left;
-  margin-left: 59px;
-  font-size: 16px;
-  text-shadow: 0px 8px 8px rgba(0, 0, 0, 0.16);
-  z-index: 0;
-}
-.popup-menu-triangle-up {
-  transform: rotate(180deg);
-  position: absolute;
-  bottom: 172px;
-  margin-left: 60px;
-  font-size: 16px;
-  text-shadow: 0px 8px 8px rgba(0, 0, 0, 0.16);
-  z-index: 0;
-}
 .delete-highlighter-container {
   position: relative;
 }

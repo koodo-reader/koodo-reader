@@ -1,7 +1,6 @@
 import React from "react";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
-import { isElectron } from "react-device-detect";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import {
@@ -20,7 +19,7 @@ import {
   KookitConfig,
   LoginHelper,
 } from "../../../assets/lib/kookit-extra-browser.min";
-import { loginList } from "../../../constants/loginList";
+import { loginList, proFeatures } from "../../../constants/loginList";
 import {
   getTempToken,
   getUserRequest,
@@ -49,6 +48,7 @@ class AccountSetting extends React.Component<
       isSendingCode: false,
       countdown: 0,
       serverRegion: getServerRegion(),
+      showLoginOptions: false,
     };
   }
   componentDidMount(): void {
@@ -625,11 +625,82 @@ class AccountSetting extends React.Component<
             </div>
           </div>
         )}
-        <div className="setting-dialog-new-title">
-          <div>
-            <Trans>
-              {this.props.isAuthed ? "Server region" : "Select server region"}
-            </Trans>
+        {!this.props.isAuthed && !this.state.showLoginOptions && (
+          <div className="pro-banner-container">
+            <div className="pro-banner">
+              <div className="pro-banner-overlay"></div>
+              <div className="pro-banner-content">
+                <div className="pro-banner-header">
+                  <div className="pro-banner-title">
+                    <Trans>Pro version</Trans>
+                  </div>
+                  <div className="pro-banner-tabs">
+                    {(
+                      [
+                        { key: "yearly", label: "Yearly" },
+                        { key: "limited", label: "Limited offer" },
+                      ] as const
+                    ).map((item) => (
+                      <div
+                        key={item.key}
+                        className={
+                          item.key === "yearly"
+                            ? "pro-banner-tab active-pro-banner-tab"
+                            : "pro-banner-tab"
+                        }
+                      >
+                        <Trans>{item.label}</Trans>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="pro-banner-price">
+                  <span className="pro-banner-price-value">
+                    <Trans>{"$4.99"}</Trans>
+                  </span>
+                  <span className="pro-banner-price-unit">
+                    {" / "}
+                    <Trans>{"Year"}</Trans>
+                  </span>
+                </div>
+                <div className="pro-banner-features">
+                  {proFeatures.map((item) => (
+                    <div key={item} className="pro-banner-feature-item">
+                      <span className="icon-check pro-banner-feature-icon"></span>
+                      <span>
+                        <Trans>{item}</Trans>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="pro-banner-actions">
+                  <div
+                    className="pro-banner-btn pro-banner-btn-login"
+                    onClick={() => {
+                      this.setState({ showLoginOptions: true });
+                    }}
+                  >
+                    <Trans>Register / Login</Trans>
+                  </div>
+                  <div
+                    className="pro-banner-btn pro-banner-btn-trial"
+                    onClick={() => {
+                      this.setState({ showLoginOptions: true });
+                    }}
+                  >
+                    <Trans>Start 7-day free trial</Trans>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {(this.props.isAuthed || this.state.showLoginOptions) && (
+          <div className="setting-dialog-new-title">
+            <div>
+              <Trans>
+                {this.props.isAuthed ? "Server region" : "Select server region"}
+              </Trans>
             {ConfigService.getReaderConfig("lang").startsWith("zh") && (
               <span
                 style={{
@@ -720,8 +791,9 @@ class AccountSetting extends React.Component<
               ))}
             </select>
           )}
-        </div>
-        {!this.props.isAuthed && (
+          </div>
+        )}
+        {!this.props.isAuthed && this.state.showLoginOptions && (
           <>
             <div className="setting-dialog-new-title">
               <Trans>Select login method</Trans>
@@ -749,22 +821,20 @@ class AccountSetting extends React.Component<
             </div>
           </>
         )}
-        {!this.props.isAuthed && (
+        {!this.props.isAuthed && this.state.showLoginOptions && (
           <>
-            <div className="account-login-tips">
+            <div
+              className="account-login-tips"
+              style={{
+                opacity: 1,
+              }}
+            >
               {this.props.t(
-                "7-day free trial upon registration, then billed annually"
+                "7-day free trial upon registration, then billed $4.99 per Year"
               )}
             </div>
             <div
               className="account-login-tips"
-              style={{
-                marginTop: "10px",
-                opacity: 1,
-                fontWeight: "bold",
-                cursor: "pointer",
-                textDecoration: "underline",
-              }}
               onClick={() => {
                 openInBrowser(
                   getWebsiteUrl() +
@@ -773,6 +843,13 @@ class AccountSetting extends React.Component<
                       : "/en") +
                     "/pricing"
                 );
+              }}
+              style={{
+                marginTop: "10px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                textDecoration: "underline",
+                opacity: 1,
               }}
             >
               {this.props.t("Compare Free and Pro features")}

@@ -41,7 +41,7 @@ const getTTSAudio = async (text, speed, config) => {
         resolve(response.data);
       })
       .catch((error) => {
-        reject("");
+        reject(error);
       });
   });
 };
@@ -75,7 +75,7 @@ const getTTSVoice = async (config) => {
         );
       })
       .catch((error) => {
-        reject("");
+        reject(error);
       });
   });
 };

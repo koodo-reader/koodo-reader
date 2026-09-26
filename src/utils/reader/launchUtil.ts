@@ -46,15 +46,12 @@ export const initTheme = () => {
   }
   syncNativeThemeSource(ConfigService.getReaderConfig("appSkin"));
 
-  if (
+  const isNightSkin =
     ConfigService.getReaderConfig("appSkin") === "night" ||
     (ConfigService.getReaderConfig("appSkin") === "system" &&
-      ConfigService.getReaderConfig("isOSNight") === "yes")
-  ) {
-    style.href = "./assets/styles/dark.css";
-  } else {
-    style.href = "./assets/styles/default.css";
-  }
+      ConfigService.getReaderConfig("isOSNight") === "yes");
+  style.href = "./assets/styles/theme.css";
+  document.documentElement.dataset.theme = isNightSkin ? "dark" : "light";
   document.head.appendChild(style);
 };
 export const initSystemFont = async () => {

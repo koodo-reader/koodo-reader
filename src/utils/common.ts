@@ -66,7 +66,13 @@ export const calculateFileMD5 = (file: File): Promise<string> => {
       // Use the file path to compute md5 via streaming, avoid loading the
       // whole file into memory with FileReader.
       const filePath = (file as any).path;
-      if (filePath && window.electronAPI?.crypto?.fileMd5) {
+      // Only use disk-path fast path when the file actually exists on disk
+      // (file.path may also carry a virtual/cloud path).
+      if (
+        filePath &&
+        window.electronAPI?.crypto?.fileMd5 &&
+        window.electronAPI.fs.existsSync(filePath)
+      ) {
         window.electronAPI.crypto
           .fileMd5(filePath)
           .then(resolve)
@@ -687,13 +693,6 @@ export function removeSearchParams() {
   const url = new URL(window.location.href.split("?")[0]);
   window.history.replaceState({}, document.title, url.toString());
 }
-export const getChatLocale = () => {
-  if (navigator.language.startsWith("zh")) {
-    return "zh_CN";
-  } else {
-    return "en";
-  }
-};
 export const preCacheAllBooks = async (bookList: Book[]) => {
   for (let index = 0; index < bookList.length; index++) {
     const selectedBook = bookList[index];
@@ -2144,4 +2143,156 @@ export const scanFolderForNewBooks = async (
     }
   }
   return imported;
+};
+
+export const getTarEntries = async (
+  filePath: string
+): Promise<{ entryPath: string; size: number; fileName: string }[]> => {
+  if (!isElectron) {
+    throw new Error("getTarEntries is only supported in Electron");
+  }
+  return await window.electronAPI.invoke("list-tar-file", { filePath });
+};
+export const getZipEntries = async (
+  filePath: string
+): Promise<{ entryPath: string; size: number; fileName: string }[]> => {
+  if (!isElectron) {
+    throw new Error("getZipEntries is only supported in Electron");
+  }
+  return await window.electronAPI.invoke("list-zip-file", { filePath });
+};
+export const clearComicTemp = () => {
+  try {
+    const fs = window.electronAPI.fs;
+    const path = window.electronAPI.path;
+    const base = path.join(path.dirname(getStorageLocation() || ""), "comic");
+    if (fs.existsSync(base)) {
+      fs.rmSync(base, { recursive: true, force: true });
+    }
+  } catch (e) {
+    console.error("clear comic temp error", e);
+  }
+};
+const readArchiveBuffer = async (
+  channel: string,
+  entryPath: string,
+  filePath: string
+): Promise<ArrayBuffer> => {
+  const extracted: string[] = await window.electronAPI.invoke(channel, {
+    filePath,
+    entries: [entryPath],
+  });
+  const extractedPath =
+    Array.isArray(extracted) && extracted.length > 0 ? extracted[0] : "";
+  if (!extractedPath) {
+    throw new Error("Failed to extract archive entry");
+  }
+  const fs = window.electronAPI.fs;
+  const buf: Buffer = fs.readFileSync(extractedPath);
+  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+};
+export const getTarBuffer = async (
+  entryPath: string,
+  filePath: string
+): Promise<ArrayBuffer> => {
+  if (!isElectron) {
+    throw new Error("getTarBuffer is only supported in Electron");
+  }
+  return readArchiveBuffer("untar-file", entryPath, filePath);
+};
+export const getZipBuffer = async (
+  entryPath: string,
+  filePath: string
+): Promise<ArrayBuffer> => {
+  if (!isElectron) {
+    throw new Error("getZipBuffer is only supported in Electron");
+  }
+  return readArchiveBuffer("unzip-file", entryPath, filePath);
+};
+export const isReadingAidMode = (format: string, bookKey: string) => {
+  let isReadingRawPDF =
+    format === "PDF" &&
+    !ConfigService.getAllListConfig("convertPDFBooks").includes(bookKey);
+  return (
+    (ConfigService.getReaderConfig("isParagraphMode") === "yes" ||
+      ConfigService.getReaderConfig("isSpeedReading") === "yes" ||
+      ConfigService.getReaderConfig("isReadingRuler") === "yes") &&
+    !isReadingRawPDF
+  );
+};
+export const getOfficialDictLang = () => {
+  const lang = ConfigService.getReaderConfig("lang");
+  if (lang.startsWith("zh")) {
+    return "chs";
+  } else if (lang.startsWith("ja")) {
+    return "jpn";
+  } else if (lang.startsWith("ko")) {
+    return "kor";
+  } else if (lang.startsWith("fr")) {
+    return "fra";
+  } else if (lang.startsWith("de")) {
+    return "deu";
+  } else if (lang.startsWith("es")) {
+    return "spa";
+  } else if (lang.startsWith("pt")) {
+    return "por";
+  } else {
+    return "eng";
+  }
+};
+export const getOcrCachePath = (
+  bookKey: string,
+  chapterDocIndex: string
+): string => {
+  const electron = window.electronAPI;
+  const dirPath = electron.sendSync("user-data", "ping");
+  const ocrDir = electron.path.join(dirPath, "ocr");
+  if (!electron.fs.existsSync(ocrDir)) {
+    electron.fs.mkdirSync(ocrDir, { recursive: true });
+  }
+  return electron.path.join(ocrDir, bookKey + "_" + chapterDocIndex + ".json");
+};
+export const isReadingRawPDF = (book: Book) => {
+  return (
+    book.format === "PDF" &&
+    !ConfigService.getAllListConfig("convertPDFBooks").includes(book.key)
+  );
+};
+export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {
+  if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
+    return null;
+  }
+  let cache = null;
+  if (isElectron && window.electronAPI && window.electronAPI.fs) {
+    try {
+      const cachePath = getOcrCachePath(bookKey, chapterDocIndex);
+      const fs = window.electronAPI.fs;
+      if (fs.existsSync(cachePath)) {
+        cache = JSON.parse(fs.readFileSync(cachePath, "utf-8")) || {};
+      }
+    } catch (error) {
+      console.error("Failed to load ocr cache:", error);
+    }
+  }
+  return cache;
+};
+
+export const saveOcrCache = (
+  bookKey: string,
+  chapterDocIndex: string,
+  cache: { src: string }
+) => {
+  if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
+    return;
+  }
+  try {
+    const cachePath = getOcrCachePath(bookKey, chapterDocIndex);
+    window.electronAPI.fs.writeFileSync(
+      cachePath,
+      JSON.stringify(cache),
+      "utf-8"
+    );
+  } catch (error) {
+    console.error("Failed to save ocr cache:", error);
+  }
 };

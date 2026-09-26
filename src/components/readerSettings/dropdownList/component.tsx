@@ -190,10 +190,6 @@ class DropdownList extends React.Component<
           currentTextOrientationValue: arr[0],
         });
         this.props.handleTextOrientation(arr[0]);
-        if (arr[0] === "vertical") {
-          this.props.handleHideBackground(true);
-          ConfigService.setReaderConfig("isHideBackground", "yes");
-        }
 
         break;
       case "selectAction":

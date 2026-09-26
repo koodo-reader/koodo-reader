@@ -166,7 +166,13 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                       "books"
                     );
                     if (books.length > 0) {
-                      await exportBooks(books);
+                      const result = await exportBooks(books);
+                      if (result === "success") {
+                        toast.success(this.props.t("Export successful"), { id: "exporting" });
+                      } else if (result === "failed") {
+                        toast.dismiss("exporting");
+                        toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                      }
                     } else {
                       toast(this.props.t("Nothing to export"));
                     }
@@ -194,7 +200,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                     className="select-more-actions select-export-format-submenu"
                     style={
                       this.state.exportSubmenu === "notes"
-                        ? { left: "160px", bottom: "auto", top: "0px" }
+                        ? { left: "160px", top: "auto", bottom: "0px" }
                         : { display: "none" }
                     }
                     onMouseEnter={() => {
@@ -207,7 +213,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                       this.setState({ exportSubmenu: "", isShowExport: false });
                     }}
                   >
-                    {(["csv", "md", "txt", "html", "pdf"] as const).map(
+                    {(["csv", "md", "txt", "html", "pdf", "json"] as const).map(
                       (fmt) => (
                         <span
                           key={fmt}
@@ -229,8 +235,12 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                                 note.notes !== "annotation"
                             );
                             if (notes.length > 0) {
-                              exportNotes(notes, selectedBooks, fmt);
-                              toast.success(this.props.t("Export successful"), { id: "exporting" });
+                              const result = await exportNotes(notes, selectedBooks, fmt);
+                              if (result === "success") {
+                                toast.success(this.props.t("Export successful"), { id: "exporting" });
+                              } else if (result === "failed") {
+                                toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                              }
                             } else {
                               toast(this.props.t("Nothing to export"));
                             }
@@ -240,15 +250,16 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                             });
                           }}
                         >
-                          {fmt === "csv"
-                            ? "CSV"
-                            : fmt === "md"
-                              ? "Markdown"
-                              : fmt === "txt"
-                                ? "TXT"
-                                : fmt === "html"
-                                  ? "HTML"
-                                  : "PDF"}
+                          {
+                            ({
+                              csv: "CSV",
+                              md: "Markdown",
+                              txt: "TXT",
+                              html: "HTML",
+                              pdf: "PDF",
+                              json: "JSON",
+                            } as Record<string, string>)[fmt]
+                          }
                         </span>
                       )
                     )}
@@ -274,7 +285,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                     className="select-more-actions select-export-format-submenu"
                     style={
                       this.state.exportSubmenu === "highlights"
-                        ? { left: "160px", bottom: "auto", top: "0px" }
+                        ? { left: "160px", top: "auto", bottom: "0px" }
                         : { display: "none" }
                     }
                     onMouseEnter={() => {
@@ -287,7 +298,7 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                       this.setState({ exportSubmenu: "", isShowExport: false });
                     }}
                   >
-                    {(["csv", "md", "txt", "html", "pdf"] as const).map(
+                    {(["csv", "md", "txt", "html", "pdf", "json"] as const).map(
                       (fmt) => (
                         <span
                           key={fmt}
@@ -305,8 +316,12 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                               )
                             ).filter((note) => note.notes === "");
                             if (highlights.length > 0) {
-                              exportHighlights(highlights, selectedBooks, fmt);
-                              toast.success(this.props.t("Export successful"), { id: "exporting" });
+                              const result = await exportHighlights(highlights, selectedBooks, fmt);
+                              if (result === "success") {
+                                toast.success(this.props.t("Export successful"), { id: "exporting" });
+                              } else if (result === "failed") {
+                                toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                              }
                             } else {
                               toast(this.props.t("Nothing to export"));
                             }
@@ -316,42 +331,94 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                             });
                           }}
                         >
-                          {fmt === "csv"
-                            ? "CSV"
-                            : fmt === "md"
-                              ? "Markdown"
-                              : fmt === "txt"
-                                ? "TXT"
-                                : fmt === "html"
-                                  ? "HTML"
-                                  : "PDF"}
+                          {
+                            ({
+                              csv: "CSV",
+                              md: "Markdown",
+                              txt: "TXT",
+                              html: "HTML",
+                              pdf: "PDF",
+                              json: "JSON",
+                            } as Record<string, string>)[fmt]
+                          }
                         </span>
                       )
                     )}
                   </div>
                 </div>
-                <span
-                  className="book-manage-title select-book-action"
-                  onClick={async () => {
-                    let selectedBooks = await DatabaseService.getRecordsByKeys(
-                      this.props.selectedBooks,
-                      "books"
-                    );
-                    let dictHistory =
-                      await DatabaseService.getRecordsByBookKeys(
-                        this.props.selectedBooks,
-                        "words"
-                      );
-                    if (dictHistory.length > 0) {
-                      exportDictionaryHistory(dictHistory, selectedBooks);
-                      toast.success(this.props.t("Export successful"), { id: "exporting" });
-                    } else {
-                      toast(this.props.t("Nothing to export"));
+                <div style={{ position: "relative" }}>
+                  <span
+                    className="book-manage-title select-book-action"
+                    onMouseEnter={() => {
+                      this.setState({
+                        exportSubmenu: "words",
+                        isShowExport: true,
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      this.setState({ exportSubmenu: "" });
+                    }}
+                  >
+                    <Trans>Export dictionary history</Trans>
+                    <span className="icon-dropdown icon-export-all"></span>
+                  </span>
+                  <div
+                    className="select-more-actions select-export-format-submenu"
+                    style={
+                      this.state.exportSubmenu === "words"
+                        ? { left: "160px", top: "auto", bottom: "0px" }
+                        : { display: "none" }
                     }
-                  }}
-                >
-                  <Trans>Export dictionary history</Trans>
-                </span>
+                    onMouseEnter={() => {
+                      this.setState({
+                        exportSubmenu: "words",
+                        isShowExport: true,
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      this.setState({ exportSubmenu: "", isShowExport: false });
+                    }}
+                  >
+                    {(["csv", "json"] as const).map((fmt) => (
+                      <span
+                        key={fmt}
+                        className="book-manage-title select-book-action"
+                        onClick={async () => {
+                          let selectedBooks =
+                            await DatabaseService.getRecordsByKeys(
+                              this.props.selectedBooks,
+                              "books"
+                            );
+                          let dictHistory =
+                            await DatabaseService.getRecordsByBookKeys(
+                              this.props.selectedBooks,
+                              "words"
+                            );
+                          if (dictHistory.length > 0) {
+                            const result = await exportDictionaryHistory(
+                              dictHistory,
+                              selectedBooks,
+                              fmt
+                            );
+                            if (result === "success") {
+                              toast.success(this.props.t("Export successful"), { id: "exporting" });
+                            } else if (result === "failed") {
+                              toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                            }
+                          } else {
+                            toast(this.props.t("Nothing to export"));
+                          }
+                          this.setState({
+                            exportSubmenu: "",
+                            isShowExport: false,
+                          });
+                        }}
+                      >
+                        {fmt === "csv" ? "CSV" : "JSON"}
+                      </span>
+                    ))}
+                  </div>
+                </div>
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {

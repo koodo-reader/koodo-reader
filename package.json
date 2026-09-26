@@ -1,7 +1,7 @@
 {
   "name": "koodo-reader",
   "main": "main.js",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "description": "Koodo Reader is a cross-platform ebook reader",
   "author": {
     "name": "App by Troye",
@@ -59,6 +59,7 @@
     "sortablejs": "^1.15.6",
     "sse.js": "^2.6.0",
     "ssh2-sftp-client": "^11.0.0",
+    "tar-stream": "^3.2.1",
     "underscore": "^1.13.7",
     "uuid": "^11.0.5",
     "webdav": "^5.7.1",
@@ -82,7 +83,7 @@
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
     "electron": "^34.0.1",
-    "electron-builder": "^26.0.12",
+    "electron-builder": "^26.16.1",
     "electron-rebuild": "^3.2.9",
     "hard-source-webpack-plugin": "^0.13.1",
     "html-react-parser": "^5.1.10",
@@ -129,6 +130,7 @@
       "src/assets/lib/kookit-extra.min.mjs",
       "src/utils/plugins/main/**/*.js",
       "main.js",
+      "src/utils/main/**/*.js",
       "preload.js",
       "chat-preload.js"
     ],

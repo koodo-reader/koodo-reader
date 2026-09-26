@@ -1,6 +1,7 @@
 import { CommonTool } from "../../assets/lib/kookit-extra-browser.min";
 import type {
   CustomRendererPluginRecord,
+  CustomVoicePluginRecord,
   DictionaryPlugin,
   RendererPluginType,
   TranslatePlugin,
@@ -22,11 +23,32 @@ export const isCustomRendererPlugin = (
   );
 };
 
+export const isCustomVoicePlugin = (
+  plugin: unknown
+): plugin is CustomVoicePluginRecord => {
+  if (!plugin || typeof plugin !== "object") return false;
+  const record = plugin as Record<string, unknown>;
+  return (
+    typeof record.key === "string" &&
+    record.type === "voice" &&
+    typeof record.script === "string" &&
+    typeof record.scriptSHA256 === "string"
+  );
+};
+
 export const verifyCustomRendererPlugin = async (plugin: unknown) => {
   if (!isCustomRendererPlugin(plugin)) return false;
   return (
     (await CommonTool.generateSHA256Hash(plugin.script)) ===
     plugin.scriptSHA256
+  );
+};
+
+export const verifyCustomVoicePlugin = async (plugin: unknown) => {
+  if (!isCustomVoicePlugin(plugin)) return false;
+  return (
+    (await CommonTool.generateSHA256Hash(plugin.script)) ===
+    plugin.scriptSHA256.toLowerCase()
   );
 };
 
