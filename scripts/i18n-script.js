@@ -2,17 +2,17 @@
 const fs = require("fs");
 const path = require("path");
 const localesPath = path.join(__dirname, "../src/assets/locales");
-const folders = fs.readdirSync(localesPath);
+const files = fs.readdirSync(localesPath);
 let resources = [];
-for (let index = 0; index < folders.length; index++) {
-  const folder = folders[index];
-  resources.push(`../src/assets/locales/${folder}`);
+for (let index = 0; index < files.length; index++) {
+  const file = files[index];
+  resources.push(`../src/assets/locales/${file}`);
 }
 console.info(resources);
 let targets = [];
-for (let index = 0; index < folders.length; index++) {
-  const folder = folders[index];
-  targets.push(`../scripts/missing/${folder}`);
+for (let index = 0; index < files.length; index++) {
+  const file = files[index];
+  targets.push(`../scripts/missing/${file}`);
 }
 console.info(targets);
 
