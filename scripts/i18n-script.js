@@ -9,6 +9,12 @@ for (let index = 0; index < folders.length; index++) {
   resources.push(`../src/assets/locales/${folder}`);
 }
 console.info(resources);
+let targets = [];
+for (let index = 0; index < folders.length; index++) {
+  const folder = folders[index];
+  targets.push(`../scripts/locales/${folder}`);
+}
+console.info(targets);
 
 // find the missing terms in the english
 const zhdataRaw = fs.readFileSync(
@@ -62,12 +68,11 @@ for (let index = 0; index < resources.length; index++) {
         missingTerms[term] = referData[term];
       }
     }
-    // console.info(missingTerms);
-    const mergedObj = Object.assign({}, targetData, missingTerms);
-
+    console.info(missingTerms);
+    const target = targets[index];
     fs.writeFileSync(
-      path.join(__dirname, resource),
-      JSON.stringify(mergedObj, null, 2)
+      path.join(__dirname, target),
+      JSON.stringify(missingTerms, null, 2)
     );
   } catch (error) {
     console.error("Error reading JSON file:", error);
