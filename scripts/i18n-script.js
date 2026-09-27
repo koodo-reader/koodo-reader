@@ -12,7 +12,7 @@ console.info(resources);
 let targets = [];
 for (let index = 0; index < folders.length; index++) {
   const folder = folders[index];
-  targets.push(`../scripts/locales/${folder}`);
+  targets.push(`../scripts/missing/${folder}`);
 }
 console.info(targets);
 
@@ -67,6 +67,12 @@ for (let index = 0; index < resources.length; index++) {
         console.info(referData[term]);
         missingTerms[term] = referData[term];
       }
+    }
+    if (
+      resources[index].includes("en.json") ||
+      resources[index].includes("zh-CN.json")
+    ) {
+      continue;
     }
     console.info(missingTerms);
     const target = targets[index];
