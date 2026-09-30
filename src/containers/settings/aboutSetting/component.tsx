@@ -5,7 +5,11 @@ import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../../package.json";
 
-import { getWebsiteUrl, openExternalUrl } from "../../../utils/common";
+import {
+  getWebsiteLang,
+  getWebsiteUrl,
+  openExternalUrl,
+} from "../../../utils/common";
 import copyTextToClipboard from "copy-text-to-clipboard";
 import { isElectron } from "react-device-detect";
 import { checkDeveloperUpdate } from "../../../utils/request/common";
@@ -51,19 +55,10 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                         id: "checking_update",
                       }
                     );
-
-                    let lang = "en";
-                    if (
-                      ConfigService.getReaderConfig("lang") &&
-                      ConfigService.getReaderConfig("lang").startsWith("zh")
-                    ) {
-                      lang = "zh";
-                    }
                     setTimeout(() => {
                       openExternalUrl(
                         getWebsiteUrl() +
-                          "/" +
-                          lang +
+                          getWebsiteLang() +
                           "/download" +
                           "?version=developer"
                       );
@@ -140,14 +135,7 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <span
             className="change-location-button"
             onClick={async () => {
-              if (
-                ConfigService.getReaderConfig("lang") &&
-                ConfigService.getReaderConfig("lang").startsWith("zh")
-              ) {
-                openExternalUrl(getWebsiteUrl() + "/zh/document");
-              } else {
-                openExternalUrl(getWebsiteUrl() + "/en/document");
-              }
+              openExternalUrl(getWebsiteUrl() + getWebsiteLang() + "/document");
             }}
           >
             <Trans>Visit</Trans>
@@ -159,14 +147,7 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <span
             className="change-location-button"
             onClick={async () => {
-              if (
-                ConfigService.getReaderConfig("lang") &&
-                ConfigService.getReaderConfig("lang").startsWith("zh")
-              ) {
-                openExternalUrl(getWebsiteUrl() + "/zh/faq");
-              } else {
-                openExternalUrl(getWebsiteUrl() + "/en/faq");
-              }
+              openExternalUrl(getWebsiteUrl() + getWebsiteLang() + "/faq");
             }}
           >
             <Trans>Visit</Trans>
@@ -178,14 +159,7 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <span
             className="change-location-button"
             onClick={async () => {
-              if (
-                ConfigService.getReaderConfig("lang") &&
-                ConfigService.getReaderConfig("lang").startsWith("zh")
-              ) {
-                openExternalUrl(getWebsiteUrl() + "/zh/support");
-              } else {
-                openExternalUrl(getWebsiteUrl() + "/en/support");
-              }
+              openExternalUrl(getWebsiteUrl() + getWebsiteLang() + "/support");
             }}
           >
             <Trans>Visit</Trans>
@@ -197,14 +171,9 @@ class AboutSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <span
             className="change-location-button"
             onClick={async () => {
-              if (
-                ConfigService.getReaderConfig("lang") &&
-                ConfigService.getReaderConfig("lang").startsWith("zh")
-              ) {
-                openExternalUrl(getWebsiteUrl() + "/zh/use-shortcut");
-              } else {
-                openExternalUrl(getWebsiteUrl() + "/en/use-shortcut");
-              }
+              openExternalUrl(
+                getWebsiteUrl() + getWebsiteLang() + "/use-shortcut"
+              );
             }}
           >
             <Trans>Visit</Trans>

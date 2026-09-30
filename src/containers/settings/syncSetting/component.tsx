@@ -14,6 +14,7 @@ import {
   generateSyncRecord,
   getICloudDrivePath,
   getServerRegion,
+  getWebsiteLang,
   getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
@@ -964,9 +965,11 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     <div
                       className="voice-add-cancel"
                       style={{ borderWidth: 0, lineHeight: "30px" }}
-                      onClick={() => {
-                        openExternalUrl(getWebsiteUrl() + "/zh/add-source");
-                      }}
+                  onClick={() => {
+                    openExternalUrl(
+                      getWebsiteUrl() + getWebsiteLang() + "/add-source"
+                    );
+                  }}
                     >
                       {this.props.t("How to fill out")}
                     </div>
@@ -1270,10 +1273,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 style={{ textDecoration: "underline" }}
                 onClick={() => {
                   openExternalUrl(
-                    getWebsiteUrl() +
-                      (ConfigService.getReaderConfig("lang").startsWith("zh")
-                        ? "/zh/use-sync"
-                        : "/en/use-sync")
+                    getWebsiteUrl() + getWebsiteLang() + "/use-sync"
                   );
                 }}
               >

@@ -30,6 +30,7 @@ import {
   generateSyncRecord,
   getBookPartialMd5,
   getTaskStats,
+  getWebsiteLang,
   getWebsiteUrl,
   openInBrowser,
   scanFolderForNewBooks,
@@ -669,10 +670,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               this.setState({ notificationCount: 0 });
               let deviceUuid = await TokenService.getFingerprint();
               let url =
-                getWebsiteUrl() +
-                (ConfigService.getReaderConfig("lang").startsWith("zh")
-                  ? "/zh/faq"
-                  : "/en/faq") +
+                getWebsiteUrl() + getWebsiteLang() + "/faq" +
                 "?referer=app&version=" +
                 packageJson.version +
                 "&client=web&device=" +
@@ -865,11 +863,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                     let tempToken = response.data.access_token;
                     let deviceUuid = await TokenService.getFingerprint();
                     openInBrowser(
-                      getWebsiteUrl() +
-                        (ConfigService.getReaderConfig("lang").startsWith("zh")
-                          ? "/zh"
-                          : "/en") +
-                        "/pricing?temp_token=" +
+                      getWebsiteUrl() + getWebsiteLang() + "/pricing?temp_token=" +
                         tempToken +
                         "&device_uuid=" +
                         deviceUuid
@@ -908,11 +902,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                     let tempToken = response.data.access_token;
                     let deviceUuid = await TokenService.getFingerprint();
                     openInBrowser(
-                      getWebsiteUrl() +
-                        (ConfigService.getReaderConfig("lang").startsWith("zh")
-                          ? "/zh"
-                          : "/en") +
-                        "/pricing?temp_token=" +
+                      getWebsiteUrl() + getWebsiteLang() + "/pricing?temp_token=" +
                         tempToken +
                         "&device_uuid=" +
                         deviceUuid

@@ -5,6 +5,7 @@ import _ from "underscore";
 
 import toast from "react-hot-toast";
 import {
+  getWebsiteLang,
   getWebsiteUrl,
   handleContextMenu,
   openExternalUrl,
@@ -79,10 +80,7 @@ class SettingDialog extends React.Component<
     this.setState({ availablePlugins: pluginList });
   };
   getPluginTutorialUrl = () =>
-    getWebsiteUrl() +
-    (ConfigService.getReaderConfig("lang")?.startsWith("zh")
-      ? "/zh/plugin"
-      : "/en/plugin");
+    getWebsiteUrl() + getWebsiteLang() + "/plugin";
   handleOpenAddNew = async (scrollToTop = false) => {
     if (window.electronAPI?.runtime?.windowsStore) {
       return;
@@ -329,14 +327,9 @@ class SettingDialog extends React.Component<
                   className="voice-add-cancel"
                   style={{ marginRight: "10px" }}
                   onClick={() => {
-                    if (
-                      ConfigService.getReaderConfig("lang") &&
-                      ConfigService.getReaderConfig("lang").startsWith("zh")
-                    ) {
-                      openExternalUrl(getWebsiteUrl() + "/zh/plugin");
-                    } else {
-                      openExternalUrl(getWebsiteUrl() + "/en/plugin");
-                    }
+                    openExternalUrl(
+                      getWebsiteUrl() + getWebsiteLang() + "/plugin"
+                    );
                   }}
                 >
                   <Trans>Document</Trans>
