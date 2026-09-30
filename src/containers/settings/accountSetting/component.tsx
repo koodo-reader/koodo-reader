@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import {
   formatTimestamp,
   getServerRegion,
+  getWebsiteLang,
   getWebsiteUrl,
   handleAutoCloudSync,
   handleContextMenu,
@@ -701,8 +702,8 @@ class AccountSetting extends React.Component<
               <Trans>
                 {this.props.isAuthed ? "Server region" : "Select server region"}
               </Trans>
-            {ConfigService.getReaderConfig("lang").startsWith("zh") && (
-              <span
+              {ConfigService.getReaderConfig("lang").startsWith("zh") && (
+                <span
                 style={{
                   textDecoration: "underline",
                   marginLeft: "10px",
@@ -713,11 +714,7 @@ class AccountSetting extends React.Component<
                 }}
                 onClick={() => {
                   openInBrowser(
-                    getWebsiteUrl() +
-                      (ConfigService.getReaderConfig("lang").startsWith("zh")
-                        ? "/zh"
-                        : "/en") +
-                      "/server-region"
+                    getWebsiteUrl() + getWebsiteLang() + "/server-region"
                   );
                 }}
               >
@@ -837,11 +834,7 @@ class AccountSetting extends React.Component<
               className="account-login-tips"
               onClick={() => {
                 openInBrowser(
-                  getWebsiteUrl() +
-                    (ConfigService.getReaderConfig("lang").startsWith("zh")
-                      ? "/zh"
-                      : "/en") +
-                    "/pricing"
+                  getWebsiteUrl() + getWebsiteLang() + "/pricing"
                 );
               }}
               style={{
@@ -1083,11 +1076,7 @@ class AccountSetting extends React.Component<
             onClick={async () => {
               if (!this.props.isAuthed) {
                 openInBrowser(
-                  getWebsiteUrl() +
-                    (ConfigService.getReaderConfig("lang").startsWith("zh")
-                      ? "/zh"
-                      : "/en") +
-                    "/pricing"
+                  getWebsiteUrl() + getWebsiteLang() + "/pricing"
                 );
                 return;
               }
@@ -1096,11 +1085,7 @@ class AccountSetting extends React.Component<
                 let tempToken = response.data.access_token;
                 let deviceUuid = await TokenService.getFingerprint();
                 openInBrowser(
-                  getWebsiteUrl() +
-                    (ConfigService.getReaderConfig("lang").startsWith("zh")
-                      ? "/zh"
-                      : "/en") +
-                    "/pricing?temp_token=" +
+                  getWebsiteUrl() + getWebsiteLang() + "/pricing?temp_token=" +
                     tempToken +
                     "&device_uuid=" +
                     deviceUuid

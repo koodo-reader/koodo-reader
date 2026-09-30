@@ -189,11 +189,7 @@ export const confirmBrowserExtensionAsync = async (): Promise<boolean> => {
     "Install extension"
   );
   if (!result) {
-    const lang = ConfigService.getReaderConfig("lang");
-    openExternalUrl(
-      getWebsiteUrl() +
-        (lang?.startsWith("zh") ? "/zh/use-extension" : "/en/use-extension")
-    );
+    openExternalUrl(getWebsiteUrl() + getWebsiteLang() + "/use-extension");
     return false;
   }
   return true;
@@ -898,8 +894,19 @@ export const getDefaultTransTarget = (langList) => {
   );
   return langMap[langTarget || "English"];
 };
-export const WEBSITE_URL = "https://koodoreader.com";
-export const CN_WEBSITE_URL = "https://koodoreader.cn";
+export const WEBSITE_URL = "https://koodoreader.com/";
+export const CN_WEBSITE_URL = "https://koodoreader.cn/";
+export const WEBSITE_LANGS = [
+  "zh",
+  "en",
+  "ja",
+  "ko",
+  "fr",
+  "de",
+  "es",
+  "pt",
+  "ru",
+];
 export const getServerRegion = () => {
   let isUseCN = false;
   if (ConfigService.getItem("serverRegion")) {
@@ -917,6 +924,10 @@ export const getServerRegion = () => {
 };
 export const getWebsiteUrl = () => {
   return getServerRegion() === "china" ? CN_WEBSITE_URL : WEBSITE_URL;
+};
+export const getWebsiteLang = () => {
+  const lang = ConfigService.getReaderConfig("lang") || "en";
+  return WEBSITE_LANGS.find((code) => lang.startsWith(code)) || "en";
 };
 export const formatTimestamp = (timestamp) => {
   if (!timestamp) return "";

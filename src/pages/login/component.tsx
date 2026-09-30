@@ -8,6 +8,7 @@ import { loginList } from "../../constants/loginList";
 import {
   generateSyncRecord,
   getServerRegion,
+  getWebsiteLang,
   getWebsiteUrl,
   handleAutoCloudSync,
   handleContextMenu,
@@ -420,13 +421,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                     }}
                     onClick={() => {
                       openInBrowser(
-                        getWebsiteUrl() +
-                          (ConfigService.getReaderConfig("lang").startsWith(
-                            "zh"
-                          )
-                            ? "/zh"
-                            : "/en") +
-                          "/pricing"
+                        getWebsiteUrl() + getWebsiteLang() + "/pricing"
                       );
                     }}
                   >
