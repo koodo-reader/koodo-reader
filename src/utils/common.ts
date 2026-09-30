@@ -374,6 +374,14 @@ export const vexPasswordInputAsync = (
   });
 };
 
+export const REPORT_REASONS = [
+  "Inaccurate or misleading information",
+  "Inappropriate or offensive content",
+  "Irrelevant or off-topic response",
+  "Privacy concern",
+  "Other",
+];
+
 export const vexSelectAsync = (
   message: string,
   options: { value: string; label: string }[]

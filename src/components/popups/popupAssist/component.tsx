@@ -8,7 +8,8 @@ import {
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
 import { Trans } from "react-i18next";
-import { handleContextMenu } from "../../../utils/common";
+import axios from "axios";
+import { handleContextMenu, REPORT_REASONS, vexSelectAsync } from "../../../utils/common";
 import toast from "react-hot-toast";
 import { saveAs } from "file-saver";
 import { getAnswerStream } from "../../../utils/request/reader";
@@ -442,6 +443,37 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       toast.success(this.props.t("Copied"));
     });
   };
+  handleReportAnswer = async (content: string, index: number) => {
+    const history =
+      this.state.mode === "ask" ? this.state.askHistory : this.state.chatHistory;
+    const userMessage = history
+      .slice(0, index)
+      .reverse()
+      .find((item) => item.role === "user");
+    const reason = await vexSelectAsync(
+      "Report reason",
+      REPORT_REASONS.map((item) => ({ value: item, label: item }))
+    );
+    if (!reason) {
+      return;
+    }
+    toast.loading(this.props.t("Please wait"), { id: "report-feedback" });
+    try {
+      await axios.post("https://api.koodoreader.com/api/llm_report", {
+        answer: content,
+        question: userMessage?.content || "",
+        reason: this.props.t(reason),
+        user_id: (this.props.userInfo?.time_created || "") + "" || "anonymous",
+      });
+      toast.success(this.props.t("Thank you for your feedback"), {
+        id: "report-feedback",
+      });
+    } catch (error) {
+      toast.success(this.props.t("Thank you for your feedback"), {
+        id: "report-feedback",
+      });
+    }
+  };
   handleRenderHistoryMessage = (message: any[]) => {
     return message.map((item, index) => {
       return (
@@ -467,6 +499,26 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
               onClick={() => this.handleCopyAnswer(item.content)}
             >
               <span className="icon-copy-line"></span>
+            </div>
+          )}
+          {item.role === "assistant" && (
+            <div
+              className="popup-assist-copy-button popup-assist-report-button"
+              onClick={() => this.handleReportAnswer(item.content, index)}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4 15s1-1 1-2 4-6 5-6 4 3 4 4c0 0 1-1 1-2V4c0-1-1-1-1-1H4s-1 1-1 1v11z" />
+                <line x1="4" y1="22" x2="4" y2="15" />
+              </svg>
             </div>
           )}
         </div>
