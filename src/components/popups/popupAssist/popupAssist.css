@@ -51,6 +51,10 @@
 .popup-assist-copy-button:hover {
   opacity: 1;
 }
+.popup-assist-report-button {
+  margin-left: 16px;
+  line-height: 1;
+}
 @keyframes spin {
   from {
     transform: rotate(0deg);
