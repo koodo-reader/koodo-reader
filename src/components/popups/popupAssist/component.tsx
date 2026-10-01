@@ -518,6 +518,15 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
               <span className="icon-report" style={{ fontWeight: 500 }}></span>
             </div>
           )}
+          {item.role === "assistant" &&
+            index === message.length - 1 &&
+            this.state.answer === "" && (
+              <div className="popup-assist-disclaimer">
+                {this.props.t(
+                  "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
+                )}
+              </div>
+            )}
         </div>
       );
     });
@@ -826,6 +835,13 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                       {
                         replace: (_domNode) => {},
                       }
+                    )}
+                    {this.state.answer && (
+                      <div className="popup-assist-disclaimer">
+                        {this.props.t(
+                          "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
+                        )}
+                      </div>
                     )}
                   </div>
                 ) : (
