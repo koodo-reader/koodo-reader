@@ -184,6 +184,36 @@
 .annotation-text-size-section {
   margin-bottom: 20px;
 }
+.annotation-quick-erase-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.annotation-quick-erase-container:hover {
+  opacity: 0.85;
+}
+.annotation-quick-erase-title {
+  font-size: 13px;
+}
+.annotation-quick-erase-switch {
+  display: flex;
+  width: 40px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: var(--text-color, #2c2c2c);
+  transition: opacity 0.15s;
+}
+.annotation-quick-erase-button {
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  margin: 2px;
+  background-color: var(--background-color, #fff);
+  transition: transform 0.3s ease;
+}
 .annotation-text-font-select {
   width: 100% !important;
   left: 0 !important;
