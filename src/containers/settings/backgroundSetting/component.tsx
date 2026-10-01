@@ -240,6 +240,7 @@ class BackgroundSetting extends React.Component<
     try {
       const dataUrl = await BackgroundUtil.downloadFeaturedBackground(
         index,
+        this.props.isAuthed,
         (progress) => this.setState({ downloadProgress: progress })
       );
       if (!dataUrl) {
@@ -455,7 +456,10 @@ class BackgroundSetting extends React.Component<
                 {visibleFeatured.has(index) ? (
                   <img
                     className="background-featured-img"
-                    src={BackgroundUtil.getFeaturedThumbnailUrl(index)}
+                    src={BackgroundUtil.getFeaturedThumbnailUrl(
+                      index,
+                      this.props.isAuthed
+                    )}
                     alt={id}
                     loading="lazy"
                   />
@@ -570,7 +574,10 @@ class BackgroundSetting extends React.Component<
             />
             <img
               className="background-preview-image"
-              src={BackgroundUtil.getFeaturedOriginalUrl(previewFeatured)}
+              src={BackgroundUtil.getFeaturedOriginalUrl(
+                previewFeatured,
+                this.props.isAuthed
+              )}
               alt={BackgroundUtil.getFeaturedBackgroundId(previewFeatured)}
               onClick={(e) => e.stopPropagation()}
             />
