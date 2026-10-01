@@ -519,8 +519,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             </div>
           )}
           {item.role === "assistant" &&
-            index === message.length - 1 &&
-            this.state.answer === "" && (
+            index === message.length - 1 && (
               <div className="popup-assist-disclaimer">
                 {this.props.t(
                   "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
@@ -835,13 +834,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                       {
                         replace: (_domNode) => {},
                       }
-                    )}
-                    {this.state.answer && (
-                      <div className="popup-assist-disclaimer">
-                        {this.props.t(
-                          "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
-                        )}
-                      </div>
                     )}
                   </div>
                 ) : (
