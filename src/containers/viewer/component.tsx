@@ -396,6 +396,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           ConfigService.getReaderConfig("annotationEraserWidth") ||
             ERASER_WIDTH_DEFAULT + ""
         ),
+        quickErase: ConfigService.getReaderConfig("annotationQuickErase") ||
+          "no",
         textSize: parseFloat(
           ConfigService.getReaderConfig("annotationTextSize") || "24"
         ),
