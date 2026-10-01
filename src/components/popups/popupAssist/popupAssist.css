@@ -55,6 +55,13 @@
   margin-left: 16px;
   line-height: 1;
 }
+.popup-assist-disclaimer {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0.6;
+  user-select: none;
+}
 @keyframes spin {
   from {
     transform: rotate(0deg);
