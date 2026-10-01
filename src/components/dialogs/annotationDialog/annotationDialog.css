@@ -121,11 +121,24 @@
 .annotation-dialog-tab-icon {
   font-size: 18px;
 }
-.annotation-dialog-tab-shape {
+.annotation-dialog-tab-shape,
+.annotation-dialog-tab-eraser {
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 0;
+}
+.annotation-eraser-width-list {
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.annotation-eraser-preview {
+  display: block;
+  border: 2px solid var(--text-color, currentColor);
+  border-radius: 50%;
+  box-sizing: border-box;
+  max-width: 40px;
+  max-height: 40px;
 }
 .annotation-shape-list {
   display: flex;

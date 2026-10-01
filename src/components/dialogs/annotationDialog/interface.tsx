@@ -17,6 +17,7 @@ export interface AnnotationDialogState {
   annotationShapeType: string;
   annotationShapeColor: string;
   annotationShapeWidth: number;
+  annotationEraserWidth: number;
   annotationTextSize: number;
   annotationTextFont: string;
   annotationTextColor: string;

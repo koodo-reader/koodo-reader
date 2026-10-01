@@ -15,6 +15,7 @@ import PageWidget from "../pageWidget";
 import {
   BRUSH_COLORS,
   BRUSH_WIDTHS,
+  ERASER_WIDTHS,
   HIGHLIGHTER_COLORS,
   HIGHLIGHTER_WIDTHS,
   SHAPE_TYPES,
@@ -390,6 +391,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         shapeWidth: parseFloat(
           ConfigService.getReaderConfig("annotationShapeWidth") ||
             BRUSH_WIDTHS[1] + ""
+        ),
+        eraserWidth: parseFloat(
+          ConfigService.getReaderConfig("annotationEraserWidth") ||
+            ERASER_WIDTHS[2] + ""
         ),
         textSize: parseFloat(
           ConfigService.getReaderConfig("annotationTextSize") || "24"
