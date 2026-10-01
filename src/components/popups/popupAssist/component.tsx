@@ -518,14 +518,13 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
               <span className="icon-report" style={{ fontWeight: 500 }}></span>
             </div>
           )}
-          {item.role === "assistant" &&
-            index === message.length - 1 && (
-              <div className="popup-assist-disclaimer">
-                {this.props.t(
-                  "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
-                )}
-              </div>
-            )}
+          {item.role === "assistant" && index === message.length - 1 && (
+            <div className="popup-assist-disclaimer">
+              {this.props.t(
+                "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
+              )}
+            </div>
+          )}
         </div>
       );
     });
@@ -573,6 +572,19 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     } else {
       this.setState({ chatHistory: [] });
     }
+  };
+  handleSendQuestion = () => {
+    if (this.state.answer || this.state.isWaiting) {
+      return;
+    }
+    this.handleNewQuestion(this.state.inputQuestion);
+    this.setState({ inputQuestion: "" }, () => {
+      const el = this.textareaRef.current;
+      if (el) {
+        el.style.height = "40px";
+        el.style.overflowY = "hidden";
+      }
+    });
   };
   handleNewQuestion = (question: string) => {
     if (this.state.mode === "ask") {
@@ -897,6 +909,18 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                       marginRight: "10px",
                       marginBottom: "0px",
                     }}
+                    onKeyDown={(
+                      event: React.KeyboardEvent<HTMLTextAreaElement>
+                    ) => {
+                      if (
+                        event.key === "Enter" &&
+                        (event.ctrlKey || event.metaKey) &&
+                        !(event.nativeEvent as any).isComposing
+                      ) {
+                        event.preventDefault();
+                        this.handleSendQuestion();
+                      }
+                    }}
                     onContextMenu={() => {
                       handleContextMenu("trans-add-content-box");
                     }}
@@ -914,19 +938,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
                   />
                   <div
                     className="popup-assistant-send-button"
-                    onClick={() => {
-                      if (this.state.answer || this.state.isWaiting) {
-                        return;
-                      }
-                      this.handleNewQuestion(this.state.inputQuestion);
-                      this.setState({ inputQuestion: "" }, () => {
-                        const el = this.textareaRef.current;
-                        if (el) {
-                          el.style.height = "40px";
-                          el.style.overflowY = "hidden";
-                        }
-                      });
-                    }}
+                    onClick={this.handleSendQuestion}
                   >
                     {this.props.t("Send")}
                   </div>
