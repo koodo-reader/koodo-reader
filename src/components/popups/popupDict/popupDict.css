@@ -238,3 +238,11 @@
   line-height: 22px;
   user-select: text;
 }
+
+.popup-assist-disclaimer {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0.6;
+  user-select: none;
+}
