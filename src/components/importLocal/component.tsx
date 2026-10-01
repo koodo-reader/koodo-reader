@@ -22,12 +22,12 @@ import {
   getTextRules,
   supportedFormats,
   throttle,
+  vexComfirmAsync,
   vexPromptAsync,
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit.min";
 import { analyzeBookTitle } from "../../utils/request/reader";
-import i18n from "../../i18n";
 
 // Convert supportedFormats to react-dropzone v14+ accept format
 // Key is MIME type, value is array of file extensions
@@ -50,17 +50,6 @@ const escapeHtml = (text: string) =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-const vexConfirmWithMessage = (message: string) => {
-  return new Promise<boolean>((resolve) => {
-    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
-    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
-    window.vex.dialog.confirm({
-      unsafeMessage: message,
-      contentClassName: "custom-confirm-width",
-      callback: (value: any) => resolve(!!value),
-    });
-  });
-};
 // Comic 封面规则与 kookit comic-book.js 保持一致：取自然排序后的第一张图片
 const COMIC_IMAGE_EXTS = [
   ".jpg",
@@ -121,13 +110,15 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       this.importUrlHandler = async (config: any) => {
         const rawUrl = config?.url;
         if (!rawUrl || typeof rawUrl !== "string") return;
-        const confirmed = await vexConfirmWithMessage(
+        const confirmed = await vexComfirmAsync(
           this.props.t(
             "Do you want to download and import the book from this URL?"
           ) +
-            "<br><br><span style='word-break:break-all'>" +
+            "<br><span style='word-break:break-all'>" +
             escapeHtml(rawUrl) +
-            "</span>"
+            "</span>",
+          "Confirm",
+          "Cancel"
         );
         if (!confirmed) {
           toast.error(this.props.t("Import cancelled"));
