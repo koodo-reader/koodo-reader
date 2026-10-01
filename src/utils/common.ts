@@ -1929,7 +1929,10 @@ export const BRUSH_COLORS = [
 ];
 
 export const BRUSH_WIDTHS = [2, 4, 8, 14];
-export const ERASER_WIDTHS = [10, 18, 28, 40];
+export const ERASER_WIDTH_MIN = 6;
+export const ERASER_WIDTH_MAX = 60;
+export const ERASER_WIDTH_STEP = 2;
+export const ERASER_WIDTH_DEFAULT = 24;
 export const HIGHLIGHTER_COLORS = [
   "#FFE54C",
   "#6FFB6B",

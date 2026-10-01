@@ -6,7 +6,10 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   BRUSH_COLORS,
   BRUSH_WIDTHS,
-  ERASER_WIDTHS,
+  ERASER_WIDTH_DEFAULT,
+  ERASER_WIDTH_MAX,
+  ERASER_WIDTH_MIN,
+  ERASER_WIDTH_STEP,
   HIGHLIGHTER_COLORS,
   HIGHLIGHTER_WIDTHS,
   SHAPE_TYPES,
@@ -54,7 +57,7 @@ class AnnotationDialog extends React.Component<
       ),
       annotationEraserWidth: parseFloat(
         ConfigService.getReaderConfig("annotationEraserWidth") ||
-          ERASER_WIDTHS[2] + ""
+          ERASER_WIDTH_DEFAULT + ""
       ),
       annotationTextSize: parseFloat(
         ConfigService.getReaderConfig("annotationTextSize") || "24"
@@ -153,6 +156,12 @@ class AnnotationDialog extends React.Component<
       eraserWidth: width,
     });
     ConfigService.setReaderConfig("annotationEraserWidth", width + "");
+  };
+  handleEraserWidthRelease = () => {
+    ConfigService.setReaderConfig(
+      "annotationEraserWidth",
+      this.state.annotationEraserWidth + ""
+    );
   };
   handleSelectTextSize = (size: number) => {
     this.setState({ annotationTextSize: size });
@@ -346,22 +355,10 @@ class AnnotationDialog extends React.Component<
             onClick={() => this.handleSelectTab("eraser")}
             title={this.props.t("Eraser")}
           >
-            <span className="annotation-dialog-tab-eraser">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21" />
-                <path d="M22 21H7" />
-                <path d="m5 11 9 9" />
-              </svg>
-            </span>
+            <span
+              className="icon-eraser-line annotation-dialog-tab-icon"
+              style={{ fontSize: "20px" }}
+            ></span>
           </span>
         </div>
 
@@ -571,31 +568,28 @@ class AnnotationDialog extends React.Component<
             </div>
           </>
         ) : annotationStyle === "eraser" ? (
-          <>
-            <div className="annotation-dialog-section">
-              <div className="annotation-dialog-label">
-                {this.props.t("Eraser size")}
-              </div>
-              <ul className="annotation-width-list annotation-eraser-width-list">
-                {ERASER_WIDTHS.map((width) => (
-                  <li
-                    key={width}
-                    className={
-                      annotationEraserWidth === width
-                        ? "annotation-width-item active-annotation-width-item"
-                        : "annotation-width-item"
-                    }
-                    onClick={() => this.handleSelectEraserWidth(width)}
-                  >
-                    <span
-                      className="annotation-eraser-preview"
-                      style={{ width: width + "px", height: width + "px" }}
-                    ></span>
-                  </li>
-                ))}
-              </ul>
+          <div className="annotation-dialog-section annotation-text-size-section">
+            <div className="annotation-opacity-label">
+              <span>{this.props.t("Eraser size")}</span>
+              <span className="annotation-opacity-value">
+                {annotationEraserWidth}
+              </span>
             </div>
-          </>
+            <input
+              type="range"
+              min={ERASER_WIDTH_MIN}
+              max={ERASER_WIDTH_MAX}
+              step={ERASER_WIDTH_STEP}
+              value={annotationEraserWidth}
+              className="annotation-opacity-slider"
+              onChange={(e) =>
+                this.handleSelectEraserWidth(parseFloat(e.target.value))
+              }
+              onPointerUp={this.handleEraserWidthRelease}
+              onMouseUp={this.handleEraserWidthRelease}
+              style={{ width: "100%" }}
+            />
+          </div>
         ) : (
           <>
             <div className="annotation-dialog-section annotation-text-size-section">
