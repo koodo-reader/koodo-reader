@@ -54,6 +54,8 @@
   "Dictionary": "Dictionary",
   "Shadow": "Shadow",
   "Import failed": "Import failed",
+  "Do you want to download and import the book from this URL?": "Do you want to download and import the book from this URL?",
+  "Import cancelled": "Import cancelled",
   "New version available": "New version available",
   "New version": "New version",
   "Customize": "Customize",

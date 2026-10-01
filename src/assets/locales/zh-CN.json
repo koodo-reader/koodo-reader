@@ -471,6 +471,8 @@
   "Highlight": "高亮",
   "Copying successful": "复制成功",
   "Copy ": "复制",
+  "Do you want to download and import the book from this URL?": "您是否要从此 URL 下载并导入图书？",
+  "Import cancelled": "导入已取消",
   "Text color": "文字颜色",
   "Eraser": "橡皮擦",
   "Eraser size": "橡皮擦大小",

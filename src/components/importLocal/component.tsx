@@ -27,6 +27,7 @@ import {
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit.min";
 import { analyzeBookTitle } from "../../utils/request/reader";
+import i18n from "../../i18n";
 
 // Convert supportedFormats to react-dropzone v14+ accept format
 // Key is MIME type, value is array of file extensions
@@ -42,6 +43,24 @@ const supportedFormatsAccept = supportedFormats.reduce<
 }, {});
 declare var window: any;
 let clickFilePath = "";
+const escapeHtml = (text: string) =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+const vexConfirmWithMessage = (message: string) => {
+  return new Promise<boolean>((resolve) => {
+    window.vex.dialog.buttons.YES.text = i18n.t("Confirm");
+    window.vex.dialog.buttons.NO.text = i18n.t("Cancel");
+    window.vex.dialog.confirm({
+      unsafeMessage: message,
+      contentClassName: "custom-confirm-width",
+      callback: (value: any) => resolve(!!value),
+    });
+  });
+};
 // Comic 封面规则与 kookit comic-book.js 保持一致：取自然排序后的第一张图片
 const COMIC_IMAGE_EXTS = [
   ".jpg",
@@ -64,6 +83,7 @@ const getComicImageExt = (name: string) => {
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   resizeHandler: (() => void) | null = null;
+  importUrlHandler: ((config: any) => void) | null = null;
 
   constructor(props: ImportLocalProps) {
     super(props);
@@ -98,11 +118,24 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         false
       );
 
-      ipcRenderer.on("import-url-from-link", (config: any) => {
+      this.importUrlHandler = async (config: any) => {
         const rawUrl = config?.url;
         if (!rawUrl || typeof rawUrl !== "string") return;
+        const confirmed = await vexConfirmWithMessage(
+          this.props.t(
+            "Do you want to download and import the book from this URL?"
+          ) +
+            "<br><br><span style='word-break:break-all'>" +
+            escapeHtml(rawUrl) +
+            "</span>"
+        );
+        if (!confirmed) {
+          toast.error(this.props.t("Import cancelled"));
+          return;
+        }
         this.handleURLImport(undefined as any, rawUrl);
-      });
+      };
+      ipcRenderer.on("import-url-from-link", this.importUrlHandler);
     }
     this.resizeHandler = throttle(() => {
       this.setState({ width: document.body.clientWidth });
@@ -111,6 +144,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.props.handleImportBookFunc(this.getMd5WithBrowser);
   }
   componentWillUnmount() {
+    if (this.importUrlHandler) {
+      window.electronAPI.removeListener(
+        "import-url-from-link",
+        this.importUrlHandler
+      );
+      this.importUrlHandler = null;
+    }
     if (this.resizeHandler) {
       window.removeEventListener("resize", this.resizeHandler);
       this.resizeHandler = null;
