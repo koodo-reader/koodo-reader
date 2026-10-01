@@ -537,6 +537,13 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                       )}
                     </div>
                   )}
+                  {!this.state.isAiWaiting && this.state.aiAnswer && (
+                    <div className="popup-assist-disclaimer">
+                      {this.props.t(
+                        "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
