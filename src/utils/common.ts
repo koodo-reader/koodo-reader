@@ -1586,10 +1586,15 @@ export const splitSentences = (text: string, maxLength?: number) => {
     if (sentence.length <= resolvedMaxLength) return [sentence];
 
     // Try splitting by common punctuation marks (Chinese and Western)
-    const parts = sentence
-      .split(/(?<=[,，;；:：、…])/)
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
+    // Avoid lookbehind (?<=) which is unsupported on low-version iOS Safari
+    const rawParts = sentence.split(/([,，;；:：、…])/);
+    const parts = [] as string[];
+    for (let i = 0; i < rawParts.length; i += 2) {
+      const merged = (rawParts[i] + (rawParts[i + 1] ?? "")).trim();
+      if (merged.length > 0) {
+        parts.push(merged);
+      }
+    }
 
     if (parts.length > 1) {
       // Greedily merge parts to minimize the number of resulting chunks
