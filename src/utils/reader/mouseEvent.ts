@@ -72,7 +72,12 @@ export const getSelectionSentence = (
       let fullText = (el as Element)?.textContent || "";
       let selectedText = sel.toString().trim();
       // Split on sentence-ending punctuation to find the sentence
-      let sentences = fullText.split(/(?<=[.!?。！？])\s*/);
+      // Avoid lookbehind (?<=) which is unsupported on low-version iOS Safari
+      const rawParts = fullText.split(/([.!?。！？])\s*/);
+      const sentences: string[] = [];
+      for (let i = 0; i < rawParts.length; i += 2) {
+        sentences.push(rawParts[i] + (rawParts[i + 1] ?? ""));
+      }
       for (let s of sentences) {
         if (s.includes(selectedText)) {
           return s.trim();
