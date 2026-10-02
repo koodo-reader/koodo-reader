@@ -502,7 +502,9 @@ export function throttle<T extends (...args: any[]) => void>(
 export const scrollContents = (chapterTitle: string, chapterHref: string) => {
   let contentBody = document.getElementsByClassName("navigation-body")[0];
   if (!contentBody) return;
-  let contentList = contentBody.getElementsByClassName("book-content-name");
+  let contentList = contentBody.getElementsByClassName(
+    "book-content-title-label"
+  );
   let targetContent = Array.from(contentList).filter((item) => {
     item.setAttribute("style", "");
     let dataHref = (item as any).getAttribute("data-href");
