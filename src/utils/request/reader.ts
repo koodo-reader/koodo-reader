@@ -7,6 +7,7 @@ import i18n from "../../i18n";
 import { handleExitApp } from "./common";
 import {
   getServerRegion,
+  getWebsiteLang,
   getWebsiteUrl,
   openExternalUrl,
   openInBrowser,
@@ -222,11 +223,7 @@ export const getTTSAudio = async (
           isShowingQuotaAlert = false;
           quotaAlertDismissTime = Date.now();
           openExternalUrl(
-            getWebsiteUrl() +
-              (ConfigService.getReaderConfig("lang").startsWith("zh")
-                ? "/zh"
-                : "/en") +
-              "/tts-quota"
+            getWebsiteUrl() + getWebsiteLang() + "/tts-quota"
           );
         } else {
           isShowingQuotaAlert = false;
@@ -253,11 +250,7 @@ export const getTTSAudio = async (
             let tempToken = response.data.access_token;
             let deviceUuid = await TokenService.getFingerprint();
             openInBrowser(
-              getWebsiteUrl() +
-                (ConfigService.getReaderConfig("lang").startsWith("zh")
-                  ? "/zh"
-                  : "/en") +
-                "/pricing?temp_token=" +
+              getWebsiteUrl() + getWebsiteLang() + "/pricing?temp_token=" +
                 tempToken +
                 "&device_uuid=" +
                 deviceUuid

@@ -32,5 +32,7 @@ export const proFeatures = [
   "AI reading aids (chapter summaries, outline, multi-role narration)",
   "Natural text-to-speech (82 languages, 569 voices)",
   "OCR text recognition for scanned PDFs",
+  "Unlock Pro features on all Platform",
   "Send to Kindle",
+  "Priority support",
 ];

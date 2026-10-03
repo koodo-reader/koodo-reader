@@ -7,6 +7,7 @@ import supportAnimation from "../../../assets/lotties/support.json";
 import exitAnimation from "../../../assets/lotties/exit.json";
 import {
   getServerRegion,
+  getWebsiteLang,
   getWebsiteUrl,
   handleContextMenu,
   openInBrowser,
@@ -364,13 +365,7 @@ class SupportDialog extends React.Component<
                               let deviceUuid =
                                 await TokenService.getFingerprint();
                               openInBrowser(
-                                getWebsiteUrl() +
-                                  (ConfigService.getReaderConfig(
-                                    "lang"
-                                  ).startsWith("zh")
-                                    ? "/zh"
-                                    : "/en") +
-                                  "/pricing?temp_token=" +
+                                getWebsiteUrl() + getWebsiteLang() + "/pricing?temp_token=" +
                                   tempToken +
                                   "&device_uuid=" +
                                   deviceUuid

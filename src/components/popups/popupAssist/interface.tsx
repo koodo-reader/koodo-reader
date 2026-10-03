@@ -11,6 +11,7 @@ export interface PopupAssistProps {
   quoteText: string;
   plugins: PluginModel[];
   isAuthed: boolean;
+  userInfo?: any;
   isDockedRight: boolean;
   handleQuoteText: (quoteText: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;

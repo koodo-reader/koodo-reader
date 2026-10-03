@@ -62,10 +62,14 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
 
   const percentage = getPercentage();
 
-  var htmlString = props.book.description;
-  var div = document.createElement("div");
-  div.innerHTML = htmlString;
-  var textContent = div.textContent || div.innerText;
+  // Do NOT assign book-supplied HTML to innerHTML, even on a detached element,
+  // as that parses and fires inline event handlers (see CVE class in epubs).
+  // Use DOMParser instead, which never executes scripts or event handlers.
+  const textContent = props.book.description
+    ? new DOMParser()
+        .parseFromString(props.book.description, "text/html")
+        .documentElement.textContent.trim()
+    : "";
 
   const actionProps = { left, top };
 
