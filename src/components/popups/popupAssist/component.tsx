@@ -467,7 +467,6 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     }
     toast.loading(this.props.t("Please wait"), { id: "report-feedback" });
     try {
-      console.log("Reporting answer:", this.props.userInfo);
       await axios.post("https://api.koodoreader.com/api/llm_report", {
         answer: content,
         question: userMessage?.content || "",
