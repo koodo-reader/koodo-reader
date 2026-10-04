@@ -8,7 +8,6 @@ import {
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
 import { Trans } from "react-i18next";
-import axios from "axios";
 import {
   handleContextMenu,
   REPORT_REASONS,
@@ -17,7 +16,7 @@ import {
 import toast from "react-hot-toast";
 import { saveAs } from "file-saver";
 import { getAnswerStream } from "../../../utils/request/reader";
-import { chatStream } from "../../../utils/request/common";
+import { chatStream, llmReport } from "../../../utils/request/common";
 import { marked } from "marked";
 import { sampleQuestion } from "../../../constants/settingList";
 class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
@@ -467,7 +466,7 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     }
     toast.loading(this.props.t("Please wait"), { id: "report-feedback" });
     try {
-      await axios.post("https://api.koodoreader.com/api/llm_report", {
+      await llmReport({
         answer: content,
         question: userMessage?.content || "",
         reason: this.props.t(reason),
