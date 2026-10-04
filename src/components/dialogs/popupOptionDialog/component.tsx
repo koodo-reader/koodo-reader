@@ -102,7 +102,7 @@ class PopupOptionDialog extends React.Component<
                   style={item.enabled ? {} : { opacity: 0.6 }}
                 >
                   <span
-                    className={`icon-${item.icon} popup-option-dialog-item-icon`}
+                    className={`icon-${item.icon} ${item.name}-icon popup-option-dialog-item-icon`}
                   ></span>
                   <span className="popup-option-dialog-item-label">
                     {this.props.t(item.title)}
