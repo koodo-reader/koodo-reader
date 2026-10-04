@@ -66,7 +66,7 @@ class PopupOptionDialog extends React.Component<
   render() {
     return (
       <div
-        className="backup-page-container popup-option-dialog-container"
+        className="edit-dialog-container popup-option-dialog-container"
         onDragEnter={(event) => {
           event.preventDefault();
           event.stopPropagation();
