@@ -23,7 +23,7 @@ const initState = {
   isSelectBook: false,
   message: "Addition successful",
   refreshBookKey: "",
-  settingMode: "general",
+  settingMode: "account",
   settingDrive: "",
   selectedBooks: [],
 };
