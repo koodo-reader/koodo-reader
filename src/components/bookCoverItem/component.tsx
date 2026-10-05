@@ -66,9 +66,9 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
   // as that parses and fires inline event handlers (see CVE class in epubs).
   // Use DOMParser instead, which never executes scripts or event handlers.
   const textContent = props.book.description
-    ? new DOMParser()
+    ? (new DOMParser()
         .parseFromString(props.book.description, "text/html")
-        .documentElement.textContent.trim()
+        .documentElement.textContent?.trim() ?? "")
     : "";
 
   const actionProps = { left, top };
