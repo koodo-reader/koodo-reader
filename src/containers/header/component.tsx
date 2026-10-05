@@ -670,7 +670,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               this.setState({ notificationCount: 0 });
               let deviceUuid = await TokenService.getFingerprint();
               let url =
-                getWebsiteUrl() + getWebsiteLang() + "/faq" +
+                getWebsiteUrl() +
+                getWebsiteLang() +
+                "/faq" +
                 "?referer=app&version=" +
                 packageJson.version +
                 "&client=web&device=" +
@@ -752,6 +754,31 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               ></span>
             </span>
           </div>
+          {!this.props.isAuthed && (
+            <div
+              className="setting-icon-container"
+              onClick={() => {
+                this.props.handleSetting(true);
+                this.props.handleSettingMode("account");
+                this.props.handleAbout(false);
+              }}
+              onMouseLeave={() => {
+                this.props.handleAbout(false);
+              }}
+              style={{ marginTop: "2px", fontWeight: "bold" }}
+            >
+              <span
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content={this.props.t("Register / Login")}
+                data-tooltip-place="left"
+              >
+                <span
+                  className="icon-account setting-icon"
+                  style={{ fontSize: "25px" }}
+                ></span>
+              </span>
+            </div>
+          )}
           <div
             className="setting-icon-container"
             onClick={async () => {
@@ -863,7 +890,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                     let tempToken = response.data.access_token;
                     let deviceUuid = await TokenService.getFingerprint();
                     openInBrowser(
-                      getWebsiteUrl() + getWebsiteLang() + "/pricing?temp_token=" +
+                      getWebsiteUrl() +
+                        getWebsiteLang() +
+                        "/pricing?temp_token=" +
                         tempToken +
                         "&device_uuid=" +
                         deviceUuid
@@ -902,7 +931,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                     let tempToken = response.data.access_token;
                     let deviceUuid = await TokenService.getFingerprint();
                     openInBrowser(
-                      getWebsiteUrl() + getWebsiteLang() + "/pricing?temp_token=" +
+                      getWebsiteUrl() +
+                        getWebsiteLang() +
+                        "/pricing?temp_token=" +
                         tempToken +
                         "&device_uuid=" +
                         deviceUuid
