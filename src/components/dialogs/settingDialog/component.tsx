@@ -112,6 +112,7 @@ class SettingDialog extends React.Component<
 
           {/* 第一组 */}
           <div className="setting-dialog-sidebar-group">
+            {this.renderSidebarItem("account", "icon-user", "Account", "18px")}
             {this.renderSidebarItem("general", "icon-setting", "General", "")}
             {this.renderSidebarItem("data", "icon-archive", "Data", "15px")}
             {this.renderSidebarItem(
@@ -140,7 +141,6 @@ class SettingDialog extends React.Component<
               "More settings",
               "13px"
             )}
-            {this.renderSidebarItem("account", "icon-user", "Account", "18px")}
             {this.renderSidebarItem("about", "icon-detail", "About", "18px")}
           </div>
 
