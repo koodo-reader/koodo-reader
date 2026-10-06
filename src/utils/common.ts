@@ -1735,6 +1735,10 @@ export const prepareThirdConfig = async (service: string, config: any) => {
     // Get access token
     let refreshToken = config.refresh_token;
     let res = await refreshThirdToken(service, refreshToken);
+    //网络问题不移除数据源
+    if (res && res.code === 503) {
+      return {};
+    }
     if (!res.data || !res.data.access_token) {
       toast.error(
         i18n.t(
