@@ -249,6 +249,18 @@ export const getNotification = async () => {
   // }
   return res;
 };
+export const llmReport = async (params: {
+  answer: string;
+  question: string;
+  reason: string;
+  user_id: string;
+}) => {
+  const res = await axios.post(
+    "https://api.koodoreader.com/api/llm_report",
+    params
+  );
+  return res;
+};
 export const parseWithSystemOCR = async (imageBase64: string) => {
   if (!isElectron) {
     return;

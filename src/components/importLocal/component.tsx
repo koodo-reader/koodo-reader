@@ -22,6 +22,7 @@ import {
   getTextRules,
   supportedFormats,
   throttle,
+  vexComfirmAsync,
   vexPromptAsync,
 } from "../../utils/common";
 import DatabaseService from "../../utils/storage/databaseService";
@@ -42,6 +43,13 @@ const supportedFormatsAccept = supportedFormats.reduce<
 }, {});
 declare var window: any;
 let clickFilePath = "";
+const escapeHtml = (text: string) =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 // Comic 封面规则与 kookit comic-book.js 保持一致：取自然排序后的第一张图片
 const COMIC_IMAGE_EXTS = [
   ".jpg",
@@ -64,6 +72,7 @@ const getComicImageExt = (name: string) => {
 
 class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   resizeHandler: (() => void) | null = null;
+  importUrlHandler: ((config: any) => void) | null = null;
 
   constructor(props: ImportLocalProps) {
     super(props);
@@ -98,11 +107,26 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         false
       );
 
-      ipcRenderer.on("import-url-from-link", (config: any) => {
+      this.importUrlHandler = async (config: any) => {
         const rawUrl = config?.url;
         if (!rawUrl || typeof rawUrl !== "string") return;
+        const confirmed = await vexComfirmAsync(
+          this.props.t(
+            "Do you want to download and import the book from this URL?"
+          ) +
+            "<br><span style='word-break:break-all'>" +
+            escapeHtml(rawUrl) +
+            "</span>",
+          "Confirm",
+          "Cancel"
+        );
+        if (!confirmed) {
+          toast.error(this.props.t("Import cancelled"));
+          return;
+        }
         this.handleURLImport(undefined as any, rawUrl);
-      });
+      };
+      ipcRenderer.on("import-url-from-link", this.importUrlHandler);
     }
     this.resizeHandler = throttle(() => {
       this.setState({ width: document.body.clientWidth });
@@ -111,6 +135,13 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     this.props.handleImportBookFunc(this.getMd5WithBrowser);
   }
   componentWillUnmount() {
+    if (this.importUrlHandler) {
+      window.electronAPI.removeListener(
+        "import-url-from-link",
+        this.importUrlHandler
+      );
+      this.importUrlHandler = null;
+    }
     if (this.resizeHandler) {
       window.removeEventListener("resize", this.resizeHandler);
       this.resizeHandler = null;

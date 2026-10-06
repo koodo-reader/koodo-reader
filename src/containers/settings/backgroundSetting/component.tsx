@@ -19,6 +19,7 @@ class BackgroundSetting extends React.Component<
 > {
   fileInputRef = React.createRef<HTMLInputElement>();
   featuredObserver: IntersectionObserver | null = null;
+  pendingFeaturedElements: HTMLDivElement[] = [];
 
   constructor(props: SettingInfoProps) {
     super(props);
@@ -49,6 +50,7 @@ class BackgroundSetting extends React.Component<
 
   setupFeaturedObserver = () => {
     if (typeof IntersectionObserver === "undefined") return;
+    const root = document.querySelector(".setting-dialog-info");
     this.featuredObserver = new IntersectionObserver(
       (entries) => {
         const newlyVisible: number[] = [];
@@ -57,7 +59,8 @@ class BackgroundSetting extends React.Component<
           const index = Number(
             (entry.target as HTMLElement).dataset.featuredIndex
           );
-          if (index && !this.state.visibleFeatured.has(index)) {
+          if (Number.isNaN(index)) return;
+          if (!this.state.visibleFeatured.has(index)) {
             newlyVisible.push(index);
           }
         });
@@ -70,8 +73,12 @@ class BackgroundSetting extends React.Component<
           }));
         }
       },
-      { rootMargin: "300px 0px" }
+      { root, rootMargin: "120px 0px" }
     );
+    this.pendingFeaturedElements.forEach((el) =>
+      this.featuredObserver!.observe(el)
+    );
+    this.pendingFeaturedElements = [];
   };
 
   registerFeaturedItem = (index: number) => (el: HTMLDivElement | null) => {
@@ -79,10 +86,8 @@ class BackgroundSetting extends React.Component<
     el.dataset.featuredIndex = String(index);
     if (this.featuredObserver) {
       this.featuredObserver.observe(el);
-    } else if (!this.state.visibleFeatured.has(index)) {
-      this.setState((prev) => ({
-        visibleFeatured: new Set([...prev.visibleFeatured, index]),
-      }));
+    } else {
+      this.pendingFeaturedElements.push(el);
     }
   };
 
@@ -240,6 +245,7 @@ class BackgroundSetting extends React.Component<
     try {
       const dataUrl = await BackgroundUtil.downloadFeaturedBackground(
         index,
+        this.props.isAuthed,
         (progress) => this.setState({ downloadProgress: progress })
       );
       if (!dataUrl) {
@@ -455,7 +461,10 @@ class BackgroundSetting extends React.Component<
                 {visibleFeatured.has(index) ? (
                   <img
                     className="background-featured-img"
-                    src={BackgroundUtil.getFeaturedThumbnailUrl(index)}
+                    src={BackgroundUtil.getFeaturedThumbnailUrl(
+                      index,
+                      this.props.isAuthed
+                    )}
                     alt={id}
                     loading="lazy"
                   />
@@ -570,7 +579,10 @@ class BackgroundSetting extends React.Component<
             />
             <img
               className="background-preview-image"
-              src={BackgroundUtil.getFeaturedOriginalUrl(previewFeatured)}
+              src={BackgroundUtil.getFeaturedOriginalUrl(
+                previewFeatured,
+                this.props.isAuthed
+              )}
               alt={BackgroundUtil.getFeaturedBackgroundId(previewFeatured)}
               onClick={(e) => e.stopPropagation()}
             />

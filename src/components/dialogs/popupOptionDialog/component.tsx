@@ -66,7 +66,7 @@ class PopupOptionDialog extends React.Component<
   render() {
     return (
       <div
-        className="backup-page-container popup-option-dialog-container"
+        className="edit-dialog-container popup-option-dialog-container"
         onDragEnter={(event) => {
           event.preventDefault();
           event.stopPropagation();
@@ -102,7 +102,7 @@ class PopupOptionDialog extends React.Component<
                   style={item.enabled ? {} : { opacity: 0.6 }}
                 >
                   <span
-                    className={`icon-${item.icon} popup-option-dialog-item-icon`}
+                    className={`icon-${item.icon} ${item.name}-icon popup-option-dialog-item-icon`}
                   ></span>
                   <span className="popup-option-dialog-item-label">
                     {this.props.t(item.title)}

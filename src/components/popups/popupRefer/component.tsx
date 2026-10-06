@@ -5,6 +5,7 @@ import { getIframeDoc } from "../../../utils/reader/docUtil";
 import { isReadingRawPDF, openExternalUrl } from "../../../utils/common";
 import Parser from "html-react-parser";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import toast from "react-hot-toast";
 
 class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
   highlighter: any;
@@ -179,6 +180,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
                   navigator.clipboard.writeText(
                     this.state.footnote.replace(/<[^>]+>/g, "").trim()
                   );
+                  toast.success(this.props.t("Copying successful"));
                 }}
               >
                 {this.props.t("Copy")}

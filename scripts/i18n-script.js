@@ -2,13 +2,19 @@
 const fs = require("fs");
 const path = require("path");
 const localesPath = path.join(__dirname, "../src/assets/locales");
-const folders = fs.readdirSync(localesPath);
+const files = fs.readdirSync(localesPath);
 let resources = [];
-for (let index = 0; index < folders.length; index++) {
-  const folder = folders[index];
-  resources.push(`../src/assets/locales/${folder}`);
+for (let index = 0; index < files.length; index++) {
+  const file = files[index];
+  resources.push(`../src/assets/locales/${file}`);
 }
 console.info(resources);
+let targets = [];
+for (let index = 0; index < files.length; index++) {
+  const file = files[index];
+  targets.push(`../scripts/missing/${file}`);
+}
+console.info(targets);
 
 // find the missing terms in the english
 const zhdataRaw = fs.readFileSync(
@@ -62,12 +68,17 @@ for (let index = 0; index < resources.length; index++) {
         missingTerms[term] = referData[term];
       }
     }
-    // console.info(missingTerms);
-    const mergedObj = Object.assign({}, targetData, missingTerms);
-
+    if (
+      resources[index].includes("en.json") ||
+      resources[index].includes("zh-CN.json")
+    ) {
+      continue;
+    }
+    console.info(missingTerms);
+    const target = targets[index];
     fs.writeFileSync(
-      path.join(__dirname, resource),
-      JSON.stringify(mergedObj, null, 2)
+      path.join(__dirname, target),
+      JSON.stringify(missingTerms, null, 2)
     );
   } catch (error) {
     console.error("Error reading JSON file:", error);
