@@ -12,6 +12,7 @@ import {
 } from "../../../assets/lib/kookit-extra-browser.min";
 import FontUtil from "../../../utils/file/fontUtil";
 import toast from "react-hot-toast";
+import { isReadingRawPDF } from "../../../utils/common";
 declare var window: any;
 class DropdownList extends React.Component<
   DropdownListProps,
@@ -221,7 +222,7 @@ class DropdownList extends React.Component<
   }
   render() {
     const isTxt = this.props.currentBook?.format?.toUpperCase() === "TXT";
-    const isPDF = this.props.currentBook?.format?.toUpperCase() === "PDF";
+    const isPDF = isReadingRawPDF(this.props.currentBook);
     const renderParagraphCharacter = () => {
       return dropdownList
         .filter((item) => {
