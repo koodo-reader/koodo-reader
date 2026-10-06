@@ -312,7 +312,9 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
               className="book-content-name content-chapter-title"
               data-href={item.href}
             >
-              <span>{item.label}</span>
+              <span className="book-content-title-label" data-href={item.href}>
+                {item.label}
+              </span>
               <span
                 style={{ marginRight: "20px", opacity: 0.6, fontSize: "12px" }}
               >

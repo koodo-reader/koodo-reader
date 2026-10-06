@@ -6,6 +6,7 @@ import {
   confirmBrowserExtensionAsync,
   generateSyncRecord,
   getStorageLocation,
+  getWebsiteLang,
   getWebsiteUrl,
   reloadManager,
   vexComfirmAsync,
@@ -141,13 +142,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       },
       "",
       labels,
-      getWebsiteUrl() +
-        `/${
-          ConfigService.getReaderConfig("lang") &&
-          ConfigService.getReaderConfig("lang").startsWith("zh")
-            ? "zh"
-            : "en"
-        }/add-thirdparty`
+      getWebsiteUrl() + getWebsiteLang() + "/add-thirdparty"
     );
 
     if (!result) {
@@ -265,11 +260,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         defaultValues,
         "",
         labelsMap,
-        getWebsiteUrl() +
-          (ConfigService.getReaderConfig("lang").startsWith("zh")
-            ? "/zh"
-            : "/en") +
-          "/add-thirdparty"
+        getWebsiteUrl() + getWebsiteLang() + "/add-thirdparty"
       );
 
       if (!result) {

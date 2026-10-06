@@ -1,5 +1,5 @@
 import { isElectron } from "react-device-detect";
-import { getStorageLocation } from "../common";
+import { getServerRegion, getStorageLocation } from "../common";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { LocalFileManager } from "./localFile";
 import localforage from "localforage";
@@ -208,12 +208,20 @@ class BackgroundUtil {
     return `official-background-${index}`;
   }
 
-  static getFeaturedThumbnailUrl(index: number): string {
-    return `https://storage.koodoreader.com/backgrounds/desktop-thumbnail/official-background-${index}.png`;
+  static getFeaturedThumbnailUrl(index: number, isAuthed: boolean): string {
+    const base =
+      getServerRegion() === "china" && isAuthed
+        ? "https://storage.koodoreader.cn"
+        : "https://storage.koodoreader.com";
+    return `${base}/backgrounds/desktop-thumbnail/official-background-${index}.png`;
   }
 
-  static getFeaturedOriginalUrl(index: number): string {
-    return `https://storage.koodoreader.com/backgrounds/desktop/official-background-${index}.png`;
+  static getFeaturedOriginalUrl(index: number, isAuthed: boolean): string {
+    const base =
+      getServerRegion() === "china" && isAuthed
+        ? "https://storage.koodoreader.cn"
+        : "https://storage.koodoreader.com";
+    return `${base}/backgrounds/desktop/official-background-${index}.png`;
   }
 
   /**
@@ -222,11 +230,12 @@ class BackgroundUtil {
    */
   static async downloadFeaturedBackground(
     index: number,
+    isAuthed: boolean,
     onProgress?: (progress: number) => void
   ): Promise<string | null> {
     const id = this.getFeaturedBackgroundId(index);
     const extension = "png";
-    const response = await fetch(this.getFeaturedOriginalUrl(index), {
+    const response = await fetch(this.getFeaturedOriginalUrl(index, isAuthed), {
       headers: {
         "Cache-Control": "no-transform",
         "Accept-Encoding": "identity",
@@ -265,9 +274,8 @@ class BackgroundUtil {
     await this.saveImageBuffer(id, arrayBuffer, extension);
     const base64 = Buffer.from(arrayBuffer).toString("base64");
     const dataUrl = `data:image/${extension};base64,${base64}`;
-    const { backgroundColor, textColor } = await this.analyzeImageColors(
-      dataUrl
-    );
+    const { backgroundColor, textColor } =
+      await this.analyzeImageColors(dataUrl);
     this.saveImageMeta(id, {
       name: `${i18n.t("Official background")} ${index}`,
       extension,

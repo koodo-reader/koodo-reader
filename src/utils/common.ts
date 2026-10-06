@@ -189,11 +189,7 @@ export const confirmBrowserExtensionAsync = async (): Promise<boolean> => {
     "Install extension"
   );
   if (!result) {
-    const lang = ConfigService.getReaderConfig("lang");
-    openExternalUrl(
-      getWebsiteUrl() +
-        (lang?.startsWith("zh") ? "/zh/use-extension" : "/en/use-extension")
-    );
+    openExternalUrl(getWebsiteUrl() + getWebsiteLang() + "/use-extension");
     return false;
   }
   return true;
@@ -378,6 +374,14 @@ export const vexPasswordInputAsync = (
   });
 };
 
+export const REPORT_REASONS = [
+  "Inaccurate or misleading information",
+  "Inappropriate or offensive content",
+  "Irrelevant or off-topic response",
+  "Privacy concern",
+  "Other",
+];
+
 export const vexSelectAsync = (
   message: string,
   options: { value: string; label: string }[]
@@ -498,7 +502,9 @@ export function throttle<T extends (...args: any[]) => void>(
 export const scrollContents = (chapterTitle: string, chapterHref: string) => {
   let contentBody = document.getElementsByClassName("navigation-body")[0];
   if (!contentBody) return;
-  let contentList = contentBody.getElementsByClassName("book-content-name");
+  let contentList = contentBody.getElementsByClassName(
+    "book-content-title-label"
+  );
   let targetContent = Array.from(contentList).filter((item) => {
     item.setAttribute("style", "");
     let dataHref = (item as any).getAttribute("data-href");
@@ -898,8 +904,19 @@ export const getDefaultTransTarget = (langList) => {
   );
   return langMap[langTarget || "English"];
 };
-export const WEBSITE_URL = "https://koodoreader.com";
-export const CN_WEBSITE_URL = "https://koodoreader.cn";
+export const WEBSITE_URL = "https://koodoreader.com/";
+export const CN_WEBSITE_URL = "https://koodoreader.cn/";
+export const WEBSITE_LANGS = [
+  "zh",
+  "en",
+  "ja",
+  "ko",
+  "fr",
+  "de",
+  "es",
+  "pt",
+  "ru",
+];
 export const getServerRegion = () => {
   let isUseCN = false;
   if (ConfigService.getItem("serverRegion")) {
@@ -917,6 +934,10 @@ export const getServerRegion = () => {
 };
 export const getWebsiteUrl = () => {
   return getServerRegion() === "china" ? CN_WEBSITE_URL : WEBSITE_URL;
+};
+export const getWebsiteLang = () => {
+  const lang = ConfigService.getReaderConfig("lang") || "en";
+  return WEBSITE_LANGS.find((code) => lang.startsWith(code)) || "en";
 };
 export const formatTimestamp = (timestamp) => {
   if (!timestamp) return "";
@@ -1565,10 +1586,15 @@ export const splitSentences = (text: string, maxLength?: number) => {
     if (sentence.length <= resolvedMaxLength) return [sentence];
 
     // Try splitting by common punctuation marks (Chinese and Western)
-    const parts = sentence
-      .split(/(?<=[,，;；:：、…])/)
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
+    // Avoid lookbehind (?<=) which is unsupported on low-version iOS Safari
+    const rawParts = sentence.split(/([,，;；:：、…])/);
+    const parts = [] as string[];
+    for (let i = 0; i < rawParts.length; i += 2) {
+      const merged = (rawParts[i] + (rawParts[i + 1] ?? "")).trim();
+      if (merged.length > 0) {
+        parts.push(merged);
+      }
+    }
 
     if (parts.length > 1) {
       // Greedily merge parts to minimize the number of resulting chunks
@@ -1709,6 +1735,10 @@ export const prepareThirdConfig = async (service: string, config: any) => {
     // Get access token
     let refreshToken = config.refresh_token;
     let res = await refreshThirdToken(service, refreshToken);
+    //网络问题不移除数据源
+    if (res && res.code === 503) {
+      return {};
+    }
     if (!res.data || !res.data.access_token) {
       toast.error(
         i18n.t(
@@ -1910,6 +1940,10 @@ export const BRUSH_COLORS = [
 ];
 
 export const BRUSH_WIDTHS = [2, 4, 8, 14];
+export const ERASER_WIDTH_MIN = 6;
+export const ERASER_WIDTH_MAX = 60;
+export const ERASER_WIDTH_STEP = 2;
+export const ERASER_WIDTH_DEFAULT = 24;
 export const HIGHLIGHTER_COLORS = [
   "#FFE54C",
   "#6FFB6B",

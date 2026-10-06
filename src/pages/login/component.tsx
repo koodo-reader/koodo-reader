@@ -8,6 +8,7 @@ import { loginList } from "../../constants/loginList";
 import {
   generateSyncRecord,
   getServerRegion,
+  getWebsiteLang,
   getWebsiteUrl,
   handleAutoCloudSync,
   handleContextMenu,
@@ -407,7 +408,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                   })}
                   <div className="login-billing-info">
                     {this.props.t(
-                      "7-day free trial upon registration, then billed annually"
+                      "7-day free trial upon registration, then billed $4.99 per Year"
                     )}
                   </div>
                   <div
@@ -420,13 +421,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                     }}
                     onClick={() => {
                       openInBrowser(
-                        getWebsiteUrl() +
-                          (ConfigService.getReaderConfig("lang").startsWith(
-                            "zh"
-                          )
-                            ? "/zh"
-                            : "/en") +
-                          "/pricing"
+                        getWebsiteUrl() + getWebsiteLang() + "/pricing"
                       );
                     }}
                   >
@@ -497,7 +492,10 @@ class Login extends React.Component<LoginProps, LoginState> {
                     }
                   })
                   .filter((item) => {
-                    if (isElectron && window.electronAPI?.runtime?.platform !== "darwin") {
+                    if (
+                      isElectron &&
+                      window.electronAPI?.runtime?.platform !== "darwin"
+                    ) {
                       return item.value !== "icloud";
                     }
                     return true;

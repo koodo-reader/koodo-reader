@@ -260,6 +260,9 @@ if (!singleInstance) {
     // Handle deep link passed via second-instance argv
     const deepLink = argv.find((arg) => arg.startsWith("koodo-reader://"));
     if (deepLink) {
+      if (deepLink === pendingDeepLink) {
+        pendingDeepLink = null;
+      }
       handleCallback(deepLink);
     }
   });
@@ -2125,6 +2128,8 @@ app.on("open-url", (event, url) => {
   event.preventDefault();
   handleCallback(url);
 });
+var lastDeepLinkUrl = null;
+var lastDeepLinkAt = 0;
 const handleCallback = (url) => {
   try {
     // 检查 URL 是否有效
@@ -2132,6 +2137,16 @@ const handleCallback = (url) => {
       console.error("Invalid URL format:", url);
       return;
     }
+
+    // 同一链接 5 秒内重复派发时忽略，避免确认框弹出两次
+    // （Windows 冷启动时 pendingDeepLink 与 second-instance 可能都到达）
+    const now = Date.now();
+    if (url === lastDeepLinkUrl && now - lastDeepLinkAt < 5000) {
+      console.info("Ignored duplicate deep link callback");
+      return;
+    }
+    lastDeepLinkUrl = url;
+    lastDeepLinkAt = now;
 
     // 解析 URL
     const parsedUrl = new URL(url);

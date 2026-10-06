@@ -50,6 +50,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       isShowUrl: false,
       aiAnswer: "",
       isAiWaiting: false,
+      isAiStreaming: false,
     };
   }
 
@@ -162,7 +163,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         systemPrompt = systemPrompt.replace("{to}", targetLang);
         let config: any = plugin.config || {};
         this.aiTextAccumulator = "";
-        this.setState({ aiAnswer: "", isAiWaiting: true });
+        this.setState({ aiAnswer: "", isAiWaiting: true, isAiStreaming: true });
         this.startUpdateInterval();
         await chatStream(
           config.endpoint,
@@ -185,7 +186,11 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
         );
         this.stopUpdateInterval();
         this.aiTextAccumulator = "";
-        this.setState({ isAiWaiting: false, dictText: " " });
+        this.setState({
+          isAiWaiting: false,
+          isAiStreaming: false,
+          dictText: " ",
+        });
         return "";
       } else if (
         ConfigService.getReaderConfig("dictService") &&
@@ -288,6 +293,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       console.error(error);
       this.setState({
         dictText: this.props.t("Error happened"),
+        isAiStreaming: false,
       });
       return "";
     }
@@ -295,7 +301,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
   handleDictionaryStream = async (text: string, isFullAnalysis: boolean) => {
     try {
       this.aiTextAccumulator = "";
-      this.setState({ aiAnswer: "", isAiWaiting: true });
+      this.setState({ aiAnswer: "", isAiWaiting: true, isAiStreaming: true });
       this.startUpdateInterval();
       let res = await getDictionaryStream(
         text,
@@ -315,12 +321,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
       this.stopUpdateInterval();
       this.aiTextAccumulator = "";
       if (res && res.done) {
-        this.setState({ isAiWaiting: false });
+        this.setState({ isAiWaiting: false, isAiStreaming: false });
       }
     } catch (error) {
       this.stopUpdateInterval();
       this.aiTextAccumulator = "";
-      this.setState({ isAiWaiting: false });
+      this.setState({ isAiWaiting: false, isAiStreaming: false });
       console.error(error);
     }
   };
@@ -534,6 +540,15 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                         {
                           replace: (_domNode) => {},
                         }
+                      )}
+                    </div>
+                  )}
+                  {!this.state.isAiWaiting &&
+                    !this.state.isAiStreaming &&
+                    this.state.aiAnswer && (
+                    <div className="popup-assist-disclaimer">
+                      {this.props.t(
+                        "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
                       )}
                     </div>
                   )}
