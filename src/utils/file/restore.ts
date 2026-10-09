@@ -23,6 +23,7 @@ const VALID_BOOK_FORMATS = new Set([
   "azw",
   "txt",
   "fb2",
+  "chm",
   "cbr",
   "cbz",
   "cbt",

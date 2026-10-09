@@ -21,14 +21,16 @@ const emptyCover = (props) => (
                       ? "#5e7fff"
                       : props.format === "FB2"
                         ? "#0063b1"
-                        : props.format === "DOCX"
-                          ? " #118CD9"
-                          : props.format === "CBT" ||
-                              props.format === "CBZ" ||
-                              props.format === "CB7" ||
-                              props.format === "CBR"
-                            ? "#00b6c2"
-                            : "#118CD9",
+                        : props.format === "CHM"
+                          ? "#8e6fce"
+                          : props.format === "DOCX"
+                            ? " #118CD9"
+                            : props.format === "CBT" ||
+                                props.format === "CBZ" ||
+                                props.format === "CB7" ||
+                                props.format === "CBR"
+                              ? "#00b6c2"
+                              : "#118CD9",
       }}
     >
       {props.format || "BOOK"}

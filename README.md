@@ -43,6 +43,7 @@
   - DRM-free Mobipocket (**.mobi**) and Kindle (**.azw3**, **.azw**)
   - Plain-text (**.txt**)
   - FictionBook (**.fb2**)
+  - Compiled HTML Help (**.chm**)
   - Comic book archive (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - Rich text (**.md**, **.docx**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)

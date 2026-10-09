@@ -51,6 +51,7 @@ export const supportedFormats = [
   ".docx",
   ".md",
   ".fb2",
+  ".chm",
   ".cbz",
   ".cbt",
   ".cbr",

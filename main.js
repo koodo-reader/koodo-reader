@@ -1285,6 +1285,7 @@ const createMainWin = () => {
             "docx",
             "md",
             "fb2",
+            "chm",
             "cbz",
             "cbt",
             "cbr",

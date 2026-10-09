@@ -219,6 +219,11 @@
         "icon": "assets/icons/fb2",
         "role": "Viewer",
         "mimeType": "application/x-fictionbook+xml"
+      },
+      {
+        "ext": "chm",
+        "role": "Viewer",
+        "mimeType": "application/vnd.ms-htmlhelp"
       }
     ],
     "extends": null,
