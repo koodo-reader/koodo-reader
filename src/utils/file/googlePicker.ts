@@ -54,6 +54,7 @@ export class GooglePickerUtil {
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
           "text/markdown", // .md
           "application/x-fictionbook+xml", // .fb2
+          "application/vnd.ms-htmlhelp", // .chm
           "application/vnd.comicbook+zip", // .cbz
           "application/vnd.comicbook+tar", // .cbt
           "application/vnd.comicbook-rar", // .cbr

@@ -228,6 +228,8 @@ func bookMime(format string) string {
 		return "text/plain"
 	case "fb2":
 		return "application/x-fictionbook+xml"
+	case "chm":
+		return "application/vnd.ms-htmlhelp"
 	default:
 		return "application/octet-stream"
 	}
