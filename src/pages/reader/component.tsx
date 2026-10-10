@@ -192,7 +192,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
       this.props.handleFetchPercentage(book);
       let readerMode =
-        isReadingRawPDF(book) || book.format.startsWith("CB")
+        isReadingRawPDF(book) ||
+        book.format.startsWith("CB") ||
+        book.format === "PPTX"
           ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
           : ConfigService.getReaderConfig("readerMode") || "double";
       this.props.handleReaderMode(readerMode);

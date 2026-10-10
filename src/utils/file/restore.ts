@@ -28,6 +28,7 @@ const VALID_BOOK_FORMATS = new Set([
   "cbz",
   "cbt",
   "cb7",
+  "pptx",
   "md",
   "docx",
   "html",

@@ -12,7 +12,9 @@ export const getIframeDoc = (format: string, bookKey?: string) => {
     return [];
   }
   const isPaginated =
-    (format === "PDF" || format?.startsWith("CB")) &&
+    (format === "PDF" ||
+      format?.startsWith("CB") ||
+      format === "PPTX") &&
     !(
       bookKey &&
       format === "PDF" &&

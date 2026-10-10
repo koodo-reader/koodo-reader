@@ -43,6 +43,7 @@
   - Texto puro (**.txt**)
   - FictionBook (**.fb2**)
   - Arquivo de quadrinhos (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
+  - Apresentação do PowerPoint (**.pptx**)
   - Texto rico (**.md**, **.docx**)
   - Hiper texto (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Plataformas suportadas: **Windows**, **macOS**, **Linux** e **Web**
