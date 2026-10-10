@@ -45,6 +45,7 @@
   - FictionBook (**.fb2**)
   - Compiled HTML Help (**.chm**)
   - Comic book archive (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
+  - PowerPoint presentation (**.pptx**)
   - Rich text (**.md**, **.docx**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux**, **Android**, **iOS** and **Web**

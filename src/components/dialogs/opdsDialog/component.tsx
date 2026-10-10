@@ -65,6 +65,8 @@ const DOWNLOAD_TYPES: Record<string, string> = {
   "application/vnd.comicbook-rar": "cbr",
   "application/x-cb7": "cb7",
   "application/vnd.comicbook+7z": "cb7",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+    "pptx",
 };
 
 const ACQUISITION_RELS = [

@@ -1290,6 +1290,7 @@ const createMainWin = () => {
             "cbt",
             "cbr",
             "cb7",
+            "pptx",
           ],
         },
       ],

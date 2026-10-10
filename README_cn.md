@@ -43,6 +43,7 @@
   - Kindle (**.azw3**, **.mobi**, **.azw**)
   - 纯文本 (**.txt**)
   - 漫画 (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
+  - PowerPoint 演示文稿 (**.pptx**)
   - 富文本 (**.md**, **.docx**)
   - FB2 (**.fb2**)
   - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
