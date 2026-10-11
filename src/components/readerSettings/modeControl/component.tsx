@@ -2,7 +2,7 @@ import React from "react";
 import "./modeControl.css";
 import { ModeControlProps, ModeControlState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { isReadingRawPDF } from "../../../utils/common";
+import { isPaginatedBook } from "../../../utils/common";
 import { Trans } from "react-i18next";
 
 class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
@@ -12,13 +12,7 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
   }
 
   handleChangeMode = (mode: string) => {
-    if (
-      isReadingRawPDF(this.props.currentBook) ||
-      this.props.currentBook.format.startsWith("CB") ||
-      this.props.currentBook.format === "PPTX" ||
-      this.props.currentBook.format === "XPS" ||
-      this.props.currentBook.format === "OXPS"
-    ) {
+    if (isPaginatedBook(this.props.currentBook)) {
       ConfigService.setReaderConfig("pdfReaderMode", mode);
     } else {
       ConfigService.setReaderConfig("readerMode", mode);
