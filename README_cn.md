@@ -45,6 +45,7 @@
   - 漫画 (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - PowerPoint 演示文稿 (**.pptx**)
   - XPS 文档 (**.xps**, **.oxps**)
+  - DjVu 文档 (**.djvu**, **.djv**)
   - 富文本 (**.md**, **.docx**, **.rtf**)
   - FB2 (**.fb2**)
   - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)

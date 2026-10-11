@@ -1294,6 +1294,8 @@ const createMainWin = () => {
             "pptx",
             "xps",
             "oxps",
+            "djvu",
+            "djv",
           ],
         },
       ],

@@ -71,6 +71,7 @@ const DOWNLOAD_TYPES: Record<string, string> = {
     "pptx",
   "application/oxps": "oxps",
   "application/vnd.ms-xpsdocument": "xps",
+  "image/vnd.djvu": "djvu",
 };
 
 const ACQUISITION_RELS = [

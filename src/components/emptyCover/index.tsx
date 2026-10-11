@@ -37,7 +37,10 @@ const emptyCover = (props) => (
                                 : props.format === "XPS" ||
                                     props.format === "OXPS"
                                   ? "#744DA9"
-                                  : "#118CD9",
+                                  : props.format === "DJVU" ||
+                                      props.format === "DJV"
+                                    ? "#003366"
+                                    : "#118CD9",
       }}
     >
       {props.format || "BOOK"}

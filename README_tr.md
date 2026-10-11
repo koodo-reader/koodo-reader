@@ -45,6 +45,7 @@
   - Çizgi roman arşivi (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - PowerPoint sunumu (**.pptx**)
   - XPS belgesi (**.xps**, **.oxps**)
+  - DjVu belgesi (**.djvu**, **.djv**)
   - Zengin metin (**.md**, **.docx**, **.rtf**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform desteği: **Windows**, **macOS**, **Linux**, **Android**, **iOS** ve **Web**

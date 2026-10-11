@@ -45,6 +45,7 @@
   - हास्य पुस्तक पुरालेख (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - PowerPoint प्रस्तुति (**.pptx**)
   - XPS दस्तावेज़ (**.xps**, **.oxps**)
+  - DjVu दस्तावेज़ (**.djvu**, **.djv**)
   - रिच टेक्स्ट (**.md**, **.docx**, **.rtf**)
   - हाइपरटेक्सट (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - प्लेटफार्म: **Windows**, **macOS**, **Linux** and **Web**

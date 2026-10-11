@@ -64,6 +64,7 @@ export class GooglePickerUtil {
           "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx
           "application/oxps", // .oxps
           "application/vnd.ms-xpsdocument", // .xps
+          "image/vnd.djvu", // .djvu, .djv
         ].join(",")
       );
 
