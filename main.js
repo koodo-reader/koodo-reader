@@ -1283,6 +1283,7 @@ const createMainWin = () => {
             "xhtml",
             "mhtml",
             "docx",
+            "rtf",
             "md",
             "fb2",
             "chm",

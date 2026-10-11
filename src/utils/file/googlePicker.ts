@@ -52,6 +52,8 @@ export class GooglePickerUtil {
           "application/x-mobipocket-ebook", // .mobi
           "application/vnd.amazon.ebook", // .azw, .azw3
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+          "application/rtf", // .rtf
+          "text/rtf", // .rtf
           "text/markdown", // .md
           "application/x-fictionbook+xml", // .fb2
           "application/vnd.ms-htmlhelp", // .chm

@@ -49,6 +49,8 @@ const DOWNLOAD_TYPES: Record<string, string> = {
   "message/rfc822": "mhtml",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
     "docx",
+  "application/rtf": "rtf",
+  "text/rtf": "rtf",
   "text/markdown": "md",
   "text/x-markdown": "md",
   "application/fb2+zip": "fb2",

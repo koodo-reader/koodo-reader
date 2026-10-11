@@ -25,7 +25,9 @@ const emptyCover = (props) => (
                           ? "#8e6fce"
                           : props.format === "DOCX"
                             ? " #118CD9"
-                            : props.format === "CBT" ||
+                            : props.format === "RTF"
+                              ? "#0F766E"
+                              : props.format === "CBT" ||
                                 props.format === "CBZ" ||
                                 props.format === "CB7" ||
                                 props.format === "CBR"

@@ -45,7 +45,7 @@
   - Arquivo de quadrinhos (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - Apresentação do PowerPoint (**.pptx**)
   - Documento XPS (**.xps**, **.oxps**)
-  - Texto rico (**.md**, **.docx**)
+  - Texto rico (**.md**, **.docx**, **.rtf**)
   - Hiper texto (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Plataformas suportadas: **Windows**, **macOS**, **Linux** e **Web**
 - Guarde seus dados no **OneDrive**, **Google Drive**, **Dropbox**, **iCloud**, **Yandex Disk**, **FTP**, **SFTP**, **WebDAV**, **SMB**, **S3**, **S3 Compatible**

@@ -49,6 +49,7 @@ export const supportedFormats = [
   ".xhtml",
   ".mhtml",
   ".docx",
+  ".rtf",
   ".md",
   ".fb2",
   ".chm",
