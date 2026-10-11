@@ -31,6 +31,8 @@ const VALID_BOOK_FORMATS = new Set([
   "pptx",
   "xps",
   "oxps",
+  "djvu",
+  "djv",
   "md",
   "docx",
   "rtf",

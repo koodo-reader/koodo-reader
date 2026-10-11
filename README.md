@@ -47,6 +47,7 @@
   - Comic book archive (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - PowerPoint presentation (**.pptx**)
   - XML Paper Specification (**.xps**, **.oxps**)
+  - DjVu document (**.djvu**, **.djv**)
   - Rich text (**.md**, **.docx**, **.rtf**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux**, **Android**, **iOS** and **Web**

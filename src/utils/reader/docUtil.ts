@@ -16,7 +16,9 @@ export const getIframeDoc = (format: string, bookKey?: string) => {
       format?.startsWith("CB") ||
       format === "PPTX" ||
       format === "XPS" ||
-      format === "OXPS") &&
+      format === "OXPS" ||
+      format === "DJVU" ||
+      format === "DJV") &&
     !(
       bookKey &&
       format === "PDF" &&

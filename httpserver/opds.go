@@ -230,6 +230,8 @@ func bookMime(format string) string {
 		return "application/vnd.ms-xpsdocument"
 	case "oxps":
 		return "application/oxps"
+	case "djvu", "djv":
+		return "image/vnd.djvu"
 	case "txt":
 		return "text/plain"
 	case "fb2":

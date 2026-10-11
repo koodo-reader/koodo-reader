@@ -46,6 +46,7 @@
   - Arsip komik (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - Presentasi PowerPoint (**.pptx**)
   - Dokumen XPS (**.xps**, **.oxps**)
+  - Dokumen DjVu (**.djvu**, **.djv**)
   - Teks kaya (**.md**, **.docx**, **.rtf**)
   - Hiperteks (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform yang didukung: **Windows**, **macOS**, **Linux**, dan **Web**
