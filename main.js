@@ -1291,6 +1291,8 @@ const createMainWin = () => {
             "cbr",
             "cb7",
             "pptx",
+            "xps",
+            "oxps",
           ],
         },
       ],

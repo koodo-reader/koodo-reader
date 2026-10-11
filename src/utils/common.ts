@@ -57,6 +57,8 @@ export const supportedFormats = [
   ".cbr",
   ".cb7",
   ".pptx",
+  ".xps",
+  ".oxps",
 ];
 export interface HighlightValue {
   styleType: string;

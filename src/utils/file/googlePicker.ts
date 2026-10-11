@@ -60,6 +60,8 @@ export class GooglePickerUtil {
           "application/vnd.comicbook-rar", // .cbr
           "application/vnd.comicbook+7z", // .cb7
           "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx
+          "application/oxps", // .oxps
+          "application/vnd.ms-xpsdocument", // .xps
         ].join(",")
       );
 
