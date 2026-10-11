@@ -15,7 +15,9 @@ class ModeControl extends React.Component<ModeControlProps, ModeControlState> {
     if (
       isReadingRawPDF(this.props.currentBook) ||
       this.props.currentBook.format.startsWith("CB") ||
-      this.props.currentBook.format === "PPTX"
+      this.props.currentBook.format === "PPTX" ||
+      this.props.currentBook.format === "XPS" ||
+      this.props.currentBook.format === "OXPS"
     ) {
       ConfigService.setReaderConfig("pdfReaderMode", mode);
     } else {

@@ -45,6 +45,7 @@
   - FictionBook (**.fb2**)
   - Arsip komik (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - Presentasi PowerPoint (**.pptx**)
+  - Dokumen XPS (**.xps**, **.oxps**)
   - Teks kaya (**.md**, **.docx**)
   - Hiperteks (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform yang didukung: **Windows**, **macOS**, **Linux**, dan **Web**

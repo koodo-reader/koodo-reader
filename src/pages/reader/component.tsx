@@ -194,7 +194,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       let readerMode =
         isReadingRawPDF(book) ||
         book.format.startsWith("CB") ||
-        book.format === "PPTX"
+        book.format === "PPTX" ||
+        book.format === "XPS" ||
+        book.format === "OXPS"
           ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
           : ConfigService.getReaderConfig("readerMode") || "double";
       this.props.handleReaderMode(readerMode);

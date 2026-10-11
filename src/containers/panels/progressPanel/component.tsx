@@ -119,7 +119,9 @@ class ProgressPanel extends React.Component<
     let readerMode =
       isReadingRawPDF(this.props.currentBook) ||
       this.props.currentBook.format.startsWith("CB") ||
-      this.props.currentBook.format === "PPTX"
+      this.props.currentBook.format === "PPTX" ||
+      this.props.currentBook.format === "XPS" ||
+      this.props.currentBook.format === "OXPS"
         ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
         : ConfigService.getReaderConfig("readerMode") || "double";
     return (

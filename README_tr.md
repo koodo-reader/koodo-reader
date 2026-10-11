@@ -44,6 +44,7 @@
   - FictionBook (**.fb2**)
   - Çizgi roman arşivi (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - PowerPoint sunumu (**.pptx**)
+  - XPS belgesi (**.xps**, **.oxps**)
   - Zengin metin (**.md**, **.docx**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform desteği: **Windows**, **macOS**, **Linux**, **Android**, **iOS** ve **Web**

@@ -67,6 +67,8 @@ const DOWNLOAD_TYPES: Record<string, string> = {
   "application/vnd.comicbook+7z": "cb7",
   "application/vnd.openxmlformats-officedocument.presentationml.presentation":
     "pptx",
+  "application/oxps": "oxps",
+  "application/vnd.ms-xpsdocument": "xps",
 };
 
 const ACQUISITION_RELS = [

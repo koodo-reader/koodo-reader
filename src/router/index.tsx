@@ -155,6 +155,8 @@ const Router = () => {
         <Route component={HtmlReader} path="/cbz" />
         <Route component={HtmlReader} path="/cb7" />
         <Route component={HtmlReader} path="/pptx" />
+        <Route component={HtmlReader} path="/xps" />
+        <Route component={HtmlReader} path="/oxps" />
         <Route component={HtmlReader} path="/azw3" />
         <Route component={HtmlReader} path="/azw" />
         <Route component={HtmlReader} path="/txt" />

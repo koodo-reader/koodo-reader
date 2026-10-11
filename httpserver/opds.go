@@ -226,6 +226,10 @@ func bookMime(format string) string {
 		return "application/x-cbr"
 	case "pptx":
 		return "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+	case "xps":
+		return "application/vnd.ms-xpsdocument"
+	case "oxps":
+		return "application/oxps"
 	case "txt":
 		return "text/plain"
 	case "fb2":
