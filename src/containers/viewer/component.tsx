@@ -33,6 +33,7 @@ import {
   getTextRules,
   getZipBuffer,
   getZipEntries,
+  isPaginatedBook,
   isReadingAidMode,
   isReadingRawPDF,
   saveOcrCache,
@@ -618,7 +619,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.handleLeaveReader("bottom");
       });
       doc.addEventListener("pointerup", (event) => {
-        if (isReadingRawPDF(this.props.currentBook)) {
+        if (isPaginatedBook(this.props.currentBook)) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
           let id = targetIframe?.getAttribute("id") || "";
@@ -643,7 +644,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.setState({ rect });
       });
       doc.addEventListener("contextmenu", (event) => {
-        if (isReadingRawPDF(this.props.currentBook)) {
+        if (isPaginatedBook(this.props.currentBook)) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
           let id = targetIframe?.getAttribute("id") || "";

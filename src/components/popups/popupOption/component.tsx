@@ -19,7 +19,11 @@ import {
 } from "../../../utils/reader/mouseEvent";
 import copy from "copy-text-to-clipboard";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import { isReadingRawPDF, openExternalUrl } from "../../../utils/common";
+import {
+  isFixedLayoutBook,
+  isReadingRawPDF,
+  openExternalUrl,
+} from "../../../utils/common";
 import { createHighlight } from "../../../utils/reader/noteUtil";
 import { Tooltip } from "react-tooltip";
 
@@ -245,11 +249,18 @@ class PopupOption extends React.Component<PopupOptionProps> {
   };
 
   render() {
+    const isFixedLayout = isFixedLayoutBook(this.props.currentBook);
     const popupOptionKeys = getEnabledPopupOptionKeys().filter((item) => {
-      return !(
+      if (
         item === "assistant" &&
         ConfigService.getReaderConfig("isDisableAI") === "yes"
-      );
+      ) {
+        return false;
+      }
+      if (isFixedLayout && (item === "note" || item === "highlight")) {
+        return false;
+      }
+      return true;
     });
     return (
       <div className="menu-list">

@@ -1,6 +1,6 @@
 import React from "react";
 import "./popupMenu.css";
-import { isReadingRawPDF } from "../../../utils/common";
+import { isFixedLayoutBook, isPaginatedBook } from "../../../utils/common";
 import PopupOption from "../popupOption";
 import ColorOption from "../../colorOption";
 import { PopupMenuProps, PopupMenuStates } from "./interface";
@@ -102,14 +102,14 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     }
     posX = posX - MENU_WIDTH / 2 + pageSize.left;
     if (
-      isReadingRawPDF(this.props.currentBook) &&
+      isPaginatedBook(this.props.currentBook) &&
       this.props.readerMode === "double" &&
       this.props.chapterDocIndex % 2 === 1
     ) {
       posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
-      isReadingRawPDF(this.props.currentBook) &&
+      isPaginatedBook(this.props.currentBook) &&
       this.props.readerMode === "scroll" &&
       posY < 0
     ) {
@@ -140,7 +140,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
-      if (isReadingRawPDF(this.props.currentBook)) {
+      if (isPaginatedBook(this.props.currentBook)) {
         let targetIframe = doc?.defaultView?.frameElement;
         let id = targetIframe?.getAttribute("id") || "";
         let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
@@ -203,6 +203,15 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     const format = this.props.currentBook.format;
     const text = getSelection(format);
     if (!text) return;
+    // PPTX/XPS/OXPS 不支持笔记和高亮，回退到默认菜单
+    if (
+      (action === "note" || action === "highlight") &&
+      isFixedLayoutBook(this.props.currentBook)
+    ) {
+      this.showMenu();
+      this.props.handleMenuMode("menu");
+      return;
+    }
 
     switch (action) {
       case "translation":
@@ -271,7 +280,12 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
           </div>
           <div
             className="popup-color-box"
-            style={this.props.menuMode === "menu" ? {} : { display: "none" }}
+            style={
+              this.props.menuMode === "menu" &&
+              !isFixedLayoutBook(this.props.currentBook)
+                ? {}
+                : { display: "none" }
+            }
           >
             <ColorOption {...(ColorProps as any)} />
           </div>

@@ -2296,6 +2296,22 @@ export const isReadingRawPDF = (book: Book) => {
     !ConfigService.getAllListConfig("convertPDFBooks").includes(book.key)
   );
 };
+// PDF（原始版式）、漫画（CB 系列）、PPTX、XPS、OXPS 共用多 iframe 分页结构
+export const isPaginatedBook = (book: Book) => {
+  return (
+    isReadingRawPDF(book) ||
+    book.format.startsWith("CB") ||
+    book.format === "PPTX" ||
+    book.format === "XPS" ||
+    book.format === "OXPS"
+  );
+};
+// PPTX/XPS/OXPS 复用漫画结构渲染，暂不支持笔记和高亮
+export const isFixedLayoutBook = (book: Book) => {
+  return (
+    book.format === "PPTX" || book.format === "XPS" || book.format === "OXPS"
+  );
+};
 export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
     return null;
