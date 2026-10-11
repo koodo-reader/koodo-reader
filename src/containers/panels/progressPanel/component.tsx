@@ -4,7 +4,7 @@ import { Trans } from "react-i18next";
 import { ProgressPanelProps, ProgressPanelState } from "./interface";
 import _ from "underscore";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { isReadingRawPDF, scrollContents } from "../../../utils/common";
+import { isPaginatedBook, scrollContents } from "../../../utils/common";
 class ProgressPanel extends React.Component<
   ProgressPanelProps,
   ProgressPanelState
@@ -116,14 +116,9 @@ class ProgressPanel extends React.Component<
     if (!this.props.htmlBook) {
       return <div className="progress-panel">Loading</div>;
     }
-    let readerMode =
-      isReadingRawPDF(this.props.currentBook) ||
-      this.props.currentBook.format.startsWith("CB") ||
-      this.props.currentBook.format === "PPTX" ||
-      this.props.currentBook.format === "XPS" ||
-      this.props.currentBook.format === "OXPS"
-        ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
-        : ConfigService.getReaderConfig("readerMode") || "double";
+    let readerMode = isPaginatedBook(this.props.currentBook)
+      ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
+      : ConfigService.getReaderConfig("readerMode") || "double";
     return (
       <div className="progress-panel">
         <p className="progress-text" style={{ marginTop: 10 }}>

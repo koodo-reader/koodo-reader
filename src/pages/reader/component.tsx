@@ -27,7 +27,7 @@ import {
 } from "../../utils/reader/discordRPC";
 import SupportDialog from "../../components/dialogs/supportDialog";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
-import { isReadingRawPDF, throttle } from "../../utils/common";
+import { isPaginatedBook, isReadingRawPDF, throttle } from "../../utils/common";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
@@ -191,14 +191,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       if (!book) return;
 
       this.props.handleFetchPercentage(book);
-      let readerMode =
-        isReadingRawPDF(book) ||
-        book.format.startsWith("CB") ||
-        book.format === "PPTX" ||
-        book.format === "XPS" ||
-        book.format === "OXPS"
-          ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
-          : ConfigService.getReaderConfig("readerMode") || "double";
+      let readerMode = isPaginatedBook(book)
+        ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
+        : ConfigService.getReaderConfig("readerMode") || "double";
       this.props.handleReaderMode(readerMode);
       this.props.handleReadingBook(book);
       // Start event-driven reading-time tracking
