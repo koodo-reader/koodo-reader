@@ -45,7 +45,7 @@
   - Çizgi roman arşivi (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - PowerPoint sunumu (**.pptx**)
   - XPS belgesi (**.xps**, **.oxps**)
-  - Zengin metin (**.md**, **.docx**)
+  - Zengin metin (**.md**, **.docx**, **.rtf**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform desteği: **Windows**, **macOS**, **Linux**, **Android**, **iOS** ve **Web**
 - Verilerinizi **OneDrive**, **Google Drive**, **Dropbox**, **iCloud**, **MEGA**, **pCloud**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB** veya **Nesne Depolama** ile eşitleyin ve yedekleyin

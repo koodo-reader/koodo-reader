@@ -33,6 +33,7 @@ const VALID_BOOK_FORMATS = new Set([
   "oxps",
   "md",
   "docx",
+  "rtf",
   "html",
   "xhtml",
   "htm",

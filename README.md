@@ -47,7 +47,7 @@
   - Comic book archive (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - PowerPoint presentation (**.pptx**)
   - XML Paper Specification (**.xps**, **.oxps**)
-  - Rich text (**.md**, **.docx**)
+  - Rich text (**.md**, **.docx**, **.rtf**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux**, **Android**, **iOS** and **Web**
 - Sync and backup your data with **OneDrive**, **Google Drive**, **Dropbox**, **iCloud**, **MEGA**, **pCloud**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB**, or **Object Storage**

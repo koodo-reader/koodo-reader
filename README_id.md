@@ -46,7 +46,7 @@
   - Arsip komik (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
   - Presentasi PowerPoint (**.pptx**)
   - Dokumen XPS (**.xps**, **.oxps**)
-  - Teks kaya (**.md**, **.docx**)
+  - Teks kaya (**.md**, **.docx**, **.rtf**)
   - Hiperteks (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform yang didukung: **Windows**, **macOS**, **Linux**, dan **Web**
 - Simpan data Anda di **OneDrive**, **Google Drive**, **Dropbox**, **iCloud**, **Yandex Disk**, **FTP**, **SFTP**, **WebDAV**, **SMB**, **S3**, **S3 Compatible**
