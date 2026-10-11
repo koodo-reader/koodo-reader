@@ -44,10 +44,10 @@
   - Teks biasa (**.txt**)
   - FictionBook (**.fb2**)
   - Arsip komik (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
-  - Presentasi PowerPoint (**.pptx**)
+  - Presentasi PowerPoint (**.pptx**, **.ppt**)
   - Dokumen XPS (**.xps**, **.oxps**)
   - Dokumen DjVu (**.djvu**, **.djv**)
-  - Teks kaya (**.md**, **.docx**, **.rtf**)
+  - Teks kaya (**.md**, **.docx**, **.doc**, **.rtf**)
   - Hiperteks (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform yang didukung: **Windows**, **macOS**, **Linux**, dan **Web**
 - Simpan data Anda di **OneDrive**, **Google Drive**, **Dropbox**, **iCloud**, **Yandex Disk**, **FTP**, **SFTP**, **WebDAV**, **SMB**, **S3**, **S3 Compatible**

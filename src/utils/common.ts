@@ -49,6 +49,7 @@ export const supportedFormats = [
   ".xhtml",
   ".mhtml",
   ".docx",
+  ".doc",
   ".rtf",
   ".md",
   ".fb2",
@@ -58,6 +59,7 @@ export const supportedFormats = [
   ".cbr",
   ".cb7",
   ".pptx",
+  ".ppt",
   ".xps",
   ".oxps",
   ".djvu",
@@ -2299,22 +2301,24 @@ export const isReadingRawPDF = (book: Book) => {
     !ConfigService.getAllListConfig("convertPDFBooks").includes(book.key)
   );
 };
-// PDF（原始版式）、漫画（CB 系列）、PPTX、XPS、OXPS、DjVu 共用多 iframe 分页结构
+// PDF（原始版式）、漫画（CB 系列）、PPTX/PPT、XPS、OXPS、DjVu 共用多 iframe 分页结构
 export const isPaginatedBook = (book: Book) => {
   return (
     isReadingRawPDF(book) ||
     book.format.startsWith("CB") ||
     book.format === "PPTX" ||
+    book.format === "PPT" ||
     book.format === "XPS" ||
     book.format === "OXPS" ||
     book.format === "DJVU" ||
     book.format === "DJV"
   );
 };
-// PPTX/XPS/OXPS/DjVu 复用漫画结构渲染，暂不支持笔记和高亮
+// PPTX/PPT/XPS/OXPS/DjVu 复用漫画结构渲染，暂不支持笔记和高亮
 export const isFixedLayoutBook = (book: Book) => {
   return (
     book.format === "PPTX" ||
+    book.format === "PPT" ||
     book.format === "XPS" ||
     book.format === "OXPS" ||
     book.format === "DJVU" ||

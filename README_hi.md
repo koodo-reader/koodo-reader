@@ -43,10 +43,10 @@
   - प्लेन टेक्स्ट (**.txt**)
   - उपन्यास पुस्तक (**.fb2**)
   - हास्य पुस्तक पुरालेख (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
-  - PowerPoint प्रस्तुति (**.pptx**)
+  - PowerPoint प्रस्तुति (**.pptx**, **.ppt**)
   - XPS दस्तावेज़ (**.xps**, **.oxps**)
   - DjVu दस्तावेज़ (**.djvu**, **.djv**)
-  - रिच टेक्स्ट (**.md**, **.docx**, **.rtf**)
+  - रिच टेक्स्ट (**.md**, **.docx**, **.doc**, **.rtf**)
   - हाइपरटेक्सट (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - प्लेटफार्म: **Windows**, **macOS**, **Linux** and **Web**
 - अपना डेटा यहां सहेजें **OneDrive**, **Google Drive**, **Dropbox**, **iCloud**, **Yandex Disk**, **FTP**, **SFTP**, **SMB**, **WebDAV**, **S3**, **S3 Compatible**

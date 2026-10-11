@@ -43,10 +43,10 @@
   - Kindle (**.azw3**, **.mobi**, **.azw**)
   - 纯文本 (**.txt**)
   - 漫画 (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
-  - PowerPoint 演示文稿 (**.pptx**)
+  - PowerPoint 演示文稿 (**.pptx**, **.ppt**)
   - XPS 文档 (**.xps**, **.oxps**)
   - DjVu 文档 (**.djvu**, **.djv**)
-  - 富文本 (**.md**, **.docx**, **.rtf**)
+  - 富文本 (**.md**, **.docx**, **.doc**, **.rtf**)
   - FB2 (**.fb2**)
   - 超文本 (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - 支持 **Windows**，**macOS**，**Linux** ，**安卓** ，**iOS** 和 **网页版**
