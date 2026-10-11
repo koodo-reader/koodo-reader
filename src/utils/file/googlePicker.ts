@@ -52,6 +52,7 @@ export class GooglePickerUtil {
           "application/x-mobipocket-ebook", // .mobi
           "application/vnd.amazon.ebook", // .azw, .azw3
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+          "application/msword", // .doc
           "application/rtf", // .rtf
           "text/rtf", // .rtf
           "text/markdown", // .md
@@ -62,6 +63,7 @@ export class GooglePickerUtil {
           "application/vnd.comicbook-rar", // .cbr
           "application/vnd.comicbook+7z", // .cb7
           "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx
+          "application/vnd.ms-powerpoint", // .ppt
           "application/oxps", // .oxps
           "application/vnd.ms-xpsdocument", // .xps
           "image/vnd.djvu", // .djvu, .djv

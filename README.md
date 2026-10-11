@@ -45,10 +45,10 @@
   - FictionBook (**.fb2**)
   - Compiled HTML Help (**.chm**)
   - Comic book archive (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
-  - PowerPoint presentation (**.pptx**)
+  - PowerPoint presentation (**.pptx**, **.ppt**)
   - XML Paper Specification (**.xps**, **.oxps**)
   - DjVu document (**.djvu**, **.djv**)
-  - Rich text (**.md**, **.docx**, **.rtf**)
+  - Rich text (**.md**, **.docx**, **.doc**, **.rtf**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux**, **Android**, **iOS** and **Web**
 - Sync and backup your data with **OneDrive**, **Google Drive**, **Dropbox**, **iCloud**, **MEGA**, **pCloud**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB**, or **Object Storage**

@@ -49,6 +49,7 @@ const DOWNLOAD_TYPES: Record<string, string> = {
   "message/rfc822": "mhtml",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
     "docx",
+  "application/msword": "doc",
   "application/rtf": "rtf",
   "text/rtf": "rtf",
   "text/markdown": "md",
@@ -69,6 +70,7 @@ const DOWNLOAD_TYPES: Record<string, string> = {
   "application/vnd.comicbook+7z": "cb7",
   "application/vnd.openxmlformats-officedocument.presentationml.presentation":
     "pptx",
+  "application/vnd.ms-powerpoint": "ppt",
   "application/oxps": "oxps",
   "application/vnd.ms-xpsdocument": "xps",
   "image/vnd.djvu": "djvu",

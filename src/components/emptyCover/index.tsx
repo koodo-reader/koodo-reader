@@ -23,7 +23,8 @@ const emptyCover = (props) => (
                         ? "#0063b1"
                         : props.format === "CHM"
                           ? "#8e6fce"
-                          : props.format === "DOCX"
+                          : props.format === "DOCX" ||
+                              props.format === "DOC"
                             ? " #118CD9"
                             : props.format === "RTF"
                               ? "#0F766E"
@@ -32,7 +33,8 @@ const emptyCover = (props) => (
                                 props.format === "CB7" ||
                                 props.format === "CBR"
                               ? "#00b6c2"
-                              : props.format === "PPTX"
+                              : props.format === "PPTX" ||
+                                  props.format === "PPT"
                                 ? "#C43E1C"
                                 : props.format === "XPS" ||
                                     props.format === "OXPS"
