@@ -203,7 +203,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     const format = this.props.currentBook.format;
     const text = getSelection(format);
     if (!text) return;
-    // PPTX/XPS/OXPS 不支持笔记和高亮，回退到默认菜单
+    // PPTX/XPS/OXPS/DjVu/OFD 不支持笔记和高亮，回退到默认菜单
     if (
       (action === "note" || action === "highlight") &&
       isFixedLayoutBook(this.props.currentBook)

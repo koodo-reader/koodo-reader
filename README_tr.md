@@ -46,6 +46,7 @@
   - PowerPoint sunumu (**.pptx**, **.ppt**)
   - XPS belgesi (**.xps**, **.oxps**)
   - DjVu belgesi (**.djvu**, **.djv**)
+  - OFD belgesi (**.ofd**)
   - CAJ belgesi (**.caj**, içe aktarılırken PDF'e dönüştürülür)
   - Zengin metin (**.md**, **.docx**, **.doc**, **.rtf**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)

@@ -36,10 +36,8 @@ const supportedFormatsAccept = supportedFormats.reduce<
   Record<string, string[]>
 >((obj, ext) => {
   const extension = ext.replace(".", "");
-  // CAJ has no registered MIME type, so the picker needs one from here.
-  const mimeType = isCajFormat(extension)
-    ? "application/x-caj"
-    : CommonTool.getMimeType(extension);
+  // CAJ and OFD have no widely registered MIME type, so the picker needs one from here.
+  const mimeType = CommonTool.getMimeType(extension);
   if (mimeType) {
     if (!obj[mimeType]) obj[mimeType] = [];
     obj[mimeType].push(ext);

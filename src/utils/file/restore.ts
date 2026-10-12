@@ -34,6 +34,7 @@ const VALID_BOOK_FORMATS = new Set([
   "oxps",
   "djvu",
   "djv",
+  "ofd",
   "md",
   "docx",
   "doc",

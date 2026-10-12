@@ -48,6 +48,7 @@
   - PowerPoint presentation (**.pptx**, **.ppt**)
   - XML Paper Specification (**.xps**, **.oxps**)
   - DjVu document (**.djvu**, **.djv**)
+  - Open Fixed-layout Document (**.ofd**)
   - CAJ document (**.caj**, converted to PDF on import)
   - Rich text (**.md**, **.docx**, **.doc**, **.rtf**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)

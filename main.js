@@ -1298,6 +1298,7 @@ const createMainWin = () => {
             "oxps",
             "djvu",
             "djv",
+            "ofd",
             "caj",
           ],
         },

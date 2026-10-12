@@ -46,6 +46,7 @@
   - PowerPoint 演示文稿 (**.pptx**, **.ppt**)
   - XPS 文档 (**.xps**, **.oxps**)
   - DjVu 文档 (**.djvu**, **.djv**)
+  - OFD 文档 (**.ofd**)
   - CAJ 文档 (**.caj**，导入时自动转换为 PDF)
   - 富文本 (**.md**, **.docx**, **.doc**, **.rtf**)
   - FB2 (**.fb2**)
