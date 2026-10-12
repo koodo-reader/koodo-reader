@@ -46,6 +46,7 @@
   - PowerPoint प्रस्तुति (**.pptx**, **.ppt**)
   - XPS दस्तावेज़ (**.xps**, **.oxps**)
   - DjVu दस्तावेज़ (**.djvu**, **.djv**)
+  - CAJ दस्तावेज़ (**.caj**, आयात के समय PDF में परिवर्तित)
   - रिच टेक्स्ट (**.md**, **.docx**, **.doc**, **.rtf**)
   - हाइपरटेक्सट (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - प्लेटफार्म: **Windows**, **macOS**, **Linux** and **Web**

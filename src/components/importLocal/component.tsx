@@ -28,13 +28,18 @@ import {
 import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit.min";
 import { analyzeBookTitle } from "../../utils/request/reader";
+import { convertCajToPdf, isCajFormat } from "../../utils/file/cajUtil";
 
 // Convert supportedFormats to react-dropzone v14+ accept format
 // Key is MIME type, value is array of file extensions
 const supportedFormatsAccept = supportedFormats.reduce<
   Record<string, string[]>
 >((obj, ext) => {
-  const mimeType = CommonTool.getMimeType(ext.replace(".", ""));
+  const extension = ext.replace(".", "");
+  // CAJ has no registered MIME type, so the picker needs one from here.
+  const mimeType = isCajFormat(extension)
+    ? "application/x-caj"
+    : CommonTool.getMimeType(extension);
   if (mimeType) {
     if (!obj[mimeType]) obj[mimeType] = [];
     obj[mimeType].push(ext);
@@ -186,7 +191,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   handleAddBook = (
     book: BookModel,
     buffer: ArrayBuffer,
-    sourcePath?: string
+    sourcePath?: string,
+    isConverted = false
   ) => {
     return new Promise<void>(async (resolve) => {
       toast.loading(
@@ -197,6 +203,10 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       );
       let isImportPath =
         ConfigService.getReaderConfig("isImportPath") === "yes";
+      // A converted book has no readable source file, so its PDF always has to
+      // be written into the library; opening it in place is not an option.
+      const isPreventAdd =
+        !isConverted && ConfigService.getReaderConfig("isPreventAdd") === "yes";
       if (isElectron && isImportPath) {
         const fs = window.electronAPI.fs;
         if (!book.path || !fs.existsSync(book.path)) {
@@ -204,7 +214,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
         }
       }
       if (this.state.isOpenFile) {
-        if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
+        if (isPreventAdd) {
           //ignore
         } else if (
           this.props.isAuthed &&
@@ -229,7 +239,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
           );
           await CoverUtil.addCover(book);
         }
-        if (ConfigService.getReaderConfig("isPreventAdd") === "yes") {
+        if (isPreventAdd) {
           this.handleJump(book);
           this.setState({ isOpenFile: false });
           toast.dismiss("add-book");
@@ -557,7 +567,33 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     resolve: (value: void) => void
   ) => {
     let result: BookModel;
+    let isConverted = false;
     try {
+      if (isCajFormat(extension)) {
+        toast.loading(
+          this.props.t("Converting to PDF") + ": " + bookName.substring(0, 50),
+          { id: "add-book" }
+        );
+        const reportProgress = throttle((fraction: number) => {
+          toast.loading(
+            this.props.t("Converting to PDF") +
+              " (" +
+              Math.round(fraction * 100) +
+              "%)" +
+              ": " +
+              bookName.substring(0, 50),
+            { id: "add-book" }
+          );
+        }, 500);
+        file_content = await convertCajToPdf(file_content, reportProgress);
+        // Everything downstream handles the converted bytes as a regular PDF
+        // import; the original .caj is not referenced again.
+        extension = "pdf";
+        fileSize = file_content.byteLength;
+        filePath = "";
+        recordPath = "";
+        isConverted = true;
+      }
       let rendition = BookHelper.getRendition(
         file_content,
         {
@@ -621,7 +657,8 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     await this.handleAddBook(
       result as BookModel,
       file_content as ArrayBuffer,
-      filePath
+      filePath,
+      isConverted
     );
 
     return resolve();

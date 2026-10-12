@@ -74,6 +74,8 @@ const DOWNLOAD_TYPES: Record<string, string> = {
   "application/oxps": "oxps",
   "application/vnd.ms-xpsdocument": "xps",
   "image/vnd.djvu": "djvu",
+  "application/x-caj": "caj",
+  "application/caj": "caj",
 };
 
 const ACQUISITION_RELS = [

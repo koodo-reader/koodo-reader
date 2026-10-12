@@ -46,6 +46,7 @@
   - Apresentação do PowerPoint (**.pptx**, **.ppt**)
   - Documento XPS (**.xps**, **.oxps**)
   - Documento DjVu (**.djvu**, **.djv**)
+  - Documento CAJ (**.caj**, convertido em PDF na importação)
   - Texto rico (**.md**, **.docx**, **.doc**, **.rtf**)
   - Hiper texto (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Plataformas suportadas: **Windows**, **macOS**, **Linux** e **Web**
