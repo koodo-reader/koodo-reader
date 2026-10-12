@@ -47,6 +47,7 @@
   - Presentasi PowerPoint (**.pptx**, **.ppt**)
   - Dokumen XPS (**.xps**, **.oxps**)
   - Dokumen DjVu (**.djvu**, **.djv**)
+  - Dokumen CAJ (**.caj**, dikonversi ke PDF saat diimpor)
   - Teks kaya (**.md**, **.docx**, **.doc**, **.rtf**)
   - Hiperteks (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform yang didukung: **Windows**, **macOS**, **Linux**, dan **Web**

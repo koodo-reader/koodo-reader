@@ -46,6 +46,7 @@
   - PowerPoint sunumu (**.pptx**, **.ppt**)
   - XPS belgesi (**.xps**, **.oxps**)
   - DjVu belgesi (**.djvu**, **.djv**)
+  - CAJ belgesi (**.caj**, içe aktarılırken PDF'e dönüştürülür)
   - Zengin metin (**.md**, **.docx**, **.doc**, **.rtf**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform desteği: **Windows**, **macOS**, **Linux**, **Android**, **iOS** ve **Web**

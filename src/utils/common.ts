@@ -64,6 +64,7 @@ export const supportedFormats = [
   ".oxps",
   ".djvu",
   ".djv",
+  ".caj",
 ];
 export interface HighlightValue {
   styleType: string;
