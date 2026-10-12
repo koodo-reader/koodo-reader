@@ -160,6 +160,7 @@ const Router = () => {
         <Route component={HtmlReader} path="/oxps" />
         <Route component={HtmlReader} path="/djvu" />
         <Route component={HtmlReader} path="/djv" />
+        <Route component={HtmlReader} path="/ofd" />
         <Route component={HtmlReader} path="/azw3" />
         <Route component={HtmlReader} path="/azw" />
         <Route component={HtmlReader} path="/txt" />

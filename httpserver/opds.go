@@ -238,6 +238,8 @@ func bookMime(format string) string {
 		return "application/oxps"
 	case "djvu", "djv":
 		return "image/vnd.djvu"
+	case "ofd":
+		return "application/ofd"
 	case "txt":
 		return "text/plain"
 	case "fb2":

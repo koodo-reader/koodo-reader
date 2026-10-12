@@ -64,6 +64,7 @@ export const supportedFormats = [
   ".oxps",
   ".djvu",
   ".djv",
+  ".ofd",
   ".caj",
 ];
 export interface HighlightValue {
@@ -2302,7 +2303,7 @@ export const isReadingRawPDF = (book: Book) => {
     !ConfigService.getAllListConfig("convertPDFBooks").includes(book.key)
   );
 };
-// PDF（原始版式）、漫画（CB 系列）、PPTX/PPT、XPS、OXPS、DjVu 共用多 iframe 分页结构
+// PDF（原始版式）、漫画（CB 系列）、PPTX/PPT、XPS、OXPS、DjVu、OFD 共用多 iframe 分页结构
 export const isPaginatedBook = (book: Book) => {
   return (
     isReadingRawPDF(book) ||
@@ -2312,10 +2313,11 @@ export const isPaginatedBook = (book: Book) => {
     book.format === "XPS" ||
     book.format === "OXPS" ||
     book.format === "DJVU" ||
-    book.format === "DJV"
+    book.format === "DJV" ||
+    book.format === "OFD"
   );
 };
-// PPTX/PPT/XPS/OXPS/DjVu 复用漫画结构渲染，暂不支持笔记和高亮
+// PPTX/PPT/XPS/OXPS/DjVu/OFD 复用漫画结构渲染，暂不支持笔记和高亮
 export const isFixedLayoutBook = (book: Book) => {
   return (
     book.format === "PPTX" ||
@@ -2323,7 +2325,8 @@ export const isFixedLayoutBook = (book: Book) => {
     book.format === "XPS" ||
     book.format === "OXPS" ||
     book.format === "DJVU" ||
-    book.format === "DJV"
+    book.format === "DJV" ||
+    book.format === "OFD"
   );
 };
 export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {
