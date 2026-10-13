@@ -27,7 +27,7 @@ export const isCajFormat = (extension: string) =>
 // The vendored caj2pdf-rust runtime is served as-is from public/lib and must
 // never be processed by the bundler; its Worker and WASM sit next to it.
 const runtimeUrl = (file: string) =>
-  new URL(`lib/caj2pdf/${file}`, document.baseURI).href;
+  new URL(`lib/caj2pdf-rust/${file}`, document.baseURI).href;
 
 let entryPromise: Promise<Caj2PdfModule> | null = null;
 
@@ -57,7 +57,7 @@ const loadWasm = () => {
           appRoot,
           "build",
           "lib",
-          "caj2pdf",
+          "caj2pdf-rust",
           "caj2pdf_wasm.wasm"
         );
         const bytes = window.electronAPI.fs.readFileSync(wasmPath);
