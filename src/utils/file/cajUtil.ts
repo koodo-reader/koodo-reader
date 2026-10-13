@@ -29,6 +29,36 @@ export const isCajFormat = (extension: string) =>
 const runtimeUrl = (file: string) =>
   new URL(`lib/caj2pdf-rust/${file}`, document.baseURI).href;
 
+// Metadata layout of the classic CAJ container: the outline-record count sits
+// at 0x110 and the records themselves start at 0x114, 308 bytes each. Some
+// CNKI exports store an unrelated page-index table in that region instead, so
+// the count can name far more records than the file can possibly hold. The
+// converter refuses the whole file in that case, while the outline it names
+// does not exist; clearing the count lets the rest of the container convert.
+const TOC_COUNT_OFFSET = 0x110;
+const TOC_RECORDS_OFFSET = 0x114;
+const TOC_RECORD_BYTES = 308;
+
+const clearImpossibleOutlineCount = (input: ArrayBuffer) => {
+  if (input.byteLength < TOC_RECORDS_OFFSET) return input;
+  const header = new DataView(input);
+  if (
+    header.getUint8(0) !== 0x43 ||
+    header.getUint8(1) !== 0x41 ||
+    header.getUint8(2) !== 0x4a ||
+    header.getUint8(3) !== 0x00
+  ) {
+    return input;
+  }
+  const count = header.getUint32(TOC_COUNT_OFFSET, true);
+  if (TOC_RECORDS_OFFSET + count * TOC_RECORD_BYTES <= input.byteLength) {
+    return input;
+  }
+  const repaired = input.slice(0);
+  new DataView(repaired).setUint32(TOC_COUNT_OFFSET, 0, true);
+  return repaired;
+};
+
 let entryPromise: Promise<Caj2PdfModule> | null = null;
 
 const loadEntry = () => {
@@ -94,7 +124,7 @@ export const convertCajToPdf = async (
   const chunks: Uint8Array[] = [];
   await entry.convert(
     wasm,
-    new Blob([input]),
+    new Blob([clearImpossibleOutlineCount(input)]),
     {
       async writeChunk(bytes) {
         chunks.push(bytes);
