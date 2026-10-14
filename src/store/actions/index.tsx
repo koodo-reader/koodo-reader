@@ -5,3 +5,4 @@ export * from "./progressPanel";
 export * from "./reader";
 export * from "./sidebar";
 export * from "./viewArea";
+export * from "./collection";

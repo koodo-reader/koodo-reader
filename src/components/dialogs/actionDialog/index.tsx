@@ -9,6 +9,12 @@ import {
   handleReadingBook,
   handleFetchBooks,
   handleDetailDialog,
+  handleCollectionDialog,
+  handleCollectionDialogMode,
+  handleCollectionDialogKey,
+  handleCollectionDetailDialog,
+  handleCurrentCollectionKey,
+  handleAddCollectionDialog,
 } from "../../../store/actions";
 
 import { stateType } from "../../../store";
@@ -36,6 +42,12 @@ const actionCreator = {
   handleDetailDialog,
   handleSelectBook,
   handleSelectedBooks,
+  handleCollectionDialog,
+  handleCollectionDialogMode,
+  handleCollectionDialogKey,
+  handleCollectionDetailDialog,
+  handleCurrentCollectionKey,
+  handleAddCollectionDialog,
 };
 export default connect(
   mapStateToProps,

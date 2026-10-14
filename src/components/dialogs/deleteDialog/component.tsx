@@ -7,6 +7,7 @@ import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import CoverUtil from "../../../utils/file/coverUtil";
 import DatabaseService from "../../../utils/storage/databaseService";
+import CollectionUtil from "../../../utils/file/collectionUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 
@@ -52,11 +53,7 @@ class DeleteDialog extends React.Component<
   deleteBookFromShelf = () => {
     if (this.props.isSelectBook) {
       this.props.selectedBooks.forEach((item) => {
-        ConfigService.deleteFromMapConfig(
-          this.props.shelfTitle,
-          item,
-          "shelfList"
-        );
+        this.deleteKeyFromShelf(item);
       });
       this.props.handleSelectedBooks([]);
       this.props.handleFetchBooks();
@@ -67,11 +64,22 @@ class DeleteDialog extends React.Component<
       });
       return;
     }
-    ConfigService.deleteFromMapConfig(
-      this.props.shelfTitle,
-      this.props.currentBook.key,
-      "shelfList"
-    );
+    this.deleteKeyFromShelf(this.props.currentBook.key);
+  };
+  deleteKeyFromShelf = (key: string) => {
+    ConfigService.deleteFromMapConfig(this.props.shelfTitle, key, "shelfList");
+    if (CollectionUtil.isCollection(key)) {
+      let collection = CollectionUtil.getCollection(key);
+      if (collection) {
+        collection.books.forEach((bookKey) => {
+          ConfigService.deleteFromMapConfig(
+            this.props.shelfTitle,
+            bookKey,
+            "shelfList"
+          );
+        });
+      }
+    }
   };
   deleteAllBookInTrash = async () => {
     toast.loading(this.props.t("Deleting..."), {
@@ -113,6 +121,11 @@ class DeleteDialog extends React.Component<
       ConfigService.setListConfig(item, "deletedBooks");
       ConfigService.deleteListConfig(item, "favoriteBooks");
     });
+    CollectionUtil.removeBooksFromAllCollections(
+      this.props.selectedBooks.filter((item) => {
+        return !CollectionUtil.isCollection(item);
+      })
+    );
     this.props.handleSelectedBooks([]);
     this.props.handleFetchBooks();
     this.props.handleSelectBook(!this.props.isSelectBook);
@@ -120,10 +133,20 @@ class DeleteDialog extends React.Component<
   deleteCurrentBook = () => {
     ConfigService.setListConfig(this.props.currentBook.key, "deletedBooks");
     ConfigService.deleteListConfig(this.props.currentBook.key, "favoriteBooks");
+    if (!CollectionUtil.isCollection(this.props.currentBook.key)) {
+      CollectionUtil.removeBooksFromAllCollections([
+        this.props.currentBook.key,
+      ]);
+    }
     this.props.handleFetchBooks();
   };
   deleteBook = (key: string, format: string) => {
     return new Promise<void>(async (resolve, reject) => {
+      if (CollectionUtil.isCollection(key)) {
+        CollectionUtil.dissolveCollection(key);
+        resolve();
+        return;
+      }
       if (
         ConfigService.getReaderConfig("isDeleteOriginal") === "yes" &&
         isElectron
@@ -149,6 +172,7 @@ class DeleteDialog extends React.Component<
           ConfigService.deleteObjectConfig(key, "recordLocation");
           ConfigService.deleteObjectConfig(key, "pdfCrop");
           ConfigService.deleteObjectConfig(key, "readingTime");
+          CollectionUtil.removeBooksFromAllCollections([key]);
           await DatabaseService.deleteRecordsByBookKey(key, "bookmarks");
           await DatabaseService.deleteRecordsByBookKey(key, "notes");
           resolve();
@@ -163,6 +187,9 @@ class DeleteDialog extends React.Component<
     });
   };
   render() {
+    const isCollection = CollectionUtil.isCollection(
+      this.props.currentBook?.key || ""
+    );
     return (
       <div className="delete-dialog-container">
         {this.props.mode === "shelf" && !this.state.isDeleteShelfBook ? (
@@ -172,6 +199,10 @@ class DeleteDialog extends React.Component<
         ) : this.props.mode === "trash" ? (
           <div className="delete-dialog-title">
             <Trans>Delete all books</Trans>
+          </div>
+        ) : isCollection ? (
+          <div className="delete-dialog-title">
+            <Trans>Delete collection</Trans>
           </div>
         ) : (
           <div className="delete-dialog-title">
@@ -211,6 +242,13 @@ class DeleteDialog extends React.Component<
             <Trans>
               This action will permanently delete the selected books, together
               with their notes, bookmarks and digests
+            </Trans>
+          </div>
+        ) : isCollection ? (
+          <div className="delete-dialog-other-option" style={{ top: "100px" }}>
+            <Trans>
+              This action will move this collection to the recycle bin, the
+              books inside will be kept in your library
             </Trans>
           </div>
         ) : (

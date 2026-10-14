@@ -6,6 +6,11 @@ import {
   handleSelectBook,
   handleSelectedBooks,
   handleRefreshBookCover,
+  handleFetchBooks,
+  handleCollectionDialog,
+  handleCollectionDialogMode,
+  handleCollectionDialogBooks,
+  handleCollectionDialogKey,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 import BookCardItem from "./component";
@@ -28,6 +33,11 @@ const actionCreator = {
   handleDeleteDialog,
   handleSelectedBooks,
   handleRefreshBookCover,
+  handleFetchBooks,
+  handleCollectionDialog,
+  handleCollectionDialogMode,
+  handleCollectionDialogBooks,
+  handleCollectionDialogKey,
 };
 export default connect(
   mapStateToProps,

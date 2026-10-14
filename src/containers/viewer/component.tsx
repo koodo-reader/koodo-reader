@@ -2,6 +2,7 @@ import React from "react";
 import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
+import CollectionUtil from "../../utils/file/collectionUtil";
 import PopupMenu from "../../components/popups/popupMenu";
 import Background from "../../components/background";
 import StyleUtil from "../../utils/reader/styleUtil";
@@ -438,7 +439,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     await this.handleRest(rendition);
     this.props.handleReadingState(true);
 
-    ConfigService.setListConfig(this.props.currentBook.key, "recentBooks");
+    ConfigService.setListConfig(
+      CollectionUtil.getRecentBookKey(this.props.currentBook.key),
+      "recentBooks"
+    );
     document.title = name + " - Koodo Reader";
   };
 

@@ -1,0 +1,82 @@
+.collection-dialog-container {
+  width: 339px;
+  height: 205px;
+  opacity: 1;
+  position: absolute;
+  left: calc(50vw - 170px);
+  top: calc(50vh - 102px);
+  z-index: 10;
+  animation: popup 0.1s ease-in-out 0s 1;
+  border-radius: 5px;
+}
+.collection-dialog-title {
+  width: 100%;
+  height: 20px;
+  font-size: 18px;
+  text-align: center;
+  font-weight: 500;
+  margin-top: 15px;
+}
+.collection-dialog-count {
+  width: 100%;
+  height: 16px;
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.7;
+  margin-top: 6px;
+}
+.collection-dialog-field-container {
+  width: 100%;
+  font-size: 14px;
+  margin-top: 14px;
+  min-height: 31px;
+  overflow: hidden;
+}
+.collection-dialog-field-text {
+  width: 90px;
+  float: left;
+  margin-left: 20px;
+  margin-top: 7px;
+  text-align: right;
+}
+.collection-dialog-input {
+  float: left;
+  width: 195px;
+  height: 31px;
+  box-sizing: border-box;
+  padding-left: 5px;
+  margin-left: 10px;
+  font-size: 14px;
+  line-height: 31px;
+  border-radius: 5px;
+}
+.collection-dialog-button-container {
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  right: 25px;
+  bottom: 15px;
+}
+.collection-dialog-cancel {
+  min-width: 60px;
+  height: 26px;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 13px;
+  margin-right: 10px;
+  line-height: 26px;
+  text-align: center;
+  cursor: pointer;
+}
+.collection-dialog-confirm {
+  min-width: 64px;
+  height: 30px;
+  font-size: 13px;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+}

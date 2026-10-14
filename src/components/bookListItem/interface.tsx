@@ -23,6 +23,10 @@ export interface BookItemProps extends RouteComponentProps<any> {
   t: (title: string) => string;
   handleFetchBooks: () => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
+  handleCollectionDialog: (isOpen: boolean) => void;
+  handleCollectionDialogMode: (mode: string) => void;
+  handleCollectionDialogBooks: (books: string[]) => void;
+  handleCollectionDialogKey: (key: string) => void;
 }
 export interface BookItemState {
   isHover: boolean;

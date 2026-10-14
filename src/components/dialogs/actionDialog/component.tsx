@@ -6,9 +6,11 @@ import toast from "react-hot-toast";
 import MoreAction from "../moreAction";
 import MarkAction from "../markAction";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import CollectionUtil from "../../../utils/file/collectionUtil";
 import {
   CONTEXT_MENU_WIDTH,
   shouldSubmenuOpenLeft,
+  vexComfirmAsync,
 } from "../../../utils/common";
 declare var window: any;
 class ActionDialog extends React.Component<
@@ -30,11 +32,24 @@ class ActionDialog extends React.Component<
     this.props.handleActionDialog(false);
   };
   handleEditBook = () => {
+    if (CollectionUtil.isCollection(this.props.currentBook.key)) {
+      this.props.handleCollectionDialogMode("edit");
+      this.props.handleCollectionDialogKey(this.props.currentBook.key);
+      this.props.handleCollectionDialog(true);
+      this.props.handleActionDialog(false);
+      return;
+    }
     this.props.handleEditDialog(true);
     this.props.handleReadingBook(this.props.currentBook);
     this.props.handleActionDialog(false);
   };
   handleDetailBook = () => {
+    if (CollectionUtil.isCollection(this.props.currentBook.key)) {
+      this.props.handleCurrentCollectionKey(this.props.currentBook.key);
+      this.props.handleCollectionDetailDialog(true);
+      this.props.handleActionDialog(false);
+      return;
+    }
     this.props.handleDetailDialog(true);
     this.props.handleReadingBook(this.props.currentBook);
     this.props.handleActionDialog(false);
@@ -43,6 +58,26 @@ class ActionDialog extends React.Component<
     this.props.handleAddDialog(true);
     this.props.handleReadingBook(this.props.currentBook);
     this.props.handleActionDialog(false);
+  };
+  handleAddCollection = () => {
+    this.props.handleAddCollectionDialog(true);
+    this.props.handleReadingBook(this.props.currentBook);
+    this.props.handleActionDialog(false);
+  };
+  handleDissolveCollection = async () => {
+    let key = this.props.currentBook.key;
+    let collection = CollectionUtil.getCollection(key);
+    if (!collection) return;
+    let result = await vexComfirmAsync(
+      `<h3>${this.props.t("Dissolve collection")}</h3><p>${this.props.t(
+        "The collection will be removed and all books will be kept in your library."
+      )}</p>`
+    );
+    if (!result) return;
+    CollectionUtil.dissolveCollection(key);
+    toast.success(this.props.t("Deletion successful"));
+    this.props.handleActionDialog(false);
+    this.props.handleFetchBooks();
   };
   handleRestoreBook = () => {
     ConfigService.deleteListConfig(this.props.currentBook.key, "deletedBooks");
@@ -74,6 +109,14 @@ class ActionDialog extends React.Component<
   };
   handleCancelLoveBook = () => {
     ConfigService.deleteListConfig(this.props.currentBook.key, "favoriteBooks");
+    if (CollectionUtil.isCollection(this.props.currentBook.key)) {
+      let collection = CollectionUtil.getCollection(this.props.currentBook.key);
+      if (collection) {
+        collection.books.forEach((bookKey) => {
+          ConfigService.deleteListConfig(bookKey, "favoriteBooks");
+        });
+      }
+    }
     if (
       Object.keys(ConfigService.getAllListConfig("favoriteBooks")).length ===
         0 &&
@@ -92,6 +135,17 @@ class ActionDialog extends React.Component<
     this.setState({ isShowMark: isShow });
   };
   render() {
+    const isCollection = CollectionUtil.isCollection(
+      this.props.currentBook.key
+    );
+    const collection = isCollection
+      ? CollectionUtil.getCollection(this.props.currentBook.key)
+      : null;
+    const isFavorite = collection
+      ? CollectionUtil.isCollectionFavorite(collection)
+      : ConfigService.getAllListConfig("favoriteBooks").indexOf(
+          this.props.currentBook.key
+        ) > -1;
     const moreActionProps = {
       left: this.props.left,
       top: this.props.top,
@@ -105,6 +159,7 @@ class ActionDialog extends React.Component<
       isShowMark: this.state.isShowMark,
       isExceed: this.state.isExceed,
       handleMarkAction: this.handleMarkAction,
+      menuItemIndex: isCollection ? 6 : 7,
     };
     if (this.props.mode === "trash") {
       return (
@@ -153,11 +208,7 @@ class ActionDialog extends React.Component<
             <div
               className="action-dialog-add"
               onClick={() => {
-                if (
-                  ConfigService.getAllListConfig("favoriteBooks").indexOf(
-                    this.props.currentBook.key
-                  ) > -1
-                ) {
+                if (isFavorite) {
                   this.handleCancelLoveBook();
                 } else {
                   this.handleLoveBook();
@@ -166,9 +217,7 @@ class ActionDialog extends React.Component<
             >
               <span className="icon-heart view-icon"></span>
               <p className="action-name">
-                {ConfigService.getAllListConfig("favoriteBooks").indexOf(
-                  this.props.currentBook.key
-                ) > -1 ? (
+                {isFavorite ? (
                   <Trans>Remove from favorite</Trans>
                 ) : (
                   <Trans>Add to favorite</Trans>
@@ -186,6 +235,19 @@ class ActionDialog extends React.Component<
                 <Trans>Add to shelf</Trans>
               </p>
             </div>
+            {!isCollection && (
+              <div
+                className="action-dialog-add"
+                onClick={() => {
+                  this.handleAddCollection();
+                }}
+              >
+                <span className="icon-folder view-icon"></span>
+                <p className="action-name">
+                  <Trans>Add to collection</Trans>
+                </p>
+              </div>
+            )}
             <div
               className="action-dialog-add"
               onClick={() => {
@@ -303,50 +365,68 @@ class ActionDialog extends React.Component<
                 <Trans>Details</Trans>
               </p>
             </div>
-            <div
-              className="action-dialog-edit"
-              onMouseEnter={(event) => {
-                this.setState({
-                  isShowExport: true,
-                  isShowMark: false,
-                  isExceed: shouldSubmenuOpenLeft(
-                    this.props.left,
-                    CONTEXT_MENU_WIDTH
-                  ),
-                });
-                const e = event || window.event;
-                let x = e.clientX;
-                if (x > document.body.clientWidth - 300) {
-                  this.setState({ isExceed: true });
-                } else {
-                  this.setState({ isExceed: false });
-                }
-              }}
-              onMouseLeave={(event) => {
-                this.setState({ isShowExport: false });
-                event.stopPropagation();
-              }}
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <p className="action-name" style={{ marginLeft: "0px" }}>
+            {isCollection && (
+              <div
+                className="action-dialog-delete"
+                onClick={() => {
+                  this.handleDissolveCollection();
+                }}
+              >
                 <span
-                  className="icon-more view-icon"
-                  style={{
-                    display: "inline-block",
-                    marginRight: "12px",
-                    marginLeft: "3px",
-                    transform: "rotate(90deg)",
-                    fontSize: "14px",
-                  }}
+                  className="icon-close view-icon"
+                  style={{ fontSize: "15px" }}
                 ></span>
-                <Trans>More actions</Trans>
-              </p>
+                <p className="action-name">
+                  <Trans>Dissolve collection</Trans>
+                </p>
+              </div>
+            )}
+            {!isCollection && (
+              <div
+                className="action-dialog-edit"
+                onMouseEnter={(event) => {
+                  this.setState({
+                    isShowExport: true,
+                    isShowMark: false,
+                    isExceed: shouldSubmenuOpenLeft(
+                      this.props.left,
+                      CONTEXT_MENU_WIDTH
+                    ),
+                  });
+                  const e = event || window.event;
+                  let x = e.clientX;
+                  if (x > document.body.clientWidth - 300) {
+                    this.setState({ isExceed: true });
+                  } else {
+                    this.setState({ isExceed: false });
+                  }
+                }}
+                onMouseLeave={(event) => {
+                  this.setState({ isShowExport: false });
+                  event.stopPropagation();
+                }}
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <p className="action-name" style={{ marginLeft: "0px" }}>
+                  <span
+                    className="icon-more view-icon"
+                    style={{
+                      display: "inline-block",
+                      marginRight: "12px",
+                      marginLeft: "3px",
+                      transform: "rotate(90deg)",
+                      fontSize: "14px",
+                    }}
+                  ></span>
+                  <Trans>More actions</Trans>
+                </p>
 
-              <span
-                className="icon-dropdown icon-export-all"
-                style={{ left: "95px" }}
-              ></span>
-            </div>
+                <span
+                  className="icon-dropdown icon-export-all"
+                  style={{ left: "95px" }}
+                ></span>
+              </div>
+            )}
           </div>
         </div>
         <MarkAction {...(markActionProps as any)} />

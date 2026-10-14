@@ -3,12 +3,14 @@ import "./booklist.css";
 import BookCardItem from "../../../components/bookCardItem";
 import BookCoverItem from "../../../components/bookCoverItem";
 import BookListItem from "../../../components/bookListItem";
+import CollectionItem from "../../../components/collectionItem";
 import BookModel from "../../../models/Book";
 import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
 import { withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import DatabaseService from "../../../utils/storage/databaseService";
+import CollectionUtil from "../../../utils/file/collectionUtil";
 import EmptyPage from "../../emptyPage";
 
 class BookList extends React.Component<BookListProps, BookListState> {
@@ -26,6 +28,13 @@ class BookList extends React.Component<BookListProps, BookListState> {
       let fullBooksData: BookModel[] = [];
       for (let i = 0; i < nextProps.deletedBooks.length; i++) {
         let book = nextProps.deletedBooks[i];
+        if (CollectionUtil.isCollection(book.key)) {
+          let collection = CollectionUtil.getCollection(book.key);
+          if (collection) {
+            fullBooksData.push(CollectionUtil.getCollectionAsBook(collection));
+          }
+          continue;
+        }
         let fullBook = await DatabaseService.getRecord(book.key, "books");
         if (fullBook) {
           fullBooksData.push(fullBook);
@@ -71,6 +80,41 @@ class BookList extends React.Component<BookListProps, BookListState> {
     //get the book data according to different scenarios
     let books = this.state.fullBooksData;
     return books.map((item: BookModel, index: number) => {
+      if (CollectionUtil.isCollection(item.key)) {
+        const collection = CollectionUtil.getCollection(item.key);
+        if (!collection) return null;
+        return this.props.viewMode === "list" ? (
+          <CollectionItem
+            key={index}
+            {...({
+              collection,
+              viewMode: "list",
+              isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            } as any)}
+          />
+        ) : this.props.viewMode === "card" ? (
+          <CollectionItem
+            key={index}
+            {...({
+              collection,
+              viewMode: "card",
+              isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            } as any)}
+          />
+        ) : (
+          <CollectionItem
+            key={index}
+            {...({
+              collection,
+              viewMode: "cover",
+              isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            } as any)}
+          />
+        );
+      }
+      if (!item.format || item.format === "COLLECTION") {
+        return null;
+      }
       return this.props.viewMode === "list" ? (
         <BookListItem
           {...{
