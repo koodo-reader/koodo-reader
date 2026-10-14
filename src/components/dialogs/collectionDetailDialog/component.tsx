@@ -2,25 +2,15 @@ import React from "react";
 import "./collectionDetailDialog.css";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
-import ActionDialog from "../actionDialog";
-import EmptyCover from "../../emptyCover";
+import BookCardItem from "../../bookCardItem";
 import CollectionCover from "../../collectionCover";
 import CollectionUtil from "../../../utils/file/collectionUtil";
 import DatabaseService from "../../../utils/storage/databaseService";
-import CoverUtil from "../../../utils/file/coverUtil";
-import BookUtil from "../../../utils/file/bookUtil";
 import BookModel from "../../../models/Book";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   CollectionDetailDialogProps,
   CollectionDetailDialogState,
-  LoadedBookItem,
 } from "./interface";
-import {
-  clampMenuPosition,
-  estimateMenuHeight,
-  CONTEXT_MENU_WIDTH,
-} from "../../../utils/common";
 
 class CollectionDetailDialog extends React.Component<
   CollectionDetailDialogProps,
@@ -28,7 +18,7 @@ class CollectionDetailDialog extends React.Component<
 > {
   constructor(props: CollectionDetailDialogProps) {
     super(props);
-    this.state = { books: [], left: 0, top: 0 };
+    this.state = { books: [] };
   }
 
   componentDidMount() {
@@ -49,47 +39,19 @@ class CollectionDetailDialog extends React.Component<
       this.setState({ books: [] });
       return;
     }
-    let books: LoadedBookItem[] = [];
+    let books: BookModel[] = [];
     let keys = [...collection.books].reverse();
     for (let i = 0; i < keys.length; i++) {
       let book = await DatabaseService.getRecord(keys[i], "books");
-      if (!book) continue;
-      let isCoverExist = await CoverUtil.isCoverExist(book);
-      let cover = isCoverExist ? await CoverUtil.getCover(book) : "";
-      if (
-        cover &&
-        !cover.startsWith("data:") &&
-        !cover.startsWith("blob:") &&
-        !cover.startsWith("http")
-      ) {
-        cover = cover + "?t=" + Date.now();
+      if (book) {
+        books.push(book);
       }
-      let location = ConfigService.getObjectConfig(
-        book.key,
-        "recordLocation",
-        {}
-      );
-      books.push({
-        book,
-        cover: cover || "",
-        isCoverExist,
-        percentage: location?.percentage || "0",
-      });
     }
     this.setState({ books });
   };
 
   handleCancel = () => {
     this.props.handleCollectionDetailDialog(false);
-    this.props.handleActionDialog(false);
-  };
-
-  handleOpenBook = (book: BookModel) => {
-    ConfigService.setListConfig(this.props.currentCollectionKey, "recentBooks");
-    this.props.handleReadingBook(book);
-    BookUtil.redirectBook(book);
-    this.props.handleCollectionDetailDialog(false);
-    this.props.handleActionDialog(false);
   };
 
   handleRemoveBook = (event: React.MouseEvent, book: BookModel) => {
@@ -101,47 +63,6 @@ class CollectionDetailDialog extends React.Component<
     this.loadBooks();
     this.props.handleFetchBooks();
   };
-
-  handleMoreAction = (event: React.MouseEvent, book: BookModel) => {
-    event.preventDefault();
-    let x = event.clientX;
-    if (x > document.body.clientWidth - 300) {
-      x = x - 190;
-    } else {
-      x = x - 10;
-    }
-    let y =
-      document.body.clientHeight - event.clientY > 250
-        ? event.clientY - 10
-        : event.clientY - 240;
-    let pos = clampMenuPosition(
-      x,
-      y,
-      CONTEXT_MENU_WIDTH,
-      estimateMenuHeight(10)
-    );
-    this.setState({ left: pos.left, top: pos.top });
-    this.props.handleReadingBook(book);
-    this.props.handleActionDialog(true);
-  };
-
-  renderPercentage(percentage: string) {
-    return (
-      <>
-        {percentage && !isNaN(parseFloat(percentage))
-          ? percentage === "0"
-            ? "New"
-            : percentage === "1"
-              ? "Done"
-              : (parseFloat(percentage) * 100).toFixed(2)
-          : "0"}
-        {percentage &&
-          !isNaN(parseFloat(percentage)) &&
-          percentage !== "0" &&
-          percentage !== "1" && <span>%</span>}
-      </>
-    );
-  }
 
   render() {
     let collection = CollectionUtil.getCollection(
@@ -183,58 +104,28 @@ class CollectionDetailDialog extends React.Component<
               </p>
             </div>
           ) : (
-            this.state.books.map((item) => {
+            this.state.books.map((book) => {
               return (
-                <div
-                  className="collection-detail-book-item"
-                  key={item.book.key}
-                  onClick={() => {
-                    this.handleOpenBook(item.book);
-                  }}
-                  onContextMenu={(event) => {
-                    this.handleMoreAction(event, item.book);
-                  }}
-                >
-                  <div className="collection-detail-book-cover">
-                    {item.isCoverExist && item.cover ? (
-                      <img src={item.cover} alt="" draggable={false}></img>
-                    ) : (
-                      <div className="collection-detail-book-empty-cover">
-                        <EmptyCover
-                          {...{
-                            format: item.book.format,
-                            title: item.book.name,
-                            scale: 0.75,
-                          }}
-                        />
-                      </div>
-                    )}
-                    <span
-                      className="icon-close collection-detail-book-remove"
-                      title={this.props.t("Remove from collection")}
-                      onClick={(event) => {
-                        this.handleRemoveBook(event, item.book);
-                      }}
-                    ></span>
-                  </div>
-                  <p className="collection-detail-book-title">
-                    {item.book.name}
-                  </p>
-                  <p className="collection-detail-book-percentage">
-                    {this.renderPercentage(item.percentage)}
-                  </p>
+                <div className="collection-detail-book-wrapper" key={book.key}>
+                  <BookCardItem
+                    {...({
+                      book,
+                      cardScale: 1,
+                      isSelected: false,
+                    } as any)}
+                  />
+                  <span
+                    className="icon-close collection-detail-book-remove"
+                    title={this.props.t("Remove from collection")}
+                    onClick={(event) => {
+                      this.handleRemoveBook(event, book);
+                    }}
+                  ></span>
                 </div>
               );
             })
           )}
         </div>
-        {this.props.isOpenActionDialog &&
-        this.props.currentBook &&
-        this.props.currentBook.key !== this.props.currentCollectionKey ? (
-          <ActionDialog
-            {...({ left: this.state.left, top: this.state.top } as any)}
-          />
-        ) : null}
       </div>
     );
   }

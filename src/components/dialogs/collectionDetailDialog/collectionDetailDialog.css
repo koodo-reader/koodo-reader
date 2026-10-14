@@ -48,44 +48,27 @@
 }
 .collection-detail-dialog-body {
   flex: 1;
-  margin-top: 14px;
+  margin-top: 10px;
   overflow-y: auto;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
 }
-.collection-detail-book-item {
-  width: 96px;
-  margin: 8px;
-  cursor: pointer;
+.collection-detail-book-wrapper {
   position: relative;
-  border-radius: 3px;
-  padding: 4px 0px;
+  width: 133px;
+  margin: 4px 8px;
 }
-.collection-detail-book-item:hover {
-  background: var(--hover-bg);
+.collection-detail-book-wrapper .book-list-item {
+  float: none;
 }
-.collection-detail-book-cover {
-  position: relative;
-  width: 80px;
-  height: 105px;
-  margin: 0 auto;
-}
-.collection-detail-book-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 2px;
-}
-.collection-detail-book-empty-cover {
-  width: 80px;
-  height: 105px;
-  overflow: hidden;
+.collection-detail-book-wrapper .book-selected-icon {
+  display: none;
 }
 .collection-detail-book-remove {
   position: absolute;
-  top: -7px;
-  right: -7px;
+  top: 2px;
+  right: 12px;
   background: rgba(0, 0, 0, 0.55);
   color: #fff;
   border-radius: 50%;
@@ -95,28 +78,11 @@
   text-align: center;
   font-size: 10px;
   display: none;
-  z-index: 2;
+  z-index: 3;
   cursor: pointer;
 }
-.collection-detail-book-item:hover .collection-detail-book-remove {
+.collection-detail-book-wrapper:hover .collection-detail-book-remove {
   display: block;
-}
-.collection-detail-book-title {
-  font-size: 12px;
-  line-height: 15px;
-  text-align: center;
-  margin: 5px 0 0 0;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-}
-.collection-detail-book-percentage {
-  font-size: 11px;
-  opacity: 0.6;
-  text-align: center;
-  margin: 2px 0 0 0;
 }
 .collection-detail-dialog-empty {
   width: 100%;

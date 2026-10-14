@@ -2,8 +2,6 @@ import { connect } from "react-redux";
 import {
   handleCollectionDetailDialog,
   handleFetchBooks,
-  handleReadingBook,
-  handleActionDialog,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 import { withTranslation } from "react-i18next";
@@ -13,15 +11,11 @@ const mapStateToProps = (state: stateType) => {
   return {
     currentCollectionKey: state.collection.currentCollectionKey,
     refreshBookKey: state.manager.refreshBookKey,
-    isOpenActionDialog: state.book.isOpenActionDialog,
-    currentBook: state.book.currentBook,
   };
 };
 const actionCreator = {
   handleCollectionDetailDialog,
   handleFetchBooks,
-  handleReadingBook,
-  handleActionDialog,
 };
 export default connect(
   mapStateToProps,
