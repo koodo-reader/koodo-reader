@@ -4,6 +4,7 @@ import { SearchBoxProps, SearchBoxState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import ConfigUtil from "../../utils/file/configUtil";
 import BookUtil from "../../utils/file/bookUtil";
+import CollectionUtil from "../../utils/file/collectionUtil";
 
 class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
   private searchBoxRef: React.RefObject<HTMLInputElement>;
@@ -48,6 +49,15 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
         : this.props.tabMode === "highlight"
           ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
           : await BookUtil.searchBooksByKeyword(keyword);
+    if (this.props.tabMode !== "note" && this.props.tabMode !== "highlight") {
+      let lowerKeyword = keyword.toLowerCase();
+      CollectionUtil.getCollectionList().forEach((collection) => {
+        if (CollectionUtil.isCollectionDeleted(collection.key)) return;
+        if (collection.name.toLowerCase().includes(lowerKeyword)) {
+          results.push({ key: collection.key, name: collection.name });
+        }
+      });
+    }
     let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");
     results = results.filter((result: any) => {
       return !deletedBookKeys.includes(

@@ -17,6 +17,7 @@ import {
 } from "../../constants/settingList";
 import toast from "react-hot-toast";
 import BookUtil from "../../utils/file/bookUtil";
+import CollectionUtil from "../../utils/file/collectionUtil";
 import i18n from "../../i18n";
 import { langToName } from "../../utils/common";
 import { resetReaderRequest } from "../../utils/request/reader";
@@ -143,13 +144,18 @@ export function handleFetchBooks() {
     if (bookSortCode.order === 2) {
       orderField = "DESC";
     }
+    let collectionKeys = CollectionUtil.getCollectionKeys();
+    let collectionList = CollectionUtil.getCollectionList();
+    let localeCompareName = (a: string, b: string) =>
+      a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
     let bookList: { key: string }[] = [];
     if (sortField === "recentRead") {
       let allBookKeys = await DatabaseService.getAllRecordKeys("books");
+      let allKeys = [...allBookKeys, ...collectionKeys];
       let recentBookLKeys = ConfigService.getAllListConfig("recentBooks") || [];
       let sortedKeys = [
-        ...recentBookLKeys.filter((key) => allBookKeys.includes(key)),
-        ...allBookKeys.filter((key) => !recentBookLKeys.includes(key)),
+        ...recentBookLKeys.filter((key) => allKeys.includes(key)),
+        ...allKeys.filter((key) => !recentBookLKeys.includes(key)),
       ];
       if (bookSortCode.order === 1) {
         sortedKeys = sortedKeys.reverse();
@@ -176,10 +182,14 @@ export function handleFetchBooks() {
       if (bookSortCode.order === 1) {
         sortedKeys = sortedKeys.reverse();
       }
-      sortedKeys = sortedKeys;
-      bookList = sortedKeys.map((key: string) => {
-        return { key };
+      let sortedCollections = [...collectionList].sort((a, b) => {
+        return localeCompareName(a.name, b.name);
       });
+      bookList = [...sortedKeys, ...sortedCollections.map((item) => item.key)].map(
+        (key: string) => {
+          return { key };
+        }
+      );
     } else if (sortField === "percentage") {
       let allBookKeys = await DatabaseService.getAllRecordKeys("books");
       let locationObj = ConfigService.getAllObjectConfig("recordLocation");
@@ -187,12 +197,20 @@ export function handleFetchBooks() {
       for (let obj in locationObj) {
         sortable.push([obj, locationObj[obj].percentage || 0]);
       }
+      collectionList.forEach((collection) => {
+        sortable.push([
+          collection.key,
+          CollectionUtil.getCollectionPercentageNumber(collection),
+        ]);
+      });
       sortable.sort(function (a, b) {
         return b[1] - a[1];
       });
       let recentBookLKeys = sortable.map((item) => item[0]) || [];
       let sortedKeys = [
-        ...recentBookLKeys.filter((key) => allBookKeys.includes(key)),
+        ...recentBookLKeys.filter(
+          (key) => allBookKeys.includes(key) || collectionKeys.includes(key)
+        ),
         ...allBookKeys.filter((key) => !recentBookLKeys.includes(key)),
       ];
       if (bookSortCode.order === 1) {
@@ -202,8 +220,54 @@ export function handleFetchBooks() {
       bookList = sortedKeys.map((key: string) => {
         return { key };
       });
+    } else if (sortField === "name") {
+      let bookKeys = (
+        await BookUtil.getBookKeysWithSort("name", "ASC")
+      ).map((item: any) => item.key);
+      let nameMap = await BookUtil.getBookNamesMapByKeys(bookKeys);
+      let nameItems = bookKeys.map((key: string) => {
+        return { key, name: nameMap[key] || "" };
+      });
+      collectionList.forEach((collection) => {
+        nameItems.push({ key: collection.key, name: collection.name });
+      });
+      nameItems.sort((a, b) => {
+        return localeCompareName(a.name, b.name);
+      });
+      if (orderField === "DESC") {
+        nameItems = nameItems.reverse();
+      }
+      bookList = nameItems.map((item) => {
+        return { key: item.key };
+      });
+    } else if (sortField === "key") {
+      let bookKeys = (
+        await BookUtil.getBookKeysWithSort("key", "ASC")
+      ).map((item: any) => item.key);
+      let allKeys = [...bookKeys, ...collectionKeys];
+      allKeys.sort((a, b) => {
+        return Number(a) - Number(b);
+      });
+      if (orderField === "DESC") {
+        allKeys = allKeys.reverse();
+      }
+      bookList = allKeys.map((key: string) => {
+        return { key };
+      });
     } else {
-      bookList = await BookUtil.getBookKeysWithSort(sortField, orderField);
+      let sortedBookList = await BookUtil.getBookKeysWithSort(
+        sortField,
+        orderField
+      );
+      let sortedCollections = [...collectionList].sort((a, b) => {
+        return localeCompareName(a.name, b.name);
+      });
+      bookList = [
+        ...sortedBookList,
+        ...sortedCollections.map((item) => {
+          return { key: item.key };
+        }),
+      ];
     }
 
     let deletedBookKeys = ConfigService.getAllListConfig("deletedBooks");

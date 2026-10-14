@@ -4,6 +4,7 @@ import { Trans } from "react-i18next";
 import { MarkActionProps } from "./interface";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import CollectionUtil from "../../../utils/file/collectionUtil";
 import {
   clampMenuPosition,
   CONTEXT_MENU_WIDTH,
@@ -13,19 +14,39 @@ import {
 
 const MENU_ITEM_HEIGHT = 33;
 const MENU_CONTAINER_PADDING = 5;
-const MARK_AS_MENU_INDEX = 6;
-const SUBMENU_TOP_OFFSET =
-  MENU_CONTAINER_PADDING + MARK_AS_MENU_INDEX * MENU_ITEM_HEIGHT - 34;
+const DEFAULT_MENU_INDEX = 6;
 
 class MarkAction extends React.Component<MarkActionProps> {
+  getMenuIndex = () => {
+    return this.props.menuItemIndex ?? DEFAULT_MENU_INDEX;
+  };
+
   handleMarkAsFinished = () => {
     const key = this.props.currentBook.key;
-    const existing = ConfigService.getObjectConfig(key, "recordLocation", {});
-    ConfigService.setObjectConfig(
-      key,
-      { ...existing, percentage: "1" },
-      "recordLocation"
-    );
+    if (CollectionUtil.isCollection(key)) {
+      let collection = CollectionUtil.getCollection(key);
+      if (collection) {
+        collection.books.forEach((bookKey) => {
+          const existing = ConfigService.getObjectConfig(
+            bookKey,
+            "recordLocation",
+            {}
+          );
+          ConfigService.setObjectConfig(
+            bookKey,
+            { ...existing, percentage: "1" },
+            "recordLocation"
+          );
+        });
+      }
+    } else {
+      const existing = ConfigService.getObjectConfig(key, "recordLocation", {});
+      ConfigService.setObjectConfig(
+        key,
+        { ...existing, percentage: "1" },
+        "recordLocation"
+      );
+    }
     toast.success(this.props.t("Modification successful"));
     this.props.handleRefreshBookCover(key);
     this.props.handleFetchBooks();
@@ -35,7 +56,16 @@ class MarkAction extends React.Component<MarkActionProps> {
 
   handleMarkAsUnread = () => {
     const key = this.props.currentBook.key;
-    ConfigService.deleteObjectConfig(key, "recordLocation");
+    if (CollectionUtil.isCollection(key)) {
+      let collection = CollectionUtil.getCollection(key);
+      if (collection) {
+        collection.books.forEach((bookKey) => {
+          ConfigService.deleteObjectConfig(bookKey, "recordLocation");
+        });
+      }
+    } else {
+      ConfigService.deleteObjectConfig(key, "recordLocation");
+    }
     toast.success(this.props.t("Modification successful"));
     this.props.handleRefreshBookCover(key);
     this.props.handleFetchBooks();
@@ -44,6 +74,9 @@ class MarkAction extends React.Component<MarkActionProps> {
   };
 
   render() {
+    const menuIndex = this.getMenuIndex();
+    const submenuTopOffset =
+      MENU_CONTAINER_PADDING + menuIndex * MENU_ITEM_HEIGHT - 34;
     return (
       <div
         className="action-dialog-container"
@@ -62,7 +95,7 @@ class MarkAction extends React.Component<MarkActionProps> {
                 const pos = clampMenuPosition(
                   this.props.left +
                     (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
-                  this.props.top + SUBMENU_TOP_OFFSET,
+                  this.props.top + submenuTopOffset,
                   CONTEXT_MENU_WIDTH,
                   estimateMenuHeight(2)
                 );

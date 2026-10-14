@@ -32,6 +32,8 @@ export interface HeaderProps extends RouteComponentProps<any> {
   handleFetchNotes: () => void;
   handleFetchBookmarks: () => void;
   handleReadingBook: (book: Book) => void;
+  handleCollectionDetailDialog: (isOpen: boolean) => void;
+  handleCurrentCollectionKey: (key: string) => void;
   handleCloudSyncFunc: (
     cloudSyncFunc: (userInfo: any) => Promise<false | undefined>
   ) => void;

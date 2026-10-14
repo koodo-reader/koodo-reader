@@ -64,7 +64,7 @@ class ConfigUtil {
     if (type === "sync") {
       config = ConfigService.getAllSyncRecord();
     } else {
-      let configList = CommonTool.configList;
+      let configList = [...CommonTool.configList, "bookCollection"];
       for (let i = 0; i < configList.length; i++) {
         let item = configList[i];
         if (ConfigService.getItem(item)) {
@@ -524,6 +524,7 @@ class ConfigUtil {
         "customBackgrounds",
         "customFonts",
         "customDicts",
+        "bookCollection",
       ];
       for (let i = 0; i < configList.length; i++) {
         let item = configList[i];
@@ -538,7 +539,7 @@ class ConfigUtil {
     if (type === "sync") {
       ConfigService.removeItem("syncRecord");
     } else {
-      let configList = CommonTool.configList;
+      let configList = [...CommonTool.configList, "bookCollection"];
       for (let i = 0; i < configList.length; i++) {
         let item = configList[i];
         ConfigService.removeItem(item);

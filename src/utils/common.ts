@@ -846,6 +846,23 @@ export const generateSyncRecord = async () => {
       }
     }
   }
+  let collectionItems: string[] = Object.keys(
+    ConfigService.getAllObjectConfig("bookCollection")
+  );
+  for (let index = 0; index < collectionItems.length; index++) {
+    ConfigService.setSyncRecord(
+      {
+        type: "config",
+        catergory: "objectConfig",
+        name: "bookCollection",
+        key: collectionItems[index],
+      },
+      {
+        operation: "update",
+        time: Date.now(),
+      }
+    );
+  }
 };
 export const handleContextMenu = (id: string, isInput: boolean = false) => {
   if (!isElectron) return;

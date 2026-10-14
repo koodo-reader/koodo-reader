@@ -4,6 +4,7 @@ import { AddDialogProps, AddDialogState } from "./interface";
 import "./addDialog.css";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import CollectionUtil from "../../../utils/file/collectionUtil";
 
 class AddDialog extends Component<AddDialogProps, AddDialogState> {
   constructor(props: AddDialogProps) {
@@ -13,6 +14,21 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
 
   handleCancel = () => {
     this.props.handleAddDialog(false);
+  };
+  deleteKeyFromShelf = (key: string) => {
+    ConfigService.deleteFromMapConfig(this.props.shelfTitle, key, "shelfList");
+    if (CollectionUtil.isCollection(key)) {
+      let collection = CollectionUtil.getCollection(key);
+      if (collection) {
+        collection.books.forEach((bookKey) => {
+          ConfigService.deleteFromMapConfig(
+            this.props.shelfTitle,
+            bookKey,
+            "shelfList"
+          );
+        });
+      }
+    }
   };
   handleComfirm = () => {
     const inputElement: HTMLInputElement = document.querySelector(
@@ -44,11 +60,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     if (this.props.isSelectBook) {
       this.props.selectedBooks.forEach((item) => {
         if (this.state.actionType === "move") {
-          ConfigService.deleteFromMapConfig(
-            this.props.shelfTitle,
-            item,
-            "shelfList"
-          );
+          this.deleteKeyFromShelf(item);
         }
         ConfigService.setMapConfig(shelfTitle, item, "shelfList");
       });
@@ -58,11 +70,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
       }
     } else {
       if (this.state.actionType === "move") {
-        ConfigService.deleteFromMapConfig(
-          this.props.shelfTitle,
-          this.props.currentBook.key,
-          "shelfList"
-        );
+        this.deleteKeyFromShelf(this.props.currentBook.key);
       }
 
       ConfigService.setMapConfig(

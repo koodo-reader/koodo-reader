@@ -1,0 +1,129 @@
+.collection-detail-dialog-container {
+  width: 620px;
+  height: 430px;
+  position: absolute;
+  left: calc(50vw - 310px);
+  top: calc(50vh - 215px);
+  z-index: 10;
+  animation: popup 0.1s ease-in-out 0s 1;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  box-sizing: border-box;
+}
+.collection-detail-dialog-header {
+  display: flex;
+  position: relative;
+  flex-shrink: 0;
+}
+.collection-detail-dialog-info {
+  flex: 1;
+  margin-left: 14px;
+  overflow: hidden;
+}
+.collection-detail-dialog-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.collection-detail-dialog-count {
+  font-size: 12px;
+  opacity: 0.7;
+  margin: 6px 0 0 0;
+}
+.collection-detail-dialog-close {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+.collection-detail-dialog-close:hover {
+  opacity: 1;
+}
+.collection-detail-dialog-body {
+  flex: 1;
+  margin-top: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+.collection-detail-book-item {
+  width: 96px;
+  margin: 8px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 3px;
+  padding: 4px 0px;
+}
+.collection-detail-book-item:hover {
+  background: var(--hover-bg);
+}
+.collection-detail-book-cover {
+  position: relative;
+  width: 80px;
+  height: 105px;
+  margin: 0 auto;
+}
+.collection-detail-book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2px;
+}
+.collection-detail-book-empty-cover {
+  width: 80px;
+  height: 105px;
+  overflow: hidden;
+}
+.collection-detail-book-remove {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-size: 10px;
+  display: none;
+  z-index: 2;
+  cursor: pointer;
+}
+.collection-detail-book-item:hover .collection-detail-book-remove {
+  display: block;
+}
+.collection-detail-book-title {
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  margin: 5px 0 0 0;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.collection-detail-book-percentage {
+  font-size: 11px;
+  opacity: 0.6;
+  text-align: center;
+  margin: 2px 0 0 0;
+}
+.collection-detail-dialog-empty {
+  width: 100%;
+  text-align: center;
+  margin-top: 70px;
+  opacity: 0.6;
+}
+.collection-detail-dialog-empty-icon {
+  font-size: 40px;
+}

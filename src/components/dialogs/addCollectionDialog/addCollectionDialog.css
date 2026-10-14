@@ -1,0 +1,107 @@
+.add-collection-dialog-container {
+  width: 309px;
+  height: 189px;
+  opacity: 1;
+  position: absolute;
+  left: calc(50vw - 155px);
+  top: calc(50vh - 95px);
+  z-index: 10;
+  animation: popup 0.1s ease-in-out 0s 1;
+  border-radius: 5px;
+}
+.add-collection-dialog-title {
+  width: 100%;
+  height: 20px;
+  font-size: 18px;
+  opacity: 1;
+  text-align: center;
+  font-weight: 500;
+  margin-top: 15px;
+}
+.add-collection-dialog-list-container {
+  width: 100%;
+  font-size: 15px;
+  line-height: 14px;
+  opacity: 1;
+  margin-top: 15px;
+  height: 30px;
+}
+.add-collection-dialog-list-text {
+  width: 50px;
+  float: left;
+  margin-left: 25px;
+  margin-top: 7px;
+}
+.add-collection-dialog-list-box {
+  float: left;
+  width: 210px;
+  height: 31px;
+  opacity: 1;
+  box-sizing: border-box;
+  font-size: 15px;
+  line-height: 31px;
+  border-radius: 5px;
+}
+.add-collection-dialog-list-option {
+  width: 169px;
+  height: 31px;
+  opacity: 1;
+  box-sizing: border-box;
+  margin-left: 16px;
+  font-size: 15px;
+  line-height: 31px;
+  cursor: pointer;
+  text-align: left;
+}
+.add-collection-dialog-new-text {
+  width: 50px;
+  float: left;
+  margin-left: 25px;
+  margin-top: 7px;
+}
+.add-collection-dialog-new-box {
+  float: left;
+  width: 210px;
+  height: 31px;
+  opacity: 1;
+  box-sizing: border-box;
+  padding-left: 5px;
+  font-size: 15px;
+  line-height: 31px;
+  border-radius: 5px;
+}
+.add-collection-dialog-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  position: absolute;
+  right: 25px;
+  bottom: 15px;
+}
+.add-collection-dialog-cancel {
+  min-width: 60px;
+  height: 26px;
+  opacity: 1;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 13px;
+  margin-right: 10px;
+  line-height: 26px;
+  opacity: 1;
+  text-align: center;
+  cursor: pointer;
+}
+.add-collection-dialog-confirm {
+  min-width: 64px;
+  height: 30px;
+  opacity: 1;
+  font-size: 13px;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  line-height: 30px;
+  opacity: 1;
+  text-align: center;
+  cursor: pointer;
+}

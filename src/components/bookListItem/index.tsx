@@ -9,6 +9,10 @@ import {
   handleSelectBook,
   handleActionDialog,
   handleRefreshBookCover,
+  handleCollectionDialog,
+  handleCollectionDialogMode,
+  handleCollectionDialogBooks,
+  handleCollectionDialogKey,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 
@@ -35,6 +39,10 @@ const actionCreator = {
   handleFetchBooks,
   handleSelectedBooks,
   handleRefreshBookCover,
+  handleCollectionDialog,
+  handleCollectionDialogMode,
+  handleCollectionDialogBooks,
+  handleCollectionDialogKey,
 };
 export default connect(
   mapStateToProps,

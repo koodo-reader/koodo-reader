@@ -102,7 +102,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
       this.props.left + (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
       this.props.top + 103,
       CONTEXT_MENU_WIDTH,
-      estimateMenuHeight(isElectron ? 9 : 8)
+      estimateMenuHeight(isElectron ? 10 : 9)
     );
 
     return (
@@ -177,7 +177,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                       (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
                     this.props.top + 103,
                     CONTEXT_MENU_WIDTH,
-                    estimateMenuHeight(isElectron ? 9 : 8)
+                    estimateMenuHeight(isElectron ? 10 : 9)
                   );
                   return { position: "fixed", left: pos.left, top: pos.top };
                 })()

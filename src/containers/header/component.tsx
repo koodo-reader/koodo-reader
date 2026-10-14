@@ -24,6 +24,7 @@ import ConfigUtil from "../../utils/file/configUtil";
 import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import BookUtil from "../../utils/file/bookUtil";
+import CollectionUtil from "../../utils/file/collectionUtil";
 import {
   checkBrokenDatabase,
   checkMissingBook,
@@ -317,6 +318,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     ) {
       let lastReadBookKey = ConfigService.getAllListConfig("recentBooks")[0];
       if (lastReadBookKey) {
+        let collectionKey = CollectionUtil.isCollection(lastReadBookKey)
+          ? lastReadBookKey
+          : CollectionUtil.getActiveCollectionByBook(lastReadBookKey)?.key;
+        if (collectionKey) {
+          let collection = CollectionUtil.getCollection(collectionKey);
+          if (collection) {
+            this.props.handleReadingBook(
+              CollectionUtil.getCollectionAsBook(collection)
+            );
+            this.props.handleCurrentCollectionKey(collectionKey);
+            this.props.handleCollectionDetailDialog(true);
+            return;
+          }
+        }
         let fullBook = await DatabaseService.getRecord(
           lastReadBookKey,
           "books"

@@ -24,6 +24,12 @@ export interface ActionDialogProps extends RouteComponentProps<any> {
   handleDetailDialog: (isShow: boolean) => void;
   handleSelectBook: (isSelectBook: boolean) => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
+  handleCollectionDialog: (isOpen: boolean) => void;
+  handleCollectionDialogMode: (mode: string) => void;
+  handleCollectionDialogKey: (key: string) => void;
+  handleCollectionDetailDialog: (isOpen: boolean) => void;
+  handleCurrentCollectionKey: (key: string) => void;
+  handleAddCollectionDialog: (isOpen: boolean) => void;
 }
 export interface ActionDialogState {
   isShowExport: boolean;

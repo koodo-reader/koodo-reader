@@ -12,6 +12,7 @@ import {
   exportNotes,
 } from "../../utils/file/export";
 import BookUtil from "../../utils/file/bookUtil";
+import { filterNonCollectionKeys } from "../../utils/reader/bookDrag";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
 import { preCacheAllBooks } from "../../utils/common";
@@ -124,6 +125,24 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
               }}
             >
               <Trans>Add to shelf</Trans>
+            </span>
+            <span
+              className="book-manage-title"
+              onClick={() => {
+                let bookKeys = filterNonCollectionKeys(
+                  this.props.selectedBooks
+                );
+                if (bookKeys.length === 0) {
+                  toast(this.props.t("Nothing to add"));
+                  return;
+                }
+                this.props.handleCollectionDialogBooks(bookKeys);
+                this.props.handleCollectionDialogMode("create");
+                this.props.handleCollectionDialogKey("");
+                this.props.handleCollectionDialog(true);
+              }}
+            >
+              <Trans>Create collection</Trans>
             </span>
             <span
               className="book-manage-title"
