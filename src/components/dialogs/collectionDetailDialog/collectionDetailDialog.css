@@ -1,15 +1,15 @@
 .collection-detail-dialog-container {
-  width: 620px;
+  width: 700px;
   height: 430px;
   position: absolute;
-  left: calc(50vw - 310px);
+  left: calc(50vw - 350px);
   top: calc(50vh - 215px);
   z-index: 10;
   animation: popup 0.1s ease-in-out 0s 1;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  padding: 16px 20px;
+  padding: 16px 10px;
   box-sizing: border-box;
 }
 .collection-detail-dialog-header {
@@ -17,6 +17,7 @@
   position: relative;
   flex-shrink: 0;
   padding-right: 40px;
+  padding-left: 15px;
   box-sizing: border-box;
 }
 .collection-detail-dialog-info {
@@ -68,8 +69,6 @@
 }
 .collection-detail-book-wrapper {
   position: relative;
-  width: 133px;
-  margin: 4px 8px;
 }
 .collection-detail-book-wrapper .book-list-item {
   float: none;
@@ -80,7 +79,7 @@
 .collection-detail-book-remove {
   position: absolute;
   top: 2px;
-  right: 12px;
+  right: 5px;
   background: rgba(0, 0, 0, 0.55);
   color: #fff;
   border-radius: 50%;
