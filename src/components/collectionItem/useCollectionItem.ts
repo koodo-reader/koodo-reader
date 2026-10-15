@@ -25,10 +25,6 @@ export interface CollectionItemSharedProps {
   handleSelectBook: (isSelectBook: boolean) => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
   handleFetchBooks?: () => void;
-  handleCollectionDialog: (isOpen: boolean) => void;
-  handleCollectionDialogMode: (mode: string) => void;
-  handleCollectionDialogBooks: (books: string[]) => void;
-  handleCollectionDialogKey: (key: string) => void;
   handleCollectionDetailDialog: (isOpen: boolean) => void;
   handleCurrentCollectionKey: (key: string) => void;
 }
@@ -45,10 +41,6 @@ export function useCollectionItem(props: CollectionItemSharedProps) {
     handleSelectBook,
     handleSelectedBooks,
     handleFetchBooks,
-    handleCollectionDialog,
-    handleCollectionDialogMode,
-    handleCollectionDialogBooks,
-    handleCollectionDialogKey,
     handleCollectionDetailDialog,
     handleCurrentCollectionKey,
   } = props;

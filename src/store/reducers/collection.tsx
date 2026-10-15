@@ -1,6 +1,5 @@
 const initState = {
   isOpenCollectionDialog: false,
-  collectionDialogMode: "create",
   collectionDialogBooks: [],
   collectionDialogKey: "",
   isOpenCollectionDetailDialog: false,
@@ -16,11 +15,6 @@ export function collection(
       return {
         ...state,
         isOpenCollectionDialog: action.payload,
-      };
-    case "HANDLE_COLLECTION_DIALOG_MODE":
-      return {
-        ...state,
-        collectionDialogMode: action.payload,
       };
     case "HANDLE_COLLECTION_DIALOG_BOOKS":
       return {

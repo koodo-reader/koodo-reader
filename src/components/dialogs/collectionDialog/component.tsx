@@ -18,15 +18,13 @@ class CollectionDialog extends React.Component<
   }
 
   componentDidMount() {
-    if (this.props.collectionDialogMode === "edit") {
-      let collection = CollectionUtil.getCollection(
-        this.props.collectionDialogKey
-      );
-      if (collection) {
-        this.setState({
-          name: collection.name,
-        });
-      }
+    let collection = CollectionUtil.getCollection(
+      this.props.collectionDialogKey
+    );
+    if (collection) {
+      this.setState({
+        name: collection.name,
+      });
     }
   }
 
@@ -36,9 +34,7 @@ class CollectionDialog extends React.Component<
 
   closeDialog = () => {
     this.props.handleCollectionDialog(false);
-    this.props.handleCollectionDialogBooks([]);
     this.props.handleCollectionDialogKey("");
-    this.props.handleCollectionDialogMode("create");
   };
 
   handleComfirm = () => {
@@ -47,51 +43,27 @@ class CollectionDialog extends React.Component<
       toast(this.props.t("Collection name is required"));
       return;
     }
-    let isEdit = this.props.collectionDialogMode === "edit";
     if (
       CollectionUtil.isCollectionNameExists(
         name,
-        isEdit ? this.props.collectionDialogKey : undefined
+        this.props.collectionDialogKey
       )
     ) {
       toast(this.props.t("Collection name already exists"));
       return;
     }
-    if (isEdit) {
-      CollectionUtil.updateCollection(this.props.collectionDialogKey, name);
-      toast.success(this.props.t("Edition successful"));
-    } else {
-      let collection = CollectionUtil.createCollection(
-        name,
-        this.props.collectionDialogBooks
-      );
-      if (collection) {
-        toast.success(this.props.t("Created successfully"));
-        this.props.handleSelectBook(false);
-        this.props.handleSelectedBooks([]);
-      }
-    }
+    CollectionUtil.updateCollection(this.props.collectionDialogKey, name);
+    toast.success(this.props.t("Edition successful"));
     this.props.handleFetchBooks();
     this.props.handleActionDialog(false);
     this.closeDialog();
   };
 
   render() {
-    let isEdit = this.props.collectionDialogMode === "edit";
     return (
       <div className="collection-dialog-container">
         <div className="collection-dialog-title">
-          {isEdit ? <Trans>Edit collection</Trans> : <Trans>Create collection</Trans>}
-        </div>
-        <div className="collection-dialog-count">
-          {!isEdit && (
-            <Trans
-              i18nKey="Total books"
-              count={this.props.collectionDialogBooks.length}
-            >
-              {"Total " + this.props.collectionDialogBooks.length + " books"}
-            </Trans>
-          )}
+          <Trans>Edit collection</Trans>
         </div>
         <div className="collection-dialog-field-container">
           <div className="collection-dialog-field-text">

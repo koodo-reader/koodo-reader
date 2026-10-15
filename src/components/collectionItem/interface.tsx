@@ -20,10 +20,6 @@ export interface CollectionItemProps extends RouteComponentProps<any> {
   handleSelectedBooks: (selectedBooks: string[]) => void;
   handleActionDialog: (isOpen: boolean) => void;
   handleFetchBooks: () => void;
-  handleCollectionDialog: (isOpen: boolean) => void;
-  handleCollectionDialogMode: (mode: string) => void;
-  handleCollectionDialogBooks: (books: string[]) => void;
-  handleCollectionDialogKey: (key: string) => void;
   handleCollectionDetailDialog: (isOpen: boolean) => void;
   handleCurrentCollectionKey: (key: string) => void;
   t: (title: string) => string;

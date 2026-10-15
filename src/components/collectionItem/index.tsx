@@ -5,10 +5,6 @@ import {
   handleSelectBook,
   handleSelectedBooks,
   handleFetchBooks,
-  handleCollectionDialog,
-  handleCollectionDialogMode,
-  handleCollectionDialogBooks,
-  handleCollectionDialogKey,
   handleCollectionDetailDialog,
   handleCurrentCollectionKey,
 } from "../../store/actions";
@@ -33,10 +29,6 @@ const actionCreator = {
   handleSelectBook,
   handleSelectedBooks,
   handleFetchBooks,
-  handleCollectionDialog,
-  handleCollectionDialogMode,
-  handleCollectionDialogBooks,
-  handleCollectionDialogKey,
   handleCollectionDetailDialog,
   handleCurrentCollectionKey,
 };

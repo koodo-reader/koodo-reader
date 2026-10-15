@@ -27,10 +27,8 @@ export interface BookItemSharedProps {
   handleSelectBook: (isSelectBook: boolean) => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
   handleFetchBooks?: () => void;
-  handleCollectionDialog: (isOpen: boolean) => void;
-  handleCollectionDialogMode: (mode: string) => void;
   handleCollectionDialogBooks: (books: string[]) => void;
-  handleCollectionDialogKey: (key: string) => void;
+  handleAddCollectionDialog: (isOpen: boolean) => void;
 }
 
 export function useBookItem(props: BookItemSharedProps) {
@@ -47,10 +45,8 @@ export function useBookItem(props: BookItemSharedProps) {
     handleSelectBook,
     handleSelectedBooks,
     handleFetchBooks,
-    handleCollectionDialog,
-    handleCollectionDialogMode,
     handleCollectionDialogBooks,
-    handleCollectionDialogKey,
+    handleAddCollectionDialog,
   } = props;
 
   const [isFavorite, setIsFavorite] = useState(
@@ -317,18 +313,14 @@ export function useBookItem(props: BookItemSharedProps) {
         }
       } else {
         handleCollectionDialogBooks([book.key, ...bookKeys]);
-        handleCollectionDialogMode("create");
-        handleCollectionDialogKey("");
-        handleCollectionDialog(true);
+        handleAddCollectionDialog(true);
       }
     },
     [
       book.key,
       handleFetchBooks,
-      handleCollectionDialog,
-      handleCollectionDialogMode,
       handleCollectionDialogBooks,
-      handleCollectionDialogKey,
+      handleAddCollectionDialog,
     ]
   );
 

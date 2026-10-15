@@ -33,7 +33,6 @@ class ActionDialog extends React.Component<
   };
   handleEditBook = () => {
     if (CollectionUtil.isCollection(this.props.currentBook.key)) {
-      this.props.handleCollectionDialogMode("edit");
       this.props.handleCollectionDialogKey(this.props.currentBook.key);
       this.props.handleCollectionDialog(true);
       this.props.handleActionDialog(false);

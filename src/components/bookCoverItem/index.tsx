@@ -7,10 +7,8 @@ import {
   handleSelectBook,
   handleRefreshBookCover,
   handleFetchBooks,
-  handleCollectionDialog,
-  handleCollectionDialogMode,
   handleCollectionDialogBooks,
-  handleCollectionDialogKey,
+  handleAddCollectionDialog,
 } from "../../store/actions";
 import BookCoverItem from "./component";
 import { stateType } from "../../store";
@@ -35,10 +33,8 @@ const actionCreator = {
   handleSelectedBooks,
   handleRefreshBookCover,
   handleFetchBooks,
-  handleCollectionDialog,
-  handleCollectionDialogMode,
   handleCollectionDialogBooks,
-  handleCollectionDialogKey,
+  handleAddCollectionDialog,
 };
 export default connect(
   mapStateToProps,
