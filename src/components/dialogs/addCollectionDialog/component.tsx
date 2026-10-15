@@ -131,7 +131,7 @@ class AddCollectionDialog extends Component<
       ];
     };
     return (
-      <div className="add-collection-dialog-container">
+      <div className="add-dialog-container">
         <div className="add-collection-dialog-title">
           <Trans>Add to collection</Trans>
         </div>

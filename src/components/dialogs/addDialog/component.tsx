@@ -120,14 +120,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
       });
     };
     return (
-      <div
-        className="add-dialog-container"
-        style={
-          this.props.mode === "shelf"
-            ? { height: "340px", top: "calc(50vh - 170px)" }
-            : { height: "280px", top: "calc(50vh - 140px)" }
-        }
-      >
+      <div className="add-dialog-container">
         <div className="add-dialog-title">
           <Trans>Add to shelf</Trans>
         </div>
