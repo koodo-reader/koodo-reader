@@ -4,10 +4,12 @@ export interface AddCollectionDialogProps {
   currentBook: BookModel;
   isSelectBook: boolean;
   selectedBooks: string[];
+  dialogBooks: string[];
   handleAddCollectionDialog: (isOpen: boolean) => void;
   handleActionDialog: (isShow: boolean) => void;
   handleSelectBook: (isSelectBook: boolean) => void;
   handleSelectedBooks: (selectedBooks: string[]) => void;
+  handleCollectionDialogBooks: (books: string[]) => void;
   handleFetchBooks: () => void;
   t: (title: string) => string;
 }

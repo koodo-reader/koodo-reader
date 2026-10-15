@@ -23,18 +23,26 @@ class AddCollectionDialog extends Component<
     this.state = { isNew: true, collectionKey: "" };
   }
 
+  componentWillUnmount() {
+    if (this.props.dialogBooks && this.props.dialogBooks.length > 0) {
+      this.props.handleCollectionDialogBooks([]);
+    }
+  }
+
   handleCancel = () => {
     this.props.handleAddCollectionDialog(false);
   };
 
   getBookKeys = (): string[] => {
     let bookKeys =
-      this.props.isSelectBook &&
-      this.props.selectedBooks.includes(this.props.currentBook?.key)
-        ? this.props.selectedBooks
-        : this.props.currentBook?.key
-          ? [this.props.currentBook.key]
-          : [];
+      this.props.dialogBooks && this.props.dialogBooks.length > 0
+        ? this.props.dialogBooks
+        : this.props.isSelectBook &&
+            this.props.selectedBooks.includes(this.props.currentBook?.key)
+          ? this.props.selectedBooks
+          : this.props.currentBook?.key
+            ? [this.props.currentBook.key]
+            : [];
     return filterNonCollectionKeys(bookKeys).filter((key) => {
       return !CollectionUtil.isDeletedKey(key);
     });

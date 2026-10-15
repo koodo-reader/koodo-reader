@@ -20,10 +20,8 @@ export interface BookCoverProps extends RouteComponentProps<any> {
   handleSelectedBooks: (selectedBooks: string[]) => void;
   handleDeleteDialog: (isShow: boolean) => void;
   handleFetchBooks: () => void;
-  handleCollectionDialog: (isOpen: boolean) => void;
-  handleCollectionDialogMode: (mode: string) => void;
   handleCollectionDialogBooks: (books: string[]) => void;
-  handleCollectionDialogKey: (key: string) => void;
+  handleAddCollectionDialog: (isOpen: boolean) => void;
 }
 export interface BookCoverState {
   isHover: boolean;

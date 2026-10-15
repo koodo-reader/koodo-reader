@@ -7,10 +7,8 @@ import {
   handleSelectedBooks,
   handleRefreshBookCover,
   handleFetchBooks,
-  handleCollectionDialog,
-  handleCollectionDialogMode,
   handleCollectionDialogBooks,
-  handleCollectionDialogKey,
+  handleAddCollectionDialog,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 import BookCardItem from "./component";
@@ -34,10 +32,8 @@ const actionCreator = {
   handleSelectedBooks,
   handleRefreshBookCover,
   handleFetchBooks,
-  handleCollectionDialog,
-  handleCollectionDialogMode,
   handleCollectionDialogBooks,
-  handleCollectionDialogKey,
+  handleAddCollectionDialog,
 };
 export default connect(
   mapStateToProps,

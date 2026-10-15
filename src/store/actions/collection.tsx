@@ -2,10 +2,6 @@ export function handleCollectionDialog(isOpen: boolean) {
   return { type: "HANDLE_COLLECTION_DIALOG", payload: isOpen };
 }
 
-export function handleCollectionDialogMode(mode: string) {
-  return { type: "HANDLE_COLLECTION_DIALOG_MODE", payload: mode };
-}
-
 export function handleCollectionDialogBooks(bookKeys: string[]) {
   return { type: "HANDLE_COLLECTION_DIALOG_BOOKS", payload: bookKeys };
 }

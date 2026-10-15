@@ -146,7 +146,6 @@ export type stateType = {
   };
   collection: {
     isOpenCollectionDialog: boolean;
-    collectionDialogMode: string;
     collectionDialogBooks: string[];
     collectionDialogKey: string;
     isOpenCollectionDetailDialog: boolean;

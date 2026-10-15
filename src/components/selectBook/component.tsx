@@ -137,12 +137,10 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                   return;
                 }
                 this.props.handleCollectionDialogBooks(bookKeys);
-                this.props.handleCollectionDialogMode("create");
-                this.props.handleCollectionDialogKey("");
-                this.props.handleCollectionDialog(true);
+                this.props.handleAddCollectionDialog(true);
               }}
             >
-              <Trans>Create collection</Trans>
+              <Trans>Add to collection</Trans>
             </span>
             <span
               className="book-manage-title"
