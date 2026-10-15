@@ -13,10 +13,12 @@
   box-sizing: border-box;
 }
 .add-dialog-title {
+  width: 100%;
+  height: 20px;
   font-size: 18px;
   font-weight: 500;
   text-align: center;
-  padding: 22px 20px 14px;
+  margin-top: 15px;
   flex-shrink: 0;
 }
 .add-dialog-body {
@@ -69,9 +71,9 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 10px;
-  padding: 12px 20px 16px;
-  flex-shrink: 0;
+  position: absolute;
+  right: 25px;
+  bottom: 15px;
 }
 .add-dialog-cancel {
   min-width: 60px;
@@ -81,6 +83,7 @@
   padding-left: 10px;
   padding-right: 10px;
   font-size: 13px;
+  margin-right: 10px;
   line-height: 30px;
   text-align: center;
   cursor: pointer;
