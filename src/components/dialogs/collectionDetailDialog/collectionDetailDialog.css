@@ -16,6 +16,8 @@
   display: flex;
   position: relative;
   flex-shrink: 0;
+  padding-right: 40px;
+  box-sizing: border-box;
 }
 .collection-detail-dialog-info {
   flex: 1;
@@ -35,16 +37,26 @@
   opacity: 0.7;
   margin: 6px 0 0 0;
 }
-.collection-detail-dialog-close {
+.collection-detail-dialog-close-container {
   position: absolute;
-  right: 0px;
-  top: 0px;
-  font-size: 16px;
+  top: 10px;
+  right: 10px;
+  transition: 0.1s;
+  width: 38px;
+  height: 38px;
   cursor: pointer;
-  opacity: 0.8;
+  z-index: 5;
 }
-.collection-detail-dialog-close:hover {
-  opacity: 1;
+.collection-detail-dialog-close-container:hover {
+  border-radius: 50%;
+  background-color: var(--hover-bg);
+}
+.collection-detail-dialog-close {
+  margin-right: 10px;
+  margin-top: 10px;
+  float: right;
+  font-size: 18px;
+  cursor: pointer;
 }
 .collection-detail-dialog-body {
   flex: 1;
