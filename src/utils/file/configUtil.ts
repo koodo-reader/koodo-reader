@@ -64,7 +64,7 @@ class ConfigUtil {
     if (type === "sync") {
       config = ConfigService.getAllSyncRecord();
     } else {
-      let configList = [...CommonTool.configList, "bookCollection"];
+      let configList = CommonTool.configList;
       for (let i = 0; i < configList.length; i++) {
         let item = configList[i];
         if (ConfigService.getItem(item)) {
@@ -539,7 +539,7 @@ class ConfigUtil {
     if (type === "sync") {
       ConfigService.removeItem("syncRecord");
     } else {
-      let configList = [...CommonTool.configList, "bookCollection"];
+      let configList = CommonTool.configList;
       for (let i = 0; i < configList.length; i++) {
         let item = configList[i];
         ConfigService.removeItem(item);
