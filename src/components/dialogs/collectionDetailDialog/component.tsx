@@ -88,12 +88,14 @@ class CollectionDetailDialog extends React.Component<
               </Trans>
             </p>
           </div>
-          <span
-            className="icon-close collection-detail-dialog-close"
-            onClick={() => {
-              this.handleCancel();
-            }}
-          ></span>
+        </div>
+        <div
+          className="collection-detail-dialog-close-container"
+          onClick={() => {
+            this.handleCancel();
+          }}
+        >
+          <span className="icon-close collection-detail-dialog-close"></span>
         </div>
         <div className="collection-detail-dialog-body">
           {this.state.books.length === 0 ? (

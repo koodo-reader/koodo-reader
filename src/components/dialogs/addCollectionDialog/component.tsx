@@ -135,27 +135,29 @@ class AddCollectionDialog extends Component<
         <div className="add-collection-dialog-title">
           <Trans>Add to collection</Trans>
         </div>
-        <div className="add-collection-dialog-list-container">
-          <div className="add-collection-dialog-list-text">
-            <Trans>Select</Trans>
+        <div className="add-collection-dialog-body">
+          <div className="add-collection-dialog-field">
+            <span className="add-collection-dialog-label">
+              <Trans>Select</Trans>
+            </span>
+            <select
+              className="add-collection-dialog-list-box"
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                this.handleChange(event.target.value);
+              }}
+            >
+              {renderCollectionList()}
+            </select>
           </div>
-          <select
-            className="add-collection-dialog-list-box"
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-              this.handleChange(event.target.value);
-            }}
-          >
-            {renderCollectionList()}
-          </select>
-        </div>
-        <div className="add-collection-dialog-list-container">
-          <div className="add-collection-dialog-new-text">
-            <Trans>New</Trans>
+          <div className="add-collection-dialog-field">
+            <span className="add-collection-dialog-label">
+              <Trans>New</Trans>
+            </span>
+            <input
+              className="add-collection-dialog-new-box"
+              disabled={!this.state.isNew}
+            />
           </div>
-          <input
-            className="add-collection-dialog-new-box"
-            disabled={!this.state.isNew}
-          />
         </div>
         <div className="add-collection-dialog-button-container">
           <div
