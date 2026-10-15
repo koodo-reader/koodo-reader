@@ -65,24 +65,26 @@ class CollectionDialog extends React.Component<
         <div className="collection-dialog-title">
           <Trans>Edit collection</Trans>
         </div>
-        <div className="collection-dialog-field-container">
-          <div className="collection-dialog-field-text">
-            <Trans>Collection name</Trans>
+        <div className="collection-dialog-body">
+          <div className="collection-dialog-field">
+            <span className="collection-dialog-label">
+              <Trans>Collection name</Trans>
+            </span>
+            <input
+              className="collection-dialog-input"
+              value={this.state.name}
+              maxLength={100}
+              autoFocus
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                this.setState({ name: event.target.value });
+              }}
+              onKeyDown={(event: React.KeyboardEvent) => {
+                if (event.key === "Enter") {
+                  this.handleComfirm();
+                }
+              }}
+            />
           </div>
-          <input
-            className="collection-dialog-input"
-            value={this.state.name}
-            maxLength={100}
-            autoFocus
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              this.setState({ name: event.target.value });
-            }}
-            onKeyDown={(event: React.KeyboardEvent) => {
-              if (event.key === "Enter") {
-                this.handleComfirm();
-              }
-            }}
-          />
         </div>
         <div className="collection-dialog-button-container">
           <div
