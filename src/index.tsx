@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./assets/styles/reset.css";
 import "./assets/styles/global.css";
 import "./assets/styles/style.css";
@@ -21,10 +21,9 @@ migrateConfig();
 applyCustomSystemCSS();
 applyAppBackgroundImage();
 const container = document.getElementById("root")!;
-ReactDOM.render(
+createRoot(container).render(
   <Provider store={store}>
     <Router />
-  </Provider>,
-  container
+  </Provider>
 );
 StyleUtil.applyTheme();

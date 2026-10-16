@@ -12,6 +12,7 @@ class SortShelfDialog extends React.Component<
   SortShelfDialogState
 > {
   private newShelfInput = React.createRef<HTMLInputElement>();
+  private latestSortedShelfList: any[] = [];
   constructor(props: SortShelfDialogProps) {
     super(props);
     this.state = {
@@ -22,18 +23,22 @@ class SortShelfDialog extends React.Component<
       isOpenDelete: false,
     };
   }
+  updateSortedShelfList(sortedShelfList: any[]) {
+    this.latestSortedShelfList = sortedShelfList;
+    this.setState({ sortedShelfList });
+  }
   componentDidMount(): void {
     let sortedShelfList =
       ConfigService.getAllListConfig("sortedShelfList") || [];
     let shelfList = ConfigService.getAllMapConfig("shelfList");
     let shelfTitleList = Object.keys(shelfList);
-    this.setState({
-      sortedShelfList: Array.from(
-        new Set([...sortedShelfList, ...shelfTitleList])
-      ).map((item, index) => {
-        return { name: item, id: index };
-      }),
-    });
+    this.updateSortedShelfList(
+      Array.from(new Set([...sortedShelfList, ...shelfTitleList])).map(
+        (item, index) => {
+          return { name: item, id: index };
+        }
+      )
+    );
   }
   handleClose = () => {
     this.props.handleSortShelfDialog(false);
@@ -56,9 +61,7 @@ class SortShelfDialog extends React.Component<
       }
       return item;
     });
-    this.setState({
-      sortedShelfList: newShelfList,
-    });
+    this.updateSortedShelfList(newShelfList);
     ConfigService.setAllListConfig(
       newShelfList.map((item) => item.name),
       "sortedShelfList"
@@ -84,13 +87,13 @@ class SortShelfDialog extends React.Component<
       ConfigService.getAllListConfig("sortedShelfList") || [];
     let shelfList = ConfigService.getAllMapConfig("shelfList");
     let shelfTitleList = Object.keys(shelfList);
-    this.setState({
-      sortedShelfList: Array.from(
-        new Set([...sortedShelfList, ...shelfTitleList])
-      ).map((item, index) => {
-        return { name: item, id: index };
-      }),
-    });
+    this.updateSortedShelfList(
+      Array.from(new Set([...sortedShelfList, ...shelfTitleList])).map(
+        (item, index) => {
+          return { name: item, id: index };
+        }
+      )
+    );
   };
   handleDeletePopup = (isOpenDelete: boolean) => {
     this.setState({ isOpenDelete });
@@ -123,9 +126,7 @@ class SortShelfDialog extends React.Component<
           {
             <ReactSortable
               list={this.state.sortedShelfList}
-              setList={(newState) =>
-                this.setState({ sortedShelfList: newState })
-              }
+              setList={(newState) => this.updateSortedShelfList(newState)}
               animation={200}
               delayOnTouchStart={true}
               delay={2}
@@ -136,7 +137,7 @@ class SortShelfDialog extends React.Component<
               filter={"input"}
               preventOnFilter={false}
               onEnd={() => {
-                let sortedShelfList = this.state.sortedShelfList.map(
+                let sortedShelfList = this.latestSortedShelfList.map(
                   (item) => item.name
                 );
                 ConfigService.setAllListConfig(
