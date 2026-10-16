@@ -32,7 +32,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
   async componentDidMount() {
     this.props.handleFetchNotes();
   }
-  async componentWillReceiveProps(
+  async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<NoteListProps>,
     nextContext: any
   ) {

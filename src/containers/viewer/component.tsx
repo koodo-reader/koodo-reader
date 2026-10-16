@@ -1,4 +1,5 @@
 import React from "react";
+import { flushSync } from "react-dom";
 import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
@@ -111,15 +112,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
     this.props.handleRenderBookFunc(this.handleRenderBook);
     this.resizeHandler = throttle(() => {
-      this.setState(
-        getPageWidth(
-          this.props.readerMode,
-          this.props.scale,
-          parseInt(this.props.margin),
-          this.props.isNavLocked,
-          this.props.isSettingLocked || this.props.isDockedRight
-        )
-      );
+      flushSync(() => {
+        this.setState(
+          getPageWidth(
+            this.props.readerMode,
+            this.props.scale,
+            parseInt(this.props.margin),
+            this.props.isNavLocked,
+            this.props.isSettingLocked || this.props.isDockedRight
+          )
+        );
+      });
       if (lock) {
         this._pendingRerender = true;
       } else {
@@ -452,7 +455,11 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.key,
       this.props.readerMode,
       this.props.currentBook.format,
-      this.props.handleScale,
+      (scale: string) => {
+        flushSync(() => {
+          this.props.handleScale(scale);
+        });
+      },
       this.props.renderBookFunc
     );
     let chapters = rendition.getChapter();
