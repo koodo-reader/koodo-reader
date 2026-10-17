@@ -10,8 +10,10 @@ import { BookListProps, BookListState } from "./interface";
 import { withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import DatabaseService from "../../../utils/storage/databaseService";
-import CollectionUtil from "../../../utils/file/collectionUtil";
+import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import EmptyPage from "../../emptyPage";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 class BookList extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
@@ -28,10 +30,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
       let fullBooksData: BookModel[] = [];
       for (let i = 0; i < nextProps.deletedBooks.length; i++) {
         let book = nextProps.deletedBooks[i];
-        if (CollectionUtil.isCollection(book.key)) {
-          let collection = CollectionUtil.getCollection(book.key);
+        if (collectionUtil.isCollection(book.key)) {
+          let collection = collectionUtil.getCollection(book.key);
           if (collection) {
-            fullBooksData.push(CollectionUtil.getCollectionAsBook(collection));
+            fullBooksData.push(collectionUtil.getCollectionAsBook(collection));
           }
           continue;
         }
@@ -80,8 +82,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
     //get the book data according to different scenarios
     let books = this.state.fullBooksData;
     return books.map((item: BookModel, index: number) => {
-      if (CollectionUtil.isCollection(item.key)) {
-        const collection = CollectionUtil.getCollection(item.key);
+      if (collectionUtil.isCollection(item.key)) {
+        const collection = collectionUtil.getCollection(item.key);
         if (!collection) return null;
         return this.props.viewMode === "list" ? (
           <CollectionItem

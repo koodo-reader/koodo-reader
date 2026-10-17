@@ -2,11 +2,13 @@ import React from "react";
 import "./collectionDialog.css";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
+import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   CollectionDialogProps,
   CollectionDialogState,
 } from "./interface";
-import CollectionUtil from "../../../utils/file/collectionUtil";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 class CollectionDialog extends React.Component<
   CollectionDialogProps,
@@ -18,7 +20,7 @@ class CollectionDialog extends React.Component<
   }
 
   componentDidMount() {
-    let collection = CollectionUtil.getCollection(
+    let collection = collectionUtil.getCollection(
       this.props.collectionDialogKey
     );
     if (collection) {
@@ -44,7 +46,7 @@ class CollectionDialog extends React.Component<
       return;
     }
     if (
-      CollectionUtil.isCollectionNameExists(
+      collectionUtil.isCollectionNameExists(
         name,
         this.props.collectionDialogKey
       )
@@ -52,7 +54,7 @@ class CollectionDialog extends React.Component<
       toast(this.props.t("Collection name already exists"));
       return;
     }
-    CollectionUtil.updateCollection(this.props.collectionDialogKey, name);
+    collectionUtil.updateCollection(this.props.collectionDialogKey, name);
     toast.success(this.props.t("Edition successful"));
     this.props.handleFetchBooks();
     this.props.handleActionDialog(false);

@@ -3,7 +3,6 @@ import { flushSync } from "react-dom";
 import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
-import CollectionUtil from "../../utils/file/collectionUtil";
 import PopupMenu from "../../components/popups/popupMenu";
 import Background from "../../components/background";
 import StyleUtil from "../../utils/reader/styleUtil";
@@ -42,7 +41,7 @@ import {
   throttle,
 } from "../../utils/common";
 import _ from "underscore";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, CollectionUtil } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
 import DatabaseService from "../../utils/storage/databaseService";
@@ -50,6 +49,8 @@ import { getOcrResult, getOcrResultV2 } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
 import { parseWithSystemOCR } from "../../utils/request/common";
 import { isElectron } from "react-device-detect";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -443,7 +444,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     this.props.handleReadingState(true);
 
     ConfigService.setListConfig(
-      CollectionUtil.getRecentBookKey(this.props.currentBook.key),
+      collectionUtil.getRecentBookKey(this.props.currentBook.key),
       "recentBooks"
     );
     document.title = name + " - Koodo Reader";

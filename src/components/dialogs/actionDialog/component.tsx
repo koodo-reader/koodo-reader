@@ -5,13 +5,14 @@ import { ActionDialogProps, ActionDialogState } from "./interface";
 import toast from "react-hot-toast";
 import MoreAction from "../moreAction";
 import MarkAction from "../markAction";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import CollectionUtil from "../../../utils/file/collectionUtil";
+import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   CONTEXT_MENU_WIDTH,
   shouldSubmenuOpenLeft,
   vexComfirmAsync,
 } from "../../../utils/common";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 class ActionDialog extends React.Component<
   ActionDialogProps,
@@ -32,7 +33,7 @@ class ActionDialog extends React.Component<
     this.props.handleActionDialog(false);
   };
   handleEditBook = () => {
-    if (CollectionUtil.isCollection(this.props.currentBook.key)) {
+    if (collectionUtil.isCollection(this.props.currentBook.key)) {
       this.props.handleCollectionDialogKey(this.props.currentBook.key);
       this.props.handleCollectionDialog(true);
       this.props.handleActionDialog(false);
@@ -43,7 +44,7 @@ class ActionDialog extends React.Component<
     this.props.handleActionDialog(false);
   };
   handleDetailBook = () => {
-    if (CollectionUtil.isCollection(this.props.currentBook.key)) {
+    if (collectionUtil.isCollection(this.props.currentBook.key)) {
       this.props.handleCurrentCollectionKey(this.props.currentBook.key);
       this.props.handleCollectionDetailDialog(true);
       this.props.handleActionDialog(false);
@@ -65,7 +66,7 @@ class ActionDialog extends React.Component<
   };
   handleDissolveCollection = async () => {
     let key = this.props.currentBook.key;
-    let collection = CollectionUtil.getCollection(key);
+    let collection = collectionUtil.getCollection(key);
     if (!collection) return;
     let result = await vexComfirmAsync(
       `<h3>${this.props.t("Dissolve collection")}</h3><p>${this.props.t(
@@ -73,7 +74,7 @@ class ActionDialog extends React.Component<
       )}</p>`
     );
     if (!result) return;
-    CollectionUtil.dissolveCollection(key);
+    collectionUtil.dissolveCollection(key);
     toast.success(this.props.t("Deletion successful"));
     this.props.handleActionDialog(false);
     this.props.handleFetchBooks();
@@ -108,8 +109,8 @@ class ActionDialog extends React.Component<
   };
   handleCancelLoveBook = () => {
     ConfigService.deleteListConfig(this.props.currentBook.key, "favoriteBooks");
-    if (CollectionUtil.isCollection(this.props.currentBook.key)) {
-      let collection = CollectionUtil.getCollection(this.props.currentBook.key);
+    if (collectionUtil.isCollection(this.props.currentBook.key)) {
+      let collection = collectionUtil.getCollection(this.props.currentBook.key);
       if (collection) {
         collection.books.forEach((bookKey) => {
           ConfigService.deleteListConfig(bookKey, "favoriteBooks");
@@ -134,14 +135,14 @@ class ActionDialog extends React.Component<
     this.setState({ isShowMark: isShow });
   };
   render() {
-    const isCollection = CollectionUtil.isCollection(
+    const isCollection = collectionUtil.isCollection(
       this.props.currentBook.key
     );
     const collection = isCollection
-      ? CollectionUtil.getCollection(this.props.currentBook.key)
+      ? collectionUtil.getCollection(this.props.currentBook.key)
       : null;
     const isFavorite = collection
-      ? CollectionUtil.isCollectionFavorite(collection)
+      ? collectionUtil.isCollectionFavorite(collection)
       : ConfigService.getAllListConfig("favoriteBooks").indexOf(
           this.props.currentBook.key
         ) > -1;

@@ -6,7 +6,7 @@ import BookCoverItem from "../../../components/bookCoverItem";
 import CollectionItem from "../../../components/collectionItem";
 import BookModel from "../../../models/Book";
 import { BookListProps, BookListState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import { Redirect, withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import SelectBook from "../../../components/selectBook";
@@ -14,8 +14,9 @@ import { Trans } from "react-i18next";
 import Book from "../../../models/Book";
 import { isElectron } from "react-device-detect";
 import DatabaseService from "../../../utils/storage/databaseService";
-import CollectionUtil from "../../../utils/file/collectionUtil";
 import { throttle } from "../../../utils/common";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 let currentBookMode = "home";
 function getBookCountPerPage() {
@@ -161,10 +162,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
     const fullBooksData: Book[] = [];
     for (let i = 0; i < displayedBooks.length; i++) {
       const key = displayedBooks[i].key;
-      if (CollectionUtil.isCollection(key)) {
-        const collection = CollectionUtil.getCollection(key);
+      if (collectionUtil.isCollection(key)) {
+        const collection = collectionUtil.getCollection(key);
         if (collection) {
-          fullBooksData.push(CollectionUtil.getCollectionAsBook(collection));
+          fullBooksData.push(collectionUtil.getCollectionAsBook(collection));
         }
         continue;
       }
@@ -235,11 +236,11 @@ class BookList extends React.Component<BookListProps, BookListState> {
       const newFullBooksData: Book[] = [];
       for (let i = 0; i < newBooks.length; i++) {
         const key = newBooks[i].key;
-        if (CollectionUtil.isCollection(key)) {
-          const collection = CollectionUtil.getCollection(key);
+        if (collectionUtil.isCollection(key)) {
+          const collection = collectionUtil.getCollection(key);
           if (collection) {
             newFullBooksData.push(
-              CollectionUtil.getCollectionAsBook(collection)
+              collectionUtil.getCollectionAsBook(collection)
             );
           }
           continue;
@@ -293,8 +294,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
   };
   handleFilterShelfBook = (items: BookModel[]) => {
     return items.filter((item) => {
-      if (CollectionUtil.isCollection(item.key)) {
-        let collection = CollectionUtil.getCollection(item.key);
+      if (collectionUtil.isCollection(item.key)) {
+        let collection = collectionUtil.getCollection(item.key);
         if (!collection) return false;
         return !this.isCollectionInShelf(collection.key, collection.books);
       }
@@ -325,15 +326,15 @@ class BookList extends React.Component<BookListProps, BookListState> {
     items.forEach((item) => {
       let key = item.key;
       if (!key) return;
-      if (CollectionUtil.isCollection(key)) {
-        if (CollectionUtil.isCollectionDeleted(key)) return;
+      if (collectionUtil.isCollection(key)) {
+        if (collectionUtil.isCollectionDeleted(key)) return;
         if (!seen.has(key)) {
           seen.add(key);
           result.push(item);
         }
         return;
       }
-      let collection = CollectionUtil.getActiveCollectionByBook(key);
+      let collection = collectionUtil.getActiveCollectionByBook(key);
       if (collection) {
         if (!seen.has(collection.key)) {
           seen.add(collection.key);
@@ -357,10 +358,10 @@ class BookList extends React.Component<BookListProps, BookListState> {
   filterBooksByReadingStatus = (books: Book[], status: string): Book[] => {
     if (!status) return books;
     return books.filter((book) => {
-      if (CollectionUtil.isCollection(book.key)) {
-        let collection = CollectionUtil.getCollection(book.key);
+      if (collectionUtil.isCollection(book.key)) {
+        let collection = collectionUtil.getCollection(book.key);
         if (!collection) return false;
-        return CollectionUtil.getCollectionReadingStatus(collection) === status;
+        return collectionUtil.getCollectionReadingStatus(collection) === status;
       }
       const record = ConfigService.getObjectConfig(
         book.key,
@@ -395,8 +396,8 @@ class BookList extends React.Component<BookListProps, BookListState> {
       : this.state.fullBooksData.filter((b) => filteredKeys.has(b.key));
 
     return displayedBooks.map((item: BookModel, index: number) => {
-      if (CollectionUtil.isCollection(item.key)) {
-        const collection = CollectionUtil.getCollection(item.key);
+      if (collectionUtil.isCollection(item.key)) {
+        const collection = collectionUtil.getCollection(item.key);
         if (!collection) return null;
         const collectionProps = {
           collection,

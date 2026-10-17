@@ -4,13 +4,15 @@ import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import BookCardItem from "../../bookCardItem";
 import CollectionCover from "../../collectionCover";
-import CollectionUtil from "../../../utils/file/collectionUtil";
+import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import BookModel from "../../../models/Book";
 import {
   CollectionDetailDialogProps,
   CollectionDetailDialogState,
 } from "./interface";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 class CollectionDetailDialog extends React.Component<
   CollectionDetailDialogProps,
@@ -32,7 +34,7 @@ class CollectionDetailDialog extends React.Component<
   }
 
   loadBooks = async () => {
-    let collection = CollectionUtil.getCollection(
+    let collection = collectionUtil.getCollection(
       this.props.currentCollectionKey
     );
     if (!collection) {
@@ -56,7 +58,7 @@ class CollectionDetailDialog extends React.Component<
 
   handleRemoveBook = (event: React.MouseEvent, book: BookModel) => {
     event.stopPropagation();
-    CollectionUtil.removeBooksFromCollection(this.props.currentCollectionKey, [
+    collectionUtil.removeBooksFromCollection(this.props.currentCollectionKey, [
       book.key,
     ]);
     toast.success(this.props.t("Modification successful"));
@@ -65,7 +67,7 @@ class CollectionDetailDialog extends React.Component<
   };
 
   render() {
-    let collection = CollectionUtil.getCollection(
+    let collection = collectionUtil.getCollection(
       this.props.currentCollectionKey
     );
     if (!collection) {

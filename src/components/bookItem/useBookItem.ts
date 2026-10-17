@@ -2,8 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import BookModel from "../../models/Book";
 import BookUtil from "../../utils/file/bookUtil";
 import CoverUtil from "../../utils/file/coverUtil";
-import CollectionUtil from "../../utils/file/collectionUtil";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, CollectionUtil } from "../../assets/lib/kookit-extra-browser.min";
 import {
   setBookDragData,
   parseBookDragData,
@@ -13,6 +12,8 @@ import {
 } from "../../utils/reader/bookDrag";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 export interface BookItemSharedProps {
   book: BookModel;
@@ -294,14 +295,14 @@ export function useBookItem(props: BookItemSharedProps) {
       e.preventDefault();
       e.stopPropagation();
       setIsDropTarget(false);
-      if (CollectionUtil.isDeletedKey(book.key)) return;
+      if (collectionUtil.isDeletedKey(book.key)) return;
       let bookKeys = filterNonCollectionKeys(parseBookDragData(e)).filter(
-        (key) => key !== book.key && !CollectionUtil.isDeletedKey(key)
+        (key) => key !== book.key && !collectionUtil.isDeletedKey(key)
       );
       if (bookKeys.length === 0) return;
-      let collection = CollectionUtil.getActiveCollectionByBook(book.key);
+      let collection = collectionUtil.getActiveCollectionByBook(book.key);
       if (collection) {
-        let { added, movedFrom } = CollectionUtil.addBooksToCollection(
+        let { added, movedFrom } = collectionUtil.addBooksToCollection(
           collection.key,
           bookKeys
         );

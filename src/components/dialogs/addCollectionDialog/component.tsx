@@ -6,11 +6,16 @@ import {
 } from "./interface";
 import "./addCollectionDialog.css";
 import toast from "react-hot-toast";
-import CollectionUtil from "../../../utils/file/collectionUtil";
+import {
+  ConfigService,
+  CollectionUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import {
   filterNonCollectionKeys,
   getMovedFromSuffix,
 } from "../../../utils/reader/bookDrag";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 const NEW_COLLECTION_OPTION = "New collection";
 
@@ -44,7 +49,7 @@ class AddCollectionDialog extends Component<
             ? [this.props.currentBook.key]
             : [];
     return filterNonCollectionKeys(bookKeys).filter((key) => {
-      return !CollectionUtil.isDeletedKey(key);
+      return !collectionUtil.isDeletedKey(key);
     });
   };
 
@@ -59,17 +64,17 @@ class AddCollectionDialog extends Component<
         toast(this.props.t("Collection name is required"));
         return;
       }
-      if (CollectionUtil.isCollectionNameExists(name)) {
+      if (collectionUtil.isCollectionNameExists(name)) {
         toast(this.props.t("Collection name already exists"));
         return;
       }
-      let collection = CollectionUtil.createCollection(name, []);
+      let collection = collectionUtil.createCollection(name, []);
       if (!collection) {
         return;
       }
       collectionKey = collection.key;
     }
-    let collection = CollectionUtil.getCollection(collectionKey);
+    let collection = collectionUtil.getCollection(collectionKey);
     if (!collection) {
       return;
     }
@@ -80,7 +85,7 @@ class AddCollectionDialog extends Component<
       toast(this.props.t("Duplicate book"));
       return;
     }
-    let { added, movedFrom } = CollectionUtil.addBooksToCollection(
+    let { added, movedFrom } = collectionUtil.addBooksToCollection(
       collectionKey,
       bookKeys
     );
@@ -108,7 +113,7 @@ class AddCollectionDialog extends Component<
 
   render() {
     const renderCollectionList = () => {
-      let collections = CollectionUtil.getCollectionList();
+      let collections = collectionUtil.getCollectionList();
       return [
         <option
           value={NEW_COLLECTION_OPTION}
