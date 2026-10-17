@@ -2385,40 +2385,46 @@ export const saveOcrCache = (
   }
 };
 export const getCoverTheme = (format: string) => {
-  let color =
-    format === "PDF"
-      ? "rgba(55, 170, 81, 0.7)"
-      : format === "TXT"
-        ? "rgba(251, 191, 16,1)"
-        : format === "EPUB"
-          ? "rgba(33, 165, 241,1)"
-          : format === "MOBI"
-            ? "rgba(255, 108, 110,1)"
-            : format === "AZW3" || format === "AZW"
-              ? " #ff9900"
-              : format === "MD"
-                ? "#5e7fff"
-                : format === "FB2"
-                  ? "#0063b1"
-                  : format === "CHM"
-                    ? "#8e6fce"
-                    : format === "DOCX" || format === "DOC"
-                      ? " #118CD9"
-                      : format === "RTF"
-                        ? "#0F766E"
-                        : format === "CBT" ||
-                            format === "CBZ" ||
-                            format === "CB7" ||
-                            format === "CBR"
-                          ? "#00b6c2"
-                          : format === "PPTX" || format === "PPT"
-                            ? "#C43E1C"
-                            : format === "XPS" || format === "OXPS"
-                              ? "#744DA9"
-                              : format === "DJVU" || format === "DJV"
-                                ? "#003366"
-                                : format === "OFD"
-                                  ? "#C2185B"
-                                  : "#118CD9";
-  return color;
+  switch (format) {
+    case "PDF":
+      return "rgba(55, 170, 81, 0.7)";
+    case "TXT":
+      return "rgba(251, 191, 16,1)";
+    case "EPUB":
+      return "rgba(33, 165, 241,1)";
+    case "MOBI":
+      return "rgba(255, 108, 110,1)";
+    case "AZW3":
+    case "AZW":
+      return " #ff9900";
+    case "MD":
+      return "#5e7fff";
+    case "FB2":
+      return "#0063b1";
+    case "CHM":
+      return "#8e6fce";
+    case "DOCX":
+    case "DOC":
+      return " #118CD9";
+    case "RTF":
+      return "#0F766E";
+    case "CBT":
+    case "CBZ":
+    case "CB7":
+    case "CBR":
+      return "#00b6c2";
+    case "PPTX":
+    case "PPT":
+      return "#C43E1C";
+    case "XPS":
+    case "OXPS":
+      return "#744DA9";
+    case "DJVU":
+    case "DJV":
+      return "#003366";
+    case "OFD":
+      return "#C2185B";
+    default:
+      return "#118CD9";
+  }
 };
