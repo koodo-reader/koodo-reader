@@ -1,10 +1,11 @@
 import React from "react";
 import "./searchBox.css";
 import { SearchBoxProps, SearchBoxState } from "./interface";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, CollectionUtil } from "../../assets/lib/kookit-extra-browser.min";
 import ConfigUtil from "../../utils/file/configUtil";
 import BookUtil from "../../utils/file/bookUtil";
-import CollectionUtil from "../../utils/file/collectionUtil";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
   private searchBoxRef: React.RefObject<HTMLInputElement>;
@@ -51,8 +52,8 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
           : await BookUtil.searchBooksByKeyword(keyword);
     if (this.props.tabMode !== "note" && this.props.tabMode !== "highlight") {
       let lowerKeyword = keyword.toLowerCase();
-      CollectionUtil.getCollectionList().forEach((collection) => {
-        if (CollectionUtil.isCollectionDeleted(collection.key)) return;
+      collectionUtil.getCollectionList().forEach((collection) => {
+        if (collectionUtil.isCollectionDeleted(collection.key)) return;
         if (collection.name.toLowerCase().includes(lowerKeyword)) {
           results.push({ key: collection.key, name: collection.name });
         }

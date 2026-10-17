@@ -1,11 +1,12 @@
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import CollectionUtil from "../file/collectionUtil";
+import { ConfigService, CollectionUtil } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 export const BOOK_DRAG_TYPE = "application/x-koodo-book";
 
 export function filterNonCollectionKeys(bookKeys: string[]): string[] {
-  return bookKeys.filter((key) => key && !CollectionUtil.isCollection(key));
+  return bookKeys.filter((key) => key && !collectionUtil.isCollection(key));
 }
 
 export function getMovedFromSuffix(movedFrom: string[]): string {
@@ -102,7 +103,7 @@ export function moveBooksToTrash(bookKeys: string[]): number {
   }
   let bookOnlyKeys = filterNonCollectionKeys(bookKeys);
   if (bookOnlyKeys.length > 0) {
-    CollectionUtil.removeBooksFromAllCollections(bookOnlyKeys);
+    collectionUtil.removeBooksFromAllCollections(bookOnlyKeys);
   }
   return moved;
 }

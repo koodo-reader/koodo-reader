@@ -3,14 +3,15 @@ import "../actionDialog/actionDialog.css";
 import { Trans } from "react-i18next";
 import { MarkActionProps } from "./interface";
 import toast from "react-hot-toast";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import CollectionUtil from "../../../utils/file/collectionUtil";
+import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import {
   clampMenuPosition,
   CONTEXT_MENU_WIDTH,
   estimateMenuHeight,
   SUBMENU_GAP,
 } from "../../../utils/common";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 const MENU_ITEM_HEIGHT = 33;
 const MENU_CONTAINER_PADDING = 5;
@@ -23,8 +24,8 @@ class MarkAction extends React.Component<MarkActionProps> {
 
   handleMarkAsFinished = () => {
     const key = this.props.currentBook.key;
-    if (CollectionUtil.isCollection(key)) {
-      let collection = CollectionUtil.getCollection(key);
+    if (collectionUtil.isCollection(key)) {
+      let collection = collectionUtil.getCollection(key);
       if (collection) {
         collection.books.forEach((bookKey) => {
           const existing = ConfigService.getObjectConfig(
@@ -56,8 +57,8 @@ class MarkAction extends React.Component<MarkActionProps> {
 
   handleMarkAsUnread = () => {
     const key = this.props.currentBook.key;
-    if (CollectionUtil.isCollection(key)) {
-      let collection = CollectionUtil.getCollection(key);
+    if (collectionUtil.isCollection(key)) {
+      let collection = collectionUtil.getCollection(key);
       if (collection) {
         collection.books.forEach((bookKey) => {
           ConfigService.deleteObjectConfig(bookKey, "recordLocation");

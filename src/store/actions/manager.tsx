@@ -1,6 +1,7 @@
 import {
   ConfigService,
   KookitConfig,
+  CollectionUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import BookModel from "../../models/Book";
 import PluginModel from "../../models/Plugin";
@@ -17,7 +18,6 @@ import {
 } from "../../constants/settingList";
 import toast from "react-hot-toast";
 import BookUtil from "../../utils/file/bookUtil";
-import CollectionUtil from "../../utils/file/collectionUtil";
 import i18n from "../../i18n";
 import { langToName } from "../../utils/common";
 import { resetReaderRequest } from "../../utils/request/reader";
@@ -25,6 +25,8 @@ import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
 import DictUtil from "../../utils/file/dictUtil";
 import TokenService from "../../utils/storage/tokenService";
 import { resolveStoredPlugin } from "../../utils/plugins/records";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 export function handleBooks(books: BookModel[]) {
   return { type: "HANDLE_BOOKS", payload: books };
@@ -144,8 +146,8 @@ export function handleFetchBooks() {
     if (bookSortCode.order === 2) {
       orderField = "DESC";
     }
-    let collectionKeys = CollectionUtil.getCollectionKeys();
-    let collectionList = CollectionUtil.getCollectionList();
+    let collectionKeys = collectionUtil.getCollectionKeys();
+    let collectionList = collectionUtil.getCollectionList();
     let localeCompareName = (a: string, b: string) =>
       a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
     let bookList: { key: string }[] = [];
@@ -200,7 +202,7 @@ export function handleFetchBooks() {
       collectionList.forEach((collection) => {
         sortable.push([
           collection.key,
-          CollectionUtil.getCollectionPercentageNumber(collection),
+          collectionUtil.getCollectionPercentageNumber(collection),
         ]);
       });
       sortable.sort(function (a, b) {

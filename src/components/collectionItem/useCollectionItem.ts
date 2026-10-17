@@ -1,8 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import CollectionModel from "../../models/Collection";
 import BookModel from "../../models/Book";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import CollectionUtil from "../../utils/file/collectionUtil";
+import { ConfigService, CollectionUtil } from "../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
 import {
@@ -12,6 +11,8 @@ import {
   filterNonCollectionKeys,
   getMovedFromSuffix,
 } from "../../utils/reader/bookDrag";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 export interface CollectionItemSharedProps {
   collection: CollectionModel;
@@ -51,11 +52,11 @@ export function useCollectionItem(props: CollectionItemSharedProps) {
   const [isDropTarget, setIsDropTarget] = useState(false);
 
   const collectionBook = useMemo(
-    () => CollectionUtil.getCollectionAsBook(collection),
+    () => collectionUtil.getCollectionAsBook(collection),
     [collection.key, collection.name]
   );
 
-  const percentage = CollectionUtil.getCollectionPercentage(collection);
+  const percentage = collectionUtil.getCollectionPercentage(collection);
 
   const handleShiftSelect = useCallback(() => {
     if (!allBooks || bookIndex === undefined) return;
@@ -99,7 +100,7 @@ export function useCollectionItem(props: CollectionItemSharedProps) {
   ]);
 
   const handleOpenDetail = useCallback(() => {
-    if (!CollectionUtil.isCollectionDeleted(collection.key)) {
+    if (!collectionUtil.isCollectionDeleted(collection.key)) {
       ConfigService.setListConfig(collection.key, "recentBooks");
     }
     handleReadingBook(collectionBook);
@@ -171,7 +172,7 @@ export function useCollectionItem(props: CollectionItemSharedProps) {
   );
 
   const isFavoriteBook = useCallback((): boolean => {
-    return CollectionUtil.isCollectionFavorite(collection);
+    return collectionUtil.isCollectionFavorite(collection);
   }, [collection]);
 
   const isTopBook = useCallback((): boolean => {
@@ -219,12 +220,12 @@ export function useCollectionItem(props: CollectionItemSharedProps) {
       e.preventDefault();
       e.stopPropagation();
       setIsDropTarget(false);
-      if (CollectionUtil.isDeletedKey(collection.key)) return;
+      if (collectionUtil.isDeletedKey(collection.key)) return;
       let bookKeys = filterNonCollectionKeys(parseBookDragData(e)).filter(
-        (key) => key !== collection.key && !CollectionUtil.isDeletedKey(key)
+        (key) => key !== collection.key && !collectionUtil.isDeletedKey(key)
       );
       if (bookKeys.length === 0) return;
-      const { added, movedFrom } = CollectionUtil.addBooksToCollection(
+      const { added, movedFrom } = collectionUtil.addBooksToCollection(
         collection.key,
         bookKeys
       );

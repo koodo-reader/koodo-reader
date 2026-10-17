@@ -3,8 +3,9 @@ import { Trans } from "react-i18next";
 import { AddDialogProps, AddDialogState } from "./interface";
 import "./addDialog.css";
 import toast from "react-hot-toast";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import CollectionUtil from "../../../utils/file/collectionUtil";
+import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 class AddDialog extends Component<AddDialogProps, AddDialogState> {
   constructor(props: AddDialogProps) {
@@ -17,8 +18,8 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
   };
   deleteKeyFromShelf = (key: string) => {
     ConfigService.deleteFromMapConfig(this.props.shelfTitle, key, "shelfList");
-    if (CollectionUtil.isCollection(key)) {
-      let collection = CollectionUtil.getCollection(key);
+    if (collectionUtil.isCollection(key)) {
+      let collection = collectionUtil.getCollection(key);
       if (collection) {
         collection.books.forEach((bookKey) => {
           ConfigService.deleteFromMapConfig(
