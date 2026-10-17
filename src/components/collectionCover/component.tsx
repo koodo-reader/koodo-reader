@@ -3,6 +3,7 @@ import "./collectionCover.css";
 import { CollectionCoverItem, CollectionCoverProps } from "./interface";
 import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
+import EmptyCover from "../emptyCover";
 
 const MAX_COVER_COUNT = 4;
 
@@ -23,13 +24,14 @@ const CollectionCover: React.FC<CollectionCoverProps> = (props) => {
         try {
           let book = await DatabaseService.getRecord(key, "books");
           if (!book) {
-            result[key] = { cover: "", title: "" };
+            result[key] = { cover: "", title: "", format: "" };
             continue;
           }
           let title = book.name || "";
+          let format = book.format || "";
           let isCoverExist = await CoverUtil.isCoverExist(book);
           if (!isCoverExist) {
-            result[key] = { cover: "", title };
+            result[key] = { cover: "", title, format };
             continue;
           }
           let cover = await CoverUtil.getCover(book);
@@ -41,9 +43,9 @@ const CollectionCover: React.FC<CollectionCoverProps> = (props) => {
           ) {
             cover = cover + "?t=" + Date.now();
           }
-          result[key] = { cover: cover || "", title };
+          result[key] = { cover: cover || "", title, format };
         } catch {
-          result[key] = { cover: "", title: "" };
+          result[key] = { cover: "", title: "", format: "" };
         }
       }
       if (!cancelled) {
@@ -57,8 +59,9 @@ const CollectionCover: React.FC<CollectionCoverProps> = (props) => {
   }, [latestKeyStr, refreshBookKey]);
 
   const count = latestKeys.length;
-  const cellWidth = width / 2;
-  const titleFontSize = Math.min(12, Math.max(7, Math.round(cellWidth / 5)));
+  const cellWidth = (width - 1) / 2;
+  const cellHeight = (height - 1) / 2;
+  const emptyCoverScale = Math.max(cellWidth / 105, cellHeight / 137);
   const renderCell = (key: string) => {
     const item = items[key];
     return (
@@ -67,12 +70,23 @@ const CollectionCover: React.FC<CollectionCoverProps> = (props) => {
           <img src={item.cover} alt="" draggable={false}></img>
         ) : (
           <div className="collection-cover-cell-empty">
-            <p
-              className="collection-cover-cell-title"
-              style={{ fontSize: `${titleFontSize}px` }}
-            >
-              {item ? item.title : ""}
-            </p>
+            {item ? (
+              <div
+                className="collection-cover-cell-empty-inner"
+                style={{
+                  width: `${105 * emptyCoverScale}px`,
+                  height: `${137 * emptyCoverScale}px`,
+                }}
+              >
+                <EmptyCover
+                  {...{
+                    format: item.format,
+                    title: item.title,
+                    scale: emptyCoverScale,
+                  }}
+                />
+              </div>
+            ) : null}
           </div>
         )}
       </div>
