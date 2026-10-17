@@ -18,7 +18,7 @@
   ${GetOptions} $R0 "/S" $R1
   ${If} ${Errors}
     SetSilent normal
-    MessageBox MB_YESNO|MB_ICONEXCLAMATION "Delete all data as well? Books, notes, highlights, bookmarks and settings will be permanently removed.$\r$\n$\r$\n是否同时删除全部数据？书籍、笔记、高亮、书签和设置将被永久删除，且无法恢复。" /SD IDNO IDNO SkipRemoval
+    MessageBox MB_YESNO "Delete all data as well? Books, notes, highlights, bookmarks and settings will be permanently removed.$\r$\n$\r$\n是否同时删除全部数据？书籍、笔记、高亮、书签和设置将被永久删除，且无法恢复。" /SD IDNO IDNO SkipRemoval
       SetShellVarContext current
       RMDir /r "$APPDATA\koodo-reader"
       RMDir /r "$LOCALAPPDATA\koodo-reader-updater"
