@@ -2384,3 +2384,41 @@ export const saveOcrCache = (
     console.error("Failed to save ocr cache:", error);
   }
 };
+export const getCoverTheme = (format: string) => {
+  let color =
+    format === "PDF"
+      ? "rgba(55, 170, 81, 0.7)"
+      : format === "TXT"
+        ? "rgba(251, 191, 16,1)"
+        : format === "EPUB"
+          ? "rgba(33, 165, 241,1)"
+          : format === "MOBI"
+            ? "rgba(255, 108, 110,1)"
+            : format === "AZW3" || format === "AZW"
+              ? " #ff9900"
+              : format === "MD"
+                ? "#5e7fff"
+                : format === "FB2"
+                  ? "#0063b1"
+                  : format === "CHM"
+                    ? "#8e6fce"
+                    : format === "DOCX" || format === "DOC"
+                      ? " #118CD9"
+                      : format === "RTF"
+                        ? "#0F766E"
+                        : format === "CBT" ||
+                            format === "CBZ" ||
+                            format === "CB7" ||
+                            format === "CBR"
+                          ? "#00b6c2"
+                          : format === "PPTX" || format === "PPT"
+                            ? "#C43E1C"
+                            : format === "XPS" || format === "OXPS"
+                              ? "#744DA9"
+                              : format === "DJVU" || format === "DJV"
+                                ? "#003366"
+                                : format === "OFD"
+                                  ? "#C2185B"
+                                  : "#118CD9";
+  return color;
+};
