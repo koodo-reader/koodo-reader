@@ -8,4 +8,5 @@ export interface CollectionCoverProps {
 export interface CollectionCoverItem {
   cover: string;
   title: string;
+  format: string;
 }
