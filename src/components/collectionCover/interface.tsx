@@ -4,3 +4,8 @@ export interface CollectionCoverProps {
   width: number;
   height: number;
 }
+
+export interface CollectionCoverItem {
+  cover: string;
+  title: string;
+}
