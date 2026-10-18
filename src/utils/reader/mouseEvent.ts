@@ -199,6 +199,13 @@ const NAV_TAB_SHORTCUTS: Array<{
 ];
 let lock = false; //prevent from clicking too fasts
 
+const isRevertDirectionReading = (rendition: any) => {
+  return (
+    rendition?.revertDirection === "yes" &&
+    !(rendition?.isVertical && rendition.isVertical())
+  );
+};
+
 const arrowKeys = async (
   rendition: any,
   event: any,
@@ -212,7 +219,22 @@ const arrowKeys = async (
   ) {
     return;
   }
-  if (readerMode === "scroll" && isReadingAidMode(format, bookKey)) {
+  const isReadingAid = isReadingAidMode(format, bookKey);
+  const revertDirection =
+    isRevertDirectionReading(rendition) &&
+    (readerMode !== "scroll" || isReadingAid);
+  if (revertDirection && (event.keyCode === 37 || event.keyCode === 39)) {
+    // RTL 下左右方向键整体镜像：← 下一页，→ 上一页
+    event.preventDefault();
+    if (event.keyCode === 37) {
+      await rendition.next();
+    } else {
+      await rendition.prev();
+    }
+    handleShortcut(event, format, bookKey, rendition);
+    return;
+  }
+  if (readerMode === "scroll" && isReadingAid) {
     // 段落模式下拦截滚动模式的原生滚动按键，改为逐段导航
     const shortcutConfig = getShortcutConfig();
     if (matchShortcut(event, shortcutConfig.prevPage)) {
@@ -228,21 +250,6 @@ const arrowKeys = async (
       return;
     }
   }
-  if (
-    readerMode !== "scroll" &&
-    ConfigService.getReaderConfig("revertDirection") === "yes" &&
-    (event.keyCode === 37 || event.keyCode === 39)
-  ) {
-    // RTL 下左右方向键整体镜像：← 下一页，→ 上一页
-    event.preventDefault();
-    if (event.keyCode === 37) {
-      await rendition.next();
-    } else {
-      await rendition.prev();
-    }
-    handleShortcut(event, format, bookKey, rendition);
-    return;
-  }
   if (isPrevPageKey(event, readerMode)) {
     event.preventDefault();
     await rendition.prev();
@@ -253,11 +260,18 @@ const arrowKeys = async (
   handleShortcut(event, format, bookKey, rendition);
 };
 
-const mouseChrome = async (rendition: any, deltaY: number) => {
-  if (deltaY < 0) {
+const mouseChrome = async (
+  rendition: any,
+  delta: number,
+  revertDirection: boolean = false
+) => {
+  // RTL 下滚轮/触控板方向整体镜像：向上/向左为下一页
+  const goNext = revertDirection ? delta < 0 : delta > 0;
+  const goPrev = revertDirection ? delta > 0 : delta < 0;
+  if (goPrev) {
     await rendition.prev();
   }
-  if (deltaY > 0) {
+  if (goNext) {
     await rendition.next();
   }
 };
@@ -354,7 +368,7 @@ const handleShortcut = (
 };
 
 const gesture = async (rendition: any, type: string) => {
-  const revertDirection = rendition.revertDirection === "yes";
+  const revertDirection = isRevertDirectionReading(rendition);
   if (type === "panup") {
     await rendition.next();
   } else if (type === "pandown") {
@@ -447,7 +461,12 @@ export const bindHtmlEvent = (
       lock = true;
       if (readerMode === "scroll") {
         if (Math.abs(event.deltaX) === 0 && isReadingAidMode(format, key)) {
-          await mouseChrome(rendition, event.deltaY);
+          // 段落/阅读尺/速读模式内部实际按单页渲染，同样遵循 RTL
+          await mouseChrome(
+            rendition,
+            event.deltaY,
+            isRevertDirectionReading(rendition)
+          );
         } else {
           await sleep(200);
           await rendition.record();
@@ -460,8 +479,15 @@ export const bindHtmlEvent = (
           }
         }
       } else {
+        const revertDirection = isRevertDirectionReading(rendition);
         if (Math.abs(event.deltaX) === 0) {
-          await mouseChrome(rendition, event.deltaY);
+          await mouseChrome(rendition, event.deltaY, revertDirection);
+        } else if (
+          revertDirection &&
+          Math.abs(event.deltaY) < Math.abs(event.deltaX)
+        ) {
+          // RTL 下触控板水平滚动：向左滚动（deltaX<0）为下一页
+          await mouseChrome(rendition, event.deltaX, true);
         }
       }
       handleLocation(key, rendition);
