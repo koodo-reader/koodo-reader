@@ -41,7 +41,10 @@ import {
   throttle,
 } from "../../utils/common";
 import _ from "underscore";
-import { ConfigService, CollectionUtil } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  CollectionUtil,
+} from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
 import DatabaseService from "../../utils/storage/databaseService";
@@ -297,6 +300,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
         textRules: getTextRules(this.props.currentBook.key),
         codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
+        isRTL: ConfigService.getReaderConfig("isRTL") || "no",
         parserRegex: getParserRegex(
           this.props.currentBook.format,
           this.props.currentBook.key
@@ -402,8 +406,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           ConfigService.getReaderConfig("annotationEraserWidth") ||
             ERASER_WIDTH_DEFAULT + ""
         ),
-        quickErase: ConfigService.getReaderConfig("annotationQuickErase") ||
-          "no",
+        quickErase:
+          ConfigService.getReaderConfig("annotationQuickErase") || "no",
         textSize: parseFloat(
           ConfigService.getReaderConfig("annotationTextSize") || "24"
         ),
