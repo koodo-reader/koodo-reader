@@ -5,7 +5,10 @@ import { ActionDialogProps, ActionDialogState } from "./interface";
 import toast from "react-hot-toast";
 import MoreAction from "../moreAction";
 import MarkAction from "../markAction";
-import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  CollectionUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import {
   CONTEXT_MENU_WIDTH,
   shouldSubmenuOpenLeft,
@@ -242,7 +245,10 @@ class ActionDialog extends React.Component<
                   this.handleAddCollection();
                 }}
               >
-                <span className="icon-folder view-icon"></span>
+                <span
+                  className="icon-folder view-icon"
+                  style={{ fontSize: "14px" }}
+                ></span>
                 <p className="action-name">
                   <Trans>Add to collection</Trans>
                 </p>
