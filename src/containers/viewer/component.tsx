@@ -300,7 +300,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
         textRules: getTextRules(this.props.currentBook.key),
         codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
-        isRTL: ConfigService.getReaderConfig("isRTL") || "no",
+        revertDirection:
+          ConfigService.getReaderConfig("revertDirection") || "no",
         parserRegex: getParserRegex(
           this.props.currentBook.format,
           this.props.currentBook.key
