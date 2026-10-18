@@ -513,6 +513,11 @@ export const skinList = [
 
 export const readerSettingList = [
   {
+    title: "Right-to-left page turning",
+    propName: "isRevertDirection",
+    isPDF: true,
+  },
+  {
     title: "Enable paragraph mode",
     propName: "isParagraphMode",
     isPDF: true,

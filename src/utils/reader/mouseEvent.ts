@@ -228,6 +228,21 @@ const arrowKeys = async (
       return;
     }
   }
+  if (
+    readerMode !== "scroll" &&
+    ConfigService.getReaderConfig("revertDirection") === "yes" &&
+    (event.keyCode === 37 || event.keyCode === 39)
+  ) {
+    // RTL 下左右方向键整体镜像：← 下一页，→ 上一页
+    event.preventDefault();
+    if (event.keyCode === 37) {
+      await rendition.next();
+    } else {
+      await rendition.prev();
+    }
+    handleShortcut(event, format, bookKey, rendition);
+    return;
+  }
   if (isPrevPageKey(event, readerMode)) {
     event.preventDefault();
     await rendition.prev();
@@ -339,11 +354,16 @@ const handleShortcut = (
 };
 
 const gesture = async (rendition: any, type: string) => {
-  if (type === "panleft" || type === "panup") {
+  const revertDirection = rendition.revertDirection === "yes";
+  if (type === "panup") {
     await rendition.next();
-  }
-  if (type === "panright" || type === "pandown") {
+  } else if (type === "pandown") {
     await rendition.prev();
+  } else if (type === "panleft") {
+    // RTL 下水平手势整体镜像：左滑上一页，右滑下一页
+    await (revertDirection ? rendition.prev() : rendition.next());
+  } else if (type === "panright") {
+    await (revertDirection ? rendition.next() : rendition.prev());
   }
 };
 
