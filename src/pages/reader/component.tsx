@@ -378,7 +378,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           onClick={async () => {
             if (lock) return;
             lock = true;
-            await this.props.htmlBook.rendition.prev();
+            // RTL 下左侧箭头翻到下一页
+            if (ConfigService.getReaderConfig("revertDirection") === "yes") {
+              await this.props.htmlBook.rendition.next();
+            } else {
+              await this.props.htmlBook.rendition.prev();
+            }
             this.handleLocation();
             setTimeout(() => (lock = false), throttleTime);
           }}
@@ -414,7 +419,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             onClick={async () => {
               if (lock) return;
               lock = true;
-              await this.props.htmlBook.rendition.next();
+              // RTL 下右侧箭头翻到上一页
+              if (ConfigService.getReaderConfig("revertDirection") === "yes") {
+                await this.props.htmlBook.rendition.prev();
+              } else {
+                await this.props.htmlBook.rendition.next();
+              }
               this.handleLocation();
               setTimeout(() => (lock = false), throttleTime);
             }}

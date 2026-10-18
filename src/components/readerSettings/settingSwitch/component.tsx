@@ -72,6 +72,8 @@ class SettingSwitch extends React.Component<
         ConfigService.getReaderConfig("isShowTotalPage") === "yes",
       isStartFromEven:
         ConfigService.getReaderConfig("isStartFromEven") === "yes",
+      isRevertDirection:
+        ConfigService.getReaderConfig("revertDirection") === "yes",
       isHideBackground:
         ConfigService.getReaderConfig("isHideBackground") === "yes",
       isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
@@ -619,6 +621,17 @@ class SettingSwitch extends React.Component<
                     this.handleChange(propName);
                     setTimeout(() => {
                       BookUtil.reloadBooks(this.props.currentBook);
+                    }, 500);
+                  } else if (propName === "isRevertDirection") {
+                    const next = !this.state.isRevertDirection;
+                    this.setState({ isRevertDirection: next });
+                    ConfigService.setReaderConfig(
+                      "revertDirection",
+                      next ? "yes" : "no"
+                    );
+                    toast(this.props.t("Change successful"));
+                    setTimeout(async () => {
+                      await this.props.renderBookFunc();
                     }, 500);
                   } else if (propName === "isParagraphMode") {
                     const next = !this.state.isParagraphMode;
