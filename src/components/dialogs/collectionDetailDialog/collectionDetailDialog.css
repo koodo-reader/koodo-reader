@@ -4,7 +4,7 @@
   position: absolute;
   left: calc(50vw - 350px);
   top: calc(50vh - 215px);
-  z-index: 10;
+  z-index: 9;
   animation: popup 0.1s ease-in-out 0s 1;
   border-radius: 5px;
   display: flex;
@@ -12,36 +12,10 @@
   padding: 16px 10px;
   box-sizing: border-box;
 }
-.collection-detail-dialog-header {
-  display: flex;
-  position: relative;
-  flex-shrink: 0;
-  padding-right: 40px;
-  padding-left: 15px;
-  box-sizing: border-box;
-}
-.collection-detail-dialog-info {
-  flex: 1;
-  margin-left: 14px;
-  overflow: hidden;
-}
-.collection-detail-dialog-name {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
-.collection-detail-dialog-count {
-  font-size: 12px;
-  opacity: 0.7;
-  margin: 6px 0 0 0;
-}
 .collection-detail-dialog-close-container {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 5px;
+  right: 5px;
   transition: 0.1s;
   width: 38px;
   height: 38px;

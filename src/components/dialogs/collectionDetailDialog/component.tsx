@@ -3,7 +3,6 @@ import "./collectionDetailDialog.css";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import BookCardItem from "../../bookCardItem";
-import CollectionCover from "../../collectionCover";
 import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import BookModel from "../../../models/Book";
@@ -75,22 +74,6 @@ class CollectionDetailDialog extends React.Component<
     }
     return (
       <div className="collection-detail-dialog-container">
-        <div className="collection-detail-dialog-header">
-          <CollectionCover
-            bookKeys={collection.books}
-            refreshBookKey={this.props.refreshBookKey}
-            width={60}
-            height={78}
-          />
-          <div className="collection-detail-dialog-info">
-            <p className="collection-detail-dialog-name">{collection.name}</p>
-            <p className="collection-detail-dialog-count">
-              <Trans i18nKey="Total books" count={collection.books.length}>
-                {"Total " + collection.books.length + " books"}
-              </Trans>
-            </p>
-          </div>
-        </div>
         <div
           className="collection-detail-dialog-close-container"
           onClick={() => {
