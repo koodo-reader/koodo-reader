@@ -1,28 +1,26 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Architecture Overview
 
 Koodo Reader 是一个跨平台电子书阅读器（Electron + React CRA + Redux）。
 
 ### 四层架构
 
-| 层 | 位置 | 职责 |
-|---|------|------|
-| Electron 主进程 | `main.js` | IPC handlers, SQLite (better-sqlite3), 云同步, 原生集成 |
-| React 渲染进程 | `src/` | UI, Redux 状态管理, 书籍渲染 |
-| 阅读引擎 | `src/assets/lib/kookit-extra.min.mjs` | 闭源 ESM — 书籍解析、SQL 语句、同步工具 |
-| Go HTTP 服务 | `httpserver/` | 可选的 KOReader / OPDS 集成 |
+| 层              | 位置                                  | 职责                                                    |
+| --------------- | ------------------------------------- | ------------------------------------------------------- |
+| Electron 主进程 | `main.js`                             | IPC handlers, SQLite (better-sqlite3), 云同步, 原生集成 |
+| React 渲染进程  | `src/`                                | UI, Redux 状态管理, 书籍渲染                            |
+| 阅读引擎        | `src/assets/lib/kookit-extra.min.mjs` | 闭源 ESM — 书籍解析、SQL 语句、同步工具                 |
+| Go HTTP 服务    | `httpserver/`                         | 可选的 KOReader / OPDS 集成                             |
 
 ## 重要提醒
 
 **不要**尝试读取 `src/assets/lib/` 下的这些文件：
+
 - `kookit-extra.min.mjs`
 - `kookit.min.js`
 - `kookit-extra-browser.min.js`
 
 这些是混淆/压缩后的产物，无法阅读。如需查阅源码，请直接读取本地源码仓库：
+
 - `D:\Project\kookit`
 - `D:\Project\kookit-extra`
 
