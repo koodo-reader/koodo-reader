@@ -504,9 +504,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           style={{
             position: "absolute",
-            top: "0px",
+            top: "10px",
             right:
-              this.props.isSettingLocked || this.props.isDockedRight ? 300 : 5,
+              this.props.isSettingLocked || this.props.isDockedRight ? 300 : 15,
             zIndex: 10,
             width: "120px",
             display: "flex",
@@ -647,7 +647,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             </div>
           )}
           <div
-            className="reader-setting-icon-container"
+            className="next-chapter-single-container"
+            style={{ transform: "rotate(0deg)", marginLeft: "8px" }}
             onClick={() => {
               this.handleEnterReader("left");
               this.handleEnterReader("right");
@@ -655,10 +656,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               this.handleEnterReader("top");
             }}
           >
-            <span
-              className="icon-grid reader-setting-icon"
-              style={{ opacity: 1 }}
-            ></span>
+            <span className="icon-grid next-chapter-single"></span>
           </div>
         </div>
         {this.props.isSettingOpen && (
