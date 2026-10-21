@@ -2,10 +2,22 @@ import React from "react";
 import "./popupRefer.css";
 import { PopupReferProps, PopupReferStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
-import { isReadingRawPDF, openExternalUrl } from "../../../utils/common";
+import {
+  isReadingRawPDF,
+  openExternalUrl,
+  vexComfirmAsync,
+} from "../../../utils/common";
 import Parser from "html-react-parser";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
+
+const escapeHtml = (text: string) =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 
 class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
   highlighter: any;
@@ -68,7 +80,15 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
       return false;
     }
     if (result.external) {
-      openExternalUrl(href);
+      const confirm = await vexComfirmAsync(
+        this.props.t("Do you want to open this link in browser") +
+          "<br><span style='word-break:break-all'>" +
+          escapeHtml(href) +
+          "</span>"
+      );
+      if (confirm) {
+        openExternalUrl(href);
+      }
       return true;
     }
     if (result.redirectChapter) {
