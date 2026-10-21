@@ -268,79 +268,50 @@ const buildWordRecord = (record: any, bookKey: string) => ({
   sentence: record.sentence ? String(record.sentence) : "",
 });
 
-export const importNotesData = async (): Promise<ImportResult> => {
-  const files = await selectImportFiles();
-  if (!files) {
-    return "cancel";
-  }
-  if (files.length === 0) {
-    toast.error(i18n.t("Failed to import"));
-    return "failed";
-  }
+// 类型识别 + 还原为数据库格式 + 按 key 去重写入
+// targetBookKey 指定时所有记录直通绑定该书（kdz 包导入场景）
+interface ImportNotesOptions {
+  targetBookKey?: string;
+}
 
-  // 解析全部文件，任何一个无效则中断
-  const rawRecords: any[] = [];
-  for (const file of files) {
-    const records = parseFileRecords(file.name, file.content);
-    if (!records || records.length === 0) {
-      toast.error(i18n.t("Invalid data"));
+export const importNoteRecords = async (
+  preparedRecords: PreparedRecord[],
+  options: ImportNotesOptions = {}
+): Promise<ImportResult> => {
+  const { targetBookKey } = options;
+  if (targetBookKey) {
+    preparedRecords = preparedRecords.map((item) => ({
+      ...item,
+      record: { ...item.record, bookKey: targetBookKey },
+    }));
+  } else {
+    // 图书匹配：优先 bookKey，其次按 bookMd5 找原书并改写 bookKey
+    const books = await DatabaseService.getAllRecords("books");
+    const bookByKey = new Map<string, any>(books.map((book: any) => [book.key, book]));
+    const bookByMd5 = new Map<string, any>(books.map((book: any) => [book.md5, book]));
+    const missingBookNames = new Set<string>();
+    for (const item of preparedRecords) {
+      const bookMd5 = item.bookMd5;
+      if (bookByKey.has(item.record.bookKey)) {
+        continue;
+      }
+      const matchedBook = bookMd5 ? bookByMd5.get(bookMd5) : null;
+      if (matchedBook) {
+        item.record.bookKey = matchedBook.key;
+      } else {
+        missingBookNames.add(item.bookName || "Unknown book");
+      }
+    }
+
+    if (missingBookNames.size > 0) {
+      await vexComfirmAsync(
+        i18n.t(
+          "The book {{name}} is not found in the library, please import the original book before importing",
+          { name: Array.from(missingBookNames).join(", ") }
+        )
+      );
       return "failed";
     }
-    rawRecords.push(...records);
-  }
-
-  // 判定类型并还原为数据库原始格式
-  const preparedRecords: PreparedRecord[] = [];
-  for (const record of rawRecords) {
-    const type = detectRecordType(record);
-    if (!type || !record.key) {
-      toast.error(i18n.t("Invalid data"));
-      return "failed";
-    }
-    const dbName = type === "dictionaryHistory" ? "words" : "notes";
-    // bookKey 占位，图书匹配阶段统一修正
-    const prepared: PreparedRecord = {
-      dbName,
-      record:
-        type === "dictionaryHistory"
-          ? buildWordRecord(record, record.bookKey ? String(record.bookKey) : "")
-          : buildNoteRecord(record, record.bookKey ? String(record.bookKey) : ""),
-    };
-    if (record.bookMd5) {
-      prepared.bookMd5 = String(record.bookMd5);
-    }
-    if (record.bookName) {
-      prepared.bookName = String(record.bookName);
-    }
-    preparedRecords.push(prepared);
-  }
-
-  // 图书匹配：优先 bookKey，其次按 bookMd5 找原书并改写 bookKey
-  const books = await DatabaseService.getAllRecords("books");
-  const bookByKey = new Map<string, any>(books.map((book: any) => [book.key, book]));
-  const bookByMd5 = new Map<string, any>(books.map((book: any) => [book.md5, book]));
-  const missingBookNames = new Set<string>();
-  for (const item of preparedRecords) {
-    const bookMd5 = item.bookMd5;
-    if (bookByKey.has(item.record.bookKey)) {
-      continue;
-    }
-    const matchedBook = bookMd5 ? bookByMd5.get(bookMd5) : null;
-    if (matchedBook) {
-      item.record.bookKey = matchedBook.key;
-    } else {
-      missingBookNames.add(item.bookName || "Unknown book");
-    }
-  }
-
-  if (missingBookNames.size > 0) {
-    await vexComfirmAsync(
-      i18n.t(
-        "The book {{name}} is not found in the library, please import the original book before importing",
-        { name: Array.from(missingBookNames).join(", ") }
-      )
-    );
-    return "failed";
   }
 
   // 按 key 去重后写入数据库
@@ -371,4 +342,63 @@ export const importNotesData = async (): Promise<ImportResult> => {
     imported,
     skipped,
   } as ImportResult;
+};
+
+// 将原始记录（解析自 csv/json）转换为数据库格式记录
+export const buildImportRecords = (rawRecords: any[]): PreparedRecord[] | null => {
+  const preparedRecords: PreparedRecord[] = [];
+  for (const record of rawRecords) {
+    const type = detectRecordType(record);
+    if (!type || !record.key) {
+      return null;
+    }
+    const dbName = type === "dictionaryHistory" ? "words" : "notes";
+    // bookKey 占位，图书匹配阶段统一修正
+    const prepared: PreparedRecord = {
+      dbName,
+      record:
+        type === "dictionaryHistory"
+          ? buildWordRecord(record, record.bookKey ? String(record.bookKey) : "")
+          : buildNoteRecord(record, record.bookKey ? String(record.bookKey) : ""),
+    };
+    if (record.bookMd5) {
+      prepared.bookMd5 = String(record.bookMd5);
+    }
+    if (record.bookName) {
+      prepared.bookName = String(record.bookName);
+    }
+    preparedRecords.push(prepared);
+  }
+  return preparedRecords;
+};
+
+export const importNotesData = async (): Promise<ImportResult> => {
+  const files = await selectImportFiles();
+  if (!files) {
+    return "cancel";
+  }
+  if (files.length === 0) {
+    toast.error(i18n.t("Failed to import"));
+    return "failed";
+  }
+
+  // 解析全部文件，任何一个无效则中断
+  const rawRecords: any[] = [];
+  for (const file of files) {
+    const records = parseFileRecords(file.name, file.content);
+    if (!records || records.length === 0) {
+      toast.error(i18n.t("Invalid data"));
+      return "failed";
+    }
+    rawRecords.push(...records);
+  }
+
+  // 判定类型并还原为数据库原始格式
+  const preparedRecords = buildImportRecords(rawRecords);
+  if (!preparedRecords) {
+    toast.error(i18n.t("Invalid data"));
+    return "failed";
+  }
+
+  return importNoteRecords(preparedRecords);
 };

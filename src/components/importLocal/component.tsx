@@ -3,6 +3,7 @@ import "./importLocal.css";
 import BookModel from "../../models/Book";
 import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
+import JSZip from "jszip";
 import * as Kookit from "../../assets/lib/kookit.min";
 import { ImportLocalProps, ImportLocalState } from "./interface";
 import { isElectron } from "react-device-detect";
@@ -29,6 +30,10 @@ import DatabaseService from "../../utils/storage/databaseService";
 import { BookHelper } from "../../assets/lib/kookit.min";
 import { analyzeBookTitle } from "../../utils/request/reader";
 import { convertCajToPdf, isCajFormat } from "../../utils/file/cajUtil";
+import {
+  buildImportRecords,
+  importNoteRecords,
+} from "../../utils/file/importData";
 
 // Convert supportedFormats to react-dropzone v14+ accept format
 // Key is MIME type, value is array of file extensions
@@ -564,8 +569,148 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
     recordPath: string,
     resolve: (value: void) => void
   ) => {
+    if (extension === "kdz") {
+      return await this.handleKdzBook(
+        bookName,
+        file_content,
+        recordPath,
+        resolve
+      );
+    }
+    await this.importBookSource(
+      bookName,
+      extension,
+      md5,
+      file_content,
+      fileSize,
+      filePath,
+      recordPath,
+      false
+    );
+    return resolve();
+  };
+
+  // 解析 kdz 图书包：解包出书籍源文件走正常导入链路，随后导入包内笔记/高亮/生词
+  handleKdzBook = async (
+    bookName: string,
+    file_content: ArrayBuffer,
+    recordPath: string,
+    resolve: (value: void) => void
+  ) => {
+    try {
+      const zip = await JSZip.loadAsync(file_content);
+      const innerEntry = Object.entries(zip.files).find(([name, file]) => {
+        if (file.dir) return false;
+        const innerExt = name.split(".").pop()?.toLowerCase();
+        return (
+          innerExt && innerExt !== "kdz" && supportedFormats.includes(`.${innerExt}`)
+        );
+      });
+      if (!innerEntry) {
+        throw new Error("Invalid kdz package");
+      }
+      const innerEntryName = innerEntry[0];
+      const innerName = innerEntryName.split("/").pop() || innerEntryName;
+      const innerExt = innerName.split(".").pop()?.toLowerCase() || "";
+      const innerBuffer = await innerEntry[1].async("arraybuffer");
+      const innerMd5 = await calculateFileMD5(
+        new File([innerBuffer], innerName)
+      );
+      if (!innerMd5) {
+        throw new Error("Md5 error: " + innerName);
+      }
+      const repeatBook: BookModel | null = await BookUtil.getBookByMd5(innerMd5);
+      if (repeatBook) {
+        toast.error(this.props.t("Duplicate book"));
+        return resolve();
+      }
+      const innerBookName = innerName.substring(
+        0,
+        innerName.length - innerExt.length - 1
+      );
+      // 先校验包内笔记/高亮/生词数据，避免书籍已入库但数据损坏的半导入状态
+      const records = await this.parseKdzRecords(zip);
+      const innerBook = await this.importBookSource(
+        innerBookName,
+        innerExt,
+        innerMd5,
+        innerBuffer,
+        innerBuffer.byteLength,
+        // 书籍源文件在包内，磁盘上无可引用的原始路径，
+        // 处理方式与 CAJ 转换后的 PDF 一致，必须写入书库
+        "",
+        "",
+        false
+      );
+      if (!innerBook || !innerBook.key) {
+        return resolve();
+      }
+      if (records.length > 0) {
+        const preparedRecords = buildImportRecords(records);
+        if (!preparedRecords) {
+          console.error("Invalid data in kdz package: " + bookName);
+          toast.error(this.props.t("Invalid data"));
+          return resolve();
+        }
+        const result = await importNoteRecords(preparedRecords, {
+          targetBookKey: (innerBook as BookModel).key,
+        });
+        if (result === "failed") {
+          toast.error(this.props.t("Failed to import"));
+          return resolve();
+        }
+        const { imported, skipped } = result as {
+          imported: number;
+          skipped: number;
+        };
+        toast.success(
+          this.props.t(
+            "Imported {{imported}} records, skipped {{skipped}} existing records",
+            { imported, skipped }
+          )
+        );
+      }
+      return resolve();
+    } catch (error) {
+      console.error(error, bookName);
+      toast.error(this.props.t("Import failed") + ": " + bookName, {
+        duration: 4000,
+      });
+      return resolve();
+    }
+  };
+
+  // 解析 kdz 包内的 notes.json / highlights.json / words.json
+  parseKdzRecords = async (zip: JSZip): Promise<any[]> => {
+    const jsonNames = ["notes.json", "highlights.json", "words.json"];
+    const rawRecords: any[] = [];
+    for (const jsonName of jsonNames) {
+      const entry = zip.file(jsonName);
+      if (!entry) {
+        continue;
+      }
+      const content = await entry.async("string");
+      const parsed = JSON.parse(content);
+      if (!Array.isArray(parsed)) {
+        throw new Error("Invalid data in kdz package: " + jsonName);
+      }
+      rawRecords.push(...parsed);
+    }
+    return rawRecords;
+  };
+
+  // 从文件内容生成书籍元数据并入库（原 processBookContent 的核心逻辑）
+  importBookSource = async (
+    bookName: string,
+    extension: string,
+    md5: string,
+    file_content: ArrayBuffer,
+    fileSize: number,
+    filePath: string,
+    recordPath: string,
+    isConverted = false
+  ): Promise<BookModel | null> => {
     let result: BookModel;
-    let isConverted = false;
     try {
       if (isCajFormat(extension)) {
         toast.loading(
@@ -638,7 +783,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       toast.error(this.props.t("Import failed") + ": " + bookName, {
         duration: 4000,
       });
-      return resolve();
+      return null;
     }
 
     clickFilePath = "";
@@ -649,7 +794,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       toast.error(this.props.t("Import failed") + ": " + bookName, {
         duration: 4000,
       });
-      return resolve();
+      return null;
     }
     await this.analyzeBookMetadata(result as BookModel, bookName);
     await this.handleAddBook(
@@ -659,7 +804,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
       isConverted
     );
 
-    return resolve();
+    return result as BookModel;
   };
 
   decodeHtmlEntities = (value: string) => {
