@@ -1371,5 +1371,7 @@
   "Failed to recognize title": "Nie udało się rozpoznać tytułu",
   "Show total page number (Experimental)": "Pokaż łączną liczbę stron (funkcja eksperymentalna)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Ta wersja Koodo Reader jest zbyt stara. Przejdź do Ustawienia - O programie - Sprawdź aktualizacje, aby zaktualizować Koodo Reader do najnowszej wersji i spróbować ponownie.",
-  "Background opacity": "Nieprzezroczystość tła"
+  "Background opacity": "Nieprzezroczystość tła",
+  "Enable auto reading": "Włącz automatyczne czytanie",
+  "Auto scrolling speed": "Szybkość automatycznego przewijania"
 }

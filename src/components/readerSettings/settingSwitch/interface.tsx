@@ -14,6 +14,8 @@ export interface SettingSwitchProps {
   handleParagraphMode: (isParagraphMode: boolean) => void;
   handleReadingRuler: (isReadingRuler: boolean) => void;
   handleSpeedReading: (isSpeedReading: boolean) => void;
+  handleAutoReading: (isAutoReading: boolean) => void;
+  handleReaderMode: (readerMode: string) => void;
   handleMergeWord: (isMergeWord: boolean) => void;
   handleShowBorder: (isShowPageBorder: boolean) => void;
   handleSetting: (isOpenSetting: boolean) => void;
@@ -48,6 +50,7 @@ export interface SettingSwitchState {
   readingRulerLineHeight: string;
   readingRulerBackgroundOpacity: string;
   isSpeedReading: boolean;
+  isAutoReading: boolean;
   speedReadingSpeed: string;
   isMergeWord: boolean;
   wordDefinitionLang: string;

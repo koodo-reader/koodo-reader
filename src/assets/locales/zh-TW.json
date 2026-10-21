@@ -1380,5 +1380,7 @@
   "Failed to recognize title": "書名辨識失敗",
   "Show total page number (Experimental)": "顯示總頁數（實驗性功能）",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "此版本的 Koodo Reader 過舊。請前往設定 - 關於 - 檢查更新，將 Koodo Reader 更新至最新版本後再試。",
-  "Background opacity": "背景不透明度"
+  "Background opacity": "背景不透明度",
+  "Enable auto reading": "自動滾動",
+  "Auto scrolling speed": "自動滾動速度"
 }

@@ -22,6 +22,8 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
         ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.6",
       speedReadingSpeed:
         ConfigService.getReaderConfig("speedReadingSpeed") || "300",
+      autoScrollRate:
+        ConfigService.getReaderConfig("autoScrollRate") || "0.5",
     } as SliderListState;
   }
 
@@ -48,6 +50,16 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
 
     if (mode === "margin") {
       this.props.handleMargin(nextValue);
+    }
+
+    if (
+      mode === "autoScrollRate" &&
+      this.props.htmlBook &&
+      ConfigService.getReaderConfig("isAutoReading") === "yes"
+    ) {
+      // 自动阅读进行中，直接以新速率重启滚动
+      this.props.htmlBook.rendition.autoScroll?.(parseFloat(nextValue), "yes");
+      this.props.htmlBook.rendition.autoScrollPDF?.("yes");
     }
   };
 

@@ -1369,5 +1369,7 @@
   "Failed to recognize title": "शीर्षक पहचानने में विफल",
   "Show total page number (Experimental)": "कुल पृष्ठ संख्या दिखाएँ (प्रयोगात्मक)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Koodo Reader का यह संस्करण बहुत पुराना है। कृपया सेटिंग्स - बारे में - अपडेट की जांच करें पर जाकर Koodo Reader को नवीनतम संस्करण में अपडेट करें और पुनः प्रयास करें।",
-  "Background opacity": "पृष्ठभूमि अपारदर्शिता"
+  "Background opacity": "पृष्ठभूमि अपारदर्शिता",
+  "Enable auto reading": "स्वचालित पढ़ाई सक्षम करें",
+  "Auto scrolling speed": "स्वचालित स्क्रॉलिंग गति"
 }

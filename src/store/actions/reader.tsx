@@ -110,6 +110,9 @@ export function handleReadingRuler(isReadingRuler: boolean) {
 export function handleSpeedReading(isSpeedReading: boolean) {
   return { type: "HANDLE_SPEED_READING", payload: isSpeedReading };
 }
+export function handleAutoReading(isAutoReading: boolean) {
+  return { type: "HANDLE_AUTO_READING", payload: isAutoReading };
+}
 export function handleMergeWord(isMergeWord: boolean) {
   return { type: "HANDLE_MERGE_WORD", payload: isMergeWord };
 }

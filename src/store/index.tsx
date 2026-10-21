@@ -119,6 +119,7 @@ export type stateType = {
     isParagraphMode: boolean;
     isReadingRuler: boolean;
     isSpeedReading: boolean;
+    isAutoReading: boolean;
     isMergeWord: boolean;
     isShowPageBorder: boolean;
     textOrientation: string;
