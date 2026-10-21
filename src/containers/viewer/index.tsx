@@ -41,6 +41,7 @@ const mapStateToProps = (state: stateType) => {
     defaultSyncOption: state.backupPage.defaultSyncOption,
     menuMode: state.viewArea.menuMode,
     scale: state.reader.scale,
+    isFitPage: state.reader.isFitPage,
     margin: state.reader.margin,
     isHideBackground: state.reader.isHideBackground,
     isParagraphMode: state.reader.isParagraphMode,

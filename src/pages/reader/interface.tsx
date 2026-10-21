@@ -18,6 +18,8 @@ export interface ReaderProps {
   isSettingOpen: boolean;
   readerMode: string;
   scale: string;
+  isFitPage: boolean;
+  handleFitPage: (isFitPage: boolean) => void;
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;
   handleConvertDialog: (isConvertOpen: boolean) => void;

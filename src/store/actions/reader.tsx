@@ -71,6 +71,9 @@ export function handleReaderMode(readerMode: string) {
 export function handleScale(scale: string) {
   return { type: "HANDLE_SCALE", payload: scale };
 }
+export function handleFitPage(isFitPage: boolean) {
+  return { type: "HANDLE_FIT_PAGE", payload: isFitPage };
+}
 export function handleMargin(margin: string) {
   return { type: "HANDLE_MARGIN", payload: margin };
 }

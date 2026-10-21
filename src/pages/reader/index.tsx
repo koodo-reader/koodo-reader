@@ -13,6 +13,7 @@ import {
   handleSpeechDialog,
   handleAnnotationDialog,
   handleScale,
+  handleFitPage,
   handleFetchAuthed,
   handleFetchUserInfo,
   handleBackgroundColor,
@@ -40,6 +41,7 @@ const mapStateToProps = (state: stateType) => {
     isSearch: state.manager.isSearch,
     isSettingOpen: state.manager.isSettingOpen,
     scale: state.reader.scale,
+    isFitPage: state.reader.isFitPage,
     renderBookFunc: state.book.renderBookFunc,
   };
 };
@@ -56,6 +58,7 @@ const actionCreator = {
   handleConvertDialog,
   handlePdfCropDialog,
   handleScale,
+  handleFitPage,
   handleFetchAuthed,
   handleSpeechDialog,
   handleAnnotationDialog,

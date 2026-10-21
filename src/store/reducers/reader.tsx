@@ -24,6 +24,7 @@ const initState = {
   quoteText: "",
   htmlBook: null,
   scale: ConfigService.getReaderConfig("scale") || "1",
+  isFitPage: ConfigService.getReaderConfig("isFitPage") === "yes",
   margin: ConfigService.getReaderConfig("margin") || "0",
   section: null,
   readerMode: "double",
@@ -240,6 +241,11 @@ export function reader(
       return {
         ...state,
         scale: action.payload,
+      };
+    case "HANDLE_FIT_PAGE":
+      return {
+        ...state,
+        isFitPage: action.payload,
       };
     case "HANDLE_MARGIN":
       return {

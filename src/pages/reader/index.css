@@ -225,6 +225,26 @@
   align-items: center;
   justify-content: flex-end;
 }
+.scale-preset-dropdown {
+  width: 76px;
+  height: 28px;
+  margin-left: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.scale-fit-switch-container {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.scale-fit-switch-title {
+  font-size: 13px;
+  margin-right: 6px;
+}
 .text-to-speech-icon {
   font-size: 22px;
   margin-right: 10px;

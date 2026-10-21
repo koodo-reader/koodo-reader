@@ -381,6 +381,7 @@
   "System OCR": "系统 OCR",
   "Note": "笔记",
   "Page width": "页面宽度",
+  "Fit to page": "适应页面",
   "Change": "更改",
   "We have two server regions(Global and China). To change the server region, you need to log out first. Do you want to log out now?": "我们有两个服务器地区：全球和中国。要更改服务器地区，您需要先退出登录。是否现在退出？",
   "Tasks failed after multiple retries, please check the network connection": "多次重试后任务失败，请检查网络连接",

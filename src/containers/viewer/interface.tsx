@@ -24,6 +24,7 @@ export interface ViewerProps {
   textOrientation: string;
   defaultSyncOption: string;
   scale: string;
+  isFitPage: boolean;
   margin: string;
   handleRenderBookFunc: (renderBookFunc: () => void) => void;
   renderNoteFunc: () => void;
