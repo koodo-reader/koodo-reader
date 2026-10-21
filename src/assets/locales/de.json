@@ -1372,6 +1372,6 @@
   "Show total page number (Experimental)": "Gesamtseitenzahl anzeigen (experimentell)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Diese Version von Koodo Reader ist zu alt. Bitte gehen Sie zu Einstellungen - Über - Nach Updates suchen, um Koodo Reader auf die neueste Version zu aktualisieren, und versuchen Sie es erneut.",
   "Background opacity": "Hintergrunddeckkraft",
-  "Enable auto reading": "Automatisches Lesen aktivieren",
-  "Auto scrolling speed": "Scrollgeschwindigkeit"
+  "Enable auto reading": "Automatisches Scrollen",
+  "Auto scrolling speed": "Geschwindigkeit für automatisches Scrollen"
 }

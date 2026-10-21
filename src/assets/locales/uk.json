@@ -1383,6 +1383,6 @@
   "Show total page number (Experimental)": "Показувати загальну кількість сторінок (експериментально)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Ця версія Koodo Reader застаріла. Перейдіть у «Налаштування — Про програму — Перевірити оновлення», оновіть Koodo Reader до останньої версії та спробуйте знову.",
   "Background opacity": "Непрозорість фону",
-  "Enable auto reading": "Увімкнути автопрокрутку",
-  "Auto scrolling speed": "Швидкість автопрокрутки"
+  "Enable auto reading": "Увімкнути автоматичне читання",
+  "Auto scrolling speed": "Швидкість автоматичного читання"
 }

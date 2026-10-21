@@ -1372,6 +1372,6 @@
   "Show total page number (Experimental)": "แสดงจำนวนหน้าทั้งหมด (ทดลอง)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Koodo Reader เวอร์ชันนี้เก่าเกินไป โปรดไปที่ การตั้งค่า - เกี่ยวกับ - ตรวจสอบอัปเดต เพื่ออัปเดต Koodo Reader เป็นเวอร์ชันล่าสุดแล้วลองอีกครั้ง",
   "Background opacity": "ความทึบของภาพพื้นหลัง",
-  "Enable auto reading": "เปิดใช้งานการอ่านแบบเลื่อนอัตโนมัติ",
-  "Auto scrolling speed": "ความเร็วการเลื่อนอัตโนมัติ"
+  "Enable auto reading": "อ่านอัตโนมัติ",
+  "Auto scrolling speed": "ความเร็วการอ่านอัตโนมัติ"
 }

@@ -1377,6 +1377,6 @@
   "Show total page number (Experimental)": "Visa totalt sidantal (experimentell)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Den här versionen av Koodo Reader är för gammal. Gå till Inställningar - Om - Sök efter uppdateringar för att uppdatera Koodo Reader till den senaste versionen och försök igen.",
   "Background opacity": "Bakgrundens opacitet",
-  "Enable auto reading": "Aktivera automatisk läsning",
-  "Auto scrolling speed": "Automatisk rullningshastighet"
+  "Enable auto reading": "Automatisk läsning",
+  "Auto scrolling speed": "Hastighet för automatisk läsning"
 }
