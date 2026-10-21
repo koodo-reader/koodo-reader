@@ -2,7 +2,7 @@ import React from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import {
@@ -28,6 +28,7 @@ import {
 import SupportDialog from "../../components/dialogs/supportDialog";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
 import { isPaginatedBook, isReadingRawPDF, throttle } from "../../utils/common";
+import { pageWidthPresetList } from "../../constants/dropdownList";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
@@ -605,6 +606,76 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                       width: "120px",
                     }}
                   />
+
+                  <select
+                    className="scale-preset-dropdown"
+                    value={
+                      pageWidthPresetList.some(
+                        (opt) => opt.value === this.state.scale
+                      )
+                        ? this.state.scale
+                        : ""
+                    }
+                    onChange={(event) => {
+                      const value = event.target.value;
+                      if (!value) return;
+                      ConfigService.setReaderConfig("scale", value);
+                      this.setState({ scale: value });
+                      this.props.handleScale(value);
+                      this.props.renderBookFunc();
+                    }}
+                    style={{ zIndex: 100 }}
+                  >
+                    <option value="" hidden></option>
+                    {pageWidthPresetList.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+
+                  <div
+                    className={
+                      "scale-fit-switch-container" +
+                      (this.props.isFitPage ? " active" : "")
+                    }
+                    onClick={() => {
+                      const next = !this.props.isFitPage;
+                      ConfigService.setReaderConfig(
+                        "isFitPage",
+                        next ? "yes" : "no"
+                      );
+                      this.props.handleFitPage(next);
+                      toast(this.props.t("Change successful"));
+                      setTimeout(() => {
+                        this.props.renderBookFunc();
+                      }, 300);
+                    }}
+                    style={{ zIndex: 100 }}
+                  >
+                    <span className="scale-fit-switch-title">
+                      {this.props.t("Fit to page")}
+                    </span>
+                    <span
+                      className="single-control-switch"
+                      style={this.props.isFitPage ? {} : { opacity: 0.6 }}
+                    >
+                      <span
+                        className="single-control-button"
+                        style={
+                          !this.props.isFitPage
+                            ? {
+                                transform: "translateX(0px)",
+                                transition: "transform 0.5s ease",
+                              }
+                            : {
+                                transform: "translateX(20px)",
+                                transition: "transform 0.5s ease",
+                              }
+                        }
+                      ></span>
+                    </span>
+                  </div>
                 </div>
               )}
               <div

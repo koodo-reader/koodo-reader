@@ -101,6 +101,7 @@ export type stateType = {
     chapters: any[];
     readerMode: string;
     scale: string;
+    isFitPage: boolean;
     margin: string;
     backgroundColor: string;
     section: any;

@@ -36,7 +36,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
         this.props.scale,
         parseInt(this.props.margin),
         this.props.isNavLocked,
-        this.props.isSettingLocked || this.props.isDockedRight
+        this.props.isSettingLocked || this.props.isDockedRight,
+        this.props.isFitPage
       )
     );
     this.loadReaderBackground();
@@ -47,7 +48,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           this.props.scale,
           parseInt(this.props.margin),
           this.props.isNavLocked,
-          this.props.isSettingLocked || this.props.isDockedRight
+          this.props.isSettingLocked || this.props.isDockedRight,
+          this.props.isFitPage
         )
       );
     });
@@ -66,6 +68,7 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
       nextProps.readerMode !== this.props.readerMode ||
       nextProps.isNavLocked !== this.props.isNavLocked ||
       nextProps.isSettingLocked !== this.props.isSettingLocked ||
+      nextProps.isFitPage !== this.props.isFitPage ||
       nextProps.isDockedRight !== this.props.isDockedRight
     ) {
       this.setState(
@@ -74,7 +77,8 @@ class Background extends React.Component<BackgroundProps, BackgroundState> {
           nextProps.scale,
           parseInt(nextProps.margin),
           nextProps.isNavLocked,
-          nextProps.isSettingLocked || nextProps.isDockedRight
+          nextProps.isSettingLocked || nextProps.isDockedRight,
+          nextProps.isFitPage
         )
       );
     }

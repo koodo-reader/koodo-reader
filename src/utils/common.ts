@@ -627,7 +627,8 @@ export const getPageWidth = (
   scale: string,
   margin: number,
   isNavLocked: boolean,
-  isSettingLocked: boolean
+  isSettingLocked: boolean,
+  isFitPage: boolean = false
 ) => {
   if (Math.abs(parseFloat(scale)) > 1.4) {
     scale = "1.3";
@@ -644,6 +645,18 @@ export const getPageWidth = (
 
     return limit;
   };
+  if (
+    isFitPage &&
+    (readerMode === "scroll" || readerMode === "single")
+  ) {
+    let pageWidth = document.body.clientWidth - 106;
+    let pageOffset = 50 + "px";
+    return {
+      pageOffset,
+      pageWidth: pageWidth + "px",
+    };
+  }
+
   if (
     document.body.clientWidth * Math.abs(parseFloat(scale)) -
       document.body.clientWidth * 0.4 >

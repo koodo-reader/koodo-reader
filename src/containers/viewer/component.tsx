@@ -106,7 +106,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.scale,
         parseInt(this.props.margin),
         this.props.isNavLocked,
-        this.props.isSettingLocked || this.props.isDockedRight
+        this.props.isSettingLocked || this.props.isDockedRight,
+        this.props.isFitPage
       )
     );
     // 刷新页面后，若 popupBox 处于固定右侧状态，自动恢复显示 popupAssist
@@ -123,7 +124,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
             this.props.scale,
             parseInt(this.props.margin),
             this.props.isNavLocked,
-            this.props.isSettingLocked || this.props.isDockedRight
+            this.props.isSettingLocked || this.props.isDockedRight,
+            this.props.isFitPage
           )
         );
       });
@@ -148,6 +150,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       nextProps.readerMode !== this.props.readerMode ||
       nextProps.isNavLocked !== this.props.isNavLocked ||
       nextProps.isSettingLocked !== this.props.isSettingLocked ||
+      nextProps.isFitPage !== this.props.isFitPage ||
       nextProps.isDockedRight !== this.props.isDockedRight
     ) {
       this.setState(
@@ -156,7 +159,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           nextProps.scale,
           parseInt(nextProps.margin),
           nextProps.isNavLocked,
-          nextProps.isSettingLocked || nextProps.isDockedRight
+          nextProps.isSettingLocked || nextProps.isDockedRight,
+          nextProps.isFitPage
         )
       );
     }
