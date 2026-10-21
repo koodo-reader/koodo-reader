@@ -8,6 +8,8 @@ const INVOKE_CHANNELS = new Set([
   "open-book",
   "generate-tts",
   "get-tts-voices",
+  "get-cached-tts",
+  "save-tts-audio",
   "cloud-upload",
   "cloud-download",
   "cloud-progress",

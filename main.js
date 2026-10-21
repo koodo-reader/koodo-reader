@@ -60,6 +60,7 @@ const {
   promptBiometricAuth,
 } = require("./src/utils/main/biometric-util");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
+const ttsCacheUtil = require("./src/utils/plugins/main/voice/ttsCache");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 const customVoicePluginCache = new Map();
@@ -1104,18 +1105,64 @@ const createMainWin = () => {
 
   ipcMain.handle("clear-tts", async (event, config) => {
     if (!fs.existsSync(path.join(dirPath, "tts"))) {
-      return "pong";
+      await fsExtra.mkdir(path.join(dirPath, "tts"));
     } else {
-      const fsExtra = require("fs-extra");
-      try {
-        await fsExtra.remove(path.join(dirPath, "tts"));
-        await fsExtra.mkdir(path.join(dirPath, "tts"));
-        return "pong";
-      } catch (err) {
-        console.error(err);
-        return "pong";
-      }
+      await fsExtra.remove(path.join(dirPath, "tts"));
+      await fsExtra.mkdir(path.join(dirPath, "tts"));
     }
+    ttsCacheUtil.resetTTSAudioIndex(dirPath);
+  });
+  // 官方 AI 语音本地缓存查询：命中返回 file:// 地址，未命中返回空字符串
+  ipcMain.handle("get-cached-tts", async (event, config) => {
+    const { text, speed, voiceIdentifier } = config || {};
+    if (
+      typeof text !== "string" ||
+      !text ||
+      typeof speed !== "number" ||
+      !Number.isFinite(speed) ||
+      typeof voiceIdentifier !== "string" ||
+      !voiceIdentifier
+    ) {
+      throw new Error("Invalid TTS cache request");
+    }
+    const key = ttsCacheUtil.getTTSAudioKey({
+      text,
+      speed,
+      voiceIdentifier,
+    });
+    const audioPath = ttsCacheUtil.findCachedTTSAudio(dirPath, key);
+    if (audioPath && fs.existsSync(audioPath)) {
+      return {
+        key,
+        audioPath: pathToFileURL(audioPath).toString(),
+      };
+    }
+    if (audioPath) {
+      ttsCacheUtil.resetTTSAudioIndex(dirPath);
+    }
+    return { key, audioPath: "" };
+  });
+  // 官方 AI 语音音频落盘：key 为内容哈希，跨会话复用
+  ipcMain.handle("save-tts-audio", async (event, config) => {
+    const { key, base64 } = config || {};
+    const rawBase64 =
+      typeof base64 === "string" ? base64 : base64 && base64.audio_base64;
+    if (
+      !ttsCacheUtil.isTTSAudioKey(key) ||
+      typeof rawBase64 !== "string" ||
+      !rawBase64
+    ) {
+      throw new Error("Invalid TTS audio cache request");
+    }
+    const base64Data = rawBase64.includes("base64,")
+      ? rawBase64.split("base64,")[1]
+      : rawBase64;
+    const audioPath = ttsCacheUtil.saveTTSAudio(
+      dirPath,
+      key,
+      Buffer.from(base64Data, "base64")
+    );
+    return pathToFileURL(audioPath).toString();
   });
   ipcMain.handle("select-path", async (event) => {
     var path = await dialog.showOpenDialog({
@@ -1754,7 +1801,16 @@ const createMainWin = () => {
       mainWin.webContents.send("chat-message", msg);
     }
   });
-  ipcMain.handle("clear-all-data", (event, config) => {
+  ipcMain.handle("clear-all-data", async (event, config) => {
+    try {
+      if (fs.existsSync(path.join(dirPath, "tts"))) {
+        await fsExtra.remove(path.join(dirPath, "tts"));
+        await fsExtra.mkdir(path.join(dirPath, "tts"));
+      }
+      ttsCacheUtil.resetTTSAudioIndex(dirPath);
+    } catch (error) {
+      console.error(error);
+    }
     store.clear();
   });
   ipcMain.handle("new-tab", (event, config) => {

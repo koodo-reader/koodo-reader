@@ -221,16 +221,12 @@ class TTSUtil {
       this.player.stop();
       this.isPaused = true;
       this.pausedMidSentence = false;
+      // 仅清理内存缓存，磁盘上的 tts 目录保留供跨会话复用
       setTimeout(() => {
-        this.clearAudioPaths();
         this.audioPaths = [];
         this.processingIndexes.clear();
       }, 1000);
     }
-  }
-  static async clearAudioPaths() {
-    if (!isElectron) return;
-    window.electronAPI.invoke("clear-tts");
   }
   static getAudioPaths() {
     return this.audioPaths;
@@ -246,6 +242,38 @@ class TTSUtil {
     // 朗读前应用文本替换 / 删除规则
     text = this.applyTextRules(text);
     if (voiceEngine === "official-ai-voice-plugin") {
+      // 内容哈希：相同文本/语速/音色命中同一文件，跨会话复用（与 expo 端 key 设计一致）
+      const audioKeyPayload = {
+        text,
+        speed,
+        voiceIdentifier: `official-ai-${voice.language}-${voice.name}`,
+      };
+      if (isElectron) {
+        // Electron：音频持久缓存到 dirPath/tts 目录，命中本地缓存直接复用
+        let cached = await window.electronAPI.invoke(
+          "get-cached-tts",
+          audioKeyPayload
+        );
+        if (cached && cached.audioPath) {
+          return cached.audioPath;
+        }
+        let res = await getTTSAudio(
+          text,
+          voice.language,
+          voice.name,
+          (speed + 100) / 100,
+          1.0,
+          isFirst
+        );
+        if (res && res.data && res.data.audio_base64) {
+          return await window.electronAPI.invoke("save-tts-audio", {
+            key: cached && cached.key,
+            base64: res.data.audio_base64,
+          });
+        }
+        return "";
+      }
+      // 浏览器：保留 base64 数据 URI 播放
       let res = await getTTSAudio(
         text,
         voice.language,

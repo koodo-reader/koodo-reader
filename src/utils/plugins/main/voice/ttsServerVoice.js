@@ -1,21 +1,23 @@
 const path = require("path");
 const fs = require("fs");
 const axios = require("axios");
+const { getTTSAudioPath, ensureTTSDir } = require("./ttsCache");
 const getAudioPath = async (text, speed, dirPath, config) => {
-  let audioName = new Date().getTime() + ".wav";
-  if (!fs.existsSync(path.join(dirPath, "tts"))) {
-    fs.mkdirSync(path.join(dirPath, "tts"));
-    fs.writeFileSync(
-      path.join(dirPath, "tts", audioName),
-      await getTTSAudio(text, speed, config)
-    );
-  } else {
-    fs.writeFileSync(
-      path.join(dirPath, "tts", audioName),
-      await getTTSAudio(text, speed, config)
-    );
+  const audioPath = getTTSAudioPath(
+    "ttsserver-voice-plugin",
+    text,
+    speed,
+    config,
+    dirPath,
+    ".wav"
+  );
+  // 命中内容哈希缓存则直接复用，不再请求 TTS 接口
+  if (fs.existsSync(audioPath)) {
+    return audioPath;
   }
-  return path.join(dirPath, "tts", audioName);
+  ensureTTSDir(dirPath);
+  fs.writeFileSync(audioPath, await getTTSAudio(text, speed, config));
+  return audioPath;
 };
 const objectToQueryString = (obj) => {
   const queryParams = [];
