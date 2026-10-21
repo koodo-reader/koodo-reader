@@ -225,13 +225,13 @@
   align-items: center;
   justify-content: flex-end;
 }
-.scale-preset-dropdown {
+.scale-preset-dropdown.general-setting-dropdown {
+  position: static;
   width: 76px;
   height: 28px;
   margin-left: 8px;
+  margin-right: 5px;
   font-size: 13px;
-  cursor: pointer;
-  border-radius: 5px;
 }
 .scale-fit-switch-container {
   display: flex;

@@ -630,9 +630,6 @@ export const getPageWidth = (
   isSettingLocked: boolean,
   isFitPage: boolean = false
 ) => {
-  if (Math.abs(parseFloat(scale)) > 1.4) {
-    scale = "1.3";
-  }
   const findValidMultiple = (limit: number) => {
     let multiple = limit - (limit % 12);
 
@@ -657,9 +654,9 @@ export const getPageWidth = (
     };
   }
 
+  //缩放过高时按窗口宽度封顶
   if (
-    document.body.clientWidth * Math.abs(parseFloat(scale)) -
-      document.body.clientWidth * 0.4 >
+    document.body.clientWidth * 0.6 * Math.abs(parseFloat(scale)) >
     document.body.clientWidth
   ) {
     let pageWidth = document.body.clientWidth - 106;
@@ -673,9 +670,10 @@ export const getPageWidth = (
   let pageOffset = "";
   let pageWidth = 0;
   if (readerMode === "scroll" || readerMode === "single") {
+    //页面宽度以 scale=1 的默认宽度（视口宽度 * 0.6）为基准等比例缩放，
+    //使预设百分比与实际显示宽度成正比，避免低百分比时出现过窄页面
     let preWidth =
-      document.body.clientWidth * Math.abs(parseFloat(scale)) -
-      document.body.clientWidth * 0.4 -
+      document.body.clientWidth * 0.6 * Math.abs(parseFloat(scale)) -
       (isNavLocked ? 300 : 0) -
       (isSettingLocked ? 300 : 0);
     let width = findValidMultiple(preWidth);

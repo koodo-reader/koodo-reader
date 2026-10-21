@@ -608,7 +608,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   />
 
                   <select
-                    className="scale-preset-dropdown"
+                    name=""
+                    className="general-setting-dropdown scale-preset-dropdown"
                     value={
                       pageWidthPresetList.some(
                         (opt) => opt.value === this.state.scale
@@ -628,7 +629,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   >
                     <option value="" hidden></option>
                     {pageWidthPresetList.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
+                      <option
+                        key={opt.value}
+                        value={opt.value}
+                        className="general-setting-option"
+                      >
                         {opt.label}
                       </option>
                     ))}
