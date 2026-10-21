@@ -2,21 +2,23 @@ const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
 const axios = require("axios");
+const { getTTSAudioPath, ensureTTSDir } = require("./ttsCache");
 const getAudioPath = async (text, speed, dirPath, config) => {
-  let audioName = new Date().getTime() + ".mp3";
-  if (!fs.existsSync(path.join(dirPath, "tts"))) {
-    fs.mkdirSync(path.join(dirPath, "tts"));
-    fs.writeFileSync(
-      path.join(dirPath, "tts", audioName),
-      await getTTSAudio(text, speed, config)
-    );
-  } else {
-    fs.writeFileSync(
-      path.join(dirPath, "tts", audioName),
-      await getTTSAudio(text, speed, config)
-    );
+  const audioPath = getTTSAudioPath(
+    "amazon-polly-voice-plugin",
+    text,
+    speed,
+    config,
+    dirPath,
+    ".mp3"
+  );
+  // 命中内容哈希缓存则直接复用，不再请求 TTS 接口
+  if (fs.existsSync(audioPath)) {
+    return audioPath;
   }
-  return path.join(dirPath, "tts", audioName);
+  ensureTTSDir(dirPath);
+  fs.writeFileSync(audioPath, await getTTSAudio(text, speed, config));
+  return audioPath;
 };
 // AWS Signature Version 4 signing helpers
 const getSignatureKey = (crypto, key, dateStamp, regionName, serviceName) => {

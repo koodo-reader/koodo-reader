@@ -505,11 +505,7 @@ class TextToSpeech extends React.Component<
     TTSUtil.isPaused = true;
     TTSUtil.pausedMidSentence = false;
 
-    // 若之前是 AI 语音，清除已生成的音频文件
-    if (previousEngine === "official-ai-voice-plugin") {
-      await TTSUtil.clearAudioPaths();
-    }
-    // 重置内存中的音频路径缓存（适用于所有引擎切换）
+    // 重置内存中的音频路径缓存（适用于所有引擎切换；磁盘 tts 缓存按内容哈希命名，切换语音无需清除）
     TTSUtil.setAudioPaths();
 
     // AI 语音需要刷新用户信息
@@ -799,7 +795,7 @@ class TextToSpeech extends React.Component<
       }
     }
     if (this.state.isAudioOn && this.props.isReading) {
-      await TTSUtil.clearAudioPaths();
+      // 重置内存缓存；磁盘 tts 缓存按内容哈希命名，保留复用
       TTSUtil.setAudioPaths();
       let position = this.props.htmlBook.rendition.getPosition();
       ConfigService.setObjectConfig(

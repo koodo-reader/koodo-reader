@@ -907,6 +907,33 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             <Trans>Clear</Trans>
           </span>
         </div>
+        {isElectron && (
+          <>
+            <div className="setting-dialog-new-title">
+              <Trans>Clear TTS cache</Trans>
+              <span
+                className="change-location-button"
+                onClick={async () => {
+                  try {
+                    await window.electronAPI.invoke("clear-tts", {});
+                    toast.success(this.props.t("Clear successful"));
+                  } catch (error) {
+                    toast.error(this.props.t("Clear failed"));
+                  }
+                }}
+              >
+                <Trans>Clear</Trans>
+              </span>
+            </div>
+            <p className="setting-option-subtitle">
+              <Trans>
+                {
+                  "Cached listen-book audio is stored locally and reused across sessions. Clearing it only frees up disk space"
+                }
+              </Trans>
+            </p>
+          </>
+        )}
       </>
     );
   }
