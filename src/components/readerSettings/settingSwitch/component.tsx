@@ -5,7 +5,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
 import { wordFrequencyList } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
-import { detectLocalLanguage, isReadingRawPDF } from "../../../utils/common";
+import { detectLocalLanguage, isPaginatedBook, isReadingRawPDF } from "../../../utils/common";
 import BookUtil from "../../../utils/file/bookUtil";
 import SliderList from "../sliderList";
 
@@ -45,6 +45,20 @@ const speedReadingSliderConfigs = [
     title: "Reading speed (WPM)",
     isPDF: false,
     defaultValue: 300,
+  },
+];
+
+const autoReadingSliderConfigs = [
+  {
+    maxValue: 1,
+    minValue: 0,
+    mode: "autoScrollRate",
+    minLabel: "0",
+    maxLabel: "1",
+    step: 0.05,
+    title: "Auto scrolling speed",
+    isPDF: false,
+    defaultValue: 0.5,
   },
 ];
 class SettingSwitch extends React.Component<
@@ -89,6 +103,7 @@ class SettingSwitch extends React.Component<
       readingRulerBackgroundOpacity:
         ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.6",
       isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
+      isAutoReading: ConfigService.getReaderConfig("isAutoReading") === "yes",
       speedReadingSpeed:
         ConfigService.getReaderConfig("speedReadingSpeed") || "300",
       isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
@@ -160,6 +175,7 @@ class SettingSwitch extends React.Component<
     "isParagraphMode",
     "isReadingRuler",
     "isSpeedReading",
+    "isAutoReading",
   ] as const;
 
   handleExclusiveOff = (
@@ -172,6 +188,7 @@ class SettingSwitch extends React.Component<
       isParagraphMode: this.props.handleParagraphMode,
       isReadingRuler: this.props.handleReadingRuler,
       isSpeedReading: this.props.handleSpeedReading,
+      isAutoReading: this.props.handleAutoReading,
     };
     const offNames = this.exclusiveModeNames.filter(
       (name) => name !== enabledName && this.state[name]
@@ -181,6 +198,9 @@ class SettingSwitch extends React.Component<
       ConfigService.setReaderConfig(name, "no");
       exclusiveHandlers[name](false);
     });
+    if (offNames.includes("isAutoReading")) {
+      this.stopAutoScroll();
+    }
     this.setState((prevState) => {
       const nextState = { ...prevState };
       offNames.forEach((name) => {
@@ -188,6 +208,45 @@ class SettingSwitch extends React.Component<
       });
       return nextState;
     });
+  };
+
+  stopAutoScroll = () => {
+    if (!this.props.htmlBook) return;
+    const rate = parseFloat(
+      ConfigService.getReaderConfig("autoScrollRate") || "0.5"
+    );
+    this.props.htmlBook.rendition.autoScroll?.(rate, "no");
+    this.props.htmlBook.rendition.autoScrollPDF?.("no");
+  };
+
+  handleAutoReadingToggle = () => {
+    const next = !this.state.isAutoReading;
+    if (next) {
+      this.handleExclusiveOff("isAutoReading");
+    }
+    this.setState({ isAutoReading: next });
+    ConfigService.setReaderConfig("isAutoReading", next ? "yes" : "no");
+    this.props.handleAutoReading(next);
+    if (next) {
+      if (!ConfigService.getReaderConfig("autoScrollRate")) {
+        ConfigService.setReaderConfig("autoScrollRate", "0.5");
+      }
+      // 自动阅读强制进入滚动模式（分页类书籍使用独立的 pdfReaderMode 配置）
+      if (isPaginatedBook(this.props.currentBook)) {
+        ConfigService.setReaderConfig("pdfReaderMode", "scroll");
+      } else {
+        ConfigService.setReaderConfig("readerMode", "scroll");
+      }
+      this.props.handleReaderMode("scroll");
+    } else {
+      this.stopAutoScroll();
+    }
+    toast(this.props.t("Change successful"));
+    if (next) {
+      setTimeout(async () => {
+        await this.props.renderBookFunc();
+      }, 500);
+    }
   };
   render() {
     return (
@@ -576,6 +635,35 @@ class SettingSwitch extends React.Component<
         </div>
         {this.state.isSpeedReading &&
           speedReadingSliderConfigs.map((item) => (
+            <SliderList key={item.mode} {...{ item }} />
+          ))}
+        <div className="single-control-switch-container" key="isAutoReading">
+          <span className="single-control-switch-title">
+            <Trans>Enable auto reading</Trans>
+          </span>
+          <span
+            className="single-control-switch"
+            onClick={this.handleAutoReadingToggle}
+            style={this.state.isAutoReading ? {} : { opacity: 0.6 }}
+          >
+            <span
+              className="single-control-button"
+              style={
+                !this.state.isAutoReading
+                  ? {
+                      transform: "translateX(0px)",
+                      transition: "transform 0.5s ease",
+                    }
+                  : {
+                      transform: "translateX(20px)",
+                      transition: "transform 0.5s ease",
+                    }
+              }
+            ></span>
+          </span>
+        </div>
+        {this.state.isAutoReading &&
+          autoReadingSliderConfigs.map((item) => (
             <SliderList key={item.mode} {...{ item }} />
           ))}
         {readerSettingList

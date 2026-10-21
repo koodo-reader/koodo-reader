@@ -1371,5 +1371,7 @@
   "Failed to recognize title": "제목 인식 실패",
   "Show total page number (Experimental)": "전체 페이지 수 표시(실험적 기능)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "이 버전의 Koodo Reader는 너무 오래되었습니다. 설정 - 정보 - 업데이트 확인에서 Koodo Reader를 최신 버전으로 업데이트한 후 다시 시도하세요.",
-  "Background opacity": "배경 불투명도"
+  "Background opacity": "배경 불투명도",
+  "Enable auto reading": "자동 스크롤 사용",
+  "Auto scrolling speed": "스크롤 속도"
 }

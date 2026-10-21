@@ -13,6 +13,8 @@ import {
   handleParagraphMode,
   handleReadingRuler,
   handleSpeedReading,
+  handleAutoReading,
+  handleReaderMode,
   handleMergeWord,
 } from "../../../store/actions";
 
@@ -36,6 +38,8 @@ const actionCreator = {
   handleParagraphMode,
   handleReadingRuler,
   handleSpeedReading,
+  handleAutoReading,
+  handleReaderMode,
   handleMergeWord,
 };
 export default connect(

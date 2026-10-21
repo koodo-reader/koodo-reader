@@ -109,6 +109,8 @@
   "Reading ruler height (lines)": "Reading ruler height (lines)",
   "Reading ruler background opacity": "Reading ruler background opacity",
   "Enable speed reading": "Enable speed reading",
+  "Enable auto reading": "Enable auto reading",
+  "Auto scrolling speed": "Auto scrolling speed",
   "Reading speed (WPM)": "Reading speed (WPM)",
   "Auto hide cursor when reading": "Auto-hide cursor when reading",
   "Disable update notification": "Disable update notifications",

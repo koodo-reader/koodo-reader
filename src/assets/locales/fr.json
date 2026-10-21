@@ -1370,5 +1370,7 @@
   "Failed to recognize title": "Échec de la reconnaissance du titre",
   "Show total page number (Experimental)": "Afficher le nombre total de pages (expérimental)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Cette version de Koodo Reader est trop ancienne. Veuillez aller dans Paramètres - À propos - Vérifier les mises à jour pour mettre Koodo Reader à jour vers la dernière version, puis réessayer.",
-  "Background opacity": "Opacité de l’arrière-plan"
+  "Background opacity": "Opacité de l’arrière-plan",
+  "Enable auto reading": "Activer la lecture automatique",
+  "Auto scrolling speed": "Vitesse de défilement automatique"
 }

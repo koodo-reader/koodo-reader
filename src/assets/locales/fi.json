@@ -1378,5 +1378,7 @@
   "Failed to recognize title": "Nimen tunnistus epäonnistui",
   "Show total page number (Experimental)": "Näytä sivujen kokonaismäärä (kokeellinen)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Tämä Koodo Reader -versio on liian vanha. Siirry kohtaan Asetukset - Tietoja - Tarkista päivitys, päivitä Koodo Reader uusimpaan versioon ja yritä uudelleen.",
-  "Background opacity": "Taustan peittävyys"
+  "Background opacity": "Taustan peittävyys",
+  "Enable auto reading": "Ota automaattinen lukeminen käyttöön",
+  "Auto scrolling speed": "Automaattinen vieritysnopeus"
 }

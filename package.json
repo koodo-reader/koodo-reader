@@ -224,6 +224,12 @@
         "ext": "chm",
         "role": "Viewer",
         "mimeType": "application/vnd.ms-htmlhelp"
+      },
+      {
+        "ext": "kdz",
+        "icon": "assets/icons/epub",
+        "role": "Viewer",
+        "mimeType": "application/vnd.koodo.kdz"
       }
     ],
     "extends": null,

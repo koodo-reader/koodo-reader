@@ -250,6 +250,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
     this.props.handleHtmlBook(null);
     if (this.state.rendition) {
+      // 停止旧渲染实例的自动滚动定时器，避免重渲染后旧循环继续占用滚动容器
+      this.state.rendition.autoScroll?.(0, "no");
+      this.state.rendition.autoScrollPDF?.("no");
       this.state.rendition.removeContent();
     }
     let result;
@@ -446,6 +449,17 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
 
     await this.handleRest(rendition);
+    if (
+      ConfigService.getReaderConfig("isAutoReading") === "yes" &&
+      this.props.readerMode === "scroll"
+    ) {
+      // 自动阅读开启：每次重渲染后以保存的速率重新启动自动滚动
+      const rate = parseFloat(
+        ConfigService.getReaderConfig("autoScrollRate") || "0.5"
+      );
+      rendition.autoScroll?.(rate, "yes");
+      rendition.autoScrollPDF?.("yes");
+    }
     this.props.handleReadingState(true);
 
     ConfigService.setListConfig(

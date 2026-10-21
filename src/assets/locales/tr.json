@@ -1372,5 +1372,7 @@
   "Failed to recognize title": "Ad tanınamadı",
   "Show total page number (Experimental)": "Toplam sayfa sayısını göster (Deneysel)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Bu Koodo Reader sürümü çok eski. Lütfen Ayarlar - Hakkında - Güncellemeleri kontrol et bölümüne gidip Koodo Reader'ı en son sürüme güncelleyin ve tekrar deneyin.",
-  "Background opacity": "Arka plan opaklığı"
+  "Background opacity": "Arka plan opaklığı",
+  "Enable auto reading": "Otomatik okumayı etkinleştir",
+  "Auto scrolling speed": "Otomatik kaydırma hızı"
 }

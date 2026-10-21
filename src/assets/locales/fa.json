@@ -1371,5 +1371,7 @@
   "Failed to recognize title": "تشخیص عنوان ناموفق بود",
   "Show total page number (Experimental)": "نمایش تعداد کل صفحات (آزمایشی)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "این نسخه از Koodo Reader بسیار قدیمی است. لطفاً به تنظیمات - درباره - بررسی به‌روزرسانی بروید و Koodo Reader را به آخرین نسخه به‌روزرسانی کنید و دوباره تلاش کنید.",
-  "Background opacity": "شفافیت پس‌زمینه"
+  "Background opacity": "شفافیت پس‌زمینه",
+  "Enable auto reading": "فعال کردن خواندن خودکار",
+  "Auto scrolling speed": "سرعت اسکرول خودکار"
 }

@@ -189,28 +189,6 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
             <div
               className="action-dialog-edit"
               style={{ paddingLeft: "0px" }}
-              onClick={() => {
-                BookUtil.fetchBook(
-                  this.props.currentBook.key,
-                  this.props.currentBook.format.toLowerCase(),
-                  true,
-                  this.props.currentBook.path
-                ).then((result: any) => {
-                  toast.success(this.props.t("Export successful"), { id: "exporting" });
-                  saveAs(
-                    new Blob([result]),
-                    getBookName(this.props.currentBook)
-                  );
-                });
-              }}
-            >
-              <p className="action-name">
-                <Trans>Export books</Trans>
-              </p>
-            </div>
-            <div
-              className="action-dialog-edit"
-              style={{ paddingLeft: "0px" }}
               onClick={async () => {
                 this.props.handleMoreAction(false);
                 this.props.handleActionDialog(false);
@@ -231,6 +209,28 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
             >
               <p className="action-name">
                 <Trans>Export book package</Trans>
+              </p>
+            </div>
+            <div
+              className="action-dialog-edit"
+              style={{ paddingLeft: "0px" }}
+              onClick={() => {
+                BookUtil.fetchBook(
+                  this.props.currentBook.key,
+                  this.props.currentBook.format.toLowerCase(),
+                  true,
+                  this.props.currentBook.path
+                ).then((result: any) => {
+                  toast.success(this.props.t("Export successful"), { id: "exporting" });
+                  saveAs(
+                    new Blob([result]),
+                    getBookName(this.props.currentBook)
+                  );
+                });
+              }}
+            >
+              <p className="action-name">
+                <Trans>Export books</Trans>
               </p>
             </div>
             <div

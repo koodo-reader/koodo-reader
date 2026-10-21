@@ -1375,5 +1375,7 @@
   "Failed to recognize title": "Nhận diện tên sách thất bại",
   "Show total page number (Experimental)": "Hiển thị tổng số trang (Thử nghiệm)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Phiên bản Koodo Reader này quá cũ. Vui lòng vào Cài đặt - Giới thiệu - Kiểm tra cập nhật để cập nhật Koodo Reader lên phiên bản mới nhất rồi thử lại.",
-  "Background opacity": "Độ mờ nền"
+  "Background opacity": "Độ mờ nền",
+  "Enable auto reading": "Bật tự động đọc",
+  "Auto scrolling speed": "Tốc độ cuộn tự động"
 }

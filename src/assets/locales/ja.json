@@ -1382,5 +1382,7 @@
   "Failed to recognize title": "書名の認識に失敗しました",
   "Show total page number (Experimental)": "総ページ数を表示（実験的機能）",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "このバージョンの Koodo Reader は古すぎます。設定 - について - アップデートを確認 から Koodo Reader を最新バージョンに更新して、もう一度お試しください。",
-  "Background opacity": "背景の不透明度"
+  "Background opacity": "背景の不透明度",
+  "Enable auto reading": "自動スクロールを読書する",
+  "Auto scrolling speed": "スクロール速度"
 }
