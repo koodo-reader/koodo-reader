@@ -6,6 +6,7 @@ import { BookListProps, BookListState } from "./interface";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
+  exportBookPackage,
   exportBooks,
   exportDictionaryHistory,
   exportHighlights,
@@ -196,6 +197,32 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                   }}
                 >
                   <Trans>Export books</Trans>
+                </span>
+                <span
+                  className="book-manage-title select-book-action"
+                  onClick={async () => {
+                    let books = await DatabaseService.getRecordsByKeys(
+                      this.props.selectedBooks,
+                      "books"
+                    );
+                    if (books.length > 0) {
+                      const result = await exportBookPackage(books);
+                      if (result === "success") {
+                        toast.success(this.props.t("Export successful"), {
+                          id: "exporting",
+                        });
+                      } else if (result === "failed") {
+                        toast.dismiss("exporting");
+                        toast.error(this.props.t("Failed to export"), {
+                          id: "exporting",
+                        });
+                      }
+                    } else {
+                      toast(this.props.t("Nothing to export"));
+                    }
+                  }}
+                >
+                  <Trans>Export book package</Trans>
                 </span>
                 <div style={{ position: "relative" }}>
                   <span

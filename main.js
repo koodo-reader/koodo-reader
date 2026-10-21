@@ -1277,6 +1277,7 @@ const createMainWin = () => {
             "mobi",
             "azw3",
             "azw",
+            "kdz",
             "htm",
             "html",
             "xml",

@@ -43,6 +43,7 @@ export const supportedFormats = [
   ".mobi",
   ".azw3",
   ".azw",
+  ".kdz",
   ".htm",
   ".html",
   ".xml",
