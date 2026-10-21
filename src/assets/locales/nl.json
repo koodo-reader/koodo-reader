@@ -1373,6 +1373,6 @@
   "Show total page number (Experimental)": "Totaal aantal pagina's tonen (experimenteel)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Deze versie van Koodo Reader is te oud. Ga naar Instellingen - Over - Controleren op updates om Koodo Reader bij te werken naar de nieuwste versie en probeer het opnieuw.",
   "Background opacity": "Achtergronddekking",
-  "Enable auto reading": "Automatisch lezen inschakelen",
-  "Auto scrolling speed": "Scrollsnelheid"
+  "Enable auto reading": "Automatisch lezen",
+  "Auto scrolling speed": "Snelheid van automatisch lezen"
 }
