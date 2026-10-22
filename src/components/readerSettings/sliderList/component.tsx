@@ -22,8 +22,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
         ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.6",
       speedReadingSpeed:
         ConfigService.getReaderConfig("speedReadingSpeed") || "300",
-      autoScrollRate:
-        ConfigService.getReaderConfig("autoScrollRate") || "0.5",
+      autoScrollRate: ConfigService.getReaderConfig("autoScrollRate") || "0.5",
     } as SliderListState;
   }
 
@@ -32,6 +31,20 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
       this.setState({ scale: this.props.scale });
     }
   }
+
+  isPercentMode = () => this.props.item.mode === "scale";
+
+  getDisplayNumber = (value: string) => {
+    if (!this.isPercentMode()) return value;
+    const parsed = parseFloat(value);
+    return Number.isNaN(parsed) ? value : String(Math.round(parsed * 100));
+  };
+
+  getDisplayValue = (value: string) => {
+    if (!this.isPercentMode()) return value;
+    const parsed = parseFloat(value);
+    return Number.isNaN(parsed) ? value : `${Math.round(parsed * 100)}%`;
+  };
 
   getClampedValue = (rawValue: string) => {
     const { minValue, maxValue } = this.props.item;
@@ -72,8 +85,15 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
   handleRest = async (mode) => {
     this.props.renderBookFunc();
   };
-  onValueChange = (event: any, mode: string) => {
-    const nextValue = this.getClampedValue(event.target.value);
+  onValueChange = (event: any, mode: string, fromPercent: boolean = false) => {
+    let rawValue = event.target.value;
+    if (this.isPercentMode() && fromPercent) {
+      const parsed = parseFloat(rawValue);
+      if (!Number.isNaN(parsed)) {
+        rawValue = (parsed / 100).toString();
+      }
+    }
+    const nextValue = this.getClampedValue(rawValue);
     event.target.value = nextValue;
     this.setState({ inputValue: nextValue });
     this.applyValue(mode, nextValue);
@@ -110,14 +130,15 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
             value={
               this.state.isTyping
                 ? this.state.inputValue
-                : this.state[this.props.item.mode]
+                : this.getDisplayNumber(this.state[this.props.item.mode])
             }
             type="number"
             step={
-              this.props.item.title === "Page width" ||
-              this.props.item.title === "Brightness"
-                ? "0.1"
-                : "1"
+              this.props.item.title === "Page width"
+                ? "10"
+                : this.props.item.title === "Brightness"
+                  ? "0.1"
+                  : "1"
             }
             onInput={(event: any) => {
               let fieldVal = event.target.value;
@@ -128,13 +149,18 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
               this.setState({ inputValue: fieldVal });
             }}
             onFocus={() => {
-              this.setState({ isTyping: true });
+              this.setState({
+                isTyping: true,
+                inputValue: this.getDisplayNumber(
+                  this.state[this.props.item.mode]
+                ),
+              });
             }}
             onBlur={(event) => {
               if (!this.state.isEntered) {
                 let fieldVal = event.target.value;
                 if (!fieldVal) return;
-                this.onValueChange(event, this.props.item.mode);
+                this.onValueChange(event, this.props.item.mode, true);
                 this.setState({ isTyping: false });
                 this.handleRest(this.props.item.mode);
               } else {
@@ -146,14 +172,14 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
                 this.setState({ isEntered: true });
                 let fieldVal = event.target.value;
                 if (!fieldVal) return;
-                this.onValueChange(event, this.props.item.mode);
+                this.onValueChange(event, this.props.item.mode, true);
                 this.setState({ isTyping: false });
                 this.handleRest(this.props.item.mode);
               }
             }}
           />
           <span style={{ marginLeft: "10px" }}>
-            {this.state[this.props.item.mode]}
+            {this.getDisplayValue(this.state[this.props.item.mode])}
           </span>
         </div>
         <div style={{ display: "flex", justifyContent: "space-around" }}>
@@ -175,7 +201,12 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
               onMouseUp={() => {
                 this.handleRest(this.props.item.mode);
               }}
-              style={{ position: "absolute", bottom: "11px" }}
+              style={{
+                position: "absolute",
+                bottom: "11px",
+                width:
+                  this.props.item.title === "Page width" ? "100%" : "200px",
+              }}
             />
           </div>
           <span className="ultra-large-size" style={{ fontSize: "16px" }}>
