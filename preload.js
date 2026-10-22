@@ -23,6 +23,8 @@ const INVOKE_CHANNELS = new Set([
   "cloud-exist",
   "cloud-close",
   "clear-tts",
+  "clear-temp-cache",
+  "get-cache-size",
   "select-path",
   "select-file",
   "select-import-file",

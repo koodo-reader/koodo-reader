@@ -822,6 +822,8 @@
   "Clear TTS cache": "Clear TTS cache",
   "Clear failed": "Clear failed",
   "Cached listen-book audio is stored locally and reused across sessions. Clearing it only frees up disk space": "Cached listen-book audio is stored locally and reused across sessions. Clearing it only frees up disk space",
+  "Clear temp cache": "Clear temp cache",
+  "Cached comic extraction files, OCR results and full-text translations are stored locally and reused across sessions. Clearing them only frees up disk space": "Cached comic extraction files, OCR results and full-text translations are stored locally and reused across sessions. Clearing them only frees up disk space",
   "Please type 'CLEAR' to confirm": "Please type 'CLEAR' to confirm",
   "Current chapter": "Current chapter",
   "Show all": "Show all",
