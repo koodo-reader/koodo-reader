@@ -29,6 +29,7 @@ const initState = {
   section: null,
   readerMode: "double",
   isConvertOpen: false,
+  isScaleOpen: false,
   isPdfCropOpen: false,
   isSpeechOpen: false,
   isAnnotationOpen: false,
@@ -81,6 +82,11 @@ export function reader(
       return {
         ...state,
         isConvertOpen: action.payload,
+      };
+    case "HANDLE_SCALE_PAGE_DIALOG":
+      return {
+        ...state,
+        isScaleOpen: action.payload,
       };
     case "HANDLE_PDF_CROP_DIALOG":
       return {

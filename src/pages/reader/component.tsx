@@ -15,6 +15,7 @@ import "./index.css";
 import Book from "../../models/Book";
 import DatabaseService from "../../utils/storage/databaseService";
 import ConvertDialog from "../../components/dialogs/convertDialog";
+import ScalePageDialog from "../../components/dialogs/scalePageDialog";
 import PdfCropDialog from "../../components/dialogs/pdfCropDialog";
 import { isElectron } from "react-device-detect";
 import SettingDialog from "../../components/dialogs/settingDialog";
@@ -28,7 +29,6 @@ import {
 import SupportDialog from "../../components/dialogs/supportDialog";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
 import { isPaginatedBook, isReadingRawPDF, throttle } from "../../utils/common";
-import { pageWidthPresetList } from "../../constants/dropdownList";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
@@ -110,11 +110,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isOpenRightPanel: this.props.isSettingLocked,
       totalDuration: 0,
       currentDuration: 0,
-      scale: ConfigService.getReaderConfig("scale") || "1",
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       isPreventTrigger:
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
-      isShowScale: false,
       isNearEdge: false,
     };
   }
@@ -531,162 +529,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 justifyContent: "flex-end",
               }}
             >
-              {this.state.isShowScale && (
-                <div className="scale-container">
-                  <div
-                    style={{
-                      zIndex: 100,
-                      width: "100px",
-                    }}
-                  >
-                    <input
-                      className="input-value"
-                      defaultValue={
-                        ConfigService.getReaderConfig("scale")
-                          ? parseFloat(ConfigService.getReaderConfig("scale")) *
-                            100
-                          : 100
-                      }
-                      value={
-                        this.state.scale === " "
-                          ? this.state.scale
-                          : Math.round(parseFloat(this.state.scale) * 100)
-                      }
-                      type="number"
-                      onInput={(event: any) => {
-                        let fieldVal = event.target.value;
-                        ConfigService.setReaderConfig(
-                          "scale",
-                          parseFloat(fieldVal) / 100 + ""
-                        );
-                      }}
-                      onFocus={() => {
-                        this.setState({ scale: " " });
-                      }}
-                      onChange={(event) => {
-                        let fieldVal = event.target.value;
-                        this.setState({
-                          scale: parseFloat(fieldVal) / 100 + "",
-                        });
-                      }}
-                      onBlur={(event) => {
-                        let fieldVal = event.target.value;
-                        if (fieldVal.trim() !== "") {
-                          ConfigService.setReaderConfig(
-                            "scale",
-                            parseFloat(fieldVal) / 100 + ""
-                          );
-                        }
-                        this.props.renderBookFunc();
-                      }}
-                    />
-                    <span> %</span>
-                  </div>
-
-                  <input
-                    className="input-progress"
-                    value={this.state.scale}
-                    type="range"
-                    max={4}
-                    min={0.5}
-                    step={0.01}
-                    onInput={(event: any) => {
-                      const scale = event.target.value;
-                      ConfigService.setReaderConfig("scale", scale);
-                    }}
-                    onChange={(event) => {
-                      this.setState({ scale: event.target.value });
-                    }}
-                    onMouseUp={() => {
-                      this.props.handleScale(this.state.scale);
-                      this.props.renderBookFunc();
-                    }}
-                    style={{
-                      zIndex: 100,
-                      width: "120px",
-                    }}
-                  />
-
-                  <select
-                    name=""
-                    className="general-setting-dropdown scale-preset-dropdown"
-                    value={
-                      pageWidthPresetList.some(
-                        (opt) => opt.value === this.state.scale
-                      )
-                        ? this.state.scale
-                        : ""
-                    }
-                    onChange={(event) => {
-                      const value = event.target.value;
-                      if (!value) return;
-                      ConfigService.setReaderConfig("scale", value);
-                      this.setState({ scale: value });
-                      this.props.handleScale(value);
-                      this.props.renderBookFunc();
-                    }}
-                    style={{ zIndex: 100 }}
-                  >
-                    <option value="" hidden></option>
-                    {pageWidthPresetList.map((opt) => (
-                      <option
-                        key={opt.value}
-                        value={opt.value}
-                        className="general-setting-option"
-                      >
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-
-                  <div
-                    className={
-                      "scale-fit-switch-container" +
-                      (this.props.isFitPage ? " active" : "")
-                    }
-                    onClick={() => {
-                      const next = !this.props.isFitPage;
-                      ConfigService.setReaderConfig(
-                        "isFitPage",
-                        next ? "yes" : "no"
-                      );
-                      this.props.handleFitPage(next);
-                      toast(this.props.t("Change successful"));
-                      setTimeout(() => {
-                        this.props.renderBookFunc();
-                      }, 300);
-                    }}
-                    style={{ zIndex: 100 }}
-                  >
-                    <span className="scale-fit-switch-title">
-                      {this.props.t("Fit to page")}
-                    </span>
-                    <span
-                      className="single-control-switch"
-                      style={this.props.isFitPage ? {} : { opacity: 0.6 }}
-                    >
-                      <span
-                        className="single-control-button"
-                        style={
-                          !this.props.isFitPage
-                            ? {
-                                transform: "translateX(0px)",
-                                transition: "transform 0.5s ease",
-                              }
-                            : {
-                                transform: "translateX(20px)",
-                                transition: "transform 0.5s ease",
-                              }
-                        }
-                      ></span>
-                    </span>
-                  </div>
-                </div>
-              )}
               <div
                 className="reader-zoom-in-icon-container"
                 onClick={() => {
-                  this.setState({ isShowScale: !this.state.isShowScale });
+                  this.props.handleScalePageDialog(!this.props.isScaleOpen);
                 }}
               >
                 <span className="icon-zoom-in reader-setting-icon"></span>
@@ -960,6 +806,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
 
         {this.props.currentBook.key && <Viewer {...(renditionProps as any)} />}
+        {(this.props.readerMode === "scroll" ||
+          this.props.readerMode === "single") &&
+          this.props.isScaleOpen && <ScalePageDialog />}
         {this.props.isConvertOpen && <ConvertDialog />}
         {this.props.isPdfCropOpen && <PdfCropDialog />}
         <SupportDialog />
