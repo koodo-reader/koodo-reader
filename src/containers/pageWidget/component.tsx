@@ -7,6 +7,7 @@ import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
 import {
   detectLocalLanguage,
   getFullTranslationTarget,
+  isRateLimitedResult,
   isReadingRawPDF,
 } from "../../utils/common";
 import toast from "react-hot-toast";
@@ -242,6 +243,9 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
           if (res && res.data && res.data.texts) {
             pendingIndexes.forEach((index, i) => {
               translatedTexts[index] = res.data.texts[i];
+              if (isRateLimitedResult(res.data.texts[i])) {
+                return;
+              }
               if (!cache[targetLang]) {
                 cache[targetLang] = {};
               }

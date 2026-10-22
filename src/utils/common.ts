@@ -2377,12 +2377,25 @@ export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {
   return cache;
 };
 
+export const isRateLimitedResult = (text: string): boolean => {
+  if (!text) {
+    return false;
+  }
+  return (
+    text.includes("You have reached the daily limit") ||
+    text.includes("您已达到今日使用上限")
+  );
+};
+
 export const saveOcrCache = (
   bookKey: string,
   chapterDocIndex: string,
-  cache: { src: string }
+  cache: { src?: string; text?: string }
 ) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
+    return;
+  }
+  if (isRateLimitedResult((cache && (cache.text || cache.src)) || "")) {
     return;
   }
   try {
