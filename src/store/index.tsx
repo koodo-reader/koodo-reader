@@ -111,6 +111,7 @@ export type stateType = {
     isSettingLocked: boolean;
     isDockedRight: boolean;
     isConvertOpen: boolean;
+    isScaleOpen: boolean;
     isPdfCropOpen: boolean;
     isSpeechOpen: boolean;
     isAnnotationOpen: boolean;

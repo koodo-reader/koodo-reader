@@ -29,6 +29,9 @@ export function handleHighlight(highlight: HighlightValue) {
 export function handleConvertDialog(isConvertOpen: boolean) {
   return { type: "HANDLE_CONVERT_DIALOG", payload: isConvertOpen };
 }
+export function handleScalePageDialog(isScaleOpen: boolean) {
+  return { type: "HANDLE_SCALE_PAGE_DIALOG", payload: isScaleOpen };
+}
 export function handlePdfCropDialog(isPdfCropOpen: boolean) {
   return { type: "HANDLE_PDF_CROP_DIALOG", payload: isPdfCropOpen };
 }

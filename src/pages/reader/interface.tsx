@@ -9,6 +9,7 @@ export interface ReaderProps {
   isSettingLocked: boolean;
   isDockedRight: boolean;
   isConvertOpen: boolean;
+  isScaleOpen: boolean;
   isPdfCropOpen: boolean;
   isSpeechOpen: boolean;
   isAnnotationOpen: boolean;
@@ -23,6 +24,7 @@ export interface ReaderProps {
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;
   handleConvertDialog: (isConvertOpen: boolean) => void;
+  handleScalePageDialog: (isScaleOpen: boolean) => void;
   handlePdfCropDialog: (isPdfCropOpen: boolean) => void;
   handleSpeechDialog: (isSpeechOpen: boolean) => void;
   handleAnnotationDialog: (isAnnotationOpen: boolean) => void;
@@ -48,8 +50,6 @@ export interface ReaderState {
   isTouch: boolean;
   isPreventTrigger: boolean;
   hoverPanel: string;
-  scale: string;
-  isShowScale: boolean;
   isNearEdge: boolean;
   totalDuration: number;
   currentDuration: number;

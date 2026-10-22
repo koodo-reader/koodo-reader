@@ -55,6 +55,7 @@ const BG_HOVER_SELECTORS = [
   ".setting-dialog-location-title",
   ".header-search-text:hover",
   ".reader-setting-icon-container:hover",
+  ".reader-zoom-in-icon-container:hover",
   ".setting-icon-container:hover",
   ".animation-mask",
   ".animation-mask-local",

@@ -1,0 +1,44 @@
+.scale-page-dialog-container {
+  padding: 8px 12px 12px;
+  box-sizing: border-box;
+}
+.scale-page-dialog-title {
+  margin: 4px 0 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
+}
+.scale-page-input-container {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+.scale-page-number-input {
+  width: 56px;
+  margin-right: 3px;
+  text-align: right;
+}
+.scale-page-slider {
+  width: 100%;
+  margin: 0;
+}
+.scale-page-preset-select {
+  width: 80px;
+  height: 28px;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.scale-page-fit-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
