@@ -646,8 +646,14 @@ export const getPageWidth = (
     isFitPage &&
     (readerMode === "scroll" || readerMode === "single")
   ) {
-    let pageWidth = document.body.clientWidth - 106;
-    let pageOffset = 50 + "px";
+    // 固定左右侧边栏时，页面只在剩余可用区域内铺满，避免被侧边栏遮挡
+    const panelWidth = 300;
+    let pageWidth =
+      document.body.clientWidth -
+      106 -
+      (isNavLocked ? panelWidth : 0) -
+      (isSettingLocked ? panelWidth : 0);
+    let pageOffset = 50 + (isNavLocked ? panelWidth : 0) + "px";
     return {
       pageOffset,
       pageWidth: pageWidth + "px",
