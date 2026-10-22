@@ -9,7 +9,3 @@ export interface ScalePageDialogProps {
   renderBookFunc: () => void;
   t: (title: string) => string;
 }
-
-export interface ScalePageDialogState {
-  scale: string;
-}

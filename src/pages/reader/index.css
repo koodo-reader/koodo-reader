@@ -223,8 +223,7 @@
   font-size: 22px;
   margin-right: 10px;
 }
-.reader-setting-icon-container,
-.reader-zoom-in-icon-container {
+.reader-setting-icon-container {
   width: 50px;
   height: 50px;
   font-size: 20px;
@@ -238,10 +237,6 @@
   transition: 0, 2s;
   float: right;
 }
-.reader-setting-icon-container:hover,
-.reader-zoom-in-icon-container:hover {
+.reader-setting-icon-container:hover {
   border-radius: 50%;
-}
-.reader-zoom-in-icon-container {
-  font-size: 23px;
 }
