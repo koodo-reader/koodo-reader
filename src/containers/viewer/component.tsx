@@ -786,7 +786,6 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ></div>
         <PageWidget />
         {this.props.isHideBackground ||
-        this.props.readerMode === "scroll" ||
         this.props.textOrientation === "vertical" ||
         this.props.isShowPageBorder ||
         ((this.props.isParagraphMode ||

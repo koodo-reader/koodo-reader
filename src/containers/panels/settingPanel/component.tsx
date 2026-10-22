@@ -60,6 +60,7 @@ class SettingPanel extends React.Component<
     }
 
     toast.success(this.props.t("Clear successful"));
+    this.props.handleBackgroundColor("");
     this.props.renderBookFunc();
   };
 

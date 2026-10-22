@@ -2,7 +2,10 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import SettingPanel from "./component";
 import { stateType } from "../../../store";
-import { handleSettingLock } from "../../../store/actions";
+import {
+  handleSettingLock,
+  handleBackgroundColor,
+} from "../../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
@@ -12,7 +15,7 @@ const mapStateToProps = (state: stateType) => {
     renderBookFunc: state.book.renderBookFunc,
   };
 };
-const actionCreator = { handleSettingLock };
+const actionCreator = { handleSettingLock, handleBackgroundColor };
 export default connect(
   mapStateToProps,
   actionCreator
