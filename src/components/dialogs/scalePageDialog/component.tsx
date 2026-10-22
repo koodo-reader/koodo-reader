@@ -2,24 +2,17 @@ import React from "react";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { pageWidthPresetList } from "../../../constants/dropdownList";
-import { ScalePageDialogProps, ScalePageDialogState } from "./interface";
+import {
+  pageWidthConfig,
+  pageWidthPresetList,
+} from "../../../constants/dropdownList";
+import SliderList from "../../readerSettings/sliderList";
+import { ScalePageDialogProps } from "./interface";
 import "./scalePageDialog.css";
 
-class ScalePageDialog extends React.Component<
-  ScalePageDialogProps,
-  ScalePageDialogState
-> {
-  constructor(props: ScalePageDialogProps) {
-    super(props);
-    this.state = {
-      scale: ConfigService.getReaderConfig("scale") || props.scale || "1",
-    };
-  }
-
-  handleScaleChange = (scale: string) => {
+class ScalePageDialog extends React.Component<ScalePageDialogProps> {
+  handlePresetChange = (scale: string) => {
     ConfigService.setReaderConfig("scale", scale);
-    this.setState({ scale });
     this.props.handleScale(scale);
     this.props.renderBookFunc();
   };
@@ -37,89 +30,30 @@ class ScalePageDialog extends React.Component<
         style={{
           left: "auto",
           top: "50px",
-          width: "260px",
+          width: "280px",
           right:
             this.props.isSettingLocked || this.props.isDockedRight ? 325 : 20,
         }}
       >
         <ul className="sort-by-category">
-          <div className="scale-page-dialog-title">
-            <Trans>Scale</Trans>
-            <div className="scale-page-input-container">
-              <input
-                className="input-value scale-page-number-input"
-                value={
-                  this.state.scale === " "
-                    ? this.state.scale
-                    : Math.round(parseFloat(this.state.scale) * 100)
-                }
-                type="number"
-                onInput={(event: any) => {
-                  let fieldVal = event.target.value;
-                  ConfigService.setReaderConfig(
-                    "scale",
-                    parseFloat(fieldVal) / 100 + ""
-                  );
-                }}
-                onFocus={() => {
-                  this.setState({ scale: " " });
-                }}
-                onChange={(event) => {
-                  let fieldVal = event.target.value;
-                  this.setState({
-                    scale: parseFloat(fieldVal) / 100 + "",
-                  });
-                }}
-                onBlur={(event) => {
-                  let fieldVal = event.target.value;
-                  if (fieldVal.trim() !== "") {
-                    ConfigService.setReaderConfig(
-                      "scale",
-                      parseFloat(fieldVal) / 100 + ""
-                    );
-                  }
-                  this.props.renderBookFunc();
-                }}
-              />
-              <span>%</span>
-            </div>
-          </div>
+          <SliderList {...({ item: pageWidthConfig } as any)} />
 
-          <input
-            className="input-progress scale-page-slider"
-            value={this.state.scale}
-            type="range"
-            max={4}
-            min={0.5}
-            step={0.01}
-            onInput={(event: any) => {
-              ConfigService.setReaderConfig("scale", event.target.value);
-            }}
-            onChange={(event) => {
-              this.setState({ scale: event.target.value });
-            }}
-            onMouseUp={() => {
-              this.props.handleScale(this.state.scale);
-              this.props.renderBookFunc();
-            }}
-          />
-
-          <div className="scale-page-dialog-title" style={{ marginTop: 12 }}>
-            <Trans>Preset</Trans>
+          <div className="setting-dialog-new-title scale-page-preset-row">
+            <Trans>Preset width</Trans>
             <select
               name=""
-              className="scale-page-preset-select"
+              className="lang-setting-dropdown"
               value={
                 pageWidthPresetList.some(
-                  (opt) => opt.value === this.state.scale
+                  (opt) => opt.value === this.props.scale
                 )
-                  ? this.state.scale
+                  ? this.props.scale
                   : ""
               }
               onChange={(event) => {
                 const value = event.target.value;
                 if (!value) return;
-                this.handleScaleChange(value);
+                this.handlePresetChange(value);
               }}
             >
               <option value="" hidden></option>
@@ -127,7 +61,7 @@ class ScalePageDialog extends React.Component<
                 <option
                   key={opt.value}
                   value={opt.value}
-                  className="general-setting-option"
+                  className="lang-setting-option"
                 >
                   {opt.label}
                 </option>

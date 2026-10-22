@@ -297,16 +297,6 @@ export const sliderConfigs = [
     isPDF: false,
   },
   {
-    maxValue: 3,
-    minValue: 0.5,
-    mode: "scale",
-    minLabel: "0.5",
-    maxLabel: "3",
-    step: 0.1,
-    title: "Page width",
-    isPDF: true,
-  },
-  {
     maxValue: 1,
     minValue: 0.3,
     mode: "brightness",
@@ -317,6 +307,16 @@ export const sliderConfigs = [
     isPDF: true,
   },
 ];
+export const pageWidthConfig = {
+  maxValue: 3,
+  minValue: 0.5,
+  mode: "scale",
+  minLabel: "0.5",
+  maxLabel: "3",
+  step: 0.1,
+  title: "Page width",
+  isPDF: true,
+};
 export const pageWidthPresetList = [
   { label: "50%", value: "0.5" },
   { label: "75%", value: "0.75" },

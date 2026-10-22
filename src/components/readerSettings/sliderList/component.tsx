@@ -27,6 +27,12 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     } as SliderListState;
   }
 
+  componentDidUpdate(prevProps: SliderListProps) {
+    if (prevProps.scale !== this.props.scale) {
+      this.setState({ scale: this.props.scale });
+    }
+  }
+
   getClampedValue = (rawValue: string) => {
     const { minValue, maxValue } = this.props.item;
     const parsedValue = parseFloat(rawValue);

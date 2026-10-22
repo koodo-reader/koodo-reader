@@ -530,12 +530,15 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               }}
             >
               <div
-                className="reader-zoom-in-icon-container"
+                className="reader-setting-icon-container"
                 onClick={() => {
                   this.props.handleScalePageDialog(!this.props.isScaleOpen);
                 }}
               >
-                <span className="icon-zoom-in reader-setting-icon"></span>
+                <span
+                  className="icon-zoom-in reader-setting-icon"
+                  style={{ fontSize: 23 }}
+                ></span>
               </div>
             </div>
           )}
