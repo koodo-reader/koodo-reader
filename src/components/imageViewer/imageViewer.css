@@ -32,8 +32,8 @@
   bottom: 30px;
   font-size: 25px;
   z-index: 10;
-  background-color: black;
-  opacity: 0.3;
+  background-color: rgba(0, 0, 0, 0.3);
+
   padding: 10px;
   border-radius: 20px;
 }
@@ -44,6 +44,14 @@
 .counterclockwise-icon {
   margin: 20px;
   cursor: pointer;
+  opacity: 0.5;
+}
+.zoom-in-icon:hover,
+.zoom-out-icon:hover,
+.save-icon:hover,
+.clockwise-icon:hover,
+.counterclockwise-icon:hover {
+  opacity: 1;
 }
 .image-background {
   width: 100%;
