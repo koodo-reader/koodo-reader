@@ -334,6 +334,8 @@
   "Clear failed": "清除失败",
   "Clear TTS cache": "清理听书缓存",
   "Cached listen-book audio is stored locally and reused across sessions. Clearing it only frees up disk space": "听书音频会缓存到本地，并在不同会话间复用。清理缓存仅释放磁盘空间，不影响任何数据",
+  "Clear temp cache": "清理临时缓存",
+  "Cached comic extraction files, OCR results and full-text translations are stored locally and reused across sessions. Clearing them only frees up disk space": "漫画解包文件、OCR 识别结果和全文翻译缓存会存储到本地，并在不同会话间复用。清理缓存仅释放磁盘空间，不影响任何数据",
   "Coming soon": "敬请期待",
   "Understand": "我知道了",
   "Authorisation successful": "授权成功",

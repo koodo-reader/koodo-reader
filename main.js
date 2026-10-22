@@ -63,6 +63,40 @@ const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const ttsCacheUtil = require("./src/utils/plugins/main/voice/ttsCache");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
+// 数据目录（即渲染进程的 getStorageLocation，见 "storage-location"）
+const dataPath = path.join(dirPath, "data");
+// 递归计算目录大小（字节），不存在或出错时返回 0
+const getDirSize = (targetPath) => {
+  if (!fs.existsSync(targetPath)) {
+    return 0;
+  }
+  try {
+    const stat = fs.statSync(targetPath);
+    if (stat.isFile()) {
+      return stat.size;
+    }
+    const entries = fs.readdirSync(targetPath, { withFileTypes: true });
+    return entries.reduce((total, entry) => {
+      const entryPath = path.join(targetPath, entry.name);
+      if (entry.isDirectory()) {
+        return total + getDirSize(entryPath);
+      }
+      return total + (fs.statSync(entryPath).size || 0);
+    }, 0);
+  } catch (error) {
+    console.error("Error calculating directory size:", error);
+    return 0;
+  }
+};
+// 听书缓存目录
+const getTTSCacheDirPath = () => path.join(dirPath, "tts");
+// 临时缓存目录：漫画解包、OCR 结果、整页翻译缓存与书籍导入临时文件
+const getTempCacheDirPaths = () => [
+  path.join(dirPath, "comic"),
+  path.join(dirPath, "ocr"),
+  path.join(dirPath, "trans"),
+  path.join(dataPath, "temp"),
+];
 const customVoicePluginCache = new Map();
 const resolveCustomVoicePlugin = ({ script, scriptSHA256, pluginKey } = {}) => {
   if (
@@ -1104,13 +1138,34 @@ const createMainWin = () => {
   });
 
   ipcMain.handle("clear-tts", async (event, config) => {
-    if (!fs.existsSync(path.join(dirPath, "tts"))) {
-      await fsExtra.mkdir(path.join(dirPath, "tts"));
+    if (!fs.existsSync(getTTSCacheDirPath())) {
+      await fsExtra.mkdir(getTTSCacheDirPath());
     } else {
-      await fsExtra.remove(path.join(dirPath, "tts"));
-      await fsExtra.mkdir(path.join(dirPath, "tts"));
+      await fsExtra.remove(getTTSCacheDirPath());
+      await fsExtra.mkdir(getTTSCacheDirPath());
     }
     ttsCacheUtil.resetTTSAudioIndex(dirPath);
+  });
+  // 查询缓存大小（字节）：type 为 "tts" 或 "temp"
+  ipcMain.handle("get-cache-size", async (event, config) => {
+    const cacheType = config && config.type;
+    if (cacheType === "tts") {
+      return getDirSize(getTTSCacheDirPath());
+    } else if (cacheType === "temp") {
+      return getTempCacheDirPaths().reduce(
+        (total, cacheDir) => total + getDirSize(cacheDir),
+        0
+      );
+    }
+    throw new Error("Invalid cache size request");
+  });
+  // 清理临时缓存：漫画解包、OCR 结果、整页翻译缓存与书籍导入临时文件
+  ipcMain.handle("clear-temp-cache", async (event, config) => {
+    for (const cacheDir of getTempCacheDirPaths()) {
+      if (fs.existsSync(cacheDir)) {
+        await fsExtra.remove(cacheDir);
+      }
+    }
   });
   // 官方 AI 语音本地缓存查询：命中返回 file:// 地址，未命中返回空字符串
   ipcMain.handle("get-cached-tts", async (event, config) => {

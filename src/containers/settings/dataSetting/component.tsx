@@ -45,6 +45,8 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     this.state = {
       storageLocation: getStorageLocation() || "",
       snapshotList: [],
+      ttsCacheSize: "",
+      tempCacheSize: "",
       exportNotesFormat: "",
       exportHighlightsFormat: "",
       exportWordsFormat: "",
@@ -82,8 +84,56 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       this.setState({
         snapshotList: getSnapshots(),
       });
+      this.loadCacheSizes();
     }
   }
+  getCacheSizeLabel = (bytes: number): string => {
+    if (!bytes || bytes <= 0) {
+      return "0 MB";
+    }
+    const megaBytes = bytes / 1024 / 1024;
+    if (megaBytes >= 1024) {
+      return (megaBytes / 1024).toFixed(2) + " GB";
+    }
+    return megaBytes.toFixed(1) + " MB";
+  };
+  loadCacheSizes = async () => {
+    if (!isElectron || !window.electronAPI) {
+      return;
+    }
+    try {
+      const ttsSize = await window.electronAPI.invoke("get-cache-size", {
+        type: "tts",
+      });
+      const tempSize = await window.electronAPI.invoke("get-cache-size", {
+        type: "temp",
+      });
+      this.setState({
+        ttsCacheSize: this.getCacheSizeLabel(ttsSize),
+        tempCacheSize: this.getCacheSizeLabel(tempSize),
+      });
+    } catch (error) {
+      console.error("Error loading cache sizes:", error);
+    }
+  };
+  handleClearTTSCache = async () => {
+    try {
+      await window.electronAPI.invoke("clear-tts", {});
+      toast.success(this.props.t("Clear successful"));
+    } catch (error) {
+      toast.error(this.props.t("Clear failed"));
+    }
+    this.loadCacheSizes();
+  };
+  handleClearTempCache = async () => {
+    try {
+      await window.electronAPI.invoke("clear-temp-cache", {});
+      toast.success(this.props.t("Clear successful"));
+    } catch (error) {
+      toast.error(this.props.t("Clear failed"));
+    }
+    this.loadCacheSizes();
+  };
   handleSetting = (stateName: string) => {
     this.setState({ [stateName]: !this.state[stateName] } as any);
     ConfigService.setReaderConfig(
@@ -911,24 +961,61 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <>
             <div className="setting-dialog-new-title">
               <Trans>Clear TTS cache</Trans>
-              <span
-                className="change-location-button"
-                onClick={async () => {
-                  try {
-                    await window.electronAPI.invoke("clear-tts", {});
-                    toast.success(this.props.t("Clear successful"));
-                  } catch (error) {
-                    toast.error(this.props.t("Clear failed"));
-                  }
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
                 }}
               >
-                <Trans>Clear</Trans>
-              </span>
+                <span
+                  id="tts-cache-size"
+                  style={{ marginRight: "10px", opacity: 0.6, fontSize: 13 }}
+                >
+                  {this.state.ttsCacheSize}
+                </span>
+                <span
+                  className="change-location-button"
+                  onClick={this.handleClearTTSCache}
+                >
+                  <Trans>Clear</Trans>
+                </span>
+              </div>
             </div>
             <p className="setting-option-subtitle">
               <Trans>
                 {
                   "Cached listen-book audio is stored locally and reused across sessions. Clearing it only frees up disk space"
+                }
+              </Trans>
+            </p>
+            <div className="setting-dialog-new-title">
+              <Trans>Clear temp cache</Trans>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
+                <span
+                  id="temp-cache-size"
+                  style={{ marginRight: "10px", opacity: 0.6, fontSize: 13 }}
+                >
+                  {this.state.tempCacheSize}
+                </span>
+                <span
+                  className="change-location-button"
+                  onClick={this.handleClearTempCache}
+                >
+                  <Trans>Clear</Trans>
+                </span>
+              </div>
+            </div>
+            <p className="setting-option-subtitle">
+              <Trans>
+                {
+                  "Cached comic extraction files, OCR results and full-text translations are stored locally and reused across sessions. Clearing them only frees up disk space"
                 }
               </Trans>
             </p>
