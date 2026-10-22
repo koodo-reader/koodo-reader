@@ -94,10 +94,6 @@ class ShortcutSetting extends React.Component<
   };
 
   removeBinding = (action: ShortcutAction, index: number) => {
-    if (this.config[action].length <= 1) {
-      toast.error(this.props.t("At least one shortcut required"));
-      return;
-    }
     this.config[action] = this.config[action].filter((_, i) => i !== index);
     if (
       this.state.recording?.action === action &&
