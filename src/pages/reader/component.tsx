@@ -74,9 +74,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
   private autoShowTimer: NodeJS.Timeout | null = null;
+  private hideQuickButtonsTimer: NodeJS.Timeout | null = null;
   private dialogAnchorIcon: HTMLElement | null = null;
-  private quickButtonsFrame: number | null = null;
-  private lastPointerPosition: { x: number; y: number } | null = null;
   private readingTimeUtil = new ReadingTimeUtil(
     ConfigService,
     isElectron
@@ -158,17 +157,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.handleReadingPanelToggle
     );
     window.addEventListener("resize", this.updateSettingDialogPosition);
-    window.addEventListener("mousemove", this.handleQuickButtonsMouseMove);
-    document.addEventListener(
-      "mouseleave",
-      this.handleQuickButtonsMouseLeaveWindow
-    );
 
     // 进入阅读器后主动展示快捷按钮 3 秒，提示用户位置后自动隐藏
     this.setState({ isNearEdge: true });
     this.autoShowTimer = setTimeout(() => {
       this.autoShowTimer = null;
-      this.setState({ isNearEdge: false }, this.updateQuickButtonsVisibility);
+      this.setState({ isNearEdge: false });
     }, 1500);
   }
   componentDidUpdate() {
@@ -229,14 +223,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.handleReadingPanelToggle
     );
     window.removeEventListener("resize", this.updateSettingDialogPosition);
-    window.removeEventListener("mousemove", this.handleQuickButtonsMouseMove);
-    document.removeEventListener(
-      "mouseleave",
-      this.handleQuickButtonsMouseLeaveWindow
-    );
-    if (this.quickButtonsFrame !== null) {
-      cancelAnimationFrame(this.quickButtonsFrame);
-      this.quickButtonsFrame = null;
+    if (this.hideQuickButtonsTimer) {
+      clearTimeout(this.hideQuickButtonsTimer);
+      this.hideQuickButtonsTimer = null;
     }
     if (isElectron) {
       clearDiscordPresence();
@@ -433,34 +422,27 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       }, 200);
     },
   });
-  updateQuickButtonsVisibility = () => {
-    if (!this.lastPointerPosition) return;
-    const { x, y } = this.lastPointerPosition;
-    const isInside = Array.from(
-      document.querySelectorAll<HTMLElement>(".reader-quick-buttons")
-    ).some((element) => {
-      const rect = element.getBoundingClientRect();
-      return (
-        x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
-      );
-    });
-    if (isInside !== this.state.isNearEdge) {
-      this.setState({ isNearEdge: isInside });
+  showQuickButtons = () => {
+    if (this.autoShowTimer) {
+      clearTimeout(this.autoShowTimer);
+      this.autoShowTimer = null;
+    }
+    if (this.hideQuickButtonsTimer) {
+      clearTimeout(this.hideQuickButtonsTimer);
+      this.hideQuickButtonsTimer = null;
+    }
+    if (!this.state.isNearEdge) {
+      this.setState({ isNearEdge: true });
     }
   };
-  handleQuickButtonsMouseMove = (event: MouseEvent) => {
-    this.lastPointerPosition = { x: event.clientX, y: event.clientY };
-    if (this.autoShowTimer) return;
-    if (this.quickButtonsFrame !== null) return;
-    this.quickButtonsFrame = window.requestAnimationFrame(() => {
-      this.quickButtonsFrame = null;
-      this.updateQuickButtonsVisibility();
-    });
-  };
-  handleQuickButtonsMouseLeaveWindow = (event: MouseEvent) => {
-    if (event.relatedTarget) return;
-    this.lastPointerPosition = null;
-    this.setState({ isNearEdge: false });
+  hideQuickButtons = () => {
+    if (this.hideQuickButtonsTimer) {
+      clearTimeout(this.hideQuickButtonsTimer);
+    }
+    this.hideQuickButtonsTimer = setTimeout(() => {
+      this.hideQuickButtonsTimer = null;
+      this.setState({ isNearEdge: false });
+    }, 200);
   };
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();
@@ -497,6 +479,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
         <div
           className="previous-chapter-single-container reader-quick-buttons"
+          onMouseEnter={this.showQuickButtons}
+          onMouseLeave={this.hideQuickButtons}
           onClick={async () => {
             if (lock) return;
             lock = true;
@@ -522,6 +506,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
         <div
           className="reader-quick-buttons"
+          onMouseEnter={this.showQuickButtons}
+          onMouseLeave={this.hideQuickButtons}
           style={{
             position: "absolute",
             bottom: 10,
@@ -622,6 +608,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
 
         <div
           className="reader-quick-buttons"
+          onMouseEnter={this.showQuickButtons}
+          onMouseLeave={this.hideQuickButtons}
           style={{
             position: "absolute",
             top: "0px",
