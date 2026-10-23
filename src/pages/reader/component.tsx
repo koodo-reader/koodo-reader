@@ -29,6 +29,7 @@ import {
   clearDiscordPresence,
 } from "../../utils/reader/discordRPC";
 import SupportDialog from "../../components/dialogs/supportDialog";
+import WindowControls from "../../components/windowControls";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
 import { isPaginatedBook, isReadingRawPDF, throttle } from "../../utils/common";
 declare var window: any;
@@ -426,6 +427,14 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     );
   };
   render() {
+    const isSeparateElectronWindow =
+      isElectron && ConfigService.getReaderConfig("isOpenInMain") !== "yes";
+    const isMacOS =
+      isElectron && window.electronAPI?.runtime?.platform === "darwin";
+    const isMergeWord =
+      ConfigService.getReaderConfig("isMergeWord") === "yes";
+    const showCustomWindowControls =
+      isSeparateElectronWindow && (!isMacOS || isMergeWord);
     const renditionProps = {
       handleLeaveReader: this.handleLeaveReader,
       handleEnterReader: this.handleEnterReader,
@@ -438,6 +447,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     return (
       <div className="viewer">
         <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
+        {isSeparateElectronWindow && (
+          <div className="reader-window-drag-region" />
+        )}
 
         <div
           className="previous-chapter-single-container"
@@ -571,13 +583,23 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           style={{
             position: "absolute",
             top: "0px",
-            right:
-              this.props.isSettingLocked || this.props.isDockedRight ? 300 : 15,
+            ...(isSeparateElectronWindow && isMacOS
+              ? {
+                  left: this.props.isNavLocked ? 315 : isMergeWord ? 15 : 82,
+                  right: "auto",
+                }
+              : {
+                  right:
+                    this.props.isSettingLocked || this.props.isDockedRight
+                      ? 300
+                      : 15,
+                }),
             zIndex: 10,
             width: "max-content",
             display: "flex",
             flexDirection: "column",
-            alignItems: "flex-end",
+            alignItems:
+              isSeparateElectronWindow && isMacOS ? "flex-start" : "flex-end",
             justifyContent: "flex-end",
             opacity: this.state.isNearEdge ? 1 : 0,
             transition: "opacity 0.3s ease",
@@ -678,6 +700,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               ></span>
             </div>
           )}
+          {showCustomWindowControls && <WindowControls t={this.props.t} />}
           </div>
           <div
             className="next-chapter-single-container"
