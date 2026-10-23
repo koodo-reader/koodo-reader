@@ -610,8 +610,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                   )}
                 >
                   <span
-                    className="icon-ruler reader-setting-icon"
-                    style={{ fontSize: 21 }}
+                    className="icon-pencil-ruler reader-setting-icon"
+                    style={{ fontSize: 23 }}
                   ></span>
                 </div>
               </>
