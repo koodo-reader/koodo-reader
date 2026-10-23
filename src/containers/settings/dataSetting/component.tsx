@@ -22,6 +22,7 @@ import {
   KOReaderUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { changeLibrary, changePath } from "../../../utils/file/common";
+import SwitchRow from "../../../components/readerSettings/switchRow";
 import { getSnapshots } from "../../../utils/file/backup";
 import { restoreFromSnapshot } from "../../../utils/file/restore";
 import {
@@ -353,33 +354,14 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
           key={item.propName}
         >
-          <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "calc(100% - 100px)" }}>
-              <Trans>{item.title}</Trans>
-            </span>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleNoteSyncSetting(item);
-              }}
-              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state[item.propName]
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+          <SwitchRow
+            variant="setting"
+            title={<Trans>{item.title}</Trans>}
+            isEnabled={this.state[item.propName]}
+            onClick={() => {
+              this.handleNoteSyncSetting(item);
+            }}
+          />
           <p className="setting-option-subtitle">
             <Trans>{item.desc}</Trans>
           </p>
@@ -412,33 +394,14 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     return wordSyncSettingList.map((item) => {
       return (
         <div key={item.propName}>
-          <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "calc(100% - 100px)" }}>
-              <Trans>{item.title}</Trans>
-            </span>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleNoteSyncSetting(item);
-              }}
-              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state[item.propName]
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+          <SwitchRow
+            variant="setting"
+            title={<Trans>{item.title}</Trans>}
+            isEnabled={this.state[item.propName]}
+            onClick={() => {
+              this.handleNoteSyncSetting(item);
+            }}
+          />
           <p className="setting-option-subtitle">
             <Trans>{item.desc}</Trans>
           </p>
@@ -454,33 +417,14 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
           key={item.propName}
         >
-          <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "calc(100% - 100px)" }}>
-              <Trans>{item.title}</Trans>
-            </span>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleDataSetting(item);
-              }}
-              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state[item.propName]
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+          <SwitchRow
+            variant="setting"
+            title={<Trans>{item.title}</Trans>}
+            isEnabled={this.state[item.propName]}
+            onClick={() => {
+              this.handleDataSetting(item);
+            }}
+          />
           <p className="setting-option-subtitle">
             <Trans>{item.desc}</Trans>
           </p>

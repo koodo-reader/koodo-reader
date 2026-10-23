@@ -1,4 +1,5 @@
 import React from "react";
+import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook } from "../../../utils/common";
@@ -221,7 +222,7 @@ class AssistReadDialog extends React.Component<
       >
         <ul className="sort-by-category">
           <SwitchRow
-            title="Enable auto reading"
+            title={<Trans>Enable auto reading</Trans>}
             isEnabled={this.state.isAutoReading}
             onClick={this.handleAutoReadingToggle}
           />
@@ -231,13 +232,13 @@ class AssistReadDialog extends React.Component<
             ))}
 
           <SwitchRow
-            title="Enable paragraph mode"
+            title={<Trans>Enable paragraph mode</Trans>}
             isEnabled={this.state.isParagraphMode}
             onClick={this.handleParagraphModeToggle}
           />
 
           <SwitchRow
-            title="Enable reading ruler"
+            title={<Trans>Enable reading ruler</Trans>}
             isEnabled={this.state.isReadingRuler}
             onClick={this.handleReadingRulerToggle}
           />
@@ -247,7 +248,7 @@ class AssistReadDialog extends React.Component<
             ))}
 
           <SwitchRow
-            title="Enable speed reading"
+            title={<Trans>Enable speed reading</Trans>}
             isEnabled={this.state.isSpeedReading}
             onClick={this.handleSpeedReadingToggle}
           />
