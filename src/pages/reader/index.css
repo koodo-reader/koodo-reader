@@ -255,6 +255,7 @@
 .reader-setting-dialog-anchor .sort-dialog-container {
   position: static;
   animation: none;
+  box-sizing: border-box;
   max-width: calc(100vw - 16px);
 }
 @keyframes reader-setting-dialog-appear {
