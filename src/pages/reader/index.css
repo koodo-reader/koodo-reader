@@ -5,6 +5,15 @@
 .viewer {
   height: 100%;
 }
+.reader-window-drag-region {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  z-index: 4;
+  -webkit-app-region: drag;
+}
 .view-area {
   height: 100%;
   touch-action: none;

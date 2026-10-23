@@ -278,6 +278,32 @@ let options = {
   },
 };
 const Database = require("better-sqlite3");
+const isMacOS = os.platform() === "darwin";
+const getReaderWindowChromeOptions = (isMergeWord) => {
+  if (isMergeWord === "yes") {
+    return { frame: false };
+  }
+  if (isMacOS) {
+    return {
+      frame: true,
+      titleBarStyle: "hidden",
+      trafficLightPosition: { x: 14, y: 16 },
+    };
+  }
+  return { frame: false };
+};
+const bindReaderWindowState = (win) => {
+  const sendState = () => {
+    if (!win || win.isDestroyed()) return;
+    win.webContents.send("reader-window-state", {
+      isMaximized: win.isMaximized(),
+      isFullScreen: win.isFullScreen(),
+    });
+  };
+  ["maximize", "unmaximize", "enter-full-screen", "leave-full-screen"].forEach(
+    (eventName) => win.on(eventName, sendState)
+  );
+};
 if (os.platform() === "linux") {
   options = Object.assign({}, options, {
     icon: path.join(__dirname, "./build/assets/icon.png"),
@@ -905,7 +931,10 @@ const createMainWin = () => {
       readerWindowList.push(readerWindow);
     }
     if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
-      readerWindow = new BrowserWindow(options);
+      readerWindow = new BrowserWindow({
+        ...options,
+        ...getReaderWindowChromeOptions(isMergeWord),
+      });
       readerWindow.webContents.on(
         "console-message",
         (_event, level, message) => {
@@ -934,7 +963,7 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: isWindowVisible ? parseInt(store.get("windowX")) : undefined,
         y: isWindowVisible ? parseInt(store.get("windowY")) : undefined,
-        frame: isMergeWord === "yes" ? false : true,
+        ...getReaderWindowChromeOptions(isMergeWord),
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
       });
@@ -949,6 +978,7 @@ const createMainWin = () => {
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
     }
+    bindReaderWindowState(readerWindow);
     if (store.get("isAlwaysOnTop") === "yes") {
       readerWindow.setAlwaysOnTop(true);
     }
@@ -1792,6 +1822,40 @@ const createMainWin = () => {
       event.returnvalue = false;
     }
   });
+  const getReaderWindowFromEvent = (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (!win || win.isDestroyed() || win === mainWin) return null;
+    return win;
+  };
+  ipcMain.handle("reader-window-minimize", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    if (!win) return false;
+    win.minimize();
+    return true;
+  });
+  ipcMain.handle("reader-window-toggle-maximize", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    if (!win || win.isFullScreen()) return null;
+    if (win.isMaximized()) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
+    return win.isMaximized();
+  });
+  ipcMain.handle("reader-window-get-state", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    return {
+      isMaximized: !!win && win.isMaximized(),
+      isFullScreen: !!win && win.isFullScreen(),
+    };
+  });
+  ipcMain.handle("reader-window-close", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    if (!win) return false;
+    win.close();
+    return true;
+  });
   ipcMain.handle("open-console", (event, arg) => {
     mainWin.webContents.openDevTools();
     event.returnvalue = true;
@@ -1983,7 +2047,9 @@ const createMainWin = () => {
     if (readerWindow && !readerWindow.isDestroyed()) {
       readerWindowReadyToClose = true;
       readerWindow.close();
-      if (store.get("isMergeWord") === "yes") {
+      const currentIsMergeWord = store.get("isMergeWord") === "yes";
+      const nextIsMergeWord = currentIsMergeWord ? "no" : "yes";
+      if (currentIsMergeWord) {
         delete options.backgroundColor;
       }
       const scaleRatio = store.get("windowDisplayScale") || 1;
@@ -1992,19 +2058,17 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
-        frame: store.get("isMergeWord") !== "yes" ? false : true,
-        hasShadow: store.get("isMergeWord") !== "yes" ? false : true,
-        transparent: store.get("isMergeWord") !== "yes" ? true : false,
+        ...getReaderWindowChromeOptions(nextIsMergeWord),
+        hasShadow: nextIsMergeWord === "yes" ? false : true,
+        transparent: nextIsMergeWord === "yes" ? true : false,
       });
 
-      store.set(
-        "isMergeWord",
-        store.get("isMergeWord") !== "yes" ? "yes" : "no"
-      );
+      store.set("isMergeWord", nextIsMergeWord);
       if (readerWindow) {
         readerWindowList.push(readerWindow);
       }
       readerWindow = new BrowserWindow(options);
+      bindReaderWindowState(readerWindow);
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);
       }
