@@ -28,7 +28,6 @@
   padding: 3px;
   box-sizing: border-box;
   border-radius: 999px;
-  border: 1.5px solid var(--text-color);
   margin-bottom: 10px;
 }
 .setting-panel-tabs-indicator {
@@ -37,7 +36,6 @@
   bottom: 3px;
   left: 3px;
   border-radius: 999px;
-  background: var(--filled-bg);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
@@ -69,7 +67,6 @@
 .setting-panel-tab.active {
   opacity: 1;
   font-weight: 600;
-  color: var(--on-filled);
 }
 
 .setting-panel {
