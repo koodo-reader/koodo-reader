@@ -223,7 +223,7 @@ class PdfCropDialog extends React.Component<
   render() {
     return (
       <div
-        className="sort-dialog-container"
+        className="sort-dialog-container pdf-crop-dialog-container"
         onMouseLeave={() => {
           this.props.handlePdfCropDialog(false);
         }}
