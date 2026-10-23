@@ -242,11 +242,8 @@ class AssistReadDialog extends React.Component<
           this.props.handleAssistReadDialog(true);
         }}
         style={{
-          left: "auto",
           top: "50px",
           width: "280px",
-          right:
-            this.props.isSettingLocked || this.props.isDockedRight ? 325 : 20,
           overflowY: "auto",
           maxHeight: "calc(100vh - 80px)",
         }}

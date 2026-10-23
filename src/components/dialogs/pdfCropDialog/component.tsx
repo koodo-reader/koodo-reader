@@ -231,10 +231,8 @@ class PdfCropDialog extends React.Component<
           this.props.handlePdfCropDialog(true);
         }}
         style={{
-          left: "auto",
           top: "50px",
           width: "280px",
-          right: this.props.isSettingLocked || this.props.isDockedRight ? 325 : 20,
           paddingBottom: "20px",
         }}
       >

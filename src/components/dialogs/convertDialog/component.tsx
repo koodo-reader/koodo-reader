@@ -108,11 +108,8 @@ class ConvertDialog extends React.Component<
             this.props.handleConvertDialog(true);
           }}
           style={{
-            left: "auto",
             top: "50px",
             width: "240px",
-            right:
-              this.props.isSettingLocked || this.props.isDockedRight ? 325 : 20,
           }}
         >
           <ul className="sort-by-category">
