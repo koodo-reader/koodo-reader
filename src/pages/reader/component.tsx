@@ -351,17 +351,56 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.handleEnterReader(position);
     }
   };
+  closeSettingDialogs = () => {
+    this.props.handleScalePageDialog(false);
+    this.props.handleConvertDialog(false);
+    this.props.handlePdfCropDialog(false);
+    this.props.handleStudyLangDialog(false);
+    this.props.handleAssistReadDialog(false);
+  };
   handleDialogButtonHover = (
     handleDialog: (isOpen: boolean) => void,
     dialogSelector: string
   ) => ({
     onMouseEnter: (event: React.MouseEvent<HTMLDivElement>) => {
-      const rect = event.currentTarget.getBoundingClientRect();
+      const iconRect = event.currentTarget.getBoundingClientRect();
+      const previousDialog = document.querySelector<HTMLElement>(
+        ".scale-page-dialog-container, .pdf-crop-dialog-container, .convert-dialog-container"
+      );
+      const previousRect = previousDialog?.getBoundingClientRect();
       document.documentElement.style.setProperty(
         "--reader-dialog-anchor-x",
-        `${rect.left + rect.width / 2}px`
+        `${iconRect.left + iconRect.width / 2}px`
       );
+      this.closeSettingDialogs();
       handleDialog(true);
+      if (!previousRect || !previousRect.width) return;
+      window.requestAnimationFrame(() => {
+        const nextDialog = document.querySelector<HTMLElement>(dialogSelector);
+        if (!nextDialog) return;
+        const nextRect = nextDialog.getBoundingClientRect();
+        if (!nextRect.width) return;
+        nextDialog.style.animation = "none";
+        const deltaX =
+          previousRect.left +
+          previousRect.width / 2 -
+          (nextRect.left + nextRect.width / 2);
+        if (Math.abs(deltaX) < 1) return;
+        nextDialog.style.transition = "none";
+        nextDialog.style.transform = `translateX(${deltaX}px)`;
+        window.requestAnimationFrame(() => {
+          nextDialog.style.transition = "transform 0.2s ease";
+          nextDialog.style.transform = "translateX(0)";
+          nextDialog.addEventListener(
+            "transitionend",
+            () => {
+              nextDialog.style.transition = "";
+              nextDialog.style.transform = "";
+            },
+            { once: true }
+          );
+        });
+      });
     },
     onMouseLeave: () => {
       window.setTimeout(() => {
