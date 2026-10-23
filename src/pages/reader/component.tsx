@@ -364,43 +364,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   ) => ({
     onMouseEnter: (event: React.MouseEvent<HTMLDivElement>) => {
       const iconRect = event.currentTarget.getBoundingClientRect();
-      const previousDialog = document.querySelector<HTMLElement>(
-        ".scale-page-dialog-container, .pdf-crop-dialog-container, .convert-dialog-container"
-      );
-      const previousRect = previousDialog?.getBoundingClientRect();
       document.documentElement.style.setProperty(
         "--reader-dialog-anchor-x",
         `${iconRect.left + iconRect.width / 2}px`
       );
       this.closeSettingDialogs();
       handleDialog(true);
-      if (!previousRect || !previousRect.width) return;
-      window.requestAnimationFrame(() => {
-        const nextDialog = document.querySelector<HTMLElement>(dialogSelector);
-        if (!nextDialog) return;
-        const nextRect = nextDialog.getBoundingClientRect();
-        if (!nextRect.width) return;
-        nextDialog.style.animation = "none";
-        const deltaX =
-          previousRect.left +
-          previousRect.width / 2 -
-          (nextRect.left + nextRect.width / 2);
-        if (Math.abs(deltaX) < 1) return;
-        nextDialog.style.transition = "none";
-        nextDialog.style.transform = `translateX(${deltaX}px)`;
-        window.requestAnimationFrame(() => {
-          nextDialog.style.transition = "transform 0.2s ease";
-          nextDialog.style.transform = "translateX(0)";
-          nextDialog.addEventListener(
-            "transitionend",
-            () => {
-              nextDialog.style.transition = "";
-              nextDialog.style.transform = "";
-            },
-            { once: true }
-          );
-        });
-      });
     },
     onMouseLeave: () => {
       window.setTimeout(() => {
@@ -902,13 +871,32 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
 
         {this.props.currentBook.key && <Viewer {...(renditionProps as any)} />}
-        {(this.props.readerMode === "scroll" ||
+        {((this.props.readerMode === "scroll" ||
           this.props.readerMode === "single") &&
-          this.props.isScaleOpen && <ScalePageDialog />}
-        {this.props.isConvertOpen && <ConvertDialog />}
-        {this.props.isPdfCropOpen && <PdfCropDialog />}
-        {this.props.isStudyLangOpen && <StudyLangDialog />}
-        {this.props.isAssistReadOpen && <AssistReadDialog />}
+          this.props.isScaleOpen) ||
+        this.props.isConvertOpen ||
+        this.props.isPdfCropOpen ||
+        this.props.isStudyLangOpen ||
+        this.props.isAssistReadOpen ? (
+          <div
+            className="reader-setting-dialog-anchor"
+            style={
+              {
+                "--reader-dialog-width": this.props.isConvertOpen
+                  ? "240px"
+                  : "280px",
+              } as React.CSSProperties
+            }
+          >
+            {(this.props.readerMode === "scroll" ||
+              this.props.readerMode === "single") &&
+              this.props.isScaleOpen && <ScalePageDialog />}
+            {this.props.isConvertOpen && <ConvertDialog />}
+            {this.props.isPdfCropOpen && <PdfCropDialog />}
+            {this.props.isStudyLangOpen && <StudyLangDialog />}
+            {this.props.isAssistReadOpen && <AssistReadDialog />}
+          </div>
+        ) : null}
         <SupportDialog />
         {this.props.isOpenPopupOptionDialog && (
           <>
