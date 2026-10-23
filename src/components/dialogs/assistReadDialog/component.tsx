@@ -218,6 +218,7 @@ class AssistReadDialog extends React.Component<
           width: "280px",
           overflowY: "auto",
           maxHeight: "calc(100vh - 80px)",
+          paddingTop: "0px",
         }}
       >
         <ul className="sort-by-category">
