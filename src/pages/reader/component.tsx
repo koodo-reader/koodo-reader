@@ -75,6 +75,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   tickTimer!: NodeJS.Timeout;
   private autoShowTimer: NodeJS.Timeout | null = null;
   private dialogAnchorIcon: HTMLElement | null = null;
+  private quickButtonsFrame: number | null = null;
+  private lastPointerPosition: { x: number; y: number } | null = null;
   private readingTimeUtil = new ReadingTimeUtil(
     ConfigService,
     isElectron
@@ -156,12 +158,17 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.handleReadingPanelToggle
     );
     window.addEventListener("resize", this.updateSettingDialogPosition);
+    window.addEventListener("mousemove", this.handleQuickButtonsMouseMove);
+    document.addEventListener(
+      "mouseleave",
+      this.handleQuickButtonsMouseLeaveWindow
+    );
 
     // 进入阅读器后主动展示快捷按钮 3 秒，提示用户位置后自动隐藏
     this.setState({ isNearEdge: true });
     this.autoShowTimer = setTimeout(() => {
       this.autoShowTimer = null;
-      this.setState({ isNearEdge: false });
+      this.setState({ isNearEdge: false }, this.updateQuickButtonsVisibility);
     }, 1500);
   }
   componentDidUpdate() {
@@ -222,6 +229,15 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.handleReadingPanelToggle
     );
     window.removeEventListener("resize", this.updateSettingDialogPosition);
+    window.removeEventListener("mousemove", this.handleQuickButtonsMouseMove);
+    document.removeEventListener(
+      "mouseleave",
+      this.handleQuickButtonsMouseLeaveWindow
+    );
+    if (this.quickButtonsFrame !== null) {
+      cancelAnimationFrame(this.quickButtonsFrame);
+      this.quickButtonsFrame = null;
+    }
     if (isElectron) {
       clearDiscordPresence();
     }
@@ -417,6 +433,35 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       }, 200);
     },
   });
+  updateQuickButtonsVisibility = () => {
+    if (!this.lastPointerPosition) return;
+    const { x, y } = this.lastPointerPosition;
+    const isInside = Array.from(
+      document.querySelectorAll<HTMLElement>(".reader-quick-buttons")
+    ).some((element) => {
+      const rect = element.getBoundingClientRect();
+      return (
+        x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+      );
+    });
+    if (isInside !== this.state.isNearEdge) {
+      this.setState({ isNearEdge: isInside });
+    }
+  };
+  handleQuickButtonsMouseMove = (event: MouseEvent) => {
+    this.lastPointerPosition = { x: event.clientX, y: event.clientY };
+    if (this.autoShowTimer) return;
+    if (this.quickButtonsFrame !== null) return;
+    this.quickButtonsFrame = window.requestAnimationFrame(() => {
+      this.quickButtonsFrame = null;
+      this.updateQuickButtonsVisibility();
+    });
+  };
+  handleQuickButtonsMouseLeaveWindow = (event: MouseEvent) => {
+    if (event.relatedTarget) return;
+    this.lastPointerPosition = null;
+    this.setState({ isNearEdge: false });
+  };
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();
 
@@ -451,7 +496,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         )}
 
         <div
-          className="previous-chapter-single-container"
+          className="previous-chapter-single-container reader-quick-buttons"
           onClick={async () => {
             if (lock) return;
             lock = true;
@@ -472,12 +517,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             opacity: this.state.isNearEdge ? undefined : 0,
             transition: "opacity 0.3s ease",
           }}
-          onMouseEnter={() => this.setState({ isNearEdge: true })}
-          onMouseLeave={() => this.setState({ isNearEdge: false })}
         >
           <span className="icon-dropdown previous-chapter-single"></span>
         </div>
         <div
+          className="reader-quick-buttons"
           style={{
             position: "absolute",
             bottom: 10,
@@ -491,8 +535,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             opacity: this.state.isNearEdge ? 1 : 0,
             transition: "opacity 0.3s ease",
           }}
-          onMouseEnter={() => this.setState({ isNearEdge: true })}
-          onMouseLeave={() => this.setState({ isNearEdge: false })}
         >
           <div
             className="next-chapter-single-container"
@@ -579,6 +621,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         </div>
 
         <div
+          className="reader-quick-buttons"
           style={{
             position: "absolute",
             top: "0px",
@@ -593,7 +636,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                       ? 300
                       : 15,
                 }),
-            zIndex: 10,
+            zIndex: 16,
             width: "max-content",
             display: "flex",
             flexDirection: "column",
@@ -606,8 +649,6 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               ? ConfigService.getReaderConfig("textColor")
               : "",
           }}
-          onMouseEnter={() => this.setState({ isNearEdge: true })}
-          onMouseLeave={() => this.setState({ isNearEdge: false })}
         >
           <div
             style={{
