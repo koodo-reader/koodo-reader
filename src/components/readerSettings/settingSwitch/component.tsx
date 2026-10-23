@@ -3,64 +3,10 @@ import { SettingSwitchProps, SettingSwitchState } from "./interface";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
-import { wordFrequencyList } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
-import { detectLocalLanguage, isPaginatedBook, isReadingRawPDF } from "../../../utils/common";
+import { isReadingRawPDF } from "../../../utils/common";
 import BookUtil from "../../../utils/file/bookUtil";
-import SliderList from "../sliderList";
 
-const readingRulerSliderConfigs = [
-  {
-    maxValue: 20,
-    minValue: 0,
-    mode: "readingRulerLineHeight",
-    minLabel: "0",
-    maxLabel: "20",
-    step: 1,
-    title: "Reading ruler height",
-    isPDF: false,
-    defaultValue: 3,
-  },
-  {
-    maxValue: 1,
-    minValue: 0,
-    mode: "readingRulerBackgroundOpacity",
-    minLabel: "0",
-    maxLabel: "1",
-    step: 0.05,
-    title: "Background opacity",
-    isPDF: false,
-    defaultValue: 0.6,
-  },
-];
-
-const speedReadingSliderConfigs = [
-  {
-    maxValue: 900,
-    minValue: 100,
-    mode: "speedReadingSpeed",
-    minLabel: "100",
-    maxLabel: "900",
-    step: 50,
-    title: "Reading speed (WPM)",
-    isPDF: false,
-    defaultValue: 300,
-  },
-];
-
-const autoReadingSliderConfigs = [
-  {
-    maxValue: 1,
-    minValue: 0,
-    mode: "autoScrollRate",
-    minLabel: "0",
-    maxLabel: "1",
-    step: 0.05,
-    title: "Auto scrolling speed",
-    isPDF: false,
-    defaultValue: 0.5,
-  },
-];
 class SettingSwitch extends React.Component<
   SettingSwitchProps,
   SettingSwitchState
@@ -75,8 +21,6 @@ class SettingSwitch extends React.Component<
       isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
       isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
       isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
-      isParagraphMode:
-        ConfigService.getReaderConfig("isParagraphMode") === "yes",
       isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
       isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
       isKeepPDFBackground:
@@ -97,53 +41,18 @@ class SettingSwitch extends React.Component<
       isCustomBookCSS:
         ConfigService.getReaderConfig("isCustomBookCSS") === "yes",
       customBookCSS: ConfigService.getReaderConfig("customBookCSS") || "",
-      isReadingRuler: ConfigService.getReaderConfig("isReadingRuler") === "yes",
-      readingRulerLineHeight:
-        ConfigService.getReaderConfig("readingRulerLineHeight") || "3",
-      readingRulerBackgroundOpacity:
-        ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.6",
-      isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
-      isAutoReading: ConfigService.getReaderConfig("isAutoReading") === "yes",
-      speedReadingSpeed:
-        ConfigService.getReaderConfig("speedReadingSpeed") || "300",
-      isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
-      isWordDefinition: ConfigService.getAllListConfig(
-        "wordDefinitionBooks"
-      ).includes(props.currentBook?.key),
       isSeperateStyle: ConfigService.getAllListConfig(
         "seperateStyleBooks"
       ).includes(props.currentBook?.key),
-      wordDefinitionLang: "",
-      currentChineseLevel:
-        ConfigService.getReaderConfig("currentChineseLevel") || "HSK3",
-      currentJapaneseLevel:
-        ConfigService.getReaderConfig("currentJapaneseLevel") || "N3",
-      currentEnglishLevel:
-        ConfigService.getReaderConfig("currentEnglishLevel") || "四级",
     };
   }
-  async UNSAFE_componentWillReceiveProps(nextProps: SettingSwitchProps) {
+
+  UNSAFE_componentWillReceiveProps(nextProps: SettingSwitchProps) {
     if (nextProps.currentBook?.key !== this.props.currentBook?.key) {
       this.setState({
-        isWordDefinition: ConfigService.getAllListConfig(
-          "wordDefinitionBooks"
-        ).includes(nextProps.currentBook?.key),
         isSeperateStyle: ConfigService.getAllListConfig(
           "seperateStyleBooks"
         ).includes(nextProps.currentBook?.key),
-      });
-    }
-    if (
-      nextProps.htmlBook !== this.props.htmlBook &&
-      nextProps.htmlBook &&
-      !this.props.htmlBook
-    ) {
-      nextProps.htmlBook.rendition.on("rendered", async () => {
-        let text = await nextProps.htmlBook?.rendition.audioText();
-        if (text && text.length > 0) {
-          const lang = detectLocalLanguage(text.slice(0, 500).join(" "));
-          this.setState({ wordDefinitionLang: lang });
-        }
       });
     }
   }
@@ -171,83 +80,6 @@ class SettingSwitch extends React.Component<
     toast(this.props.t("Change successful"));
   };
 
-  exclusiveModeNames = [
-    "isParagraphMode",
-    "isReadingRuler",
-    "isSpeedReading",
-    "isAutoReading",
-  ] as const;
-
-  handleExclusiveOff = (
-    enabledName: (typeof this.exclusiveModeNames)[number]
-  ) => {
-    const exclusiveHandlers: Record<
-      (typeof this.exclusiveModeNames)[number],
-      (value: boolean) => void
-    > = {
-      isParagraphMode: this.props.handleParagraphMode,
-      isReadingRuler: this.props.handleReadingRuler,
-      isSpeedReading: this.props.handleSpeedReading,
-      isAutoReading: this.props.handleAutoReading,
-    };
-    const offNames = this.exclusiveModeNames.filter(
-      (name) => name !== enabledName && this.state[name]
-    );
-    if (offNames.length === 0) return;
-    offNames.forEach((name) => {
-      ConfigService.setReaderConfig(name, "no");
-      exclusiveHandlers[name](false);
-    });
-    if (offNames.includes("isAutoReading")) {
-      this.stopAutoScroll();
-    }
-    this.setState((prevState) => {
-      const nextState = { ...prevState };
-      offNames.forEach((name) => {
-        nextState[name] = false;
-      });
-      return nextState;
-    });
-  };
-
-  stopAutoScroll = () => {
-    if (!this.props.htmlBook) return;
-    const rate = parseFloat(
-      ConfigService.getReaderConfig("autoScrollRate") || "0.5"
-    );
-    this.props.htmlBook.rendition.autoScroll?.(rate, "no");
-    this.props.htmlBook.rendition.autoScrollPDF?.("no");
-  };
-
-  handleAutoReadingToggle = () => {
-    const next = !this.state.isAutoReading;
-    if (next) {
-      this.handleExclusiveOff("isAutoReading");
-    }
-    this.setState({ isAutoReading: next });
-    ConfigService.setReaderConfig("isAutoReading", next ? "yes" : "no");
-    this.props.handleAutoReading(next);
-    if (next) {
-      if (!ConfigService.getReaderConfig("autoScrollRate")) {
-        ConfigService.setReaderConfig("autoScrollRate", "0.5");
-      }
-      // 自动阅读强制进入滚动模式（分页类书籍使用独立的 pdfReaderMode 配置）
-      if (isPaginatedBook(this.props.currentBook)) {
-        ConfigService.setReaderConfig("pdfReaderMode", "scroll");
-      } else {
-        ConfigService.setReaderConfig("readerMode", "scroll");
-      }
-      this.props.handleReaderMode("scroll");
-    } else {
-      this.stopAutoScroll();
-    }
-    toast(this.props.t("Change successful"));
-    if (next) {
-      setTimeout(async () => {
-        await this.props.renderBookFunc();
-      }, 500);
-    }
-  };
   render() {
     return (
       <>
@@ -260,8 +92,9 @@ class SettingSwitch extends React.Component<
             }}
           >
             <Trans>
-              The audiobook feature has been moved to the bottom right of the
-              book page
+              {
+                "Full text translation, word definitions, auto reading, paragraph mode, reading ruler and speed reading have been moved to the top right corner of the book page"
+              }
             </Trans>
           </span>
         </div>
@@ -379,293 +212,6 @@ class SettingSwitch extends React.Component<
             ></span>
           </span>
         </div>
-        <div className="single-control-switch-container" key="isWordDefinition">
-          <span className="single-control-switch-title">
-            <Trans>Enable word definitions</Trans>
-            <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
-          </span>
-          <span
-            className="single-control-switch"
-            onClick={async () => {
-              const next = !this.state.isWordDefinition;
-              if (next) {
-                if (!this.props.isAuthed) {
-                  toast(
-                    this.props.t("Please upgrade to Pro to use this feature")
-                  );
-                  this.props.handleSetting(true);
-                  this.props.handleSettingMode("account");
-                  ConfigService.setReaderConfig("fullTranslationMode", "no");
-                  return;
-                }
-                if (this.state.isBionic) {
-                  toast.error(
-                    this.props.t(
-                      "Word definitions and fast reading mode cannot be enabled at the same time"
-                    )
-                  );
-                  return;
-                }
-                let lang = "";
-                if (this.props.htmlBook?.rendition) {
-                  try {
-                    const text =
-                      await this.props.htmlBook.rendition.audioText();
-                    if (text && text.length > 0) {
-                      lang = detectLocalLanguage(text.slice(0, 500).join(" "));
-                    }
-                  } catch (e) {
-                    console.error(e);
-                  }
-                }
-                if (lang === "ko") {
-                  toast.error(
-                    this.props.t(
-                      "Unsupported language for word definition, currently only Chinese, Japanese and English are supported"
-                    )
-                  );
-                  return;
-                }
-                ConfigService.setListConfig(
-                  this.props.currentBook.key,
-                  "wordDefinitionBooks"
-                );
-
-                this.setState({
-                  isWordDefinition: true,
-                  wordDefinitionLang: lang,
-                });
-              } else {
-                ConfigService.deleteListConfig(
-                  this.props.currentBook.key,
-                  "wordDefinitionBooks"
-                );
-                this.setState({
-                  isWordDefinition: false,
-                  wordDefinitionLang: "",
-                });
-              }
-              toast(this.props.t("Change successful"));
-              setTimeout(async () => {
-                this.props.renderBookFunc();
-              }, 500);
-            }}
-            style={this.state.isWordDefinition ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                !this.state.isWordDefinition
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        <p
-          className="setting-option-subtitle"
-          style={{ marginLeft: "20px", marginRight: "20px" }}
-        >
-          <Trans>
-            {"Add definition next to the English, Chinese, Japanese words"}
-          </Trans>
-        </p>
-        {this.state.isWordDefinition &&
-          (this.state.wordDefinitionLang === "zh" ||
-            this.state.wordDefinitionLang === "ja" ||
-            this.state.wordDefinitionLang === "en") &&
-          (() => {
-            const langKey =
-              this.state.wordDefinitionLang === "zh"
-                ? "currentChineseLevel"
-                : this.state.wordDefinitionLang === "ja"
-                  ? "currentJapaneseLevel"
-                  : "currentEnglishLevel";
-            const levelItem = wordFrequencyList.find(
-              (item) => item.value === langKey
-            );
-            if (!levelItem) return null;
-            const stateKey = langKey as
-              | "currentChineseLevel"
-              | "currentJapaneseLevel"
-              | "currentEnglishLevel";
-            return (
-              <li
-                className="paragraph-character-container"
-                key={langKey}
-                style={{ margin: "0 20px" }}
-              >
-                <p className="general-setting-title">
-                  <Trans>{levelItem.title}</Trans>
-                </p>
-                <select
-                  className="general-setting-dropdown"
-                  value={this.state[stateKey]}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    this.setState({ [stateKey]: val } as any);
-                    ConfigService.setReaderConfig(langKey, val);
-                    toast(this.props.t("Change successful"));
-
-                    this.props.renderBookFunc();
-                  }}
-                >
-                  {levelItem.option.map((opt, idx) => (
-                    <option
-                      key={idx}
-                      value={opt.value}
-                      className="general-setting-option"
-                    >
-                      {this.props.t(opt.label)}
-                    </option>
-                  ))}
-                </select>
-              </li>
-            );
-          })()}
-        <div className="single-control-switch-container" key="isReadingRuler">
-          <span className="single-control-switch-title">
-            <Trans>Enable reading ruler</Trans>
-          </span>
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              const next = !this.state.isReadingRuler;
-              if (next) {
-                this.handleExclusiveOff("isReadingRuler");
-              }
-              this.setState({ isReadingRuler: next });
-              ConfigService.setReaderConfig(
-                "isReadingRuler",
-                next ? "yes" : "no"
-              );
-              this.props.handleReadingRuler(next);
-              if (next) {
-                if (!ConfigService.getReaderConfig("readingRulerLineHeight")) {
-                  ConfigService.setReaderConfig("readingRulerLineHeight", "3");
-                }
-                if (
-                  !ConfigService.getReaderConfig(
-                    "readingRulerBackgroundOpacity"
-                  )
-                ) {
-                  ConfigService.setReaderConfig(
-                    "readingRulerBackgroundOpacity",
-                    "0.6"
-                  );
-                }
-              }
-              toast(this.props.t("Change successful"));
-              setTimeout(async () => {
-                await this.props.renderBookFunc();
-              }, 500);
-            }}
-            style={this.state.isReadingRuler ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                !this.state.isReadingRuler
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        {this.state.isReadingRuler &&
-          readingRulerSliderConfigs.map((item) => (
-            <SliderList key={item.mode} {...{ item }} />
-          ))}
-        <div className="single-control-switch-container" key="isSpeedReading">
-          <span className="single-control-switch-title">
-            <Trans>Enable speed reading</Trans>
-          </span>
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              const next = !this.state.isSpeedReading;
-              if (next) {
-                this.handleExclusiveOff("isSpeedReading");
-              }
-              this.setState({ isSpeedReading: next });
-              ConfigService.setReaderConfig(
-                "isSpeedReading",
-                next ? "yes" : "no"
-              );
-              this.props.handleSpeedReading(next);
-              if (next) {
-                if (!ConfigService.getReaderConfig("speedReadingSpeed")) {
-                  ConfigService.setReaderConfig("speedReadingSpeed", "300");
-                }
-              }
-              toast(this.props.t("Change successful"));
-              setTimeout(async () => {
-                await this.props.renderBookFunc();
-              }, 500);
-            }}
-            style={this.state.isSpeedReading ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                !this.state.isSpeedReading
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        {this.state.isSpeedReading &&
-          speedReadingSliderConfigs.map((item) => (
-            <SliderList key={item.mode} {...{ item }} />
-          ))}
-        <div className="single-control-switch-container" key="isAutoReading">
-          <span className="single-control-switch-title">
-            <Trans>Enable auto reading</Trans>
-          </span>
-          <span
-            className="single-control-switch"
-            onClick={this.handleAutoReadingToggle}
-            style={this.state.isAutoReading ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                !this.state.isAutoReading
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        {this.state.isAutoReading &&
-          autoReadingSliderConfigs.map((item) => (
-            <SliderList key={item.mode} {...{ item }} />
-          ))}
         {readerSettingList
           .filter((item) => {
             if (isReadingRawPDF(this.props.currentBook)) {
@@ -693,7 +239,12 @@ class SettingSwitch extends React.Component<
                   };
 
                   if (propName === "isBionic") {
-                    if (!this.state.isBionic && this.state.isWordDefinition) {
+                    if (
+                      !this.state.isBionic &&
+                      ConfigService.getAllListConfig(
+                        "wordDefinitionBooks"
+                      ).includes(this.props.currentBook.key)
+                    ) {
                       toast.error(
                         this.props.t(
                           "Word definitions and fast reading mode cannot be enabled at the same time"
@@ -721,19 +272,6 @@ class SettingSwitch extends React.Component<
                     setTimeout(async () => {
                       await this.props.renderBookFunc();
                     }, 500);
-                  } else if (propName === "isParagraphMode") {
-                    const next = !this.state.isParagraphMode;
-                    if (next) {
-                      this.handleExclusiveOff("isParagraphMode");
-                    }
-                    this.props.handleParagraphMode(next);
-                    this.handleChange(propName);
-                    setTimeout(async () => {
-                      await this.props.renderBookFunc();
-                    }, 500);
-                  } else if (propName === "isMergeWord") {
-                    this.props.handleMergeWord(!this.state.isMergeWord);
-                    this._handleChange(propName);
                   } else if (propName in renderProps) {
                     renderProps[propName]!(!this.state[propName]);
                     this.handleChange(propName);

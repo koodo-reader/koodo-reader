@@ -17,6 +17,8 @@ import DatabaseService from "../../utils/storage/databaseService";
 import ConvertDialog from "../../components/dialogs/convertDialog";
 import ScalePageDialog from "../../components/dialogs/scalePageDialog";
 import PdfCropDialog from "../../components/dialogs/pdfCropDialog";
+import StudyLangDialog from "../../components/dialogs/studyLangDialog";
+import AssistReadDialog from "../../components/dialogs/assistReadDialog";
 import { isElectron } from "react-device-detect";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import SpeechDialog from "../../components/dialogs/speechDialog";
@@ -522,7 +524,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             right:
               this.props.isSettingLocked || this.props.isDockedRight ? 300 : 15,
             zIndex: 10,
-            width: "120px",
+            width: "max-content",
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-end",
@@ -535,6 +537,35 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           onMouseEnter={() => this.setState({ isNearEdge: true })}
           onMouseLeave={() => this.setState({ isNearEdge: false })}
         >
+          {this.props.currentBook &&
+            !isReadingRawPDF(this.props.currentBook) && (
+              <>
+                <div
+                  className="reader-setting-icon-container"
+                  {...this.handleDialogButtonHover(
+                    this.props.handleStudyLangDialog,
+                    ".study-lang-dialog-container"
+                  )}
+                >
+                  <span
+                    className="icon-trans reader-setting-icon"
+                    style={{ fontSize: 23 }}
+                  ></span>
+                </div>
+                <div
+                  className="reader-setting-icon-container"
+                  {...this.handleDialogButtonHover(
+                    this.props.handleAssistReadDialog,
+                    ".assist-read-dialog-container"
+                  )}
+                >
+                  <span
+                    className="icon-ruler reader-setting-icon"
+                    style={{ fontSize: 23 }}
+                  ></span>
+                </div>
+              </>
+            )}
           {(this.props.readerMode === "scroll" ||
             this.props.readerMode === "single") && (
             <div
@@ -832,6 +863,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           this.props.isScaleOpen && <ScalePageDialog />}
         {this.props.isConvertOpen && <ConvertDialog />}
         {this.props.isPdfCropOpen && <PdfCropDialog />}
+        {this.props.isStudyLangOpen && <StudyLangDialog />}
+        {this.props.isAssistReadOpen && <AssistReadDialog />}
         <SupportDialog />
         {this.props.isOpenPopupOptionDialog && (
           <>

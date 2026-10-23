@@ -1,0 +1,29 @@
+.assist-read-dialog-container {
+  padding: 12px 14px 16px;
+  box-sizing: border-box;
+}
+.assist-read-dialog-container .sort-by-category {
+  margin: 0;
+  padding: 0;
+}
+.assist-read-dialog-container .single-control-switch-container {
+  margin: 12px 0 6px;
+  padding: 0;
+}
+.assist-read-dialog-container .single-control-switch-title {
+  max-width: calc(100% - 50px);
+}
+.assist-read-dialog-container .font-size-setting {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.assist-read-dialog-container .font-size-title {
+  padding-bottom: 8px;
+}
+.assist-read-dialog-container .assist-read-description {
+  margin: 0 0 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.8;
+}

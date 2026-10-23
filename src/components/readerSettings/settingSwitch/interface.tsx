@@ -1,25 +1,12 @@
 import BookModel from "../../../models/Book";
-import PluginModel from "../../../models/Plugin";
-import HtmlBookModel from "../../../models/HtmlBook";
 export interface SettingSwitchProps {
   currentBook: BookModel;
-  htmlBook: HtmlBookModel | null;
-  plugins: PluginModel[];
-  isAuthed?: boolean;
   renderBookFunc: () => void;
   handleHideFooter: (isHideFooter: boolean) => void;
   handleHideHeader: (isHideHeader: boolean) => void;
   t: (title: string) => string;
   handleHideBackground: (isHideBackground: boolean) => void;
-  handleParagraphMode: (isParagraphMode: boolean) => void;
-  handleReadingRuler: (isReadingRuler: boolean) => void;
-  handleSpeedReading: (isSpeedReading: boolean) => void;
-  handleAutoReading: (isAutoReading: boolean) => void;
-  handleReaderMode: (readerMode: string) => void;
-  handleMergeWord: (isMergeWord: boolean) => void;
   handleShowBorder: (isShowPageBorder: boolean) => void;
-  handleSetting: (isOpenSetting: boolean) => void;
-  handleSettingMode: (mode: string) => void;
   handleBackgroundColor: (color: string) => void;
 }
 export interface SettingSwitchState {
@@ -39,22 +26,9 @@ export interface SettingSwitchState {
   isOrphanWidow: boolean;
   isKeepPDFBackground: boolean;
   isBionic: boolean;
-  isParagraphMode: boolean;
   isHideHeader: boolean;
   isShowPageBorder: boolean;
   isCustomBookCSS: boolean;
   customBookCSS: string;
-  isWordDefinition: boolean;
   isSeperateStyle: boolean;
-  isReadingRuler: boolean;
-  readingRulerLineHeight: string;
-  readingRulerBackgroundOpacity: string;
-  isSpeedReading: boolean;
-  isAutoReading: boolean;
-  speedReadingSpeed: string;
-  isMergeWord: boolean;
-  wordDefinitionLang: string;
-  currentChineseLevel: string;
-  currentJapaneseLevel: string;
-  currentEnglishLevel: string;
 }

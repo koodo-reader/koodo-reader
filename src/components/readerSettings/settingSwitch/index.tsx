@@ -7,24 +7,13 @@ import {
   handleHideHeader,
   handleHideBackground,
   handleShowBorder,
-  handleSetting,
-  handleSettingMode,
   handleBackgroundColor,
-  handleParagraphMode,
-  handleReadingRuler,
-  handleSpeedReading,
-  handleAutoReading,
-  handleReaderMode,
-  handleMergeWord,
 } from "../../../store/actions";
 
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     renderBookFunc: state.book.renderBookFunc,
-    plugins: state.manager.plugins,
-    htmlBook: state.reader.htmlBook,
-    isAuthed: state.manager.isAuthed as boolean,
   };
 };
 const actionCreator = {
@@ -32,15 +21,7 @@ const actionCreator = {
   handleHideHeader,
   handleHideBackground,
   handleShowBorder,
-  handleSetting,
-  handleSettingMode,
   handleBackgroundColor,
-  handleParagraphMode,
-  handleReadingRuler,
-  handleSpeedReading,
-  handleAutoReading,
-  handleReaderMode,
-  handleMergeWord,
 };
 export default connect(
   mapStateToProps,

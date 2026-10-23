@@ -35,6 +35,12 @@ export function handleScalePageDialog(isScaleOpen: boolean) {
 export function handlePdfCropDialog(isPdfCropOpen: boolean) {
   return { type: "HANDLE_PDF_CROP_DIALOG", payload: isPdfCropOpen };
 }
+export function handleStudyLangDialog(isStudyLangOpen: boolean) {
+  return { type: "HANDLE_STUDY_LANG_DIALOG", payload: isStudyLangOpen };
+}
+export function handleAssistReadDialog(isAssistReadOpen: boolean) {
+  return { type: "HANDLE_ASSIST_READ_DIALOG", payload: isAssistReadOpen };
+}
 export function handleSpeechDialog(isSpeechOpen: boolean) {
   return { type: "HANDLE_SPEECH_DIALOG", payload: isSpeechOpen };
 }
