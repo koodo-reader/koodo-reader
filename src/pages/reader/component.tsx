@@ -701,6 +701,9 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             )}
             <div
               className="reader-setting-icon-container"
+              aria-label={this.props.t("Toggle menu")}
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={this.props.t("Toggle menu")}
               onClick={() => {
                 this.handleEnterReader("left");
                 this.handleEnterReader("right");
