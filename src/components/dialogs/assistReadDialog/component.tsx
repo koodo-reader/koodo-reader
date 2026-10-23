@@ -5,7 +5,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook } from "../../../utils/common";
 import SliderList from "../../readerSettings/sliderList";
 import { AssistReadDialogProps, AssistReadDialogState } from "./interface";
-import "./assistReadDialog.css";
+import "../scalePageDialog/scalePageDialog.css";
 
 const readingRulerSliderConfigs = [
   {
@@ -208,41 +208,32 @@ class AssistReadDialog extends React.Component<
   renderSwitch = (
     title: string,
     isEnabled: boolean,
-    onClick: () => void,
-    description?: string
+    onClick: () => void
   ) => {
     return (
-      <div>
-        <div className="single-control-switch-container assist-read-option-row">
-          <span className="single-control-switch-title">
-            <Trans>{title}</Trans>
-          </span>
+      <div className="scale-page-fit-switch" onClick={onClick}>
+        <span className="scale-page-fit-switch-title">
+          <Trans>{title}</Trans>
+        </span>
+        <span
+          className="single-control-switch"
+          style={isEnabled ? {} : { opacity: 0.6 }}
+        >
           <span
-            className="single-control-switch"
-            onClick={onClick}
-            style={isEnabled ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                !isEnabled
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        {description && (
-          <p className="setting-option-subtitle assist-read-description">
-            <Trans>{description}</Trans>
-          </p>
-        )}
+            className="single-control-button"
+            style={
+              !isEnabled
+                ? {
+                    transform: "translateX(0px)",
+                    transition: "transform 0.5s ease",
+                  }
+                : {
+                    transform: "translateX(20px)",
+                    transition: "transform 0.5s ease",
+                  }
+            }
+          ></span>
+        </span>
       </div>
     );
   };
@@ -250,7 +241,7 @@ class AssistReadDialog extends React.Component<
   render() {
     return (
       <div
-        className="sort-dialog-container assist-read-dialog-container"
+        className="sort-dialog-container scale-page-dialog-container assist-read-dialog-container"
         onMouseLeave={() => {
           this.props.handleAssistReadDialog(false);
         }}
@@ -260,13 +251,11 @@ class AssistReadDialog extends React.Component<
         style={{
           left: "auto",
           top: "50px",
-          width: "300px",
+          width: "280px",
           right:
             this.props.isSettingLocked || this.props.isDockedRight ? 325 : 20,
           overflowY: "auto",
           maxHeight: "calc(100vh - 80px)",
-          padding: "12px 14px 16px",
-          boxSizing: "border-box",
         }}
       >
         <ul className="sort-by-category">
