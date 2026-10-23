@@ -349,6 +349,21 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.handleEnterReader(position);
     }
   };
+  handleDialogButtonHover = (
+    handleDialog: (isOpen: boolean) => void,
+    dialogSelector: string
+  ) => ({
+    onMouseEnter: () => {
+      handleDialog(true);
+    },
+    onMouseLeave: () => {
+      window.setTimeout(() => {
+        if (!document.querySelector(`${dialogSelector}:hover`)) {
+          handleDialog(false);
+        }
+      }, 200);
+    },
+  });
   handleLocation = () => {
     let position = this.props.htmlBook.rendition.getPosition();
 
@@ -531,9 +546,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             >
               <div
                 className="reader-setting-icon-container"
-                onClick={() => {
-                  this.props.handleScalePageDialog(!this.props.isScaleOpen);
-                }}
+                {...this.handleDialogButtonHover(
+                  this.props.handleScalePageDialog,
+                  ".scale-page-dialog-container"
+                )}
               >
                 <span
                   className="icon-zoom-in reader-setting-icon"
@@ -547,9 +563,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             this.props.readerMode === "scroll" && (
               <div
                 className="reader-setting-icon-container"
-                onClick={() => {
-                  this.props.handlePdfCropDialog(!this.props.isPdfCropOpen);
-                }}
+                {...this.handleDialogButtonHover(
+                  this.props.handlePdfCropDialog,
+                  ".pdf-crop-dialog-container"
+                )}
               >
                 <span
                   className="icon-crop reader-setting-icon"
@@ -561,9 +578,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           {this.props.currentBook.format === "PDF" && (
             <div
               className="reader-setting-icon-container"
-              onClick={() => {
-                this.props.handleConvertDialog(!this.props.isConvertOpen);
-              }}
+              {...this.handleDialogButtonHover(
+                this.props.handleConvertDialog,
+                ".convert-dialog-container"
+              )}
             >
               <span
                 className="icon-convert-text reader-setting-icon"

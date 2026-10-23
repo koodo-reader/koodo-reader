@@ -100,7 +100,7 @@ class ConvertDialog extends React.Component<
     return (
       <>
         <div
-          className="sort-dialog-container"
+          className="sort-dialog-container convert-dialog-container"
           onMouseLeave={() => {
             this.props.handleConvertDialog(false);
           }}
