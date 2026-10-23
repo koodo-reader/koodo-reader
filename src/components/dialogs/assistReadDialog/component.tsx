@@ -5,7 +5,6 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook } from "../../../utils/common";
 import SliderList from "../../readerSettings/sliderList";
 import { AssistReadDialogProps, AssistReadDialogState } from "./interface";
-import "../scalePageDialog/scalePageDialog.css";
 
 const readingRulerSliderConfigs = [
   {
@@ -69,10 +68,8 @@ class AssistReadDialog extends React.Component<
     this.state = {
       isParagraphMode:
         ConfigService.getReaderConfig("isParagraphMode") === "yes",
-      isReadingRuler:
-        ConfigService.getReaderConfig("isReadingRuler") === "yes",
-      isSpeedReading:
-        ConfigService.getReaderConfig("isSpeedReading") === "yes",
+      isReadingRuler: ConfigService.getReaderConfig("isReadingRuler") === "yes",
+      isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
       isAutoReading: ConfigService.getReaderConfig("isAutoReading") === "yes",
     };
   }
@@ -205,11 +202,7 @@ class AssistReadDialog extends React.Component<
     }
   };
 
-  renderSwitch = (
-    title: string,
-    isEnabled: boolean,
-    onClick: () => void
-  ) => {
+  renderSwitch = (title: string, isEnabled: boolean, onClick: () => void) => {
     return (
       <div className="scale-page-fit-switch" onClick={onClick}>
         <span className="scale-page-fit-switch-title">

@@ -9,7 +9,6 @@ import {
 } from "../../../constants/dropdownList";
 import { detectLocalLanguage } from "../../../utils/common";
 import { StudyLangDialogProps, StudyLangDialogState } from "./interface";
-import "../scalePageDialog/scalePageDialog.css";
 
 class StudyLangDialog extends React.Component<
   StudyLangDialogProps,
