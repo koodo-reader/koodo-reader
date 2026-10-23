@@ -228,7 +228,7 @@
 }
 .reader-setting-icon {
   margin: 8px;
-  opacity: 0.7;
+  opacity: 1;
   width: 50px;
   padding: 15px;
 }
@@ -259,7 +259,9 @@
   z-index: 5;
   left: clamp(
     8px,
-    calc(var(--reader-dialog-anchor-x, 50%) - var(--reader-dialog-width, 280px) / 2),
+    calc(
+      var(--reader-dialog-anchor-x, 50%) - var(--reader-dialog-width, 280px) / 2
+    ),
     calc(100% - var(--reader-dialog-width, 280px) - 8px)
   );
   transition: left 0.2s ease;
