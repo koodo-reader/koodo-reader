@@ -28,11 +28,8 @@ class ScalePageDialog extends React.Component<ScalePageDialogProps> {
           this.props.handleScalePageDialog(true);
         }}
         style={{
-          left: "auto",
           top: "50px",
           width: "280px",
-          right:
-            this.props.isSettingLocked || this.props.isDockedRight ? 325 : 20,
         }}
       >
         <ul className="sort-by-category">

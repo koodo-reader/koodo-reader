@@ -240,3 +240,18 @@
 .reader-setting-icon-container:hover {
   border-radius: 50%;
 }
+.sort-dialog-container.scale-page-dialog-container,
+.sort-dialog-container.pdf-crop-dialog-container,
+.sort-dialog-container.convert-dialog-container {
+  --reader-dialog-width: 280px;
+  left: clamp(
+    8px,
+    calc(var(--reader-dialog-anchor-x, 50%) - var(--reader-dialog-width) / 2),
+    calc(100% - var(--reader-dialog-width) - 8px)
+  );
+  right: auto;
+  max-width: calc(100% - 16px);
+}
+.sort-dialog-container.convert-dialog-container {
+  --reader-dialog-width: 240px;
+}

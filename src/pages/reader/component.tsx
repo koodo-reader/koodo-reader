@@ -355,7 +355,12 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     handleDialog: (isOpen: boolean) => void,
     dialogSelector: string
   ) => ({
-    onMouseEnter: () => {
+    onMouseEnter: (event: React.MouseEvent<HTMLDivElement>) => {
+      const rect = event.currentTarget.getBoundingClientRect();
+      document.documentElement.style.setProperty(
+        "--reader-dialog-anchor-x",
+        `${rect.left + rect.width / 2}px`
+      );
       handleDialog(true);
     },
     onMouseLeave: () => {
