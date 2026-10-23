@@ -20,35 +20,56 @@
 }
 
 .setting-panel-tabs {
+  position: relative;
   display: flex;
-  width: calc(100% - 44px);
-  margin: 0 22px 6px;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+  align-items: stretch;
+  width: calc(100% - 30px);
+  margin: 0 15px 4px;
+  padding: 3px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  border: 1.5px solid var(--text-color);
+  margin-bottom: 10px;
+}
+.setting-panel-tabs-indicator {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  border-radius: 999px;
+  background: var(--filled-bg);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
 }
 .setting-panel-tab {
-  flex: 1;
-  height: 30px;
-  line-height: 30px;
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 28px;
+  line-height: 28px;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  border-radius: 999px;
   box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
   transition:
     opacity 0.15s ease,
-    border-color 0.15s ease;
-  white-space: nowrap;
+    color 0.2s ease;
 }
 .setting-panel-tab:hover {
-  opacity: 0.85;
+  opacity: 0.9;
 }
 .setting-panel-tab.active {
   opacity: 1;
   font-weight: 600;
-  border-bottom-color: currentColor;
+  color: var(--on-filled);
 }
 
 .setting-panel {
