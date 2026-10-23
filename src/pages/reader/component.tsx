@@ -624,7 +624,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                       ? 300
                       : 15,
                 }),
-            zIndex: 16,
+            zIndex: 14,
             width: "max-content",
             display: "flex",
             flexDirection: "column",
