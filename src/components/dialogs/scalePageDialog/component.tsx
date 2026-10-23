@@ -7,6 +7,7 @@ import {
   pageWidthPresetList,
 } from "../../../constants/dropdownList";
 import SliderList from "../../readerSettings/sliderList";
+import SwitchRow from "../../readerSettings/switchRow";
 import { ScalePageDialogProps } from "./interface";
 import "./scalePageDialog.css";
 
@@ -66,8 +67,9 @@ class ScalePageDialog extends React.Component<ScalePageDialogProps> {
             </select>
           </div>
 
-          <div
-            className="scale-page-fit-switch"
+          <SwitchRow
+            title="Fit to page"
+            isEnabled={this.props.isFitPage}
             onClick={() => {
               const next = !this.props.isFitPage;
               ConfigService.setReaderConfig(
@@ -80,30 +82,7 @@ class ScalePageDialog extends React.Component<ScalePageDialogProps> {
                 this.props.renderBookFunc();
               }, 300);
             }}
-          >
-            <span className="scale-page-fit-switch-title">
-              <Trans>Fit to page</Trans>
-            </span>
-            <span
-              className="single-control-switch"
-              style={this.props.isFitPage ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  !this.props.isFitPage
-                    ? {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+          />
         </ul>
       </div>
     );

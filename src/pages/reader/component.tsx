@@ -878,16 +878,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         this.props.isPdfCropOpen ||
         this.props.isStudyLangOpen ||
         this.props.isAssistReadOpen ? (
-          <div
-            className="reader-setting-dialog-anchor"
-            style={
-              {
-                "--reader-dialog-width": this.props.isConvertOpen
-                  ? "240px"
-                  : "280px",
-              } as React.CSSProperties
-            }
-          >
+          <div className="reader-setting-dialog-anchor">
             {(this.props.readerMode === "scroll" ||
               this.props.readerMode === "single") &&
               this.props.isScaleOpen && <ScalePageDialog />}

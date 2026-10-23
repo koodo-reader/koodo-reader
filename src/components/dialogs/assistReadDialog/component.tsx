@@ -1,9 +1,9 @@
 import React from "react";
-import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook } from "../../../utils/common";
 import SliderList from "../../readerSettings/sliderList";
+import SwitchRow from "../../readerSettings/switchRow";
 import { AssistReadDialogProps, AssistReadDialogState } from "./interface";
 
 const readingRulerSliderConfigs = [
@@ -202,35 +202,6 @@ class AssistReadDialog extends React.Component<
     }
   };
 
-  renderSwitch = (title: string, isEnabled: boolean, onClick: () => void) => {
-    return (
-      <div className="scale-page-fit-switch" onClick={onClick}>
-        <span className="scale-page-fit-switch-title">
-          <Trans>{title}</Trans>
-        </span>
-        <span
-          className="single-control-switch"
-          style={isEnabled ? {} : { opacity: 0.6 }}
-        >
-          <span
-            className="single-control-button"
-            style={
-              !isEnabled
-                ? {
-                    transform: "translateX(0px)",
-                    transition: "transform 0.5s ease",
-                  }
-                : {
-                    transform: "translateX(20px)",
-                    transition: "transform 0.5s ease",
-                  }
-            }
-          ></span>
-        </span>
-      </div>
-    );
-  };
-
   render() {
     return (
       <div
@@ -249,37 +220,37 @@ class AssistReadDialog extends React.Component<
         }}
       >
         <ul className="sort-by-category">
-          {this.renderSwitch(
-            "Enable auto reading",
-            this.state.isAutoReading,
-            this.handleAutoReadingToggle
-          )}
+          <SwitchRow
+            title="Enable auto reading"
+            isEnabled={this.state.isAutoReading}
+            onClick={this.handleAutoReadingToggle}
+          />
           {this.state.isAutoReading &&
             autoReadingSliderConfigs.map((item) => (
               <SliderList key={item.mode} {...{ item }} />
             ))}
 
-          {this.renderSwitch(
-            "Enable paragraph mode",
-            this.state.isParagraphMode,
-            this.handleParagraphModeToggle
-          )}
+          <SwitchRow
+            title="Enable paragraph mode"
+            isEnabled={this.state.isParagraphMode}
+            onClick={this.handleParagraphModeToggle}
+          />
 
-          {this.renderSwitch(
-            "Enable reading ruler",
-            this.state.isReadingRuler,
-            this.handleReadingRulerToggle
-          )}
+          <SwitchRow
+            title="Enable reading ruler"
+            isEnabled={this.state.isReadingRuler}
+            onClick={this.handleReadingRulerToggle}
+          />
           {this.state.isReadingRuler &&
             readingRulerSliderConfigs.map((item) => (
               <SliderList key={item.mode} {...{ item }} />
             ))}
 
-          {this.renderSwitch(
-            "Enable speed reading",
-            this.state.isSpeedReading,
-            this.handleSpeedReadingToggle
-          )}
+          <SwitchRow
+            title="Enable speed reading"
+            isEnabled={this.state.isSpeedReading}
+            onClick={this.handleSpeedReadingToggle}
+          />
           {this.state.isSpeedReading &&
             speedReadingSliderConfigs.map((item) => (
               <SliderList key={item.mode} {...{ item }} />
