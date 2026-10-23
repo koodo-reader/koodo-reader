@@ -431,8 +431,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       isElectron && ConfigService.getReaderConfig("isOpenInMain") !== "yes";
     const isMacOS =
       isElectron && window.electronAPI?.runtime?.platform === "darwin";
-    const isMergeWord =
-      ConfigService.getReaderConfig("isMergeWord") === "yes";
+    const isMergeWord = ConfigService.getReaderConfig("isMergeWord") === "yes";
     const showCustomWindowControls =
       isSeparateElectronWindow && (!isMacOS || isMergeWord);
     const renditionProps = {
@@ -619,100 +618,102 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           >
             {this.props.currentBook &&
               !isReadingRawPDF(this.props.currentBook) && (
-              <>
+                <>
+                  <div
+                    className="reader-setting-icon-container"
+                    {...this.handleDialogButtonHover(
+                      this.props.handleStudyLangDialog,
+                      ".study-lang-dialog-container"
+                    )}
+                  >
+                    <span
+                      className="icon-trans reader-setting-icon"
+                      style={{ fontSize: 23 }}
+                    ></span>
+                  </div>
+                  <div
+                    className="reader-setting-icon-container"
+                    {...this.handleDialogButtonHover(
+                      this.props.handleAssistReadDialog,
+                      ".assist-read-dialog-container"
+                    )}
+                  >
+                    <span
+                      className="icon-pencil-ruler reader-setting-icon"
+                      style={{ fontSize: 21 }}
+                    ></span>
+                  </div>
+                </>
+              )}
+            {(this.props.readerMode === "scroll" ||
+              this.props.readerMode === "single") && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                }}
+              >
                 <div
                   className="reader-setting-icon-container"
                   {...this.handleDialogButtonHover(
-                    this.props.handleStudyLangDialog,
-                    ".study-lang-dialog-container"
+                    this.props.handleScalePageDialog,
+                    ".scale-page-dialog-container"
                   )}
                 >
                   <span
-                    className="icon-trans reader-setting-icon"
+                    className="icon-zoom-in reader-setting-icon"
                     style={{ fontSize: 23 }}
                   ></span>
                 </div>
+              </div>
+            )}
+
+            {this.props.currentBook.format === "PDF" &&
+              this.props.readerMode === "scroll" && (
                 <div
                   className="reader-setting-icon-container"
                   {...this.handleDialogButtonHover(
-                    this.props.handleAssistReadDialog,
-                    ".assist-read-dialog-container"
+                    this.props.handlePdfCropDialog,
+                    ".pdf-crop-dialog-container"
                   )}
                 >
                   <span
-                    className="icon-pencil-ruler reader-setting-icon"
-                    style={{ fontSize: 21 }}
+                    className="icon-crop reader-setting-icon"
+                    style={{ fontSize: 24 }}
                   ></span>
                 </div>
-              </>
-            )}
-          {(this.props.readerMode === "scroll" ||
-            this.props.readerMode === "single") && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
-            >
+              )}
+
+            {this.props.currentBook.format === "PDF" && (
               <div
                 className="reader-setting-icon-container"
                 {...this.handleDialogButtonHover(
-                  this.props.handleScalePageDialog,
-                  ".scale-page-dialog-container"
+                  this.props.handleConvertDialog,
+                  ".convert-dialog-container"
                 )}
               >
                 <span
-                  className="icon-zoom-in reader-setting-icon"
-                  style={{ fontSize: 23 }}
-                ></span>
-              </div>
-            </div>
-          )}
-
-          {this.props.currentBook.format === "PDF" &&
-            this.props.readerMode === "scroll" && (
-              <div
-                className="reader-setting-icon-container"
-                {...this.handleDialogButtonHover(
-                  this.props.handlePdfCropDialog,
-                  ".pdf-crop-dialog-container"
-                )}
-              >
-                <span
-                  className="icon-crop reader-setting-icon"
-                  style={{ fontSize: 24 }}
+                  className="icon-convert-text reader-setting-icon"
+                  style={{ fontSize: 26 }}
                 ></span>
               </div>
             )}
-
-          {this.props.currentBook.format === "PDF" && (
             <div
               className="reader-setting-icon-container"
-              {...this.handleDialogButtonHover(
-                this.props.handleConvertDialog,
-                ".convert-dialog-container"
-              )}
+              onClick={() => {
+                this.handleEnterReader("left");
+                this.handleEnterReader("right");
+                this.handleEnterReader("bottom");
+                this.handleEnterReader("top");
+              }}
             >
               <span
-                className="icon-convert-text reader-setting-icon"
-                style={{ fontSize: 26 }}
+                className="icon-grid reader-setting-icon"
+                style={{ fontSize: 20 }}
               ></span>
             </div>
-          )}
-          {showCustomWindowControls && <WindowControls t={this.props.t} />}
-          </div>
-          <div
-            className="next-chapter-single-container"
-            style={{ transform: "rotate(0deg)", marginLeft: "8px" }}
-            onClick={() => {
-              this.handleEnterReader("left");
-              this.handleEnterReader("right");
-              this.handleEnterReader("bottom");
-              this.handleEnterReader("top");
-            }}
-          >
-            <span className="icon-grid next-chapter-single"></span>
+            {showCustomWindowControls && <WindowControls t={this.props.t} />}
           </div>
         </div>
         {this.props.isSettingOpen && (
