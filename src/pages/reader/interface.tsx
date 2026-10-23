@@ -11,6 +11,8 @@ export interface ReaderProps {
   isConvertOpen: boolean;
   isScaleOpen: boolean;
   isPdfCropOpen: boolean;
+  isStudyLangOpen: boolean;
+  isAssistReadOpen: boolean;
   isSpeechOpen: boolean;
   isAnnotationOpen: boolean;
   isOpenPopupOptionDialog: boolean;
@@ -26,6 +28,8 @@ export interface ReaderProps {
   handleConvertDialog: (isConvertOpen: boolean) => void;
   handleScalePageDialog: (isScaleOpen: boolean) => void;
   handlePdfCropDialog: (isPdfCropOpen: boolean) => void;
+  handleStudyLangDialog: (isStudyLangOpen: boolean) => void;
+  handleAssistReadDialog: (isAssistReadOpen: boolean) => void;
   handleSpeechDialog: (isSpeechOpen: boolean) => void;
   handleAnnotationDialog: (isAnnotationOpen: boolean) => void;
   handleMenuMode: (menuMode: string) => void;

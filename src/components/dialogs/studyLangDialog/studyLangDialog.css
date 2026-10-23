@@ -1,0 +1,33 @@
+.study-lang-dialog-container {
+  padding: 12px 14px 16px;
+  box-sizing: border-box;
+}
+.study-lang-dialog-container .sort-by-category {
+  margin: 0;
+  padding: 0;
+}
+.study-lang-dialog-container .setting-dialog-new-title {
+  margin-left: 0;
+  width: 100%;
+  align-items: center;
+  box-sizing: border-box;
+  gap: 10px;
+}
+.study-lang-dialog-container .study-lang-option-row,
+.study-lang-dialog-container .study-lang-level-row,
+.study-lang-dialog-container .study-lang-switch-row {
+  margin-bottom: 8px;
+}
+.study-lang-dialog-container .lang-setting-dropdown {
+  width: 130px;
+  flex-shrink: 0;
+}
+.study-lang-dialog-container .single-control-switch {
+  flex-shrink: 0;
+}
+.study-lang-dialog-container .study-lang-description {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.8;
+}

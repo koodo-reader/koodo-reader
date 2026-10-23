@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  dropdownList,
-  fullTranslationLangList,
-} from "../../../constants/dropdownList";
+import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
 import { DropdownListProps, DropdownListState } from "./interface";
@@ -34,15 +31,6 @@ class DropdownList extends React.Component<
       currentBookLayoutValue: ConfigService.getReaderConfig("bookLayout") || "",
       currentCodeHighlighterValue:
         ConfigService.getReaderConfig("codeHighlight") || "",
-      fullTranslationModeValue: ConfigService.getAllListConfig(
-        "fullTranslationBooks"
-      ).includes(props.currentBook?.key)
-        ? ConfigService.getReaderConfig("fullTranslationMode") || ""
-        : "",
-      fullTranslationTargetValue:
-        ConfigService.getReaderConfig("fullTranslationTarget") ||
-        ConfigService.getReaderConfig("lang") ||
-        "zhCN",
       fontOptions: [],
       currentTextOrientationValue:
         ConfigService.getReaderConfig("textOrientation") || "",
@@ -57,11 +45,6 @@ class DropdownList extends React.Component<
   UNSAFE_componentWillReceiveProps(nextProps: DropdownListProps) {
     if (nextProps.currentBook?.key !== this.props.currentBook?.key) {
       this.setState({
-        fullTranslationModeValue: ConfigService.getAllListConfig(
-          "fullTranslationBooks"
-        ).includes(nextProps.currentBook?.key)
-          ? ConfigService.getReaderConfig("fullTranslationMode") || ""
-          : "",
         currentTxtParserValue:
           ConfigService.getObjectConfig(
             nextProps.currentBook?.key,
@@ -159,33 +142,6 @@ class DropdownList extends React.Component<
           currentCodeHighlighterValue: arr[0],
         });
         break;
-      case "fullTranslationMode":
-        this.setState({
-          fullTranslationModeValue: arr[0],
-        });
-        if (arr[0] === "no" || arr[0] === "") {
-          ConfigService.deleteListConfig(
-            this.props.currentBook.key,
-            "fullTranslationBooks"
-          );
-        } else {
-          if (!this.props.isAuthed) {
-            this.setState({
-              fullTranslationModeValue: "no",
-            });
-            toast(this.props.t("Please upgrade to Pro to use this feature"));
-            this.props.handleSetting(true);
-            this.props.handleSettingMode("account");
-            ConfigService.setReaderConfig("fullTranslationMode", "no");
-            return;
-          }
-          ConfigService.setListConfig(
-            this.props.currentBook.key,
-            "fullTranslationBooks"
-          );
-        }
-        toast.success(this.props.t("Setup successful"));
-        break;
       case "textOrientation":
         this.setState({
           currentTextOrientationValue: arr[0],
@@ -226,6 +182,9 @@ class DropdownList extends React.Component<
     const renderParagraphCharacter = () => {
       return dropdownList
         .filter((item) => {
+          if (item.value === "fullTranslationMode") {
+            return false;
+          }
           if (isPDF) {
             return item.isPDF;
           }
@@ -236,12 +195,6 @@ class DropdownList extends React.Component<
             <li className="paragraph-character-container">
               <p className="general-setting-title">
                 <Trans>{item.title}</Trans>
-                {item.value === "fullTranslationMode" && (
-                  <span style={{ fontSize: "13px", color: "#f16464" }}>
-                    {" "}
-                    (Pro)
-                  </span>
-                )}
               </p>
               <select
                 name=""
@@ -259,15 +212,13 @@ class DropdownList extends React.Component<
                             ? this.state.currentBookLayoutValue
                             : item.value === "codeHighlight"
                               ? this.state.currentCodeHighlighterValue
-                              : item.value === "fullTranslationMode"
-                                ? this.state.fullTranslationModeValue
-                                : item.value === "textOrientation"
-                                  ? this.state.currentTextOrientationValue
-                                  : item.value === "fontFamily"
-                                    ? this.state.currentFontFamilyValue
-                                    : item.value === "selectAction"
-                                      ? this.state.currentSelectActionValue
-                                      : this.state.currentSubFontFamilyValue
+                              : item.value === "textOrientation"
+                                ? this.state.currentTextOrientationValue
+                                : item.value === "fontFamily"
+                                  ? this.state.currentFontFamilyValue
+                                  : item.value === "selectAction"
+                                    ? this.state.currentSelectActionValue
+                                    : this.state.currentSubFontFamilyValue
                 }
                 onChange={(event) => {
                   this.handleView(event, item.value);
@@ -304,48 +255,6 @@ class DropdownList extends React.Component<
                 )}
               </select>
             </li>
-            {item.value === "fullTranslationMode" &&
-              (this.state.fullTranslationModeValue === "both" ||
-                this.state.fullTranslationModeValue === "target") && (
-                <li className="paragraph-character-container">
-                  <p className="general-setting-title">
-                    <Trans>Target translation language</Trans>
-                  </p>
-                  <select
-                    className="general-setting-dropdown"
-                    value={
-                      fullTranslationLangList.find(
-                        (opt) =>
-                          opt.code === this.state.fullTranslationTargetValue ||
-                          KookitConfig.ConvertLangMap[opt.code] ===
-                            KookitConfig.ConvertLangMap[
-                              this.state.fullTranslationTargetValue
-                            ]
-                      )?.code || this.state.fullTranslationTargetValue
-                    }
-                    onChange={(event) => {
-                      const val = event.target.value;
-                      this.setState({ fullTranslationTargetValue: val });
-                      ConfigService.setReaderConfig(
-                        "fullTranslationTarget",
-                        val
-                      );
-                      toast(this.props.t("Change successful"));
-                      this.props.renderBookFunc();
-                    }}
-                  >
-                    {fullTranslationLangList.map((opt) => (
-                      <option
-                        key={opt.code}
-                        value={opt.code}
-                        className="general-setting-option"
-                      >
-                        {this.props.t(opt.label)}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-              )}
           </React.Fragment>
         ));
     };
