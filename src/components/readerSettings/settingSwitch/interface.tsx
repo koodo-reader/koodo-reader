@@ -1,6 +1,7 @@
 import BookModel from "../../../models/Book";
 export interface SettingSwitchProps {
   currentBook: BookModel;
+  group?: string;
   renderBookFunc: () => void;
   handleHideFooter: (isHideFooter: boolean) => void;
   handleHideHeader: (isHideHeader: boolean) => void;

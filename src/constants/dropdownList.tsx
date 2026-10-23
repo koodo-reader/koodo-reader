@@ -53,6 +53,7 @@ export const codeHighlightLangList = [
 export const dropdownList = [
   {
     title: "Book layout",
+    group: "layout",
     value: "bookLayout",
     option: [
       { label: "Default", value: "" },
@@ -70,12 +71,14 @@ export const dropdownList = [
   },
   {
     title: "Code highlighting",
+    group: "more",
     value: "codeHighlight",
     option: codeHighlightLangList,
     isPDF: false,
   },
   {
     title: "Default font family",
+    group: "font",
     value: "fontFamily",
     option: [{ label: "Built-in font", value: "Built-in font" }],
     isPDF: false,
@@ -83,6 +86,7 @@ export const dropdownList = [
 
   {
     title: "Line height",
+    group: "layout",
     value: "lineHeight",
     option: [
       { label: "Default", value: "" },
@@ -96,6 +100,7 @@ export const dropdownList = [
   },
   {
     title: "Text alignment",
+    group: "layout",
     value: "textAlign",
     option: [
       { label: "Default", value: "" },
@@ -107,6 +112,7 @@ export const dropdownList = [
   },
   {
     title: "Text orientation",
+    group: "layout",
     value: "textOrientation",
     option: [
       { label: "Default", value: "" },
@@ -117,6 +123,7 @@ export const dropdownList = [
   },
   {
     title: "Conversion of Chinese",
+    group: "more",
     value: "convertChinese",
     option: [
       { label: "Default", value: "" },
@@ -133,6 +140,7 @@ export const dropdownList = [
   },
   {
     title: "Page turning animation",
+    group: "more",
     value: "animation",
     option: [
       { label: "None", value: "none" },
@@ -143,6 +151,7 @@ export const dropdownList = [
   },
   {
     title: "Action after selecting text",
+    group: "more",
     value: "selectAction",
     option: [
       { label: "Default", value: "" },
@@ -171,6 +180,7 @@ export const dropdownList = [
   },
   {
     title: "Full text translation",
+    group: "more",
     value: "fullTranslationMode",
     option: [
       { label: "Disable", value: "no" },
@@ -187,6 +197,7 @@ export const dropdownList = [
   },
   {
     title: "CJK font family",
+    group: "font",
     value: "subFontFamily",
     option: [{ label: "Built-in font", value: "Built-in font" }],
     isPDF: false,
@@ -264,6 +275,7 @@ export const sliderConfigs = [
     maxLabel: "80",
     step: 1,
     title: "Font size",
+    group: "font",
     isPDF: false,
   },
   {
@@ -274,6 +286,7 @@ export const sliderConfigs = [
     maxLabel: "80",
     step: 5,
     title: "Margin",
+    group: "layout",
     isPDF: true,
   },
   {
@@ -284,6 +297,7 @@ export const sliderConfigs = [
     maxLabel: "20",
     step: 1,
     title: "Letter spacing",
+    group: "font",
     isPDF: false,
   },
   {
@@ -294,6 +308,7 @@ export const sliderConfigs = [
     maxLabel: "120",
     step: 1,
     title: "Paragraph spacing",
+    group: "layout",
     isPDF: false,
   },
   {
@@ -304,6 +319,7 @@ export const sliderConfigs = [
     maxLabel: "1",
     step: 0.1,
     title: "Brightness",
+    group: "theme",
     isPDF: true,
   },
 ];

@@ -182,6 +182,9 @@ class DropdownList extends React.Component<
     const renderParagraphCharacter = () => {
       return dropdownList
         .filter((item) => {
+          if (this.props.group && item.group !== this.props.group) {
+            return false;
+          }
           if (item.value === "fullTranslationMode") {
             return false;
           }
