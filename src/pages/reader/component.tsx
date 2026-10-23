@@ -570,7 +570,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <div
           style={{
             position: "absolute",
-            top: "10px",
+            top: "0px",
             right:
               this.props.isSettingLocked || this.props.isDockedRight ? 300 : 15,
             zIndex: 10,
