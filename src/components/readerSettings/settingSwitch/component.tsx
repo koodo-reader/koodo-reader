@@ -82,101 +82,109 @@ class SettingSwitch extends React.Component<
   };
 
   render() {
+    const isMoreGroup = !this.props.group || this.props.group === "more";
     return (
       <>
-        <div style={{ margin: "20px", textAlign: "center" }}>
-          <span
-            style={{
-              textDecoration: "underline",
-              cursor: "pointer",
-              textAlign: "center",
-            }}
-          >
-            <Trans>
-              {
-                "Full text translation, word definitions, auto reading, paragraph mode, reading ruler and speed reading have been moved to the top right corner of the book page"
-              }
-            </Trans>
-          </span>
-        </div>
-        <SwitchRow
-          variant="panel"
-          title={<Trans>Custom book style (CSS)</Trans>}
-          isEnabled={this.state.isCustomBookCSS}
-          onClick={() => {
-            const next = !this.state.isCustomBookCSS;
-            this.setState({ isCustomBookCSS: next }, () => {
-              ConfigService.setReaderConfig(
-                "isCustomBookCSS",
-                next ? "yes" : "no"
-              );
-              if (!this.state.customBookCSS) {
-                return;
-              }
-              toast(this.props.t("Change successful"));
-              setTimeout(async () => {
-                await this.props.renderBookFunc();
-              }, 500);
-            });
-          }}
-        />
-        {this.state.isCustomBookCSS && (
-          <div style={{ margin: "10px 20px" }}>
-            <textarea
-              className="token-dialog-token-box"
-              placeholder={
-                "/* " + this.props.t("Enter custom CSS here") + " */"
-              }
-              value={this.state.customBookCSS}
-              onChange={(e) => {
-                const val = e.target.value;
-                this.setState({ customBookCSS: val });
-              }}
-              onBlur={() => {
-                ConfigService.setReaderConfig(
-                  "customBookCSS",
-                  this.state.customBookCSS
-                );
-                toast(this.props.t("Change successful"));
-                setTimeout(async () => {
-                  await this.props.renderBookFunc();
-                }, 500);
+        {isMoreGroup && (
+          <>
+            <div style={{ margin: "20px", textAlign: "center" }}>
+              <span
+                style={{
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  textAlign: "center",
+                }}
+              >
+                <Trans>
+                  {
+                    "Full text translation, word definitions, auto reading, paragraph mode, reading ruler and speed reading have been moved to the top right corner of the book page"
+                  }
+                </Trans>
+              </span>
+            </div>
+            <SwitchRow
+              variant="panel"
+              title={<Trans>Custom book style (CSS)</Trans>}
+              isEnabled={this.state.isCustomBookCSS}
+              onClick={() => {
+                const next = !this.state.isCustomBookCSS;
+                this.setState({ isCustomBookCSS: next }, () => {
+                  ConfigService.setReaderConfig(
+                    "isCustomBookCSS",
+                    next ? "yes" : "no"
+                  );
+                  if (!this.state.customBookCSS) {
+                    return;
+                  }
+                  toast(this.props.t("Change successful"));
+                  setTimeout(async () => {
+                    await this.props.renderBookFunc();
+                  }, 500);
+                });
               }}
             />
-          </div>
+            {this.state.isCustomBookCSS && (
+              <div style={{ margin: "10px 20px" }}>
+                <textarea
+                  className="token-dialog-token-box"
+                  placeholder={
+                    "/* " + this.props.t("Enter custom CSS here") + " */"
+                  }
+                  value={this.state.customBookCSS}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    this.setState({ customBookCSS: val });
+                  }}
+                  onBlur={() => {
+                    ConfigService.setReaderConfig(
+                      "customBookCSS",
+                      this.state.customBookCSS
+                    );
+                    toast(this.props.t("Change successful"));
+                    setTimeout(async () => {
+                      await this.props.renderBookFunc();
+                    }, 500);
+                  }}
+                />
+              </div>
+            )}
+            <SwitchRow
+              variant="panel"
+              title={<Trans>Enable seperate style for this book</Trans>}
+              isEnabled={this.state.isSeperateStyle}
+              onClick={async () => {
+                const next = !this.state.isSeperateStyle;
+                if (next) {
+                  ConfigService.setListConfig(
+                    this.props.currentBook.key,
+                    "seperateStyleBooks"
+                  );
+                  this.setState({
+                    isSeperateStyle: true,
+                  });
+                } else {
+                  ConfigService.deleteListConfig(
+                    this.props.currentBook.key,
+                    "seperateStyleBooks"
+                  );
+                  this.setState({
+                    isSeperateStyle: false,
+                  });
+                }
+                toast(this.props.t("Change successful"));
+                this.props.handleBackgroundColor(
+                  ConfigService.getReaderConfig("backgroundColor") || ""
+                );
+                this.props.renderBookFunc();
+              }}
+            />
+          </>
         )}
-        <SwitchRow
-          variant="panel"
-          title={<Trans>Enable seperate style for this book</Trans>}
-          isEnabled={this.state.isSeperateStyle}
-          onClick={async () => {
-            const next = !this.state.isSeperateStyle;
-            if (next) {
-              ConfigService.setListConfig(
-                this.props.currentBook.key,
-                "seperateStyleBooks"
-              );
-              this.setState({
-                isSeperateStyle: true,
-              });
-            } else {
-              ConfigService.deleteListConfig(
-                this.props.currentBook.key,
-                "seperateStyleBooks"
-              );
-              this.setState({
-                isSeperateStyle: false,
-              });
-            }
-            toast(this.props.t("Change successful"));
-            this.props.handleBackgroundColor(
-              ConfigService.getReaderConfig("backgroundColor") || ""
-            );
-            this.props.renderBookFunc();
-          }}
-        />
         {readerSettingList
           .filter((item) => {
+            if (this.props.group && item.group !== this.props.group) {
+              return false;
+            }
             if (isReadingRawPDF(this.props.currentBook)) {
               return item.isPDF;
             }

@@ -12,4 +12,5 @@ export interface SettingPanelProps {
 export interface SettingPanelState {
   isShowMenu: boolean;
   isSettingLocked: boolean;
+  activeTab: string;
 }

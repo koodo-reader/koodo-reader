@@ -19,15 +19,57 @@
   opacity: 1;
 }
 
+.setting-panel-tabs {
+  display: flex;
+  width: calc(100% - 44px);
+  margin: 0 22px 6px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+}
+.setting-panel-tab {
+  flex: 1;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.6;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  box-sizing: border-box;
+  transition:
+    opacity 0.15s ease,
+    border-color 0.15s ease;
+  white-space: nowrap;
+}
+.setting-panel-tab:hover {
+  opacity: 0.85;
+}
+.setting-panel-tab.active {
+  opacity: 1;
+  font-weight: 600;
+  border-bottom-color: currentColor;
+}
+
 .setting-panel {
   opacity: 1;
   width: 100%;
-  height: calc(100% - 55px);
+  height: calc(100% - 87px);
   overflow-y: scroll;
+  overflow-x: hidden;
   box-sizing: border-box;
   padding-top: 5px;
+  animation: setting-panel-fade 0.15s ease-in-out 0s 1;
 
   /* display: none; */
+}
+@keyframes setting-panel-fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 .single-control-switch-container {
   margin: 15px 20px 10px;
