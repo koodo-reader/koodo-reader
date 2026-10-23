@@ -9,7 +9,7 @@ import {
 } from "../../../constants/dropdownList";
 import { detectLocalLanguage } from "../../../utils/common";
 import { StudyLangDialogProps, StudyLangDialogState } from "./interface";
-import "./studyLangDialog.css";
+import "../scalePageDialog/scalePageDialog.css";
 
 class StudyLangDialog extends React.Component<
   StudyLangDialogProps,
@@ -208,7 +208,7 @@ class StudyLangDialog extends React.Component<
     if (!levelItem) return null;
     return (
       <div
-        className="setting-dialog-new-title study-lang-level-row"
+        className="setting-dialog-new-title scale-page-preset-row"
         key={langKey}
       >
         <span>
@@ -250,7 +250,7 @@ class StudyLangDialog extends React.Component<
     ];
     return (
       <div
-        className="sort-dialog-container study-lang-dialog-container"
+        className="sort-dialog-container scale-page-dialog-container study-lang-dialog-container"
         onMouseLeave={() => {
           this.props.handleStudyLangDialog(false);
         }}
@@ -260,17 +260,15 @@ class StudyLangDialog extends React.Component<
         style={{
           left: "auto",
           top: "50px",
-          width: "300px",
+          width: "280px",
           right:
             this.props.isSettingLocked || this.props.isDockedRight ? 325 : 20,
           overflowY: "auto",
           maxHeight: "calc(100vh - 80px)",
-          padding: "12px 14px 16px",
-          boxSizing: "border-box",
         }}
       >
         <ul className="sort-by-category">
-          <div className="setting-dialog-new-title study-lang-option-row">
+          <div className="setting-dialog-new-title scale-page-preset-row">
             <span>
               <Trans>Full text translation</Trans>
               <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
@@ -295,8 +293,8 @@ class StudyLangDialog extends React.Component<
           </div>
           {(this.state.fullTranslationModeValue === "both" ||
             this.state.fullTranslationModeValue === "target") && (
-            <div className="setting-dialog-new-title study-lang-option-row">
-              <span>
+            <div className="setting-dialog-new-title scale-page-preset-row">
+              <span style={{ maxWidth: "120px" }}>
                 <Trans>Target translation language</Trans>
               </span>
               <select
@@ -327,14 +325,18 @@ class StudyLangDialog extends React.Component<
               </select>
             </div>
           )}
-          <div className="setting-dialog-new-title study-lang-switch-row">
-            <span>
+          <div
+            className="scale-page-fit-switch"
+            onClick={() => {
+              this.handleWordDefinitionToggle();
+            }}
+          >
+            <span className="scale-page-fit-switch-title">
               <Trans>Enable word definitions</Trans>
               <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
             </span>
             <span
               className="single-control-switch"
-              onClick={this.handleWordDefinitionToggle}
               style={this.state.isWordDefinition ? {} : { opacity: 0.6 }}
             >
               <span
@@ -353,7 +355,10 @@ class StudyLangDialog extends React.Component<
               ></span>
             </span>
           </div>
-          <p className="setting-option-subtitle study-lang-description">
+          <p
+            className="setting-option-subtitle"
+            style={{ margin: "4px 0 0", fontSize: "13px", lineHeight: 1.5 }}
+          >
             <Trans>
               {"Add definition next to the English, Chinese, Japanese words"}
             </Trans>
