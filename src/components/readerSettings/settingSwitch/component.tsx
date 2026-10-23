@@ -84,7 +84,7 @@ class SettingSwitch extends React.Component<
   render() {
     return (
       <>
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
+        <div style={{ margin: "20px", textAlign: "center" }}>
           <span
             style={{
               textDecoration: "underline",
