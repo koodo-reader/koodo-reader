@@ -576,7 +576,8 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
             zIndex: 10,
             width: "max-content",
             display: "flex",
-            alignItems: "center",
+            flexDirection: "column",
+            alignItems: "flex-end",
             justifyContent: "flex-end",
             opacity: this.state.isNearEdge ? 1 : 0,
             transition: "opacity 0.3s ease",
@@ -587,8 +588,15 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
           onMouseEnter={() => this.setState({ isNearEdge: true })}
           onMouseLeave={() => this.setState({ isNearEdge: false })}
         >
-          {this.props.currentBook &&
-            !isReadingRawPDF(this.props.currentBook) && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
+            {this.props.currentBook &&
+              !isReadingRawPDF(this.props.currentBook) && (
               <>
                 <div
                   className="reader-setting-icon-container"
@@ -670,6 +678,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
               ></span>
             </div>
           )}
+          </div>
           <div
             className="next-chapter-single-container"
             style={{ transform: "rotate(0deg)", marginLeft: "8px" }}
