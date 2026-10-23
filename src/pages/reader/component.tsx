@@ -574,7 +574,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
                 >
                   <span
                     className="icon-ruler reader-setting-icon"
-                    style={{ fontSize: 23 }}
+                    style={{ fontSize: 21 }}
                   ></span>
                 </div>
               </>
