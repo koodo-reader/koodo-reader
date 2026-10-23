@@ -165,6 +165,10 @@ class SettingPanel extends React.Component<
     )
       ? this.state.activeTab
       : "theme";
+    const activeIndex = Math.max(
+      availableTabs.findIndex((item) => item.key === activeTab),
+      0
+    );
     return (
       <div
         className="setting-panel-parent"
@@ -192,6 +196,13 @@ class SettingPanel extends React.Component<
           <Trans>Reading option</Trans>
         </div>
         <div className="setting-panel-tabs">
+          <div
+            className="setting-panel-tabs-indicator"
+            style={{
+              width: `calc((100% - 6px) / ${availableTabs.length})`,
+              transform: `translateX(${activeIndex * 100}%)`,
+            }}
+          ></div>
           {availableTabs.map((item) => (
             <div
               key={item.key}
