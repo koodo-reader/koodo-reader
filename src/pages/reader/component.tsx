@@ -73,6 +73,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
   messageTimer!: NodeJS.Timeout;
   tickTimer!: NodeJS.Timeout;
   private autoShowTimer: NodeJS.Timeout | null = null;
+  private dialogAnchorIcon: HTMLElement | null = null;
   private readingTimeUtil = new ReadingTimeUtil(
     ConfigService,
     isElectron
@@ -153,6 +154,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       READING_PANEL_TOGGLE_EVENT,
       this.handleReadingPanelToggle
     );
+    window.addEventListener("resize", this.updateSettingDialogPosition);
 
     // 进入阅读器后主动展示快捷按钮 3 秒，提示用户位置后自动隐藏
     this.setState({ isNearEdge: true });
@@ -160,6 +162,11 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       this.autoShowTimer = null;
       this.setState({ isNearEdge: false });
     }, 1500);
+  }
+  componentDidUpdate() {
+    if (document.querySelector(".reader-setting-dialog-anchor")) {
+      this.updateSettingDialogPosition();
+    }
   }
   async UNSAFE_componentWillMount() {
     let url = document.location.href;
@@ -213,6 +220,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       READING_PANEL_TOGGLE_EVENT,
       this.handleReadingPanelToggle
     );
+    window.removeEventListener("resize", this.updateSettingDialogPosition);
     if (isElectron) {
       clearDiscordPresence();
     }
@@ -358,18 +366,47 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     this.props.handleStudyLangDialog(false);
     this.props.handleAssistReadDialog(false);
   };
+  updateSettingDialogPosition = () => {
+    const anchor = document.querySelector<HTMLElement>(
+      ".reader-setting-dialog-anchor"
+    );
+    const dialog = anchor?.querySelector<HTMLElement>(".sort-dialog-container");
+    if (!anchor || !dialog) return;
+    const icon = this.dialogAnchorIcon;
+    if (!icon || !icon.isConnected) return;
+    const iconRect = icon.getBoundingClientRect();
+    const iconCenter = iconRect.left + iconRect.width / 2;
+    const viewportWidth =
+      document.documentElement.clientWidth || window.innerWidth;
+    const reservedRight =
+      this.props.isSettingLocked || this.props.isDockedRight ? 300 : 0;
+    const dialogWidth = dialog.offsetWidth;
+    if (!dialogWidth) return;
+    const minLeft = 8;
+    const maxLeft = Math.max(
+      minLeft,
+      viewportWidth - reservedRight - dialogWidth - 8
+    );
+    const left = Math.min(
+      maxLeft,
+      Math.max(minLeft, iconCenter - dialogWidth / 2)
+    );
+    document.documentElement.style.setProperty(
+      "--reader-dialog-anchor-x",
+      `${iconCenter}px`
+    );
+    anchor.style.left = `${left}px`;
+  };
   handleDialogButtonHover = (
     handleDialog: (isOpen: boolean) => void,
     dialogSelector: string
   ) => ({
     onMouseEnter: (event: React.MouseEvent<HTMLDivElement>) => {
-      const iconRect = event.currentTarget.getBoundingClientRect();
-      document.documentElement.style.setProperty(
-        "--reader-dialog-anchor-x",
-        `${iconRect.left + iconRect.width / 2}px`
-      );
+      this.dialogAnchorIcon = event.currentTarget;
       this.closeSettingDialogs();
       handleDialog(true);
+      this.updateSettingDialogPosition();
+      window.requestAnimationFrame(this.updateSettingDialogPosition);
     },
     onMouseLeave: () => {
       window.setTimeout(() => {
