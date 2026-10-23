@@ -12,6 +12,7 @@ import {
 
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import SwitchRow from "../../../components/readerSettings/switchRow";
 
 declare var window: any;
 class GeneralSetting extends React.Component<
@@ -124,53 +125,33 @@ class GeneralSetting extends React.Component<
           style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
           key={item.propName}
         >
-          <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "calc(100% - 100px)" }}>
-              <Trans>{item.title}</Trans>
-            </span>
-
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                switch (item.propName) {
-                  case "isOpenInMain":
-                    this.handleOpenInMain();
-                    break;
-                  case "isAlwaysOnTop":
-                    this.handleAlwaysOnTop();
-                    break;
-                  case "isAutoMaximizeWin":
-                    this.handleMaximizeWin();
-                    break;
-                  case "isAutoLaunch":
-                    this.handleAutoLaunch();
-                    break;
-                  case "isMinimizeToTray":
-                    this.handleMinimizeToTray();
-                    break;
-                  default:
-                    this.handleSetting(item.propName);
-                    break;
-                }
-              }}
-              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state[item.propName]
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+          <SwitchRow
+            variant="setting"
+            title={<Trans>{item.title}</Trans>}
+            isEnabled={this.state[item.propName]}
+            onClick={() => {
+              switch (item.propName) {
+                case "isOpenInMain":
+                  this.handleOpenInMain();
+                  break;
+                case "isAlwaysOnTop":
+                  this.handleAlwaysOnTop();
+                  break;
+                case "isAutoMaximizeWin":
+                  this.handleMaximizeWin();
+                  break;
+                case "isAutoLaunch":
+                  this.handleAutoLaunch();
+                  break;
+                case "isMinimizeToTray":
+                  this.handleMinimizeToTray();
+                  break;
+                default:
+                  this.handleSetting(item.propName);
+                  break;
+              }
+            }}
+          />
           <p className="setting-option-subtitle">
             <Trans>{item.desc}</Trans>
           </p>

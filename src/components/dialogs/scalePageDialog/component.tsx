@@ -68,7 +68,7 @@ class ScalePageDialog extends React.Component<ScalePageDialogProps> {
           </div>
 
           <SwitchRow
-            title="Fit to page"
+            title={<Trans>Fit to page</Trans>}
             isEnabled={this.props.isFitPage}
             onClick={() => {
               const next = !this.props.isFitPage;

@@ -8,6 +8,7 @@ import {
   wordFrequencyList,
 } from "../../../constants/dropdownList";
 import { detectLocalLanguage } from "../../../utils/common";
+import SwitchRow from "../../readerSettings/switchRow";
 import { StudyLangDialogProps, StudyLangDialogState } from "./interface";
 
 class StudyLangDialog extends React.Component<
@@ -321,36 +322,19 @@ class StudyLangDialog extends React.Component<
               </select>
             </div>
           )}
-          <div
-            className="scale-page-fit-switch"
-            onClick={() => {
-              this.handleWordDefinitionToggle();
-            }}
-          >
-            <span className="scale-page-fit-switch-title">
-              <Trans>Enable word definitions</Trans>
-              <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
-            </span>
-            <span
-              className="single-control-switch"
-              style={this.state.isWordDefinition ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  !this.state.isWordDefinition
-                    ? {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+          <SwitchRow
+            title={
+              <>
+                <Trans>Enable word definitions</Trans>
+                <span style={{ fontSize: "13px", color: "#f16464" }}>
+                  {" "}
+                  (Pro)
+                </span>
+              </>
+            }
+            isEnabled={this.state.isWordDefinition}
+            onClick={this.handleWordDefinitionToggle}
+          />
           <p
             className="setting-option-subtitle"
             style={{ margin: "4px 0 0", fontSize: "13px", lineHeight: 1.5 }}

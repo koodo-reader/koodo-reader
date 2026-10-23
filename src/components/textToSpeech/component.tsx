@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 import TTSUtil from "../../utils/reader/ttsUtil";
 import { getTextRules } from "../../utils/common";
 import "./textToSpeech.css";
+import SwitchRow from "../readerSettings/switchRow";
 import { fetchUserInfo } from "../../utils/request/user";
 import { getSplitSentence } from "../../utils/request/reader";
 import { Howl } from "howler";
@@ -1259,43 +1260,26 @@ class TextToSpeech extends React.Component<
           </span>
         </div>
         {/* Multi-role reading section */}
-        <div
-          className="setting-dialog-new-title"
+        <SwitchRow
+          variant="setting"
+          title={
+            <>
+              <Trans>AI multi-role speech</Trans>
+              <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
+            </>
+          }
+          titleStyle={{ width: "calc(100% - 50px)" }}
           style={{
             marginLeft: "20px",
             width: "88%",
             marginTop: "20px",
             fontWeight: 500,
           }}
-        >
-          <span style={{ width: "calc(100% - 50px)" }}>
-            <Trans>AI multi-role speech</Trans>
-            <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
-          </span>
-
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              this.handleMultiRoleToggle(!this.state.multiRoleEnabled);
-            }}
-            style={this.state.multiRoleEnabled ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                this.state.multiRoleEnabled
-                  ? {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
+          isEnabled={this.state.multiRoleEnabled}
+          onClick={() => {
+            this.handleMultiRoleToggle(!this.state.multiRoleEnabled);
+          }}
+        />
         <p
           className="setting-option-subtitle"
           style={{ marginLeft: "20px", marginRight: "20px" }}

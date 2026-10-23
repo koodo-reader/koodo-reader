@@ -100,7 +100,7 @@ class ConvertDialog extends React.Component<
       >
         <ul className="sort-by-category">
           <SwitchRow
-            title="Convert PDF to Text"
+            title={<Trans>Convert PDF to Text</Trans>}
             isEnabled={this.state.isConvertPDF}
             onClick={this.handleConvertToggle}
           />

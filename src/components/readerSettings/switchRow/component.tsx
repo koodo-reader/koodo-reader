@@ -1,25 +1,59 @@
 import React from "react";
-import { Trans } from "react-i18next";
 import { SwitchRowProps } from "./interface";
 
-const SwitchRow = ({ title, isEnabled, onClick }: SwitchRowProps) => {
-  return (
-    <div className="scale-page-fit-switch" onClick={onClick}>
-      <span className="scale-page-fit-switch-title">
-        <Trans>{title}</Trans>
-      </span>
+const SwitchRow = ({
+  title,
+  isEnabled,
+  onClick,
+  variant = "dialog",
+  style,
+  titleStyle,
+}: SwitchRowProps) => {
+  const isDialog = variant === "dialog";
+  const switchNode = (
+    <span
+      className="single-control-switch"
+      onClick={isDialog ? undefined : onClick}
+      style={isEnabled ? {} : { opacity: 0.6 }}
+    >
       <span
-        className="single-control-switch"
-        style={isEnabled ? {} : { opacity: 0.6 }}
-      >
-        <span
-          className="single-control-button"
-          style={{
-            transform: isEnabled ? "translateX(20px)" : "translateX(0px)",
-            transition: "transform 0.5s ease",
-          }}
-        ></span>
+        className="single-control-button"
+        style={{
+          transform: isEnabled ? "translateX(20px)" : "translateX(0px)",
+          transition: "transform 0.5s ease",
+        }}
+      ></span>
+    </span>
+  );
+
+  if (isDialog) {
+    return (
+      <div className="scale-page-fit-switch" style={style} onClick={onClick}>
+        <span className="scale-page-fit-switch-title" style={titleStyle}>
+          {title}
+        </span>
+        {switchNode}
+      </div>
+    );
+  }
+
+  if (variant === "panel") {
+    return (
+      <div className="single-control-switch-container" style={style}>
+        <span className="single-control-switch-title" style={titleStyle}>
+          {title}
+        </span>
+        {switchNode}
+      </div>
+    );
+  }
+
+  return (
+    <div className="setting-dialog-new-title" style={style}>
+      <span style={{ width: "calc(100% - 100px)", ...titleStyle }}>
+        {title}
       </span>
+      {switchNode}
     </div>
   );
 };

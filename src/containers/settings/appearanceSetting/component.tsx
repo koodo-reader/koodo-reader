@@ -15,6 +15,7 @@ import {
 import { themeList } from "../../../constants/themeList";
 import { HexColorPicker } from "react-colorful";
 import { reloadManager, parseColorInput } from "../../../utils/common";
+import SwitchRow from "../../../components/readerSettings/switchRow";
 import FontUtil from "../../../utils/file/fontUtil";
 import {
   applyCustomSystemCSS,
@@ -315,34 +316,14 @@ class AppearanceSetting extends React.Component<
           style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
           key={item.propName}
         >
-          <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "calc(100% - 100px)" }}>
-              <Trans>{item.title}</Trans>
-            </span>
-
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleSetting(item.propName);
-              }}
-              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state[item.propName]
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+          <SwitchRow
+            variant="setting"
+            title={<Trans>{item.title}</Trans>}
+            isEnabled={this.state[item.propName]}
+            onClick={() => {
+              this.handleSetting(item.propName);
+            }}
+          />
           <p className="setting-option-subtitle">
             <Trans>{item.desc}</Trans>
           </p>
@@ -529,42 +510,25 @@ class AppearanceSetting extends React.Component<
             </li>
           ))}
         </ul>
-        <div className="setting-dialog-new-title">
-          <Trans>Custom app style</Trans>
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              const next = !this.state.isCustomSystemCSS;
-              this.setState({ isCustomSystemCSS: next }, () => {
-                ConfigService.setReaderConfig(
-                  "isCustomSystemCSS",
-                  next ? "yes" : "no"
-                );
-                if (!this.state.customSystemCSS) {
-                  return;
-                }
-                applyCustomSystemCSS();
-                this.handleRest(next);
-              });
-            }}
-            style={this.state.isCustomSystemCSS ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                this.state.isCustomSystemCSS
-                  ? {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
+        <SwitchRow
+          variant="setting"
+          title={<Trans>Custom app style</Trans>}
+          isEnabled={this.state.isCustomSystemCSS}
+          onClick={() => {
+            const next = !this.state.isCustomSystemCSS;
+            this.setState({ isCustomSystemCSS: next }, () => {
+              ConfigService.setReaderConfig(
+                "isCustomSystemCSS",
+                next ? "yes" : "no"
+              );
+              if (!this.state.customSystemCSS) {
+                return;
               }
-            ></span>
-          </span>
-        </div>
+              applyCustomSystemCSS();
+              this.handleRest(next);
+            });
+          }}
+        />
         <p className="setting-option-subtitle">
           <Trans>
             Customize the appearance of the entire application with CSS
