@@ -15,5 +15,5 @@ export interface SpeechDialogProps {
   plugins: Plugin[];
 }
 export interface SpeechDialogState {
-  isShowExportAll: boolean;
+
 }

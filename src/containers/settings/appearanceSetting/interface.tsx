@@ -4,7 +4,7 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   t: (title: string) => string;
 }
 export interface SettingInfoState {
-  appSkin: string;
+
   currentThemeIndex: number;
   isShowCustomColorPicker: boolean;
   customColor: string;

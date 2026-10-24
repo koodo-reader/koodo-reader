@@ -26,9 +26,7 @@ const mapStateToProps = (state: stateType) => {
     mode: state.sidebar.mode,
     currentBook: state.book.currentBook,
 
-    isSelectBook: state.manager.isSelectBook,
 
-    deletedBooks: state.manager.deletedBooks,
   };
 };
 const actionCreator = {

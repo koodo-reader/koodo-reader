@@ -21,7 +21,6 @@ class LocalFileDialog extends React.Component<
     super(props);
     this.state = {
       isFinish: false,
-      hasLocalAccess: false,
       status: {
         hasAccess: false,
         needsReauthorization: false,
@@ -69,7 +68,6 @@ class LocalFileDialog extends React.Component<
         toast.dismiss("local-folder-access");
         this.setState({
           isFinish: true,
-          hasLocalAccess: true,
         });
         ConfigService.setItem("isUseLocal", "yes");
         this.showMessage("Local folder access granted successfully");
@@ -142,7 +140,6 @@ class LocalFileDialog extends React.Component<
                   onClick={async () => {
                     await LocalFileManager.ensureDirectoryAccess();
                     this.setState({
-                      hasLocalAccess: true,
                       isFinish: true,
                     });
 

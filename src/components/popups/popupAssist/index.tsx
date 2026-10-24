@@ -2,7 +2,6 @@ import { connect } from "react-redux";
 import {
   handleOpenMenu,
   handleMenuMode,
-  handleFetchPlugins,
   handleSetting,
   handleSettingMode,
   handleQuoteText,
@@ -24,7 +23,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleOpenMenu,
   handleMenuMode,
-  handleFetchPlugins,
   handleSetting,
   handleSettingMode,
   handleQuoteText,

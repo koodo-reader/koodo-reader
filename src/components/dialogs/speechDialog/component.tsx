@@ -10,7 +10,6 @@ class SpeechDialog extends React.Component<
   constructor(props: SpeechDialogProps) {
     super(props);
     this.state = {
-      isShowExportAll: false,
     };
   }
   componentDidMount(): void {

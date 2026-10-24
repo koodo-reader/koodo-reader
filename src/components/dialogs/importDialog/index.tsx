@@ -1,9 +1,5 @@
 import {
   handleImportDialog,
-  handleTokenDialog,
-  handleLoadingDialog,
-  handleFetchBooks,
-  handleImportBookFunc,
   handleSetting,
   handleSettingMode,
   handleSettingDrive,
@@ -16,17 +12,12 @@ import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
     isAuthed: state.manager.isAuthed,
-    isOpenImportDialog: state.backupPage.isOpenImportDialog,
     dataSourceList: state.backupPage.dataSourceList,
     importBookFunc: state.book.importBookFunc,
   };
 };
 const actionCreator = {
   handleImportDialog,
-  handleTokenDialog,
-  handleLoadingDialog,
-  handleFetchBooks,
-  handleImportBookFunc,
   handleSetting,
   handleSettingMode,
   handleSettingDrive,

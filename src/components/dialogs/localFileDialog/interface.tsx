@@ -10,6 +10,5 @@ export interface LocalFileDialogProps extends RouteComponentProps<any> {
 }
 export interface LocalFileDialogState {
   isFinish: boolean;
-  hasLocalAccess: boolean;
   status: any;
 }

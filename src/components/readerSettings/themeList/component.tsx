@@ -35,15 +35,6 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         }),
       isShowTextPicker: false,
       isShowBgPicker: false,
-      currentPresetIndex: KookitConfig.PresetThemeList.findIndex((item) => {
-        return (
-          item.backgroundColor ===
-            (ConfigService.getReaderConfig("backgroundColor") ||
-              "rgba(255,255,255,1)") &&
-          item.textColor ===
-            (ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)")
-        );
-      }),
       bgColorInput: normalizePickerColor(
         ConfigService.getReaderConfig("backgroundColor"),
         "#ffffff"
@@ -77,12 +68,6 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       ConfigService.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
     this.props.renderBookFunc();
-    this.setState({
-      currentPresetIndex: this.getPresetIndex(
-        color,
-        ConfigService.getReaderConfig("textColor") || "rgba(0,0,0,1)"
-      ),
-    });
   };
 
   handlePreviewBgColor = (color: string) => {
@@ -155,11 +140,6 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
         .indexOf(color),
       textColorInput: normalizePickerColor(color, "#000000"),
       pendingTextColor: normalizePickerColor(color, "#000000"),
-      currentPresetIndex: this.getPresetIndex(
-        ConfigService.getReaderConfig("backgroundColor") ||
-          "rgba(255,255,255,1)",
-        color
-      ),
     });
     ConfigService.setReaderConfig("textColor", color);
     this.props.renderBookFunc();
@@ -171,10 +151,10 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
       );
     });
   };
-  handleChoosePreset = (
-    preset: { textColor: string; backgroundColor: string },
-    index: number
-  ) => {
+  handleChoosePreset = (preset: {
+    textColor: string;
+    backgroundColor: string;
+  }) => {
     ConfigService.setReaderConfig("backgroundColor", preset.backgroundColor);
     ConfigService.setReaderConfig("textColor", preset.textColor);
     this.props.handleBackgroundColor(preset.backgroundColor);
@@ -187,7 +167,6 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
     this.setState({
       currentBackgroundIndex: bgIndex,
       currentTextIndex: textIndex,
-      currentPresetIndex: index,
       bgColorInput: normalizePickerColor(preset.backgroundColor, "#ffffff"),
       textColorInput: normalizePickerColor(preset.textColor, "#000000"),
     });
@@ -418,7 +397,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
           <Trans>Theme</Trans>
         </div>
         <div className="preset-theme-list">
-          {KookitConfig.PresetThemeList.map((item, index) => {
+          {KookitConfig.PresetThemeList.map((item) => {
             return (
               <div
                 key={item.key}
@@ -429,7 +408,7 @@ class ThemeList extends React.Component<ThemeListProps, ThemeListState> {
                   borderColor: item.textColor,
                 }}
                 onClick={() => {
-                  this.handleChoosePreset(item, index);
+                  this.handleChoosePreset(item);
                 }}
               >
                 <span className="preset-theme-text">

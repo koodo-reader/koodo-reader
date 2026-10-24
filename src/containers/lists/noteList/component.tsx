@@ -14,7 +14,6 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
     super(props);
     this.state = {
       tag: [],
-      currentSelectedBook: "",
       bookNamesMap: {},
       cardList: [],
     };
@@ -108,7 +107,6 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
                 className="lang-setting-dropdown"
                 onChange={async (event) => {
                   this.setState({
-                    currentSelectedBook: event.target.value,
                     cardList: await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
                       event.target.value,
                       this.props.tabMode

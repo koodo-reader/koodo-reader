@@ -9,5 +9,5 @@ export interface EmptyPageProps extends RouteComponentProps<any> {
   handleMode: (mode: string) => void;
 }
 export interface EmptyPageState {
-  isOpenDelete: boolean;
+
 }

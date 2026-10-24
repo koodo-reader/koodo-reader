@@ -10,7 +10,6 @@ import CollectionDetailDialog from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     currentCollectionKey: state.collection.currentCollectionKey,
-    refreshBookKey: state.manager.refreshBookKey,
   };
 };
 const actionCreator = {

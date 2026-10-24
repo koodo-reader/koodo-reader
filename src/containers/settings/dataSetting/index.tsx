@@ -5,9 +5,8 @@ import { stateType } from "../../../store";
 import { withRouter } from "react-router-dom";
 import { handleFetchBooks } from "../../../store/actions";
 
-const mapStateToProps = (state: stateType) => {
+const mapStateToProps = (_state: stateType) => {
   return {
-    isAuthed: state.manager.isAuthed,
   };
 };
 const actionCreator = { handleFetchBooks };

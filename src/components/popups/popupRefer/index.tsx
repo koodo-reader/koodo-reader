@@ -1,4 +1,4 @@
-import { handleSelection, handleJumpPosition } from "../../../store/actions";
+import { handleJumpPosition } from "../../../store/actions";
 import { connect } from "react-redux";
 import { stateType } from "../../../store";
 import PopupRefer from "./component";
@@ -8,11 +8,9 @@ const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     readerMode: state.reader.readerMode,
-    isChangeDirection: state.viewArea.isChangeDirection,
   };
 };
 const actionCreator = {
-  handleSelection,
   handleJumpPosition,
 };
 export default connect(

@@ -10,7 +10,6 @@ const mapStateToProps = (state: stateType) => {
     isSearch: state.manager.isSearch,
     isReading: state.book.isReading,
     tabMode: state.sidebar.mode,
-    shelfTitle: state.sidebar.shelfTitle,
   };
 };
 const actionCreator = {

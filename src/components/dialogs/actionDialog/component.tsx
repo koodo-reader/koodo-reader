@@ -26,7 +26,6 @@ class ActionDialog extends React.Component<
     this.state = {
       isShowExport: false,
       isShowMark: false,
-      isShowDetail: false,
       isExceed: shouldSubmenuOpenLeft(this.props.left, CONTEXT_MENU_WIDTH),
     };
   }

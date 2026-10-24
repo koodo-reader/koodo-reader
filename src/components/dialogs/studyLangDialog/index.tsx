@@ -13,8 +13,6 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     htmlBook: state.reader.htmlBook,
     isAuthed: state.manager.isAuthed,
-    isSettingLocked: state.reader.isSettingLocked,
-    isDockedRight: state.reader.isDockedRight,
     renderBookFunc: state.book.renderBookFunc,
   };
 };

@@ -24,13 +24,13 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   settingDrive: string;
 }
 export interface SettingInfoState {
-  isTouch: boolean;
-  isPreventTrigger: boolean;
+
+
   isMergeWord: boolean;
 
   isImportPath: boolean;
-  isOpenBook: boolean;
-  isDisablePopup: boolean;
+
+
   isDisableTrashBin: boolean;
   isDeleteShelfBook: boolean;
   isPreventSleep: boolean;
@@ -47,7 +47,7 @@ export interface SettingInfoState {
   isPrecacheBook: boolean;
   isUseBuiltIn: boolean;
   isDeleteOriginal: boolean;
-  isDisablePDFCover: boolean;
+
   isHideShelfBook: boolean;
   isPreventAdd: boolean;
   startupShelf: string;

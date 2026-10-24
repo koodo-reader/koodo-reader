@@ -27,9 +27,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
     super(props);
     this.state = {
       updateLog: "",
-      progress: 0,
-      downloadedMB: 0,
-      totalMB: 0,
       isDownloading: false,
     };
   }
@@ -173,11 +170,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                         ipcRenderer.on(
                           "download-app-progress",
                           (config: any) => {
-                            this.setState({
-                              progress: config.progress,
-                              downloadedMB: config.downloadedMB,
-                              totalMB: config.totalMB,
-                            });
                             toast.loading(
                               this.props.t("Downloading") +
                                 `(${config.downloadedMB} / ${config.totalMB} MB)`,
@@ -195,9 +187,6 @@ class UpdateInfo extends React.Component<UpdateInfoProps, UpdateInfoState> {
                         ipcRenderer.invoke("cancel-download-app", {});
                         this.setState({
                           isDownloading: false,
-                          progress: 0,
-                          downloadedMB: 0,
-                          totalMB: 0,
                         });
                         setTimeout(() => {
                           toast.success(

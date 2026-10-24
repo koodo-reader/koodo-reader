@@ -16,7 +16,6 @@ import { withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
 const mapStateToProps = (state: stateType) => {
   return {
-    isOpenDeleteDialog: state.book.isOpenDeleteDialog,
     currentBook: state.book.currentBook,
     isAuthed: state.manager.isAuthed,
   };

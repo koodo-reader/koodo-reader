@@ -20,9 +20,6 @@ class ContentList extends React.Component<ContentListProps, ContentListState> {
     super(props);
     this.state = {
       chapters: [],
-      isCollapsed: true,
-      currentIndex: -1,
-      currentChapterIndex: 0,
       expandedItems: new Set<string>(), // 存储展开的项目路径
       isExpandContent:
         ConfigService.getReaderConfig("isExpandContent") === "yes",

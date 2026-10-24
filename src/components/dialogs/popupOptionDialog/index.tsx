@@ -7,9 +7,8 @@ import {
 } from "../../../store/actions";
 import { stateType } from "../../../store";
 
-const mapStateToProps = (state: stateType) => {
+const mapStateToProps = (_state: stateType) => {
   return {
-    isOpenPopupOptionDialog: state.backupPage.isOpenPopupOptionDialog,
   };
 };
 

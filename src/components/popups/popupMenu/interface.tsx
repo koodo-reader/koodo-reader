@@ -28,8 +28,6 @@ export interface PopupMenuProps {
   handleFetchNotes: () => void;
 }
 export interface PopupMenuStates {
-  deleteKey: string;
-  isRightEdge: boolean;
   // cfiRange: string;
   rect: DOMRect | null;
 }

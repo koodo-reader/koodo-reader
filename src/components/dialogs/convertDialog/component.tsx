@@ -26,7 +26,6 @@ class ConvertDialog extends React.Component<
   constructor(props: ConvertDialogProps) {
     super(props);
     this.state = {
-      isShowExportAll: false,
       isConvertPDF: ConfigService.getAllListConfig("convertPDFBooks").includes(
         props.currentBook?.key
       ),

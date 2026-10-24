@@ -40,15 +40,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     super(props);
     this.state = {
       totalBooks: parseInt(ConfigService.getReaderConfig("totalBooks")) || 0,
-      favoriteBooks: Object.keys(
-        ConfigService.getAllListConfig("favoriteBooks")
-      ).length,
-      isAuthed: false,
-      isError: false,
-      isCopied: false,
-      isUpdated: false,
       isDrag: false,
-      token: "",
     };
   }
 
@@ -68,13 +60,6 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
     }
     if (nextProps.books && nextProps.books.length === 1 && !this.props.books) {
       this.props.history.push("/manager/home");
-    }
-    if (this.props.mode !== nextProps.mode) {
-      this.setState({
-        favoriteBooks: Object.keys(
-          ConfigService.getAllListConfig("favoriteBooks")
-        ).length,
-      });
     }
   }
   UNSAFE_componentWillMount() {

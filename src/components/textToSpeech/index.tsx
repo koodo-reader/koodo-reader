@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import TextToSpeech from "./component";
 import { stateType } from "../../store";
 import {
-  handleFetchPlugins,
   handleSetting,
   handleSettingMode,
   handleSpeechStartText,
@@ -22,7 +21,6 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleFetchPlugins,
   handleSetting,
   handleSettingMode,
   handleSpeechStartText,

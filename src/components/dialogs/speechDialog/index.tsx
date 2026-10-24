@@ -1,6 +1,5 @@
 import { connect } from "react-redux";
 import {
-  handleSetting,
   handleSpeechDialog,
   handleFetchPlugins,
 } from "../../../store/actions";
@@ -10,16 +9,12 @@ import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    isSpeechOpen: state.reader.isSpeechOpen,
     plugins: state.manager.plugins,
-    isAuthed: state.manager.isAuthed,
-    currentBook: state.book.currentBook,
     isSettingLocked: state.reader.isSettingLocked,
     isDockedRight: state.reader.isDockedRight,
   };
 };
 const actionCreator = {
-  handleSetting,
   handleSpeechDialog,
   handleFetchPlugins,
 };

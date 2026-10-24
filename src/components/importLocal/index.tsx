@@ -1,7 +1,6 @@
 import { connect } from "react-redux";
 import {
   handleFetchBooks,
-  handleLoadingDialog,
   handleImportDialog,
   handleOPDSDialog,
   handleAutoImportDialog,
@@ -27,7 +26,6 @@ const mapStateToProps = (state: stateType) => {
 const actionCreator = {
   handleFetchBooks,
   handleReadingBook,
-  handleLoadingDialog,
   handleImportDialog,
   handleOPDSDialog,
   handleAutoImportDialog,

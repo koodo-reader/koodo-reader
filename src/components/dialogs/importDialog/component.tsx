@@ -37,7 +37,6 @@ class ImportDialog extends React.Component<
   constructor(props: ImportDialogProps) {
     super(props);
     this.state = {
-      isBackup: "",
       currentDrive: "",
       currentPath: "",
       currentFileList: [],

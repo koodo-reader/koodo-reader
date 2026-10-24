@@ -17,7 +17,7 @@ export interface ImportDialogProps extends RouteComponentProps<any> {
   dataSourceList: string[];
 }
 export interface ImportDialogState {
-  isBackup: string;
+
   currentDrive: string;
   currentPath: string;
   currentFileList: {

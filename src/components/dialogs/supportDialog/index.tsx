@@ -1,6 +1,5 @@
 import { connect } from "react-redux";
 import {
-  handleNewWarning,
   handleFetchAuthed,
   handleFetchUserInfo,
   handleLoginOptionList,
@@ -19,7 +18,6 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleNewWarning,
   handleFetchAuthed,
   handleLoginOptionList,
   handleFetchUserInfo,

@@ -19,12 +19,9 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
   constructor(props: SidebarProps) {
     super(props);
     this.state = {
-      mode: "home",
       hoverMode: "",
       hoverShelfTitle: "",
       isCollpaseShelf: false,
-      isOpenDelete: false,
-      shelfTitle: "",
       isCollapsed:
         ConfigService.getReaderConfig("isCollapsed") === "yes" || false,
       isCreateShelf: false,
@@ -61,7 +58,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     }
   }
   handleSidebar = (mode: string) => {
-    this.setState({ mode: mode });
     this.props.handleSelectBook(false);
     this.props.history.push(`/manager/${mode}`);
     this.props.handleMode(mode);
@@ -118,7 +114,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.props.handleFetchBooks();
     this.props.handleShelf(shelfTitle);
     this.props.handleMode("shelf");
-    this.setState({ mode: "" });
     this.props.history.push("/manager/shelf");
   };
   handleFavoriteDrop = (event: React.DragEvent) => {
@@ -139,7 +134,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.props.handleFetchBooks();
     this.props.handleShelf("");
     this.props.handleMode("favorite");
-    this.setState({ mode: "favorite" });
     this.props.history.push("/manager/favorite");
   };
   handleTrashDrop = (event: React.DragEvent) => {
@@ -160,7 +154,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
     this.props.handleFetchBooks();
     this.props.handleShelf("");
     this.props.handleMode("trash");
-    this.setState({ mode: "trash" });
     this.props.history.push("/manager/trash");
   };
   getBookDragHandlers = (
@@ -298,7 +291,6 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               onClick={() => {
                 this.props.handleShelf(item);
                 this.props.handleMode("shelf");
-                this.setState({ mode: "" });
                 this.props.history.push("/manager/shelf");
               }}
               {...this.getBookDragHandlers(item, (event) => {

@@ -20,9 +20,9 @@ export interface PopupDictState {
   prototype: string;
   dictService: string;
   dictTarget: string;
-  dictSource: string;
+
   isAddNew: boolean;
-  isShowUrl: boolean;
+
   aiAnswer: string;
   isAiWaiting: boolean;
   isAiStreaming: boolean;

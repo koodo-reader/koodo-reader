@@ -11,7 +11,6 @@ import {
   handleFetchAuthed,
   handleFetchBookmarks,
   handleFetchDefaultSyncOption,
-  handleFetchLoginOptionList,
   handleFetchDataSourceList,
   handleCloudSyncFunc,
   handleFetchUserInfo,
@@ -25,19 +24,14 @@ import { withRouter } from "react-router-dom";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    isSearch: state.manager.isSearch,
-    isAboutOpen: state.manager.isAboutOpen,
 
     isCollapsed: state.sidebar.isCollapsed,
-    isNewWarning: state.manager.isNewWarning,
     currentBook: state.book.currentBook,
     mode: state.sidebar.mode,
     isAuthed: state.manager.isAuthed,
     defaultSyncOption: state.backupPage.defaultSyncOption,
     userInfo: state.manager.userInfo,
-    isLoadMore: state.manager.isLoadMore,
     isSortDisplay: state.manager.isSortDisplay,
-    bookSortCode: state.manager.bookSortCode,
     importBookFunc: state.book.importBookFunc,
   };
 };
@@ -52,7 +46,6 @@ const actionCreator = {
   handleFetchBookmarks,
   handleFetchAuthed,
   handleFetchDefaultSyncOption,
-  handleFetchLoginOptionList,
   handleFetchDataSourceList,
   handleCloudSyncFunc,
   handleFetchUserInfo,

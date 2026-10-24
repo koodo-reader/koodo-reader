@@ -2,8 +2,6 @@ import { connect } from "react-redux";
 import { stateType } from "../../store";
 import PageWidget from "./component";
 import {
-  handleCurrentChapter,
-  handleCurrentChapterIndex,
   handleJumpPosition,
   handleFetchNotes,
 } from "../../store/actions";
@@ -11,7 +9,6 @@ import { withTranslation } from "react-i18next";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    notes: state.reader.notes,
     currentChapter: state.reader.currentChapter,
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
@@ -22,7 +19,6 @@ const mapStateToProps = (state: stateType) => {
     isHideHeader: state.reader.isHideHeader,
     isShowPageBorder: state.reader.isShowPageBorder,
     textOrientation: state.reader.textOrientation,
-    currentChapterIndex: state.reader.currentChapterIndex,
     htmlBook: state.reader.htmlBook,
     isShowBookmark: state.viewArea.isShowBookmark,
     isAuthed: state.manager.isAuthed,
@@ -30,8 +26,6 @@ const mapStateToProps = (state: stateType) => {
   };
 };
 const actionCreator = {
-  handleCurrentChapter,
-  handleCurrentChapterIndex,
   handleJumpPosition,
   handleFetchNotes,
 };

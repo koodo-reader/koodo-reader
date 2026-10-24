@@ -15,6 +15,5 @@ export interface DeleteIconProps {
   htmlBook: any;
 }
 export interface DeleteIconStates {
-  deleteIndex: number;
   isOpenDelete: boolean;
 }

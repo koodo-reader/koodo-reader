@@ -12,8 +12,6 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
       tagIndex: [],
       isInput: false,
       isEntered: false,
-      deleteIndex: -1,
-      isShowTags: false,
     };
   }
   componentDidMount() {
@@ -83,17 +81,15 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
       document.getElementById("newTag")?.focus();
     });
   };
-  handleShowTags = (bool: boolean) => {
-    this.setState({ isShowTags: bool }, () => {
-      if (document.querySelector(".card-list-container")) {
-        (document.querySelector(".card-list-container") as any)?.setAttribute(
-          "style",
-          `height:calc(100% - ${
-            (document.querySelector(".card-list-container") as any)?.offsetTop
-          }px)`
-        );
-      }
-    });
+  handleShowTags = (_bool: boolean) => {
+    if (document.querySelector(".card-list-container")) {
+      (document.querySelector(".card-list-container") as any)?.setAttribute(
+        "style",
+        `height:calc(100% - ${
+          (document.querySelector(".card-list-container") as any)?.offsetTop
+        }px)`
+      );
+    }
   };
 
   calculateContainerWidth = () => {

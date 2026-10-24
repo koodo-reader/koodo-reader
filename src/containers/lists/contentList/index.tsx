@@ -9,9 +9,7 @@ import {
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    chapters: state.reader.chapters,
     htmlBook: state.reader.htmlBook,
-    renderBookFunc: state.book.renderBookFunc,
     currentChapter: state.reader.currentChapter,
     currentChapterIndex: state.reader.currentChapterIndex,
   };

@@ -6,10 +6,7 @@ import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    isPdfCropOpen: state.reader.isPdfCropOpen,
     currentBook: state.book.currentBook,
-    isSettingLocked: state.reader.isSettingLocked,
-    isDockedRight: state.reader.isDockedRight,
   };
 };
 const actionCreator = {

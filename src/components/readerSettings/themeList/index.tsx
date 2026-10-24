@@ -7,7 +7,6 @@ import { handleBackgroundColor } from "../../../store/actions";
 const mapStateToProps = (state: stateType) => {
   return {
     renderBookFunc: state.book.renderBookFunc,
-    currentBook: state.book.currentBook,
   };
 };
 const actionCreator = { handleBackgroundColor };

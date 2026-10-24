@@ -12,7 +12,6 @@ class EmptyPage extends React.Component<EmptyPageProps, EmptyPageState> {
   constructor(props: EmptyPageProps) {
     super(props);
     this.state = {
-      isOpenDelete: false,
     };
   }
   render() {

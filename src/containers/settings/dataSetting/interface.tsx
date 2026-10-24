@@ -20,7 +20,7 @@ export interface SettingInfoState {
   isEnableMarkdownSync: boolean;
   isEnableEudicSync: boolean;
   isEnableAnkiSync: boolean;
-  isEnableImaSync: boolean;
+
   isEnableSiYuanSync: boolean;
   [key: string]: any;
 }

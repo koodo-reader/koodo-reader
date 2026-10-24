@@ -22,14 +22,9 @@ class GeneralSetting extends React.Component<
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
-      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       isImportPath: ConfigService.getReaderConfig("isImportPath") === "yes",
       isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
-      isPreventTrigger:
-        ConfigService.getReaderConfig("isPreventTrigger") === "yes",
       isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
-      isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
-      isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isDisableTrashBin:
         ConfigService.getReaderConfig("isDisableTrashBin") === "yes",
       isDeleteShelfBook:
@@ -57,8 +52,6 @@ class GeneralSetting extends React.Component<
       isUseBuiltIn: ConfigService.getReaderConfig("isUseBuiltIn") === "yes",
       isDeleteOriginal:
         ConfigService.getReaderConfig("isDeleteOriginal") === "yes",
-      isDisablePDFCover:
-        ConfigService.getReaderConfig("isDisablePDFCover") === "yes",
       startupShelf: ConfigService.getReaderConfig("startupShelf") || "",
     };
   }

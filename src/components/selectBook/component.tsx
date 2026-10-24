@@ -21,12 +21,8 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
   constructor(props: BookListProps) {
     super(props);
     this.state = {
-      isOpenDelete: false,
       isShowExport: false,
       exportSubmenu: "",
-      favoriteBooks: Object.keys(
-        ConfigService.getAllListConfig("favoriteBooks")
-      ).length,
     };
   }
   handleFilterShelfBook = (items: BookModel[]) => {

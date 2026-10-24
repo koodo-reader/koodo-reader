@@ -20,7 +20,7 @@ export interface BookListProps extends RouteComponentProps<any> {
 }
 export interface BookListState {
   isShowExport: boolean;
-  isOpenDelete: boolean;
-  favoriteBooks: number;
+
+
   exportSubmenu: string;
 }

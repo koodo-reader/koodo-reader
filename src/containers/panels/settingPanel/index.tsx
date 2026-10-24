@@ -9,7 +9,6 @@ import {
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    readerMode: state.reader.readerMode,
     backgroundColor: state.reader.backgroundColor,
     isSettingLocked: state.reader.isSettingLocked,
     renderBookFunc: state.book.renderBookFunc,

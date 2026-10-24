@@ -12,7 +12,6 @@ class DeleteIcon extends React.Component<DeleteIconProps, DeleteIconStates> {
   constructor(props: DeleteIconProps) {
     super(props);
     this.state = {
-      deleteIndex: -1,
       isOpenDelete: false,
     };
   }

@@ -37,9 +37,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     this.highlighter = null;
     this.mode = "";
     this.state = {
-      deleteKey: "",
       rect: this.props.rect,
-      isRightEdge: false,
     };
   }
   UNSAFE_componentWillReceiveProps(nextProps: PopupMenuProps) {
@@ -55,18 +53,13 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     }
   }
 
-  handleShowDelete = (deleteKey: string) => {
-    this.setState({ deleteKey });
-  };
   showMenu = () => {
     let rect = this.state.rect;
     if (!rect) return;
-    this.setState({ isRightEdge: false }, () => {
-      let { posX, posY } = this.getHtmlPosition(rect);
-      this.props.handleOpenMenu(true);
-      let popupMenu = document.querySelector(".popup-menu-container");
-      popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
-    });
+    let { posX, posY } = this.getHtmlPosition(rect);
+    this.props.handleOpenMenu(true);
+    let popupMenu = document.querySelector(".popup-menu-container");
+    popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
   };
   getHtmlPosition(rect: any) {
     let pageSize = this.props.rendition.getPageSize(this.props.chapterDocIndex);
@@ -134,7 +127,6 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
   }
 
   openMenu = () => {
-    this.setState({ deleteKey: "" });
     let docs = getIframeDoc(this.props.currentBook);
     let sel: Selection | null = null;
     for (let i = 0; i < docs.length; i++) {

@@ -41,10 +41,6 @@ class SettingPanel extends React.Component<
     const availableTabs = this.getAvailableTabs().map((item) => item.key);
     const savedTab = localStorage.getItem(SETTING_PANEL_TAB_KEY);
     this.state = {
-      isSettingLocked:
-        ConfigService.getReaderConfig("isSettingLocked") === "yes"
-          ? true
-          : false,
       isShowMenu: false,
       activeTab:
         savedTab && availableTabs.includes(savedTab) ? savedTab : "theme",

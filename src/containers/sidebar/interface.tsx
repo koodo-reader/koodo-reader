@@ -18,14 +18,13 @@ export interface SidebarProps extends RouteComponentProps<any> {
 }
 
 export interface SidebarState {
-  mode: string;
   hoverMode: string;
   hoverShelfTitle: string;
   isCollapsed: boolean;
   isCollpaseShelf: boolean;
-  shelfTitle: string;
+
   newShelfName: string;
-  isOpenDelete: boolean;
+
   isCreateShelf: boolean;
   dropTargetShelf: string;
 }

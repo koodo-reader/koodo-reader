@@ -69,17 +69,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   constructor(props: ViewerProps) {
     super(props);
     this.state = {
-      cfiRange: null,
-      contents: null,
       rect: null,
-      key: "",
-      isFirst: true,
-      chapterTitle:
-        ConfigService.getObjectConfig(
-          this.props.currentBook.key,
-          "recordLocation",
-          {}
-        ).chapterTitle || "",
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
       chapterDocIndex: parseInt(

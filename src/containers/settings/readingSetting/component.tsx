@@ -21,24 +21,13 @@ class ReadingSetting extends React.Component<
         ConfigService.getReaderConfig("isPreventTrigger") === "yes",
       isAutoFullscreen:
         ConfigService.getReaderConfig("isAutoFullscreen") === "yes",
-      isPreventAdd: ConfigService.getReaderConfig("isPreventAdd") === "yes",
       isAutoMaximize: ConfigService.getReaderConfig("isAutoMaximize") === "yes",
-      isLemmatizeWord:
-        ConfigService.getReaderConfig("isLemmatizeWord") === "yes",
       isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
       isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
       isManualScroll: ConfigService.getReaderConfig("isManualScroll") === "yes",
       isDisableAutoScroll:
         ConfigService.getReaderConfig("isDisableAutoScroll") === "yes",
-      isDisableTrashBin:
-        ConfigService.getReaderConfig("isDisableTrashBin") === "yes",
-      isDeleteShelfBook:
-        ConfigService.getReaderConfig("isDeleteShelfBook") === "yes",
-      isHideShelfBook:
-        ConfigService.getReaderConfig("isHideShelfBook") === "yes",
-      isPreventSleep: ConfigService.getReaderConfig("isPreventSleep") === "yes",
       isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
-      isPrecacheBook: ConfigService.getReaderConfig("isPrecacheBook") === "yes",
       isOverwriteText:
         ConfigService.getReaderConfig("isOverwriteText") === "yes",
       isOverwriteLink:

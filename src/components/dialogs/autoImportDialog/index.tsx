@@ -7,12 +7,9 @@ import {
   handleFetchBooks,
 } from "../../../store/actions";
 import AutoImportDialog from "./component";
-import { isElectron } from "react-device-detect";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    isElectron,
-    books: state.manager.books,
     importBookFunc: state.book.importBookFunc,
   };
 };
