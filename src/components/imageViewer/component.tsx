@@ -58,7 +58,7 @@ class ImageViewer extends React.Component<ImageViewerProps, ImageViewerStates> {
 
   bindDocEvents = (bind: boolean) => {
     const method = bind ? "addEventListener" : "removeEventListener";
-    getIframeDoc(this.props.currentBook.format).forEach((doc) => {
+    getIframeDoc(this.props.currentBook).forEach((doc) => {
       if (!doc) return;
       doc[method]("click", this.showImage);
       doc[method]("keydown", this.handleKeyDown, true);

@@ -247,7 +247,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
 
       if (dictText.startsWith("https://")) {
         openExternalUrl(dictText, true, "dict");
-        let docs = getIframeDoc(this.props.currentBook.format);
+        let docs = getIframeDoc(this.props.currentBook);
         for (let i = 0; i < docs.length; i++) {
           let doc = docs[i];
           if (!doc) continue;
