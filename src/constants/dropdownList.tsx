@@ -1,5 +1,7 @@
 import i18n from "../i18n";
 import { KookitConfig } from "../assets/lib/kookit-extra-browser.min";
+import type PluginModel from "../models/Plugin";
+import { getBuiltinPluginDefinition } from "../utils/plugins/catalog";
 
 export const fullTranslationLangList = (() => {
   const seen = new Set<string>();
@@ -436,7 +438,13 @@ export const titleSizeList = [
   { label: "4", value: "4" },
   { label: "5", value: "5" },
 ];
-export const ocrEngineList = [
+export interface OcrEngineOption {
+  label: string;
+  value: string;
+  lang: string;
+  isPro?: boolean;
+}
+export const ocrEngineList: OcrEngineOption[] = [
   { label: "Please select", value: "", lang: "" },
   {
     label: "Official AI OCR",
@@ -460,3 +468,22 @@ export const ocrEngineList = [
     lang: "chi_sim",
   },
 ];
+export const getOcrEngineList = (
+  plugins: PluginModel[] = []
+): OcrEngineOption[] => {
+  const pluginOptions = plugins.flatMap((plugin) => {
+    if (plugin.type !== "ocr") return [];
+    const definition = getBuiltinPluginDefinition(plugin.key);
+    if (!definition || definition.type !== "ocr") return [];
+    return [
+      {
+        label: i18n.language.startsWith("zh")
+          ? definition.name.zhCN
+          : definition.name.en,
+        value: plugin.key,
+        lang: "",
+      },
+    ];
+  });
+  return [...ocrEngineList, ...pluginOptions];
+};

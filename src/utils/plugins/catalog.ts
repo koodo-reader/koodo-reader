@@ -6337,14 +6337,13 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     displayName: "Baidu OCR (Standard)",
     icon: "baidu",
     version: "1.0.0",
-    autoValue: "auto",
+    autoValue: "CHN_ENG",
     defaultConfig: {
       apiKey: "[Your API Key]",
       secretKey: "[Your Secret Key]",
       language: "CHN_ENG",
     },
     langList: {
-      auto: "Automatic",
       CHN_ENG: "Chinese & English",
       ENG: "English",
       JAP: "Japanese",
@@ -6378,14 +6377,13 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     displayName: "Baidu OCR (Accurate)",
     icon: "baidu",
     version: "1.0.0",
-    autoValue: "auto",
+    autoValue: "CHN_ENG",
     defaultConfig: {
       apiKey: "[Your API Key]",
       secretKey: "[Your Secret Key]",
       language: "CHN_ENG",
     },
     langList: {
-      auto: "Automatic",
       CHN_ENG: "Chinese & English",
       ENG: "English",
       JAP: "Japanese",
@@ -6736,7 +6734,7 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     displayName: "Azure OCR for Images",
     icon: "ocr",
     version: "1.0.0",
-    autoValue: "auto",
+    autoValue: "unk",
     defaultConfig: {
       endpoint:
         "[Your Endpoint, e.g. https://xxx.cognitiveservices.azure.com]",
@@ -6744,7 +6742,7 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
       language: "unk",
     },
     langList: {
-      auto: "Automatic",
+      unk: "Automatic",
     },
     voiceList: [],
     name: {
@@ -6800,14 +6798,13 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     displayName: "OCR.space",
     icon: "ocr",
     version: "1.0.0",
-    autoValue: "auto",
+    autoValue: "eng",
     defaultConfig: {
       apiKey: "helloworld",
       language: "eng",
       ocrEngine: "2",
     },
     langList: {
-      auto: "Automatic",
       eng: "English",
       chs: "Chinese (Simplified)",
       cht: "Chinese (Traditional)",
