@@ -1,9 +1,6 @@
-import React, { Component } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
-import {
-  AddCollectionDialogProps,
-  AddCollectionDialogState,
-} from "./interface";
+import { AddCollectionDialogProps } from "./interface";
 import "./addCollectionDialog.css";
 import toast from "react-hot-toast";
 import {
@@ -19,172 +16,169 @@ const collectionUtil = new CollectionUtil(ConfigService);
 
 const NEW_COLLECTION_OPTION = "New collection";
 
-class AddCollectionDialog extends Component<
-  AddCollectionDialogProps,
-  AddCollectionDialogState
-> {
-  constructor(props: AddCollectionDialogProps) {
-    super(props);
-    this.state = { isNew: true, collectionKey: "" };
-  }
+const AddCollectionDialog = (props: AddCollectionDialogProps) => {
+  const [isNew, setIsNew] = useState(true);
+  const [collectionKey, setCollectionKey] = useState("");
+  const dialogBooksRef = useRef(props.dialogBooks);
+  dialogBooksRef.current = props.dialogBooks;
 
-  componentWillUnmount() {
-    if (this.props.dialogBooks && this.props.dialogBooks.length > 0) {
-      this.props.handleCollectionDialogBooks([]);
-    }
-  }
+  useEffect(() => {
+    return () => {
+      if (dialogBooksRef.current && dialogBooksRef.current.length > 0) {
+        props.handleCollectionDialogBooks([]);
+      }
+    };
+  }, []);
 
-  handleCancel = () => {
-    this.props.handleAddCollectionDialog(false);
+  const handleCancel = () => {
+    props.handleAddCollectionDialog(false);
   };
 
-  getBookKeys = (): string[] => {
+  const getBookKeys = (): string[] => {
     let bookKeys =
-      this.props.dialogBooks && this.props.dialogBooks.length > 0
-        ? this.props.dialogBooks
-        : this.props.isSelectBook &&
-            this.props.selectedBooks.includes(this.props.currentBook?.key)
-          ? this.props.selectedBooks
-          : this.props.currentBook?.key
-            ? [this.props.currentBook.key]
+      props.dialogBooks && props.dialogBooks.length > 0
+        ? props.dialogBooks
+        : props.isSelectBook &&
+            props.selectedBooks.includes(props.currentBook?.key)
+          ? props.selectedBooks
+          : props.currentBook?.key
+            ? [props.currentBook.key]
             : [];
     return filterNonCollectionKeys(bookKeys).filter((key) => {
       return !collectionUtil.isDeletedKey(key);
     });
   };
 
-  handleComfirm = () => {
-    let collectionKey = this.state.collectionKey;
-    if (this.state.isNew) {
+  const handleComfirm = () => {
+    let targetCollectionKey = collectionKey;
+    if (isNew) {
       const inputElement: HTMLInputElement = document.querySelector(
         ".add-collection-dialog-new-box"
       ) as HTMLInputElement;
       let name = (inputElement?.value || "").trim();
       if (!name) {
-        toast(this.props.t("Collection name is required"));
+        toast(props.t("Collection name is required"));
         return;
       }
       if (collectionUtil.isCollectionNameExists(name)) {
-        toast(this.props.t("Collection name already exists"));
+        toast(props.t("Collection name already exists"));
         return;
       }
       let collection = collectionUtil.createCollection(name, []);
       if (!collection) {
         return;
       }
-      collectionKey = collection.key;
+      targetCollectionKey = collection.key;
     }
-    let collection = collectionUtil.getCollection(collectionKey);
+    let collection = collectionUtil.getCollection(targetCollectionKey);
     if (!collection) {
       return;
     }
-    let bookKeys = this.getBookKeys().filter((key) => {
+    let bookKeys = getBookKeys().filter((key) => {
       return collection!.books.indexOf(key) === -1;
     });
     if (bookKeys.length === 0) {
-      toast(this.props.t("Duplicate book"));
+      toast(props.t("Duplicate book"));
       return;
     }
     let { added, movedFrom } = collectionUtil.addBooksToCollection(
-      collectionKey,
+      targetCollectionKey,
       bookKeys
     );
     if (added > 0 || movedFrom.length > 0) {
       toast.success(
-        this.props.t("Addition successful") + getMovedFromSuffix(movedFrom)
+        props.t("Addition successful") + getMovedFromSuffix(movedFrom)
       );
     }
-    if (this.props.isSelectBook) {
-      this.props.handleSelectBook(false);
-      this.props.handleSelectedBooks([]);
+    if (props.isSelectBook) {
+      props.handleSelectBook(false);
+      props.handleSelectedBooks([]);
     }
-    this.props.handleAddCollectionDialog(false);
-    this.props.handleActionDialog(false);
-    this.props.handleFetchBooks();
+    props.handleAddCollectionDialog(false);
+    props.handleActionDialog(false);
+    props.handleFetchBooks();
   };
 
-  handleChange = (collectionKey: string) => {
-    if (collectionKey === NEW_COLLECTION_OPTION) {
-      this.setState({ isNew: true, collectionKey: "" });
+  const handleChange = (nextCollectionKey: string) => {
+    if (nextCollectionKey === NEW_COLLECTION_OPTION) {
+      setIsNew(true);
+      setCollectionKey("");
     } else {
-      this.setState({ isNew: false, collectionKey });
+      setIsNew(false);
+      setCollectionKey(nextCollectionKey);
     }
   };
 
-  render() {
-    const renderCollectionList = () => {
-      let collections = collectionUtil.getCollectionList();
-      return [
-        <option
-          value={NEW_COLLECTION_OPTION}
-          key={NEW_COLLECTION_OPTION}
-          className="add-collection-dialog-list-option"
-        >
-          {this.props.t("New collection")}
-        </option>,
-        ...collections.map((collection) => {
-          return (
-            <option
-              value={collection.key}
-              key={collection.key}
-              className="add-collection-dialog-list-option"
-            >
-              {collection.name}
-            </option>
-          );
-        }),
-      ];
-    };
-    return (
-      <div className="add-dialog-container">
-        <div className="add-collection-dialog-title">
-          <Trans>Add to collection</Trans>
-        </div>
-        <div className="add-collection-dialog-body">
-          <div className="add-collection-dialog-field">
-            <span className="add-collection-dialog-label">
-              <Trans>Select</Trans>
-            </span>
-            <select
-              className="add-collection-dialog-list-box"
-              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                this.handleChange(event.target.value);
-              }}
-            >
-              {renderCollectionList()}
-            </select>
-          </div>
-          <div className="add-collection-dialog-field">
-            <span className="add-collection-dialog-label">
-              <Trans>New</Trans>
-            </span>
-            <input
-              className="add-collection-dialog-new-box"
-              disabled={!this.state.isNew}
-            />
-          </div>
-        </div>
-        <div className="add-collection-dialog-button-container">
-          <div
-            className="add-collection-dialog-cancel"
-            onClick={() => {
-              this.handleCancel();
+  const renderCollectionList = () => {
+    let collections = collectionUtil.getCollectionList();
+    return [
+      <option
+        value={NEW_COLLECTION_OPTION}
+        key={NEW_COLLECTION_OPTION}
+        className="add-collection-dialog-list-option"
+      >
+        {props.t("New collection")}
+      </option>,
+      ...collections.map((collection) => {
+        return (
+          <option
+            value={collection.key}
+            key={collection.key}
+            className="add-collection-dialog-list-option"
+          >
+            {collection.name}
+          </option>
+        );
+      }),
+    ];
+  };
+
+  return (
+    <div className="add-dialog-container">
+      <div className="add-collection-dialog-title">
+        <Trans>Add to collection</Trans>
+      </div>
+      <div className="add-collection-dialog-body">
+        <div className="add-collection-dialog-field">
+          <span className="add-collection-dialog-label">
+            <Trans>Select</Trans>
+          </span>
+          <select
+            className="add-collection-dialog-list-box"
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+              handleChange(event.target.value);
             }}
           >
-            <Trans>Cancel</Trans>
-          </div>
-          <div
-            className="add-collection-dialog-confirm"
-            onClick={() => {
-              this.handleComfirm();
-            }}
-          >
-            <Trans>Confirm</Trans>
-          </div>
+            {renderCollectionList()}
+          </select>
+        </div>
+        <div className="add-collection-dialog-field">
+          <span className="add-collection-dialog-label">
+            <Trans>New</Trans>
+          </span>
+          <input className="add-collection-dialog-new-box" disabled={!isNew} />
         </div>
       </div>
-    );
-  }
-}
+      <div className="add-collection-dialog-button-container">
+        <div
+          className="add-collection-dialog-cancel"
+          onClick={() => {
+            handleCancel();
+          }}
+        >
+          <Trans>Cancel</Trans>
+        </div>
+        <div
+          className="add-collection-dialog-confirm"
+          onClick={() => {
+            handleComfirm();
+          }}
+        >
+          <Trans>Confirm</Trans>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default AddCollectionDialog;

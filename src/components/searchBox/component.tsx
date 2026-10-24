@@ -1,56 +1,34 @@
-import React from "react";
+import { useEffect, useRef, useState } from "react";
 import "./searchBox.css";
-import { SearchBoxProps, SearchBoxState } from "./interface";
-import { ConfigService, CollectionUtil } from "../../assets/lib/kookit-extra-browser.min";
+import { SearchBoxProps } from "./interface";
+import {
+  ConfigService,
+  CollectionUtil,
+} from "../../assets/lib/kookit-extra-browser.min";
 import ConfigUtil from "../../utils/file/configUtil";
 import BookUtil from "../../utils/file/bookUtil";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 
-class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
-  private searchBoxRef: React.RefObject<HTMLInputElement | null>;
-  constructor(props: SearchBoxProps) {
-    super(props);
-    this.state = {
-      isFocused: false,
-    };
-    this.searchBoxRef = React.createRef<HTMLInputElement>();
-  }
-  componentDidMount() {
-    if (this.props.isNavSearch) {
+const SearchBox = (props: SearchBoxProps) => {
+  const searchBoxRef = useRef<HTMLInputElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    if (props.isNavSearch) {
       let searchBox: any = document.querySelector(".header-search-box");
       searchBox && searchBox.focus();
     }
-  }
-  handleMouse = async () => {
-    let value = this.searchBoxRef.current?.value || "";
-    if (this.props.isNavSearch) {
-      value && this.search(value);
-    }
-    this.setState({ isFocused: false });
-    if (this.props.mode === "nav") {
-      this.props.handleNavSearchState("searching");
-    }
-    let keyword = (
-      document.querySelector(".header-search-box") as HTMLInputElement
-    ).value.toLowerCase();
-    let results = await this.handleGetSearchResults(keyword);
-    if (results) {
-      this.props.handleSearchResults(results);
-      this.props.handleSearch(true);
-      if (this.props.mode === "nav") {
-        this.props.handleNavSearchState("done");
-      }
-    }
-  };
-  handleGetSearchResults = async (keyword: string) => {
+  }, []);
+
+  const handleGetSearchResults = async (keyword: string) => {
     let results =
-      this.props.tabMode === "note"
+      props.tabMode === "note"
         ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
-        : this.props.tabMode === "highlight"
+        : props.tabMode === "highlight"
           ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
           : await BookUtil.searchBooksByKeyword(keyword);
-    if (this.props.tabMode !== "note" && this.props.tabMode !== "highlight") {
+    if (props.tabMode !== "note" && props.tabMode !== "highlight") {
       let lowerKeyword = keyword.toLowerCase();
       collectionUtil.getCollectionList().forEach((collection) => {
         if (collectionUtil.isCollectionDeleted(collection.key)) return;
@@ -63,7 +41,7 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     results = results.filter((result: any) => {
       return !deletedBookKeys.includes(
         result[
-          this.props.tabMode === "note" || this.props.tabMode === "highlight"
+          props.tabMode === "note" || props.tabMode === "highlight"
             ? "bookKey"
             : "key"
         ]
@@ -72,32 +50,11 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
     return results;
   };
 
-  handleKey = async (event: any) => {
-    if (event.keyCode !== 13) {
-      return;
-    }
-    let value = this.searchBoxRef.current?.value || "";
-    if (this.props.isNavSearch || this.props.isReading) {
-      value && this.search(value);
-    }
-    this.setState({ isFocused: false });
-    if (event && event.keyCode === 13) {
-      let keyword = event.target.value.toLowerCase();
-      let results = await this.handleGetSearchResults(keyword);
-      if (results) {
-        this.props.handleSearchResults(results);
-        this.props.handleSearch(true);
-        if (this.props.mode === "nav") {
-          this.props.handleNavSearchState("done");
-        }
-      }
-    }
-  };
-  search = async (q: string) => {
-    this.props.handleNavSearchState("searching");
-    let searchList = await this.props.htmlBook.rendition.doSearch(q);
-    this.props.handleNavSearchState("pending");
-    this.props.handleSearchList(
+  const search = async (q: string) => {
+    props.handleNavSearchState("searching");
+    let searchList = await props.htmlBook.rendition.doSearch(q);
+    props.handleNavSearchState("pending");
+    props.handleSearchList(
       searchList.map((item: any) => {
         const regex = new RegExp(
           q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
@@ -110,100 +67,140 @@ class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
         return item;
       })
     );
-    this.props.handleNavSearchState("done");
+    props.handleNavSearchState("done");
   };
 
-  handleCancel = () => {
-    if (this.props.isNavSearch) {
-      this.props.handleSearchList(null);
-      this.props.handleNavSearchState("done");
+  const handleMouse = async () => {
+    let value = searchBoxRef.current?.value || "";
+    if (props.isNavSearch) {
+      value && search(value);
     }
-    this.props.handleSearch(false);
+    setIsFocused(false);
+    if (props.mode === "nav") {
+      props.handleNavSearchState("searching");
+    }
+    let keyword = (
+      document.querySelector(".header-search-box") as HTMLInputElement
+    ).value.toLowerCase();
+    let results = await handleGetSearchResults(keyword);
+    if (results) {
+      props.handleSearchResults(results);
+      props.handleSearch(true);
+      if (props.mode === "nav") {
+        props.handleNavSearchState("done");
+      }
+    }
+  };
+
+  const handleKey = async (event: any) => {
+    if (event.keyCode !== 13) {
+      return;
+    }
+    let value = searchBoxRef.current?.value || "";
+    if (props.isNavSearch || props.isReading) {
+      value && search(value);
+    }
+    setIsFocused(false);
+    if (event && event.keyCode === 13) {
+      let keyword = event.target.value.toLowerCase();
+      let results = await handleGetSearchResults(keyword);
+      if (results) {
+        props.handleSearchResults(results);
+        props.handleSearch(true);
+        if (props.mode === "nav") {
+          props.handleNavSearchState("done");
+        }
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    if (props.isNavSearch) {
+      props.handleSearchList(null);
+      props.handleNavSearchState("done");
+    }
+    props.handleSearch(false);
     (document.querySelector(".header-search-box") as HTMLInputElement).value =
       "";
   };
 
-  render() {
-    return (
-      <div style={{ position: "relative" }}>
-        <input
-          type="text"
-          ref={this.searchBoxRef}
-          className="header-search-box"
-          onKeyDown={(event) => {
-            this.handleKey(event);
-          }}
-          onFocus={() => {
-            this.setState({ isFocused: true });
+  return (
+    <div style={{ position: "relative" }}>
+      <input
+        type="text"
+        ref={searchBoxRef}
+        className="header-search-box"
+        onKeyDown={(event) => {
+          handleKey(event);
+        }}
+        onFocus={() => {
+          setIsFocused(true);
 
-            if (this.props.mode === "nav") {
-              this.props.handleNavSearchState("focused");
-            }
-          }}
-          placeholder={
-            this.props.isNavSearch || this.props.mode === "nav"
-              ? this.props.t("Search in the Book")
-              : this.props.tabMode === "note"
-                ? this.props.t("Search my notes")
-                : this.props.tabMode === "highlight"
-                  ? this.props.t("Search my highlights")
-                  : this.props.t("Search my library")
+          if (props.mode === "nav") {
+            props.handleNavSearchState("focused");
           }
-          style={
-            this.props.mode === "nav"
-              ? {
-                  width: this.props.width,
-                  height: this.props.height,
-                  paddingRight: "30px",
-                }
-              : {}
+        }}
+        placeholder={
+          props.isNavSearch || props.mode === "nav"
+            ? props.t("Search in the Book")
+            : props.tabMode === "note"
+              ? props.t("Search my notes")
+              : props.tabMode === "highlight"
+                ? props.t("Search my highlights")
+                : props.t("Search my library")
+        }
+        style={
+          props.mode === "nav"
+            ? {
+                width: props.width,
+                height: props.height,
+                paddingRight: "30px",
+              }
+            : {}
+        }
+        onCompositionStart={() => {
+          if (props.mode === "nav") {
+            props.handleNavSearchState("focused");
           }
-          onCompositionStart={() => {
-            if (this.props.mode === "nav") {
-              this.props.handleNavSearchState("focused");
-            }
-            if (this.props.isNavLocked) {
-              return;
-            } else {
-              ConfigService.setReaderConfig("isTempLocked", "yes");
-              ConfigService.setReaderConfig("isNavLocked", "yes");
-            }
+          if (props.isNavLocked) {
+            return;
+          } else {
+            ConfigService.setReaderConfig("isTempLocked", "yes");
+            ConfigService.setReaderConfig("isNavLocked", "yes");
+          }
+        }}
+        onCompositionEnd={() => {
+          if (ConfigService.getReaderConfig("isTempLocked") === "yes") {
+            ConfigService.setReaderConfig("isNavLocked", "");
+            ConfigService.setReaderConfig("isTempLocked", "");
+          }
+        }}
+      />
+      {props.isSearch && !isFocused ? (
+        <span
+          className="header-search-text"
+          onClick={() => {
+            handleCancel();
           }}
-          onCompositionEnd={() => {
-            if (ConfigService.getReaderConfig("isTempLocked") === "yes") {
-              ConfigService.setReaderConfig("isNavLocked", "");
-              ConfigService.setReaderConfig("isTempLocked", "");
-            }
+          style={props.mode === "nav" ? { right: "-9px", top: "14px" } : {}}
+        >
+          <span className="icon-close theme-color-delete"></span>
+        </span>
+      ) : (
+        <span
+          className="header-search-text"
+          onClick={() => {
+            handleMouse();
           }}
-        />
-        {this.props.isSearch && !this.state.isFocused ? (
+        >
           <span
-            className="header-search-text"
-            onClick={() => {
-              this.handleCancel();
-            }}
-            style={
-              this.props.mode === "nav" ? { right: "-9px", top: "14px" } : {}
-            }
-          >
-            <span className="icon-close theme-color-delete"></span>
-          </span>
-        ) : (
-          <span
-            className="header-search-text"
-            onClick={() => {
-              this.handleMouse();
-            }}
-          >
-            <span
-              className="icon-search header-search-icon"
-              style={this.props.mode === "nav" ? { right: "5px" } : {}}
-            ></span>
-          </span>
-        )}
-      </div>
-    );
-  }
-}
+            className="icon-search header-search-icon"
+            style={props.mode === "nav" ? { right: "5px" } : {}}
+          ></span>
+        </span>
+      )}
+    </div>
+  );
+};
 
 export default SearchBox;

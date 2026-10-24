@@ -1,166 +1,153 @@
-import React from "react";
+import { useState } from "react";
 import "./sortDialog.css";
 import { Trans } from "react-i18next";
-import { SortDialogProps, SortDialogState } from "./interface";
+import { SortDialogProps } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
-class SortDialog extends React.Component<SortDialogProps, SortDialogState> {
-  constructor(props: SortDialogProps) {
-    super(props);
-    this.state = {
-      isNote: this.props.mode === "note" || this.props.mode === "highlight",
-    };
-  }
+const SortDialog = (props: SortDialogProps) => {
+  const [isNote] = useState(
+    props.mode === "note" || props.mode === "highlight"
+  );
 
-  handleSort = (code: number) => {
-    if (this.state.isNote) {
-      let noteSortCode = this.props.noteSortCode;
+  const handleSort = (code: number) => {
+    if (isNote) {
+      let noteSortCode = props.noteSortCode;
       noteSortCode.sort = code;
-      this.props.handleNoteSortCode(noteSortCode);
+      props.handleNoteSortCode(noteSortCode);
       ConfigService.setReaderConfig(
         "noteSortCode",
-        JSON.stringify({ sort: code, order: this.props.noteSortCode.order })
+        JSON.stringify({ sort: code, order: props.noteSortCode.order })
       );
-      this.props.handleFetchNotes();
+      props.handleFetchNotes();
     } else {
-      let bookSortCode = this.props.bookSortCode;
+      let bookSortCode = props.bookSortCode;
       bookSortCode.sort = code;
-      this.props.handleBookSortCode(bookSortCode);
+      props.handleBookSortCode(bookSortCode);
       ConfigService.setReaderConfig(
         "bookSortCode",
-        JSON.stringify({ sort: code, order: this.props.bookSortCode.order })
+        JSON.stringify({ sort: code, order: props.bookSortCode.order })
       );
-      this.props.handleFetchBooks();
+      props.handleFetchBooks();
     }
   };
-  handleOrder = (code: number) => {
-    if (this.state.isNote) {
-      let noteSortCode = this.props.noteSortCode;
+  const handleOrder = (code: number) => {
+    if (isNote) {
+      let noteSortCode = props.noteSortCode;
       noteSortCode.order = code;
       ConfigService.setReaderConfig(
         "noteSortCode",
-        JSON.stringify({ sort: this.props.noteSortCode.sort, order: code })
+        JSON.stringify({ sort: props.noteSortCode.sort, order: code })
       );
-      this.props.handleNoteSortCode(noteSortCode);
-      this.props.handleFetchNotes();
+      props.handleNoteSortCode(noteSortCode);
+      props.handleFetchNotes();
     } else {
-      let bookSortCode = this.props.bookSortCode;
+      let bookSortCode = props.bookSortCode;
       bookSortCode.order = code;
       ConfigService.setReaderConfig(
         "bookSortCode",
-        JSON.stringify({ sort: this.props.bookSortCode.sort, order: code })
+        JSON.stringify({ sort: props.bookSortCode.sort, order: code })
       );
-      this.props.handleBookSortCode(bookSortCode);
-      this.props.handleFetchBooks();
+      props.handleBookSortCode(bookSortCode);
+      props.handleFetchBooks();
     }
   };
 
-  render() {
-    let sortCode = this.state.isNote
-      ? this.props.noteSortCode
-      : this.props.bookSortCode;
-    return (
-      <div
-        className="sort-dialog-container"
-        onMouseLeave={() => {
-          this.props.handleSortDisplay(false);
-        }}
-        onMouseEnter={() => {
-          this.props.handleSortDisplay(true);
-        }}
-        style={this.state.isNote ? { height: "132px" } : {}}
-      >
-        {this.state.isNote ? (
-          <ul className="sort-by-category">
-            {["Sort by Date", "Reading progress"].map((item, index) => {
-              return (
-                <li
-                  className="sort-by-category-list"
-                  onClick={() => {
-                    this.handleSort(index + 1);
-                  }}
-                  style={sortCode.sort === index + 1 ? {} : { opacity: 0.34 }}
-                  key={index + 1}
-                >
-                  <Trans>{item}</Trans>
-                  {sortCode.sort === index + 1 && (
-                    <span
-                      className="icon-check"
-                      style={{ fontWeight: "bold" }}
-                    ></span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        ) : (
-          <ul className="sort-by-category">
-            {[
-              "Recently read",
-              "Book name",
-              "Sort by Date",
-              "Reading duration",
-              "Author name",
-              "Reading progress",
-              "File size",
-            ].map((item, index) => {
-              return (
-                <li
-                  className="sort-by-category-list"
-                  onClick={() => {
-                    this.handleSort(index + 1);
-                  }}
-                  style={sortCode.sort === index + 1 ? {} : { opacity: 0.34 }}
-                  key={index + 1}
-                >
-                  <Trans>{item}</Trans>
-                  {sortCode.sort === index + 1 && (
-                    <span
-                      className="icon-check"
-                      style={{ fontWeight: "bold" }}
-                    ></span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-        <div className="sort-dialog-seperator"></div>
-        <ul className="sort-by-order">
-          <li
-            className="sort-by-order-list"
-            onClick={() => {
-              this.handleOrder(1);
-            }}
-            style={sortCode.order === 1 ? {} : { opacity: 0.34 }}
-          >
-            <Trans>Ascend</Trans>
-            {sortCode.order === 1 && (
-              <span
-                className="icon-check"
-                style={{ fontWeight: "bold" }}
-              ></span>
-            )}
-          </li>
-          <li
-            className="sort-by-order-list"
-            onClick={() => {
-              this.handleOrder(2);
-            }}
-            style={sortCode.order === 2 ? {} : { opacity: 0.34 }}
-          >
-            <Trans>Descend</Trans>
-            {sortCode.order === 2 && (
-              <span
-                className="icon-check"
-                style={{ fontWeight: "bold" }}
-              ></span>
-            )}
-          </li>
+  let sortCode = isNote ? props.noteSortCode : props.bookSortCode;
+  return (
+    <div
+      className="sort-dialog-container"
+      onMouseLeave={() => {
+        props.handleSortDisplay(false);
+      }}
+      onMouseEnter={() => {
+        props.handleSortDisplay(true);
+      }}
+      style={isNote ? { height: "132px" } : {}}
+    >
+      {isNote ? (
+        <ul className="sort-by-category">
+          {["Sort by Date", "Reading progress"].map((item, index) => {
+            return (
+              <li
+                className="sort-by-category-list"
+                onClick={() => {
+                  handleSort(index + 1);
+                }}
+                style={sortCode.sort === index + 1 ? {} : { opacity: 0.34 }}
+                key={index + 1}
+              >
+                <Trans>{item}</Trans>
+                {sortCode.sort === index + 1 && (
+                  <span
+                    className="icon-check"
+                    style={{ fontWeight: "bold" }}
+                  ></span>
+                )}
+              </li>
+            );
+          })}
         </ul>
-      </div>
-    );
-  }
-}
+      ) : (
+        <ul className="sort-by-category">
+          {[
+            "Recently read",
+            "Book name",
+            "Sort by Date",
+            "Reading duration",
+            "Author name",
+            "Reading progress",
+            "File size",
+          ].map((item, index) => {
+            return (
+              <li
+                className="sort-by-category-list"
+                onClick={() => {
+                  handleSort(index + 1);
+                }}
+                style={sortCode.sort === index + 1 ? {} : { opacity: 0.34 }}
+                key={index + 1}
+              >
+                <Trans>{item}</Trans>
+                {sortCode.sort === index + 1 && (
+                  <span
+                    className="icon-check"
+                    style={{ fontWeight: "bold" }}
+                  ></span>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      <div className="sort-dialog-seperator"></div>
+      <ul className="sort-by-order">
+        <li
+          className="sort-by-order-list"
+          onClick={() => {
+            handleOrder(1);
+          }}
+          style={sortCode.order === 1 ? {} : { opacity: 0.34 }}
+        >
+          <Trans>Ascend</Trans>
+          {sortCode.order === 1 && (
+            <span className="icon-check" style={{ fontWeight: "bold" }}></span>
+          )}
+        </li>
+        <li
+          className="sort-by-order-list"
+          onClick={() => {
+            handleOrder(2);
+          }}
+          style={sortCode.order === 2 ? {} : { opacity: 0.34 }}
+        >
+          <Trans>Descend</Trans>
+          {sortCode.order === 2 && (
+            <span className="icon-check" style={{ fontWeight: "bold" }}></span>
+          )}
+        </li>
+      </ul>
+    </div>
+  );
+};
 
 export default SortDialog;
