@@ -18,8 +18,6 @@ class DetailDialog extends React.Component<
   constructor(props: DetailDialogProps) {
     super(props);
     this.state = {
-      backgroundColor: "#333",
-      textColor: "#333",
       cover: "",
       isCoverExist: false,
       shelfLocation: [],

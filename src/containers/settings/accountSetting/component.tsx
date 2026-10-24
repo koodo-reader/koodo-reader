@@ -41,14 +41,12 @@ class AccountSetting extends React.Component<
   constructor(props: SettingInfoProps) {
     super(props);
     this.state = {
-      isAddNew: false,
       settingLogin: "",
       loginConfig: {},
       isRedeemCode: false,
       redeemCode: "",
       isSendingCode: false,
       countdown: 0,
-      serverRegion: getServerRegion(),
       showLoginOptions: false,
     };
   }
@@ -741,9 +739,6 @@ class AccountSetting extends React.Component<
                     let newRegion =
                       getServerRegion() === "china" ? "global" : "china";
                     ConfigService.setItem("serverRegion", newRegion);
-                    this.setState({
-                      serverRegion: newRegion,
-                    });
                     resetReaderRequest();
                     resetUserRequest();
                     resetThirdpartyRequest();
@@ -764,9 +759,6 @@ class AccountSetting extends React.Component<
                   return;
                 }
                 ConfigService.setItem("serverRegion", event.target.value);
-                this.setState({
-                  serverRegion: event.target.value,
-                });
                 resetReaderRequest();
                 resetUserRequest();
                 resetThirdpartyRequest();

@@ -10,7 +10,6 @@ export interface ThemeListProps {
 export interface ThemeListState {
   currentBackgroundIndex: number;
   currentTextIndex: number;
-  currentPresetIndex: number;
   isShowTextPicker: boolean;
   isShowBgPicker: boolean;
   bgColorInput: string;

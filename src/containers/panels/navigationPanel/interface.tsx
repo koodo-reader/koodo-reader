@@ -17,7 +17,7 @@ export interface NavigationPanelProps {
 
 export interface NavigationPanelState {
   currentTab: string;
-  chapters: any;
+
   searchState: string;
   searchList: any;
   cover: string;

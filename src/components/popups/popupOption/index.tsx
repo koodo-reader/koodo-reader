@@ -2,9 +2,7 @@ import { connect } from "react-redux";
 import {
   handleOpenMenu,
   handleMenuMode,
-  handleChangeDirection,
   handlePopupOptionDialog,
-  handlePopupOptionUpdate,
   handleSpeechDialog,
   handleSpeechStartText,
   handleSpeechAutoStart,
@@ -22,8 +20,6 @@ import PopupOption from "./component";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    selection: state.viewArea.selection,
-    popupOptionUpdateIndex: state.backupPage.popupOptionUpdateIndex,
 
     highlight: state.reader.highlight,
     htmlBook: state.reader.htmlBook,
@@ -35,10 +31,8 @@ const actionCreator = {
   handleFetchNotes,
   handleOriginalText,
   handleOriginalSentence,
-  handleChangeDirection,
   handleNoteKey,
   handlePopupOptionDialog,
-  handlePopupOptionUpdate,
   handleSpeechDialog,
   handleSpeechStartText,
   handleSpeechAutoStart,

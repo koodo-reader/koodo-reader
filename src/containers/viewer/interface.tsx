@@ -52,17 +52,17 @@ export interface ViewerProps {
   handleBackgroundColor: (color: string) => void;
 }
 export interface ViewerState {
-  key: string;
-  isFirst: boolean;
+
+
   isTouch: boolean;
-  chapterTitle: string;
+
   isDisablePopup: boolean;
   chapter: string;
   pageOffset: string;
   pageWidth: string;
   chapterDocIndex: number;
-  cfiRange: any;
-  contents: any;
+
+
   rect: any;
   rendition: any;
 }

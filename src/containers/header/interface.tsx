@@ -40,10 +40,6 @@ export interface HeaderProps extends RouteComponentProps<any> {
 }
 
 export interface HeaderState {
-  isOnlyLocal: boolean;
-  language: string;
-  width: number;
-  isNewVersion: boolean;
   isHidePro: boolean;
   isSync: boolean;
   notificationCount: number;

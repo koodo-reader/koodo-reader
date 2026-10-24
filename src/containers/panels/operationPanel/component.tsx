@@ -24,19 +24,6 @@ class OperationPanel extends React.Component<
   constructor(props: OperationPanelProps) {
     super(props);
     this.state = {
-      isBookmark: false,
-      time: 0,
-      currentPercentage: ConfigService.getObjectConfig(
-        this.props.currentBook.key,
-        "recordLocation",
-        {}
-      )
-        ? ConfigService.getObjectConfig(
-            this.props.currentBook.key,
-            "recordLocation",
-            {}
-          ).percentage
-        : 0,
       timeLeft: 0,
       isFullscreen: ConfigService.getReaderConfig("isFullscreen") === "yes",
     };
@@ -156,7 +143,6 @@ class OperationPanel extends React.Component<
     );
     await DatabaseService.saveRecord(bookmark, "bookmarks");
     this.props.handleFetchBookmarks();
-    this.setState({ isBookmark: true });
     this.props.handleShowBookmark(true);
   };
   async handleDisplayBookmark() {

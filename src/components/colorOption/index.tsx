@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { handleHighlight, handleSelection } from "../../store/actions";
+import { handleHighlight } from "../../store/actions";
 import { stateType } from "../../store";
 import ColorOption from "./component";
 const mapStateToProps = (state: stateType) => {
@@ -9,6 +9,5 @@ const mapStateToProps = (state: stateType) => {
 };
 const actionCreator = {
   handleHighlight,
-  handleSelection,
 };
 export default connect(mapStateToProps, actionCreator)(ColorOption as any);

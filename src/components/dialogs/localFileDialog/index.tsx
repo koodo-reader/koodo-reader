@@ -1,7 +1,5 @@
 import {
   handleLocalFileDialog,
-  handleTokenDialog,
-  handleLoadingDialog,
   handleFetchBooks,
 } from "../../../store/actions";
 import { connect } from "react-redux";
@@ -9,15 +7,12 @@ import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";
 import LocalFileDialog from "./component";
 import { withRouter } from "react-router-dom";
-const mapStateToProps = (state: stateType) => {
+const mapStateToProps = (_state: stateType) => {
   return {
-    isAuthed: state.manager.isAuthed,
   };
 };
 const actionCreator = {
   handleLocalFileDialog,
-  handleTokenDialog,
-  handleLoadingDialog,
   handleFetchBooks,
 };
 export default connect(

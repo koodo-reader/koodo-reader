@@ -16,8 +16,5 @@ export interface UpdateInfoProps {
 }
 export interface UpdateInfoState {
   updateLog: any;
-  progress: number;
-  downloadedMB: number;
-  totalMB: number;
   isDownloading: boolean;
 }

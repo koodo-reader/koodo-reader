@@ -58,11 +58,5 @@ export interface ManagerProps extends RouteComponentProps<any> {
 
 export interface ManagerState {
   totalBooks: number;
-  favoriteBooks: number;
-  isAuthed: boolean;
-  isError: boolean;
-  isCopied: boolean;
-  isUpdated: boolean;
   isDrag: boolean;
-  token: string;
 }

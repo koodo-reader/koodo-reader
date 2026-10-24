@@ -14,17 +14,17 @@ export interface SettingInfoState {
   isDisablePopup: boolean;
   isDisableAutoScroll: boolean;
   isManualScroll: boolean;
-  isDisableTrashBin: boolean;
-  isDeleteShelfBook: boolean;
-  isPreventSleep: boolean;
+
+
+
   isOpenInMain: boolean;
-  isPrecacheBook: boolean;
+
   isOverwriteLink: boolean;
   isOverwriteText: boolean;
   isOverwriteBackground: boolean;
   isAutoFullscreen: boolean;
   isAutoMaximize: boolean;
-  isHideShelfBook: boolean;
-  isPreventAdd: boolean;
-  isLemmatizeWord: boolean;
+
+
+
 }

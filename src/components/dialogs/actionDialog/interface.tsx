@@ -33,6 +33,6 @@ export interface ActionDialogProps extends RouteComponentProps<any> {
 export interface ActionDialogState {
   isShowExport: boolean;
   isShowMark: boolean;
-  isShowDetail: boolean;
+
   isExceed: boolean;
 }

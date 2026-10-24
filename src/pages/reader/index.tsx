@@ -1,6 +1,4 @@
 import {
-  handleFetchNotes,
-  handleFetchBookmarks,
   handleFetchBooks,
   handleReadingBook,
   handleFetchPercentage,
@@ -15,8 +13,6 @@ import {
   handleAssistReadDialog,
   handleSpeechDialog,
   handleAnnotationDialog,
-  handleScale,
-  handleFitPage,
   handleFetchAuthed,
   handleFetchUserInfo,
   handleBackgroundColor,
@@ -29,7 +25,6 @@ import { withTranslation } from "react-i18next";
 const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
-    percentage: state.progressPanel.percentage,
     htmlBook: state.reader.htmlBook,
     readerMode: state.reader.readerMode,
     isNavLocked: state.reader.isNavLocked,
@@ -43,17 +38,10 @@ const mapStateToProps = (state: stateType) => {
     isOpenPopupOptionDialog: state.backupPage.isOpenPopupOptionDialog,
     isSettingLocked: state.reader.isSettingLocked,
     isDockedRight: state.reader.isDockedRight,
-    isAuthed: state.manager.isAuthed,
-    isSearch: state.manager.isSearch,
     isSettingOpen: state.manager.isSettingOpen,
-    scale: state.reader.scale,
-    isFitPage: state.reader.isFitPage,
-    renderBookFunc: state.book.renderBookFunc,
   };
 };
 const actionCreator = {
-  handleFetchNotes,
-  handleFetchBookmarks,
   handleFetchBooks,
   handleReadingBook,
   handleFetchPercentage,
@@ -66,8 +54,6 @@ const actionCreator = {
   handlePdfCropDialog,
   handleStudyLangDialog,
   handleAssistReadDialog,
-  handleScale,
-  handleFitPage,
   handleFetchAuthed,
   handleSpeechDialog,
   handleAnnotationDialog,

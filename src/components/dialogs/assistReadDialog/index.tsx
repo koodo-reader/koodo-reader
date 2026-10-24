@@ -15,9 +15,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     currentBook: state.book.currentBook,
     htmlBook: state.reader.htmlBook,
-    readerMode: state.reader.readerMode,
-    isSettingLocked: state.reader.isSettingLocked,
-    isDockedRight: state.reader.isDockedRight,
     renderBookFunc: state.book.renderBookFunc,
   };
 };

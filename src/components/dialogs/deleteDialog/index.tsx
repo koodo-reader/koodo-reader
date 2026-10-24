@@ -2,7 +2,6 @@ import { connect } from "react-redux";
 import {
   handleFetchBooks,
   handleDeleteDialog,
-  handleActionDialog,
   handleFetchBookmarks,
   handleFetchNotes,
   handleSelectedBooks,
@@ -20,8 +19,6 @@ const mapStateToProps = (state: stateType) => {
     selectedBooks: state.manager.selectedBooks,
     isSelectBook: state.manager.isSelectBook,
     isSearch: state.manager.isSearch,
-    searchResults: state.manager.searchResults,
-    isOpenDeleteDialog: state.book.isOpenDeleteDialog,
     currentBook: state.book.currentBook,
 
     deletedBooks: state.manager.deletedBooks,
@@ -34,7 +31,6 @@ const actionCreator = {
   handleDeleteDialog,
   handleFetchBookmarks,
   handleFetchNotes,
-  handleActionDialog,
   handleSelectedBooks,
   handleSelectBook,
   handleSearch,

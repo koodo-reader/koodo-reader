@@ -28,12 +28,11 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
   settingDrive: string;
 }
 export interface SettingInfoState {
-  isAddNew: boolean;
+
   isRedeemCode: boolean;
   redeemCode: string;
   loginConfig: any;
   settingLogin: string;
-  serverRegion: string;
   showLoginOptions: boolean;
   isSendingCode: boolean;
   countdown: number;

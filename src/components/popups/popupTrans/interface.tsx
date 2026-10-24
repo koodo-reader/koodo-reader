@@ -18,8 +18,6 @@ export interface PopupTransState {
   translatedText: string;
   originalText: string;
   transService: string;
-  transTarget: string;
-  transSource: string;
   isAddNew: boolean;
   isFinishOutput: boolean;
   isAiWaiting: boolean;

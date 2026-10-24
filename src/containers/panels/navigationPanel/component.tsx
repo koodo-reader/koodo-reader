@@ -91,7 +91,6 @@ class NavigationPanel extends React.Component<
     this.highlightUtil = new HighlightUtil(ConfigService);
     this.state = {
       currentTab: "contents",
-      chapters: [],
       searchState: "",
       searchList: null,
       cover: "",

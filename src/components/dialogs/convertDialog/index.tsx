@@ -10,12 +10,9 @@ import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    isConvertOpen: state.reader.isConvertOpen,
     isAuthed: state.manager.isAuthed,
     currentBook: state.book.currentBook,
     plugins: state.manager.plugins || [],
-    isSettingLocked: state.reader.isSettingLocked,
-    isDockedRight: state.reader.isDockedRight,
   };
 };
 const actionCreator = {

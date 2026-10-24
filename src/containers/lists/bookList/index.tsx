@@ -1,9 +1,6 @@
 import { connect } from "react-redux";
 import {
   handleFetchBooks,
-  handleMode,
-  handleShelf,
-  handleDeleteDialog,
   handleLoadMore,
 } from "../../../store/actions";
 import { stateType } from "../../../store";
@@ -22,15 +19,10 @@ const mappropsToProps = (state: stateType) => {
     isSearch: state.manager.isSearch,
     isSelectBook: state.manager.isSelectBook,
     viewMode: state.manager.viewMode,
-    bookSortCode: state.manager.bookSortCode,
-    noteSortCode: state.manager.noteSortCode,
   };
 };
 const actionCreator = {
-  handleMode,
-  handleShelf,
   handleFetchBooks,
-  handleDeleteDialog,
   handleLoadMore,
 };
 export default connect(

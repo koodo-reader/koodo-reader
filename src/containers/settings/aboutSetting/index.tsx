@@ -4,10 +4,8 @@ import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";
 import { withRouter } from "react-router-dom";
 
-const mapStateToProps = (state: stateType) => {
+const mapStateToProps = (_state: stateType) => {
   return {
-    isAuthed: state.manager.isAuthed,
-    isNewWarning: state.manager.isNewWarning,
   };
 };
 const actionCreator = {};

@@ -6,7 +6,6 @@ import { withTranslation } from "react-i18next";
 
 const mapStateToProps = (state: stateType) => {
   return {
-    isAnnotationOpen: state.reader.isAnnotationOpen,
     isSettingLocked: state.reader.isSettingLocked,
     isDockedRight: state.reader.isDockedRight,
     htmlBook: state.reader.htmlBook,

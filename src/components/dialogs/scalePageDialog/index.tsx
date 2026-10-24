@@ -8,8 +8,6 @@ const mapStateToProps = (state: stateType) => {
   return {
     scale: state.reader.scale,
     isFitPage: state.reader.isFitPage,
-    isSettingLocked: state.reader.isSettingLocked,
-    isDockedRight: state.reader.isDockedRight,
     renderBookFunc: state.book.renderBookFunc,
   };
 };

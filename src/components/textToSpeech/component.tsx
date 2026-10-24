@@ -44,7 +44,6 @@ class TextToSpeech extends React.Component<
     super(props);
     this.highlightUtil = new HighlightUtil(ConfigService);
     this.state = {
-      isSupported: false,
       isAudioOn: false,
       isPaused: false,
       currentIndex: 0,
@@ -89,9 +88,6 @@ class TextToSpeech extends React.Component<
     this.previewPlayer = null;
   }
   async componentDidMount() {
-    if ("speechSynthesis" in window) {
-      this.setState({ isSupported: true });
-    }
     window.speechSynthesis && window.speechSynthesis.cancel();
     this.setState({ isAudioOn: false });
     this.nodeList = [];
@@ -112,8 +108,6 @@ class TextToSpeech extends React.Component<
                 })
               );
               clearInterval(id);
-            } else {
-              this.setState({ isSupported: false });
             }
           }, 10);
         }

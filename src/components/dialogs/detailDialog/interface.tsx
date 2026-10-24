@@ -7,8 +7,8 @@ export interface DetailDialogProps {
   currentBook: BookModel;
 }
 export interface DetailDialogState {
-  backgroundColor: string;
-  textColor: string;
+
+
   cover: string;
   isCoverExist: boolean;
   shelfLocation: string[];

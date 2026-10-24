@@ -15,6 +15,6 @@ export interface ConvertDialogProps {
   isDockedRight: boolean;
 }
 export interface ConvertDialogState {
-  isShowExportAll: boolean;
+
   isConvertPDF: boolean;
 }

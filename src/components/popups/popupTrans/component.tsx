@@ -28,8 +28,6 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       translatedText: "",
       originalText: "",
       transService: ConfigService.getReaderConfig("transService") || "",
-      transTarget: ConfigService.getReaderConfig("transTarget"),
-      transSource: ConfigService.getReaderConfig("transSource"),
       isAddNew: false,
       isFinishOutput: false,
       isAiWaiting: false,
@@ -259,10 +257,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       }
       let autoValue = plugin.autoValue;
       this.setState(
-        {
-          transSource: autoValue,
-          transTarget: getDefaultTransTarget(plugin.langList),
-        },
+        {},
         () => {
           ConfigService.setReaderConfig(
             "transTarget",

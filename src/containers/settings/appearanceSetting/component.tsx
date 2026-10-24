@@ -34,7 +34,6 @@ class AppearanceSetting extends React.Component<
     const ttsHighlight = this.highlightUtil.getTtsHighlightValue();
     const searchHighlight = this.highlightUtil.getSearchHighlightValue();
     this.state = {
-      appSkin: ConfigService.getReaderConfig("appSkin"),
       currentThemeIndex: themeList.findIndex(
         (item) =>
           item.color ===
