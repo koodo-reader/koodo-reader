@@ -1,5 +1,5 @@
-import React from "react";
-import { SettingInfoProps, SettingInfoState } from "./interface";
+import { useState } from "react";
+import { SettingInfoProps } from "./interface";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
@@ -8,83 +8,74 @@ import { readingSettingList } from "../../../constants/settingList";
 import SwitchRow from "../../../components/readerSettings/switchRow";
 declare var window: any;
 
-class ReadingSetting extends React.Component<
-  SettingInfoProps,
-  SettingInfoState
-> {
-  constructor(props: SettingInfoProps) {
-    super(props);
-    this.state = {
-      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
-      isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
-      isPreventTrigger:
-        ConfigService.getReaderConfig("isPreventTrigger") === "yes",
-      isAutoFullscreen:
-        ConfigService.getReaderConfig("isAutoFullscreen") === "yes",
-      isAutoMaximize: ConfigService.getReaderConfig("isAutoMaximize") === "yes",
-      isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
-      isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
-      isManualScroll: ConfigService.getReaderConfig("isManualScroll") === "yes",
-      isDisableAutoScroll:
-        ConfigService.getReaderConfig("isDisableAutoScroll") === "yes",
-      isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
-      isOverwriteText:
-        ConfigService.getReaderConfig("isOverwriteText") === "yes",
-      isOverwriteLink:
-        ConfigService.getReaderConfig("isOverwriteLink") === "yes",
-      isOverwriteBackground:
-        ConfigService.getReaderConfig("isOverwriteBackground") === "yes",
-    };
-  }
+const ReadingSetting = (props: SettingInfoProps) => {
+  const [state, setState] = useState<Record<string, boolean>>({
+    isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
+    isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
+    isPreventTrigger:
+      ConfigService.getReaderConfig("isPreventTrigger") === "yes",
+    isAutoFullscreen:
+      ConfigService.getReaderConfig("isAutoFullscreen") === "yes",
+    isAutoMaximize: ConfigService.getReaderConfig("isAutoMaximize") === "yes",
+    isOpenBook: ConfigService.getReaderConfig("isOpenBook") === "yes",
+    isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
+    isManualScroll: ConfigService.getReaderConfig("isManualScroll") === "yes",
+    isDisableAutoScroll:
+      ConfigService.getReaderConfig("isDisableAutoScroll") === "yes",
+    isOpenInMain: ConfigService.getReaderConfig("isOpenInMain") === "yes",
+    isOverwriteText:
+      ConfigService.getReaderConfig("isOverwriteText") === "yes",
+    isOverwriteLink:
+      ConfigService.getReaderConfig("isOverwriteLink") === "yes",
+    isOverwriteBackground:
+      ConfigService.getReaderConfig("isOverwriteBackground") === "yes",
+  });
 
-  handleRest = (_bool: boolean) => {
-    toast.success(this.props.t("Change successful"));
+  const handleRest = (_bool: boolean) => {
+    toast.success(props.t("Change successful"));
   };
 
-  handleSetting = (stateName: string) => {
-    if (stateName === "isLemmatizeWord" && !this.props.isAuthed) {
-      toast.error(this.props.t("Please upgrade to Pro to use this feature"));
-      this.props.handleSetting(true);
-      this.props.handleSettingMode("account");
+  const handleSetting = (stateName: string) => {
+    if (stateName === "isLemmatizeWord" && !props.isAuthed) {
+      toast.error(props.t("Please upgrade to Pro to use this feature"));
+      props.handleSetting(true);
+      props.handleSettingMode("account");
       return;
     }
-    this.setState({ [stateName]: !this.state[stateName] } as any);
-    ConfigService.setReaderConfig(
-      stateName,
-      this.state[stateName] ? "no" : "yes"
-    );
-    this.handleRest(this.state[stateName]);
+    setState((prev) => ({ ...prev, [stateName]: !prev[stateName] }));
+    ConfigService.setReaderConfig(stateName, state[stateName] ? "no" : "yes");
+    handleRest(state[stateName]);
   };
 
-  handleResetReaderPosition = () => {
+  const handleResetReaderPosition = () => {
     window.electronAPI.invoke("reset-reader-position", "ping");
-    toast.success(this.props.t("Reset successful"));
+    toast.success(props.t("Reset successful"));
   };
 
-  handleMergeWord = () => {
-    if (this.state.isOpenInMain && !this.state.isMergeWord) {
-      toast(this.props.t("Please turn off open books in the main window"));
+  const handleMergeWord = () => {
+    if (state.isOpenInMain && !state.isMergeWord) {
+      toast(props.t("Please turn off open books in the main window"));
       return;
     }
-    if (this.state.isAutoFullscreen && !this.state.isMergeWord) {
-      toast(this.props.t("Please turn off auto open book in full screen"));
+    if (state.isAutoFullscreen && !state.isMergeWord) {
+      toast(props.t("Please turn off auto open book in full screen"));
       return;
     }
-    this.handleSetting("isMergeWord");
-    this.props.handleMergeWord(
+    handleSetting("isMergeWord");
+    props.handleMergeWord(
       ConfigService.getReaderConfig("isMergeWord") === "yes"
     );
   };
 
-  handleOpenInMain = () => {
-    if (this.state.isMergeWord && !this.state.isOpenInMain) {
-      toast(this.props.t("Please turn off merge with word first"));
+  const handleOpenInMain = () => {
+    if (state.isMergeWord && !state.isOpenInMain) {
+      toast(props.t("Please turn off merge with word first"));
       return;
     }
-    this.handleSetting("isOpenInMain");
+    handleSetting("isOpenInMain");
   };
 
-  renderSwitchOption = (optionList: any[]) => {
+  const renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
         <div
@@ -94,17 +85,17 @@ class ReadingSetting extends React.Component<
           <SwitchRow
             variant="setting"
             title={<Trans>{item.title}</Trans>}
-            isEnabled={this.state[item.propName]}
+            isEnabled={state[item.propName]}
             onClick={() => {
               switch (item.propName) {
                 case "isMergeWord":
-                  this.handleMergeWord();
+                  handleMergeWord();
                   break;
                 case "isOpenInMain":
-                  this.handleOpenInMain();
+                  handleOpenInMain();
                   break;
                 default:
-                  this.handleSetting(item.propName);
+                  handleSetting(item.propName);
                   break;
               }
             }}
@@ -117,29 +108,27 @@ class ReadingSetting extends React.Component<
     });
   };
 
-  render() {
-    return (
-      <>
-        {this.renderSwitchOption(readingSettingList)}
-        {isElectron && (
-          <>
-            <div className="setting-dialog-new-title">
-              <Trans>Reset reader window's position</Trans>
+  return (
+    <>
+      {renderSwitchOption(readingSettingList)}
+      {isElectron && (
+        <>
+          <div className="setting-dialog-new-title">
+            <Trans>Reset reader window's position</Trans>
 
-              <span
-                className="change-location-button"
-                onClick={() => {
-                  this.handleResetReaderPosition();
-                }}
-              >
-                <Trans>Reset</Trans>
-              </span>
-            </div>
-          </>
-        )}
-      </>
-    );
-  }
-}
+            <span
+              className="change-location-button"
+              onClick={() => {
+                handleResetReaderPosition();
+              }}
+            >
+              <Trans>Reset</Trans>
+            </span>
+          </div>
+        </>
+      )}
+    </>
+  );
+};
 
 export default ReadingSetting;

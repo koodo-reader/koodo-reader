@@ -1,9 +1,11 @@
-import React from "react";
 import "../actionDialog/actionDialog.css";
 import { Trans } from "react-i18next";
 import { MarkActionProps } from "./interface";
 import toast from "react-hot-toast";
-import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  CollectionUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
 import {
   clampMenuPosition,
   CONTEXT_MENU_WIDTH,
@@ -17,13 +19,13 @@ const MENU_ITEM_HEIGHT = 33;
 const MENU_CONTAINER_PADDING = 5;
 const DEFAULT_MENU_INDEX = 6;
 
-class MarkAction extends React.Component<MarkActionProps> {
-  getMenuIndex = () => {
-    return this.props.menuItemIndex ?? DEFAULT_MENU_INDEX;
+const MarkAction = (props: MarkActionProps) => {
+  const getMenuIndex = () => {
+    return props.menuItemIndex ?? DEFAULT_MENU_INDEX;
   };
 
-  handleMarkAsFinished = () => {
-    const key = this.props.currentBook.key;
+  const handleMarkAsFinished = () => {
+    const key = props.currentBook.key;
     if (collectionUtil.isCollection(key)) {
       let collection = collectionUtil.getCollection(key);
       if (collection) {
@@ -48,15 +50,15 @@ class MarkAction extends React.Component<MarkActionProps> {
         "recordLocation"
       );
     }
-    toast.success(this.props.t("Modification successful"));
-    this.props.handleRefreshBookCover(key);
-    this.props.handleFetchBooks();
-    this.props.handleMarkAction(false);
-    this.props.handleActionDialog(false);
+    toast.success(props.t("Modification successful"));
+    props.handleRefreshBookCover(key);
+    props.handleFetchBooks();
+    props.handleMarkAction(false);
+    props.handleActionDialog(false);
   };
 
-  handleMarkAsUnread = () => {
-    const key = this.props.currentBook.key;
+  const handleMarkAsUnread = () => {
+    const key = props.currentBook.key;
     if (collectionUtil.isCollection(key)) {
       let collection = collectionUtil.getCollection(key);
       if (collection) {
@@ -67,75 +69,72 @@ class MarkAction extends React.Component<MarkActionProps> {
     } else {
       ConfigService.deleteObjectConfig(key, "recordLocation");
     }
-    toast.success(this.props.t("Modification successful"));
-    this.props.handleRefreshBookCover(key);
-    this.props.handleFetchBooks();
-    this.props.handleMarkAction(false);
-    this.props.handleActionDialog(false);
+    toast.success(props.t("Modification successful"));
+    props.handleRefreshBookCover(key);
+    props.handleFetchBooks();
+    props.handleMarkAction(false);
+    props.handleActionDialog(false);
   };
 
-  render() {
-    const menuIndex = this.getMenuIndex();
-    const submenuTopOffset =
-      MENU_CONTAINER_PADDING + menuIndex * MENU_ITEM_HEIGHT - 34;
-    return (
-      <div
-        className="action-dialog-container"
-        onMouseLeave={() => {
-          this.props.handleMarkAction(false);
-          this.props.handleActionDialog(false);
-        }}
-        onMouseEnter={(event) => {
-          this.props.handleMarkAction(true);
-          this.props.handleActionDialog(true);
-          event?.stopPropagation();
-        }}
-        style={
-          this.props.isShowMark
-            ? (() => {
-                const pos = clampMenuPosition(
-                  this.props.left +
-                    (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
-                  this.props.top + submenuTopOffset,
-                  CONTEXT_MENU_WIDTH,
-                  estimateMenuHeight(2)
-                );
-                return {
-                  position: "fixed",
-                  left: pos.left,
-                  top: pos.top,
-                };
-              })()
-            : { display: "none" }
-        }
-      >
-        <div className="action-dialog-actions-container">
-          <div
-            className="action-dialog-edit"
-            style={{ paddingLeft: "0px" }}
-            onClick={() => {
-              this.handleMarkAsFinished();
-            }}
-          >
-            <p className="action-name">
-              <Trans>Mark as finished</Trans>
-            </p>
-          </div>
-          <div
-            className="action-dialog-edit"
-            style={{ paddingLeft: "0px" }}
-            onClick={() => {
-              this.handleMarkAsUnread();
-            }}
-          >
-            <p className="action-name">
-              <Trans>Mark as unread</Trans>
-            </p>
-          </div>
+  const menuIndex = getMenuIndex();
+  const submenuTopOffset =
+    MENU_CONTAINER_PADDING + menuIndex * MENU_ITEM_HEIGHT - 34;
+  return (
+    <div
+      className="action-dialog-container"
+      onMouseLeave={() => {
+        props.handleMarkAction(false);
+        props.handleActionDialog(false);
+      }}
+      onMouseEnter={(event) => {
+        props.handleMarkAction(true);
+        props.handleActionDialog(true);
+        event?.stopPropagation();
+      }}
+      style={
+        props.isShowMark
+          ? (() => {
+              const pos = clampMenuPosition(
+                props.left + (props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
+                props.top + submenuTopOffset,
+                CONTEXT_MENU_WIDTH,
+                estimateMenuHeight(2)
+              );
+              return {
+                position: "fixed",
+                left: pos.left,
+                top: pos.top,
+              };
+            })()
+          : { display: "none" }
+      }
+    >
+      <div className="action-dialog-actions-container">
+        <div
+          className="action-dialog-edit"
+          style={{ paddingLeft: "0px" }}
+          onClick={() => {
+            handleMarkAsFinished();
+          }}
+        >
+          <p className="action-name">
+            <Trans>Mark as finished</Trans>
+          </p>
+        </div>
+        <div
+          className="action-dialog-edit"
+          style={{ paddingLeft: "0px" }}
+          onClick={() => {
+            handleMarkAsUnread();
+          }}
+        >
+          <p className="action-name">
+            <Trans>Mark as unread</Trans>
+          </p>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default MarkAction;
