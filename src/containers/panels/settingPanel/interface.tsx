@@ -3,7 +3,7 @@ export interface SettingPanelProps {
   currentBook: BookModel;
   backgroundColor: string;
   isSettingLocked: boolean;
-  readerMode: string;
+
   t: (title: string) => string;
   handleSettingLock: (isSettingLocked: boolean) => void;
   handleBackgroundColor: (color: string) => void;

@@ -11,7 +11,7 @@ export interface TextToSpeechProps {
   readerMode: string;
   speechStartText: string;
   isSpeechAutoStart: boolean;
-  handleFetchPlugins: () => void;
+
   handleSetting: (isShow: boolean) => void;
   handleSettingMode: (settingMode: string) => void;
   handleSpeechStartText: (speechStartText: string) => void;

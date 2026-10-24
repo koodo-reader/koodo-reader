@@ -2,7 +2,7 @@ import BookModel from "../../../models/Book";
 
 export interface PopupReferProps {
   currentBook: BookModel;
-  isChangeDirection: boolean;
+
   menuMode: string;
   rendition: any;
   chapterDocIndex: number;

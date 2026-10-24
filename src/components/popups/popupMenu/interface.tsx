@@ -5,7 +5,7 @@ import { HighlightValue } from "../../../utils/common";
 export interface PopupMenuProps {
   currentBook: BookModel;
   isOpenMenu: boolean;
-  isChangeDirection: boolean;
+
   menuMode: string;
 
   highlight: HighlightValue;
@@ -13,7 +13,7 @@ export interface PopupMenuProps {
   htmlBook: HtmlBook;
   // cfiRange: any;
   rect: any;
-  noteKey: string;
+
   chapterDocIndex: number;
   chapter: string;
   readerMode: string;
@@ -22,7 +22,7 @@ export interface PopupMenuProps {
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
   handleChangeDirection: (isChangeDirection: boolean) => void;
-  handleRenderNoteFunc: (renderNoteFunc: () => void) => void;
+
   handleOriginalText: (originalText: string) => void;
   handleOriginalSentence: (originalSentence: string) => void;
   handleFetchNotes: () => void;

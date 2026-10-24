@@ -64,7 +64,7 @@ class NavList extends React.Component<NavListProps, NavListState> {
   }
   UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<NavListProps>,
-    nextContext: any
+    _nextContext: any
   ): void {
     const tabOrBookChanged =
       nextProps.currentTab !== this.props.currentTab ||

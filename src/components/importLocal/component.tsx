@@ -595,7 +595,7 @@ class ImportLocal extends React.Component<ImportLocalProps, ImportLocalState> {
   handleKdzBook = async (
     bookName: string,
     file_content: ArrayBuffer,
-    recordPath: string,
+    _recordPath: string,
     resolve: (value: void) => void
   ) => {
     try {

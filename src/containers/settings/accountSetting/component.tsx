@@ -58,7 +58,7 @@ class AccountSetting extends React.Component<
   }
   UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<SettingInfoProps>,
-    nextContext: any
+    _nextContext: any
   ): void {
     if (
       nextProps.isShowSupport &&

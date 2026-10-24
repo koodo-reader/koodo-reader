@@ -74,7 +74,7 @@ class Login extends React.Component<LoginProps, LoginState> {
   }
   UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<LoginProps>,
-    nextContext: any
+    _nextContext: any
   ): void {
     if (
       nextProps.isShowSupport &&

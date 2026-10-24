@@ -10,7 +10,7 @@ export interface EditDialogProps extends RouteComponentProps<any> {
   handleSetting: (isSettingOpen: boolean) => void;
   handleSettingMode: (mode: string) => void;
 
-  isOpenDeleteDialog: boolean;
+
   currentBook: BookModel;
 }
 

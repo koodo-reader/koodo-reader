@@ -37,9 +37,6 @@ export function handlePlugins(plugins: PluginModel[]) {
 export function handleDeletedBooks(deletedBooks: BookModel[]) {
   return { type: "HANDLE_DELETED_BOOKS", payload: deletedBooks };
 }
-export function handleSearchResults(searchResults: number[]) {
-  return { type: "HANDLE_SEARCH_BOOKS", payload: searchResults };
-}
 export function handleSearch(isSearch: boolean) {
   return { type: "HANDLE_SEARCH", payload: isSearch };
 }
@@ -631,4 +628,7 @@ export function handleFetchViewMode() {
     let viewMode = ConfigService.getReaderConfig("viewMode") || "card";
     dispatch(handleViewMode(viewMode));
   };
+}
+export function handleSearchResults(searchResults: number[]) {
+  return { type: "HANDLE_SEARCH_BOOKS", payload: searchResults };
 }

@@ -172,7 +172,7 @@ class TextToSpeech extends React.Component<
   }
   UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<TextToSpeechProps>,
-    nextContext: any
+    _nextContext: any
   ): void {
     //plugin更新后重新获取语音列表
     if (nextProps.plugins !== this.props.plugins) {
@@ -477,7 +477,7 @@ class TextToSpeech extends React.Component<
   handleVoiceSwitch = async (
     newVoiceName: string,
     newVoiceEngine: string,
-    previousEngine: string
+    _previousEngine: string
   ) => {
     if (!this.state.isAudioOn || this.nodeList.length === 0) return;
 

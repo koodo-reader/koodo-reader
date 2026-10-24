@@ -68,9 +68,6 @@ export function handleCurrentChapterIndex(currentChapterIndex: number) {
 export function handleJumpPosition(jumpPosition: object | null) {
   return { type: "HANDLE_JUMP_POSITION", payload: jumpPosition };
 }
-export function handleChapters(chapters: any) {
-  return { type: "HANDLE_CHAPTERS", payload: chapters };
-}
 export function handleNoteKey(key: string) {
   return { type: "HANDLE_NOTE_KEY", payload: key };
 }
@@ -80,32 +77,14 @@ export function handleReaderMode(readerMode: string) {
 export function handleScale(scale: string) {
   return { type: "HANDLE_SCALE", payload: scale };
 }
-export function handleFitPage(isFitPage: boolean) {
-  return { type: "HANDLE_FIT_PAGE", payload: isFitPage };
-}
-export function handleMargin(margin: string) {
-  return { type: "HANDLE_MARGIN", payload: margin };
-}
 export function handleBackgroundColor(backgroundColor: string) {
   return { type: "HANDLE_BACKGROUND_COLOR", payload: backgroundColor };
-}
-export function handleReaderBackgroundImage(readerBackgroundImage: string) {
-  return {
-    type: "HANDLE_READER_BACKGROUND_IMAGE",
-    payload: readerBackgroundImage,
-  };
 }
 export function handleNavLock(isNavLocked: boolean) {
   return { type: "HANDLE_NAV_LOCK", payload: isNavLocked };
 }
-export function handleSettingLock(isSettingLocked: boolean) {
-  return { type: "HANDLE_SETTING_LOCK", payload: isSettingLocked };
-}
 export function handleDockedRight(isDockedRight: boolean) {
   return { type: "HANDLE_DOCKED_RIGHT", payload: isDockedRight };
-}
-export function handleHideFooter(isHideFooter: boolean) {
-  return { type: "HANDLE_HIDE_FOOTER", payload: isHideFooter };
 }
 export function handleHideHeader(isHideHeader: boolean) {
   return { type: "HANDLE_HIDE_HEADER", payload: isHideHeader };
@@ -131,10 +110,6 @@ export function handleMergeWord(isMergeWord: boolean) {
 export function handleShowBorder(isShowPageBorder: boolean) {
   return { type: "HANDLE_SHOW_BORDER", payload: isShowPageBorder };
 }
-export function handleTextOrientation(textOrientation: string) {
-  return { type: "HANDLE_TEXT_ORIENTATION", payload: textOrientation };
-}
-
 export function handleFetchNotes() {
   return async (
     dispatch: (arg0: { type: string; payload: NoteModel[] }) => void
@@ -179,4 +154,25 @@ export function handleFetchBookmarks() {
       dispatch(handleBookmarks(bookmarks));
     });
   };
+}
+export function handleFitPage(isFitPage: boolean) {
+  return { type: "HANDLE_FIT_PAGE", payload: isFitPage };
+}
+export function handleMargin(margin: string) {
+  return { type: "HANDLE_MARGIN", payload: margin };
+}
+export function handleReaderBackgroundImage(readerBackgroundImage: string) {
+  return {
+    type: "HANDLE_READER_BACKGROUND_IMAGE",
+    payload: readerBackgroundImage,
+  };
+}
+export function handleSettingLock(isSettingLocked: boolean) {
+  return { type: "HANDLE_SETTING_LOCK", payload: isSettingLocked };
+}
+export function handleHideFooter(isHideFooter: boolean) {
+  return { type: "HANDLE_HIDE_FOOTER", payload: isHideFooter };
+}
+export function handleTextOrientation(textOrientation: string) {
+  return { type: "HANDLE_TEXT_ORIENTATION", payload: textOrientation };
 }

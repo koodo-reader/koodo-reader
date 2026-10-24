@@ -5,7 +5,7 @@ export interface SliderListProps {
   renderBookFunc: () => void;
   t: (title: string) => string;
   scale: string;
-  margin: number;
+
   htmlBook?: HtmlBookModel | null;
   handleScale: (scale: string) => void;
   handleMargin: (margin: string) => void;

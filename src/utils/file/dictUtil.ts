@@ -1,5 +1,5 @@
 import { isElectron } from "react-device-detect";
-import { getServerRegion, getStorageLocation } from "../common";
+import { getStorageLocation } from "../common";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { Buffer } from "buffer";
 import toast from "react-hot-toast";
@@ -142,7 +142,7 @@ class DictUtil {
   }
 
   /** Build download url of a cloud dict */
-  static getCloudDictUrl(dictId: string, isAuthed: boolean): string {
+  static getCloudDictUrl(dictId: string, _isAuthed: boolean): string {
     const base = "https://storage.koodoreader.com";
     return `${base}/dicts/${dictId}.mdx`;
   }

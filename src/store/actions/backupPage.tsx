@@ -3,9 +3,6 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { getUserRequest } from "../../utils/request/user";
 import { handleExitApp } from "../../utils/request/common";
 
-export function handleBackupDialog(mode: boolean) {
-  return { type: "HANDLE_BACKUP", payload: mode };
-}
 export function handleLocalFileDialog(isOpen: boolean) {
   return { type: "HANDLE_LOCAL_FILE_DIALOG", payload: isOpen };
 }

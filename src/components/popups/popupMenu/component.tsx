@@ -191,7 +191,7 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
     });
   };
 
-  handleSelectAction = async (action: string, sel: Selection) => {
+  handleSelectAction = async (action: string, _sel: Selection) => {
     const text = getSelection(this.props.currentBook);
     if (!text) return;
     // PPTX/XPS/OXPS/DjVu/OFD 不支持笔记和高亮，回退到默认菜单

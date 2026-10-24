@@ -433,7 +433,7 @@ class DatabaseService {
       }
     }
   }
-  static async dumpDatabase(dbName: string) {
+  static async dumpDatabase(_dbName: string) {
     return;
   }
 }

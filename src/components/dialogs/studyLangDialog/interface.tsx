@@ -5,8 +5,8 @@ export interface StudyLangDialogProps {
   currentBook: BookModel;
   htmlBook: HtmlBookModel | null;
   isAuthed: boolean;
-  isSettingLocked: boolean;
-  isDockedRight: boolean;
+
+
   t: (title: string) => string;
   handleStudyLangDialog: (isStudyLangOpen: boolean) => void;
   handleSetting: (isSettingOpen: boolean) => void;

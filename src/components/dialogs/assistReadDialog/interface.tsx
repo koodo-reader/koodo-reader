@@ -4,9 +4,9 @@ import HtmlBookModel from "../../../models/HtmlBook";
 export interface AssistReadDialogProps {
   currentBook: BookModel;
   htmlBook: HtmlBookModel | null;
-  readerMode: string;
-  isSettingLocked: boolean;
-  isDockedRight: boolean;
+
+
+
   t: (title: string) => string;
   handleAssistReadDialog: (isAssistReadOpen: boolean) => void;
   handleParagraphMode: (isParagraphMode: boolean) => void;

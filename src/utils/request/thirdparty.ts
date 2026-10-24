@@ -2,7 +2,6 @@ import toast from "react-hot-toast";
 import {
   ConfigService,
   KookitConfig,
-  SyncUtil,
   ThirdpartyRequest,
 } from "../../assets/lib/kookit-extra-browser.min";
 import i18n from "../../i18n";

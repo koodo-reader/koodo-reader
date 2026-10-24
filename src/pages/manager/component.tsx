@@ -14,7 +14,6 @@ import { Trans } from "react-i18next";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import { Route, Switch } from "react-router-dom";
 import { routes } from "../../router/routes";
-import Arrow from "../../components/arrow";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
 import { Toaster } from "react-hot-toast";
 import DetailDialog from "../../components/dialogs/detailDialog";
