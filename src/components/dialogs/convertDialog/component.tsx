@@ -6,13 +6,17 @@ import "./convertDialog.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import BookUtil from "../../../utils/file/bookUtil";
 import {
-  ocrEngineList,
+  getOcrEngineList,
   ocrTesseractLangList,
   paraSpacingList,
   titleSizeList,
 } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
-import { getDefaultOcrEngine, getOcrLangList } from "../../../utils/common";
+import {
+  clearOcrCache,
+  getDefaultOcrEngine,
+  getOcrLangList,
+} from "../../../utils/common";
 import SwitchRow from "../../readerSettings/switchRow";
 
 class ConvertDialog extends React.Component<
@@ -75,12 +79,16 @@ class ConvertDialog extends React.Component<
     const ocrEngine = ConfigService.getReaderConfig(
       isScanned ? "scannedOcrEngine" : "textOcrEngine"
     );
-    const filteredOcrEngineList = ocrEngineList.filter((item) => {
+    const engineList = getOcrEngineList(this.props.plugins);
+    const filteredOcrEngineList = engineList.filter((item) => {
       if (!isElectron && isScanned) {
         return item.value !== "system-ocr";
       }
       return true;
     });
+    const ocrLangList = getOcrLangList(
+      getDefaultOcrEngine(this.props.currentBook)
+    );
 
     return (
       <div
@@ -139,7 +147,7 @@ class ConvertDialog extends React.Component<
                     isScanned ? "scannedOcrLang" : "textOcrLang",
                     filteredOcrEngineList
                       .find((item) => item.value === event.target.value)?.lang ||
-                      "general"
+                      ""
                   );
                 }
                 if (
@@ -147,6 +155,7 @@ class ConvertDialog extends React.Component<
                     this.props.currentBook.key
                   )
                 ) {
+                  clearOcrCache(this.props.currentBook.key);
                   BookUtil.reloadBooks(this.props.currentBook);
                 }
                 this.forceUpdate();
@@ -241,7 +250,7 @@ class ConvertDialog extends React.Component<
                 "When a line of text is n times the size of regular text, it will be treated as a title"
               )}
             </>
-          ) : (
+          ) : ocrLangList.length > 0 ? (
             this.renderSelectRow(
               ocrEngine === "official-ai-ocr"
                 ? "Set OCR mode"
@@ -269,6 +278,7 @@ class ConvertDialog extends React.Component<
                       this.props.currentBook.key
                     )
                   ) {
+                    clearOcrCache(this.props.currentBook.key);
                     BookUtil.reloadBooks(this.props.currentBook);
                   }
                   this.forceUpdate();
@@ -276,8 +286,7 @@ class ConvertDialog extends React.Component<
               >
                 {[
                   { label: "Please select", value: "", lang: "" },
-                  ...(getOcrLangList(getDefaultOcrEngine(this.props.currentBook)) ||
-                    []),
+                  ...ocrLangList,
                 ].map((item) => (
                   <option
                     value={item.value}
@@ -289,7 +298,7 @@ class ConvertDialog extends React.Component<
                 ))}
               </select>
             )
-          )}
+          ) : null}
         </ul>
       </div>
     );

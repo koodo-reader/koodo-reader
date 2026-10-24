@@ -53,6 +53,10 @@ import { getOcrResult, getOcrResultV2 } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
 import { parseWithSystemOCR } from "../../utils/request/common";
 import { isElectron } from "react-device-detect";
+import axios from "axios";
+import { getBuiltinOcr } from "../../utils/plugins/rendererRegistry";
+import { resolveStoredPlugin } from "../../utils/plugins/records";
+import type { PluginConfig } from "../../utils/plugins/types";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
@@ -300,6 +304,57 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.description.indexOf("scanned") > -1
         ? "scannedOcrLang"
         : "textOcrLang";
+    const isScannedBook =
+      this.props.currentBook.description.indexOf("scanned") > -1;
+    const rawOcrEngine = getDefaultOcrEngine(this.props.currentBook);
+    let ocrEngine = rawOcrEngine;
+    let ocrLang = getDefaultOcrLang(rawOcrEngine, this.props.currentBook);
+    let externalWorker: {
+      recognize: (input: string) => Promise<unknown>;
+    } = {
+      recognize:
+        rawOcrEngine === "system-ocr"
+          ? parseWithSystemOCR
+          : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
+            ? getOcrResultV2
+            : getOcrResult,
+    };
+
+    const builtinOcr = getBuiltinOcr(rawOcrEngine);
+    if (builtinOcr) {
+      const record = await DatabaseService.getRecord(rawOcrEngine, "plugins");
+      const plugin = record ? await resolveStoredPlugin(record) : undefined;
+      if (plugin) {
+        const pluginConfig = {
+          ...(plugin.config as PluginConfig),
+        } as PluginConfig;
+        if (ocrLang) {
+          pluginConfig.language = ocrLang;
+        }
+        let ocrQueue: Promise<unknown> = Promise.resolve();
+        externalWorker = {
+          recognize: (imageBase64: string) => {
+            const task = ocrQueue.then(() =>
+              builtinOcr(imageBase64, axios, pluginConfig)
+            );
+            ocrQueue = task.catch(() => undefined);
+            return task.then((lines) => lines.join("\n"));
+          },
+        };
+        ocrEngine = "plugin-ocr";
+      } else {
+        ocrEngine = isScannedBook ? "paddle" : "system-ocr";
+        ocrLang = ocrEngine === "paddle" ? "standard_v5_mobile" : "auto";
+        externalWorker = {
+          recognize:
+            ocrEngine === "system-ocr"
+              ? parseWithSystemOCR
+              : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
+                ? getOcrResultV2
+                : getOcrResult,
+        };
+      }
+    }
     let rendition = BookHelper.getRendition(
       result,
       {
@@ -363,19 +418,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ).includes(this.props.currentBook.key)
           ? "yes"
           : "no",
-        ocrLang: getDefaultOcrLang(
-          getDefaultOcrEngine(this.props.currentBook),
-          this.props.currentBook
-        ),
-        externalWorker: {
-          recognize:
-            getDefaultOcrEngine(this.props.currentBook) === "system-ocr"
-              ? parseWithSystemOCR
-              : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
-                ? getOcrResultV2
-                : getOcrResult,
-        },
-        ocrEngine: getDefaultOcrEngine(this.props.currentBook),
+        ocrLang,
+        externalWorker,
+        ocrEngine,
         serverRegion:
           getServerRegion() === "china" && this.props.isAuthed
             ? "china"

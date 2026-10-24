@@ -35,6 +35,7 @@ import {
   ocrTesseractLangList,
 } from "../constants/dropdownList";
 import TokenService from "./storage/tokenService";
+import { getBuiltinPluginDefinition } from "./plugins/catalog";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -2035,6 +2036,25 @@ export const getDefaultOcrEngine = (currentBook: any) => {
   }
 };
 export const getOcrLangList = (engine: string) => {
+  const pluginDefinition = getBuiltinPluginDefinition(engine);
+  if (pluginDefinition?.type === "ocr") {
+    if (!pluginDefinition.defaultConfig.language) {
+      return [];
+    }
+    const langList = pluginDefinition.langList;
+    if (Array.isArray(langList)) {
+      return langList.map((item) => ({
+        label: item.nativeLang || item.lang,
+        value: item.code,
+        lang: item.code,
+      }));
+    }
+    return Object.entries(langList).map(([value, label]) => ({
+      label: String(label),
+      value,
+      lang: value,
+    }));
+  }
   let list: any[];
   if (engine === "tesseract") {
     list = ocrTesseractLangList;
@@ -2065,6 +2085,22 @@ export const getOcrLangList = (engine: string) => {
   return list;
 };
 export const getDefaultOcrLang = (engine: string, currentBook: any) => {
+  const pluginDefinition = getBuiltinPluginDefinition(engine);
+  if (pluginDefinition?.type === "ocr") {
+    const pluginLangList = getOcrLangList(engine);
+    if (pluginLangList.length === 0) {
+      return "";
+    }
+    const lang = ConfigService.getReaderConfig(
+      currentBook.description.indexOf("scanned") > -1
+        ? "scannedOcrLang"
+        : "textOcrLang"
+    );
+    if (lang && pluginLangList.some((item) => item.value === lang)) {
+      return lang;
+    }
+    return "";
+  }
   const lang = ConfigService.getReaderConfig(
     currentBook.description.indexOf("scanned") > -1
       ? "scannedOcrLang"
@@ -2337,6 +2373,27 @@ export const getOcrCachePath = (
     electron.fs.mkdirSync(ocrDir, { recursive: true });
   }
   return electron.path.join(ocrDir, bookKey + "_" + chapterDocIndex + ".json");
+};
+export const clearOcrCache = (bookKey: string) => {
+  if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
+    return;
+  }
+  try {
+    const electron = window.electronAPI;
+    const dirPath = electron.sendSync("user-data", "ping");
+    const ocrDir = electron.path.join(dirPath, "ocr");
+    if (!electron.fs.existsSync(ocrDir)) {
+      return;
+    }
+    const files = electron.fs.readdirSync(ocrDir);
+    files.forEach((fileName: string) => {
+      if (fileName.startsWith(bookKey + "_")) {
+        electron.fs.unlinkSync(electron.path.join(ocrDir, fileName));
+      }
+    });
+  } catch (error) {
+    console.error("Failed to clear ocr cache:", error);
+  }
 };
 export const isReadingRawPDF = (book: Book) => {
   return (
