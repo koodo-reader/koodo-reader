@@ -1,6 +1,6 @@
-import React from "react";
+import { useState } from "react";
 import { Trans } from "react-i18next";
-import { PdfCropDialogProps, PdfCropDialogState } from "./interface";
+import { PdfCropDialogProps } from "./interface";
 import "../../readerSettings/sliderList/sliderList.css";
 import BookUtil from "../../../utils/file/bookUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -51,163 +51,137 @@ interface PdfCropSliderProps {
   onCommit: () => void;
 }
 
-interface PdfCropSliderState {
-  inputValue: string;
-  isTyping: boolean;
-  isEntered: boolean;
-}
+const PdfCropSlider = (props: PdfCropSliderProps) => {
+  const [inputValue, setInputValue] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [isEntered, setIsEntered] = useState(false);
 
-class PdfCropSlider extends React.Component<
-  PdfCropSliderProps,
-  PdfCropSliderState
-> {
-  constructor(props: PdfCropSliderProps) {
-    super(props);
-    this.state = {
-      inputValue: "",
-      isTyping: false,
-      isEntered: false,
-    };
-  }
-
-  getClampedValue = (rawValue: string) => {
-    const { minValue, maxValue } = this.props.item;
+  const getClampedValue = (rawValue: string) => {
+    const { minValue, maxValue } = props.item;
     const parsedValue = parseFloat(rawValue);
     const min = minValue;
     const max = maxValue;
 
     if (Number.isNaN(parsedValue)) {
-      return this.props.value.toString();
+      return props.value.toString();
     }
 
     return Math.min(Math.max(parsedValue, min), max).toString();
   };
 
-  applyValue = (nextValue: string) => {
-    this.props.onValueChange(this.props.item.mode, parseFloat(nextValue));
+  const applyValue = (nextValue: string) => {
+    props.onValueChange(props.item.mode, parseFloat(nextValue));
   };
 
-  onValueChange = (event: any) => {
-    const nextValue = this.getClampedValue(event.target.value);
+  const onValueChange = (event: any) => {
+    const nextValue = getClampedValue(event.target.value);
     event.target.value = nextValue;
-    this.setState({ inputValue: nextValue });
-    this.applyValue(nextValue);
+    setInputValue(nextValue);
+    applyValue(nextValue);
   };
 
-  onValueInput = (event: any) => {
-    this.props.onValueChange(
-      this.props.item.mode,
-      parseFloat(event.target.value) || 0
-    );
+  const onValueInput = (event: any) => {
+    props.onValueChange(props.item.mode, parseFloat(event.target.value) || 0);
   };
 
-  render() {
-    const displayValue = this.props.value.toString();
-    return (
-      <div className="font-size-setting">
-        <div className="font-size-title">
-          <span style={{ marginRight: "10px" }}>
-            <Trans>{this.props.item.title}</Trans>
-          </span>
+  const displayValue = props.value.toString();
+  return (
+    <div className="font-size-setting">
+      <div className="font-size-title">
+        <span style={{ marginRight: "10px" }}>
+          <Trans>{props.item.title}</Trans>
+        </span>
 
+        <input
+          className="input-value"
+          value={isTyping ? inputValue : displayValue}
+          type="number"
+          step="1"
+          onInput={(event: any) => {
+            setInputValue(event.target.value);
+          }}
+          onChange={(event) => {
+            setInputValue(event.target.value);
+          }}
+          onFocus={() => {
+            setIsTyping(true);
+          }}
+          onBlur={(event) => {
+            if (!isEntered) {
+              const fieldVal = event.target.value;
+              if (!fieldVal) return;
+              onValueChange(event);
+              setIsTyping(false);
+              props.onCommit();
+            } else {
+              setIsEntered(false);
+            }
+          }}
+          onKeyDown={(event: any) => {
+            if (event.key === "Enter") {
+              setIsEntered(true);
+              const fieldVal = event.target.value;
+              if (!fieldVal) return;
+              onValueChange(event);
+              setIsTyping(false);
+              props.onCommit();
+            }
+          }}
+        />
+        <span style={{ marginLeft: "10px" }}>{displayValue}</span>
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <span className="ultra-small-size">{props.item.minLabel}</span>
+        <div className="font-size-selector">
           <input
-            className="input-value"
-            value={this.state.isTyping ? this.state.inputValue : displayValue}
-            type="number"
-            step="1"
-            onInput={(event: any) => {
-              this.setState({ inputValue: event.target.value });
+            className="input-progress"
+            value={displayValue}
+            type="range"
+            max={props.item.maxValue}
+            min={props.item.minValue}
+            step={props.item.step}
+            onInput={(event) => {
+              onValueChange(event);
             }}
             onChange={(event) => {
-              this.setState({ inputValue: event.target.value });
+              onValueInput(event);
             }}
-            onFocus={() => {
-              this.setState({ isTyping: true });
+            onMouseUp={() => {
+              props.onCommit();
             }}
-            onBlur={(event) => {
-              if (!this.state.isEntered) {
-                const fieldVal = event.target.value;
-                if (!fieldVal) return;
-                this.onValueChange(event);
-                this.setState({ isTyping: false });
-                this.props.onCommit();
-              } else {
-                this.setState({ isEntered: false });
-              }
-            }}
-            onKeyDown={(event: any) => {
-              if (event.key === "Enter") {
-                this.setState({ isEntered: true });
-                const fieldVal = event.target.value;
-                if (!fieldVal) return;
-                this.onValueChange(event);
-                this.setState({ isTyping: false });
-                this.props.onCommit();
-              }
-            }}
+            style={{ position: "absolute", bottom: "11px" }}
           />
-          <span style={{ marginLeft: "10px" }}>{displayValue}</span>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-around" }}>
-          <span className="ultra-small-size">{this.props.item.minLabel}</span>
-          <div className="font-size-selector">
-            <input
-              className="input-progress"
-              value={displayValue}
-              type="range"
-              max={this.props.item.maxValue}
-              min={this.props.item.minValue}
-              step={this.props.item.step}
-              onInput={(event) => {
-                this.onValueChange(event);
-              }}
-              onChange={(event) => {
-                this.onValueInput(event);
-              }}
-              onMouseUp={() => {
-                this.props.onCommit();
-              }}
-              style={{ position: "absolute", bottom: "11px" }}
-            />
-          </div>
-          <span className="ultra-large-size" style={{ fontSize: "16px" }}>
-            {this.props.item.maxLabel}
-          </span>
-        </div>
+        <span className="ultra-large-size" style={{ fontSize: "16px" }}>
+          {props.item.maxLabel}
+        </span>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-class PdfCropDialog extends React.Component<
-  PdfCropDialogProps,
-  PdfCropDialogState
-> {
-  constructor(props: PdfCropDialogProps) {
-    super(props);
-    const crop = ConfigService.getObjectConfig(
+const PdfCropDialog = (props: PdfCropDialogProps) => {
+  const [crop, setCrop] = useState<Record<string, number>>(() => {
+    const initialCrop = ConfigService.getObjectConfig(
       props.currentBook?.key,
       "pdfCrop",
       null
     );
-    this.state = {
-      top: Number(crop?.top) || 0,
-      bottom: Number(crop?.bottom) || 0,
-      left: Number(crop?.left) || 0,
-      right: Number(crop?.right) || 0,
+    return {
+      top: Number(initialCrop?.top) || 0,
+      bottom: Number(initialCrop?.bottom) || 0,
+      left: Number(initialCrop?.left) || 0,
+      right: Number(initialCrop?.right) || 0,
     };
-  }
+  });
 
-  handleValueChange = (mode: string, value: number) => {
-    this.setState({ [mode]: value } as Pick<
-      PdfCropDialogState,
-      keyof PdfCropDialogState
-    >);
+  const handleValueChange = (mode: string, value: number) => {
+    setCrop((prev) => ({ ...prev, [mode]: value }));
   };
 
-  handleCommit = () => {
-    const { top, bottom, left, right } = this.state;
-    const bookKey = this.props.currentBook.key;
+  const handleCommit = () => {
+    const { top, bottom, left, right } = crop;
+    const bookKey = props.currentBook.key;
     if (top === 0 && bottom === 0 && left === 0 && right === 0) {
       ConfigService.deleteObjectConfig(bookKey, "pdfCrop");
     } else {
@@ -217,51 +191,49 @@ class PdfCropDialog extends React.Component<
         "pdfCrop"
       );
     }
-    BookUtil.reloadBooks(this.props.currentBook);
+    BookUtil.reloadBooks(props.currentBook);
   };
 
-  render() {
-    return (
-      <div
-        className="sort-dialog-container pdf-crop-dialog-container"
-        onMouseLeave={() => {
-          this.props.handlePdfCropDialog(false);
-        }}
-        onMouseEnter={() => {
-          this.props.handlePdfCropDialog(true);
-        }}
-        style={{
-          top: "50px",
-          width: "280px",
-          paddingBottom: "20px",
-        }}
-      >
-        <ul className="sort-by-category">
-          <div
-            className="setting-dialog-new-title"
-            style={{
-              marginLeft: 10,
-              width: "calc(100% - 20px)",
-              textAlign: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Trans>Crop PDF</Trans>
-            <span>{" (%)"}</span>
-          </div>
-          {cropSliderConfigs.map((item) => (
-            <PdfCropSlider
-              key={item.mode}
-              item={item}
-              value={this.state[item.mode as keyof PdfCropDialogState]}
-              onValueChange={this.handleValueChange}
-              onCommit={this.handleCommit}
-            />
-          ))}
-        </ul>
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      className="sort-dialog-container pdf-crop-dialog-container"
+      onMouseLeave={() => {
+        props.handlePdfCropDialog(false);
+      }}
+      onMouseEnter={() => {
+        props.handlePdfCropDialog(true);
+      }}
+      style={{
+        top: "50px",
+        width: "280px",
+        paddingBottom: "20px",
+      }}
+    >
+      <ul className="sort-by-category">
+        <div
+          className="setting-dialog-new-title"
+          style={{
+            marginLeft: 10,
+            width: "calc(100% - 20px)",
+            textAlign: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Trans>Crop PDF</Trans>
+          <span>{" (%)"}</span>
+        </div>
+        {cropSliderConfigs.map((item) => (
+          <PdfCropSlider
+            key={item.mode}
+            item={item}
+            value={crop[item.mode]}
+            onValueChange={handleValueChange}
+            onCommit={handleCommit}
+          />
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 export default PdfCropDialog;

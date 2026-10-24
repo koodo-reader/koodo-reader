@@ -1,255 +1,269 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./progressPanel.css";
 import { Trans } from "react-i18next";
-import { ProgressPanelProps, ProgressPanelState } from "./interface";
+import { ProgressPanelProps } from "./interface";
 import _ from "underscore";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook, scrollContents } from "../../../utils/common";
-class ProgressPanel extends React.Component<
-  ProgressPanelProps,
-  ProgressPanelState
-> {
-  constructor(props: ProgressPanelProps) {
-    super(props);
-    this.state = {
-      currentPage: 0,
-      totalPage: 0,
-      targetChapterIndex: 0,
-      targetPage: 0,
-      currentPercentage: 0,
-      isEntered: false,
-    };
-  }
-  async UNSAFE_componentWillReceiveProps(nextProps: ProgressPanelProps) {
-    if (
-      nextProps.htmlBook !== this.props.htmlBook &&
-      nextProps.htmlBook &&
-      !this.props.htmlBook
-    ) {
-      await this.handlePageNum(nextProps.htmlBook.rendition);
-      nextProps.htmlBook.rendition.on("page-changed", async () => {
-        this.handleLocation();
-        await this.handlePageNum(nextProps.htmlBook.rendition);
-        this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
-        this.props.handleFetchPercentage(this.props.currentBook);
-      });
-      nextProps.htmlBook.rendition.on("rendered", async () => {
-        await this.handlePageNum(nextProps.htmlBook.rendition);
-        this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
-      });
-      this.handleCurrentChapterIndex(nextProps.htmlBook.rendition);
-      let bookLocation: {
-        text: string;
-        chapterTitle: string;
-        chapterDocIndex: string;
-        chapterHref: string;
-        percentage: string;
-      } = ConfigService.getObjectConfig(
-        this.props.currentBook.key,
-        "recordLocation",
-        {}
-      );
-      if (bookLocation.percentage) {
-        let percentage = (parseFloat(bookLocation.percentage) * 100).toFixed(2);
-        this.setState({ currentPercentage: parseFloat(percentage) });
-      }
-    }
-    if (nextProps.percentage !== this.props.percentage && nextProps.htmlBook) {
-      let percentage = (nextProps.percentage * 100).toFixed(2);
-      this.setState({ currentPercentage: parseFloat(percentage) });
-    }
-  }
-  handleLocation = () => {
-    let position = this.props.htmlBook.rendition.getPosition();
+
+const ProgressPanel = (props: ProgressPanelProps) => {
+  const [state, setState] = useState<Record<string, any>>({
+    currentPage: 0,
+    totalPage: 0,
+    targetChapterIndex: 0,
+    targetPage: 0,
+    currentPercentage: 0,
+    isEntered: false,
+  });
+
+  const handleLocation = () => {
+    let position = props.htmlBook.rendition.getPosition();
     ConfigService.setObjectConfig(
-      this.props.currentBook.key,
+      props.currentBook.key,
       position,
       "recordLocation"
     );
-    this.props.handleCurrentChapter(position.chapterTitle);
+    props.handleCurrentChapter(position.chapterTitle);
     setTimeout(() => {
       scrollContents(position.chapterTitle, position.chapterHref);
     }, 1000);
   };
-  handleCurrentChapterIndex = (rendition) => {
+
+  const handleCurrentChapterIndex = (rendition: any) => {
     let position = rendition.getPosition();
 
     let href = position.chapterHref;
     if (!href) {
       return;
     }
-    let chapterIndex = _.findIndex(this.props.htmlBook.flattenChapters, {
+    let chapterIndex = _.findIndex(props.htmlBook.flattenChapters, {
       href,
     });
-    this.setState({ targetChapterIndex: chapterIndex + 1 });
+    setState((prev) => ({ ...prev, targetChapterIndex: chapterIndex + 1 }));
   };
-  async handlePageNum(rendition) {
+
+  const handlePageNum = async (rendition: any) => {
     let pageInfo = await rendition.getProgress();
     if (!pageInfo) {
       return;
     }
-    this.setState({
+    setState((prev) => ({
+      ...prev,
       currentPage: pageInfo.currentPage,
       totalPage: pageInfo.totalPage,
-    });
-  }
-  onProgressChange = async (event: any) => {
-    const percentage = event.target.value / 100;
-    this.setState({ currentPercentage: event.target.value });
-    await this.props.htmlBook.rendition.goToPercentage(percentage);
+    }));
   };
-  nextChapter = async () => {
-    if (this.props.htmlBook.flattenChapters.length > 0) {
-      await this.props.htmlBook.rendition.nextChapter();
-    }
-  };
-  prevChapter = async () => {
-    if (this.props.htmlBook.flattenChapters.length > 0) {
-      await this.props.htmlBook.rendition.prevChapter();
-    }
-  };
-  handleJumpChapter = async (event: any) => {
-    let targetChapterIndex = parseInt(event.target.value.trim()) - 1;
-    await this.props.htmlBook.rendition.goToChapterIndex(targetChapterIndex);
-  };
-  render() {
-    if (!this.props.htmlBook) {
-      return <div className="progress-panel">Loading</div>;
-    }
-    let readerMode = isPaginatedBook(this.props.currentBook)
-      ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
-      : ConfigService.getReaderConfig("readerMode") || "double";
-    return (
-      <div className="progress-panel">
-        <p className="progress-text" style={{ marginTop: 10 }}>
-          <span>
-            <Trans>Progress</Trans>: {this.state.currentPercentage}
-            %&nbsp;&nbsp;&nbsp;
-          </span>
-        </p>
 
-        <p className="progress-text" style={{ marginTop: 0 }}>
-          <Trans>Pages</Trans>
-          <input
-            type="text"
-            name="jumpPage"
-            id="jumpPage"
-            value={
-              this.state.targetPage
-                ? this.state.targetPage
-                : this.state.currentPage *
-                  (readerMode === "double" &&
-                  this.props.currentBook.format !== "PDF"
-                    ? 2
-                    : 1)
+  useEffect(() => {
+    if (!props.htmlBook) return;
+    const rendition = props.htmlBook.rendition;
+    (async () => {
+      await handlePageNum(rendition);
+    })();
+    const onPageChanged = async () => {
+      handleLocation();
+      await handlePageNum(rendition);
+      handleCurrentChapterIndex(rendition);
+      props.handleFetchPercentage(props.currentBook);
+    };
+    const onRendered = async () => {
+      await handlePageNum(rendition);
+      handleCurrentChapterIndex(rendition);
+    };
+    rendition.on("page-changed", onPageChanged);
+    rendition.on("rendered", onRendered);
+    handleCurrentChapterIndex(rendition);
+    let bookLocation: {
+      text: string;
+      chapterTitle: string;
+      chapterDocIndex: string;
+      chapterHref: string;
+      percentage: string;
+    } = ConfigService.getObjectConfig(
+      props.currentBook.key,
+      "recordLocation",
+      {}
+    );
+    if (bookLocation.percentage) {
+      let percentage = (parseFloat(bookLocation.percentage) * 100).toFixed(2);
+      setState((prev) => ({
+        ...prev,
+        currentPercentage: parseFloat(percentage),
+      }));
+    }
+    return () => {
+      rendition.off?.("page-changed", onPageChanged);
+      rendition.off?.("rendered", onRendered);
+    };
+  }, [props.htmlBook]);
+
+  useEffect(() => {
+    if (props.htmlBook) {
+      let percentage = (props.percentage * 100).toFixed(2);
+      setState((prev) => ({
+        ...prev,
+        currentPercentage: parseFloat(percentage),
+      }));
+    }
+  }, [props.percentage]);
+
+  const onProgressChange = async (event: any) => {
+    const percentage = event.target.value / 100;
+    setState((prev) => ({ ...prev, currentPercentage: event.target.value }));
+    await props.htmlBook.rendition.goToPercentage(percentage);
+  };
+  const nextChapter = async () => {
+    if (props.htmlBook.flattenChapters.length > 0) {
+      await props.htmlBook.rendition.nextChapter();
+    }
+  };
+  const prevChapter = async () => {
+    if (props.htmlBook.flattenChapters.length > 0) {
+      await props.htmlBook.rendition.prevChapter();
+    }
+  };
+  const handleJumpChapter = async (event: any) => {
+    let targetChapterIndex = parseInt(event.target.value.trim()) - 1;
+    await props.htmlBook.rendition.goToChapterIndex(targetChapterIndex);
+  };
+
+  if (!props.htmlBook) {
+    return <div className="progress-panel">Loading</div>;
+  }
+  let readerMode = isPaginatedBook(props.currentBook)
+    ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
+    : ConfigService.getReaderConfig("readerMode") || "double";
+  return (
+    <div className="progress-panel">
+      <p className="progress-text" style={{ marginTop: 10 }}>
+        <span>
+          <Trans>Progress</Trans>: {state.currentPercentage}
+          %&nbsp;&nbsp;&nbsp;
+        </span>
+      </p>
+
+      <p className="progress-text" style={{ marginTop: 0 }}>
+        <Trans>Pages</Trans>
+        <input
+          type="text"
+          name="jumpPage"
+          id="jumpPage"
+          value={
+            state.targetPage
+              ? state.targetPage
+              : state.currentPage *
+                (readerMode === "double" &&
+                props.currentBook.format !== "PDF"
+                  ? 2
+                  : 1)
+          }
+          onFocus={() => {
+            setState((prev) => ({ ...prev, targetPage: " " }));
+          }}
+          onChange={(event) => {
+            let fieldVal = event.target.value;
+            setState((prev) => ({ ...prev, targetPage: fieldVal }));
+          }}
+          onBlur={(event) => {
+            if (event.target.value.trim()) {
+              props.htmlBook.rendition.goToPage(
+                parseInt(event.target.value.trim())
+              );
+            } else {
+              setState((prev) => ({ ...prev, targetPage: "" }));
             }
-            onFocus={() => {
-              this.setState({ targetPage: " " });
-            }}
-            onChange={(event) => {
-              let fieldVal = event.target.value;
-              this.setState({ targetPage: fieldVal });
-            }}
-            onBlur={(event) => {
+          }}
+        />
+        <span>/ {state.totalPage}</span>
+        &nbsp;&nbsp;&nbsp;
+        <Trans>Chapters</Trans>
+        <input
+          type="text"
+          name="jumpChapter"
+          id="jumpChapter"
+          value={state.targetChapterIndex}
+          onFocus={() => {
+            setState((prev) => ({ ...prev, targetChapterIndex: " " }));
+          }}
+          onChange={(event) => {
+            let fieldVal = event.target.value;
+            setState((prev) => ({ ...prev, targetChapterIndex: fieldVal }));
+          }}
+          onBlur={(event) => {
+            if (!state.isEntered) {
               if (event.target.value.trim()) {
-                this.props.htmlBook.rendition.goToPage(
-                  parseInt(event.target.value.trim())
-                );
+                handleJumpChapter(event);
+                setState((prev) => ({ ...prev, targetChapterIndex: "" }));
               } else {
-                this.setState({ targetPage: "" });
+                setState((prev) => ({ ...prev, targetChapterIndex: "" }));
               }
-            }}
-          />
-          <span>/ {this.state.totalPage}</span>
-          &nbsp;&nbsp;&nbsp;
-          <Trans>Chapters</Trans>
-          <input
-            type="text"
-            name="jumpChapter"
-            id="jumpChapter"
-            value={this.state.targetChapterIndex}
-            onFocus={() => {
-              this.setState({ targetChapterIndex: " " });
-            }}
-            onChange={(event) => {
-              let fieldVal = event.target.value;
-              this.setState({ targetChapterIndex: fieldVal });
-            }}
-            onBlur={(event) => {
-              if (!this.state.isEntered) {
-                if (event.target.value.trim()) {
-                  this.handleJumpChapter(event);
-                  this.setState({ targetChapterIndex: "" });
-                } else {
-                  this.setState({ targetChapterIndex: "" });
-                }
+            } else {
+              setState((prev) => ({ ...prev, isEntered: false }));
+            }
+          }}
+          onKeyDown={(event: any) => {
+            if (event.key === "Enter") {
+              setState((prev) => ({ ...prev, isEntered: true }));
+              if (event.target.value.trim()) {
+                handleJumpChapter(event);
+                setState((prev) => ({ ...prev, targetChapterIndex: "" }));
               } else {
-                this.setState({ isEntered: false });
+                setState((prev) => ({ ...prev, targetChapterIndex: "" }));
               }
-            }}
-            onKeyDown={(event: any) => {
-              if (event.key === "Enter") {
-                this.setState({ isEntered: true });
-                if (event.target.value.trim()) {
-                  this.handleJumpChapter(event);
-                  this.setState({ targetChapterIndex: "" });
-                } else {
-                  this.setState({ targetChapterIndex: "" });
-                }
-              }
-            }}
-          />
-          <span>/ {this.props.htmlBook.flattenChapters.length}</span>
-        </p>
+            }
+          }}
+        />
+        <span>/ {props.htmlBook.flattenChapters.length}</span>
+      </p>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "90%",
+          marginLeft: "5%",
+        }}
+      >
         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "90%",
-            marginLeft: "5%",
+          className="previous-chapter"
+          onClick={() => {
+            prevChapter();
           }}
         >
-          <div
-            className="previous-chapter"
-            onClick={() => {
-              this.prevChapter();
-            }}
-          >
-            <span className="icon-dropdown previous-chapter-icon"> </span>
-          </div>
-          <input
-            className="input-progress"
-            value={this.state.currentPercentage}
-            type="range"
-            max="100"
-            min="0"
-            step="1"
-            onMouseUp={(event) => {
-              this.onProgressChange(event);
-            }}
-            onTouchEnd={(event) => {
-              this.onProgressChange(event);
-            }}
-            onChange={(event) => {
-              this.setState({
-                currentPercentage: parseInt(event.target.value),
-              });
-            }}
-            style={{ width: "80%" }}
-          />
-          <div
-            className="next-chapter"
-            onClick={() => {
-              this.nextChapter();
-            }}
-          >
-            <span className="icon-dropdown next-chapter-icon"></span>
-          </div>
+          <span className="icon-dropdown previous-chapter-icon"> </span>
+        </div>
+        <input
+          className="input-progress"
+          value={state.currentPercentage}
+          type="range"
+          max="100"
+          min="0"
+          step="1"
+          onMouseUp={(event) => {
+            onProgressChange(event);
+          }}
+          onTouchEnd={(event) => {
+            onProgressChange(event);
+          }}
+          onChange={(event) => {
+            setState((prev) => ({
+              ...prev,
+              currentPercentage: parseInt(event.target.value),
+            }));
+          }}
+          style={{ width: "80%" }}
+        />
+        <div
+          className="next-chapter"
+          onClick={() => {
+            nextChapter();
+          }}
+        >
+          <span className="icon-dropdown next-chapter-icon"></span>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default ProgressPanel;

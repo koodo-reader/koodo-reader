@@ -1,9 +1,9 @@
-import React from "react";
+import { useEffect, useRef, useState } from "react";
 import "./popupMenu.css";
 import { isFixedLayoutBook, isPaginatedBook } from "../../../utils/common";
 import PopupOption from "../popupOption";
 import ColorOption from "../../colorOption";
-import { PopupMenuProps, PopupMenuStates } from "./interface";
+import { PopupMenuProps } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import {
   ConfigService,
@@ -19,91 +19,62 @@ declare var window: any;
 
 const MENU_WIDTH = 252;
 const MENU_HEIGHT = 141;
+const highlightUtil: any = new HighlightUtil(ConfigService);
 
-class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
-  highlighter: any;
-  highlightUtil: any;
-  timer!: NodeJS.Timeout;
-  key: any;
-  mode: string;
-  showNote: boolean;
-  isFirstShow: boolean;
-  rect: any;
-  constructor(props: PopupMenuProps) {
-    super(props);
-    this.highlightUtil = new HighlightUtil(ConfigService);
-    this.showNote = false;
-    this.isFirstShow = false;
-    this.highlighter = null;
-    this.mode = "";
-    this.state = {
-      rect: this.props.rect,
-    };
-  }
-  UNSAFE_componentWillReceiveProps(nextProps: PopupMenuProps) {
-    if (nextProps.rect !== this.props.rect) {
-      this.setState(
-        {
-          rect: nextProps.rect,
-        },
-        () => {
-          this.openMenu();
-        }
-      );
-    }
-  }
+const PopupMenu = (props: PopupMenuProps) => {
+  const [rect, setRect] = useState(props.rect);
+  const prevRectRef = useRef(props.rect);
 
-  showMenu = () => {
-    let rect = this.state.rect;
-    if (!rect) return;
-    let { posX, posY } = this.getHtmlPosition(rect);
-    this.props.handleOpenMenu(true);
+  const showMenu = (menuRect: any = rect) => {
+    if (!menuRect) return;
+    let { posX, posY } = getHtmlPosition(menuRect);
+    props.handleOpenMenu(true);
     let popupMenu = document.querySelector(".popup-menu-container");
     popupMenu?.setAttribute("style", `left:${posX}px;top:${posY}px`);
   };
-  getHtmlPosition(rect: any) {
-    let pageSize = this.props.rendition.getPageSize(this.props.chapterDocIndex);
-    let posY = rect.bottom - pageSize.scrollTop;
-    let posX = rect.left + rect.width / 2;
-    // fix popup position when crossing pages
-    if (rect.width > pageSize.sectionWidth && rect.left < 0) {
-      posX = rect.left + rect.width;
+
+  const getHtmlPosition = (menuRect: any) => {
+    let pageSize = props.rendition.getPageSize(props.chapterDocIndex);
+    let posY = menuRect.bottom - pageSize.scrollTop;
+    let posX = menuRect.left + menuRect.width / 2;
+    if (menuRect.width > pageSize.sectionWidth && menuRect.left < 0) {
+      posX = menuRect.left + menuRect.width;
     }
     if (
-      rect.top < MENU_HEIGHT &&
-      pageSize.height - rect.top - rect.height < MENU_HEIGHT &&
-      this.props.readerMode !== "scroll"
+      menuRect.top < MENU_HEIGHT &&
+      pageSize.height - menuRect.top - menuRect.height < MENU_HEIGHT &&
+      props.readerMode !== "scroll"
     ) {
-      this.props.handleChangeDirection(true);
-      posY = rect.top + 16 + pageSize.top;
+      props.handleChangeDirection(true);
+      posY = menuRect.top + 16 + pageSize.top;
     } else if (
-      pageSize.height - rect.height < MENU_HEIGHT &&
-      pageSize.height - rect.height > -10
+      pageSize.height - menuRect.height < MENU_HEIGHT &&
+      pageSize.height - menuRect.height > -10
     ) {
-      this.props.handleChangeDirection(true);
-      posY = rect.top - pageSize.scrollTop + 16;
+      props.handleChangeDirection(true);
+      posY = menuRect.top - pageSize.scrollTop + 16;
     } else if (
-      rect.height - pageSize.height > 0 &&
-      this.props.readerMode === "scroll"
+      menuRect.height - pageSize.height > 0 &&
+      props.readerMode === "scroll"
     ) {
       posY = 40;
     } else if (posY < pageSize.height - MENU_HEIGHT + pageSize.top) {
-      this.props.handleChangeDirection(true);
+      props.handleChangeDirection(true);
       posY = posY + 16 + pageSize.top;
     } else {
-      posY = posY - rect.height - MENU_HEIGHT + pageSize.top;
+      posY = posY - menuRect.height - MENU_HEIGHT + pageSize.top;
     }
     posX = posX - MENU_WIDTH / 2 + pageSize.left;
     if (
-      isPaginatedBook(this.props.currentBook) &&
-      this.props.readerMode === "double" &&
-      this.props.chapterDocIndex % 2 === 1
+      isPaginatedBook(props.currentBook) &&
+      props.readerMode === "double" &&
+      props.chapterDocIndex % 2 === 1
     ) {
       posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
-      isPaginatedBook(this.props.currentBook) &&
-      this.props.readerMode === "scroll" &&
+      isPaginatedBook(props.currentBook) &&
+      props.readerMode === "scroll" &&
       posY < 0
     ) {
       posY = posY + pageSize.offsetTop;
@@ -115,8 +86,8 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posY = pageSize.height - MENU_HEIGHT;
     }
     if (
-      this.props.readerMode === "scroll" &&
-      this.props.currentBook.format === "PDF"
+      props.readerMode === "scroll" &&
+      props.currentBook.format === "PDF"
     ) {
       posX = posX - pageSize.scrollLeft;
     }
@@ -124,19 +95,19 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
       posX: Math.min(Math.max(12, posX), window.innerWidth - 12 - MENU_WIDTH),
       posY,
     } as any;
-  }
+  };
 
-  openMenu = () => {
-    let docs = getIframeDoc(this.props.currentBook);
+  const openMenu = (menuRect?: any) => {
+    let docs = getIframeDoc(props.currentBook);
     let sel: Selection | null = null;
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
-      if (isPaginatedBook(this.props.currentBook)) {
+      if (isPaginatedBook(props.currentBook)) {
         let targetIframe = doc?.defaultView?.frameElement;
         let id = targetIframe?.getAttribute("id") || "";
         let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
-        if (chapterDocIndex !== this.props.chapterDocIndex) {
+        if (chapterDocIndex !== props.chapterDocIndex) {
           continue;
         }
       }
@@ -146,95 +117,102 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         break;
       }
     }
-    this.props.handleChangeDirection(false);
-    if (this.props.isOpenMenu) {
-      this.props.handleMenuMode("");
-      this.props.handleOpenMenu(false);
-      this.props.handleNoteKey("");
+    props.handleChangeDirection(false);
+    if (props.isOpenMenu) {
+      props.handleMenuMode("");
+      props.handleOpenMenu(false);
+      props.handleNoteKey("");
     }
     if (!sel) return;
     if (sel.isCollapsed) {
-      this.props.isOpenMenu && this.props.handleOpenMenu(false);
-      this.props.handleMenuMode("menu");
-      this.props.handleNoteKey("");
+      props.isOpenMenu && props.handleOpenMenu(false);
+      props.handleMenuMode("menu");
+      props.handleNoteKey("");
       return;
     }
 
     const selectAction = ConfigService.getReaderConfig("selectAction");
     if (selectAction && selectAction !== "") {
-      this.handleSelectAction(selectAction, sel);
+      handleSelectAction(selectAction, sel);
       return;
     }
 
-    this.showMenu();
-    this.props.handleMenuMode("menu");
+    showMenu(menuRect);
+    props.handleMenuMode("menu");
   };
 
-  handleDigest = async () => {
+  useEffect(() => {
+    if (prevRectRef.current !== props.rect) {
+      prevRectRef.current = props.rect;
+      setRect(props.rect);
+      openMenu(props.rect);
+    }
+  }, [props.rect]);
+
+  const handleDigest = async () => {
     await createHighlight({
-      currentBook: this.props.currentBook,
-      htmlBook: this.props.htmlBook,
-      chapterDocIndex: this.props.chapterDocIndex,
-      chapter: this.props.chapter,
-      color: this.highlightUtil.formatHighlightValue(this.props.highlight),
-      t: this.props.t,
+      currentBook: props.currentBook,
+      htmlBook: props.htmlBook,
+      chapterDocIndex: props.chapterDocIndex,
+      chapter: props.chapter,
+      color: highlightUtil.formatHighlightValue(props.highlight),
+      t: props.t,
       onNoteClick: (event: Event) => {
-        this.props.handleNoteKey((event.target as any).dataset.key);
-        this.props.handleMenuMode("note");
-        this.props.handleOpenMenu(true);
+        props.handleNoteKey((event.target as any).dataset.key);
+        props.handleMenuMode("note");
+        props.handleOpenMenu(true);
       },
       onSuccess: () => {
-        this.props.handleOpenMenu(false);
-        this.props.handleFetchNotes();
-        this.props.handleMenuMode("");
+        props.handleOpenMenu(false);
+        props.handleFetchNotes();
+        props.handleMenuMode("");
       },
     });
   };
 
-  handleSelectAction = async (action: string, _sel: Selection) => {
-    const text = getSelection(this.props.currentBook);
+  const handleSelectAction = async (action: string, _sel: Selection) => {
+    const text = getSelection(props.currentBook);
     if (!text) return;
-    // PPTX/XPS/OXPS/DjVu/OFD 不支持笔记和高亮，回退到默认菜单
     if (
       (action === "note" || action === "highlight") &&
-      isFixedLayoutBook(this.props.currentBook)
+      isFixedLayoutBook(props.currentBook)
     ) {
-      this.showMenu();
-      this.props.handleMenuMode("menu");
+      showMenu();
+      props.handleMenuMode("menu");
       return;
     }
 
     switch (action) {
       case "translation":
-        this.props.handleOriginalText(text);
-        this.props.handleMenuMode("trans");
-        this.props.handleOpenMenu(true);
+        props.handleOriginalText(text);
+        props.handleMenuMode("trans");
+        props.handleOpenMenu(true);
         break;
       case "dict":
-        this.props.handleOriginalText(text);
-        this.props.handleOriginalSentence(
-          getSelectionSentence(this.props.currentBook)
+        props.handleOriginalText(text);
+        props.handleOriginalSentence(
+          getSelectionSentence(props.currentBook)
         );
-        this.props.handleMenuMode("dict");
-        this.props.handleOpenMenu(true);
+        props.handleMenuMode("dict");
+        props.handleOpenMenu(true);
         break;
       case "highlight":
         await createHighlight({
-          currentBook: this.props.currentBook,
-          htmlBook: this.props.htmlBook,
-          chapterDocIndex: this.props.chapterDocIndex,
-          chapter: this.props.chapter,
-          color: this.highlightUtil.formatHighlightValue(this.props.highlight),
-          t: this.props.t,
+          currentBook: props.currentBook,
+          htmlBook: props.htmlBook,
+          chapterDocIndex: props.chapterDocIndex,
+          chapter: props.chapter,
+          color: highlightUtil.formatHighlightValue(props.highlight),
+          t: props.t,
           onSuccess: () => {
-            this.props.handleOpenMenu(false);
+            props.handleOpenMenu(false);
           },
         });
         break;
       case "note":
-        this.props.handleMenuMode("note");
-        this.showMenu();
-        this.props.handleOpenMenu(true);
+        props.handleMenuMode("note");
+        showMenu();
+        props.handleOpenMenu(true);
         break;
       case "speaker":
         const msg = new SpeechSynthesisUtterance();
@@ -245,47 +223,45 @@ class PopupMenu extends React.Component<PopupMenuProps, PopupMenuStates> {
         }
         break;
       default:
-        this.showMenu();
-        this.props.handleMenuMode("menu");
+        showMenu();
+        props.handleMenuMode("menu");
         break;
     }
   };
 
-  render() {
-    const PopupProps = {
-      chapterDocIndex: this.props.chapterDocIndex,
-      chapter: this.props.chapter,
-    };
-    const ColorProps = {
-      handleDigest: this.handleDigest,
-    };
-    return (
-      <div>
+  const PopupProps = {
+    chapterDocIndex: props.chapterDocIndex,
+    chapter: props.chapter,
+  };
+  const ColorProps = {
+    handleDigest: handleDigest,
+  };
+  return (
+    <div>
+      <div
+        className="popup-menu-container"
+        style={props.isOpenMenu ? {} : { display: "none" }}
+      >
         <div
-          className="popup-menu-container"
-          style={this.props.isOpenMenu ? {} : { display: "none" }}
+          className="popup-menu-box"
+          style={props.menuMode === "menu" ? {} : { display: "none" }}
         >
-          <div
-            className="popup-menu-box"
-            style={this.props.menuMode === "menu" ? {} : { display: "none" }}
-          >
-            <PopupOption {...(PopupProps as any)} />
-          </div>
-          <div
-            className="popup-color-box"
-            style={
-              this.props.menuMode === "menu" &&
-              !isFixedLayoutBook(this.props.currentBook)
-                ? {}
-                : { display: "none" }
-            }
-          >
-            <ColorOption {...(ColorProps as any)} />
-          </div>
+          <PopupOption {...(PopupProps as any)} />
+        </div>
+        <div
+          className="popup-color-box"
+          style={
+            props.menuMode === "menu" &&
+            !isFixedLayoutBook(props.currentBook)
+              ? {}
+              : { display: "none" }
+          }
+        >
+          <ColorOption {...(ColorProps as any)} />
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default PopupMenu;

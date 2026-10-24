@@ -1,9 +1,9 @@
-import React from "react";
+import { useEffect, useRef, useState } from "react";
 import "./operationPanel.css";
 import Bookmark from "../../../models/Bookmark";
 import { Trans } from "react-i18next";
 
-import { OperationPanelProps, OperationPanelState } from "./interface";
+import { OperationPanelProps } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -13,75 +13,92 @@ import { handleExitFullScreen, handleFullScreen } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import BookLocation from "../../../models/BookLocation";
 declare var window: any;
-class OperationPanel extends React.Component<
-  OperationPanelProps,
-  OperationPanelState
-> {
-  timeStamp: number;
-  speed: number;
-  timer: any;
 
-  constructor(props: OperationPanelProps) {
-    super(props);
-    this.state = {
-      timeLeft: 0,
-      isFullscreen: ConfigService.getReaderConfig("isFullscreen") === "yes",
-    };
-    this.timeStamp = Date.now();
-    this.speed = 30000;
-  }
+const OperationPanel = (props: OperationPanelProps) => {
+  const [state, setState] = useState<Record<string, any>>({
+    timeLeft: 0,
+    isFullscreen: ConfigService.getReaderConfig("isFullscreen") === "yes",
+  });
+  const timeStampRef = useRef(Date.now());
+  const speedRef = useRef(30000);
 
-  handleFullscreenChange = () => {
+  const handleFullscreenChange = () => {
     const isNowFullscreen = !!document.fullscreenElement;
     if (!isNowFullscreen) {
       ConfigService.setReaderConfig("isFullscreen", "no");
     }
-    this.setState({ isFullscreen: isNowFullscreen });
+    setState((prev) => ({ ...prev, isFullscreen: isNowFullscreen }));
   };
 
-  componentDidMount() {
-    document.addEventListener("fullscreenchange", this.handleFullscreenChange);
-    this.props.htmlBook.rendition.on("page-changed", async () => {
-      this.speed = Date.now() - this.timeStamp;
-      this.timeStamp = Date.now();
-      let pageProgress = await this.props.htmlBook.rendition.getProgress();
-      this.setState({
-        timeLeft:
-          ((pageProgress.totalPage - pageProgress.currentPage) * this.speed) /
-          1000,
-      });
-      this.handleDisplayBookmark();
-    });
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener(
-      "fullscreenchange",
-      this.handleFullscreenChange
+  const handleDisplayBookmark = async () => {
+    props.handleShowBookmark(false);
+    let bookLocation: {
+      text: string;
+      count: string;
+      chapterTitle: string;
+      chapterDocIndex: string;
+      chapterHref: string;
+      percentage: string;
+      cfi: string;
+    } = ConfigService.getObjectConfig(
+      props.currentBook.key,
+      "recordLocation",
+      {}
     );
-  }
+    let bookmarks = await DatabaseService.getRecordsByBookKey(
+      props.currentBook.key,
+      "bookmarks"
+    );
+    bookmarks.forEach((item) => {
+      if (item.cfi === JSON.stringify(bookLocation)) {
+        props.handleShowBookmark(true);
+      }
+    });
+  };
 
-  handleShortcut() {}
-  handleScreen() {
+  useEffect(() => {
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    const onPageChanged = async () => {
+      speedRef.current = Date.now() - timeStampRef.current;
+      timeStampRef.current = Date.now();
+      let pageProgress = await props.htmlBook.rendition.getProgress();
+      setState((prev) => ({
+        ...prev,
+        timeLeft:
+          ((pageProgress.totalPage - pageProgress.currentPage) *
+            speedRef.current) /
+          1000,
+      }));
+      handleDisplayBookmark();
+    };
+    props.htmlBook.rendition.on("page-changed", onPageChanged);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      props.htmlBook.rendition.off?.("page-changed", onPageChanged);
+    };
+  }, []);
+
+  const handleScreen = () => {
     const entering = ConfigService.getReaderConfig("isFullscreen") !== "yes";
     entering ? handleFullScreen() : handleExitFullScreen();
     if (entering) {
       ConfigService.setReaderConfig("isFullscreen", "yes");
-      this.setState({ isFullscreen: true });
+      setState((prev) => ({ ...prev, isFullscreen: true }));
     } else {
       ConfigService.setReaderConfig("isFullscreen", "no");
-      this.setState({ isFullscreen: false });
+      setState((prev) => ({ ...prev, isFullscreen: false }));
     }
-  }
-  async handleExit() {
+  };
+
+  const handleExit = async () => {
     ConfigService.setReaderConfig("isFullscreen", "no");
-    this.props.handleReadingState(false);
-    this.props.handleSearch(false);
+    props.handleReadingState(false);
+    props.handleSearch(false);
     window.speechSynthesis && window.speechSynthesis.cancel();
     TTSUtil.pauseAudio();
     handleExitFullScreen();
-    if (this.props.htmlBook) {
-      this.props.handleHtmlBook(null);
+    if (props.htmlBook) {
+      props.handleHtmlBook(null);
     }
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
@@ -93,9 +110,10 @@ class OperationPanel extends React.Component<
       ConfigService.setReaderConfig("isFinishWebReading", "yes");
       window.close();
     }
-  }
-  handleAddBookmark = async () => {
-    let bookKey = this.props.currentBook.key;
+  };
+
+  const handleAddBookmark = async () => {
+    let bookKey = props.currentBook.key;
     let bookLocation: BookLocation = ConfigService.getObjectConfig(
       bookKey,
       "recordLocation",
@@ -106,7 +124,7 @@ class OperationPanel extends React.Component<
     let percentage = bookLocation.percentage;
     let isDuplicate = false;
     let bookmarks = await DatabaseService.getRecordsByBookKey(
-      this.props.currentBook.key,
+      props.currentBook.key,
       "bookmarks"
     );
     for (let i = 0; i < bookmarks.length; i++) {
@@ -119,13 +137,13 @@ class OperationPanel extends React.Component<
       }
     }
     if (isDuplicate) {
-      toast.error(this.props.t("Bookmark already exists"));
+      toast.error(props.t("Bookmark already exists"));
       return;
     }
 
     let cfi = JSON.stringify(bookLocation);
     if (!text) {
-      text = (await this.props.htmlBook.rendition.visibleText()).join(" ");
+      text = (await props.htmlBook.rendition.visibleText()).join(" ");
     }
     text = text
       .replace(/\s\s/g, "")
@@ -142,120 +160,92 @@ class OperationPanel extends React.Component<
       chapter
     );
     await DatabaseService.saveRecord(bookmark, "bookmarks");
-    this.props.handleFetchBookmarks();
-    this.props.handleShowBookmark(true);
+    props.handleFetchBookmarks();
+    props.handleShowBookmark(true);
   };
-  async handleDisplayBookmark() {
-    this.props.handleShowBookmark(false);
-    let bookLocation: {
-      text: string;
-      count: string;
-      chapterTitle: string;
-      chapterDocIndex: string;
-      chapterHref: string;
-      percentage: string;
-      cfi: string;
-    } = ConfigService.getObjectConfig(
-      this.props.currentBook.key,
-      "recordLocation",
-      {}
-    );
-    let bookmarks = await DatabaseService.getRecordsByBookKey(
-      this.props.currentBook.key,
-      "bookmarks"
-    );
-    bookmarks.forEach((item) => {
-      if (item.cfi === JSON.stringify(bookLocation)) {
-        this.props.handleShowBookmark(true);
-      }
-    });
-  }
-  render() {
-    return (
-      <div className="book-operation-panel">
-        <div className="book-opeartion-info">
-          <span>
-            <Trans
-              i18nKey="Current reading time"
-              count={Math.floor(
-                Math.abs(Math.floor(this.props.currentDuration / 60))
-              )}
-            >
-              Current reading time:
-              {{
-                count: Math.abs(Math.floor(this.props.currentDuration / 60)),
-              }}
-              min
-            </Trans>
-          </span>
-          &nbsp;&nbsp;&nbsp;
-          <span>
-            <Trans
-              i18nKey="Remaining reading time"
-              count={Math.ceil(this.state.timeLeft / 60)}
-            >
-              Remaining reading time:
-              {{
-                count: `${Math.ceil(this.state.timeLeft / 60)}`,
-              }}
-              min
-            </Trans>
-          </span>
-        </div>
-        <div
-          className="exit-reading-button"
-          onClick={() => {
-            this.handleExit();
-          }}
-        >
-          <div className="operation-button-container">
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span className="icon-exit exit-reading-icon"></span>
-              <span className="exit-reading-text">
-                <Trans>Exit</Trans>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div
-          className="add-bookmark-button"
-          onClick={() => {
-            this.handleAddBookmark();
-          }}
-        >
-          <div className="operation-button-container">
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span className="icon-add add-bookmark-icon"></span>
-              <span className="add-bookmark-text">
-                <Trans>Bookmark</Trans>
-              </span>
-            </div>
-          </div>
-        </div>
-        <div
-          className="enter-fullscreen-button"
-          onClick={() => {
-            this.handleScreen();
-          }}
-        >
-          <div className="operation-button-container">
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span
-                className={`${this.state.isFullscreen ? "icon-collapse" : "icon-fullscreen"} enter-fullscreen-icon`}
-              ></span>
-              <span className="enter-fullscreen-text">
-                {this.state.isFullscreen ? (
-                  <Trans>Exit full screen</Trans>
-                ) : (
-                  <Trans>Full screen</Trans>
-                )}
-              </span>
-            </div>
+
+  return (
+    <div className="book-operation-panel">
+      <div className="book-opeartion-info">
+        <span>
+          <Trans
+            i18nKey="Current reading time"
+            count={Math.floor(Math.abs(Math.floor(props.currentDuration / 60)))}
+          >
+            Current reading time:
+            {{
+              count: Math.abs(Math.floor(props.currentDuration / 60)),
+            }}
+            min
+          </Trans>
+        </span>
+        &nbsp;&nbsp;&nbsp;
+        <span>
+          <Trans
+            i18nKey="Remaining reading time"
+            count={Math.ceil(state.timeLeft / 60)}
+          >
+            Remaining reading time:
+            {{
+              count: `${Math.ceil(state.timeLeft / 60)}`,
+            }}
+            min
+          </Trans>
+        </span>
+      </div>
+      <div
+        className="exit-reading-button"
+        onClick={() => {
+          handleExit();
+        }}
+      >
+        <div className="operation-button-container">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span className="icon-exit exit-reading-icon"></span>
+            <span className="exit-reading-text">
+              <Trans>Exit</Trans>
+            </span>
           </div>
         </div>
       </div>
-    );
-  }
-}
+      <div
+        className="add-bookmark-button"
+        onClick={() => {
+          handleAddBookmark();
+        }}
+      >
+        <div className="operation-button-container">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span className="icon-add add-bookmark-icon"></span>
+            <span className="add-bookmark-text">
+              <Trans>Bookmark</Trans>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        className="enter-fullscreen-button"
+        onClick={() => {
+          handleScreen();
+        }}
+      >
+        <div className="operation-button-container">
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span
+              className={`${state.isFullscreen ? "icon-collapse" : "icon-fullscreen"} enter-fullscreen-icon`}
+            ></span>
+            <span className="enter-fullscreen-text">
+              {state.isFullscreen ? (
+                <Trans>Exit full screen</Trans>
+              ) : (
+                <Trans>Full screen</Trans>
+              )}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default withRouter(OperationPanel as any);

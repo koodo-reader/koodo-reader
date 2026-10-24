@@ -1,9 +1,8 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./popupNote.css";
 import { isReadingRawPDF } from "../../../utils/common";
 import Note from "../../../models/Note";
-import _ from "underscore";
-import { PopupNoteProps, PopupNoteState } from "./interface";
+import { PopupNoteProps } from "./interface";
 import NoteTag from "../../noteTag";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -16,138 +15,135 @@ import {
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
-class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
-  highlightUtil: any;
-  constructor(props: PopupNoteProps) {
-    super(props);
-    this.highlightUtil = new HighlightUtil(ConfigService);
-    this.state = { tag: [], text: "", note: null };
-  }
-  async componentDidMount() {
+
+const highlightUtil: any = new HighlightUtil(ConfigService);
+
+const PopupNote = (props: PopupNoteProps) => {
+  const [tag, setTag] = useState<string[]>([]);
+  const [text, setText] = useState("");
+  const [note, setNote] = useState<Note | null>(null);
+
+  useEffect(() => {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
-    if (this.props.noteKey) {
-      let note: Note = await DatabaseService.getRecord(
-        this.props.noteKey,
-        "notes"
-      );
-      this.setState({
-        text: note.text,
-        tag: note.tag,
-        note: note,
-      });
-      textArea.value = note.notes;
-      let { styleType, color } = this.highlightUtil.getHighlightValue(
-        note.color || "background-#FEF3CD"
-      );
-      this.props.handleHighlight({
-        styleType,
-        color,
-      });
-    } else {
-      let docs = getIframeDoc(this.props.currentBook);
-      let text = "";
-      for (let i = 0; i < docs.length; i++) {
-        let doc = docs[i];
-        if (!doc) continue;
-        text = doc.getSelection()?.toString() || "";
-        if (text) {
-          break;
+    (async () => {
+      if (props.noteKey) {
+        let loadedNote: Note = await DatabaseService.getRecord(
+          props.noteKey,
+          "notes"
+        );
+        setText(loadedNote.text);
+        setTag(loadedNote.tag);
+        setNote(loadedNote);
+        if (textArea) {
+          textArea.value = loadedNote.notes;
         }
+        let { styleType, color } = highlightUtil.getHighlightValue(
+          loadedNote.color || "background-#FEF3CD"
+        );
+        props.handleHighlight({
+          styleType,
+          color,
+        });
+      } else {
+        let docs = getIframeDoc(props.currentBook);
+        let selectedText = "";
+        for (let i = 0; i < docs.length; i++) {
+          let doc = docs[i];
+          if (!doc) continue;
+          selectedText = doc.getSelection()?.toString() || "";
+          if (selectedText) {
+            break;
+          }
+        }
+        if (!selectedText) return;
+
+        selectedText = selectedText.replace(/\s\s/g, "");
+        selectedText = selectedText.replace(/\r/g, "");
+        selectedText = selectedText.replace(/\n/g, "");
+        selectedText = selectedText.replace(/\t/g, "");
+        selectedText = selectedText.replace(/\f/g, "");
+        setText(selectedText);
       }
-      if (!text) return;
+    })();
+  }, []);
 
-      text = text.replace(/\s\s/g, "");
-      text = text.replace(/\r/g, "");
-      text = text.replace(/\n/g, "");
-      text = text.replace(/\t/g, "");
-      text = text.replace(/\f/g, "");
-      this.setState({ text });
-    }
-  }
-  handleTag = (tag: string[]) => {
-    this.setState({ tag });
+  const handleTag = (nextTag: string[]) => {
+    setTag(nextTag);
   };
 
-  handleNoteClick = (event: Event) => {
-    this.props.handleNoteKey((event.target as any).dataset.key);
-    this.props.handleMenuMode("note");
-    this.props.handleOpenMenu(true);
+  const handleNoteClick = (event: Event) => {
+    props.handleNoteKey((event.target as any).dataset.key);
+    props.handleMenuMode("note");
+    props.handleOpenMenu(true);
   };
-  async createNote() {
+
+  const createNote = async () => {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
 
-    if (this.props.noteKey) {
-      let newNote = await DatabaseService.getRecord(
-        this.props.noteKey,
-        "notes"
-      );
+    if (props.noteKey) {
+      let newNote = await DatabaseService.getRecord(props.noteKey, "notes");
       newNote.notes = notes;
-      newNote.tag = this.state.tag;
+      newNote.tag = tag;
       newNote.color =
-        this.highlightUtil.formatHighlightValue(this.props.highlight) ||
-        newNote.color;
+        highlightUtil.formatHighlightValue(props.highlight) || newNote.color;
       DatabaseService.updateRecord(newNote, "notes").then(() => {
-        this.props.handleOpenMenu(false);
-        this.props.handleFetchNotes();
-        this.props.handleMenuMode("");
-        this.props.handleNoteKey("");
-        this.props.handleShowPopupNote(false);
-        if (this.props.htmlBook && this.props.htmlBook.rendition) {
-          this.props.htmlBook.rendition.removeOneNote(
-            this.props.noteKey,
-            this.props.chapterDocIndex
+        props.handleOpenMenu(false);
+        props.handleFetchNotes();
+        props.handleMenuMode("");
+        props.handleNoteKey("");
+        props.handleShowPopupNote(false);
+        if (props.htmlBook && props.htmlBook.rendition) {
+          props.htmlBook.rendition.removeOneNote(
+            props.noteKey,
+            props.chapterDocIndex
           );
-          this.props.htmlBook.rendition.createOneNote(
-            newNote,
-            this.handleNoteClick
-          );
+          props.htmlBook.rendition.createOneNote(newNote, handleNoteClick);
         }
       });
     } else {
       let cfi = JSON.stringify(
         ConfigService.getObjectConfig(
-          this.props.currentBook.key,
+          props.currentBook.key,
           "recordLocation",
           {}
         )
       );
-      if (isReadingRawPDF(this.props.currentBook)) {
-        let bookLocation = this.props.htmlBook.rendition.getPositionByChapter(
-          this.props.chapterDocIndex
+      if (isReadingRawPDF(props.currentBook)) {
+        let bookLocation = props.htmlBook.rendition.getPositionByChapter(
+          props.chapterDocIndex
         );
         cfi = JSON.stringify(bookLocation);
       }
-      let bookKey = this.props.currentBook.key;
+      let bookKey = props.currentBook.key;
       let range = JSON.stringify(
-        await this.props.htmlBook.rendition.getHighlightCoords(
-          this.props.chapterDocIndex
+        await props.htmlBook.rendition.getHighlightCoords(
+          props.chapterDocIndex
         )
       );
 
       let percentage = ConfigService.getObjectConfig(
-        this.props.currentBook.key,
+        props.currentBook.key,
         "recordLocation",
         {}
       ).percentage
         ? ConfigService.getObjectConfig(
-            this.props.currentBook.key,
+            props.currentBook.key,
             "recordLocation",
             {}
           ).percentage
         : "0";
 
       let color =
-        this.highlightUtil.formatHighlightValue(this.props.highlight) ||
+        highlightUtil.formatHighlightValue(props.highlight) ||
         "background-#FEF3CD";
-      let tag = this.state.tag;
 
-      let note = new Note(
+      let newNote = new Note(
         bookKey,
-        this.props.chapter,
-        this.props.chapterDocIndex,
-        this.state.text,
+        props.chapter,
+        props.chapterDocIndex,
+        text,
         cfi,
         range,
         notes,
@@ -155,132 +151,124 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         color,
         tag
       );
-      DatabaseService.saveRecord(note, "notes").then(async () => {
-        this.props.handleOpenMenu(false);
-        this.props.handleFetchNotes();
-        this.props.handleMenuMode("");
-        await this.props.htmlBook.rendition.createOneNote(
-          note,
-          this.handleNoteClick
+      DatabaseService.saveRecord(newNote, "notes").then(async () => {
+        props.handleOpenMenu(false);
+        props.handleFetchNotes();
+        props.handleMenuMode("");
+        await props.htmlBook.rendition.createOneNote(
+          newNote,
+          handleNoteClick
         );
-        // Auto-sync note to enabled destinations
         let noteSyncManager = new NoteSyncManager(
           DatabaseService,
           ConfigService,
           window.electronAPI?.fs,
           window.electronAPI?.path
         );
-        noteSyncManager.syncNote(note, bookKey);
+        noteSyncManager.syncNote(newNote, bookKey);
       });
-    }
-  }
-  handleUpdateHighlight = () => {};
-  handleClose = () => {
-    if (this.props.noteKey) {
-      DatabaseService.deleteRecord(this.props.noteKey, "notes").then(() => {
-        toast.success(this.props.t("Deletion successful"));
-        this.props.handleMenuMode("");
-        this.props.handleFetchNotes();
-        this.props.handleNoteKey("");
-        if (this.props.htmlBook && this.props.htmlBook.rendition) {
-          this.props.htmlBook.rendition.removeOneNote(
-            this.props.noteKey,
-            this.props.chapterDocIndex
-          );
-        }
-
-        this.props.handleOpenMenu(false);
-        this.props.handleShowPopupNote(false);
-      });
-    } else {
-      this.props.handleOpenMenu(false);
-      this.props.handleMenuMode("");
-      this.props.handleNoteKey("");
     }
   };
 
-  render() {
-    const colorOptionProps = {
-      handleDigest: this.handleUpdateHighlight,
-      isEdit: true,
-      noteItem: this.state.note,
-    };
-    let note = this.state.note;
+  const handleUpdateHighlight = () => {};
 
-    const renderNoteEditor = () => {
-      return (
-        <div className="note-editor">
-          <div className="note-original-text">{this.state.text}</div>
-          <div className="editor-box-parent">
-            <textarea
-              className="editor-box"
-              style={{ height: "calc(100% - 90px)" }}
-              onKeyDown={(event) => {
-                if (
-                  event.key === "Enter" &&
-                  (event.ctrlKey || event.metaKey) &&
-                  !(event.nativeEvent as any).isComposing
-                ) {
-                  event.preventDefault();
-                  this.createNote();
-                }
-              }}
-            />
-          </div>
-          <ColorOption {...(colorOptionProps as any)} />
-          <div
-            className="note-tags"
-            style={{
-              position: "absolute",
-              bottom: "35px",
-              height: "40px",
-              width: "calc(100% - 40px)",
-            }}
-          >
-            <NoteTag
-              {...({
-                handleTag: this.handleTag,
-                tag: this.props.noteKey && note ? note.tag : [],
-              } as any)}
-            />
-          </div>
+  const handleClose = () => {
+    if (props.noteKey) {
+      DatabaseService.deleteRecord(props.noteKey, "notes").then(() => {
+        toast.success(props.t("Deletion successful"));
+        props.handleMenuMode("");
+        props.handleFetchNotes();
+        props.handleNoteKey("");
+        if (props.htmlBook && props.htmlBook.rendition) {
+          props.htmlBook.rendition.removeOneNote(
+            props.noteKey,
+            props.chapterDocIndex
+          );
+        }
 
-          <div className="note-button-container">
-            <span
-              className="book-manage-title"
-              onClick={() => {
-                copy(this.state.text);
-                toast.success(this.props.t("Copying successful"));
-              }}
-            >
-              <Trans>Copy quotes</Trans>
-            </span>
-            <span
-              className="book-manage-title"
-              onClick={() => {
-                this.handleClose();
-              }}
-            >
-              {this.props.noteKey ? (
-                <Trans>Delete</Trans>
-              ) : (
-                <Trans>Cancel</Trans>
-              )}
-            </span>
-            <span
-              className="book-manage-title"
-              onClick={() => {
-                this.createNote();
-              }}
-            >
-              <Trans>Confirm</Trans>
-              <span> (CTRL + ↵)</span>
-            </span>
-          </div>
-        </div>
-      );
-    };
-    return renderNoteEditor();
-  }
-}
+        props.handleOpenMenu(false);
+        props.handleShowPopupNote(false);
+      });
+    } else {
+      props.handleOpenMenu(false);
+      props.handleMenuMode("");
+      props.handleNoteKey("");
+    }
+  };
+
+  const colorOptionProps = {
+    handleDigest: handleUpdateHighlight,
+    isEdit: true,
+    noteItem: note,
+  };
+
+  return (
+    <div className="note-editor">
+      <div className="note-original-text">{text}</div>
+      <div className="editor-box-parent">
+        <textarea
+          className="editor-box"
+          style={{ height: "calc(100% - 90px)" }}
+          onKeyDown={(event) => {
+            if (
+              event.key === "Enter" &&
+              (event.ctrlKey || event.metaKey) &&
+              !(event.nativeEvent as any).isComposing
+            ) {
+              event.preventDefault();
+              createNote();
+            }
+          }}
+        />
+      </div>
+      <ColorOption {...(colorOptionProps as any)} />
+      <div
+        className="note-tags"
+        style={{
+          position: "absolute",
+          bottom: "35px",
+          height: "40px",
+          width: "calc(100% - 40px)",
+        }}
+      >
+        <NoteTag
+          {...({
+            handleTag: handleTag,
+            tag: props.noteKey && note ? note.tag : [],
+          } as any)}
+        />
+      </div>
+
+      <div className="note-button-container">
+        <span
+          className="book-manage-title"
+          onClick={() => {
+            copy(text);
+            toast.success(props.t("Copying successful"));
+          }}
+        >
+          <Trans>Copy quotes</Trans>
+        </span>
+        <span
+          className="book-manage-title"
+          onClick={() => {
+            handleClose();
+          }}
+        >
+          {props.noteKey ? <Trans>Delete</Trans> : <Trans>Cancel</Trans>}
+        </span>
+        <span
+          className="book-manage-title"
+          onClick={() => {
+            createNote();
+          }}
+        >
+          <Trans>Confirm</Trans>
+          <span> (CTRL + ↵)</span>
+        </span>
+      </div>
+    </div>
+  );
+};
+
 export default PopupNote;
