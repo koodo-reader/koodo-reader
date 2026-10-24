@@ -483,9 +483,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
   handleRest = async (rendition: any) => {
     htmlMouseEvent(
       rendition,
-      this.props.currentBook.key,
+      this.props.currentBook,
       this.props.readerMode,
-      this.props.currentBook.format,
       (scale: string) => {
         flushSync(() => {
           this.props.handleScale(scale);
@@ -647,10 +646,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
   handleBindGesture = () => {
-    let docs = getIframeDoc(
-      this.props.currentBook.format,
-      this.props.currentBook.key
-    );
+    let docs = getIframeDoc(this.props.currentBook);
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;

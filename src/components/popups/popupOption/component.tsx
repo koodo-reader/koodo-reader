@@ -40,14 +40,13 @@ class PopupOption extends React.Component<PopupOptionProps> {
     this.props.handleOpenMenu(true);
   };
   handleCopy = () => {
-    const format = this.props.currentBook.format;
-    let text = getSelection(format);
+    let text = getSelection(this.props.currentBook);
     if (!text) return;
     if (isReadingRawPDF(this.props.currentBook)) {
       text = text.split("\n").join(" ").trim();
     }
     let copied = false;
-    const docs = getIframeDoc(format);
+    const docs = getIframeDoc(this.props.currentBook);
     for (let i = 0; i < docs.length && !copied; i++) {
       const doc = docs[i];
       if (!doc) continue;
@@ -68,14 +67,14 @@ class PopupOption extends React.Component<PopupOptionProps> {
   };
   handleTrans = () => {
     this.props.handleMenuMode("trans");
-    this.props.handleOriginalText(getSelection(this.props.currentBook.format));
+    this.props.handleOriginalText(getSelection(this.props.currentBook));
     this.props.handleOpenMenu(true);
   };
   handleDict = () => {
     this.props.handleMenuMode("dict");
-    this.props.handleOriginalText(getSelection(this.props.currentBook.format));
+    this.props.handleOriginalText(getSelection(this.props.currentBook));
     this.props.handleOriginalSentence(
-      getSelectionSentence(this.props.currentBook.format)
+      getSelectionSentence(this.props.currentBook)
     );
     this.props.handleOpenMenu(true);
   };
@@ -109,76 +108,76 @@ class PopupOption extends React.Component<PopupOptionProps> {
       case "google":
         this.handleJump(
           "https://www.google.com/search?q=" +
-            getSelection(this.props.currentBook.format)
+            getSelection(this.props.currentBook)
         );
         break;
       case "baidu":
         this.handleJump(
           "https://www.baidu.com/s?wd=" +
-            getSelection(this.props.currentBook.format)
+            getSelection(this.props.currentBook)
         );
         break;
       case "bing":
         this.handleJump(
           "https://www.bing.com/search?q=" +
-            getSelection(this.props.currentBook.format)
+            getSelection(this.props.currentBook)
         );
         break;
       case "duckduckgo":
         this.handleJump(
           "https://duckduckgo.com/?q=" +
-            getSelection(this.props.currentBook.format)
+            getSelection(this.props.currentBook)
         );
         break;
       case "yandex":
         this.handleJump(
           "https://yandex.com/search/?text=" +
-            getSelection(this.props.currentBook.format)
+            getSelection(this.props.currentBook)
         );
         break;
       case "yahoo":
         this.handleJump(
           "https://search.yahoo.com/search?p=" +
-            getSelection(this.props.currentBook.format)
+            getSelection(this.props.currentBook)
         );
         break;
       case "naver":
         this.handleJump(
           "https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=" +
-            getSelection(this.props.currentBook.format)
+            getSelection(this.props.currentBook)
         );
         break;
       case "baike":
         this.handleJump(
           "https://baike.baidu.com/item/" +
-            getSelection(this.props.currentBook.format)
+            getSelection(this.props.currentBook)
         );
         break;
       case "wiki":
         this.handleJump(
           "https://en.wikipedia.org/wiki/" +
-            getSelection(this.props.currentBook.format)
+            getSelection(this.props.currentBook)
         );
         break;
       default:
         this.handleJump(
           navigator.language === "zh-CN"
             ? "https://www.baidu.com/s?wd=" +
-                getSelection(this.props.currentBook.format)
+                getSelection(this.props.currentBook)
             : "https://www.google.com/search?q=" +
-                getSelection(this.props.currentBook.format)
+                getSelection(this.props.currentBook)
         );
         break;
     }
   };
   handleSearchBook = () => {
-    searchInTheBook("", this.props.currentBook.format, true);
+    searchInTheBook("", this.props.currentBook, true);
     this.props.handleOpenMenu(false);
   };
 
   handleSpeak = () => {
     var msg = new SpeechSynthesisUtterance();
-    msg.text = getSelection(this.props.currentBook.format);
+    msg.text = getSelection(this.props.currentBook);
     if (window.speechSynthesis && window.speechSynthesis.getVoices) {
       msg.voice = window.speechSynthesis.getVoices()[0];
       window.speechSynthesis.speak(msg);
@@ -187,8 +186,8 @@ class PopupOption extends React.Component<PopupOptionProps> {
 
   handleReadFromHere = () => {
     const text =
-      getSelectionSentence(this.props.currentBook.format) ||
-      getSelection(this.props.currentBook.format);
+      getSelectionSentence(this.props.currentBook) ||
+      getSelection(this.props.currentBook);
     if (!text) return;
 
     this.props.handleSpeechStartText(text);
@@ -198,7 +197,7 @@ class PopupOption extends React.Component<PopupOptionProps> {
   };
 
   handleAssistant = () => {
-    const text = getSelection(this.props.currentBook.format);
+    const text = getSelection(this.props.currentBook);
     if (!text) return;
 
     this.props.handleQuoteText(text);

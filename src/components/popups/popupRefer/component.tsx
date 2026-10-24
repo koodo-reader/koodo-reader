@@ -44,7 +44,7 @@ class PopupRefer extends React.Component<PopupReferProps, PopupReferStates> {
   }
   componentDidMount() {
     this.props.rendition.on("rendered", () => {
-      let docs = getIframeDoc(this.props.currentBook.format);
+      let docs = getIframeDoc(this.props.currentBook);
       for (let i = 0; i < docs.length; i++) {
         let doc = docs[i];
         if (!doc) continue;
