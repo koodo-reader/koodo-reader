@@ -93,7 +93,8 @@ export const recognize: OCRPlugin = async (imageBase64, axios, config) => {
     return blocks
       .filter((block) => block?.BlockType === "LINE")
       .map((block) => String(block?.Text || ""))
-      .filter(Boolean);
+      .filter(Boolean)
+      .join("\n");
   } catch (error) {
     throwOcrRequestError(error);
   }

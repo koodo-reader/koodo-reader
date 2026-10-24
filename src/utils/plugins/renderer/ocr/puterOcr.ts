@@ -1,7 +1,7 @@
 import type { OCRPlugin } from "../../types";
 import {
+  normalizeOcrText,
   parseImageBase64,
-  splitTextToLines,
   throwOcrRequestError,
 } from "./common";
 
@@ -68,7 +68,7 @@ export const recognize: OCRPlugin = async (imageBase64, _axios, config) => {
     const { dataUrl } = parseImageBase64(imageBase64);
     const provider = config.provider || "aws-textract";
     const text = await puter.ai!.img2txt!(dataUrl, { provider });
-    return splitTextToLines(text);
+    return normalizeOcrText(text);
   } catch (error) {
     throwOcrRequestError(error);
   }

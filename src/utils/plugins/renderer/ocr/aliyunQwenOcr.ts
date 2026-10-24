@@ -1,8 +1,8 @@
 import type { OCRPlugin } from "../../types";
 import {
   extractChatContent,
+  normalizeOcrText,
   parseImageBase64,
-  splitTextToLines,
   throwOcrRequestError,
 } from "./common";
 
@@ -26,6 +26,7 @@ export const recognize: OCRPlugin = async (imageBase64, axios, config) => {
       `${baseUrl}/chat/completions`,
       {
         model,
+        stream: false,
         messages: [
           {
             role: "user",
@@ -47,7 +48,7 @@ export const recognize: OCRPlugin = async (imageBase64, axios, config) => {
       throw new Error(res.data.error.message || "Qwen OCR request failed");
     }
 
-    return splitTextToLines(
+    return normalizeOcrText(
       extractChatContent(res.data?.choices?.[0]?.message?.content)
     );
   } catch (error) {

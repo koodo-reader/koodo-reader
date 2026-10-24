@@ -338,7 +338,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               builtinOcr(imageBase64, axios, pluginConfig)
             );
             ocrQueue = task.catch(() => undefined);
-            return task.then((lines) => lines.join("\n"));
+            return task;
           },
         };
         ocrEngine = "plugin-ocr";

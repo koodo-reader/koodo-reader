@@ -20,7 +20,7 @@ export const recognizeWithTencent = async (
   imageBase64: string,
   axios: AxiosInstance,
   config: PluginConfig
-): Promise<string[]> => {
+): Promise<string> => {
   const secretId = config.secretId || "";
   const secretKey = config.secretKey || "";
   const region = config.region || "ap-beijing";
@@ -93,7 +93,8 @@ export const recognizeWithTencent = async (
       .map((item: { DetectedText?: string }) =>
         String(item?.DetectedText || "")
       )
-      .filter(Boolean);
+      .filter(Boolean)
+      .join("\n");
   } catch (error) {
     throwOcrRequestError(error);
   }

@@ -1,7 +1,7 @@
 import type { OCRPlugin } from "../../types";
 import {
+  normalizeOcrText,
   parseImageBase64,
-  splitTextToLines,
   throwOcrRequestError,
 } from "./common";
 
@@ -44,8 +44,11 @@ export const recognize: OCRPlugin = async (imageBase64, axios, config) => {
     )
       ? res.data.ParsedResults
       : [];
-    return results.flatMap((result) =>
-      splitTextToLines(result?.ParsedText)
+    return normalizeOcrText(
+      results
+        .map((result) => String(result?.ParsedText || ""))
+        .filter(Boolean)
+        .join("\n")
     );
   } catch (error) {
     throwOcrRequestError(error);

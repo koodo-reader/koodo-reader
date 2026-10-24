@@ -192,7 +192,7 @@ export type OCRPlugin = (
   imageBase64: string,
   axios: AxiosInstance,
   config: PluginConfig
-) => Promise<string[]>;
+) => Promise<string>;
 
 export interface VoicePlugin {
   getAudioPath: (
