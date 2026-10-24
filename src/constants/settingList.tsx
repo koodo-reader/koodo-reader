@@ -515,7 +515,7 @@ export const readerSettingList = [
   {
     title: "Right-to-left page turning",
     propName: "isRevertDirection",
-    group: "more",
+    group: "layout",
     isPDF: true,
   },
   {
