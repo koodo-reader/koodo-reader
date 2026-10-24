@@ -98,19 +98,21 @@
     "react-i18next": "^14.1.3",
     "react-redux": "^8.1.3",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "source-map-explorer": "^2.5.2",
     "typescript": "^5.9.3",
+    "vite": "^6.3.5",
+    "vite-plugin-node-polyfills": "^0.28.0",
+    "@vitejs/plugin-react": "^4.4.1",
     "wait-on": "^7.0.1"
   },
   "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "analyze": "vite build --sourcemap && source-map-explorer 'build/static/*.js'",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
     "ele": "electron .",
     "dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://127.0.0.1:3000/ && nodemon --watch main.js --watch src/utils/plugins/main --ext js --exec electron .\"",
     "release": "electron-builder",
@@ -118,7 +120,6 @@
     "postinstall": "node scripts/patch-nan.js && electron-builder install-app-deps",
     "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
-  "homepage": "./",
   "build": {
     "appId": "xyz.960960.koodo",
     "productName": "Koodo Reader",
@@ -354,12 +355,6 @@
       ]
     }
   },
-  "eslintConfig": {
-    "extends": "react-app",
-    "rules": {
-      "no-unused-vars": 2
-    }
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -370,11 +365,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
     ]
   }
 }

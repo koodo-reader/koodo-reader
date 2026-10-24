@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.png" />
+    <link rel="dns-prefetch" href="https://web.koodoreader.com" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      #root {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+      }
+    </style>
+    <title>Koodo Reader</title>
+    <script type="text/javascript" src="./lib/7z-wasm/7zz.umd.js"></script>
+    <script type="text/javascript" src="./lib/libunrar/rpc.js"></script>
+    <script>
+      (function () {
+        var script = document.createElement("script");
+        script.type = "module";
+        script.src = new URL("lib/pdfjs/pdf.mjs", document.baseURI).href;
+        script.onload = function () {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+            "lib/pdfjs/pdf.worker.mjs",
+            document.baseURI
+          ).href;
+        };
+        document.head.appendChild(script);
+      })();
+    </script>
+    <script type="text/javascript" src="./lib/sqljs-wasm/sql-wasm.js"></script>
+    <script
+      type="text/javascript"
+      src="./lib/tesseractjs/tesseract.min.js"
+    ></script>
+    <script type="text/javascript" src="./lib/onnxruntime-web/ort.min.js"></script>
+    <script
+      type="text/javascript"
+      src="./lib/esearch-ocr/esearch-ocr.umd.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="./lib/pdf-lib/html2canvas.min.js"
+    ></script>
+    <script type="text/javascript" src="./lib/pdf-lib/pdf-lib.min.js"></script>
+    <script type="text/javascript" src="./lib/fabric-js/fabric.min.js"></script>
+    <script src="./lib/vex-js/vex.combined.min.js"></script>
+    <script>
+      vex.defaultOptions.className = "vex-theme-wireframe";
+      vex.defaultOptions.overlayClosesOnClick = false;
+    </script>
+    <link rel="stylesheet" href="./lib/vex-js/vex.min.css" />
+    <link
+      rel="stylesheet"
+      href="./lib/vex-js/vex-theme-wireframe.min.css"
+    />
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <canvas id="the-canvas"></canvas>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>

@@ -7,6 +7,10 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { getWebsiteUrl, openInBrowser } from "../../utils/common";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
+import logoDark from "../../assets/images/logo-dark.png";
+import logoDarkPro from "../../assets/images/logo-dark-pro.png";
+import logoLight from "../../assets/images/logo-light.png";
+import logoLightPro from "../../assets/images/logo-light-pro.png";
 import {
   addBooksToFavorite,
   addBooksToShelf,
@@ -382,16 +386,12 @@ class Sidebar extends React.Component<SidebarProps, SidebarState> {
               ConfigService.getReaderConfig("appSkin") === "night" ||
               (ConfigService.getReaderConfig("appSkin") === "system" &&
                 ConfigService.getReaderConfig("isOSNight") === "yes")
-                ? require(
-                    `../../assets/images/logo-dark${
-                      this.props.isAuthed ? "-pro" : ""
-                    }.png`
-                  )
-                : require(
-                    `../../assets/images/logo-light${
-                      this.props.isAuthed ? "-pro" : ""
-                    }.png`
-                  )
+                ? this.props.isAuthed
+                  ? logoDarkPro
+                  : logoDark
+                : this.props.isAuthed
+                ? logoLightPro
+                : logoLight
             }
             alt=""
             onClick={() => {

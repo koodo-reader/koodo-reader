@@ -11,6 +11,7 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { generateSnapshot } from "../../utils/file/backup";
+import chatWidget from "../../assets/images/chat-widget.png";
 import { isElectron } from "react-device-detect";
 import {
   getCloudConfig,
@@ -689,7 +690,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             }}
           >
             <img
-              src={require("../../assets/images/chat-widget.png")}
+              src={chatWidget}
               alt="logo"
               className="login-mobile-qr"
               style={{
