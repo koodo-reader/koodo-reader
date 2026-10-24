@@ -94,13 +94,13 @@ const SettingDialog = (props: SettingInfoProps) => {
 
   return (
       <div className="setting-dialog-container">
-        {/* 左侧导航�?*/}
+        {/* Left sidebar */}
         <div className="setting-dialog-sidebar">
           <div className="setting-dialog-sidebar-title">
             <Trans>Setting</Trans>
           </div>
 
-          {/* 第一�?*/}
+          {/* First group */}
           <div className="setting-dialog-sidebar-group">
             {renderSidebarItem("account", "icon-user", "Account", "18px")}
             {renderSidebarItem("general", "icon-setting", "General", "")}
@@ -136,7 +136,7 @@ const SettingDialog = (props: SettingInfoProps) => {
 
           <hr className="setting-dialog-sidebar-divider" />
 
-          {/* 第二�?*/}
+          {/* Second group */}
           <div className="setting-dialog-sidebar-group">
             {renderSidebarItem("plugins", "icon-internet", "Plugins", "")}
             {renderSidebarItem(

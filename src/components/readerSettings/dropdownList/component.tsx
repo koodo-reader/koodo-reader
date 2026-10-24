@@ -1,8 +1,8 @@
-import React from "react";
+﻿import { Fragment, useEffect, useState } from "react";
 import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
-import { DropdownListProps, DropdownListState } from "./interface";
+import { DropdownListProps } from "./interface";
 import {
   ConfigService,
   KookitConfig,
@@ -11,73 +11,64 @@ import FontUtil from "../../../utils/file/fontUtil";
 import toast from "react-hot-toast";
 import { isReadingRawPDF } from "../../../utils/common";
 declare var window: any;
-class DropdownList extends React.Component<
-  DropdownListProps,
-  DropdownListState
-> {
-  constructor(props: DropdownListProps) {
-    super(props);
-    this.state = {
-      currentFontFamilyValue:
-        ConfigService.getReaderConfig("fontFamily") || "Built-in font",
-      currentSubFontFamilyValue:
-        ConfigService.getReaderConfig("subFontFamily") || "Built-in font",
-      currentLineHeightValue: ConfigService.getReaderConfig("lineHeight") || "",
-      currentTextAlignValue: ConfigService.getReaderConfig("textAlign") || "",
-      chineseConversionValue:
-        ConfigService.getReaderConfig("convertChinese") || "",
-      currentAnimationValue:
-        ConfigService.getReaderConfig("animation") || "none",
-      currentBookLayoutValue: ConfigService.getReaderConfig("bookLayout") || "",
-      currentCodeHighlighterValue:
-        ConfigService.getReaderConfig("codeHighlight") || "",
-      fontOptions: [],
-      currentTextOrientationValue:
-        ConfigService.getReaderConfig("textOrientation") || "",
-      currentSelectActionValue:
-        ConfigService.getReaderConfig("selectAction") || "",
-      currentTxtParserValue:
-        ConfigService.getObjectConfig(props.currentBook?.key, "bookRules", {})
-          ?.defaultTxtParser || "",
-      txtParserOptions: [],
-    };
-  }
-  UNSAFE_componentWillReceiveProps(nextProps: DropdownListProps) {
-    if (nextProps.currentBook?.key !== this.props.currentBook?.key) {
-      this.setState({
-        currentTxtParserValue:
-          ConfigService.getObjectConfig(
-            nextProps.currentBook?.key,
-            "bookRules",
-            {}
-          )?.defaultTxtParser || "",
-      });
-    }
-  }
-  componentDidMount() {
+const DropdownList = (props: DropdownListProps) => {
+  const [state, setState] = useState<Record<string, any>>({
+    currentFontFamilyValue:
+      ConfigService.getReaderConfig("fontFamily") || "Built-in font",
+    currentSubFontFamilyValue:
+      ConfigService.getReaderConfig("subFontFamily") || "Built-in font",
+    currentLineHeightValue: ConfigService.getReaderConfig("lineHeight") || "",
+    currentTextAlignValue: ConfigService.getReaderConfig("textAlign") || "",
+    chineseConversionValue:
+      ConfigService.getReaderConfig("convertChinese") || "",
+    currentAnimationValue: ConfigService.getReaderConfig("animation") || "none",
+    currentBookLayoutValue: ConfigService.getReaderConfig("bookLayout") || "",
+    currentCodeHighlighterValue:
+      ConfigService.getReaderConfig("codeHighlight") || "",
+    fontOptions: [],
+    currentTextOrientationValue:
+      ConfigService.getReaderConfig("textOrientation") || "",
+    currentSelectActionValue:
+      ConfigService.getReaderConfig("selectAction") || "",
+    currentTxtParserValue:
+      ConfigService.getObjectConfig(props.currentBook?.key, "bookRules", {})
+        ?.defaultTxtParser || "",
+    txtParserOptions: [],
+  });
+  const updateState = (patch: Record<string, any>) =>
+    setState((prev) => ({ ...prev, ...patch }));
+
+  useEffect(() => {
     const customParserLabels: string[] =
       ConfigService.getAllListConfig("txtParserList") || [];
     const customParserOptions = customParserLabels.map((label) => ({
       label,
       value: label,
     }));
-    this.setState({
+    updateState({
       txtParserOptions: [
         ...KookitConfig.ContentRegxConfig,
         ...customParserOptions,
       ],
     });
-    this.loadMergedFonts();
-    window.addEventListener("font-list-changed", this.loadMergedFonts);
-  }
+    loadMergedFonts();
+    window.addEventListener("font-list-changed", loadMergedFonts);
+    return () => {
+      window.removeEventListener("font-list-changed", loadMergedFonts);
+    };
+  }, []);
 
-  componentWillUnmount() {
-    window.removeEventListener("font-list-changed", this.loadMergedFonts);
-  }
+  useEffect(() => {
+    updateState({
+      currentTxtParserValue:
+        ConfigService.getObjectConfig(props.currentBook?.key, "bookRules", {})
+          ?.defaultTxtParser || "",
+    });
+  }, [props.currentBook?.key]);
 
-  loadMergedFonts = async () => {
+  const loadMergedFonts = async () => {
     const options = await FontUtil.getMergedFontOptions();
-    this.setState({
+    updateState({
       fontOptions: options,
       currentFontFamilyValue:
         ConfigService.getReaderConfig("fontFamily") || "Built-in font",
@@ -86,13 +77,13 @@ class DropdownList extends React.Component<
     });
   };
 
-  handleView(event: any, option: string) {
+  const handleView = (event: any, option: string) => {
     const value = event.target.value;
     ConfigService.setReaderConfig(option, value);
     let arr = [value];
     switch (option) {
       case "fontFamily":
-        this.setState({
+        updateState({
           currentFontFamilyValue: arr[0],
         });
         if (arr[0] === "Built-in font") {
@@ -100,7 +91,7 @@ class DropdownList extends React.Component<
         }
         break;
       case "subFontFamily":
-        this.setState({
+        updateState({
           currentSubFontFamilyValue: arr[0],
         });
         if (arr[0] === "Built-in font") {
@@ -109,80 +100,79 @@ class DropdownList extends React.Component<
         break;
 
       case "lineHeight":
-        this.setState({
+        updateState({
           currentLineHeightValue: arr[0],
         });
 
         break;
       case "textAlign":
-        this.setState({
+        updateState({
           currentTextAlignValue: arr[0],
         });
 
         break;
       case "convertChinese":
-        this.setState({
+        updateState({
           chineseConversionValue: arr[0],
         });
 
         break;
       case "animation":
-        this.setState({
+        updateState({
           currentAnimationValue: arr[0],
         });
 
         break;
       case "bookLayout":
-        this.setState({
+        updateState({
           currentBookLayoutValue: arr[0],
         });
         break;
       case "codeHighlight":
-        this.setState({
+        updateState({
           currentCodeHighlighterValue: arr[0],
         });
         break;
       case "textOrientation":
-        this.setState({
+        updateState({
           currentTextOrientationValue: arr[0],
         });
-        this.props.handleTextOrientation(arr[0]);
+        props.handleTextOrientation(arr[0]);
 
         break;
       case "selectAction":
-        this.setState({
+        updateState({
           currentSelectActionValue: arr[0],
         });
-        toast.success(this.props.t("Setup successful"));
+        toast.success(props.t("Setup successful"));
         return;
       case "txtParser": {
-        this.setState({ currentTxtParserValue: arr[0] });
+        updateState({ currentTxtParserValue: arr[0] });
         const rule = ConfigService.getObjectConfig(
-          this.props.currentBook.key,
+          props.currentBook.key,
           "bookRules",
           {}
         );
         ConfigService.setObjectConfig(
-          this.props.currentBook.key,
+          props.currentBook.key,
           { ...rule, defaultTxtParser: arr[0] },
           "bookRules"
         );
-        toast.success(this.props.t("Setup successful"));
-        this.props.renderBookFunc();
+        toast.success(props.t("Setup successful"));
+        props.renderBookFunc();
         return;
       }
       default:
         break;
     }
-    this.props.renderBookFunc();
+    props.renderBookFunc();
   }
-  render() {
-    const isTxt = this.props.currentBook?.format?.toUpperCase() === "TXT";
-    const isPDF = isReadingRawPDF(this.props.currentBook);
+  const isTxt = props.currentBook?.format?.toUpperCase() === "TXT";
+    const isPDF = isReadingRawPDF(props.currentBook);
     const renderParagraphCharacter = () => {
       return dropdownList
         .filter((item) => {
-          if (this.props.group && item.group !== this.props.group) {
+          if (props.group && item.group !== props.group) {
             return false;
           }
           if (item.value === "fullTranslationMode") {
@@ -194,7 +184,7 @@ class DropdownList extends React.Component<
           return true;
         })
         .map((item) => (
-          <React.Fragment key={item.value}>
+          <Fragment key={item.value}>
             <li className="paragraph-character-container">
               <p className="general-setting-title">
                 <Trans>{item.title}</Trans>
@@ -204,31 +194,31 @@ class DropdownList extends React.Component<
                 className="general-setting-dropdown"
                 value={
                   item.value === "lineHeight"
-                    ? this.state.currentLineHeightValue
+                    ? state.currentLineHeightValue
                     : item.value === "textAlign"
-                      ? this.state.currentTextAlignValue
+                      ? state.currentTextAlignValue
                       : item.value === "convertChinese"
-                        ? this.state.chineseConversionValue
+                        ? state.chineseConversionValue
                         : item.value === "animation"
-                          ? this.state.currentAnimationValue
+                          ? state.currentAnimationValue
                           : item.value === "bookLayout"
-                            ? this.state.currentBookLayoutValue
+                            ? state.currentBookLayoutValue
                             : item.value === "codeHighlight"
-                              ? this.state.currentCodeHighlighterValue
+                              ? state.currentCodeHighlighterValue
                               : item.value === "textOrientation"
-                                ? this.state.currentTextOrientationValue
+                                ? state.currentTextOrientationValue
                                 : item.value === "fontFamily"
-                                  ? this.state.currentFontFamilyValue
+                                  ? state.currentFontFamilyValue
                                   : item.value === "selectAction"
-                                    ? this.state.currentSelectActionValue
-                                    : this.state.currentSubFontFamilyValue
+                                    ? state.currentSelectActionValue
+                                    : state.currentSubFontFamilyValue
                 }
                 onChange={(event) => {
-                  this.handleView(event, item.value);
+                  handleView(event, item.value);
                 }}
               >
                 {(item.value === "fontFamily" || item.value === "subFontFamily"
-                  ? this.state.fontOptions
+                  ? state.fontOptions
                   : item.option
                 ).map(
                   (
@@ -245,26 +235,26 @@ class DropdownList extends React.Component<
                     >
                       {item.value === "codeHighlight"
                         ? subItem.value === ""
-                          ? this.props.t("Disable")
+                          ? props.t("Disable")
                           : subItem.label
                         : item.value === "fontFamily" ||
                             item.value === "subFontFamily"
                           ? subItem.value === "Built-in font"
-                            ? this.props.t(subItem.label)
+                            ? props.t(subItem.label)
                             : subItem.label
-                          : this.props.t(subItem.label)}
+                          : props.t(subItem.label)}
                     </option>
                   )
                 )}
               </select>
             </li>
-          </React.Fragment>
+          </Fragment>
         ));
     };
     return (
       <ul className="paragraph-character-setting">
         {renderParagraphCharacter()}
-        {isTxt && this.props.group === "more" && (
+        {isTxt && props.group === "more" && (
           <li className="paragraph-character-container">
             <p className="general-setting-title">
               <Trans>TXT parser</Trans>
@@ -272,23 +262,23 @@ class DropdownList extends React.Component<
             <select
               name=""
               className="general-setting-dropdown"
-              value={this.state.currentTxtParserValue}
+              value={state.currentTxtParserValue}
               onChange={(event) => {
                 if (event.target.value === "add-parser") {
-                  this.props.handleSetting(true);
-                  this.props.handleSettingMode("chapter");
+                  props.handleSetting(true);
+                  props.handleSettingMode("chapter");
                   return;
                 }
-                this.handleView(event, "txtParser");
+                handleView(event, "txtParser");
               }}
             >
-              {this.state.txtParserOptions.map((option, index) => (
+              {state.txtParserOptions.map((option, index) => (
                 <option
                   value={option.value}
                   key={index}
                   className="general-setting-option"
                 >
-                  {this.props.t(option.label)}
+                  {props.t(option.label)}
                 </option>
               ))}
               <option
@@ -296,14 +286,14 @@ class DropdownList extends React.Component<
                 key="add"
                 className="general-setting-option"
               >
-                {this.props.t("Add new parser")}
+                {props.t("Add new parser")}
               </option>
             </select>
           </li>
         )}
       </ul>
-    );
-  }
-}
+  );
+};
 
 export default DropdownList;
+

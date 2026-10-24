@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./navigationPanel.css";
 import { isReadingRawPDF } from "../../../utils/common";
 import ContentList from "../../lists/contentList";
@@ -81,86 +81,94 @@ export const groupSearchResults = (searchList: any[]): SearchResultGroup[] => {
   return Array.from(map.values()).sort((a, b) => a.docIndex - b.docIndex);
 };
 
-class NavigationPanel extends React.Component<
-  NavigationPanelProps,
-  NavigationPanelState
-> {
-  highlightUtil: any;
-  constructor(props: NavigationPanelProps) {
-    super(props);
-    this.highlightUtil = new HighlightUtil(ConfigService);
-    this.state = {
-      currentTab: "contents",
-      searchState: "",
+const NavigationPanel = (props: NavigationPanelProps) => {
+  const highlightUtilRef = useRef<any>(null);
+  if (!highlightUtilRef.current) {
+    highlightUtilRef.current = new HighlightUtil(ConfigService);
+  }
+
+  const [state, setState] = useState<NavigationPanelState>({
+    currentTab: "contents",
+    searchState: "",
+    searchList: null,
+    cover: "",
+    isCoverExist: false,
+    activeSearchKey: null,
+    collapsedChapters: new Set<number>(),
+  });
+
+  const resetSearchState = () => {
+    setState((prev) => ({
+      ...prev,
       searchList: null,
-      cover: "",
-      isCoverExist: false,
       activeSearchKey: null,
       collapsedChapters: new Set<number>(),
-    };
-  }
-  handleNavSearchState = (state: string) => {
-    this.setState({ searchState: state });
-    if (state === "searching") {
-      this.resetSearchState();
+    }));
+  };
+
+  const handleNavSearchState = (searchState: string) => {
+    setState((prev) => ({ ...prev, searchState }));
+    if (searchState === "searching") {
+      resetSearchState();
     }
-    if (state) {
-      this.props.handleSearch(true);
+    if (searchState) {
+      props.handleSearch(true);
     } else {
       if (ConfigService.getReaderConfig("isNavLocked") !== "yes") {
-        this.props.handleSearch(false);
+        props.handleSearch(false);
       }
     }
   };
-  handleSearchList = (searchList: any) => {
+
+  const handleSearchList = (searchList: any) => {
     if (searchList === null) {
-      this.resetSearchState();
+      resetSearchState();
     } else {
-      this.setState({ searchList });
+      setState((prev) => ({ ...prev, searchList }));
     }
   };
-  resetSearchState = () => {
-    this.setState({
-      searchList: null,
-      activeSearchKey: null,
-      collapsedChapters: new Set<number>(),
-    });
-  };
-  async UNSAFE_componentWillReceiveProps(nextProps: NavigationPanelProps) {
-    if (nextProps.currentBook.key !== this.props.currentBook.key) {
-      let cover = await CoverUtil.getCover(nextProps.currentBook);
-      let isCoverExist = await CoverUtil.isCoverExist(nextProps.currentBook);
-      this.setState({
-        cover,
-        isCoverExist,
-      });
+
+  // componentWillReceiveProps: 只在 currentBook.key 变化时重新获取封面
+  const prevBookKeyRef = useRef<string>(props.currentBook.key);
+  useEffect(() => {
+    if (prevBookKeyRef.current === props.currentBook.key) {
+      return;
     }
-  }
-  componentDidMount() {
-    this.props.handleFetchBookmarks();
-    window.addEventListener(NAV_TAB_TOGGLE_EVENT, this.handleNavTabToggle);
-  }
+    prevBookKeyRef.current = props.currentBook.key;
+    let isActive = true;
+    (async () => {
+      const cover = await CoverUtil.getCover(props.currentBook);
+      const isCoverExist = await CoverUtil.isCoverExist(props.currentBook);
+      if (isActive) {
+        setState((prev) => ({ ...prev, cover, isCoverExist }));
+      }
+    })();
+    return () => {
+      isActive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.currentBook.key]);
 
-  componentWillUnmount() {
-    window.removeEventListener(NAV_TAB_TOGGLE_EVENT, this.handleNavTabToggle);
-  }
-
-  isLeftPanelOpen = () => {
+  const isLeftPanelOpen = () => {
     const el = document.querySelector(
       ".navigation-panel-container"
     ) as HTMLElement | null;
     return !!el && !el.style.transform;
   };
 
-  handleNavTabToggle = (event: Event) => {
+  const handleChangeTab = (currentTab: string) => {
+    setState((prev) => ({ ...prev, currentTab }));
+  };
+
+  const handleNavTabToggle = (event: Event) => {
     const tab = (event as CustomEvent<{ tab: string }>).detail?.tab;
     if (!tab) return;
-    if (this.state.searchState) {
-      this.handleNavSearchState("");
-      this.props.handleSearch(false);
-      this.resetSearchState();
+    if (state.searchState) {
+      handleNavSearchState("");
+      props.handleSearch(false);
+      resetSearchState();
     }
-    if (this.isLeftPanelOpen() && this.state.currentTab === tab) {
+    if (isLeftPanelOpen() && state.currentTab === tab) {
       window.dispatchEvent(
         new CustomEvent(READING_PANEL_TOGGLE_EVENT, {
           detail: { position: "left" },
@@ -168,39 +176,53 @@ class NavigationPanel extends React.Component<
       );
       return;
     }
-    if (!this.isLeftPanelOpen()) {
+    if (!isLeftPanelOpen()) {
       openReadingPanel("left");
     }
-    this.handleChangeTab(tab);
+    handleChangeTab(tab);
   };
 
-  handleChangeTab = (currentTab: string) => {
-    this.setState({ currentTab });
-  };
-  handleLock = () => {
-    this.props.handleNavLock(!this.props.isNavLocked);
+  // 让 window 监听器始终调用最新一次渲染的 handler
+  const navTabToggleRef = useRef<(event: Event) => void>(() => {});
+  navTabToggleRef.current = handleNavTabToggle;
+
+  // componentDidMount + componentWillUnmount
+  useEffect(() => {
+    const listener = (event: Event) => navTabToggleRef.current(event);
+    props.handleFetchBookmarks();
+    window.addEventListener(NAV_TAB_TOGGLE_EVENT, listener);
+    return () => {
+      window.removeEventListener(NAV_TAB_TOGGLE_EVENT, listener);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleLock = () => {
+    props.handleNavLock(!props.isNavLocked);
     ConfigService.setReaderConfig(
       "isNavLocked",
-      !this.props.isNavLocked ? "yes" : "no"
+      !props.isNavLocked ? "yes" : "no"
     );
     setTimeout(() => {
-      this.props.renderBookFunc();
+      props.renderBookFunc();
     }, 300);
   };
-  toggleChapter = (docIndex: number) => {
-    this.setState((prevState) => {
-      const next = new Set(prevState.collapsedChapters);
+
+  const toggleChapter = (docIndex: number) => {
+    setState((prev) => {
+      const next = new Set(prev.collapsedChapters);
       if (next.has(docIndex)) {
         next.delete(docIndex);
       } else {
         next.add(docIndex);
       }
-      return { collapsedChapters: next };
+      return { ...prev, collapsedChapters: next };
     });
   };
-  handleSearchItemClick = async (item: any) => {
+
+  const handleSearchItemClick = async (item: any) => {
     let bookLocation = JSON.parse(item.cfi) || {};
-    await this.props.htmlBook.rendition.goToPosition(
+    await props.htmlBook.rendition.goToPosition(
       JSON.stringify({
         text: bookLocation.text,
         chapterTitle: bookLocation.chapterTitle,
@@ -214,27 +236,23 @@ class NavigationPanel extends React.Component<
         page: bookLocation.page,
       })
     );
-    let style = this.highlightUtil.buildSearchHighlightStyle(
-      isReadingRawPDF(this.props.currentBook),
+    let style = highlightUtilRef.current.buildSearchHighlightStyle(
+      isReadingRawPDF(props.currentBook),
       ConfigService.getReaderConfig("textOrientation") === "vertical"
     );
-    this.props.htmlBook.rendition.highlightSearchNode(
-      bookLocation.keyword,
-      style
-    );
+    props.htmlBook.rendition.highlightSearchNode(bookLocation.keyword, style);
   };
-  renderSearchList = () => {
-    if (!this.state.searchList[0]) {
+
+  const renderSearchList = () => {
+    if (!state.searchList[0]) {
       return (
         <div className="navigation-panel-empty-bookmark">
           <Trans>Empty</Trans>
         </div>
       );
     }
-    const groups: SearchResultGroup[] = groupSearchResults(
-      this.state.searchList
-    );
-    const totalCount = this.state.searchList.length;
+    const groups: SearchResultGroup[] = groupSearchResults(state.searchList);
+    const totalCount = state.searchList.length;
     return (
       <>
         <div className="nav-search-total">
@@ -243,13 +261,13 @@ class NavigationPanel extends React.Component<
           </Trans>
         </div>
         {groups.map((group: SearchResultGroup) => {
-          const collapsed = this.state.collapsedChapters.has(group.docIndex);
+          const collapsed = state.collapsedChapters.has(group.docIndex);
           return (
             <li className="nav-search-group" key={`group-${group.docIndex}`}>
               <div
                 className="nav-search-group-title"
                 onClick={() => {
-                  this.toggleChapter(group.docIndex);
+                  toggleChapter(group.docIndex);
                 }}
               >
                 <span
@@ -264,7 +282,7 @@ class NavigationPanel extends React.Component<
               {!collapsed && (
                 <ul className="nav-search-group-items">
                   {group.items.map((entry) => {
-                    const isActive = this.state.activeSearchKey === entry.key;
+                    const isActive = state.activeSearchKey === entry.key;
                     return (
                       <li
                         className={
@@ -274,8 +292,11 @@ class NavigationPanel extends React.Component<
                         }
                         key={entry.key}
                         onClick={() => {
-                          this.setState({ activeSearchKey: entry.key });
-                          this.handleSearchItemClick(entry.item);
+                          setState((prev) => ({
+                            ...prev,
+                            activeSearchKey: entry.key,
+                          }));
+                          handleSearchItemClick(entry.item);
                         }}
                       >
                         <div>
@@ -292,176 +313,157 @@ class NavigationPanel extends React.Component<
       </>
     );
   };
-  render() {
-    const searchProps = {
-      mode: this.state.searchState ? "" : "nav",
-      width: "100px",
-      height: "35px",
-      isNavSearch: this.state.searchState,
-      handleNavSearchState: this.handleNavSearchState,
-      handleSearchList: this.handleSearchList,
-    };
-    return (
-      <div
-        className="navigation-panel"
-        style={{
-          backgroundColor: this.props.isNavLocked
-            ? this.props.backgroundColor
-            : "",
-          color: this.props.isNavLocked
-            ? ConfigService.getReaderConfig("textColor")
-            : "",
-        }}
-        onMouseLeave={(event) => {
-          if (this.state.searchState && this.state.searchState !== "done") {
-            event.preventDefault();
-            event.stopPropagation();
-          }
-        }}
-      >
-        {this.state.searchState ? (
-          <>
-            <div
-              className="nav-close-icon"
-              onClick={() => {
-                this.handleNavSearchState("");
-                this.props.handleSearch(false);
-                this.resetSearchState();
-              }}
-            >
-              <span className="icon-close theme-color-delete"></span>
-            </div>
 
-            <div className="header-search-container">
-              <div
-                className="navigation-search-title"
-                style={{ height: "20px", margin: "0px 25px 13px" }}
-              >
-                <Trans>Search in the Book</Trans>
+  const searchProps = {
+    mode: state.searchState ? "" : "nav",
+    width: "100px",
+    height: "35px",
+    isNavSearch: state.searchState,
+    handleNavSearchState,
+    handleSearchList,
+  };
+  return (
+    <div
+      className="navigation-panel"
+      style={{
+        backgroundColor: props.isNavLocked ? props.backgroundColor : "",
+        color: props.isNavLocked
+          ? ConfigService.getReaderConfig("textColor")
+          : "",
+      }}
+      onMouseLeave={(event) => {
+        if (state.searchState && state.searchState !== "done") {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }}
+    >
+      {state.searchState ? (
+        <>
+          <div
+            className="nav-close-icon"
+            onClick={() => {
+              handleNavSearchState("");
+              props.handleSearch(false);
+              resetSearchState();
+            }}
+          >
+            <span className="icon-close theme-color-delete"></span>
+          </div>
+
+          <div className="header-search-container">
+            <div
+              className="navigation-search-title"
+              style={{ height: "20px", margin: "0px 25px 13px" }}
+            >
+              <Trans>Search in the Book</Trans>
+            </div>
+            <SearchBox {...(searchProps as any)} />
+          </div>
+          <ul className="nav-search-list">
+            {state.searchState === "searching" ? (
+              <div className="loading-animation search-animation">
+                <div className="loader"></div>
               </div>
+            ) : state.searchList ? (
+              renderSearchList()
+            ) : null}
+          </ul>
+        </>
+      ) : (
+        <>
+          <div className="navigation-header">
+            <span
+              className={
+                props.isNavLocked
+                  ? "icon-lock nav-lock-icon"
+                  : "icon-unlock nav-lock-icon"
+              }
+              onClick={() => {
+                handleLock();
+              }}
+            ></span>
+
+            {state.isCoverExist ? (
+              <img className="book-cover" src={state.cover} alt="" />
+            ) : (
+              <div className="book-cover">
+                <EmptyCover
+                  {...{
+                    format: props.currentBook.format,
+                    title: props.currentBook.name,
+                    scale: 0.86,
+                  }}
+                />
+              </div>
+            )}
+
+            <p className="book-title">{props.currentBook.name}</p>
+            <p className="book-arthur">
+              <Trans>Author</Trans>:{" "}
+              <Trans>{props.currentBook.author || "Unknown author"}</Trans>
+            </p>
+            <span className="reading-duration">
+              <Trans>Reading time</Trans>:{" "}
+              {Math.floor(props.totalDuration / 60)}
+              &nbsp; min
+            </span>
+            <div className="navigation-search-box">
               <SearchBox {...(searchProps as any)} />
             </div>
-            <ul className="nav-search-list">
-              {this.state.searchState === "searching" ? (
-                <div className="loading-animation search-animation">
-                  <div className="loader"></div>
-                </div>
-              ) : this.state.searchList ? (
-                this.renderSearchList()
-              ) : null}
-            </ul>
-          </>
-        ) : (
-          <>
-            <div className="navigation-header">
+
+            <div className="navigation-navigation">
               <span
-                className={
-                  this.props.isNavLocked
-                    ? "icon-lock nav-lock-icon"
-                    : "icon-unlock nav-lock-icon"
-                }
+                className="book-bookmark-title"
                 onClick={() => {
-                  this.handleLock();
+                  handleChangeTab("contents");
                 }}
-              ></span>
-
-              {this.state.isCoverExist ? (
-                <img className="book-cover" src={this.state.cover} alt="" />
-              ) : (
-                <div className="book-cover">
-                  <EmptyCover
-                    {...{
-                      format: this.props.currentBook.format,
-                      title: this.props.currentBook.name,
-                      scale: 0.86,
-                    }}
-                  />
-                </div>
-              )}
-
-              <p className="book-title">{this.props.currentBook.name}</p>
-              <p className="book-arthur">
-                <Trans>Author</Trans>:{" "}
-                <Trans>
-                  {this.props.currentBook.author || "Unknown author"}
-                </Trans>
-              </p>
-              <span className="reading-duration">
-                <Trans>Reading time</Trans>:{" "}
-                {Math.floor(this.props.totalDuration / 60)}
-                &nbsp; min
+                style={state.currentTab === "contents" ? {} : { opacity: 0.5 }}
+              >
+                <Trans>Content</Trans>
               </span>
-              <div className="navigation-search-box">
-                <SearchBox {...(searchProps as any)} />
-              </div>
-
-              <div className="navigation-navigation">
-                <span
-                  className="book-bookmark-title"
-                  onClick={() => {
-                    this.handleChangeTab("contents");
-                  }}
-                  style={
-                    this.state.currentTab === "contents" ? {} : { opacity: 0.5 }
-                  }
-                >
-                  <Trans>Content</Trans>
-                </span>
-                <span
-                  className="book-bookmark-title"
-                  style={
-                    this.state.currentTab === "bookmarks"
-                      ? {}
-                      : { opacity: 0.5 }
-                  }
-                  onClick={() => {
-                    this.handleChangeTab("bookmarks");
-                  }}
-                >
-                  <Trans>Bookmark</Trans>
-                </span>
-                <span
-                  className="book-bookmark-title"
-                  style={
-                    this.state.currentTab === "notes" ? {} : { opacity: 0.5 }
-                  }
-                  onClick={() => {
-                    this.handleChangeTab("notes");
-                  }}
-                >
-                  <Trans>Note</Trans>
-                </span>
-                <span
-                  className="book-bookmark-title"
-                  style={
-                    this.state.currentTab === "highlights"
-                      ? {}
-                      : { opacity: 0.5 }
-                  }
-                  onClick={() => {
-                    this.handleChangeTab("highlights");
-                  }}
-                >
-                  <Trans>Highlight</Trans>
-                </span>
-              </div>
+              <span
+                className="book-bookmark-title"
+                style={state.currentTab === "bookmarks" ? {} : { opacity: 0.5 }}
+                onClick={() => {
+                  handleChangeTab("bookmarks");
+                }}
+              >
+                <Trans>Bookmark</Trans>
+              </span>
+              <span
+                className="book-bookmark-title"
+                style={state.currentTab === "notes" ? {} : { opacity: 0.5 }}
+                onClick={() => {
+                  handleChangeTab("notes");
+                }}
+              >
+                <Trans>Note</Trans>
+              </span>
+              <span
+                className="book-bookmark-title"
+                style={state.currentTab === "highlights" ? {} : { opacity: 0.5 }}
+                onClick={() => {
+                  handleChangeTab("highlights");
+                }}
+              >
+                <Trans>Highlight</Trans>
+              </span>
             </div>
-            <div className="navigation-body-parent">
-              <div className="navigation-body">
-                {this.state.currentTab === "contents" ? (
-                  <ContentList />
-                ) : (
-                  <BookNavList
-                    {...({ currentTab: this.state.currentTab } as any)}
-                  />
-                )}
-              </div>
+          </div>
+          <div className="navigation-body-parent">
+            <div className="navigation-body">
+              {state.currentTab === "contents" ? (
+                <ContentList />
+              ) : (
+                <BookNavList {...({ currentTab: state.currentTab } as any)} />
+              )}
             </div>
-          </>
-        )}
-      </div>
-    );
-  }
-}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 export default NavigationPanel;

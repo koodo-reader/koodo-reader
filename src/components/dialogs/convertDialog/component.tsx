@@ -1,6 +1,6 @@
-import React from "react";
+﻿import { useReducer, useState } from "react";
 import { Trans } from "react-i18next";
-import { ConvertDialogProps, ConvertDialogState } from "./interface";
+import { ConvertDialogProps } from "./interface";
 import { isElectron } from "react-device-detect";
 import "./convertDialog.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -19,34 +19,29 @@ import {
 } from "../../../utils/common";
 import SwitchRow from "../../readerSettings/switchRow";
 
-class ConvertDialog extends React.Component<
-  ConvertDialogProps,
-  ConvertDialogState
-> {
-  constructor(props: ConvertDialogProps) {
-    super(props);
-    this.state = {
-      isConvertPDF: ConfigService.getAllListConfig("convertPDFBooks").includes(
-        props.currentBook?.key
-      ),
-    };
-  }
+const ConvertDialog = (props: ConvertDialogProps) => {
+  const [isConvertPDF, setIsConvertPDF] = useState(
+    ConfigService.getAllListConfig("convertPDFBooks").includes(
+      props.currentBook?.key
+    )
+  );
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
-  handleConvertToggle = () => {
-    const next = !this.state.isConvertPDF;
-    this.setState({ isConvertPDF: next });
+  const handleConvertToggle = () => {
+    const next = !isConvertPDF;
+    setIsConvertPDF(next);
     if (next) {
-      ConfigService.setListConfig(this.props.currentBook.key, "convertPDFBooks");
+      ConfigService.setListConfig(props.currentBook.key, "convertPDFBooks");
     } else {
       ConfigService.deleteListConfig(
-        this.props.currentBook.key,
+        props.currentBook.key,
         "convertPDFBooks"
       );
     }
-    BookUtil.reloadBooks(this.props.currentBook);
+    BookUtil.reloadBooks(props.currentBook);
   };
 
-  renderSelectRow = (
+  const renderSelectRow = (
     title: string,
     select: React.ReactNode,
     subtitle?: string
@@ -68,9 +63,8 @@ class ConvertDialog extends React.Component<
     );
   };
 
-  render() {
-    const isScanned =
-      this.props.currentBook.description.indexOf("scanned") > -1;
+  const isScanned =
+      props.currentBook.description.indexOf("scanned") > -1;
     const isDefaultOcrEngine =
       !isScanned &&
       (ConfigService.getReaderConfig("textOcrEngine") === "system-ocr" ||
@@ -78,7 +72,7 @@ class ConvertDialog extends React.Component<
     const ocrEngine = ConfigService.getReaderConfig(
       isScanned ? "scannedOcrEngine" : "textOcrEngine"
     );
-    const engineList = getOcrEngineList(this.props.plugins);
+    const engineList = getOcrEngineList(props.plugins);
     const filteredOcrEngineList = engineList.filter((item) => {
       if (!isElectron && isScanned) {
         return item.value !== "system-ocr";
@@ -86,17 +80,17 @@ class ConvertDialog extends React.Component<
       return true;
     });
     const ocrLangList = getOcrLangList(
-      getDefaultOcrEngine(this.props.currentBook)
+      getDefaultOcrEngine(props.currentBook)
     );
 
     return (
       <div
         className="sort-dialog-container scale-page-dialog-container convert-dialog-container"
         onMouseLeave={() => {
-          this.props.handleConvertDialog(false);
+          props.handleConvertDialog(false);
         }}
         onMouseEnter={() => {
-          this.props.handleConvertDialog(true);
+          props.handleConvertDialog(true);
         }}
         style={{
           top: "50px",
@@ -108,25 +102,25 @@ class ConvertDialog extends React.Component<
         <ul className="sort-by-category">
           <SwitchRow
             title={<Trans>Convert PDF to Text</Trans>}
-            isEnabled={this.state.isConvertPDF}
-            onClick={this.handleConvertToggle}
+            isEnabled={isConvertPDF}
+            onClick={handleConvertToggle}
           />
 
-          {this.renderSelectRow(
+          {renderSelectRow(
             "OCR engine",
             <select
               className="lang-setting-dropdown"
-              value={getDefaultOcrEngine(this.props.currentBook)}
+              value={getDefaultOcrEngine(props.currentBook)}
               onChange={(event) => {
                 if (
                   event.target.value === "official-ai-ocr" &&
-                  !this.props.isAuthed
+                  !props.isAuthed
                 ) {
                   toast(
-                    this.props.t("Please upgrade to Pro to use this feature")
+                    props.t("Please upgrade to Pro to use this feature")
                   );
-                  this.props.handleSetting(true);
-                  this.props.handleSettingMode("account");
+                  props.handleSetting(true);
+                  props.handleSettingMode("account");
                   return;
                 }
                 ConfigService.setReaderConfig(
@@ -151,13 +145,13 @@ class ConvertDialog extends React.Component<
                 }
                 if (
                   ConfigService.getAllListConfig("convertPDFBooks").includes(
-                    this.props.currentBook.key
+                    props.currentBook.key
                   )
                 ) {
-                  clearOcrCache(this.props.currentBook.key);
-                  BookUtil.reloadBooks(this.props.currentBook);
+                  clearOcrCache(props.currentBook.key);
+                  BookUtil.reloadBooks(props.currentBook);
                 }
-                this.forceUpdate();
+                forceUpdate();
               }}
             >
               {filteredOcrEngineList.map((item) => (
@@ -166,7 +160,7 @@ class ConvertDialog extends React.Component<
                   key={item.value}
                   className="lang-setting-option"
                 >
-                  {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+                  {props.t(item.label) + (item.isPro ? " (Pro)" : "")}
                 </option>
               ))}
             </select>
@@ -174,7 +168,7 @@ class ConvertDialog extends React.Component<
 
           {isDefaultOcrEngine ? (
             <>
-              {this.renderSelectRow(
+              {renderSelectRow(
                 "Paragraph spacing threshold",
                 <select
                   className="lang-setting-dropdown"
@@ -189,11 +183,11 @@ class ConvertDialog extends React.Component<
                     if (
                       ConfigService.getAllListConfig(
                         "convertPDFBooks"
-                      ).includes(this.props.currentBook.key)
+                      ).includes(props.currentBook.key)
                     ) {
-                      BookUtil.reloadBooks(this.props.currentBook);
+                      BookUtil.reloadBooks(props.currentBook);
                     }
-                    this.forceUpdate();
+                    forceUpdate();
                   }}
                 >
                   {[
@@ -205,13 +199,13 @@ class ConvertDialog extends React.Component<
                       key={item.value}
                       className="lang-setting-option"
                     >
-                      {this.props.t(item.label)}
+                      {props.t(item.label)}
                     </option>
                   ))}
                 </select>,
                 "When the spacing between two lines of text is n times of regular spacing, they will be split into two paragraphs"
               )}
-              {this.renderSelectRow(
+              {renderSelectRow(
                 "Title size threshold",
                 <select
                   className="lang-setting-dropdown"
@@ -226,11 +220,11 @@ class ConvertDialog extends React.Component<
                     if (
                       ConfigService.getAllListConfig(
                         "convertPDFBooks"
-                      ).includes(this.props.currentBook.key)
+                      ).includes(props.currentBook.key)
                     ) {
-                      BookUtil.reloadBooks(this.props.currentBook);
+                      BookUtil.reloadBooks(props.currentBook);
                     }
-                    this.forceUpdate();
+                    forceUpdate();
                   }}
                 >
                   {[
@@ -242,7 +236,7 @@ class ConvertDialog extends React.Component<
                       key={item.value}
                       className="lang-setting-option"
                     >
-                      {this.props.t(item.label)}
+                      {props.t(item.label)}
                     </option>
                   ))}
                 </select>,
@@ -250,7 +244,7 @@ class ConvertDialog extends React.Component<
               )}
             </>
           ) : ocrLangList.length > 0 ? (
-            this.renderSelectRow(
+            renderSelectRow(
               ocrEngine === "official-ai-ocr"
                 ? "Set OCR mode"
                 : "Set OCR language",
@@ -274,13 +268,13 @@ class ConvertDialog extends React.Component<
                   );
                   if (
                     ConfigService.getAllListConfig("convertPDFBooks").includes(
-                      this.props.currentBook.key
+                      props.currentBook.key
                     )
                   ) {
-                    clearOcrCache(this.props.currentBook.key);
-                    BookUtil.reloadBooks(this.props.currentBook);
+                    clearOcrCache(props.currentBook.key);
+                    BookUtil.reloadBooks(props.currentBook);
                   }
-                  this.forceUpdate();
+                  forceUpdate();
                 }}
               >
                 {[
@@ -292,7 +286,7 @@ class ConvertDialog extends React.Component<
                     key={item.value}
                     className="lang-setting-option"
                   >
-                    {this.props.t(item.label)}
+                    {props.t(item.label)}
                   </option>
                 ))}
               </select>
@@ -300,8 +294,8 @@ class ConvertDialog extends React.Component<
           ) : null}
         </ul>
       </div>
-    );
-  }
-}
+  );
+};
 
 export default ConvertDialog;
+

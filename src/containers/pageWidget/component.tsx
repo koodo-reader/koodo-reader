@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./pageWidget.css";
 import { PageWidgetProps, PageWidgetState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
@@ -20,157 +20,60 @@ declare var window: any;
 
 type TransCache = Record<string, Record<string, string>>;
 
-class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
-  isFirst: Boolean;
-  timeInterval: any;
-  lastBatchTranslationTriggerAt: number;
-  batchTranslationLock: Promise<any>;
-  transCacheMap: Map<string, TransCache>;
-  transCacheDirPath: string;
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      isSingle: this.props.readerMode !== "double",
-      prevPage: 0,
-      nextPage: 0,
-      currentTime: this.getFormattedTime(),
-      percentage: "",
-      ignoreNextPageChange: false,
-    };
-    this.isFirst = true;
-    this.lastBatchTranslationTriggerAt = 0;
-    this.batchTranslationLock = Promise.resolve();
-    this.transCacheMap = new Map();
-    this.transCacheDirPath = "";
-  }
-
-  getFormattedTime() {
+const PageWidget = (props: PageWidgetProps) => {
+  const getFormattedTime = () => {
     const now = new Date();
     return (
       now.getHours().toString().padStart(2, "0") +
       ":" +
       now.getMinutes().toString().padStart(2, "0")
     );
-  }
+  };
 
-  async componentDidMount() {
-    this.timeInterval = setInterval(() => {
-      this.setState({ currentTime: this.getFormattedTime() });
-    }, 60000);
-  }
+  const [state, setState] = useState<PageWidgetState>({
+    isSingle: props.readerMode !== "double",
+    prevPage: 0,
+    nextPage: 0,
+    currentTime: getFormattedTime(),
+    percentage: "",
+    ignoreNextPageChange: false,
+  });
 
-  componentWillUnmount() {
-    if (this.timeInterval) {
-      clearInterval(this.timeInterval);
-    }
-  }
+  const isFirst = useRef<Boolean>(true);
+  const timeInterval = useRef<any>(null);
+  const lastBatchTranslationTriggerAt = useRef<number>(0);
+  const batchTranslationLock = useRef<Promise<any>>(Promise.resolve());
+  const transCacheMap = useRef<Map<string, TransCache>>(new Map());
+  const transCacheDirPath = useRef<string>("");
+  const ignoreNextPageChange = useRef<boolean>(false);
 
-  async UNSAFE_componentWillReceiveProps(nextProps: PageWidgetProps) {
-    if (
-      nextProps.htmlBook !== this.props.htmlBook &&
-      nextProps.htmlBook &&
-      !this.props.htmlBook
-    ) {
-      await this.handlePageNum(nextProps.htmlBook.rendition);
-      nextProps.htmlBook.rendition.on("page-changed", async () => {
-        await this.handlePageNum(nextProps.htmlBook.rendition);
-        await this.handleBatchTranslation(nextProps.htmlBook.rendition);
-        if (this.state.ignoreNextPageChange) {
-          this.setState({ ignoreNextPageChange: false });
-        } else {
-          this.props.handleJumpPosition(null);
-        }
-      });
-      nextProps.htmlBook.rendition.on(
-        "annotation-changed",
-        async (chapterDocIndex: number) => {
-          let annotationData =
-            nextProps.htmlBook.rendition.getAnnotationData(chapterDocIndex);
-          let notes = await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
-            this.props.currentBook.key,
-            "annotation"
-          );
-          let note = notes.find(
-            (note: Note) => note.chapterIndex === chapterDocIndex
-          );
-          if (note) {
-            note = await DatabaseService.getRecord(note.key, "notes");
-            let newNote = {
-              ...note,
-              range: JSON.stringify(annotationData),
-            };
-            await DatabaseService.updateRecord(newNote, "notes");
-          } else {
-            let bookLocation: {
-              text: string;
-              count: string;
-              chapterTitle: string;
-              chapterDocIndex: string;
-              chapterHref: string;
-              percentage: string;
-              cfi: string;
-              page: string;
-              xpath: string;
-            } = ConfigService.getObjectConfig(
-              this.props.currentBook.key,
-              "recordLocation",
-              {}
-            );
-            let newNote = new Note(
-              this.props.currentBook.key,
-              bookLocation.chapterTitle,
-              chapterDocIndex,
-              "",
-              JSON.stringify(bookLocation),
-              JSON.stringify(annotationData),
-              "annotation",
-              bookLocation.percentage,
-              "annotation",
-              []
-            );
-            await DatabaseService.saveRecord(newNote, "notes");
-          }
-          this.props.handleFetchNotes();
-        }
-      );
-      nextProps.htmlBook.rendition.on("rendered", async () => {
-        await this.handlePageNum(nextProps.htmlBook.rendition);
-        await this.handleBatchTranslation(nextProps.htmlBook.rendition);
-        await this.handleWordDefinition(nextProps.htmlBook.rendition);
-      });
-    }
-    if (nextProps.readerMode !== this.props.readerMode) {
-      this.setState({ isSingle: nextProps.readerMode !== "double" });
-    }
-    if (
-      nextProps.jumpPosition !== this.props.jumpPosition &&
-      nextProps.jumpPosition !== null
-    ) {
-      this.setState({ ignoreNextPageChange: true });
-    }
-  }
-  getTransCachePath(chapterDocIndex: string): string {
+  const setIgnoreNextPageChange = (value: boolean) => {
+    ignoreNextPageChange.current = value;
+    setState((prev) => ({ ...prev, ignoreNextPageChange: value }));
+  };
+
+  const getTransCachePath = (chapterDocIndex: string): string => {
     const electron = window.electronAPI;
     const dirPath = electron.sendSync("user-data", "ping");
     const transDir = electron.path.join(dirPath, "trans");
     if (!electron.fs.existsSync(transDir)) {
       electron.fs.mkdirSync(transDir, { recursive: true });
     }
-    this.transCacheDirPath = transDir;
+    transCacheDirPath.current = transDir;
     return electron.path.join(
       transDir,
-      this.props.currentBook.key + "_" + chapterDocIndex + ".json"
+      props.currentBook.key + "_" + chapterDocIndex + ".json"
     );
-  }
+  };
 
-  getTransCache(chapterDocIndex: string): TransCache {
-    if (this.transCacheMap.has(chapterDocIndex)) {
-      return this.transCacheMap.get(chapterDocIndex)!;
+  const getTransCache = (chapterDocIndex: string): TransCache => {
+    if (transCacheMap.current.has(chapterDocIndex)) {
+      return transCacheMap.current.get(chapterDocIndex)!;
     }
     let cache: TransCache = {};
     if (isElectron && window.electronAPI && window.electronAPI.fs) {
       try {
-        const cachePath = this.getTransCachePath(chapterDocIndex);
+        const cachePath = getTransCachePath(chapterDocIndex);
         const fs = window.electronAPI.fs;
         if (fs.existsSync(cachePath)) {
           cache = JSON.parse(fs.readFileSync(cachePath, "utf-8")) || {};
@@ -180,16 +83,16 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
         cache = {};
       }
     }
-    this.transCacheMap.set(chapterDocIndex, cache);
+    transCacheMap.current.set(chapterDocIndex, cache);
     return cache;
-  }
+  };
 
-  saveTransCache(chapterDocIndex: string, cache: TransCache) {
+  const saveTransCache = (chapterDocIndex: string, cache: TransCache) => {
     if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
       return;
     }
     try {
-      const cachePath = this.getTransCachePath(chapterDocIndex);
+      const cachePath = getTransCachePath(chapterDocIndex);
       window.electronAPI.fs.writeFileSync(
         cachePath,
         JSON.stringify(cache),
@@ -198,17 +101,17 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
     } catch (error) {
       console.error("Failed to save translation cache:", error);
     }
-  }
+  };
 
-  async handleBatchTranslation(rendition) {
-    const prev = this.batchTranslationLock;
+  const handleBatchTranslation = async (rendition) => {
+    const prev = batchTranslationLock.current;
     const next = prev.then(async () => {
       if (
         !ConfigService.getAllListConfig("fullTranslationBooks").includes(
-          this.props.currentBook.key
+          props.currentBook.key
         ) ||
         ConfigService.getReaderConfig("fullTranslationMode") === "no" ||
-        !this.props.isAuthed
+        !props.isAuthed
       ) {
         return;
       }
@@ -226,7 +129,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
         if (!chapterDocIndex) {
           chapterDocIndex = "0";
         }
-        let cache = this.getTransCache(chapterDocIndex);
+        let cache = getTransCache(chapterDocIndex);
         let translatedTexts: string[] = new Array(batchTransTexts.length);
         let pendingIndexes: number[] = [];
         let pendingTexts: string[] = [];
@@ -252,7 +155,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
               }
               cache[targetLang][batchTransTexts[index]] = res.data.texts[i];
             });
-            this.saveTransCache(chapterDocIndex, cache);
+            saveTransCache(chapterDocIndex, cache);
           }
         }
         if (translatedTexts.every((text) => text !== undefined)) {
@@ -260,17 +163,18 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
         }
       }
     });
-    this.batchTranslationLock = next.catch(() => {});
+    batchTranslationLock.current = next.catch(() => {});
     return next;
-  }
-  async handleWordDefinition(rendition) {
-    const prev = this.batchTranslationLock;
+  };
+
+  const handleWordDefinition = async (rendition) => {
+    const prev = batchTranslationLock.current;
     const next = prev.then(async () => {
       if (
         !ConfigService.getAllListConfig("wordDefinitionBooks").includes(
-          this.props.currentBook.key
+          props.currentBook.key
         ) ||
-        !this.props.isAuthed
+        !props.isAuthed
       ) {
         return;
       }
@@ -280,7 +184,7 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
         let lang = detectLocalLanguage(wordTexts.slice(0, 500).join(" "));
         if (lang === "ko") {
           toast.error(
-            this.props.t(
+            props.t(
               "Unsupported language for word definition, currently only Chinese, Japanese and English are supported"
             )
           );
@@ -303,198 +207,317 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
         }
       }
     });
-    this.batchTranslationLock = next.catch(() => {});
+    batchTranslationLock.current = next.catch(() => {});
     return next;
-  }
-  async handlePageNum(rendition) {
+  };
+
+  const handlePageNum = async (rendition) => {
     let pageInfo = await rendition.getProgress();
     if (!pageInfo) {
       return;
     }
     if (
-      isReadingRawPDF(this.props.currentBook) ||
-      isFixedLayoutComic(this.props.currentBook)
+      isReadingRawPDF(props.currentBook) ||
+      isFixedLayoutComic(props.currentBook)
     ) {
-      this.setState({
+      setState((prev) => ({
+        ...prev,
         prevPage: pageInfo.currentPage,
         nextPage: pageInfo.currentPage + 1,
         percentage: pageInfo.percentage,
-      });
+      }));
       return;
     }
-    this.setState({
-      prevPage: this.state.isSingle
+    setState((prev) => ({
+      ...prev,
+      prevPage: prev.isSingle
         ? pageInfo.currentPage
         : pageInfo.currentPage * 2 - 1,
-      nextPage: this.state.isSingle
-        ? pageInfo.currentPage
-        : pageInfo.currentPage * 2,
+      nextPage: prev.isSingle ? pageInfo.currentPage : pageInfo.currentPage * 2,
       percentage: pageInfo.percentage,
-    });
-  }
+    }));
+  };
 
-  render() {
-    return (
-      <>
-        <div
-          className="background"
-          style={{
-            color: ConfigService.getReaderConfig("textColor")
-              ? ConfigService.getReaderConfig("textColor")
-              : "",
-            width:
-              !this.props.isNavLocked &&
-              !this.props.isSettingLocked &&
-              !this.props.isDockedRight
-                ? "100%"
-                : this.props.isNavLocked &&
-                    (this.props.isSettingLocked || this.props.isDockedRight)
-                  ? "calc(100% - 600px)"
-                  : "calc(100% - 300px)",
-            left: !this.props.isNavLocked ? "0" : "300px",
-            right:
-              !this.props.isSettingLocked && !this.props.isDockedRight
-                ? "0"
-                : "300px",
-            backgroundColor: this.props.backgroundColor,
-            filter: `brightness(${
-              ConfigService.getReaderConfig("brightness") || 1
-            }) invert(${
-              ConfigService.getReaderConfig("isInvert") === "yes" ? 1 : 0
-            })`,
-          }}
-        >
-          <div className="header-container">
-            {!this.props.isHideHeader && this.props.currentChapter + "" && (
+  const methodsRef = useRef<any>(null);
+  methodsRef.current = {
+    handlePageNum,
+    handleBatchTranslation,
+    handleWordDefinition,
+  };
+
+  const propsRef = useRef(props);
+  propsRef.current = props;
+
+  // componentDidMount + componentWillUnmount: 每分钟刷新一次时间
+  useEffect(() => {
+    timeInterval.current = setInterval(() => {
+      setState((prev) => ({ ...prev, currentTime: getFormattedTime() }));
+    }, 60000);
+    return () => {
+      if (timeInterval.current) {
+        clearInterval(timeInterval.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // UNSAFE_componentWillReceiveProps: htmlBook 从无到有，注册 rendition 监听
+  const prevHtmlBookRef = useRef(props.htmlBook);
+  useEffect(() => {
+    const prevHtmlBook = prevHtmlBookRef.current;
+    const nextHtmlBook = props.htmlBook;
+    prevHtmlBookRef.current = nextHtmlBook;
+    if (nextHtmlBook && nextHtmlBook !== prevHtmlBook && !prevHtmlBook) {
+      const rendition = nextHtmlBook.rendition;
+      (async () => {
+        await methodsRef.current.handlePageNum(rendition);
+        rendition.on("page-changed", async () => {
+          await methodsRef.current.handlePageNum(rendition);
+          await methodsRef.current.handleBatchTranslation(rendition);
+          if (ignoreNextPageChange.current) {
+            setIgnoreNextPageChange(false);
+          } else {
+            propsRef.current.handleJumpPosition(null);
+          }
+        });
+        rendition.on(
+          "annotation-changed",
+          async (chapterDocIndex: number) => {
+            let annotationData = rendition.getAnnotationData(chapterDocIndex);
+            let notes = await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
+              propsRef.current.currentBook.key,
+              "annotation"
+            );
+            let note = notes.find(
+              (note: Note) => note.chapterIndex === chapterDocIndex
+            );
+            if (note) {
+              note = await DatabaseService.getRecord(note.key, "notes");
+              let newNote = {
+                ...note,
+                range: JSON.stringify(annotationData),
+              };
+              await DatabaseService.updateRecord(newNote, "notes");
+            } else {
+              let bookLocation: {
+                text: string;
+                count: string;
+                chapterTitle: string;
+                chapterDocIndex: string;
+                chapterHref: string;
+                percentage: string;
+                cfi: string;
+                page: string;
+                xpath: string;
+              } = ConfigService.getObjectConfig(
+                propsRef.current.currentBook.key,
+                "recordLocation",
+                {}
+              );
+              let newNote = new Note(
+                propsRef.current.currentBook.key,
+                bookLocation.chapterTitle,
+                chapterDocIndex,
+                "",
+                JSON.stringify(bookLocation),
+                JSON.stringify(annotationData),
+                "annotation",
+                bookLocation.percentage,
+                "annotation",
+                []
+              );
+              await DatabaseService.saveRecord(newNote, "notes");
+            }
+            propsRef.current.handleFetchNotes();
+          }
+        );
+        rendition.on("rendered", async () => {
+          await methodsRef.current.handlePageNum(rendition);
+          await methodsRef.current.handleBatchTranslation(rendition);
+          await methodsRef.current.handleWordDefinition(rendition);
+        });
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.htmlBook]);
+
+  // UNSAFE_componentWillReceiveProps: readerMode 变化时更新单双页
+  const prevReaderModeRef = useRef(props.readerMode);
+  useEffect(() => {
+    const prevReaderMode = prevReaderModeRef.current;
+    prevReaderModeRef.current = props.readerMode;
+    if (props.readerMode !== prevReaderMode) {
+      setState((prev) => ({
+        ...prev,
+        isSingle: props.readerMode !== "double",
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.readerMode]);
+
+  // UNSAFE_componentWillReceiveProps: jumpPosition 变化时忽略下一次翻页
+  const prevJumpPositionRef = useRef(props.jumpPosition);
+  useEffect(() => {
+    const prevJumpPosition = prevJumpPositionRef.current;
+    prevJumpPositionRef.current = props.jumpPosition;
+    if (
+      props.jumpPosition !== prevJumpPosition &&
+      props.jumpPosition !== null
+    ) {
+      setIgnoreNextPageChange(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.jumpPosition]);
+
+  return (
+    <>
+      <div
+        className="background"
+        style={{
+          color: ConfigService.getReaderConfig("textColor")
+            ? ConfigService.getReaderConfig("textColor")
+            : "",
+          width:
+            !props.isNavLocked && !props.isSettingLocked && !props.isDockedRight
+              ? "100%"
+              : props.isNavLocked &&
+                  (props.isSettingLocked || props.isDockedRight)
+                ? "calc(100% - 600px)"
+                : "calc(100% - 300px)",
+          left: !props.isNavLocked ? "0" : "300px",
+          right: !props.isSettingLocked && !props.isDockedRight ? "0" : "300px",
+          backgroundColor: props.backgroundColor,
+          filter: `brightness(${
+            ConfigService.getReaderConfig("brightness") || 1
+          }) invert(${
+            ConfigService.getReaderConfig("isInvert") === "yes" ? 1 : 0
+          })`,
+        }}
+      >
+        <div className="header-container">
+          {!props.isHideHeader && props.currentChapter + "" && (
+            <p
+              className="header-chapter-name"
+              style={
+                state.isSingle
+                  ? {
+                      left: `calc(50vw - 
+                      270px)`,
+                    }
+                  : {}
+              }
+            >
+              {props.currentChapter}
+            </p>
+          )}
+          {!props.isHideHeader &&
+            props.currentChapter + "" &&
+            !state.isSingle && (
               <p
-                className="header-chapter-name"
+                className="header-book-name"
                 style={
-                  this.state.isSingle
+                  state.isSingle
                     ? {
-                        left: `calc(50vw - 
+                        right: `calc(50vw - 
                       270px)`,
                       }
                     : {}
                 }
               >
-                {this.props.currentChapter}
+                {props.currentBook.name}
               </p>
             )}
-            {!this.props.isHideHeader &&
-              this.props.currentChapter + "" &&
-              !this.state.isSingle && (
-                <p
-                  className="header-book-name"
-                  style={
-                    this.state.isSingle
-                      ? {
-                          right: `calc(50vw - 
-                      270px)`,
-                        }
-                      : {}
-                  }
-                >
-                  {this.props.currentBook.name}
-                </p>
-              )}
-            {!this.props.isHideHeader && (
-              <>
-                <span className="footer-time">
-                  {this.state.currentTime}
-                  {this.state.percentage
-                    ? "  " +
-                      (parseFloat(this.state.percentage) * 100).toFixed(2) +
-                      "%"
-                    : ""}
-                </span>
-              </>
-            )}
-          </div>
-          <div className="footer-container">
-            {!this.props.isHideFooter && this.state.prevPage > 0 && (
-              <p
-                className="background-page-left"
-                style={
-                  this.state.isSingle
-                    ? {
-                        left: `calc(50vw - 
-                      270px)`,
-                      }
-                    : {}
-                }
-              >
-                <Trans i18nKey="Book page" count={this.state.prevPage}>
-                  Page
-                  {{
-                    count: this.state.prevPage,
-                  }}
-                </Trans>
-              </p>
-            )}
-            {!this.props.isHideFooter &&
-              this.state.nextPage > 0 &&
-              !this.state.isSingle && (
-                <p className="background-page-right">
-                  <Trans i18nKey="Book page" count={this.state.nextPage}>
-                    Page
-                    {{
-                      count: this.state.nextPage,
-                    }}
-                  </Trans>
-                </p>
-              )}
-          </div>
-          <>
-            {this.props.isShowBookmark ? (
-              <div className="bookmark"></div>
-            ) : null}
-          </>
-          {this.props.isShowPageBorder && (
+          {!props.isHideHeader && (
             <>
-              <div className="page-border"></div>
-              <div className="inner-page-border"></div>
-              <div className="page-border-header-line"></div>
-              <div className="page-border-footer-line"></div>
-              {!this.state.isSingle && (
-                <div
-                  className="page-border-center-line"
-                  style={
-                    this.props.textOrientation === "vertical"
-                      ? {
-                          top: "50%",
-                          height: "1px",
-                          width: "calc(100% - 30px)",
-                          left: "15px",
-                          right: "15px",
-                        }
-                      : {}
-                  }
-                ></div>
-              )}
+              <span className="footer-time">
+                {state.currentTime}
+                {state.percentage
+                  ? "  " + (parseFloat(state.percentage) * 100).toFixed(2) + "%"
+                  : ""}
+              </span>
             </>
           )}
         </div>
-        {this.props.jumpPosition && (
-          <div className="jump-return-button-container">
-            <button
-              className="jump-return-button"
-              onClick={async () => {
-                if (this.props.jumpPosition && this.props.htmlBook) {
-                  this.setState({ ignoreNextPageChange: true });
-                  await this.props.htmlBook.rendition.goToPosition(
-                    JSON.stringify(this.props.jumpPosition)
-                  );
-                  this.props.handleJumpPosition(null);
-                }
-              }}
+        <div className="footer-container">
+          {!props.isHideFooter && state.prevPage > 0 && (
+            <p
+              className="background-page-left"
+              style={
+                state.isSingle
+                  ? {
+                      left: `calc(50vw - 
+                      270px)`,
+                    }
+                  : {}
+              }
             >
-              {this.props.t("Return")}
-            </button>
-          </div>
+              <Trans i18nKey="Book page" count={state.prevPage}>
+                Page
+                {{
+                  count: state.prevPage,
+                }}
+              </Trans>
+            </p>
+          )}
+          {!props.isHideFooter && state.nextPage > 0 && !state.isSingle && (
+            <p className="background-page-right">
+              <Trans i18nKey="Book page" count={state.nextPage}>
+                Page
+                {{
+                  count: state.nextPage,
+                }}
+              </Trans>
+            </p>
+          )}
+        </div>
+        <>
+          {props.isShowBookmark ? <div className="bookmark"></div> : null}
+        </>
+        {props.isShowPageBorder && (
+          <>
+            <div className="page-border"></div>
+            <div className="inner-page-border"></div>
+            <div className="page-border-header-line"></div>
+            <div className="page-border-footer-line"></div>
+            {!state.isSingle && (
+              <div
+                className="page-border-center-line"
+                style={
+                  props.textOrientation === "vertical"
+                    ? {
+                        top: "50%",
+                        height: "1px",
+                        width: "calc(100% - 30px)",
+                        left: "15px",
+                        right: "15px",
+                      }
+                    : {}
+                }
+              ></div>
+            )}
+          </>
         )}
-      </>
-    );
-  }
-}
+      </div>
+      {props.jumpPosition && (
+        <div className="jump-return-button-container">
+          <button
+            className="jump-return-button"
+            onClick={async () => {
+              if (props.jumpPosition && props.htmlBook) {
+                setIgnoreNextPageChange(true);
+                await props.htmlBook.rendition.goToPosition(
+                  JSON.stringify(props.jumpPosition)
+                );
+                props.handleJumpPosition(null);
+              }
+            }}
+          >
+            {props.t("Return")}
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
 
 export default PageWidget;
