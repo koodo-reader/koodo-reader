@@ -6331,6 +6331,541 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
       "coqui-ai/TTS: 🐸💬 - a deep learning toolkit for Text-to-Speech, battle-tested in research and production (github.com)",
     websiteUrl: "https://github.com/coqui-ai/TTS",
   },
+  {
+    key: "baidu-ocr-general-plugin",
+    type: "ocr",
+    displayName: "Baidu OCR (Standard)",
+    icon: "baidu",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      apiKey: "[Your API Key]",
+      secretKey: "[Your Secret Key]",
+      language: "CHN_ENG",
+    },
+    langList: {
+      auto: "Automatic",
+      CHN_ENG: "Chinese & English",
+      ENG: "English",
+      JAP: "Japanese",
+      KOR: "Korean",
+      FRE: "French",
+      GER: "German",
+      SPA: "Spanish",
+      POR: "Portuguese",
+      ITA: "Italian",
+      RUS: "Russian",
+    },
+    voiceList: [],
+    name: {
+      en: "Baidu OCR (Standard)",
+      zhCN: "百度通用文字识别（标准版）",
+    },
+    feature: {
+      en: "Baidu AI general OCR API",
+      zhCN: "百度 AI 通用文字识别接口",
+    },
+    configuration: {
+      en: "Fill in the API Key and Secret Key of your Baidu OCR application",
+      zhCN: "填写百度 OCR 应用的 API Key 和 Secret Key",
+    },
+    websiteName: "百度通用文字识别（标准版）",
+    websiteUrl: "https://ai.baidu.com/ai-doc/OCR/zk3h7xz52",
+  },
+  {
+    key: "baidu-ocr-accurate-plugin",
+    type: "ocr",
+    displayName: "Baidu OCR (Accurate)",
+    icon: "baidu",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      apiKey: "[Your API Key]",
+      secretKey: "[Your Secret Key]",
+      language: "CHN_ENG",
+    },
+    langList: {
+      auto: "Automatic",
+      CHN_ENG: "Chinese & English",
+      ENG: "English",
+      JAP: "Japanese",
+      KOR: "Korean",
+      FRE: "French",
+      GER: "German",
+      SPA: "Spanish",
+      POR: "Portuguese",
+      ITA: "Italian",
+      RUS: "Russian",
+    },
+    voiceList: [],
+    name: {
+      en: "Baidu OCR (Accurate)",
+      zhCN: "百度通用文字识别（高精度版）",
+    },
+    feature: {
+      en: "Baidu AI high precision OCR API",
+      zhCN: "百度 AI 高精度文字识别接口",
+    },
+    configuration: {
+      en: "Fill in the API Key and Secret Key of your Baidu OCR application",
+      zhCN: "填写百度 OCR 应用的 API Key 和 Secret Key",
+    },
+    websiteName: "百度通用文字识别（高精度版）",
+    websiteUrl: "https://ai.baidu.com/ai-doc/OCR/1k3h7y3db",
+  },
+  {
+    key: "tencent-ocr-general-plugin",
+    type: "ocr",
+    displayName: "Tencent Cloud OCR (General)",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      secretId: "[Your Secret ID]",
+      secretKey: "[Your Secret Key]",
+      region: "ap-beijing",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Tencent Cloud OCR (General)",
+      zhCN: "腾讯云通用文字识别",
+    },
+    feature: {
+      en: "Tencent Cloud general text recognition API",
+      zhCN: "腾讯云通用文字识别接口",
+    },
+    configuration: {
+      en: "Fill in SecretId, SecretKey and region of your Tencent Cloud account",
+      zhCN: "填写腾讯云账号的 SecretId、SecretKey 和 region",
+    },
+    websiteName: "腾讯云通用文字识别",
+    websiteUrl: "https://cloud.tencent.com/document/api/866/33526",
+  },
+  {
+    key: "tencent-ocr-accurate-plugin",
+    type: "ocr",
+    displayName: "Tencent Cloud OCR (Accurate)",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      secretId: "[Your Secret ID]",
+      secretKey: "[Your Secret Key]",
+      region: "ap-beijing",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Tencent Cloud OCR (Accurate)",
+      zhCN: "腾讯云通用文字识别（高精度版）",
+    },
+    feature: {
+      en: "Tencent Cloud high precision text recognition API",
+      zhCN: "腾讯云高精度文字识别接口",
+    },
+    configuration: {
+      en: "Fill in SecretId, SecretKey and region of your Tencent Cloud account",
+      zhCN: "填写腾讯云账号的 SecretId、SecretKey 和 region",
+    },
+    websiteName: "腾讯云通用文字识别（高精度版）",
+    websiteUrl: "https://cloud.tencent.com/document/api/866/34937",
+  },
+  {
+    key: "aliyun-ocr-alltext-plugin",
+    type: "ocr",
+    displayName: "Aliyun OCR (Unified)",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      accessKeyId: "[Your Access Key ID]",
+      accessKeySecret: "[Your Access Key Secret]",
+      endpoint: "https://ocr-api.cn-hangzhou.aliyuncs.com/",
+      ocrType: "General",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Aliyun OCR (Unified)",
+      zhCN: "阿里云统一识别",
+    },
+    feature: {
+      en: "Aliyun OCR RecognizeAllText API",
+      zhCN: "阿里云 RecognizeAllText 统一识别接口",
+    },
+    configuration: {
+      en: "Fill in AccessKeyId and AccessKeySecret; ocrType defaults to General",
+      zhCN: "填写 AccessKeyId 和 AccessKeySecret，ocrType 默认 General",
+    },
+    websiteName: "阿里云统一识别",
+    websiteUrl:
+      "https://help.aliyun.com/zh/ocr/developer-reference/api-ocr-api-2021-07-07-recognizealltext",
+  },
+  {
+    key: "aliyun-ocr-general-plugin",
+    type: "ocr",
+    displayName: "Aliyun OCR (General)",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      accessKeyId: "[Your Access Key ID]",
+      accessKeySecret: "[Your Access Key Secret]",
+      endpoint: "https://ocr-api.cn-hangzhou.aliyuncs.com/",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Aliyun OCR (General)",
+      zhCN: "阿里云通用文字识别",
+    },
+    feature: {
+      en: "Aliyun OCR RecognizeGeneral API",
+      zhCN: "阿里云 RecognizeGeneral 通用文字识别接口",
+    },
+    configuration: {
+      en: "Fill in AccessKeyId and AccessKeySecret",
+      zhCN: "填写 AccessKeyId 和 AccessKeySecret",
+    },
+    websiteName: "阿里云通用文字识别",
+    websiteUrl:
+      "https://help.aliyun.com/zh/ocr/developer-reference/api-ocr-api-2021-07-07-recognizegeneral",
+  },
+  {
+    key: "aliyun-ocr-advanced-plugin",
+    type: "ocr",
+    displayName: "Aliyun OCR (Advanced)",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      accessKeyId: "[Your Access Key ID]",
+      accessKeySecret: "[Your Access Key Secret]",
+      endpoint: "https://ocr-api.cn-hangzhou.aliyuncs.com/",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Aliyun OCR (Advanced)",
+      zhCN: "阿里云全文识别高精版",
+    },
+    feature: {
+      en: "Aliyun OCR RecognizeAdvanced API",
+      zhCN: "阿里云 RecognizeAdvanced 高精度识别接口",
+    },
+    configuration: {
+      en: "Fill in AccessKeyId and AccessKeySecret",
+      zhCN: "填写 AccessKeyId 和 AccessKeySecret",
+    },
+    websiteName: "阿里云全文识别高精版",
+    websiteUrl:
+      "https://help.aliyun.com/zh/ocr/developer-reference/api-ocr-api-2021-07-07-recognizeadvanced",
+  },
+  {
+    key: "aliyun-qwen-ocr-plugin",
+    type: "ocr",
+    displayName: "Qwen OCR",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      apiKey: "[Your DashScope API Key]",
+      model: "qwen-vl-ocr",
+      baseUrl: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Qwen OCR",
+      zhCN: "阿里云文字提取（Qwen-OCR）",
+    },
+    feature: {
+      en: "Alibaba Cloud DashScope Qwen OCR model",
+      zhCN: "阿里云百炼 Qwen-OCR 文字提取模型",
+    },
+    configuration: {
+      en: "Fill in your DashScope API Key; model defaults to qwen-vl-ocr",
+      zhCN: "填写百炼 DashScope API Key，model 默认 qwen-vl-ocr",
+    },
+    websiteName: "Qwen-VL-OCR - 阿里云百炼",
+    websiteUrl: "https://help.aliyun.com/zh/model-studio/qwen-vl-ocr",
+  },
+  {
+    key: "amazon-textract-plugin",
+    type: "ocr",
+    displayName: "Amazon Textract",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      accessKeyId: "[Your Access Key ID]",
+      secretAccessKey: "[Your Secret Access Key]",
+      region: "us-east-1",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Amazon Textract",
+      zhCN: "Amazon Textract",
+    },
+    feature: {
+      en: "Amazon Textract DetectDocumentText API",
+      zhCN: "Amazon Textract 文档文字检测接口",
+    },
+    configuration: {
+      en: "Fill in AccessKeyId, SecretAccessKey and region",
+      zhCN: "填写 AccessKeyId、SecretAccessKey 和 region",
+    },
+    websiteName: "Amazon Textract API Reference",
+    websiteUrl:
+      "https://docs.aws.amazon.com/textract/latest/APIReference/Welcome.html",
+  },
+  {
+    key: "google-cloud-vision-plugin",
+    type: "ocr",
+    displayName: "Google Cloud Vision",
+    icon: "google",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      apiKey: "[Your API Key]",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Google Cloud Vision",
+      zhCN: "Google Cloud Vision",
+    },
+    feature: {
+      en: "Google Cloud Vision text detection API",
+      zhCN: "Google Cloud Vision 文字检测接口",
+    },
+    configuration: {
+      en: "Enable Cloud Vision API and fill in the API Key",
+      zhCN: "启用 Cloud Vision API 并填写 API Key",
+    },
+    websiteName: "Google Cloud Vision API",
+    websiteUrl: "https://docs.cloud.google.com/vision/docs/reference/rest",
+  },
+  {
+    key: "google-document-ai-plugin",
+    type: "ocr",
+    displayName: "Google Document AI",
+    icon: "google",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      accessToken: "[Your OAuth Access Token]",
+      projectId: "[Your Project ID]",
+      location: "us",
+      processorId: "[Your Processor ID]",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Google Document AI",
+      zhCN: "Google Document AI",
+    },
+    feature: {
+      en: "Google Document AI enterprise document OCR",
+      zhCN: "Google Document AI 企业级文档 OCR",
+    },
+    configuration: {
+      en: "Fill in OAuth access token, project ID, location and processor ID",
+      zhCN: "填写 OAuth access token、project ID、location 和 processor ID",
+    },
+    websiteName: "Google Document AI - Enterprise Document OCR",
+    websiteUrl:
+      "https://docs.cloud.google.com/document-ai/docs/enterprise-document-ocr?hl=zh-cn",
+  },
+  {
+    key: "azure-document-intelligence-plugin",
+    type: "ocr",
+    displayName: "Azure Document Intelligence",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      endpoint:
+        "[Your Endpoint, e.g. https://xxx.cognitiveservices.azure.com]",
+      apiKey: "[Your API Key]",
+      modelId: "prebuilt-read",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Azure Document Intelligence",
+      zhCN: "Azure AI 文档智能",
+    },
+    feature: {
+      en: "Azure Document Intelligence prebuilt-read model",
+      zhCN: "Azure AI 文档智能 prebuilt-read 模型",
+    },
+    configuration: {
+      en: "Fill in endpoint and API key; modelId defaults to prebuilt-read",
+      zhCN: "填写 endpoint 和 API key，modelId 默认 prebuilt-read",
+    },
+    websiteName: "Azure AI Document Intelligence - Read model",
+    websiteUrl:
+      "https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/prebuilt/read?view=doc-intel-4.0.0&tabs=sample-code",
+  },
+  {
+    key: "azure-computer-vision-ocr-plugin",
+    type: "ocr",
+    displayName: "Azure OCR for Images",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      endpoint:
+        "[Your Endpoint, e.g. https://xxx.cognitiveservices.azure.com]",
+      apiKey: "[Your API Key]",
+      language: "unk",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Azure OCR for Images",
+      zhCN: "Azure 图像 OCR",
+    },
+    feature: {
+      en: "Azure AI Vision OCR for images",
+      zhCN: "Azure AI Vision 图像 OCR 接口",
+    },
+    configuration: {
+      en: "Fill in endpoint and API key; language defaults to unk (auto)",
+      zhCN: "填写 endpoint 和 API key，language 默认 unk（自动）",
+    },
+    websiteName: "Azure AI Vision - OCR",
+    websiteUrl:
+      "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/concept-ocr",
+  },
+  {
+    key: "openai-compatible-ocr-plugin",
+    type: "ocr",
+    displayName: "OpenAI Compatible OCR (SiliconFlow)",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      apiKey: "[Your API Key]",
+      baseUrl: "https://api.siliconflow.cn/v1",
+      model: "Qwen/Qwen2.5-VL-72B-Instruct",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "OpenAI Compatible OCR (SiliconFlow)",
+      zhCN: "OpenAI 兼容 OCR（硅基流动）",
+    },
+    feature: {
+      en: "OpenAI compatible chat completions OCR API",
+      zhCN: "OpenAI 兼容 Chat Completions OCR 接口",
+    },
+    configuration: {
+      en: "Fill in API Key, base URL and model",
+      zhCN: "填写 API Key、base URL 和 model",
+    },
+    websiteName: "SiliconFlow Chat Completions API",
+    websiteUrl: "https://api-docs.siliconflow.cn/docs/api/chat-completions-post",
+  },
+  {
+    key: "ocrspace-plugin",
+    type: "ocr",
+    displayName: "OCR.space",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      apiKey: "helloworld",
+      language: "eng",
+      ocrEngine: "2",
+    },
+    langList: {
+      auto: "Automatic",
+      eng: "English",
+      chs: "Chinese (Simplified)",
+      cht: "Chinese (Traditional)",
+      jpn: "Japanese",
+      kor: "Korean",
+      fre: "French",
+      ger: "German",
+      spa: "Spanish",
+      ita: "Italian",
+      por: "Portuguese",
+      rus: "Russian",
+    },
+    voiceList: [],
+    name: {
+      en: "OCR.space",
+      zhCN: "OCR.space",
+    },
+    feature: {
+      en: "OCR.space free OCR API",
+      zhCN: "OCR.space 免费 OCR 接口",
+    },
+    configuration: {
+      en: "Fill in API Key (helloworld for testing), language and OCR engine",
+      zhCN: "填写 API Key（测试可用 helloworld）、language 和 OCR engine",
+    },
+    websiteName: "OCR.space Free OCR API",
+    websiteUrl: "https://ocr.space/ocrapi",
+  },
+  {
+    key: "puter-ocr-plugin",
+    type: "ocr",
+    displayName: "Puter OCR",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      provider: "aws-textract",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "Puter OCR",
+      zhCN: "Puter OCR",
+    },
+    feature: {
+      en: "Puter.js free OCR with user-pays model",
+      zhCN: "Puter.js 免费 OCR（用户付费模式）",
+    },
+    configuration: {
+      en: "No API key required; provider can be aws-textract or mistral",
+      zhCN: "无需 API Key，provider 可选 aws-textract 或 mistral",
+    },
+    websiteName: "Puter.js Free OCR API",
+    websiteUrl:
+      "https://developer.puter.com/tutorials/free-unlimited-ocr-api/",
+  },
 ];
 
 const chineseOnlyPluginKeys = new Set([
@@ -6358,6 +6893,14 @@ const chineseOnlyPluginKeys = new Set([
   "qwen-tts-voice-plugin",
   "zhipu-tts-voice-plugin",
   "volcengine-tts-voice-plugin",
+  "baidu-ocr-general-plugin",
+  "baidu-ocr-accurate-plugin",
+  "tencent-ocr-general-plugin",
+  "tencent-ocr-accurate-plugin",
+  "aliyun-ocr-alltext-plugin",
+  "aliyun-ocr-general-plugin",
+  "aliyun-ocr-advanced-plugin",
+  "aliyun-qwen-ocr-plugin",
 ]);
 
 const definitionsByKey = new Map(

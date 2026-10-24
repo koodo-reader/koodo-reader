@@ -387,6 +387,7 @@
   "When a line of text is n times the size of regular text, it will be treated as a title": "当一行文字的大小为常规文字的n倍时，将被视为标题",
   "Title size threshold": "标题大小阈值",
   "OCR engine": "OCR 引擎",
+  "Text recognition": "文字识别",
   "System OCR": "系统 OCR",
   "Note": "笔记",
   "Page width": "页面宽度",

@@ -806,6 +806,7 @@
   "When a line of text is n times the size of regular text, it will be treated as a title": "When a line of text is n times the size of regular text, it will be treated as a title",
   "Title size threshold": "Title size threshold",
   "OCR engine": "OCR engine",
+  "Text recognition": "Text recognition",
   "System OCR": "System OCR",
   "Render PDF from even page": "Render PDF from even page",
   "Filter by book": "Filter by book",

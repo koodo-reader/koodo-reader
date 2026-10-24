@@ -42,6 +42,7 @@ class SettingDialog extends React.Component<
 > {
   private translationRef = React.createRef<HTMLDivElement>();
   private dictionaryRef = React.createRef<HTMLDivElement>();
+  private ocrRef = React.createRef<HTMLDivElement>();
   private voiceRef = React.createRef<HTMLDivElement>();
 
   constructor(props: SettingInfoProps) {
@@ -72,7 +73,8 @@ class SettingDialog extends React.Component<
     const typeOrder: Record<string, number> = {
       translation: 0,
       dictionary: 1,
-      voice: 2,
+      ocr: 2,
+      voice: 3,
     };
     pluginList.sort(
       (a, b) => typeOrder[a.plugin.type] - typeOrder[b.plugin.type]
@@ -365,7 +367,8 @@ class SettingDialog extends React.Component<
                           ? "dict"
                           : item.type === "voice"
                             ? "speaker"
-                            : item.type === "translation"
+                            : item.type === "translation" ||
+                                item.type === "ocr"
                               ? "translation"
                               : "ai-assist"
                       } setting-plugin-icon`}
@@ -410,17 +413,19 @@ class SettingDialog extends React.Component<
           </span>
         </div>
         <div className="plugin-tab-bar">
-          {(["translation", "dictionary", "voice"] as const)
+          {(["translation", "dictionary", "ocr", "voice"] as const)
             .filter((type) => isElectron || type !== "voice")
             .map((type) => {
               const labelMap: Record<string, string> = {
                 translation: this.props.t("Translation"),
                 dictionary: this.props.t("Dictionary"),
+                ocr: this.props.t("Text recognition"),
                 voice: this.props.t("Voice"),
               };
               const refMap: Record<string, React.RefObject<HTMLDivElement>> = {
                 translation: this.translationRef,
                 dictionary: this.dictionaryRef,
+                ocr: this.ocrRef,
                 voice: this.voiceRef,
               };
               return (
@@ -465,9 +470,11 @@ class SettingDialog extends React.Component<
                 ? this.translationRef
                 : type === "dictionary"
                   ? this.dictionaryRef
-                  : type === "voice"
-                    ? this.voiceRef
-                    : null;
+                  : type === "ocr"
+                    ? this.ocrRef
+                    : type === "voice"
+                      ? this.voiceRef
+                      : null;
             return (
               <div key={item.plugin.identifier}>
                 {isFirstOfType && sectionRef && (
@@ -481,7 +488,8 @@ class SettingDialog extends React.Component<
                           ? "dict"
                           : item.plugin.type === "voice"
                             ? "speaker"
-                            : item.plugin.type === "translation"
+                            : item.plugin.type === "translation" ||
+                                item.plugin.type === "ocr"
                               ? "translation"
                               : "ai-assist"
                       } setting-plugin-icon`}
