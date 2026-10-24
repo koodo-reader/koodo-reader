@@ -571,15 +571,6 @@ export const handleExitFullScreen = () => {
     }
   }
 };
-export const getQueryParams = (url: string) => {
-  const urlObj = new URL(url);
-  const params = new URLSearchParams(urlObj.search);
-  const queryParams = {};
-  for (let pair of params.entries()) {
-    queryParams[pair[0]] = pair[1];
-  }
-  return queryParams;
-};
 export const getStorageLocation = () => {
   if (isElectron) {
     return ConfigService.getItem("storageLocation")
@@ -1019,30 +1010,6 @@ export const checkMissingBook = async () => {
     if (book.path && fs.existsSync(book.path)) {
       fs.copyFileSync(book.path, expectedPath);
     }
-  }
-};
-export const deleteBrokenCovers = () => {
-  try {
-    if (!isElectron) return;
-    var fs = window.electronAPI.fs;
-    var path = window.electronAPI.path;
-    const storageLocation = getStorageLocation();
-    if (!storageLocation) return;
-    const dirPath = path.join(storageLocation, "cover");
-    const files = fs.readdirSync(dirPath);
-    for (const file of files) {
-      const filePath = path.join(dirPath, file);
-      try {
-        const stat = fs.statSync(filePath);
-        if (stat.size === 0) {
-          fs.unlinkSync(filePath);
-        }
-      } catch (e) {
-        console.error("Failed to check/delete file:", filePath, e);
-      }
-    }
-  } catch (error) {
-    console.error("Error while deleting broken books and covers:", error);
   }
 };
 export const checkBrokenDatabase = async () => {

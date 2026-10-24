@@ -240,11 +240,6 @@ export function reader(
         ...state,
         section: action.payload,
       };
-    case "HANDLE_CHAPTERS":
-      return {
-        ...state,
-        chapters: action.payload,
-      };
     case "HANDLE_JUMP_POSITION":
       return {
         ...state,

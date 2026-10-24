@@ -162,10 +162,6 @@ export const toggleReadingPanel = (
   );
 };
 
-export const openTableOfContents = () => {
-  openReadingPanel("left");
-};
-
 const READING_PANEL_SHORTCUTS: Array<{
   shortcut: ShortcutAction;
   position: "left" | "right" | "top" | "bottom";

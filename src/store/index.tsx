@@ -73,7 +73,6 @@ export type stateType = {
     renderBookFunc: () => void;
     importBookFunc: (file: any) => Promise<void>;
     cloudSyncFunc: () => Promise<void>;
-    renderNoteFunc: () => void;
   };
   backupPage: {
     isBackup: boolean;
@@ -142,7 +141,6 @@ export type stateType = {
     isCollapsed: boolean;
   };
   viewArea: {
-    selection: string;
     menuMode: string;
     isOpenMenu: boolean;
     isChangeDirection: boolean;

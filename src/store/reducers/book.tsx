@@ -8,7 +8,6 @@ const initState = {
   renderBookFunc: () => {},
   importBookFunc: () => {},
   cloudSyncFunc: () => {},
-  renderNoteFunc: () => {},
 };
 export function book(
   state = initState,
@@ -39,11 +38,6 @@ export function book(
       return {
         ...state,
         cloudSyncFunc: action.payload,
-      };
-    case "HANDLE_RENDER_NOTE_FUNC":
-      return {
-        ...state,
-        renderNoteFunc: action.payload,
       };
     case "HANDLE_ADD_DIALOG":
       return {
