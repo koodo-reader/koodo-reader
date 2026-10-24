@@ -64,7 +64,7 @@ export const recognize: OCRPlugin = async (imageBase64, axios, config) => {
         }
       });
     });
-    return lines;
+    return lines.join("\n");
   } catch (error) {
     throwOcrRequestError(error);
   }

@@ -41,13 +41,9 @@ export const base64ToUint8Array = (base64: string): Uint8Array => {
   return bytes;
 };
 
-export const splitTextToLines = (text: unknown): string[] => {
-  if (typeof text !== "string") return [];
-  return text
-    .replace(/\r\n?/g, "\n")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
+export const normalizeOcrText = (text: unknown): string => {
+  if (typeof text !== "string") return "";
+  return text.replace(/\r\n?/g, "\n").trim();
 };
 
 export const extractChatContent = (content: unknown): string => {

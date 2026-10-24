@@ -1,8 +1,8 @@
 import type { OCRPlugin } from "../../types";
 import {
   base64ToUint8Array,
+  normalizeOcrText,
   parseImageBase64,
-  splitTextToLines,
   throwOcrRequestError,
 } from "./common";
 
@@ -35,7 +35,7 @@ export const recognize: OCRPlugin = async (imageBase64, axios, config) => {
     });
 
     if (res.data?.analyzeResult?.content) {
-      return splitTextToLines(res.data.analyzeResult.content);
+      return normalizeOcrText(res.data.analyzeResult.content);
     }
 
     const operationLocation =
@@ -53,7 +53,7 @@ export const recognize: OCRPlugin = async (imageBase64, axios, config) => {
       });
       const status = poll.data?.status;
       if (status === "succeeded") {
-        return splitTextToLines(poll.data?.analyzeResult?.content);
+        return normalizeOcrText(poll.data?.analyzeResult?.content);
       }
       if (status === "failed") {
         throw new Error(

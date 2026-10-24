@@ -5,9 +5,9 @@ import {
   getNonce,
   getTimestamp,
   hmacSha1Base64,
+  normalizeOcrText,
   parseImageBase64,
   percentEncode,
-  splitTextToLines,
   throwOcrRequestError,
 } from "./common";
 
@@ -23,7 +23,7 @@ export const recognizeWithAliyun = async (
   imageBase64: string,
   axios: AxiosInstance,
   config: PluginConfig
-): Promise<string[]> => {
+): Promise<string> => {
   const accessKeyId = config.accessKeyId || "";
   const accessKeySecret = config.accessKeySecret || "";
 
@@ -74,7 +74,7 @@ export const recognizeWithAliyun = async (
       typeof res.data?.Data === "string"
         ? JSON.parse(res.data.Data)
         : res.data?.Data;
-    return splitTextToLines(data?.content || data?.Content);
+    return normalizeOcrText(data?.content || data?.Content);
   } catch (error) {
     throwOcrRequestError(error);
   }

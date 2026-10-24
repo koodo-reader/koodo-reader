@@ -46,7 +46,7 @@ export const recognizeWithBaidu = async (
   imageBase64: string,
   axios: AxiosInstance,
   config: PluginConfig
-): Promise<string[]> => {
+): Promise<string> => {
   const apiKey = config.apiKey || "";
   const secretKey = config.secretKey || "";
 
@@ -81,7 +81,8 @@ export const recognizeWithBaidu = async (
       : [];
     return results
       .map((item: { words?: string }) => String(item?.words || ""))
-      .filter(Boolean);
+      .filter(Boolean)
+      .join("\n");
   } catch (error) {
     throwOcrRequestError(error);
   }

@@ -1,8 +1,8 @@
 import type { OCRPlugin } from "../../types";
 import {
   extractChatContent,
+  normalizeOcrText,
   parseImageBase64,
-  splitTextToLines,
   throwOcrRequestError,
 } from "./common";
 
@@ -26,6 +26,7 @@ export const recognize: OCRPlugin = async (imageBase64, axios, config) => {
       `${baseUrl}/chat/completions`,
       {
         model,
+        stream: false,
         temperature: 0,
         messages: [
           {
@@ -50,7 +51,7 @@ export const recognize: OCRPlugin = async (imageBase64, axios, config) => {
       );
     }
 
-    return splitTextToLines(
+    return normalizeOcrText(
       extractChatContent(res.data?.choices?.[0]?.message?.content)
     );
   } catch (error) {
