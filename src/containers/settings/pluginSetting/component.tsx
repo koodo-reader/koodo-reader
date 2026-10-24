@@ -422,7 +422,7 @@ class SettingDialog extends React.Component<
                 ocr: this.props.t("Text recognition"),
                 voice: this.props.t("Voice"),
               };
-              const refMap: Record<string, React.RefObject<HTMLDivElement>> = {
+              const refMap: Record<string, React.RefObject<HTMLDivElement | null>> = {
                 translation: this.translationRef,
                 dictionary: this.dictionaryRef,
                 ocr: this.ocrRef,

@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
-import thunk from "redux-thunk";
+import { thunk } from "redux-thunk";
 import { book } from "./reducers/book";
 import { manager } from "./reducers/manager";
 import { progressPanel } from "./reducers/progressPanel";
@@ -23,7 +23,7 @@ const rootReducer = combineReducers({
   sidebar,
   backupPage,
   collection,
-});
+} as any);
 const store = createStore(
   rootReducer,
   compose(

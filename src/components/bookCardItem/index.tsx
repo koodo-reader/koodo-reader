@@ -2,6 +2,12 @@ import { connect } from "react-redux";
 import {
   handleActionDialog,
   handleReadingBook,
+  handleRefreshBookCover,
+  handleSelectBook,
+  handleSelectedBooks,
+  handleFetchBooks,
+  handleCollectionDialogBooks,
+  handleAddCollectionDialog,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 import BookCardItem from "./component";
@@ -13,11 +19,18 @@ const mapStateToProps = (state: stateType) => {
     isOpenActionDialog: state.book.isOpenActionDialog,
     currentBook: state.book.currentBook,
     isSelectBook: state.manager.isSelectBook,
+    refreshBookKey: state.manager.refreshBookKey,
   };
 };
 const actionCreator = {
   handleReadingBook,
   handleActionDialog,
+  handleRefreshBookCover,
+  handleSelectBook,
+  handleSelectedBooks,
+  handleFetchBooks,
+  handleCollectionDialogBooks,
+  handleAddCollectionDialog,
 };
 export default connect(
   mapStateToProps,

@@ -14,7 +14,7 @@ interface FlatChapterItem {
 }
 
 class ContentList extends React.Component<ContentListProps, ContentListState> {
-  private searchInputRef: React.RefObject<HTMLInputElement>;
+  private searchInputRef: React.RefObject<HTMLInputElement | null>;
 
   constructor(props: ContentListProps) {
     super(props);

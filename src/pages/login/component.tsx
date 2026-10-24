@@ -150,6 +150,7 @@ class Login extends React.Component<LoginProps, LoginState> {
         <Toaster
           toastOptions={{
             style: {
+              padding: "8px 10px",
               wordWrap: "break-word",
               wordBreak: "break-word",
               whiteSpace: "normal",

@@ -12,7 +12,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import Note from "../../../models/Note";
 class CardList extends React.Component<CardListProps, CardListStates> {
-  private containerRef: React.RefObject<HTMLDivElement>;
+  private containerRef: React.RefObject<HTMLDivElement | null>;
   private scrollTimer: NodeJS.Timeout | null = null;
   constructor(props: CardListProps) {
     super(props);

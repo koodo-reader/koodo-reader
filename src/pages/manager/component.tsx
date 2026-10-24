@@ -285,6 +285,7 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         <Toaster
           toastOptions={{
             style: {
+              padding: "8px 10px",
               wordWrap: "break-word",
               wordBreak: "break-word",
               whiteSpace: "normal",

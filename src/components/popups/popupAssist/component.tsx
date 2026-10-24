@@ -20,8 +20,8 @@ import { chatStream, llmReport } from "../../../utils/request/common";
 import { marked } from "marked";
 import { sampleQuestion } from "../../../constants/settingList";
 class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
-  chatBoxRef: React.RefObject<HTMLDivElement>;
-  textareaRef: React.RefObject<HTMLTextAreaElement>;
+  chatBoxRef: React.RefObject<HTMLDivElement | null>;
+  textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   answerTextAccumulator: string = "";
   updateInterval: ReturnType<typeof setInterval> | null = null;
   isHydrating = false;

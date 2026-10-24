@@ -145,39 +145,39 @@ const Router = () => {
   return (
     <HashRouter>
       <Switch>
-        <Route component={Manager} path="/manager" />
-        <Route component={Login} path="/login" />
-        <Route component={Stats} path="/stats" />
-        <Route component={HtmlReader} path="/epub" />
-        <Route component={HtmlReader} path="/mobi" />
-        <Route component={HtmlReader} path="/cbr" />
-        <Route component={HtmlReader} path="/cbt" />
-        <Route component={HtmlReader} path="/cbz" />
-        <Route component={HtmlReader} path="/cb7" />
-        <Route component={HtmlReader} path="/pptx" />
-        <Route component={HtmlReader} path="/ppt" />
-        <Route component={HtmlReader} path="/xps" />
-        <Route component={HtmlReader} path="/oxps" />
-        <Route component={HtmlReader} path="/djvu" />
-        <Route component={HtmlReader} path="/djv" />
-        <Route component={HtmlReader} path="/ofd" />
-        <Route component={HtmlReader} path="/azw3" />
-        <Route component={HtmlReader} path="/azw" />
-        <Route component={HtmlReader} path="/txt" />
-        <Route component={HtmlReader} path="/docx" />
-        <Route component={HtmlReader} path="/doc" />
-        <Route component={HtmlReader} path="/rtf" />
-        <Route component={HtmlReader} path="/md" />
-        <Route component={HtmlReader} path="/fb2" />
-        <Route component={HtmlReader} path="/chm" />
-        <Route component={HtmlReader} path="/html" />
-        <Route component={HtmlReader} path="/htm" />
-        <Route component={HtmlReader} path="/xml" />
-        <Route component={HtmlReader} path="/xhtml" />
-        <Route component={HtmlReader} path="/mhtml" />
-        <Route component={HtmlReader} path="/href" />
-        <Route component={HtmlReader} path="/pdf" />
-        <Route component={_Redirect} path="/" />
+        <Route component={Manager as any} path="/manager" />
+        <Route component={Login as any} path="/login" />
+        <Route component={Stats as any} path="/stats" />
+        <Route component={HtmlReader as any} path="/epub" />
+        <Route component={HtmlReader as any} path="/mobi" />
+        <Route component={HtmlReader as any} path="/cbr" />
+        <Route component={HtmlReader as any} path="/cbt" />
+        <Route component={HtmlReader as any} path="/cbz" />
+        <Route component={HtmlReader as any} path="/cb7" />
+        <Route component={HtmlReader as any} path="/pptx" />
+        <Route component={HtmlReader as any} path="/ppt" />
+        <Route component={HtmlReader as any} path="/xps" />
+        <Route component={HtmlReader as any} path="/oxps" />
+        <Route component={HtmlReader as any} path="/djvu" />
+        <Route component={HtmlReader as any} path="/djv" />
+        <Route component={HtmlReader as any} path="/ofd" />
+        <Route component={HtmlReader as any} path="/azw3" />
+        <Route component={HtmlReader as any} path="/azw" />
+        <Route component={HtmlReader as any} path="/txt" />
+        <Route component={HtmlReader as any} path="/docx" />
+        <Route component={HtmlReader as any} path="/doc" />
+        <Route component={HtmlReader as any} path="/rtf" />
+        <Route component={HtmlReader as any} path="/md" />
+        <Route component={HtmlReader as any} path="/fb2" />
+        <Route component={HtmlReader as any} path="/chm" />
+        <Route component={HtmlReader as any} path="/html" />
+        <Route component={HtmlReader as any} path="/htm" />
+        <Route component={HtmlReader as any} path="/xml" />
+        <Route component={HtmlReader as any} path="/xhtml" />
+        <Route component={HtmlReader as any} path="/mhtml" />
+        <Route component={HtmlReader as any} path="/href" />
+        <Route component={HtmlReader as any} path="/pdf" />
+        <Route component={_Redirect as any} path="/" />
       </Switch>
     </HashRouter>
   );

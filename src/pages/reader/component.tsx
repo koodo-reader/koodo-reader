@@ -757,6 +757,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
         <Toaster
           toastOptions={{
             style: {
+              padding: "8px 10px",
               wordWrap: "break-word",
               wordBreak: "break-word",
               whiteSpace: "normal",

@@ -2,6 +2,12 @@ import { connect } from "react-redux";
 import {
   handleActionDialog,
   handleReadingBook,
+  handleRefreshBookCover,
+  handleSelectBook,
+  handleSelectedBooks,
+  handleFetchBooks,
+  handleCollectionDialogBooks,
+  handleAddCollectionDialog,
 } from "../../store/actions";
 import BookCoverItem from "./component";
 import { stateType } from "../../store";
@@ -14,11 +20,18 @@ const mapStateToProps = (state: stateType) => {
     isCollapsed: state.sidebar.isCollapsed,
     currentBook: state.book.currentBook,
     isSelectBook: state.manager.isSelectBook,
+    refreshBookKey: state.manager.refreshBookKey,
   };
 };
 const actionCreator = {
   handleReadingBook,
   handleActionDialog,
+  handleRefreshBookCover,
+  handleSelectBook,
+  handleSelectedBooks,
+  handleFetchBooks,
+  handleCollectionDialogBooks,
+  handleAddCollectionDialog,
 };
 export default connect(
   mapStateToProps,

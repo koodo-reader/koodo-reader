@@ -15,7 +15,7 @@ import Bookmark from "../../../models/Bookmark";
 import Note from "../../../models/Note";
 
 class NavList extends React.Component<NavListProps, NavListState> {
-  private searchInputRef: React.RefObject<HTMLInputElement>;
+  private searchInputRef: React.RefObject<HTMLInputElement | null>;
   highlightUtil: any;
 
   constructor(props: NavListProps) {

@@ -8,7 +8,7 @@ import BookUtil from "../../utils/file/bookUtil";
 const collectionUtil = new CollectionUtil(ConfigService);
 
 class SearchBox extends React.Component<SearchBoxProps, SearchBoxState> {
-  private searchBoxRef: React.RefObject<HTMLInputElement>;
+  private searchBoxRef: React.RefObject<HTMLInputElement | null>;
   constructor(props: SearchBoxProps) {
     super(props);
     this.state = {

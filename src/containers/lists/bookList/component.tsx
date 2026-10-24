@@ -34,7 +34,7 @@ function getBookCountPerPage() {
 }
 
 class BookList extends React.Component<BookListProps, BookListState> {
-  private scrollContainer: React.RefObject<HTMLUListElement>;
+  private scrollContainer: React.RefObject<HTMLUListElement | null>;
   private visibilityChangeHandler: ((event: Event) => void) | null = null;
   private resizeHandler: (() => void) | null = null;
   private readingFinishedHandler: ((config: any) => void) | null = null;
