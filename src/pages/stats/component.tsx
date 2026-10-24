@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./stats.css";
 import { StatsProps, StatsState } from "./interface";
 import { withRouter } from "react-router-dom";
@@ -21,29 +21,61 @@ import {
   CartesianGrid,
 } from "recharts";
 
-class Stats extends React.Component<StatsProps, StatsState> {
-  private readingTimeUtil = new ReadingTimeUtil(ConfigService, {
-    registerUnloadHandler: () => () => {},
+const Stats = (props: StatsProps) => {
+  const readingTimeUtilRef = useRef<InstanceType<
+    typeof ReadingTimeUtil
+  > | null>(null);
+  if (!readingTimeUtilRef.current) {
+    readingTimeUtilRef.current = new ReadingTimeUtil(ConfigService, {
+      registerUnloadHandler: () => () => {},
+    });
+  }
+
+  const [state, setState] = useState<StatsState>({
+    totalBooks: 0,
+    totalSeconds: 0,
+    longestStreak: 0,
+    avgDailySeconds: 0,
+    last30Days: [],
+    heatmapData: [],
+    chartTab: "bar",
+    isLoading: true,
   });
-  constructor(props: StatsProps) {
-    super(props);
-    this.state = {
-      totalBooks: 0,
-      totalSeconds: 0,
-      longestStreak: 0,
-      avgDailySeconds: 0,
-      last30Days: [],
-      heatmapData: [],
-      chartTab: "bar",
-      isLoading: true,
-    };
-  }
 
-  componentDidMount() {
-    this.loadStats();
-  }
+  const dateToKey = (d: Date): string => {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
-  loadStats = async () => {
+  const formatTime = (seconds: number): string => {
+    if (seconds < 60) return `${seconds}s`;
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    if (h > 0) return `${h}h ${m}m`;
+    return `${m}m`;
+  };
+
+  const getHeatmapColor = (seconds: number, isDarkMode: boolean): string => {
+    if (seconds === 0)
+      return isDarkMode ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)";
+    if (seconds < 300) return isDarkMode ? "#0e4429" : "#9be9a8";
+    if (seconds < 900) return isDarkMode ? "#006d32" : "#40c463";
+    if (seconds < 1800) return isDarkMode ? "#26a641" : "#30a14e";
+    return isDarkMode ? "#39d353" : "#216e39";
+  };
+
+  const isDark = (): boolean => {
+    const skin = ConfigService.getReaderConfig("appSkin");
+    const isOSNight = ConfigService.getReaderConfig("isOSNight");
+    return skin === "night" || (skin === "system" && isOSNight === "yes");
+  };
+
+  const loadStats = async () => {
+    const readingTimeUtil = readingTimeUtilRef.current;
+    if (!readingTimeUtil) return;
+
     // ── 1. Books read (has a recordLocation) ──────────────────────────────
     let allBookKeys: string[] = [];
     try {
@@ -60,11 +92,11 @@ class Stats extends React.Component<StatsProps, StatsState> {
     }
 
     // ── 2. Total reading time from readingStats ────────────────────────────
-    const allDates = this.readingTimeUtil.getAllDates();
+    const allDates = readingTimeUtil.getAllDates();
     let totalSeconds = 0;
     const dateSecondsMap: Record<string, number> = {};
     for (const dateKey of allDates) {
-      const dayStats = this.readingTimeUtil.getDayStats(dateKey);
+      const dayStats = readingTimeUtil.getDayStats(dateKey);
       const dayTotal = dayStats.reduce((sum, s) => sum + s.seconds, 0);
       totalSeconds += dayTotal;
       dateSecondsMap[dateKey] = dayTotal;
@@ -80,7 +112,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
     for (let i = 0; i < 365; i++) {
       const d = new Date(today);
       d.setDate(today.getDate() - i);
-      const key = this.dateToKey(d);
+      const key = dateToKey(d);
       if (datesWithReading.has(key)) {
         currentStreak++;
         longestStreak = Math.max(longestStreak, currentStreak);
@@ -101,7 +133,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
     for (let i = 29; i >= 0; i--) {
       const d = new Date(today);
       d.setDate(today.getDate() - i);
-      const key = this.dateToKey(d);
+      const key = dateToKey(d);
       last30Days.push({
         date: `${d.getMonth() + 1}/${d.getDate()}`,
         seconds: dateSecondsMap[key] || 0,
@@ -118,11 +150,12 @@ class Stats extends React.Component<StatsProps, StatsState> {
       d <= today;
       d.setDate(d.getDate() + 1)
     ) {
-      const key = this.dateToKey(d);
+      const key = dateToKey(d);
       heatmapData.push({ date: key, seconds: dateSecondsMap[key] || 0 });
     }
 
-    this.setState({
+    setState((prev) => ({
+      ...prev,
       totalBooks,
       totalSeconds,
       longestStreak,
@@ -130,42 +163,17 @@ class Stats extends React.Component<StatsProps, StatsState> {
       last30Days,
       heatmapData,
       isLoading: false,
-    });
+    }));
   };
 
-  dateToKey(d: Date): string {
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-  }
+  useEffect(() => {
+    loadStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  formatTime(seconds: number): string {
-    if (seconds < 60) return `${seconds}s`;
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    if (h > 0) return `${h}h ${m}m`;
-    return `${m}m`;
-  }
-
-  getHeatmapColor(seconds: number, isDark: boolean): string {
-    if (seconds === 0)
-      return isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)";
-    if (seconds < 300) return isDark ? "#0e4429" : "#9be9a8";
-    if (seconds < 900) return isDark ? "#006d32" : "#40c463";
-    if (seconds < 1800) return isDark ? "#26a641" : "#30a14e";
-    return isDark ? "#39d353" : "#216e39";
-  }
-
-  isDark(): boolean {
-    const skin = ConfigService.getReaderConfig("appSkin");
-    const isOSNight = ConfigService.getReaderConfig("isOSNight");
-    return skin === "night" || (skin === "system" && isOSNight === "yes");
-  }
-
-  renderHeatmap() {
-    const { heatmapData } = this.state;
-    const isDark = this.isDark();
+  const renderHeatmap = () => {
+    const { heatmapData } = state;
+    const darkMode = isDark();
 
     // Build week columns: each column is 7 days (Sun–Sat)
     // We need to figure out which day of week the first date falls on
@@ -239,11 +247,11 @@ class Stats extends React.Component<StatsProps, StatsState> {
                       <div
                         key={di}
                         className="heatmap-cell"
-                        title={`${cell.date}: ${this.formatTime(cell.seconds)}`}
+                        title={`${cell.date}: ${formatTime(cell.seconds)}`}
                         style={{
-                          backgroundColor: this.getHeatmapColor(
+                          backgroundColor: getHeatmapColor(
                             cell.seconds,
-                            isDark
+                            darkMode
                           ),
                         }}
                       />
@@ -261,308 +269,312 @@ class Stats extends React.Component<StatsProps, StatsState> {
               key={lvl}
               className="heatmap-legend-cell"
               style={{
-                backgroundColor: this.getHeatmapColor(lvl, isDark),
+                backgroundColor: getHeatmapColor(lvl, darkMode),
               }}
             />
           ))}
         </div>
       </div>
     );
-  }
+  };
 
-  render() {
-    const {
-      totalBooks,
-      totalSeconds,
-      longestStreak,
-      avgDailySeconds,
-      last30Days,
-      chartTab,
-      isLoading,
-    } = this.state;
+  const {
+    totalBooks,
+    totalSeconds,
+    longestStreak,
+    avgDailySeconds,
+    last30Days,
+    chartTab,
+    isLoading,
+  } = state;
 
-    const isDark = this.isDark();
-    const bgColor = isDark ? "#1e1e1e" : "#f5f5f5";
-    const cardBg = isDark ? "#2a2a2a" : "#ffffff";
-    const textColor = isDark ? "#e0e0e0" : "#333333";
-    const chartColor = textColor;
-    const lineChartColor = isDark ? "#ffb066" : "#ff6b1a";
-    const lineChartGradientId = `stats-line-gradient-${
-      isDark ? "dark" : "light"
-    }`;
-    const gridColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
-    const tabActiveBg = isDark ? "#3a3a3a" : "#333";
-    const tabActiveColor = isDark ? "#fff" : "#fff";
-    const tabInactiveBg = isDark
-      ? "rgba(255,255,255,0.06)"
-      : "rgba(0,0,0,0.06)";
-    const tabInactiveColor = isDark
-      ? "rgba(255,255,255,0.6)"
-      : "rgba(0,0,0,0.5)";
+  const darkMode = isDark();
+  const bgColor = darkMode ? "#1e1e1e" : "#f5f5f5";
+  const cardBg = darkMode ? "#2a2a2a" : "#ffffff";
+  const textColor = darkMode ? "#e0e0e0" : "#333333";
+  const chartColor = textColor;
+  const lineChartColor = darkMode ? "#ffb066" : "#ff6b1a";
+  const lineChartGradientId = `stats-line-gradient-${
+    darkMode ? "dark" : "light"
+  }`;
+  const gridColor = darkMode
+    ? "rgba(255,255,255,0.08)"
+    : "rgba(0,0,0,0.08)";
+  const tabActiveBg = darkMode ? "#3a3a3a" : "#333";
+  const tabActiveColor = darkMode ? "#fff" : "#fff";
+  const tabInactiveBg = darkMode
+    ? "rgba(255,255,255,0.06)"
+    : "rgba(0,0,0,0.06)";
+  const tabInactiveColor = darkMode
+    ? "rgba(255,255,255,0.6)"
+    : "rgba(0,0,0,0.5)";
 
-    const cards = [
-      {
-        icon: "icon-bookshelf",
-        value: totalBooks,
-        label: this.props.t("Books read"),
-        color: textColor,
-        iconSize: 24,
-      },
-      {
-        icon: "icon-grid",
-        value: this.formatTime(totalSeconds),
-        label: this.props.t("Total reading time"),
-        color: textColor,
-        iconSize: 22,
-      },
-      {
-        icon: "icon-clock",
-        value: `${longestStreak}`,
-        label: this.props.t("Reading streak (days)"),
-        color: textColor,
-        iconSize: 28,
-      },
-      {
-        icon: "icon-chart",
-        value: this.formatTime(avgDailySeconds),
-        label: this.props.t("Daily average"),
-        color: textColor,
-        iconSize: 22,
-      },
-    ];
+  const cards = [
+    {
+      icon: "icon-bookshelf",
+      value: totalBooks,
+      label: props.t("Books read"),
+      color: textColor,
+      iconSize: 24,
+    },
+    {
+      icon: "icon-grid",
+      value: formatTime(totalSeconds),
+      label: props.t("Total reading time"),
+      color: textColor,
+      iconSize: 22,
+    },
+    {
+      icon: "icon-clock",
+      value: `${longestStreak}`,
+      label: props.t("Reading streak (days)"),
+      color: textColor,
+      iconSize: 28,
+    },
+    {
+      icon: "icon-chart",
+      value: formatTime(avgDailySeconds),
+      label: props.t("Daily average"),
+      color: textColor,
+      iconSize: 22,
+    },
+  ];
 
-    const chartData = last30Days.map((d) => ({
-      ...d,
-      minutes: Math.round(d.seconds / 60),
-    }));
+  const chartData = last30Days.map((d) => ({
+    ...d,
+    minutes: Math.round(d.seconds / 60),
+  }));
 
-    return (
+  return (
+    <div
+      className="stats-page"
+      style={{ backgroundColor: bgColor, color: textColor }}
+    >
+      {/* Close button */}
       <div
-        className="stats-page"
-        style={{ backgroundColor: bgColor, color: textColor }}
+        className="stats-close-btn"
+        style={{ color: textColor }}
+        onClick={() => {
+          props.history.push("/manager/home");
+        }}
       >
-        {/* Close button */}
-        <div
-          className="stats-close-btn"
-          style={{ color: textColor }}
-          onClick={() => {
-            this.props.history.push("/manager/home");
-          }}
-        >
-          <span className="icon-close"></span>
-        </div>
-
-        {/* Title */}
-        <div className="stats-title">
-          <Trans>Reading Stats</Trans>
-        </div>
-
-        {/* Cards */}
-        {!isLoading && (
-          <>
-            <div className="stats-cards">
-              {cards.map((card, i) => (
-                <div
-                  key={i}
-                  className="stats-card"
-                  style={{ backgroundColor: cardBg }}
-                >
-                  <div
-                    className="stats-card-icon"
-                    style={{ color: card.color, fontSize: card.iconSize }}
-                  >
-                    <span className={card.icon}></span>
-                  </div>
-                  <div
-                    className="stats-card-value"
-                    style={{ color: textColor }}
-                  >
-                    {card.value}
-                  </div>
-                  <div className="stats-card-label">{card.label}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Chart */}
-            <div
-              className="stats-chart-wrapper"
-              style={{ backgroundColor: cardBg }}
-            >
-              <div className="stats-section-title">
-                <Trans>Last 30 Days</Trans>
-              </div>
-              <div className="stats-chart-tabs">
-                <button
-                  className="stats-chart-tab"
-                  style={{
-                    backgroundColor:
-                      chartTab === "bar" ? tabActiveBg : tabInactiveBg,
-                    color:
-                      chartTab === "bar" ? tabActiveColor : tabInactiveColor,
-                  }}
-                  onClick={() => this.setState({ chartTab: "bar" })}
-                >
-                  <Trans>Bar Chart</Trans>
-                </button>
-                <button
-                  className="stats-chart-tab"
-                  style={{
-                    backgroundColor:
-                      chartTab === "line" ? tabActiveBg : tabInactiveBg,
-                    color:
-                      chartTab === "line" ? tabActiveColor : tabInactiveColor,
-                  }}
-                  onClick={() => this.setState({ chartTab: "line" })}
-                >
-                  <Trans>Line Chart</Trans>
-                </button>
-              </div>
-
-              <ResponsiveContainer width="100%" height={220}>
-                {chartTab === "bar" ? (
-                  <BarChart
-                    data={chartData}
-                    margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
-                  >
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      stroke={gridColor}
-                      vertical={false}
-                    />
-                    <XAxis
-                      dataKey="date"
-                      tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
-                      tickLine={false}
-                      axisLine={false}
-                      interval={4}
-                    />
-                    <YAxis
-                      tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
-                      tickLine={false}
-                      axisLine={false}
-                      tickFormatter={(v) => `${v}m`}
-                    />
-                    <Tooltip
-                      formatter={(value: any) => [`${value} min`]}
-                      contentStyle={{
-                        backgroundColor: cardBg,
-                        border: "none",
-                        borderRadius: 8,
-                        color: textColor,
-                        fontSize: 12,
-                      }}
-                      cursor={{
-                        fill: isDark
-                          ? "rgba(255,255,255,0.05)"
-                          : "rgba(0,0,0,0.05)",
-                      }}
-                    />
-                    <Bar
-                      dataKey="minutes"
-                      fill={chartColor}
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                ) : (
-                  <AreaChart
-                    data={chartData}
-                    margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
-                  >
-                    <defs>
-                      <linearGradient
-                        id={lineChartGradientId}
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="0%"
-                          stopColor={lineChartColor}
-                          stopOpacity={0.32}
-                        />
-                        <stop
-                          offset="70%"
-                          stopColor={lineChartColor}
-                          stopOpacity={0.1}
-                        />
-                        <stop
-                          offset="100%"
-                          stopColor={lineChartColor}
-                          stopOpacity={0.02}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      stroke={gridColor}
-                      vertical={false}
-                    />
-                    <XAxis
-                      dataKey="date"
-                      tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
-                      tickLine={false}
-                      axisLine={false}
-                      interval={4}
-                    />
-                    <YAxis
-                      tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
-                      tickLine={false}
-                      axisLine={false}
-                      tickFormatter={(v) => `${v}m`}
-                    />
-                    <Tooltip
-                      formatter={(value: any) => [`${value} min`]}
-                      contentStyle={{
-                        backgroundColor: cardBg,
-                        border: "none",
-                        borderRadius: 8,
-                        color: textColor,
-                        fontSize: 12,
-                      }}
-                      cursor={{
-                        fill: isDark
-                          ? "rgba(255,255,255,0.05)"
-                          : "rgba(0,0,0,0.05)",
-                      }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="minutes"
-                      stroke="none"
-                      fill={`url(#${lineChartGradientId})`}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="minutes"
-                      stroke={lineChartColor}
-                      strokeWidth={2.5}
-                      dot={false}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      activeDot={{ r: 5 }}
-                    />
-                  </AreaChart>
-                )}
-              </ResponsiveContainer>
-            </div>
-
-            {/* Heatmap */}
-            <div
-              className="stats-heatmap-wrapper"
-              style={{ backgroundColor: cardBg }}
-            >
-              <div className="stats-section-title">
-                <Trans>Reading Activity</Trans>
-              </div>
-              {this.renderHeatmap()}
-            </div>
-          </>
-        )}
+        <span className="icon-close"></span>
       </div>
-    );
-  }
-}
+
+      {/* Title */}
+      <div className="stats-title">
+        <Trans>Reading Stats</Trans>
+      </div>
+
+      {/* Cards */}
+      {!isLoading && (
+        <>
+          <div className="stats-cards">
+            {cards.map((card, i) => (
+              <div
+                key={i}
+                className="stats-card"
+                style={{ backgroundColor: cardBg }}
+              >
+                <div
+                  className="stats-card-icon"
+                  style={{ color: card.color, fontSize: card.iconSize }}
+                >
+                  <span className={card.icon}></span>
+                </div>
+                <div
+                  className="stats-card-value"
+                  style={{ color: textColor }}
+                >
+                  {card.value}
+                </div>
+                <div className="stats-card-label">{card.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Chart */}
+          <div
+            className="stats-chart-wrapper"
+            style={{ backgroundColor: cardBg }}
+          >
+            <div className="stats-section-title">
+              <Trans>Last 30 Days</Trans>
+            </div>
+            <div className="stats-chart-tabs">
+              <button
+                className="stats-chart-tab"
+                style={{
+                  backgroundColor:
+                    chartTab === "bar" ? tabActiveBg : tabInactiveBg,
+                  color:
+                    chartTab === "bar" ? tabActiveColor : tabInactiveColor,
+                }}
+                onClick={() =>
+                  setState((prev) => ({ ...prev, chartTab: "bar" }))
+                }
+              >
+                <Trans>Bar Chart</Trans>
+              </button>
+              <button
+                className="stats-chart-tab"
+                style={{
+                  backgroundColor:
+                    chartTab === "line" ? tabActiveBg : tabInactiveBg,
+                  color:
+                    chartTab === "line" ? tabActiveColor : tabInactiveColor,
+                }}
+                onClick={() =>
+                  setState((prev) => ({ ...prev, chartTab: "line" }))
+                }
+              >
+                <Trans>Line Chart</Trans>
+              </button>
+            </div>
+
+            <ResponsiveContainer width="100%" height={220}>
+              {chartTab === "bar" ? (
+                <BarChart
+                  data={chartData}
+                  margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={gridColor}
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
+                    tickLine={false}
+                    axisLine={false}
+                    interval={4}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(v) => `${v}m`}
+                  />
+                  <Tooltip
+                    formatter={(value: any) => [`${value} min`]}
+                    contentStyle={{
+                      backgroundColor: cardBg,
+                      border: "none",
+                      borderRadius: 8,
+                      color: textColor,
+                      fontSize: 12,
+                    }}
+                    cursor={{
+                      fill: darkMode
+                        ? "rgba(255,255,255,0.05)"
+                        : "rgba(0,0,0,0.05)",
+                    }}
+                  />
+                  <Bar
+                    dataKey="minutes"
+                    fill={chartColor}
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              ) : (
+                <AreaChart
+                  data={chartData}
+                  margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
+                >
+                  <defs>
+                    <linearGradient
+                      id={lineChartGradientId}
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="0%"
+                        stopColor={lineChartColor}
+                        stopOpacity={0.32}
+                      />
+                      <stop
+                        offset="70%"
+                        stopColor={lineChartColor}
+                        stopOpacity={0.1}
+                      />
+                      <stop
+                        offset="100%"
+                        stopColor={lineChartColor}
+                        stopOpacity={0.02}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={gridColor}
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
+                    tickLine={false}
+                    axisLine={false}
+                    interval={4}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(v) => `${v}m`}
+                  />
+                  <Tooltip
+                    formatter={(value: any) => [`${value} min`]}
+                    contentStyle={{
+                      backgroundColor: cardBg,
+                      border: "none",
+                      borderRadius: 8,
+                      color: textColor,
+                      fontSize: 12,
+                    }}
+                    cursor={{
+                      fill: darkMode
+                        ? "rgba(255,255,255,0.05)"
+                        : "rgba(0,0,0,0.05)",
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="minutes"
+                    stroke="none"
+                    fill={`url(#${lineChartGradientId})`}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="minutes"
+                    stroke={lineChartColor}
+                    strokeWidth={2.5}
+                    dot={false}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    activeDot={{ r: 5 }}
+                  />
+                </AreaChart>
+              )}
+            </ResponsiveContainer>
+          </div>
+
+          {/* Heatmap */}
+          <div
+            className="stats-heatmap-wrapper"
+            style={{ backgroundColor: cardBg }}
+          >
+            <div className="stats-section-title">
+              <Trans>Reading Activity</Trans>
+            </div>
+            {renderHeatmap()}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 export default withRouter(Stats as any);

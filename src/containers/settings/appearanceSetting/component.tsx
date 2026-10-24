@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
@@ -23,17 +23,17 @@ import {
   syncNativeThemeSource,
 } from "../../../utils/reader/launchUtil";
 
-class AppearanceSetting extends React.Component<
-  SettingInfoProps,
-  SettingInfoState
-> {
-  highlightUtil: any;
-  constructor(props: SettingInfoProps) {
-    super(props);
-    this.highlightUtil = new HighlightUtil(ConfigService);
-    const ttsHighlight = this.highlightUtil.getTtsHighlightValue();
-    const searchHighlight = this.highlightUtil.getSearchHighlightValue();
-    this.state = {
+const AppearanceSetting = (props: SettingInfoProps) => {
+  const highlightUtilRef = useRef<any>(null);
+  if (!highlightUtilRef.current) {
+    highlightUtilRef.current = new HighlightUtil(ConfigService);
+  }
+  const highlightUtil = highlightUtilRef.current;
+
+  const [state, setState] = useState<SettingInfoState>(() => {
+    const ttsHighlight = highlightUtil.getTtsHighlightValue();
+    const searchHighlight = highlightUtil.getSearchHighlightValue();
+    return {
       currentThemeIndex: themeList.findIndex(
         (item) =>
           item.color ===
@@ -58,37 +58,40 @@ class AppearanceSetting extends React.Component<
       searchHighlightStyleType: searchHighlight.styleType,
       searchHighlightColor: searchHighlight.color,
     };
-  }
+  });
 
-  componentDidMount(): void {
-    this.loadFont();
-    window.addEventListener("font-list-changed", this.loadFont);
-  }
+  const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
 
-  componentWillUnmount(): void {
-    window.removeEventListener("font-list-changed", this.loadFont);
-  }
-
-  loadFont = async () => {
+  const loadFont = async () => {
     const options = await FontUtil.getMergedFontOptions();
-    this.setState((prevState) => ({
+    setState((prevState) => ({
+      ...prevState,
       fontOptions: options,
       fontListVersion: prevState.fontListVersion + 1,
     }));
   };
 
-  handleRest = (_bool: boolean) => {
-    toast.success(this.props.t("Change successful"));
+  useEffect(() => {
+    loadFont();
+    window.addEventListener("font-list-changed", loadFont);
+    return () => {
+      window.removeEventListener("font-list-changed", loadFont);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleRest = (_bool: boolean) => {
+    toast.success(props.t("Change successful"));
   };
 
-  handleSetting = (stateName: string) => {
-    const nextValue = !this.state[stateName];
-    this.setState({ [stateName]: nextValue } as any);
+  const handleSetting = (stateName: string) => {
+    const nextValue = !(state as any)[stateName];
+    setState((prevState) => ({ ...prevState, [stateName]: nextValue } as any));
     ConfigService.setReaderConfig(stateName, nextValue ? "yes" : "no");
-    this.handleRest(nextValue);
+    handleRest(nextValue);
   };
 
-  changeSkin = (skin: string) => {
+  const changeSkin = (skin: string) => {
     ConfigService.setReaderConfig("appSkin", skin);
     syncNativeThemeSource(skin);
 
@@ -111,78 +114,87 @@ class AppearanceSetting extends React.Component<
     reloadManager();
   };
 
-  changeFont = async (font: string) => {
+  const changeFont = async (font: string) => {
     ConfigService.setReaderConfig(
       "systemFont",
       font === "Built-in font" ? "" : font
     );
     await applyCustomSystemFont();
-    this.forceUpdate();
+    forceUpdate();
   };
 
-  handleTheme = (color: string, index: number) => {
-    this.setState({
+  const handleTheme = (color: string, index: number) => {
+    setState((prevState) => ({
+      ...prevState,
       currentThemeIndex: index,
       isShowCustomColorPicker: false,
-    });
+    }));
     ConfigService.setReaderConfig("themeColor", color);
     reloadManager();
   };
 
-  handleCustomColor = (color: string) => {
-    this.setState({ pendingCustomColor: color });
+  const handleCustomColor = (color: string) => {
+    setState((prevState) => ({
+      ...prevState,
+      pendingCustomColor: color,
+    }));
   };
 
-  handleConfirmCustomColor = () => {
-    const color = this.state.pendingCustomColor;
-    this.setState({
+  const handleConfirmCustomColor = () => {
+    const color = state.pendingCustomColor;
+    setState((prevState) => ({
+      ...prevState,
       customColor: color,
       currentThemeIndex: -1,
       isShowCustomColorPicker: false,
-    });
+    }));
     ConfigService.setReaderConfig("themeColor", color);
     reloadManager();
   };
 
-  handleTtsStyleType = (styleType: string) => {
+  const handleTtsStyleType = (styleType: string) => {
     const color = KookitConfig.HighlightPresetColors[styleType][0];
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       ttsHighlightStyleType: styleType,
       ttsHighlightColor: color,
-    });
-    this.highlightUtil.saveTtsHighlightValue({ styleType, color });
+    }));
+    highlightUtil.saveTtsHighlightValue({ styleType, color });
   };
 
-  handleTtsPresetColor = (index: number) => {
-    const styleType = this.state.ttsHighlightStyleType;
+  const handleTtsPresetColor = (index: number) => {
+    const styleType = state.ttsHighlightStyleType;
     const color = KookitConfig.HighlightPresetColors[styleType][index];
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       ttsHighlightColor: color,
-    });
-    this.highlightUtil.saveTtsHighlightValue({ styleType, color });
+    }));
+    highlightUtil.saveTtsHighlightValue({ styleType, color });
   };
 
-  handleSearchStyleType = (styleType: string) => {
+  const handleSearchStyleType = (styleType: string) => {
     const color = KookitConfig.HighlightPresetColors[styleType][0];
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       searchHighlightStyleType: styleType,
       searchHighlightColor: color,
-    });
-    this.highlightUtil.saveSearchHighlightValue({ styleType, color });
+    }));
+    highlightUtil.saveSearchHighlightValue({ styleType, color });
   };
 
-  handleSearchPresetColor = (index: number) => {
-    const styleType = this.state.searchHighlightStyleType;
+  const handleSearchPresetColor = (index: number) => {
+    const styleType = state.searchHighlightStyleType;
     const color = KookitConfig.HighlightPresetColors[styleType][index];
-    this.setState({
+    setState((prevState) => ({
+      ...prevState,
       searchHighlightColor: color,
-    });
-    this.highlightUtil.saveSearchHighlightValue({ styleType, color });
+    }));
+    highlightUtil.saveSearchHighlightValue({ styleType, color });
   };
 
-  renderTtsHighlightSetting = () => {
-    const styleType = this.state.ttsHighlightStyleType;
-    const currentColor = this.state.ttsHighlightColor;
+  const renderTtsHighlightSetting = () => {
+    const styleType = state.ttsHighlightStyleType;
+    const currentColor = state.ttsHighlightColor;
     const presetColors = KookitConfig.HighlightPresetColors[styleType];
 
     return (
@@ -209,11 +221,11 @@ class AppearanceSetting extends React.Component<
                     ? "tts-highlight-style-tab active-tts-highlight-tab"
                     : "tts-highlight-style-tab"
                 }
-                onClick={() => this.handleTtsStyleType(item.value)}
+                onClick={() => handleTtsStyleType(item.value)}
               >
                 <span
                   className="tts-highlight-style-preview"
-                  style={this.highlightUtil.buildTtsHighlightPreviewStyle(
+                  style={highlightUtil.buildTtsHighlightPreviewStyle(
                     item.value,
                     previewColor
                   )}
@@ -237,7 +249,7 @@ class AppearanceSetting extends React.Component<
                   : "tts-highlight-color-item"
               }
               style={{ backgroundColor: color }}
-              onClick={() => this.handleTtsPresetColor(index)}
+              onClick={() => handleTtsPresetColor(index)}
             />
           ))}
         </ul>
@@ -245,9 +257,9 @@ class AppearanceSetting extends React.Component<
     );
   };
 
-  renderSearchHighlightSetting = () => {
-    const styleType = this.state.searchHighlightStyleType;
-    const currentColor = this.state.searchHighlightColor;
+  const renderSearchHighlightSetting = () => {
+    const styleType = state.searchHighlightStyleType;
+    const currentColor = state.searchHighlightColor;
     const presetColors = KookitConfig.HighlightPresetColors[styleType];
 
     return (
@@ -272,11 +284,11 @@ class AppearanceSetting extends React.Component<
                     ? "tts-highlight-style-tab active-tts-highlight-tab"
                     : "tts-highlight-style-tab"
                 }
-                onClick={() => this.handleSearchStyleType(item.value)}
+                onClick={() => handleSearchStyleType(item.value)}
               >
                 <span
                   className="tts-highlight-style-preview"
-                  style={this.highlightUtil.buildSearchHighlightPreviewStyle(
+                  style={highlightUtil.buildSearchHighlightPreviewStyle(
                     item.value,
                     previewColor
                   )}
@@ -300,7 +312,7 @@ class AppearanceSetting extends React.Component<
                   : "tts-highlight-color-item"
               }
               style={{ backgroundColor: color }}
-              onClick={() => this.handleSearchPresetColor(index)}
+              onClick={() => handleSearchPresetColor(index)}
             />
           ))}
         </ul>
@@ -308,7 +320,7 @@ class AppearanceSetting extends React.Component<
     );
   };
 
-  renderSwitchOption = (optionList: any[]) => {
+  const renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
         <div
@@ -318,9 +330,9 @@ class AppearanceSetting extends React.Component<
           <SwitchRow
             variant="setting"
             title={<Trans>{item.title}</Trans>}
-            isEnabled={this.state[item.propName]}
+            isEnabled={(state as any)[item.propName]}
             onClick={() => {
-              this.handleSetting(item.propName);
+              handleSetting(item.propName);
             }}
           />
           <p className="setting-option-subtitle">
@@ -331,233 +343,240 @@ class AppearanceSetting extends React.Component<
     });
   };
 
-  render() {
-    return (
-      <>
-        {this.renderSwitchOption(appearanceSettingList)}
-        <div className="setting-dialog-new-title">
-          <Trans>System font</Trans>
-          <select
-            name=""
-            className="lang-setting-dropdown"
-            value={
-              ConfigService.getReaderConfig("systemFont") || "Built-in font"
-            }
-            onChange={(event) => {
-              this.changeFont(event.target.value);
-            }}
-          >
-            {this.state.fontOptions.map((item) => (
-              <option
-                value={item.value}
-                key={item.value}
-                className="lang-setting-option"
-              >
-                {item.value === "Built-in font"
-                  ? this.props.t(item.label)
-                  : item.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Theme color</Trans>
-        </div>
-        <ul className="theme-setting-container">
-          {themeList.map((item, index) => (
-            <li
-              className={
-                index === this.state.currentThemeIndex
-                  ? "theme-setting-item active-theme-item"
-                  : "theme-setting-item"
-              }
-              key={item.color}
-              onClick={() => {
-                this.handleTheme(item.color, index);
-              }}
-              style={{
-                color:
-                  item.color === "default" ? "rgba(75, 75, 75, 1)" : item.color,
-              }}
+  return (
+    <>
+      {renderSwitchOption(appearanceSettingList)}
+      <div className="setting-dialog-new-title">
+        <Trans>System font</Trans>
+        <select
+          name=""
+          className="lang-setting-dropdown"
+          value={ConfigService.getReaderConfig("systemFont") || "Built-in font"}
+          onChange={(event) => {
+            changeFont(event.target.value);
+          }}
+        >
+          {state.fontOptions.map((item) => (
+            <option
+              value={item.value}
+              key={item.value}
+              className="lang-setting-option"
             >
-              <span
-                className="theme-setting-dot"
-                style={{
-                  backgroundColor:
-                    item.color === "default"
-                      ? "rgba(75, 75, 75, 1)"
-                      : item.color,
-                }}
-              ></span>
-              <span className="theme-setting-title">
-                <Trans>{item.title}</Trans>
-              </span>
-            </li>
+              {item.value === "Built-in font"
+                ? props.t(item.label)
+                : item.label}
+            </option>
           ))}
+        </select>
+      </div>
+      <div className="setting-dialog-new-title">
+        <Trans>Theme color</Trans>
+      </div>
+      <ul className="theme-setting-container">
+        {themeList.map((item, index) => (
           <li
             className={
-              this.state.currentThemeIndex === -1
+              index === state.currentThemeIndex
                 ? "theme-setting-item active-theme-item"
                 : "theme-setting-item"
             }
+            key={item.color}
             onClick={() => {
-              this.setState({
-                isShowCustomColorPicker: !this.state.isShowCustomColorPicker,
-                pendingCustomColor: this.state.customColor,
-              });
+              handleTheme(item.color, index);
             }}
-            style={{ color: this.state.customColor }}
+            style={{
+              color:
+                item.color === "default" ? "rgba(75, 75, 75, 1)" : item.color,
+            }}
           >
             <span
               className="theme-setting-dot"
               style={{
                 backgroundColor:
-                  this.state.currentThemeIndex === -1
-                    ? this.state.customColor
-                    : undefined,
+                  item.color === "default"
+                    ? "rgba(75, 75, 75, 1)"
+                    : item.color,
               }}
-            >
-              <span
-                className={
-                  this.state.isShowCustomColorPicker
-                    ? "icon-check"
-                    : "icon-more"
-                }
-                style={{
-                  fontSize: "12px",
-                  position: "relative",
-                  top: "2px",
-                  left: "2px",
-                }}
-              ></span>
-            </span>
+            ></span>
             <span className="theme-setting-title">
-              <Trans>Custom</Trans>
+              <Trans>{item.title}</Trans>
             </span>
           </li>
-        </ul>
-        {this.state.isShowCustomColorPicker && (
-          <div className="custom-color-picker-container">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <HexColorPicker
-                color={this.state.pendingCustomColor}
-                onChange={this.handleCustomColor}
-                style={{
-                  margin: "10px 0",
-                  animation: "fade-in 0.2s ease-in-out 0s 1",
-                }}
-              />
-              <input
-                className="color-input-box"
-                style={{ marginBottom: 8 }}
-                value={this.state.pendingCustomColor}
-                placeholder="#rrggbb / rgba(r,g,b,a)"
-                onChange={(e) =>
-                  this.setState({ pendingCustomColor: e.target.value })
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const hex = parseColorInput(this.state.pendingCustomColor);
-                    if (hex) this.setState({ pendingCustomColor: hex });
-                  }
-                }}
-                onBlur={() => {
-                  const hex = parseColorInput(this.state.pendingCustomColor);
-                  if (hex) this.setState({ pendingCustomColor: hex });
-                }}
-              />
-              <span
-                className="change-location-button"
-                onClick={this.handleConfirmCustomColor}
-                style={{ marginBottom: "10px" }}
-              >
-                <Trans>Confirm</Trans>
-              </span>
-            </div>
-          </div>
-        )}
-        {this.renderTtsHighlightSetting()}
-        {this.renderSearchHighlightSetting()}
-        <div className="setting-dialog-new-title">
-          <Trans>Appearance</Trans>
-        </div>
-        <ul className="skin-setting-container">
-          {skinList.map((item) => (
-            <li
-              key={item.value}
-              className={
-                item.value ===
-                (ConfigService.getReaderConfig("appSkin") || "system")
-                  ? "skin-setting-item active-skin-item"
-                  : "skin-setting-item"
-              }
-              onClick={() => {
-                this.changeSkin(item.value);
-              }}
-            >
-              <span
-                className="skin-setting-icon"
-                dangerouslySetInnerHTML={{ __html: item.icon }}
-              />
-              <Trans>{item.label}</Trans>
-            </li>
-          ))}
-        </ul>
-        <SwitchRow
-          variant="setting"
-          title={<Trans>Custom app style</Trans>}
-          isEnabled={this.state.isCustomSystemCSS}
+        ))}
+        <li
+          className={
+            state.currentThemeIndex === -1
+              ? "theme-setting-item active-theme-item"
+              : "theme-setting-item"
+          }
           onClick={() => {
-            const next = !this.state.isCustomSystemCSS;
-            this.setState({ isCustomSystemCSS: next }, () => {
-              ConfigService.setReaderConfig(
-                "isCustomSystemCSS",
-                next ? "yes" : "no"
-              );
-              if (!this.state.customSystemCSS) {
-                return;
-              }
-              applyCustomSystemCSS();
-              this.handleRest(next);
-            });
+            setState((prevState) => ({
+              ...prevState,
+              isShowCustomColorPicker: !state.isShowCustomColorPicker,
+              pendingCustomColor: state.customColor,
+            }));
           }}
-        />
-        <p className="setting-option-subtitle">
-          <Trans>
-            Customize the appearance of the entire application with CSS
-          </Trans>
-        </p>
-        {this.state.isCustomSystemCSS && (
-          <div style={{ margin: "10px 25px" }}>
-            <textarea
-              className="token-dialog-token-box"
-              placeholder={
-                "/* " + this.props.t("Enter custom CSS here") + " */"
+          style={{ color: state.customColor }}
+        >
+          <span
+            className="theme-setting-dot"
+            style={{
+              backgroundColor:
+                state.currentThemeIndex === -1 ? state.customColor : undefined,
+            }}
+          >
+            <span
+              className={
+                state.isShowCustomColorPicker ? "icon-check" : "icon-more"
               }
-              value={this.state.customSystemCSS}
-              onChange={(e) => {
-                this.setState({ customSystemCSS: e.target.value });
+              style={{
+                fontSize: "12px",
+                position: "relative",
+                top: "2px",
+                left: "2px",
               }}
-              onBlur={() => {
-                ConfigService.setReaderConfig(
-                  "customSystemCSS",
-                  this.state.customSystemCSS
-                );
-                applyCustomSystemCSS();
-                this.handleRest(true);
+            ></span>
+          </span>
+          <span className="theme-setting-title">
+            <Trans>Custom</Trans>
+          </span>
+        </li>
+      </ul>
+      {state.isShowCustomColorPicker && (
+        <div className="custom-color-picker-container">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <HexColorPicker
+              color={state.pendingCustomColor}
+              onChange={handleCustomColor}
+              style={{
+                margin: "10px 0",
+                animation: "fade-in 0.2s ease-in-out 0s 1",
               }}
             />
+            <input
+              className="color-input-box"
+              style={{ marginBottom: 8 }}
+              value={state.pendingCustomColor}
+              placeholder="#rrggbb / rgba(r,g,b,a)"
+              onChange={(e) =>
+                setState((prevState) => ({
+                  ...prevState,
+                  pendingCustomColor: e.target.value,
+                }))
+              }
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const hex = parseColorInput(state.pendingCustomColor);
+                  if (hex)
+                    setState((prevState) => ({
+                      ...prevState,
+                      pendingCustomColor: hex,
+                    }));
+                }
+              }}
+              onBlur={() => {
+                const hex = parseColorInput(state.pendingCustomColor);
+                if (hex)
+                  setState((prevState) => ({
+                    ...prevState,
+                    pendingCustomColor: hex,
+                  }));
+              }}
+            />
+            <span
+              className="change-location-button"
+              onClick={handleConfirmCustomColor}
+              style={{ marginBottom: "10px" }}
+            >
+              <Trans>Confirm</Trans>
+            </span>
           </div>
-        )}
-      </>
-    );
-  }
-}
+        </div>
+      )}
+      {renderTtsHighlightSetting()}
+      {renderSearchHighlightSetting()}
+      <div className="setting-dialog-new-title">
+        <Trans>Appearance</Trans>
+      </div>
+      <ul className="skin-setting-container">
+        {skinList.map((item) => (
+          <li
+            key={item.value}
+            className={
+              item.value ===
+              (ConfigService.getReaderConfig("appSkin") || "system")
+                ? "skin-setting-item active-skin-item"
+                : "skin-setting-item"
+            }
+            onClick={() => {
+              changeSkin(item.value);
+            }}
+          >
+            <span
+              className="skin-setting-icon"
+              dangerouslySetInnerHTML={{ __html: item.icon }}
+            />
+            <Trans>{item.label}</Trans>
+          </li>
+        ))}
+      </ul>
+      <SwitchRow
+        variant="setting"
+        title={<Trans>Custom app style</Trans>}
+        isEnabled={state.isCustomSystemCSS}
+        onClick={() => {
+          const next = !state.isCustomSystemCSS;
+          setState((prevState) => ({
+            ...prevState,
+            isCustomSystemCSS: next,
+          }));
+          ConfigService.setReaderConfig(
+            "isCustomSystemCSS",
+            next ? "yes" : "no"
+          );
+          if (!state.customSystemCSS) {
+            return;
+          }
+          applyCustomSystemCSS();
+          handleRest(next);
+        }}
+      />
+      <p className="setting-option-subtitle">
+        <Trans>
+          Customize the appearance of the entire application with CSS
+        </Trans>
+      </p>
+      {state.isCustomSystemCSS && (
+        <div style={{ margin: "10px 25px" }}>
+          <textarea
+            className="token-dialog-token-box"
+            placeholder={"/* " + props.t("Enter custom CSS here") + " */"}
+            value={state.customSystemCSS}
+            onChange={(e) => {
+              setState((prevState) => ({
+                ...prevState,
+                customSystemCSS: e.target.value,
+              }));
+            }}
+            onBlur={() => {
+              ConfigService.setReaderConfig(
+                "customSystemCSS",
+                state.customSystemCSS
+              );
+              applyCustomSystemCSS();
+              handleRest(true);
+            }}
+          />
+        </div>
+      )}
+    </>
+  );
+};
 
 export default AppearanceSetting;

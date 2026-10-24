@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TextRule, TextSettingProps, TextSettingState } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -12,42 +12,36 @@ import BookUtil from "../../../utils/file/bookUtil";
 const HIGHLIGHT_STYLE_TYPES = KookitConfig.HighlightStyleTypes;
 const HIGHLIGHT_PRESET_COLORS = KookitConfig.HighlightPresetColors;
 
-class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
-  highlightUtil: any;
-  constructor(props: TextSettingProps) {
-    super(props);
-    this.highlightUtil = new HighlightUtil(ConfigService);
-    this.state = {
-      ruleList: ConfigService.getAllListConfig("textRuleList") || [],
-      bookNamesMap: {},
-      isFormOpen: false,
-      isEditing: false,
-      editingId: "",
-      formType: "replace",
-      formPattern: "",
-      formReplacement: "",
-      formMatchType: "plain",
-      formScope: "all",
-      formBookKey: "",
-      formHighlightStyle: "background",
-      formHighlightColor: "#F3C9C9",
-    };
+const TextSetting = (props: TextSettingProps) => {
+  const highlightUtil = useRef<any>(null);
+  if (!highlightUtil.current) {
+    highlightUtil.current = new HighlightUtil(ConfigService);
   }
+  const [state, setState] = useState<TextSettingState>(() => ({
+    ruleList: ConfigService.getAllListConfig("textRuleList") || [],
+    bookNamesMap: {},
+    isFormOpen: false,
+    isEditing: false,
+    editingId: "",
+    formType: "replace",
+    formPattern: "",
+    formReplacement: "",
+    formMatchType: "plain",
+    formScope: "all",
+    formBookKey: "",
+    formHighlightStyle: "background",
+    formHighlightColor: "#F3C9C9",
+  }));
 
-  componentDidMount(): void {
-    this.loadBookNamesMap();
-  }
+  useEffect(() => {
+    loadBookNamesMap();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.books]);
 
-  componentDidUpdate(prevProps: TextSettingProps): void {
-    if (prevProps.books !== this.props.books) {
-      this.loadBookNamesMap();
-    }
-  }
-
-  getBookKeys = () => {
-    const bookKeys = (this.props.books || []).map((book) => book.key);
+  const getBookKeys = () => {
+    const bookKeys = (props.books || []).map((book) => book.key);
     const ruleBookKeys = (ConfigService.getAllListConfig("textRuleList") || [])
-      .map((id) => this.getRule(id))
+      .map((id) => getRule(id))
       .filter(
         (rule): rule is TextRule =>
           !!rule && rule.scope === "book" && !!rule.bookKey
@@ -56,24 +50,25 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
     return Array.from(new Set([...bookKeys, ...ruleBookKeys]));
   };
 
-  loadBookNamesMap = async () => {
-    const bookKeys = this.getBookKeys();
+  const loadBookNamesMap = async () => {
+    const bookKeys = getBookKeys();
     if (bookKeys.length === 0) {
-      this.setState({ bookNamesMap: {} });
+      setState((prev) => ({ ...prev, bookNamesMap: {} }));
       return;
     }
     const bookNamesMap = await BookUtil.getBookNamesMapByKeys(bookKeys);
-    this.setState({ bookNamesMap });
+    setState((prev) => ({ ...prev, bookNamesMap }));
   };
 
-  fetchRuleList = () => {
-    this.setState({
+  const fetchRuleList = () => {
+    setState((prev) => ({
+      ...prev,
       ruleList: ConfigService.getAllListConfig("textRuleList") || [],
-    });
-    this.loadBookNamesMap();
+    }));
+    loadBookNamesMap();
   };
 
-  getRule = (ruleId: string): TextRule | null => {
+  const getRule = (ruleId: string): TextRule | null => {
     return ConfigService.getObjectConfig(
       ruleId,
       "textRules",
@@ -81,13 +76,14 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
     ) as TextRule | null;
   };
 
-  scrollFormToTop = () => {
+  const scrollFormToTop = () => {
     const infoEl = document.querySelector(".setting-dialog-info");
     if (infoEl) infoEl.scrollTop = 0;
   };
 
-  resetForm = () => {
-    this.setState({
+  const resetForm = () => {
+    setState((prev) => ({
+      ...prev,
       isFormOpen: false,
       isEditing: false,
       editingId: "",
@@ -99,54 +95,52 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
       formBookKey: "",
       formHighlightStyle: "background",
       formHighlightColor: "#F3C9C9",
-    });
+    }));
   };
 
-  openAddForm = (type: "replace" | "delete" | "highlight") => {
-    this.setState(
-      {
-        isFormOpen: true,
-        isEditing: false,
-        editingId: "",
-        formType: type,
-        formPattern: "",
-        formReplacement: "",
-        formMatchType: "plain",
-        formScope: "all",
-        formBookKey: "",
-        formHighlightStyle: "background",
-        formHighlightColor: "#F3C9C9",
-      },
-      () => this.scrollFormToTop()
-    );
+  const openAddForm = (type: "replace" | "delete" | "highlight") => {
+    setState((prev) => ({
+      ...prev,
+      isFormOpen: true,
+      isEditing: false,
+      editingId: "",
+      formType: type,
+      formPattern: "",
+      formReplacement: "",
+      formMatchType: "plain",
+      formScope: "all",
+      formBookKey: "",
+      formHighlightStyle: "background",
+      formHighlightColor: "#F3C9C9",
+    }));
+    scrollFormToTop();
   };
 
-  openEditForm = (ruleId: string) => {
-    const rule = this.getRule(ruleId);
+  const openEditForm = (ruleId: string) => {
+    const rule = getRule(ruleId);
     if (!rule) return;
-    this.setState(
-      {
-        isFormOpen: true,
-        isEditing: true,
-        editingId: ruleId,
-        formType: rule.type,
-        formPattern: rule.pattern,
-        formReplacement: rule.replacement || "",
-        formMatchType: rule.matchType,
-        formScope: rule.scope,
-        formBookKey: rule.bookKey || "",
-        formHighlightStyle: rule.highlightStyle || "background",
-        formHighlightColor: rule.highlightColor || "#F3C9C9",
-      },
-      () => this.scrollFormToTop()
-    );
+    setState((prev) => ({
+      ...prev,
+      isFormOpen: true,
+      isEditing: true,
+      editingId: ruleId,
+      formType: rule.type,
+      formPattern: rule.pattern,
+      formReplacement: rule.replacement || "",
+      formMatchType: rule.matchType,
+      formScope: rule.scope,
+      formBookKey: rule.bookKey || "",
+      formHighlightStyle: rule.highlightStyle || "background",
+      formHighlightColor: rule.highlightColor || "#F3C9C9",
+    }));
+    scrollFormToTop();
   };
 
-  handleCancel = () => {
-    this.resetForm();
+  const handleCancel = () => {
+    resetForm();
   };
 
-  validateRegex = (pattern: string): boolean => {
+  const validateRegex = (pattern: string): boolean => {
     try {
       new RegExp(pattern);
       return true;
@@ -155,7 +149,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
     }
   };
 
-  handleSave = () => {
+  const handleSave = () => {
     const {
       formType,
       formPattern,
@@ -168,25 +162,25 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
       bookNamesMap,
       formHighlightStyle,
       formHighlightColor,
-    } = this.state;
+    } = state;
 
     const pattern = formPattern.trim();
     const replacement = formReplacement.trim();
 
     if (!pattern) {
-      toast.error(this.props.t("Please enter match pattern"));
+      toast.error(props.t("Please enter match pattern"));
       return;
     }
     if (formType === "replace" && !replacement) {
-      toast.error(this.props.t("Please enter replacement"));
+      toast.error(props.t("Please enter replacement"));
       return;
     }
     if (formScope === "book" && !formBookKey) {
-      toast.error(this.props.t("Please select a book"));
+      toast.error(props.t("Please select a book"));
       return;
     }
-    if (formMatchType === "regex" && !this.validateRegex(pattern)) {
-      toast.error(this.props.t("Invalid regex pattern"));
+    if (formMatchType === "regex" && !validateRegex(pattern)) {
+      toast.error(props.t("Invalid regex pattern"));
       return;
     }
 
@@ -213,38 +207,38 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
 
     if (isEditing && editingId) {
       ConfigService.setObjectConfig(editingId, rule, "textRules");
-      toast.success(this.props.t("Modification successful"));
+      toast.success(props.t("Modification successful"));
     } else {
       ConfigService.setObjectConfig(rule.id, rule, "textRules");
       ConfigService.setListConfig(rule.id, "textRuleList");
-      toast.success(this.props.t("Addition successful"));
+      toast.success(props.t("Addition successful"));
     }
 
-    this.fetchRuleList();
-    this.resetForm();
+    fetchRuleList();
+    resetForm();
   };
 
-  handleDelete = (ruleId: string) => {
+  const handleDelete = (ruleId: string) => {
     ConfigService.deleteListConfig(ruleId, "textRuleList");
     ConfigService.deleteObjectConfig(ruleId, "textRules");
-    this.fetchRuleList();
-    toast.success(this.props.t("Deletion successful"));
+    fetchRuleList();
+    toast.success(props.t("Deletion successful"));
   };
 
-  renderScopeLabel = (rule: TextRule) => {
+  const renderScopeLabel = (rule: TextRule) => {
     if (rule.scope === "book" && rule.bookName) {
       return rule.bookName;
     }
-    return this.props.t("All books");
+    return props.t("All books");
   };
 
-  renderMatchTypeLabel = (matchType: string) => {
+  const renderMatchTypeLabel = (matchType: string) => {
     return matchType === "regex"
-      ? this.props.t("Regular expression")
-      : this.props.t("Plain text");
+      ? props.t("Regular expression")
+      : props.t("Plain text");
   };
 
-  renderForm = () => {
+  const renderForm = () => {
     const {
       isEditing,
       formType,
@@ -256,10 +250,10 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
       bookNamesMap,
       formHighlightStyle,
       formHighlightColor,
-    } = this.state;
+    } = state;
 
     const scopeValue = formScope === "all" ? "all" : formBookKey;
-    const bookKeys = (this.props.books || []).map((book) => book.key);
+    const bookKeys = (props.books || []).map((book) => book.key);
     const presetColors =
       HIGHLIGHT_PRESET_COLORS[formHighlightStyle] ||
       HIGHLIGHT_PRESET_COLORS["background"];
@@ -281,16 +275,17 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             className="lang-setting-dropdown"
             value={formMatchType}
             onChange={(e) =>
-              this.setState({
+              setState((prev) => ({
+                ...prev,
                 formMatchType: e.target.value as "regex" | "plain",
-              })
+              }))
             }
           >
             <option value="plain" className="lang-setting-option">
-              {this.props.t("Plain text")}
+              {props.t("Plain text")}
             </option>
             <option value="regex" className="lang-setting-option">
-              {this.props.t("Regular expression")}
+              {props.t("Regular expression")}
             </option>
           </select>
         </div>
@@ -302,9 +297,11 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
           <input
             type="text"
             className="token-dialog-username-box"
-            placeholder={this.props.t("Please enter match pattern")}
+            placeholder={props.t("Please enter match pattern")}
             value={formPattern}
-            onChange={(e) => this.setState({ formPattern: e.target.value })}
+            onChange={(e) =>
+              setState((prev) => ({ ...prev, formPattern: e.target.value }))
+            }
           />
         </div>
 
@@ -316,10 +313,13 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             <input
               type="text"
               className="token-dialog-username-box"
-              placeholder={this.props.t("Please enter replacement")}
+              placeholder={props.t("Please enter replacement")}
               value={formReplacement}
               onChange={(e) =>
-                this.setState({ formReplacement: e.target.value })
+                setState((prev) => ({
+                  ...prev,
+                  formReplacement: e.target.value,
+                }))
               }
             />
           </div>
@@ -352,15 +352,16 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                       }
                       onClick={() => {
                         const color = HIGHLIGHT_PRESET_COLORS[item.value][0];
-                        this.setState({
+                        setState((prev) => ({
+                          ...prev,
                           formHighlightStyle: item.value,
                           formHighlightColor: color,
-                        });
+                        }));
                       }}
                     >
                       <span
                         className="tts-highlight-style-preview"
-                        style={this.highlightUtil.buildHighlightPreviewStyle(
+                        style={highlightUtil.current.buildHighlightPreviewStyle(
                           item.value,
                           previewColor
                         )}
@@ -388,7 +389,12 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                       : "tts-highlight-color-item"
                   }
                   style={{ backgroundColor: color }}
-                  onClick={() => this.setState({ formHighlightColor: color })}
+                  onClick={() =>
+                    setState((prev) => ({
+                      ...prev,
+                      formHighlightColor: color,
+                    }))
+                  }
                 />
               ))}
             </ul>
@@ -405,14 +411,22 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             onChange={(e) => {
               const value = e.target.value;
               if (value === "all") {
-                this.setState({ formScope: "all", formBookKey: "" });
+                setState((prev) => ({
+                  ...prev,
+                  formScope: "all",
+                  formBookKey: "",
+                }));
               } else {
-                this.setState({ formScope: "book", formBookKey: value });
+                setState((prev) => ({
+                  ...prev,
+                  formScope: "book",
+                  formBookKey: value,
+                }));
               }
             }}
           >
             <option value="all" className="lang-setting-option">
-              {this.props.t("All books")}
+              {props.t("All books")}
             </option>
             {bookKeys.map((bookKey) => (
               <option
@@ -427,11 +441,11 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
         </div>
 
         <div className="token-dialog-button-container">
-          <div className="voice-add-confirm" onClick={this.handleSave}>
+          <div className="voice-add-confirm" onClick={handleSave}>
             <Trans>{isEditing ? "Save" : "Add"}</Trans>
           </div>
           <div className="voice-add-button-container">
-            <div className="voice-add-cancel" onClick={this.handleCancel}>
+            <div className="voice-add-cancel" onClick={handleCancel}>
               <Trans>Cancel</Trans>
             </div>
           </div>
@@ -440,13 +454,13 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
     );
   };
 
-  renderRuleList = (
+  const renderRuleList = (
     type: "replace" | "delete" | "highlight",
     emptyMessage: string
   ) => {
-    const { ruleList } = this.state;
+    const { ruleList } = state;
     const rules = ruleList
-      .map((id) => this.getRule(id))
+      .map((id) => getRule(id))
       .filter((rule): rule is TextRule => !!rule && rule.type === type);
 
     return (
@@ -492,7 +506,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                     fontSize: "12px",
                   }}
                 >
-                  ({this.renderMatchTypeLabel(rule.matchType)})
+                  ({renderMatchTypeLabel(rule.matchType)})
                 </span>
               </p>
               <p
@@ -504,13 +518,13 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
               >
                 <span
                   className="change-location-button"
-                  onClick={() => this.openEditForm(rule.id)}
+                  onClick={() => openEditForm(rule.id)}
                 >
                   <Trans>Edit</Trans>
                 </span>
                 <span
                   className="change-location-button"
-                  onClick={() => this.handleDelete(rule.id)}
+                  onClick={() => handleDelete(rule.id)}
                 >
                   <Trans>Delete</Trans>
                 </span>
@@ -529,7 +543,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
             >
               {type === "replace" && rule.replacement !== undefined && (
                 <span>
-                  {this.props.t("Replacement")}: {rule.replacement} ·{" "}
+                  {props.t("Replacement")}: {rule.replacement} ·{" "}
                 </span>
               )}
               {type === "highlight" &&
@@ -538,7 +552,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                   <span>
                     <span
                       style={{
-                        ...this.highlightUtil.buildHighlightPreviewStyle(
+                        ...highlightUtil.current.buildHighlightPreviewStyle(
                           rule.highlightStyle,
                           rule.highlightColor
                         ),
@@ -548,8 +562,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                     >
                       Aa
                     </span>
-                    {this.props.t("Highlight style")}: {rule.highlightStyle}{" "}
-                    ·{" "}
+                    {props.t("Highlight style")}: {rule.highlightStyle} ·{" "}
                   </span>
                 )}
             </p>
@@ -564,7 +577,7 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
                 zIndex: -1,
               }}
             >
-              {this.props.t("Scope")}: {this.renderScopeLabel(rule)}
+              {props.t("Scope")}: {renderScopeLabel(rule)}
             </p>
           </div>
         ))}
@@ -572,78 +585,70 @@ class TextSetting extends React.Component<TextSettingProps, TextSettingState> {
     );
   };
 
-  render() {
-    const { isFormOpen } = this.state;
+  const { isFormOpen } = state;
 
-    return (
-      <>
-        {isFormOpen && this.renderForm()}
+  return (
+    <>
+      {isFormOpen && renderForm()}
 
-        <div
-          style={{
-            fontWeight: "bold",
-            textAlign: "left",
-            marginBottom: "20px",
-            marginLeft: "20px",
-            marginTop: "20px",
-          }}
+      <div
+        style={{
+          fontWeight: "bold",
+          textAlign: "left",
+          marginBottom: "20px",
+          marginLeft: "20px",
+          marginTop: "20px",
+        }}
+      >
+        <Trans>Replacement rules</Trans>
+      </div>
+      {renderRuleList("replace", "No replacement rules added")}
+
+      <div
+        style={{
+          fontWeight: "bold",
+          textAlign: "left",
+          marginBottom: "20px",
+          marginLeft: "20px",
+          marginTop: "20px",
+        }}
+      >
+        <Trans>Deletion rules</Trans>
+      </div>
+      {renderRuleList("delete", "No deletion rules added")}
+
+      <div
+        style={{
+          fontWeight: "bold",
+          textAlign: "left",
+          marginBottom: "20px",
+          marginLeft: "20px",
+          marginTop: "20px",
+        }}
+      >
+        <Trans>Highlight rules</Trans>
+      </div>
+      {renderRuleList("highlight", "No highlight rules added")}
+
+      <div
+        className="setting-dialog-new-plugin"
+        style={{ display: "flex", gap: "16px" }}
+      >
+        <span style={{ fontWeight: "bold" }} onClick={() => openAddForm("replace")}>
+          <Trans>Add replacement rule</Trans>
+        </span>
+        <span style={{ fontWeight: "bold" }} onClick={() => openAddForm("delete")}>
+          <Trans>Add deletion rule</Trans>
+        </span>
+        <span
+          style={{ fontWeight: "bold" }}
+          onClick={() => openAddForm("highlight")}
         >
-          <Trans>Replacement rules</Trans>
-        </div>
-        {this.renderRuleList("replace", "No replacement rules added")}
-
-        <div
-          style={{
-            fontWeight: "bold",
-            textAlign: "left",
-            marginBottom: "20px",
-            marginLeft: "20px",
-            marginTop: "20px",
-          }}
-        >
-          <Trans>Deletion rules</Trans>
-        </div>
-        {this.renderRuleList("delete", "No deletion rules added")}
-
-        <div
-          style={{
-            fontWeight: "bold",
-            textAlign: "left",
-            marginBottom: "20px",
-            marginLeft: "20px",
-            marginTop: "20px",
-          }}
-        >
-          <Trans>Highlight rules</Trans>
-        </div>
-        {this.renderRuleList("highlight", "No highlight rules added")}
-
-        <div
-          className="setting-dialog-new-plugin"
-          style={{ display: "flex", gap: "16px" }}
-        >
-          <span
-            style={{ fontWeight: "bold" }}
-            onClick={() => this.openAddForm("replace")}
-          >
-            <Trans>Add replacement rule</Trans>
-          </span>
-          <span
-            style={{ fontWeight: "bold" }}
-            onClick={() => this.openAddForm("delete")}
-          >
-            <Trans>Add deletion rule</Trans>
-          </span>
-          <span
-            style={{ fontWeight: "bold" }}
-            onClick={() => this.openAddForm("highlight")}
-          >
-            <Trans>Add highlight rule</Trans>
-          </span>
-        </div>
-      </>
-    );
-  }
-}
+          <Trans>Add highlight rule</Trans>
+        </span>
+      </div>
+    </>
+  );
+};
 
 export default TextSetting;

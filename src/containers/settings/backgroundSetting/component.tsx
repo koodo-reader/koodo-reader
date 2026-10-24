@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./backgroundSetting.css";
 import {
   SettingInfoProps,
@@ -13,45 +13,30 @@ import BackgroundUtil from "../../../utils/file/backgroundUtil";
 
 const FEATURED_COUNT = 100;
 
-class BackgroundSetting extends React.Component<
-  SettingInfoProps,
-  SettingInfoState
-> {
-  fileInputRef = React.createRef<HTMLInputElement>();
-  featuredObserver: IntersectionObserver | null = null;
-  pendingFeaturedElements: HTMLDivElement[] = [];
+const BackgroundSetting = (props: SettingInfoProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const featuredObserver = useRef<IntersectionObserver | null>(null);
+  const pendingFeaturedElements = useRef<HTMLDivElement[]>([]);
 
-  constructor(props: SettingInfoProps) {
-    super(props);
-    this.state = {
-      images: [],
-      loadedUrls: {},
-      previewImage: null,
-      previewFeatured: null,
-      appBackgroundId:
-        ConfigService.getReaderConfig("appBackgroundImage") || "",
-      readerBackgroundId:
-        ConfigService.getReaderConfig("readerBackgroundImage") || "",
-      isLoading: true,
-      visibleFeatured: new Set<number>(),
-      downloadingId: "",
-      downloadProgress: 0,
-    };
-  }
+  const [state, setState] = useState<SettingInfoState>({
+    images: [],
+    loadedUrls: {},
+    previewImage: null,
+    previewFeatured: null,
+    appBackgroundId:
+      ConfigService.getReaderConfig("appBackgroundImage") || "",
+    readerBackgroundId:
+      ConfigService.getReaderConfig("readerBackgroundImage") || "",
+    isLoading: true,
+    visibleFeatured: new Set<number>(),
+    downloadingId: "",
+    downloadProgress: 0,
+  });
 
-  componentDidMount() {
-    this.loadAllImages();
-    this.setupFeaturedObserver();
-  }
-
-  componentWillUnmount() {
-    this.featuredObserver?.disconnect();
-  }
-
-  setupFeaturedObserver = () => {
+  const setupFeaturedObserver = () => {
     if (typeof IntersectionObserver === "undefined") return;
     const root = document.querySelector(".setting-dialog-info");
-    this.featuredObserver = new IntersectionObserver(
+    featuredObserver.current = new IntersectionObserver(
       (entries) => {
         const newlyVisible: number[] = [];
         entries.forEach((entry) => {
@@ -60,39 +45,44 @@ class BackgroundSetting extends React.Component<
             (entry.target as HTMLElement).dataset.featuredIndex
           );
           if (Number.isNaN(index)) return;
-          if (!this.state.visibleFeatured.has(index)) {
-            newlyVisible.push(index);
-          }
+          newlyVisible.push(index);
         });
         if (newlyVisible.length > 0) {
-          this.setState((prev) => ({
-            visibleFeatured: new Set([
-              ...prev.visibleFeatured,
-              ...newlyVisible,
-            ]),
-          }));
+          setState((prev) => {
+            const next = new Set(prev.visibleFeatured);
+            let hasNew = false;
+            newlyVisible.forEach((index) => {
+              if (!next.has(index)) {
+                next.add(index);
+                hasNew = true;
+              }
+            });
+            return hasNew ? { ...prev, visibleFeatured: next } : prev;
+          });
         }
       },
       { root, rootMargin: "120px 0px" }
     );
-    this.pendingFeaturedElements.forEach((el) =>
-      this.featuredObserver!.observe(el)
+    pendingFeaturedElements.current.forEach((el) =>
+      featuredObserver.current!.observe(el)
     );
-    this.pendingFeaturedElements = [];
+    pendingFeaturedElements.current = [];
   };
 
-  registerFeaturedItem = (index: number) => (el: HTMLDivElement | null) => {
-    if (!el) return;
-    el.dataset.featuredIndex = String(index);
-    if (this.featuredObserver) {
-      this.featuredObserver.observe(el);
-    } else {
-      this.pendingFeaturedElements.push(el);
-    }
+  const registerFeaturedItem = (index: number) => {
+    return (el: HTMLDivElement | null) => {
+      if (!el) return;
+      el.dataset.featuredIndex = String(index);
+      if (featuredObserver.current) {
+        featuredObserver.current.observe(el);
+      } else {
+        pendingFeaturedElements.current.push(el);
+      }
+    };
   };
 
-  loadAllImages = async () => {
-    this.setState({ isLoading: true });
+  const loadAllImages = async () => {
+    setState((prev) => ({ ...prev, isLoading: true }));
     const ids = BackgroundUtil.getImageIds();
     const images: BackgroundImage[] = [];
     const loadedUrls: Record<string, string> = {};
@@ -111,14 +101,23 @@ class BackgroundSetting extends React.Component<
       if (url) loadedUrls[id] = url;
     }
 
-    this.setState({ images, loadedUrls, isLoading: false });
+    setState((prev) => ({ ...prev, images, loadedUrls, isLoading: false }));
   };
 
-  handleImportClick = () => {
-    this.fileInputRef.current?.click();
+  useEffect(() => {
+    loadAllImages();
+    setupFeaturedObserver();
+    return () => {
+      featuredObserver.current?.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
   };
 
-  handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     const file = files[0];
@@ -150,42 +149,43 @@ class BackgroundSetting extends React.Component<
           backgroundColor,
           textColor,
         };
-        this.setState((prev) => ({
+        setState((prev) => ({
+          ...prev,
           images: [...prev.images, newImage],
           loadedUrls: { ...prev.loadedUrls, [id]: dataUrl },
         }));
-        toast.success(this.props.t("Import successful"));
+        toast.success(props.t("Import successful"));
       } catch (err) {
         console.error(err);
-        toast.error(this.props.t("Import failed"));
+        toast.error(props.t("Import failed"));
       }
     };
     reader.readAsDataURL(file);
   };
 
-  handlePreview = (image: BackgroundImage) => {
-    this.setState({ previewImage: image });
+  const handlePreview = (image: BackgroundImage) => {
+    setState((prev) => ({ ...prev, previewImage: image }));
   };
 
-  handleClosePreview = () => {
-    this.setState({ previewImage: null });
+  const handleClosePreview = () => {
+    setState((prev) => ({ ...prev, previewImage: null }));
   };
 
-  handleSetAppBackground = (image: BackgroundImage) => {
+  const handleSetAppBackground = (image: BackgroundImage) => {
     ConfigService.setReaderConfig("appBackgroundImage", image.id);
-    this.setState({ appBackgroundId: image.id });
+    setState((prev) => ({ ...prev, appBackgroundId: image.id }));
     applyAppBackgroundImage();
-    toast.success(this.props.t("Change successful"));
+    toast.success(props.t("Change successful"));
   };
 
-  handleClearAppBackground = () => {
+  const handleClearAppBackground = () => {
     ConfigService.setReaderConfig("appBackgroundImage", "");
-    this.setState({ appBackgroundId: "" });
+    setState((prev) => ({ ...prev, appBackgroundId: "" }));
     applyAppBackgroundImage();
-    toast.success(this.props.t("Change successful"));
+    toast.success(props.t("Change successful"));
   };
 
-  handleSetReaderBackground = (image: BackgroundImage) => {
+  const handleSetReaderBackground = (image: BackgroundImage) => {
     ConfigService.setReaderConfig("readerBackgroundImage", image.id);
     if (image.textColor) {
       ConfigService.setReaderConfig("textColor", image.textColor);
@@ -193,63 +193,68 @@ class BackgroundSetting extends React.Component<
     if (image.backgroundColor) {
       ConfigService.setReaderConfig("backgroundColor", image.backgroundColor);
     }
-    this.setState({ readerBackgroundId: image.id });
-    this.props.handleReaderBackgroundImage?.(image.id);
-    toast.success(this.props.t("Change successful"));
+    setState((prev) => ({ ...prev, readerBackgroundId: image.id }));
+    props.handleReaderBackgroundImage?.(image.id);
+    toast.success(props.t("Change successful"));
   };
 
-  handleClearReaderBackground = () => {
+  const handleClearReaderBackground = () => {
     ConfigService.setReaderConfig("readerBackgroundImage", "");
-    this.setState({ readerBackgroundId: "" });
-    this.props.handleReaderBackgroundImage?.("");
-    toast.success(this.props.t("Change successful"));
+    setState((prev) => ({ ...prev, readerBackgroundId: "" }));
+    props.handleReaderBackgroundImage?.("");
+    toast.success(props.t("Change successful"));
     ConfigService.setReaderConfig("textColor", "");
     ConfigService.setReaderConfig("backgroundColor", "");
   };
 
-  getFeaturedImage = (index: number): BackgroundImage | undefined => {
+  const getFeaturedImage = (index: number): BackgroundImage | undefined => {
     const id = BackgroundUtil.getFeaturedBackgroundId(index);
-    return this.state.images.find((img) => img.id === id);
+    return state.images.find((img) => img.id === id);
   };
 
-  handleFeaturedPreview = (index: number) => {
-    const existing = this.getFeaturedImage(index);
+  const handleFeaturedPreview = (index: number) => {
+    const existing = getFeaturedImage(index);
     if (existing) {
-      this.handlePreview(existing);
+      handlePreview(existing);
     } else {
-      this.setState({ previewFeatured: index });
+      setState((prev) => ({ ...prev, previewFeatured: index }));
     }
   };
 
-  handleCloseFeaturedPreview = () => {
-    this.setState({ previewFeatured: null });
+  const handleCloseFeaturedPreview = () => {
+    setState((prev) => ({ ...prev, previewFeatured: null }));
   };
 
-  handleFeaturedSetBackground = async (
+  const handleFeaturedSetBackground = async (
     index: number,
     type: "app" | "reader"
   ) => {
     const id = BackgroundUtil.getFeaturedBackgroundId(index);
-    if (this.state.downloadingId) return;
-    const existing = this.getFeaturedImage(index);
+    if (state.downloadingId) return;
+    const existing = getFeaturedImage(index);
     if (existing) {
       if (type === "app") {
-        this.handleSetAppBackground(existing);
+        handleSetAppBackground(existing);
       } else {
-        this.handleSetReaderBackground(existing);
+        handleSetReaderBackground(existing);
       }
       return;
     }
 
-    this.setState({ downloadingId: id, downloadProgress: 0 });
+    setState((prev) => ({
+      ...prev,
+      downloadingId: id,
+      downloadProgress: 0,
+    }));
     try {
       const dataUrl = await BackgroundUtil.downloadFeaturedBackground(
         index,
-        this.props.isAuthed,
-        (progress) => this.setState({ downloadProgress: progress })
+        props.isAuthed,
+        (progress) =>
+          setState((prev) => ({ ...prev, downloadProgress: progress }))
       );
       if (!dataUrl) {
-        toast.error(this.props.t("Download failed"));
+        toast.error(props.t("Download failed"));
         return;
       }
       const meta = BackgroundUtil.getImageMeta(id);
@@ -260,59 +265,65 @@ class BackgroundSetting extends React.Component<
         backgroundColor: meta?.backgroundColor,
         textColor: meta?.textColor,
       };
-      this.setState((prev) => ({
+      setState((prev) => ({
+        ...prev,
         images: [...prev.images, newImage],
         loadedUrls: { ...prev.loadedUrls, [id]: dataUrl },
       }));
       if (type === "app") {
-        this.handleSetAppBackground(newImage);
+        handleSetAppBackground(newImage);
       } else {
-        this.handleSetReaderBackground(newImage);
+        handleSetReaderBackground(newImage);
       }
-      toast.success(this.props.t("Download successful"));
+      toast.success(props.t("Download successful"));
     } catch (err) {
       console.error(err);
-      toast.error(this.props.t("Download failed"));
+      toast.error(props.t("Download failed"));
     } finally {
-      this.setState({ downloadingId: "", downloadProgress: 0 });
+      setState((prev) => ({
+        ...prev,
+        downloadingId: "",
+        downloadProgress: 0,
+      }));
     }
   };
 
-  handleDelete = async (e: React.MouseEvent, image: BackgroundImage) => {
+  const handleDelete = async (e: React.MouseEvent, image: BackgroundImage) => {
     e.stopPropagation();
     try {
       await BackgroundUtil.deleteImage(image.id);
       BackgroundUtil.deleteImageMeta(image.id);
       BackgroundUtil.removeImageId(image.id);
 
-      const updatedUrls = { ...this.state.loadedUrls };
+      const updatedUrls = { ...state.loadedUrls };
       delete updatedUrls[image.id];
 
-      this.setState((prev) => ({
+      setState((prev) => ({
+        ...prev,
         images: prev.images.filter((img) => img.id !== image.id),
         loadedUrls: updatedUrls,
       }));
 
-      if (this.state.appBackgroundId === image.id) {
+      if (state.appBackgroundId === image.id) {
         ConfigService.setReaderConfig("appBackgroundImage", "");
-        this.setState({ appBackgroundId: "" });
+        setState((prev) => ({ ...prev, appBackgroundId: "" }));
         applyAppBackgroundImage();
       }
-      if (this.state.readerBackgroundId === image.id) {
+      if (state.readerBackgroundId === image.id) {
         ConfigService.setReaderConfig("readerBackgroundImage", "");
-        this.setState({ readerBackgroundId: "" });
-        this.props.handleReaderBackgroundImage?.("");
+        setState((prev) => ({ ...prev, readerBackgroundId: "" }));
+        props.handleReaderBackgroundImage?.("");
       }
-      toast.success(this.props.t("Deletion successful"));
+      toast.success(props.t("Deletion successful"));
     } catch (err) {
       console.error(err);
-      toast.error(this.props.t("Deletion failed"));
+      toast.error(props.t("Deletion failed"));
     }
   };
 
-  renderBadge = (image: BackgroundImage) => {
-    const isApp = this.state.appBackgroundId === image.id;
-    const isReader = this.state.readerBackgroundId === image.id;
+  const renderBadge = (image: BackgroundImage) => {
+    const isApp = state.appBackgroundId === image.id;
+    const isReader = state.readerBackgroundId === image.id;
     if (!isApp && !isReader) return null;
     return (
       <span className="background-setting-badge">
@@ -323,9 +334,9 @@ class BackgroundSetting extends React.Component<
     );
   };
 
-  renderPreviewActions = (previewImage: BackgroundImage) => {
-    const isApp = this.state.appBackgroundId === previewImage.id;
-    const isReader = this.state.readerBackgroundId === previewImage.id;
+  const renderPreviewActions = (previewImage: BackgroundImage) => {
+    const isApp = state.appBackgroundId === previewImage.id;
+    const isReader = state.readerBackgroundId === previewImage.id;
     return (
       <div
         className="background-preview-actions"
@@ -335,7 +346,7 @@ class BackgroundSetting extends React.Component<
           <span
             className="change-location-button background-apple-button"
             style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
-            onClick={this.handleClearAppBackground}
+            onClick={handleClearAppBackground}
           >
             <Trans>Clear app background</Trans>
           </span>
@@ -343,7 +354,7 @@ class BackgroundSetting extends React.Component<
           <span
             className="change-location-button background-apple-button"
             style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
-            onClick={() => this.handleSetAppBackground(previewImage)}
+            onClick={() => handleSetAppBackground(previewImage)}
           >
             <Trans>Set as app background</Trans>
           </span>
@@ -352,7 +363,7 @@ class BackgroundSetting extends React.Component<
           <span
             className="change-location-button background-apple-button"
             style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
-            onClick={this.handleClearReaderBackground}
+            onClick={handleClearReaderBackground}
           >
             <Trans>Clear book background</Trans>
           </span>
@@ -360,7 +371,7 @@ class BackgroundSetting extends React.Component<
           <span
             className="change-location-button background-apple-button"
             style={{ fontSize: "14px", padding: "6px 16px", height: "32px" }}
-            onClick={() => this.handleSetReaderBackground(previewImage)}
+            onClick={() => handleSetReaderBackground(previewImage)}
           >
             <Trans>Set as book background</Trans>
           </span>
@@ -369,12 +380,12 @@ class BackgroundSetting extends React.Component<
     );
   };
 
-  renderFeaturedPreviewActions = (index: number) => {
+  const renderFeaturedPreviewActions = (index: number) => {
     const id = BackgroundUtil.getFeaturedBackgroundId(index);
-    const isDownloading = this.state.downloadingId === id;
-    const percent = Math.round(this.state.downloadProgress * 100);
-    const isApp = this.state.appBackgroundId === id;
-    const isReader = this.state.readerBackgroundId === id;
+    const isDownloading = state.downloadingId === id;
+    const percent = Math.round(state.downloadProgress * 100);
+    const isApp = state.appBackgroundId === id;
+    const isReader = state.readerBackgroundId === id;
     return (
       <div
         className="background-preview-actions"
@@ -383,7 +394,7 @@ class BackgroundSetting extends React.Component<
         {isApp ? (
           <span
             className="change-location-button background-apple-button"
-            onClick={this.handleClearAppBackground}
+            onClick={handleClearAppBackground}
           >
             <Trans>Clear app background</Trans>
           </span>
@@ -393,7 +404,7 @@ class BackgroundSetting extends React.Component<
               "change-location-button background-apple-button" +
               (isDownloading ? " is-downloading" : "")
             }
-            onClick={() => this.handleFeaturedSetBackground(index, "app")}
+            onClick={() => handleFeaturedSetBackground(index, "app")}
           >
             {isDownloading ? (
               <span>
@@ -407,7 +418,7 @@ class BackgroundSetting extends React.Component<
         {isReader ? (
           <span
             className="change-location-button background-apple-button"
-            onClick={this.handleClearReaderBackground}
+            onClick={handleClearReaderBackground}
           >
             <Trans>Clear book background</Trans>
           </span>
@@ -417,7 +428,7 @@ class BackgroundSetting extends React.Component<
               "change-location-button background-apple-button" +
               (isDownloading ? " is-downloading" : "")
             }
-            onClick={() => this.handleFeaturedSetBackground(index, "reader")}
+            onClick={() => handleFeaturedSetBackground(index, "reader")}
           >
             {isDownloading ? (
               <span>
@@ -432,8 +443,8 @@ class BackgroundSetting extends React.Component<
     );
   };
 
-  renderFeaturedSection = () => {
-    const { visibleFeatured, appBackgroundId, readerBackgroundId } = this.state;
+  const renderFeaturedSection = () => {
+    const { visibleFeatured, appBackgroundId, readerBackgroundId } = state;
     const indices = Array.from({ length: FEATURED_COUNT }, (_, i) => i + 1);
     return (
       <div className="background-featured-section">
@@ -455,15 +466,15 @@ class BackgroundSetting extends React.Component<
                   "background-featured-item" +
                   (isActive ? " active-bg-item" : "")
                 }
-                ref={this.registerFeaturedItem(index)}
-                onClick={() => this.handleFeaturedPreview(index)}
+                ref={registerFeaturedItem(index)}
+                onClick={() => handleFeaturedPreview(index)}
               >
                 {visibleFeatured.has(index) ? (
                   <img
                     className="background-featured-img"
                     src={BackgroundUtil.getFeaturedThumbnailUrl(
                       index,
-                      this.props.isAuthed
+                      props.isAuthed
                     )}
                     alt={id}
                     loading="lazy"
@@ -479,119 +490,115 @@ class BackgroundSetting extends React.Component<
     );
   };
 
-  render() {
-    const { images, previewImage, previewFeatured, loadedUrls, isLoading } =
-      this.state;
-    return (
-      <>
-        <div className="background-setting-grid">
-          {isLoading ? (
-            <div className="background-setting-empty">
-              <Trans>Loading...</Trans>
-            </div>
-          ) : images.length === 0 ? (
-            <div className="background-setting-empty">
-              <Trans>No background images added yet</Trans>
-            </div>
-          ) : (
-            images.map((img) => (
-              <div
-                key={img.id}
-                className={
-                  "background-setting-item" +
-                  (this.state.appBackgroundId === img.id ||
-                  this.state.readerBackgroundId === img.id
-                    ? " active-bg-item"
-                    : "")
-                }
-                onClick={() => this.handlePreview(img)}
-                title={img.name}
-              >
-                {loadedUrls[img.id] ? (
-                  <img
-                    className="background-setting-img"
-                    src={loadedUrls[img.id]}
-                    alt={img.name}
-                  />
-                ) : (
-                  <div className="background-setting-img background-setting-placeholder" />
-                )}
-                {this.renderBadge(img)}
-                <span
-                  className="background-setting-delete icon-close"
-                  onClick={(e) => this.handleDelete(e, img)}
+  const { images, previewImage, previewFeatured, loadedUrls, isLoading } =
+    state;
+
+  return (
+    <>
+      <div className="background-setting-grid">
+        {isLoading ? (
+          <div className="background-setting-empty">
+            <Trans>Loading...</Trans>
+          </div>
+        ) : images.length === 0 ? (
+          <div className="background-setting-empty">
+            <Trans>No background images added yet</Trans>
+          </div>
+        ) : (
+          images.map((img) => (
+            <div
+              key={img.id}
+              className={
+                "background-setting-item" +
+                (state.appBackgroundId === img.id ||
+                state.readerBackgroundId === img.id
+                  ? " active-bg-item"
+                  : "")
+              }
+              onClick={() => handlePreview(img)}
+              title={img.name}
+            >
+              {loadedUrls[img.id] ? (
+                <img
+                  className="background-setting-img"
+                  src={loadedUrls[img.id]}
+                  alt={img.name}
                 />
-              </div>
-            ))
-          )}
-        </div>
-
-        {this.renderFeaturedSection()}
-
-        {/* Hidden file input */}
-        <input
-          ref={this.fileInputRef}
-          type="file"
-          accept="image/*"
-          style={{ display: "none" }}
-          onChange={this.handleFileChange}
-        />
-
-        {/* Import button fixed at bottom-right */}
-        <div
-          className="setting-dialog-new-plugin"
-          onClick={this.handleImportClick}
-        >
-          <span style={{ fontWeight: "bold" }}>
-            <Trans>Import local image</Trans>
-          </span>
-        </div>
-
-        {/* Preview overlay */}
-        {previewImage && (
-          <div
-            className="background-preview-overlay"
-            onClick={this.handleClosePreview}
-          >
-            <span
-              className="background-preview-close icon-close"
-              onClick={this.handleClosePreview}
-            />
-            <img
-              className="background-preview-image"
-              src={loadedUrls[previewImage.id] || ""}
-              alt={previewImage.name}
-              onClick={(e) => e.stopPropagation()}
-            />
-            {this.renderPreviewActions(previewImage)}
-          </div>
-        )}
-
-        {/* Featured preview overlay */}
-        {previewFeatured !== null && !previewImage && (
-          <div
-            className="background-preview-overlay"
-            onClick={this.handleCloseFeaturedPreview}
-          >
-            <span
-              className="background-preview-close icon-close"
-              onClick={this.handleCloseFeaturedPreview}
-            />
-            <img
-              className="background-preview-image"
-              src={BackgroundUtil.getFeaturedOriginalUrl(
-                previewFeatured,
-                this.props.isAuthed
+              ) : (
+                <div className="background-setting-img background-setting-placeholder" />
               )}
-              alt={BackgroundUtil.getFeaturedBackgroundId(previewFeatured)}
-              onClick={(e) => e.stopPropagation()}
-            />
-            {this.renderFeaturedPreviewActions(previewFeatured)}
-          </div>
+              {renderBadge(img)}
+              <span
+                className="background-setting-delete icon-close"
+                onClick={(e) => handleDelete(e, img)}
+              />
+            </div>
+          ))
         )}
-      </>
-    );
-  }
-}
+      </div>
+
+      {renderFeaturedSection()}
+
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+
+      {/* Import button fixed at bottom-right */}
+      <div className="setting-dialog-new-plugin" onClick={handleImportClick}>
+        <span style={{ fontWeight: "bold" }}>
+          <Trans>Import local image</Trans>
+        </span>
+      </div>
+
+      {/* Preview overlay */}
+      {previewImage && (
+        <div
+          className="background-preview-overlay"
+          onClick={handleClosePreview}
+        >
+          <span
+            className="background-preview-close icon-close"
+            onClick={handleClosePreview}
+          />
+          <img
+            className="background-preview-image"
+            src={loadedUrls[previewImage.id] || ""}
+            alt={previewImage.name}
+            onClick={(e) => e.stopPropagation()}
+          />
+          {renderPreviewActions(previewImage)}
+        </div>
+      )}
+
+      {/* Featured preview overlay */}
+      {previewFeatured !== null && !previewImage && (
+        <div
+          className="background-preview-overlay"
+          onClick={handleCloseFeaturedPreview}
+        >
+          <span
+            className="background-preview-close icon-close"
+            onClick={handleCloseFeaturedPreview}
+          />
+          <img
+            className="background-preview-image"
+            src={BackgroundUtil.getFeaturedOriginalUrl(
+              previewFeatured,
+              props.isAuthed
+            )}
+            alt={BackgroundUtil.getFeaturedBackgroundId(previewFeatured)}
+            onClick={(e) => e.stopPropagation()}
+          />
+          {renderFeaturedPreviewActions(previewFeatured)}
+        </div>
+      )}
+    </>
+  );
+};
 
 export default BackgroundSetting;
