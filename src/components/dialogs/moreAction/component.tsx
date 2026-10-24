@@ -21,6 +21,7 @@ import {
   getPdfPassword,
   getStorageLocation,
   getTextRules,
+  isFixedLayoutBook,
 } from "../../../utils/common";
 import { BookHelper } from "../../../assets/lib/kookit.min";
 import {
@@ -327,7 +328,10 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
               className="action-dialog-edit"
               style={{ paddingLeft: "0px" }}
               onClick={() => {
-                if (this.props.currentBook.format === "PDF") {
+                if (
+                  this.props.currentBook.format === "PDF" ||
+                  isFixedLayoutBook(this.props.currentBook)
+                ) {
                   toast(this.props.t("Not supported yet"));
                   return;
                 }

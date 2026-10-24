@@ -7,6 +7,7 @@ import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
 import {
   detectLocalLanguage,
   getFullTranslationTarget,
+  isFixedLayoutComic,
   isRateLimitedResult,
   isReadingRawPDF,
 } from "../../utils/common";
@@ -310,7 +311,10 @@ class PageWidget extends React.Component<PageWidgetProps, PageWidgetState> {
     if (!pageInfo) {
       return;
     }
-    if (isReadingRawPDF(this.props.currentBook)) {
+    if (
+      isReadingRawPDF(this.props.currentBook) ||
+      isFixedLayoutComic(this.props.currentBook)
+    ) {
       this.setState({
         prevPage: pageInfo.currentPage,
         nextPage: pageInfo.currentPage + 1,
