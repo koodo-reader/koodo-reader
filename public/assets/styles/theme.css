@@ -281,10 +281,6 @@ a {
   background-color: currentColor;
 }
 
-.setting-panel-tab.active {
-  color: inherit;
-}
-
 .book-item-image,
 .book-item-cover,
 .book-cover,
