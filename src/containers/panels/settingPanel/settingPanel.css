@@ -77,6 +77,7 @@
   overflow-x: hidden;
   box-sizing: border-box;
   padding-top: 5px;
+  padding-bottom: 20px;
   animation: setting-panel-fade 0.15s ease-in-out 0s 1;
 
   /* display: none; */
