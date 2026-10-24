@@ -11,7 +11,6 @@ import Book from "../models/Book";
 import BookUtil from "./file/bookUtil";
 import * as Kookit from "../assets/lib/kookit.min";
 import DatabaseService from "./storage/databaseService";
-import packageJson from "../../package.json";
 import toast from "react-hot-toast";
 import i18n from "../i18n";
 import {
@@ -1263,7 +1262,7 @@ export const showDownloadProgress = (
   return timer;
 };
 export const showTaskProgress = async (
-  handleSyncStateChange: (isSync: boolean) => void
+  _handleSyncStateChange: (isSync: boolean) => void
 ) => {
   let config = {};
   let timer: any;
@@ -1717,12 +1716,10 @@ export const findLastMatchIndex = (a: string[], b: string[]) => {
 
   for (let i = 0; i < b.length; i++) {
     // 从当前 aIndex 开始在 a 中查找 b[i]
-    let found = false;
     for (let j = aIndex; j < a.length; j++) {
       if (a[j].trim() === b[i].trim()) {
         lastMatchIndex = j;
         aIndex = j + 1;
-        found = true;
         break;
       }
     }

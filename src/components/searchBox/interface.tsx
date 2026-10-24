@@ -9,7 +9,7 @@ export interface SearchBoxProps {
   width: string;
   height: string;
   htmlBook: htmlBookModel;
-  shelfTitle: string;
+
   handleSearchResults: (results: number[]) => void;
   handleSearch: (isSearch: boolean) => void;
   handleNavSearchState: (state: string) => void;

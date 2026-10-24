@@ -82,7 +82,7 @@ class SliderList extends React.Component<SliderListProps, SliderListState> {
     }
   };
 
-  handleRest = async (mode) => {
+  handleRest = async (_mode) => {
     this.props.renderBookFunc();
   };
   onValueChange = (event: any, mode: string, fromPercent: boolean = false) => {

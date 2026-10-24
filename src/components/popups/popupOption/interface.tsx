@@ -3,8 +3,8 @@ import HtmlBook from "../../../models/HtmlBook";
 import { HighlightValue } from "../../../utils/common";
 export interface PopupOptionProps {
   currentBook: BookModel;
-  selection: string;
-  popupOptionUpdateIndex: number;
+
+
 
   highlight: HighlightValue;
   noteKey: string;
@@ -24,6 +24,6 @@ export interface PopupOptionProps {
   handleOriginalText: (originalText: string) => void;
   handleOriginalSentence: (originalSentence: string) => void;
   handleQuoteText: (quoteText: string) => void;
-  handleChangeDirection: (isChangeDirection: boolean) => void;
+
   t: (title: string) => string;
 }

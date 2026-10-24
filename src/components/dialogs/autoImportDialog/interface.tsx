@@ -1,7 +1,7 @@
 import { RouteComponentProps } from "react-router-dom";
 
 export interface AutoImportDialogProps extends RouteComponentProps<any> {
-  books: any[];
+
   handleAutoImportDialog: (isOpen: boolean) => void;
   handleFetchBooks: () => void;
   importBookFunc: (file: any) => Promise<void>;

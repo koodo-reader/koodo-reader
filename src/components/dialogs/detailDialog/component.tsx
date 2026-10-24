@@ -48,7 +48,7 @@ class DetailDialog extends React.Component<
   };
   render() {
     const renderShelfLocation = (shelfLocation: string[]) => {
-      return shelfLocation.map((item: any, index: number) => {
+      return shelfLocation.map((item: any) => {
         return (
           <li
             key={item}

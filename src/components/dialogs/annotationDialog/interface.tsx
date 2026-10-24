@@ -1,5 +1,5 @@
 export interface AnnotationDialogProps {
-  isAnnotationOpen: boolean;
+
   isSettingLocked: boolean;
   isDockedRight: boolean;
   handleAnnotationDialog: (isAnnotationOpen: boolean) => void;

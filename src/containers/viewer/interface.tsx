@@ -22,16 +22,16 @@ export interface ViewerProps {
   isMergeWord: boolean;
   isShowPageBorder: boolean;
   textOrientation: string;
-  defaultSyncOption: string;
+
   scale: string;
   isFitPage: boolean;
   margin: string;
   handleRenderBookFunc: (renderBookFunc: () => void) => void;
-  renderNoteFunc: () => void;
-  handleFetchAuthed: () => void;
+
+
   t: (title: string) => string;
   handleReadingState: (isReading: boolean) => void;
-  handleReadingBook: (book: BookModel) => void;
+
   handleHtmlBook: (htmlBook: HtmlBook | null) => void;
   handleLeaveReader: (position: string) => void;
   handleEnterReader: (position: string) => void;
@@ -42,11 +42,11 @@ export interface ViewerProps {
   handleNoteKey: (key: string) => void;
   handleOpenMenu: (isOpenMenu: boolean) => void;
   handleMenuMode: (menu: string) => void;
-  handleReaderMode: (readerMode: string) => void;
+
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
-  handlePercentage: (percentage: number) => void;
-  handleFetchPercentage: (book: BookModel) => void;
+
+
   handleScale: (scale: string) => void;
   renderBookFunc: () => void;
   handleBackgroundColor: (color: string) => void;

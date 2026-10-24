@@ -14,7 +14,6 @@ import { generateSnapshot } from "../../utils/file/backup";
 import { isElectron } from "react-device-detect";
 import {
   getCloudConfig,
-  removeCloudConfig,
   upgradeConfig,
   upgradeStorage,
 } from "../../utils/file/common";
@@ -107,9 +106,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         console.error("upgrade failed");
       }
 
-      this.readingFinishedHandler = async (config: any) => {
-        this.handleFinishReading();
-      };
+    this.readingFinishedHandler = async () => {
+      this.handleFinishReading();
+    };
       ipcRenderer.on("reading-finished", this.readingFinishedHandler);
       ipcRenderer.on("open-book-from-link", async (config: any) => {
         const book = await DatabaseService.getRecord(config.bookKey, "books");
@@ -166,7 +165,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       }
     }
     this.props.handleCloudSyncFunc(this.handleCloudSync);
-    document.addEventListener("visibilitychange", async (event) => {
+    document.addEventListener("visibilitychange", async () => {
       if (
         document.visibilityState === "visible" &&
         !isElectron &&

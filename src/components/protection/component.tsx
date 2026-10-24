@@ -25,7 +25,6 @@ interface ProtectionOverlayState {
 let _hasCheckedOnStartup = false;
 
 class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
-  private pinResolve: ((pin: string) => void) | null = null;
 
   constructor(props: {}) {
     super(props);
@@ -97,12 +96,6 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
     this.setState({
       isAuthenticating: false,
       biometricError: getBiometricErrorMessage(result.code, i18n.t.bind(i18n)),
-    });
-  };
-
-  waitForPin = (): Promise<string> => {
-    return new Promise((resolve) => {
-      this.pinResolve = resolve;
     });
   };
 

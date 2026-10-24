@@ -17,9 +17,6 @@ export function handleImportBookFunc(importBookFunc: () => void) {
 export function handleCloudSyncFunc(cloudSyncFunc: () => void) {
   return { type: "HANDLE_CLOUD_SYNC_FUNC", payload: cloudSyncFunc };
 }
-export function handleRenderNoteFunc(renderNoteFunc: () => void) {
-  return { type: "HANDLE_RENDER_NOTE_FUNC", payload: renderNoteFunc };
-}
 export function handleActionDialog(mode: boolean) {
   return { type: "HANDLE_ACTION_DIALOG", payload: mode };
 }

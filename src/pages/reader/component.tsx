@@ -2,7 +2,7 @@ import React from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
-import { Toaster, toast } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
 import { ReaderProps, ReaderState } from "./interface";
 import {
@@ -139,7 +139,7 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
       }));
     }, 60000);
 
-    window.addEventListener("beforeunload", function (event) {
+    window.addEventListener("beforeunload", function () {
       if (!isElectron) {
         ConfigService.setReaderConfig("isFinishWebReading", "yes");
       }

@@ -11,8 +11,8 @@ export interface ConvertDialogProps {
   handleConvertDialog: (isAboutOpen: boolean) => void;
   isAuthed: boolean;
   t: (title: string) => string;
-  isSettingLocked: boolean;
-  isDockedRight: boolean;
+
+
 }
 export interface ConvertDialogState {
 

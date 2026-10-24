@@ -14,23 +14,6 @@ import {
 } from "./interface";
 import { supportedFormats } from "../../../utils/common";
 
-const BUILT_IN_CATALOGS: OPDSCatalog[] = [
-  {
-    id: "project-gutenberg",
-    title: "Project Gutenberg",
-    url: "https://www.gutenberg.org/ebooks.opds/",
-    isBuiltIn: true,
-    isElectronicOnly: false,
-  },
-  {
-    id: "manybooks",
-    title: "ManyBooks",
-    url: "https://manybooks.net/opds/index.php",
-    isBuiltIn: true,
-    isElectronicOnly: true,
-  },
-];
-
 const DOWNLOAD_TYPES: Record<string, string> = {
   "application/epub+zip": "epub",
   "application/epub": "epub",

@@ -33,7 +33,7 @@ class NoteList extends React.Component<NoteListProps, NoteListState> {
   }
   async UNSAFE_componentWillReceiveProps(
     nextProps: Readonly<NoteListProps>,
-    nextContext: any
+    _nextContext: any
   ) {
     if (
       nextProps.notes !== this.props.notes ||

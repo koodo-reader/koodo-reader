@@ -4,9 +4,9 @@ export interface ContentListProps {
   currentBook: BookModel;
   currentChapter: string;
   currentChapterIndex: number;
-  chapters: any;
+
   htmlBook: HtmlBookModel;
-  renderBookFunc: (id: string) => void;
+
   handleCurrentChapter: (currentChapter: string) => void;
   handleCurrentChapterIndex: (currentChapterIndex: number) => void;
   handleJumpPosition: (jumpPosition: object | null) => void;

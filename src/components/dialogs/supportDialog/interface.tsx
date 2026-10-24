@@ -3,7 +3,7 @@ export interface SupportDialogProps {
   isAuthed: boolean;
   t: (title: string) => string;
   handleShowSupport: (isShowSupport: boolean) => void;
-  handleNewWarning: (isNewWarning: boolean) => void;
+
   handleFetchAuthed: () => void;
   handleLoginOptionList: (
     loginOptionList: { email: string; provider: string }[]

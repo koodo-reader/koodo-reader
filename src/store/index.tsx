@@ -13,7 +13,6 @@ import NoteModel from "../models/Note";
 import BookmarkModel from "../models/Bookmark";
 import HtmlBookModel from "../models/HtmlBook";
 import PluginModel from "../models/Plugin";
-import CollectionModel from "../models/Collection";
 import { HighlightValue } from "../utils/common";
 const rootReducer = combineReducers({
   book,

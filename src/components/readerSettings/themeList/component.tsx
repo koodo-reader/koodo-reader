@@ -1,6 +1,5 @@
 import React from "react";
 import { backgroundList, textList } from "../../../constants/themeList";
-import StyleUtil from "../../../utils/reader/styleUtil";
 import "./themeList.css";
 import { Trans } from "react-i18next";
 import { ThemeListProps, ThemeListState } from "./interface";

@@ -2,7 +2,7 @@ import BookModel from "../../models/Book";
 import HtmlBookModel from "../../models/HtmlBook";
 export interface ReaderProps {
   currentBook: BookModel;
-  percentage: number;
+
   t: (title: string) => string;
   htmlBook: HtmlBookModel;
   isNavLocked: boolean;
@@ -16,14 +16,14 @@ export interface ReaderProps {
   isSpeechOpen: boolean;
   isAnnotationOpen: boolean;
   isOpenPopupOptionDialog: boolean;
-  isSearch: boolean;
-  isAuthed: boolean;
+
+
   isSettingOpen: boolean;
   readerMode: string;
-  scale: string;
-  isFitPage: boolean;
-  handleFitPage: (isFitPage: boolean) => void;
-  handleFetchNotes: () => void;
+
+
+
+
   handleReaderMode: (readerMode: string) => void;
   handleConvertDialog: (isConvertOpen: boolean) => void;
   handleScalePageDialog: (isScaleOpen: boolean) => void;
@@ -37,11 +37,11 @@ export interface ReaderProps {
   handleFetchBooks: () => void;
   handleBackgroundColor: (backgroundColor: string) => void;
   handleOpenMenu: (isOpen: boolean) => void;
-  handleFetchBookmarks: () => void;
+
   handleFetchPercentage: (currentBook: BookModel) => void;
   handleReadingBook: (book: BookModel) => void;
-  handleScale: (scale: string) => void;
-  renderBookFunc: () => void;
+
+
   handleFetchAuthed: () => void;
   handleFetchUserInfo: () => Promise<any>;
 }

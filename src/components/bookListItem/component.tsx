@@ -5,7 +5,6 @@ import { Trans } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import EmptyCover from "../emptyCover";
 import ActionDialog from "../dialogs/actionDialog";
-import toast from "react-hot-toast";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useBookItem } from "../bookItem/useBookItem";
 import { getFileNameWithoutExtension } from "../../utils/common";
@@ -23,7 +22,6 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
     setLeft,
     top,
     setTop,
-    direction,
     setDirection,
     isHover,
     setIsHover,
@@ -41,7 +39,6 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
     getPercentage,
     isFavoriteBook,
     isTopBook,
-    setIsFavorite,
   } = useBookItem(props);
 
   const handleMoreAction = (event: any) => {

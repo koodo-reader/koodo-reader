@@ -1,18 +1,18 @@
 import { RouteComponentProps } from "react-router-dom";
 import Book from "../../models/Book";
 export interface HeaderProps extends RouteComponentProps<any> {
-  isSearch: boolean;
+
   isSortDisplay: boolean;
-  isAboutOpen: boolean;
+
   isCollapsed: boolean;
-  isNewWarning: boolean;
-  isLoadMore: boolean;
+
+
   isAuthed: boolean;
   currentBook: Book;
   defaultSyncOption: string;
   mode: string;
   userInfo: any;
-  bookSortCode: { sort: number; order: number };
+
   importBookFunc: (file: any) => Promise<void>;
   handleSortDisplay: (isSortDisplay: boolean) => void;
   handleSetting: (isSettingOpen: boolean) => void;
@@ -24,7 +24,7 @@ export interface HeaderProps extends RouteComponentProps<any> {
   handleFetchUserInfo: () => Promise<any>;
   handleSettingMode: (settingMode: string) => void;
   handleFetchDefaultSyncOption: () => void;
-  handleFetchLoginOptionList: () => void;
+
   handleFetchDataSourceList: () => void;
   handleDrag: (isDrag: boolean) => void;
   handleFetchBooks: () => void;

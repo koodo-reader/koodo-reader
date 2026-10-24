@@ -13,13 +13,13 @@ export interface BookListProps extends RouteComponentProps<any> {
   viewMode: string;
   selectedBooks: string[];
 
-  bookSortCode: { sort: number; order: number };
-  noteSortCode: { sort: number; order: number };
+
+
   handleAddDialog: (isShow: boolean) => void;
-  handleMode: (mode: string) => void;
+
   handleFetchBooks: () => void;
-  handleShelf: (shelfTitle: string) => void;
-  handleDeleteDialog: (isShow: boolean) => void;
+
+
   handleLoadMore: (isLoadMore: boolean) => void;
   t: (title: string) => string;
 }

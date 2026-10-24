@@ -12,7 +12,6 @@ import {
   handleContextMenu,
   openInBrowser,
 } from "../../../utils/common";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { handleClearToken, handleExitApp } from "../../../utils/request/common";
 import {
