@@ -19,6 +19,7 @@ const mapStateToProps = (state: stateType) => {
     isOpenActionDialog: state.book.isOpenActionDialog,
     currentBook: state.book.currentBook,
     isSelectBook: state.manager.isSelectBook,
+    selectedBooks: state.manager.selectedBooks,
     refreshBookKey: state.manager.refreshBookKey,
   };
 };

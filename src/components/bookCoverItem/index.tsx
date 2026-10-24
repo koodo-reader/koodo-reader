@@ -20,6 +20,7 @@ const mapStateToProps = (state: stateType) => {
     isCollapsed: state.sidebar.isCollapsed,
     currentBook: state.book.currentBook,
     isSelectBook: state.manager.isSelectBook,
+    selectedBooks: state.manager.selectedBooks,
     refreshBookKey: state.manager.refreshBookKey,
   };
 };

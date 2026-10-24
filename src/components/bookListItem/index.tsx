@@ -19,7 +19,9 @@ const mapStateToProps = (state: stateType) => {
     currentBook: state.book.currentBook,
     isSelectBook: state.manager.isSelectBook,
     isOpenActionDialog: state.book.isOpenActionDialog,
+    selectedBooks: state.manager.selectedBooks,
     refreshBookKey: state.manager.refreshBookKey,
+    percentage: state.progressPanel.percentage,
   };
 };
 const actionCreator = {
