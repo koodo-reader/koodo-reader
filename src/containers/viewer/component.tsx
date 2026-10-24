@@ -34,6 +34,7 @@ import {
   getTextRules,
   getZipBuffer,
   getZipEntries,
+  isFixedLayoutComic,
   isPaginatedBook,
   isReadingAidMode,
   isReadingRawPDF,
@@ -261,6 +262,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
     let result;
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, "zip", path);
+    if (isFixedLayoutComic(this.props.currentBook)) {
+      isCacheExsit = false;
+    }
     if (
       isElectron &&
       (this.props.currentBook.format === "CBZ" ||
@@ -300,6 +304,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       result,
       {
         format: isCacheExsit ? "CACHE" : format,
+        isFixedLayout: isFixedLayoutComic(this.props.currentBook)
+          ? "yes"
+          : "no",
         readerMode: this.props.readerMode,
         charset: this.props.currentBook.charset,
         animation: ConfigService.getReaderConfig("animation") || "none",

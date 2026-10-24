@@ -731,7 +731,7 @@ export function removeSearchParams() {
 export const preCacheAllBooks = async (bookList: Book[]) => {
   for (let index = 0; index < bookList.length; index++) {
     const selectedBook = bookList[index];
-    if (selectedBook.format === "PDF") {
+    if (selectedBook.format === "PDF" || isFixedLayoutBook(selectedBook)) {
       continue;
     }
     if (
@@ -2344,6 +2344,15 @@ export const isReadingRawPDF = (book: Book) => {
     !ConfigService.getAllListConfig("convertPDFBooks").includes(book.key)
   );
 };
+export const isFixedLayoutComic = (book: Book) => {
+  return (
+    (book.format === "EPUB" ||
+      book.format === "MOBI" ||
+      book.format === "AZW3" ||
+      book.format === "AZW") &&
+    book.layout === "pre-paginated"
+  );
+};
 // PDF（原始版式）、漫画（CB 系列）、PPTX/PPT、XPS、OXPS、DjVu、OFD 共用多 iframe 分页结构
 export const isPaginatedBook = (book: Book) => {
   return (
@@ -2355,7 +2364,8 @@ export const isPaginatedBook = (book: Book) => {
     book.format === "OXPS" ||
     book.format === "DJVU" ||
     book.format === "DJV" ||
-    book.format === "OFD"
+    book.format === "OFD" ||
+    isFixedLayoutComic(book)
   );
 };
 // PPTX/PPT/XPS/OXPS/DjVu/OFD 复用漫画结构渲染，暂不支持笔记和高亮
@@ -2367,7 +2377,8 @@ export const isFixedLayoutBook = (book: Book) => {
     book.format === "OXPS" ||
     book.format === "DJVU" ||
     book.format === "DJV" ||
-    book.format === "OFD"
+    book.format === "OFD" ||
+    isFixedLayoutComic(book)
   );
 };
 export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {

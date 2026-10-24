@@ -178,7 +178,8 @@
   gap: 6px;
 }
 .detail-metadata-value {
-  flex: 1;
+  flex: 0 1 auto;
+  min-width: 0;
   font-size: 13px;
   line-height: 16px;
   word-break: break-word;
