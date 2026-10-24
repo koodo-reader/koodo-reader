@@ -559,7 +559,7 @@ const createMainWin = () => {
   }
 
   const urlLocation = isDev
-    ? "http://localhost:3000"
+    ? "http://127.0.0.1:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
   // Handle deep link on cold start: wait for renderer to mount its IPC listeners

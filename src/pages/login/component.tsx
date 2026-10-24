@@ -32,6 +32,14 @@ import SettingDialog from "../../components/dialogs/settingDialog";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
 import { resetReaderRequest } from "../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../utils/request/thirdparty";
+import logoLogin from "../../assets/images/logo-login.png";
+import background1 from "../../assets/images/background1.png";
+import illustration1 from "../../assets/images/illustration1.png";
+import background2 from "../../assets/images/background2.png";
+import illustration2 from "../../assets/images/illustration2.png";
+import background3 from "../../assets/images/background3.png";
+import mobileQrZh from "../../assets/images/mobile-qr-zh.png";
+import mobileQr from "../../assets/images/mobile-qr.png";
 
 class Login extends React.Component<LoginProps, LoginState> {
   private lastLoginClickTime: number = 0;
@@ -174,21 +182,21 @@ class Login extends React.Component<LoginProps, LoginState> {
             >
               <div className="login-logo">
                 <img
-                  src={require("../../assets/images/logo-login.png")}
+                  src={logoLogin}
                   alt="logo"
                   className="login-logo-img"
                 />
               </div>
 
               <img
-                src={require("../../assets/images/background1.png")}
+                src={background1}
                 alt="cover"
                 className="login-cover-img"
               />
             </div>
             <div className="login-content-container">
               <img
-                src={require("../../assets/images/illustration1.png")}
+                src={illustration1}
                 alt="logo"
                 className="login-content-illustration"
               />
@@ -233,21 +241,21 @@ class Login extends React.Component<LoginProps, LoginState> {
             >
               <div className="login-logo">
                 <img
-                  src={require("../../assets/images/logo-login.png")}
+                  src={logoLogin}
                   alt="logo"
                   className="login-logo-img"
                 />
               </div>
 
               <img
-                src={require("../../assets/images/background2.png")}
+                src={background2}
                 alt="cover"
                 className="login-cover-img"
               />
             </div>
             <div className="login-content-container">
               <img
-                src={require("../../assets/images/illustration2.png")}
+                src={illustration2}
                 alt="logo"
                 className="login-content-illustration"
                 style={{
@@ -309,14 +317,14 @@ class Login extends React.Component<LoginProps, LoginState> {
             >
               <div className="login-logo">
                 <img
-                  src={require("../../assets/images/logo-login.png")}
+                  src={logoLogin}
                   alt="logo"
                   className="login-logo-img"
                 />
               </div>
 
               <img
-                src={require("../../assets/images/background3.png")}
+                src={background3}
                 alt="cover"
                 className="login-cover-img"
               />
@@ -461,14 +469,14 @@ class Login extends React.Component<LoginProps, LoginState> {
             >
               <div className="login-logo">
                 <img
-                  src={require("../../assets/images/logo-login.png")}
+                  src={logoLogin}
                   alt="logo"
                   className="login-logo-img"
                 />
               </div>
 
               <img
-                src={require("../../assets/images/background3.png")}
+                src={background3}
                 alt="cover"
                 className="login-cover-img"
               />
@@ -597,14 +605,14 @@ class Login extends React.Component<LoginProps, LoginState> {
             >
               <div className="login-logo">
                 <img
-                  src={require("../../assets/images/logo-login.png")}
+                  src={logoLogin}
                   alt="logo"
                   className="login-logo-img"
                 />
               </div>
 
               <img
-                src={require("../../assets/images/background3.png")}
+                src={background3}
                 alt="cover"
                 className="login-cover-img"
               />
@@ -623,8 +631,8 @@ class Login extends React.Component<LoginProps, LoginState> {
                   src={
                     ConfigService.getReaderConfig("lang") &&
                     ConfigService.getReaderConfig("lang").startsWith("zh")
-                      ? require("../../assets/images/mobile-qr-zh.png")
-                      : require("../../assets/images/mobile-qr.png")
+                      ? mobileQrZh
+                      : mobileQr
                   }
                   alt="logo"
                   className="login-mobile-qr"
@@ -663,14 +671,14 @@ class Login extends React.Component<LoginProps, LoginState> {
             >
               <div className="login-logo">
                 <img
-                  src={require("../../assets/images/logo-login.png")}
+                  src={logoLogin}
                   alt="logo"
                   className="login-logo-img"
                 />
               </div>
 
               <img
-                src={require("../../assets/images/background3.png")}
+                src={background3}
                 alt="cover"
                 className="login-cover-img"
               />
