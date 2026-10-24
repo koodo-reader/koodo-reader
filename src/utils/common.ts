@@ -992,6 +992,12 @@ export const formatTimestamp = (timestamp) => {
   // return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   return date.toLocaleDateString();
 };
+export const formatDateToDay = (value?: string): string => {
+  if (!value) return "";
+  const match = String(value).match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+  if (!match) return String(value);
+  return `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}`;
+};
 export const checkMissingBook = async () => {
   if (!isElectron) return;
   var fs = window.electronAPI.fs;

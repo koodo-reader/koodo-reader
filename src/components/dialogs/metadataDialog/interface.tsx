@@ -16,6 +16,14 @@ export interface MetadataResult {
   description?: string;
   publishedDate?: string;
   cover?: string;
+  published?: string;
+  modified?: string;
+  identifier?: string;
+  language?: string;
+  subject?: string;
+  rights?: string;
+  isbn?: string;
+  layout?: string;
 }
 
 export interface CloudBookItem {

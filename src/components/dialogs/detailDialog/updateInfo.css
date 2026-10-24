@@ -143,6 +143,31 @@
   max-width: 60px;
   height: 60px;
 }
+.detail-metadata-section {
+  width: 100%;
+}
+.detail-metadata-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 12px;
+  width: 90%;
+  margin-left: 5%;
+  margin-top: 5px;
+}
+.detail-metadata-item {
+  min-width: 0;
+}
+.detail-metadata-label {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-bottom: 2px;
+}
+.detail-metadata-value {
+  font-size: 13px;
+  line-height: 16px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
 
 .detail-dialog-book-divider {
   height: 60px;

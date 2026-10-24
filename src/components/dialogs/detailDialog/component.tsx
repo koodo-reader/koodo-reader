@@ -7,6 +7,7 @@ import DOMPurify from "dompurify";
 import EmptyCover from "../../emptyCover";
 import CoverUtil from "../../../utils/file/coverUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { formatDateToDay, formatTimestamp } from "../../../utils/common";
 class DetailDialog extends React.Component<
   DetailDialogProps,
   DetailDialogState
@@ -63,6 +64,22 @@ class DetailDialog extends React.Component<
         );
       });
     };
+    const metadataFields: { label: string; value: string }[] = [
+      {
+        label: "Published date",
+        value: formatDateToDay(this.props.currentBook.published),
+      },
+      {
+        label: "Modified date",
+        value: formatDateToDay(this.props.currentBook.modified),
+      },
+      { label: "Identifier", value: this.props.currentBook.identifier },
+      { label: "Language", value: this.props.currentBook.language },
+      { label: "Subject", value: this.props.currentBook.subject },
+      { label: "Rights", value: this.props.currentBook.rights },
+      { label: "ISBN", value: this.props.currentBook.isbn },
+      { label: "Layout", value: this.props.currentBook.layout },
+    ].filter((item) => item.value);
     return (
       <div className="download-desk-container">
         <div
@@ -143,9 +160,7 @@ class DetailDialog extends React.Component<
               </p>
               <p className="detail-sub-content-container">
                 <p className="detail-sub-content">
-                  {new Date(parseInt(this.props.currentBook.key))
-                    .toLocaleString()
-                    .replace(/:\d{1,2}$/, " ")}
+                  {formatTimestamp(parseInt(this.props.currentBook.key))}
                 </p>
               </p>
             </p>
@@ -164,6 +179,25 @@ class DetailDialog extends React.Component<
               </p>
             </p>
           </div>
+          {metadataFields.length > 0 && (
+            <div className="detail-metadata-section">
+              <p className="detail-dialog-book-desc">
+                <Trans>Metadata</Trans>:
+              </p>
+              <div className="detail-metadata-grid">
+                {metadataFields.map((item) => (
+                  <div className="detail-metadata-item" key={item.label}>
+                    <div className="detail-metadata-label">
+                      <Trans>{item.label}</Trans>
+                    </div>
+                    <div className="detail-metadata-value" title={item.value}>
+                      {item.value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {this.state.shelfLocation.length > 0 && (
             <div>
               <p className="detail-dialog-book-desc">
