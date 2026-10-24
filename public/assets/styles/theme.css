@@ -274,11 +274,15 @@ a {
 }
 
 .setting-panel-tabs {
-  border: 1.5px solid currentColor;
+  border: 1.5px solid var(--filled-bg);
 }
 
 .setting-panel-tabs-indicator {
-  background-color: currentColor;
+  background-color: var(--filled-bg);
+}
+
+.setting-panel-tab.active {
+  color: var(--on-filled);
 }
 
 .book-item-image,
