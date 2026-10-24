@@ -1,5 +1,4 @@
 const initState = {
-  selection: null,
   isOpenMenu: false,
   menuMode: "menu",
   isChangeDirection: false,
@@ -15,21 +14,10 @@ export function viewArea(
         ...state,
         isOpenMenu: action.payload,
       };
-    case "HANDLE_OPEN_HIGHLIGHT":
-      return {
-        ...state,
-        isOpenHighlight: action.payload,
-      };
-
     case "HANDLE_SHOW_BOOKMARK":
       return {
         ...state,
         isShowBookmark: action.payload,
-      };
-    case "HANDLE_SELECTION":
-      return {
-        ...state,
-        selection: action.payload,
       };
     case "HANDLE_DIALOG_LOCATION":
       return {

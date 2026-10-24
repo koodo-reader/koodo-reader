@@ -1,7 +1,6 @@
 import type {
   BuiltinPluginDefinition,
   BuiltinPluginMarketItem,
-  BuiltinPluginType,
 } from "./types";
 
 const builtinPluginCatalog: BuiltinPluginDefinition[] = [
@@ -6904,15 +6903,10 @@ const definitionsByKey = new Map(
   builtinPluginCatalog.map((definition) => [definition.key, definition])
 );
 
-export const getBuiltinPluginCatalog = () => builtinPluginCatalog;
-
 export const getBuiltinPluginDefinition = (key: string) =>
   definitionsByKey.get(key);
 
 export const isBuiltinPluginKey = (key: string) => definitionsByKey.has(key);
-
-export const isBuiltinPluginType = (key: string, type: BuiltinPluginType) =>
-  definitionsByKey.get(key)?.type === type;
 
 export const getBuiltinPluginMarket = (
   language: string
