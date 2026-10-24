@@ -64,19 +64,47 @@ class DetailDialog extends React.Component<
         );
       });
     };
-    const metadataFields: { label: string; value: string }[] = [
+    const fileSize = this.props.currentBook.size
+      ? this.props.currentBook.size / 1024 / 1024 > 1
+        ? parseFloat(this.props.currentBook.size / 1024 / 1024 + "").toFixed(
+            2
+          ) + "Mb"
+        : parseInt(this.props.currentBook.size / 1024 + "") + "Kb"
+      : "0Kb";
+    const infoFields: { label: string; value: string }[] = [
+      {
+        label: "Publisher",
+        value: this.props.currentBook.publisher || "-",
+      },
       {
         label: "Published date",
-        value: formatDateToDay(this.props.currentBook.published),
+        value: formatDateToDay(this.props.currentBook.published) || "-",
       },
       {
         label: "Modified date",
-        value: formatDateToDay(this.props.currentBook.modified),
+        value: formatDateToDay(this.props.currentBook.modified) || "-",
       },
+      {
+        label: "Language",
+        value: this.props.currentBook.language || "-",
+      },
+      {
+        label: "Rights",
+        value: this.props.currentBook.rights || "-",
+      },
+      { label: "File size", value: fileSize },
+      {
+        label: "Added on",
+        value: formatTimestamp(parseInt(this.props.currentBook.key)),
+      },
+      {
+        label: "Format",
+        value: this.props.currentBook.format || "-",
+      },
+    ];
+    const metadataFields: { label: string; value: string }[] = [
       { label: "Identifier", value: this.props.currentBook.identifier },
-      { label: "Language", value: this.props.currentBook.language },
       { label: "Subject", value: this.props.currentBook.subject },
-      { label: "Rights", value: this.props.currentBook.rights },
       { label: "ISBN", value: this.props.currentBook.isbn },
       { label: "Layout", value: this.props.currentBook.layout },
     ].filter((item) => item.value);
@@ -119,65 +147,16 @@ class DetailDialog extends React.Component<
           </p>
 
           <div className="detail-sub-info">
-            <p className="detail-dialog-book-publisher">
-              <p className="detail-sub-title">
-                <Trans>Publisher</Trans>
-              </p>
-              <p className="detail-sub-content-container">
-                <p className="detail-sub-content">
-                  {this.props.currentBook.publisher}
+            {infoFields.map((item) => (
+              <div className="detail-sub-info-item" key={item.label}>
+                <p className="detail-sub-title">
+                  <Trans>{item.label}</Trans>
                 </p>
-              </p>
-            </p>
-            <p
-              className="detail-dialog-book-divider"
-              style={{ backgroundColor: this.state.textColor }}
-            ></p>
-            <p className="detail-dialog-book-size">
-              <p className="detail-sub-title">
-                <Trans>File size</Trans>
-              </p>
-              <p className="detail-sub-content-container">
-                <p className="detail-sub-content">
-                  {this.props.currentBook.size
-                    ? this.props.currentBook.size / 1024 / 1024 > 1
-                      ? parseFloat(
-                          this.props.currentBook.size / 1024 / 1024 + ""
-                        ).toFixed(2) + "Mb"
-                      : parseInt(this.props.currentBook.size / 1024 + "") + "Kb"
-                    : // eslint-disable-next-line
-                      "0" + "Kb"}
+                <p className="detail-sub-content-container">
+                  <p className="detail-sub-content">{item.value}</p>
                 </p>
-              </p>
-            </p>
-            <p
-              className="detail-dialog-book-divider"
-              style={{ backgroundColor: this.state.textColor }}
-            ></p>
-            <p className="detail-dialog-book-added">
-              <p className="detail-sub-title">
-                <Trans>Added on</Trans>
-              </p>
-              <p className="detail-sub-content-container">
-                <p className="detail-sub-content">
-                  {formatTimestamp(parseInt(this.props.currentBook.key))}
-                </p>
-              </p>
-            </p>
-            <p
-              className="detail-dialog-book-divider"
-              style={{ backgroundColor: this.state.textColor }}
-            ></p>
-            <p className="detail-dialog-book-added">
-              <p className="detail-sub-title">
-                <Trans>Format</Trans>
-              </p>
-              <p className="detail-sub-content-container">
-                <p className="detail-sub-content">
-                  {this.props.currentBook.format}
-                </p>
-              </p>
-            </p>
+              </div>
+            ))}
           </div>
           {metadataFields.length > 0 && (
             <div className="detail-metadata-section">

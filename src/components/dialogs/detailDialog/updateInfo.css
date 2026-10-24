@@ -103,11 +103,21 @@
   line-height: 18px;
 }
 .detail-sub-info {
-  display: flex;
-  justify-content: space-around;
-  width: 90%;
-  margin-left: 5%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px 4px;
+  width: 94%;
+  margin-left: 3%;
   margin-top: 20px;
+}
+.detail-sub-info-item {
+  text-align: center;
+  line-height: 16px;
+  font-size: 13px;
+  min-width: 0;
+}
+.detail-sub-info-item .detail-sub-content-container {
+  height: 40px;
 }
 .detail-sub-title {
   font-size: 12px;
@@ -148,7 +158,7 @@
 }
 .detail-metadata-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 10px 12px;
   width: 90%;
   margin-left: 5%;
