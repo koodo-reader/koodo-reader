@@ -8,6 +8,9 @@ import EmptyCover from "../../emptyCover";
 import CoverUtil from "../../../utils/file/coverUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { formatDateToDay, formatTimestamp } from "../../../utils/common";
+import copy from "copy-text-to-clipboard";
+import toast from "react-hot-toast";
+import i18n from "../../../i18n";
 class DetailDialog extends React.Component<
   DetailDialogProps,
   DetailDialogState
@@ -169,8 +172,23 @@ class DetailDialog extends React.Component<
                     <div className="detail-metadata-label">
                       <Trans>{item.label}</Trans>
                     </div>
-                    <div className="detail-metadata-value" title={item.value}>
-                      {item.value}
+                    <div className="detail-metadata-value-row">
+                      <div className="detail-metadata-value" title={item.value}>
+                        {item.value}
+                      </div>
+                      {(item.label === "Identifier" ||
+                        item.label === "ISBN") && (
+                        <button
+                          className="detail-metadata-copy-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copy(item.value);
+                            toast(i18n.t("Copying successful"));
+                          }}
+                        >
+                          <span className="icon-copy"></span>
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
