@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { connect } from "../../../store/legacyConnect";
 import { handlePdfCropDialog } from "../../../store/actions";
 import { stateType } from "../../../store";
 import PdfCropDialog from "./component";

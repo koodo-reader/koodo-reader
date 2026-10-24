@@ -17,7 +17,7 @@ import {
   handleFetchUserInfo,
   handleBackgroundColor,
 } from "../../store/actions";
-import { connect } from "react-redux";
+import { connect } from "../../store/legacyConnect";
 import { stateType } from "../../store";
 import Reader from "./component";
 import { withTranslation } from "react-i18next";

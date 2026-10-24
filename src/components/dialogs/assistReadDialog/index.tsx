@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { connect } from "../../../store/legacyConnect";
 import { withTranslation } from "react-i18next";
 import AssistReadDialog from "./component";
 import { stateType } from "../../../store";

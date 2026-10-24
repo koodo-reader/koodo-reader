@@ -7,8 +7,8 @@ import {
   handleShelf,
   handleSortShelfDialog,
 } from "../../store/actions";
-import { handleFetchBooks } from "../../store/actions/manager";
-import { connect } from "react-redux";
+import { handleFetchBooks } from "../../store/actions";
+import { connect } from "../../store/legacyConnect";
 import { stateType } from "../../store";
 import { withTranslation } from "react-i18next";
 import Sidebar from "./component";

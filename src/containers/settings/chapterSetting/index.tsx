@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { connect } from "../../../store/legacyConnect";
 import ChapterSetting from "./component";
 import { withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";

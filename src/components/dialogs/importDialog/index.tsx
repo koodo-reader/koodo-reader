@@ -4,7 +4,7 @@ import {
   handleSettingMode,
   handleSettingDrive,
 } from "../../../store/actions";
-import { connect } from "react-redux";
+import { connect } from "../../../store/legacyConnect";
 import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";
 import ImportDialog from "./component";

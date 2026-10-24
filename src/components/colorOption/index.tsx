@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { connect } from "../../store/legacyConnect";
 import { handleHighlight } from "../../store/actions";
 import { stateType } from "../../store";
 import ColorOption from "./component";

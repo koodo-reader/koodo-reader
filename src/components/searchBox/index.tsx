@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { connect } from "../../store/legacyConnect";
 import { handleSearchResults, handleSearch } from "../../store/actions";
 import { stateType } from "../../store";
 import { withTranslation } from "react-i18next";

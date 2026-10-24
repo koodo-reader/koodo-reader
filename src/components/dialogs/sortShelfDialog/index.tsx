@@ -2,7 +2,7 @@ import {
   handleSortShelfDialog,
   handleShelf,
 } from "../../../store/actions";
-import { connect } from "react-redux";
+import { connect } from "../../../store/legacyConnect";
 import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";
 import SortShelfDialog from "./component";

@@ -3,9 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./assets/styles/reset.css";
 import "./assets/styles/global.css";
 import "./assets/styles/style.css";
-import { Provider } from "react-redux";
 import "./i18n";
-import store from "./store";
 import Router from "./router/index";
 import StyleUtil from "./utils/reader/styleUtil";
 import {
@@ -21,9 +19,5 @@ migrateConfig();
 applyCustomSystemCSS();
 applyAppBackgroundImage();
 const container = document.getElementById("root")!;
-createRoot(container).render(
-  <Provider store={store}>
-    <Router />
-  </Provider>
-);
+createRoot(container).render(<Router />);
 StyleUtil.applyTheme();

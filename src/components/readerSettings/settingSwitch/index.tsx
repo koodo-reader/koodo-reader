@@ -1,5 +1,5 @@
 import { withTranslation } from "react-i18next";
-import { connect } from "react-redux";
+import { connect } from "../../../store/legacyConnect";
 import SettingSwitch from "./component";
 import { stateType } from "../../../store";
 import {

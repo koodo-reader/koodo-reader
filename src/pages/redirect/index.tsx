@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { connect } from "../../store/legacyConnect";
 import "./manager.css";
 import { stateType } from "../../store";
 import { handleLoadingDialog } from "../../store/actions";

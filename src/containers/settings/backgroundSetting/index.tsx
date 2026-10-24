@@ -1,8 +1,8 @@
-import { connect } from "react-redux";
+import { connect } from "../../../store/legacyConnect";
 import BackgroundSetting from "./component";
 import { withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import { handleReaderBackgroundImage } from "../../../store/actions/reader";
+import { handleReaderBackgroundImage } from "../../../store/actions";
 import { stateType } from "../../../store";
 
 const mapStateToProps = (state: stateType) => {

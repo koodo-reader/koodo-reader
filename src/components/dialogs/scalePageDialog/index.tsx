@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { connect } from "../../../store/legacyConnect";
 import { stateType } from "../../../store";
 import { handleFitPage, handleScale, handleScalePageDialog } from "../../../store/actions";
 import ScalePageDialog from "./component";

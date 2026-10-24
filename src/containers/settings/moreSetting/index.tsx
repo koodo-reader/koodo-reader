@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { connect } from "../../../store/legacyConnect";
 import MoreSetting from "./component";
 import { withTranslation } from "react-i18next";
 import { stateType } from "../../../store";

@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import { connect } from "../../../store/legacyConnect";
 import { stateType } from "../../../store";
 import NoteList from "./component";
 import { handleFetchNotes } from "../../../store/actions";
