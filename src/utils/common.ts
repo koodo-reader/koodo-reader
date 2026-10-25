@@ -2275,7 +2275,9 @@ const readArchiveBuffer = async (
   }
   const fs = window.electronAPI.fs;
   const buf: Buffer = fs.readFileSync(extractedPath);
-  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+  const arrayBuffer = new ArrayBuffer(buf.byteLength);
+  new Uint8Array(arrayBuffer).set(buf);
+  return arrayBuffer;
 };
 export const getTarBuffer = async (
   entryPath: string,

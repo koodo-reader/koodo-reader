@@ -106,7 +106,9 @@ class FontUtil {
       const file = files.find((f) => f.startsWith(fontKey + "."));
       if (!file) return null;
       const buf: Buffer = fs.readFileSync(path.join(dir, file));
-      return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+      const arrayBuffer = new ArrayBuffer(buf.byteLength);
+      new Uint8Array(arrayBuffer).set(buf);
+      return arrayBuffer;
     }
 
     if (ConfigService.getItem("isUseLocal") === "yes") {
