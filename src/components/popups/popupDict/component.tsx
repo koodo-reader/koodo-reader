@@ -2,7 +2,6 @@ import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./popupDict.css";
-import { PopupDictProps, PopupDictState } from "./interface";
 import {
   ConfigService,
   KookitConfig,
@@ -36,6 +35,24 @@ import {
   isCustomRendererPlugin,
 } from "../../../utils/plugins/customPlugin";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface PopupDictProps {
+  isDockedRight: boolean;
+}
+
+export interface PopupDictState {
+  dictText: string;
+  word: string;
+  prototype: string;
+  dictService: string;
+  dictTarget: string;
+
+  isAddNew: boolean;
+
+  aiAnswer: string;
+  isAiWaiting: boolean;
+  isAiStreaming: boolean;
+}
 
 const PopupDict = (props: PopupDictProps) => {
   const originalText = useAppStore((s) => s.reader.originalText);

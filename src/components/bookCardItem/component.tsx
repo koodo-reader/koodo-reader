@@ -1,6 +1,5 @@
 import React from "react";
 import "./bookCardItem.css";
-import { BookCardProps } from "./interface";
 import ActionDialog from "../dialogs/actionDialog";
 import EmptyCover from "../emptyCover";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
@@ -12,6 +11,16 @@ import {
   CONTEXT_MENU_WIDTH,
 } from "../../utils/common";
 import { useAppStore } from "../../store/useAppStore";
+
+import BookModel from "../../models/Book";
+
+export interface BookCardProps {
+  book: BookModel;
+  isSelected?: boolean;
+  cardScale?: number;
+  allBooks?: BookModel[];
+  bookIndex?: number;
+}
 
 declare var window: any;
 

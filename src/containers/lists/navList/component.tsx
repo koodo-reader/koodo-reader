@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./navList.css";
 import { Trans } from "react-i18next";
-import { NavListProps, NavListState } from "./interface";
 import DeleteIcon from "../../../components/deleteIcon";
 import toast from "react-hot-toast";
 import {
@@ -16,6 +15,25 @@ import Book from "../../../models/Book";
 import Bookmark from "../../../models/Bookmark";
 import Note from "../../../models/Note";
 import { useAppStore } from "../../../store/useAppStore";
+
+import BookmarkModel from "../../../models/Bookmark";
+import NoteModel from "../../../models/Note";
+
+export interface NavListProps {
+  currentTab: string;
+}
+
+export interface NavListState {
+  deleteIndex: number;
+  currentData: (BookmarkModel | NoteModel)[];
+  isSearchOpen: boolean;
+  searchKeyword: string;
+  searchResults: (BookmarkModel | NoteModel)[];
+  isComposing: boolean;
+  isSortOpen: boolean;
+  sortCode: number;
+  orderCode: number;
+}
 
 interface NavPrevProps {
   currentTab: string;

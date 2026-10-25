@@ -5,12 +5,36 @@ import "./popupMenu.css";
 import PopupNote from "../popupNote";
 import PopupTrans from "../popupTrans";
 import PopupDict from "../popupDict";
-import { PopupBoxProps, PopupBoxStates } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import PopupAssist from "../popupAssist";
 import { isElectron } from "react-device-detect";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface PopupBoxProps {
+  rendition: any;
+  // cfiRange: any;
+  rect: any;
+
+  chapterDocIndex: number;
+  chapter: string;
+}
+
+export interface PopupBoxStates {
+  deleteKey: string;
+  rect: DOMRect | null;
+  isShowUrl: boolean;
+  popupWidth: number;
+  popupHeight: number;
+  popupLeft: number;
+  popupBottom: number;
+  isDragging: boolean;
+  dragStartX: number;
+  dragStartY: number;
+  isNearBottom: boolean;
+  isNearRight: boolean;
+  isDockedRight: boolean;
+}
 
 const SNAP_THRESHOLD_PX = 50;
 const RIGHT_SNAP_THRESHOLD_PX = 50;

@@ -1,17 +1,37 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./backgroundSetting.css";
-import {
-  SettingInfoProps,
-  SettingInfoState,
-  BackgroundImage,
-} from "./interface";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { applyAppBackgroundImage } from "../../../utils/reader/launchUtil";
 import BackgroundUtil from "../../../utils/file/backgroundUtil";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface BackgroundImage {
+  id: string;
+  name: string;
+  extension: string;
+  textColor?: string;
+  backgroundColor?: string;
+}
+
+export interface SettingInfoState {
+  images: BackgroundImage[];
+  /** loaded dataUrls keyed by image id */
+  loadedUrls: Record<string, string>;
+  previewImage: BackgroundImage | null;
+  /** featured background index currently in preview */
+  previewFeatured: number | null;
+  appBackgroundId: string;
+  readerBackgroundId: string;
+  isLoading: boolean;
+  /** featured indexes whose thumbnail has entered the viewport */
+  visibleFeatured: Set<number>;
+  /** id of the featured background being downloaded */
+  downloadingId: string;
+  downloadProgress: number;
+}
 
 const FEATURED_COUNT = 100;
 

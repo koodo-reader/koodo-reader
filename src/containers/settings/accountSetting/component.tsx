@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useRef, useState } from "react";
-import { SettingInfoProps, SettingInfoState } from "./interface";
+import { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
-import _ from "underscore";
 import toast from "react-hot-toast";
 import {
   formatTimestamp,
@@ -34,6 +32,17 @@ import { resetReaderRequest } from "../../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../../utils/request/thirdparty";
 import TokenService from "../../../utils/storage/tokenService";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface SettingInfoState {
+  isRedeemCode: boolean;
+  redeemCode: string;
+  loginConfig: any;
+  settingLogin: string;
+  showLoginOptions: boolean;
+  isSendingCode: boolean;
+  countdown: number;
+}
+
 declare var window: any;
 
 const AccountSetting = () => {

@@ -1,12 +1,22 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./contentList.css";
-import { ContentListProps, ContentListState } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { scrollContents } from "../../../utils/common";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import _ from "underscore";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface ContentListState {
+  chapters: any;
+
+  isExpandContent: boolean;
+  expandedItems: Set<string>;
+  isSearchOpen: boolean;
+  searchKeyword: string;
+  isComposing: boolean;
+  chapterPages: number[];
+}
 
 interface FlatChapterItem {
   item: any;

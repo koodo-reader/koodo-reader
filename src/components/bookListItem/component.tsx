@@ -1,6 +1,5 @@
 import React from "react";
 import "./bookListItem.css";
-import { BookItemProps } from "./interface";
 import { Trans } from "react-i18next";
 import EmptyCover from "../emptyCover";
 import ActionDialog from "../dialogs/actionDialog";
@@ -13,6 +12,15 @@ import {
   CONTEXT_MENU_WIDTH,
 } from "../../utils/common";
 import { useAppStore } from "../../store/useAppStore";
+
+import BookModel from "../../models/Book";
+
+export interface BookItemProps {
+  book: BookModel;
+  isSelected?: boolean;
+  allBooks?: BookModel[];
+  bookIndex?: number;
+}
 
 declare var window: any;
 

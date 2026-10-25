@@ -1,13 +1,22 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import "./deleteIcon.css";
-import { DeleteIconProps } from "./interface";
 import DeletePopup from "../dialogs/deletePopup";
 import toast from "react-hot-toast";
 import DatabaseService from "../../utils/storage/databaseService";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import ConfigUtil from "../../utils/file/configUtil";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface DeleteIconProps {
+  mode: string;
+  index: number;
+  tagName: string;
+  itemKey: string;
+  renderHighlighters: () => void;
+  handleShowDelete: (Deletekey: string) => void;
+  handleChangeTag: (index: number) => void;
+}
 
 const DeleteIcon = (props: DeleteIconProps) => {
   const htmlBook = useAppStore((s) => s.reader.htmlBook);

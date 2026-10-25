@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import { SettingSwitchProps } from "./interface";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
@@ -9,6 +8,10 @@ import { isReadingRawPDF } from "../../../utils/common";
 import BookUtil from "../../../utils/file/bookUtil";
 import SwitchRow from "../switchRow";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface SettingSwitchProps {
+  group?: string;
+}
 
 const SettingSwitch = (props: SettingSwitchProps) => {
   const currentBook = useAppStore((s) => s.book.currentBook);

@@ -52,7 +52,7 @@ const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
 
 ### Container 模式
 
-`index.tsx` 仅做 `export { default } from "./component";`；`component.tsx` 是函数组件，使用 hooks 读取状态、翻译和路由；`interface.tsx` 只保留自身 props。新增组件一律使用函数组件 + hooks，不要新增 `connect` / `withRouter` / `withTranslation`。
+`index.tsx` 仅做 `export { default } from "./component";`；`component.tsx` 是函数组件，使用 hooks 读取状态、翻译和路由；组件自身 Props / State 直接定义在 `component.tsx`，跨文件共享的类型放在同目录 `types.ts`。新增组件一律使用函数组件 + hooks，不要新增 `connect` / `withRouter` / `withTranslation`。
 
 ### 页面路由
 
@@ -107,7 +107,7 @@ yarn rebuild
 
 - **不要主动提交代码**：修改完代码后，只展示改动内容和说明，由用户自行决定是否提交。除非用户明确要求提交，否则不要执行 `git commit`、`git push` 等操作。
 - 用户可见文本必须使用 `react-i18next` 的 `useTranslation()` + `t("key")`，不得硬编码
-- TypeScript 避免 `any`，在 `interface.tsx` 中定义类型
+- TypeScript 避免 `any`；组件局部 Props / State 定义在 `component.tsx`，跨文件共享类型放在同目录 `types.ts`
 - 状态统一使用 `useAppStore` 字段级 selector；禁止新增 Redux / connect 相关代码
 - 翻译统一使用 `useTranslation`；路由统一使用 `useNavigate` / `useLocation`，禁止新增 `withTranslation` / `withRouter` HOC
 - 组件 CSS 必须在 `component.tsx` 或 `index.tsx` 中显式导入，不要依赖其他路由文件的副作用导入

@@ -2,7 +2,6 @@ import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./fontSetting.css";
-import { SettingInfoProps, SettingInfoState, InstalledFont } from "./interface";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
@@ -13,6 +12,25 @@ import FontUtil, {
 import { ChineseFonts, NonChineseFonts } from "../../../constants/fontConfig";
 import { applyCustomSystemFont } from "../../../utils/reader/launchUtil";
 import { useAppStore } from "../../../store/useAppStore";
+
+import { FontItem } from "../../../utils/file/fontUtil";
+
+export interface InstalledFont extends FontItem {
+  key: string;
+}
+
+export interface SettingInfoState {
+  fonts: InstalledFont[];
+  loadedUrls: Record<string, string>;
+  isLoading: boolean;
+  previewFont: InstalledFont | null;
+  previewLoading: boolean;
+  appFontKey: string;
+  readerFontKey: string;
+  expandedFamily: string;
+  downloadingId: string;
+  downloadProgress: number;
+}
 
 const FontSetting = () => {
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);

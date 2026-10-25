@@ -4,7 +4,6 @@ import "./operationPanel.css";
 import Bookmark from "../../../models/Bookmark";
 import { Trans } from "react-i18next";
 
-import { OperationPanelProps } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import TTSUtil from "../../../utils/reader/ttsUtil";
@@ -13,6 +12,12 @@ import { handleExitFullScreen, handleFullScreen } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import BookLocation from "../../../models/BookLocation";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface OperationPanelProps {
+  rendition: any;
+  currentDuration: number;
+}
+
 declare var window: any;
 
 const OperationPanel = (props: OperationPanelProps) => {

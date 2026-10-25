@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
-import { ReaderWindowState, WindowControlsProps } from "./interface";
 import "./windowControls.css";
+
+export interface WindowControlsProps {
+  t: (key: string) => string;
+}
+
+export interface ReaderWindowState {
+  isMaximized: boolean;
+  isFullScreen: boolean;
+}
+
 declare var window: any;
 
 const WindowControls = (props: WindowControlsProps) => {

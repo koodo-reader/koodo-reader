@@ -12,7 +12,6 @@ import LocalFileDialog from "../../components/dialogs/localFileDialog";
 import ImportDialog from "../../components/dialogs/importDialog";
 import OPDSDialog from "../../components/dialogs/opdsDialog";
 import AutoImportDialog from "../../components/dialogs/autoImportDialog";
-import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import { Route, Routes } from "react-router-dom";
@@ -36,6 +35,11 @@ import {
 import Footer from "../../components/footer";
 import ProtectionOverlay from "../../components/protection";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface ManagerState {
+  totalBooks: number;
+  isDrag: boolean;
+}
 
 const Manager = () => {
   const books = useAppStore((s) => s.manager.books);

@@ -1,9 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import { useState } from "react";
 import "./actionDialog.css";
 import { Trans } from "react-i18next";
-import { ActionDialogProps, ActionDialogState } from "./interface";
 import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import MoreAction from "../moreAction";
@@ -17,6 +16,25 @@ import {
   shouldSubmenuOpenLeft,
   vexComfirmAsync,
 } from "../../../utils/common";
+
+import BookModel from "../../../models/Book";
+
+export interface ActionDialogProps {
+  book: BookModel;
+
+  left: number;
+  top: number;
+
+  handleFetchBookmarks: () => void;
+  handleFetchNotes: () => void;
+}
+
+export interface ActionDialogState {
+  isShowExport: boolean;
+  isShowMark: boolean;
+
+  isExceed: boolean;
+}
 
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;

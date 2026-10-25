@@ -7,8 +7,6 @@ import BookListItem from "../../../components/bookListItem";
 import BookCoverItem from "../../../components/bookCoverItem";
 import CollectionItem from "../../../components/collectionItem";
 import BookModel from "../../../models/Book";
-import { BookListState } from "./interface";
-
 import {
   ConfigService,
   CollectionUtil,
@@ -22,6 +20,16 @@ import { isElectron } from "react-device-detect";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { throttle } from "../../../utils/common";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface BookListState {
+  favoriteBooks: number;
+  isHideShelfBook: boolean;
+  displayedBooksCount: number;
+  isLoadingMore: boolean;
+  fullBooksData: BookModel[];
+  cardScale: number;
+  readingStatusFilter: string;
+}
 
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;

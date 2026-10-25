@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
-import { SettingInfoProps, SettingInfoState } from "./interface";
+import { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import {
   clearAllData,
@@ -42,6 +41,28 @@ import {
 } from "../../../constants/settingList";
 import TokenService from "../../../utils/storage/tokenService";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface SettingInfoState {
+  storageLocation: string;
+  snapshotList: { file: string; time: number }[];
+  ttsCacheSize: string;
+  tempCacheSize: string;
+  exportNotesFormat: string;
+  exportHighlightsFormat: string;
+  exportWordsFormat: string;
+  isEnableDiscordRPC: boolean;
+  isEnableKoReaderSync: boolean;
+  isEnableNotionSync: boolean;
+  isEnableYuqueSync: boolean;
+  isEnableReadwiseSync: boolean;
+  isEnableMarkdownSync: boolean;
+  isEnableEudicSync: boolean;
+  isEnableAnkiSync: boolean;
+
+  isEnableSiYuanSync: boolean;
+  [key: string]: any;
+}
+
 declare var window: any;
 const DataSetting = () => {
   const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);

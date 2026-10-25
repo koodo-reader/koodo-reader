@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import "../actionDialog/actionDialog.css";
 import { Trans } from "react-i18next";
-import { MarkActionProps } from "./interface";
 import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import {
@@ -14,6 +13,15 @@ import {
   estimateMenuHeight,
   SUBMENU_GAP,
 } from "../../../utils/common";
+
+export interface MarkActionProps {
+  left: number;
+  top: number;
+  isShowMark: boolean;
+  isExceed: boolean;
+  menuItemIndex?: number;
+  handleMarkAction: (isShow: boolean) => void;
+}
 
 const collectionUtil = new CollectionUtil(ConfigService);
 

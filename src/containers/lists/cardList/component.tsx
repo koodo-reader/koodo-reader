@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import "./cardList.css";
 import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
-import { CardListProps } from "./interface";
 import { Navigate } from "react-router-dom";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
@@ -13,6 +12,12 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import Note from "../../../models/Note";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface CardListProps {
+  cards: NoteModel[];
+  mode: string;
+  bookNamesMap: { [key: string]: string };
+}
 
 const CardList = (props: CardListProps) => {
   const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);

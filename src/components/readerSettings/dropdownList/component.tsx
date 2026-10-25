@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
-import { DropdownListProps } from "./interface";
 import {
   ConfigService,
   KookitConfig,
@@ -12,6 +11,11 @@ import FontUtil from "../../../utils/file/fontUtil";
 import toast from "react-hot-toast";
 import { isReadingRawPDF } from "../../../utils/common";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface DropdownListProps {
+  group?: string;
+}
+
 declare var window: any;
 const DropdownList = (props: DropdownListProps) => {
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);

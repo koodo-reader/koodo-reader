@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import "./dictSetting.css";
-import { SettingInfoProps } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import DictUtil, {
@@ -11,6 +10,13 @@ import DictUtil, {
 import { getFileNameWithoutExtension } from "../../../utils/common";
 import { KookitConfig } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface SettingInfoState {
+  dicts: DictMeta[];
+  isLoading: boolean;
+  downloadingId: string;
+  downloadProgress: number;
+}
 
 const DictSetting = () => {
   const isAuthed = useAppStore((s) => s.manager.isAuthed);

@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./pageWidget.css";
-import { PageWidgetProps, PageWidgetState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { Trans } from "react-i18next";
 import { getBatchTrans, getWordDefinitions } from "../../utils/request/reader";
@@ -18,6 +17,16 @@ import DatabaseService from "../../utils/storage/databaseService";
 import Note from "../../models/Note";
 import ConfigUtil from "../../utils/file/configUtil";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface PageWidgetState {
+  isSingle: boolean;
+  prevPage: number;
+  nextPage: number;
+  currentTime: string;
+  percentage: string;
+  ignoreNextPageChange: boolean;
+}
+
 declare var window: any;
 
 type TransCache = Record<string, Record<string, string>>;

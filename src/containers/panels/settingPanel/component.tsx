@@ -7,7 +7,6 @@ import SliderList from "../../../components/readerSettings/sliderList";
 import DropdownList from "../../../components/readerSettings/dropdownList";
 import ModeControl from "../../../components/readerSettings/modeControl";
 import SettingSwitch from "../../../components/readerSettings/settingSwitch";
-import { SettingPanelProps } from "./interface";
 import { Trans } from "react-i18next";
 import {
   ConfigService,

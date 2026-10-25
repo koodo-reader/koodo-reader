@@ -1,11 +1,18 @@
 import "./colorOption.css";
-import { ColorProps } from "./interface";
 import {
   ConfigService,
   HighlightUtil,
   KookitConfig,
 } from "../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../store/useAppStore";
+
+import Note from "../../models/Note";
+
+export interface ColorProps {
+  noteItem?: Note;
+  isEdit: boolean;
+  handleDigest: () => void;
+}
 
 const highlightUtil: any = new HighlightUtil(ConfigService);
 

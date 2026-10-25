@@ -1,8 +1,7 @@
 import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Trans } from "react-i18next";
-import { MoreSettingProps, MoreSettingState } from "./interface";
 import toast from "react-hot-toast";
 import {
   clearProtection,
@@ -20,6 +19,23 @@ import i18n from "../../../i18n";
 import { isElectron } from "react-device-detect";
 import TokenService from "../../../utils/storage/tokenService";
 import SwitchRow from "../../../components/readerSettings/switchRow";
+
+export interface MoreSettingState {
+  protectionMethod: string;
+  biometricAvailable: boolean;
+  pinInputMode: "none" | "setup-enter" | "setup-confirm" | "verify";
+  pinValue: string;
+  pinFirstValue: string;
+  pinCallback: ((pin: string | false) => void) | null;
+  proxyEnabled: boolean;
+  proxyType: "none" | "http" | "socks5";
+  proxyHost: string;
+  proxyPort: string;
+  proxyUsername: string;
+  proxyPassword: string;
+  isTestingProxy: boolean;
+  proxyEditing: boolean;
+}
 
 const MoreSetting = () => {
   const { t } = useTranslation();

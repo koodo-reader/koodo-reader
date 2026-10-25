@@ -1,9 +1,6 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
-import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
-import _ from "underscore";
-
 import toast from "react-hot-toast";
 import {
   getWebsiteLang,
@@ -30,6 +27,15 @@ import {
 } from "../../../utils/plugins/customPlugin";
 import type { PluginConfig, PluginVoice } from "../../../utils/plugins/types";
 import { useAppStore } from "../../../store/useAppStore";
+
+import type { BuiltinPluginMarketItem } from "../../../utils/plugins/types";
+
+export interface SettingInfoState {
+  isAddNew: boolean;
+  availablePlugins: BuiltinPluginMarketItem[];
+  expandedPluginKey: string | null;
+  activePluginTab: string;
+}
 
 const manualVoiceListPluginKeys = new Set([
   "ttsserver-voice-plugin",

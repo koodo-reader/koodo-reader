@@ -1,7 +1,6 @@
 import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
-import React, { useRef, useState } from "react";
-import { SettingInfoProps, SettingInfoState, AIModelConfig } from "./interface";
+import { useState } from "react";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { handleContextMenu, vexTextareaAsync } from "../../../utils/common";
@@ -11,6 +10,37 @@ import {
   KookitConfig,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface AIModelConfig {
+  endpoint: string;
+  modelName: string;
+  modelId: string;
+  apiKey: string;
+  providerId: string;
+  providerName: string;
+}
+
+export interface SettingInfoState {
+  isAddNew: boolean;
+  isEditing: boolean;
+  editingKey: string;
+  selectedProvider: string;
+  selectedModel: string;
+  endpoint: string;
+  modelName: string;
+  modelId: string;
+  apiKey: string;
+  isTesting: boolean;
+  testResult: string;
+  fetchedModels: { id: string; name: string }[];
+  isFetchingModels: boolean;
+  aiTranslateModel: string;
+  aiDictModel: string;
+  aiAssistanceModel: string;
+  aiTranslatePrompt: string;
+  aiDictPrompt: string;
+  aiAssistancePrompt: string;
+}
 
 const AISetting = () => {
   const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);

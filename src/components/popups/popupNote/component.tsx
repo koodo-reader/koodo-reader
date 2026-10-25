@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import "./popupNote.css";
 import { isReadingRawPDF } from "../../../utils/common";
 import Note from "../../../models/Note";
-import { PopupNoteProps } from "./interface";
 import NoteTag from "../../noteTag";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -17,6 +16,13 @@ import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface PopupNoteProps {
+  isDockedRight: boolean;
+
+  chapterDocIndex: number;
+  chapter: string;
+}
 
 const highlightUtil: any = new HighlightUtil(ConfigService);
 

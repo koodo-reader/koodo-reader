@@ -2,7 +2,6 @@ import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import "./popupTrans.css";
-import { PopupTransProps, PopupTransState } from "./interface";
 import {
   ConfigService,
   KookitConfig,
@@ -21,6 +20,19 @@ import {
   isCustomRendererPlugin,
 } from "../../../utils/plugins/customPlugin";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface PopupTransProps {
+  isDockedRight: boolean;
+}
+
+export interface PopupTransState {
+  translatedText: string;
+  transService: string;
+  isAddNew: boolean;
+  isFinishOutput: boolean;
+  isAiWaiting: boolean;
+  originalText: string;
+}
 
 const PopupTrans = (props: PopupTransProps) => {
   const originalText = useAppStore((s) => s.reader.originalText);

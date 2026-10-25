@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import "./supportDialog.css";
-import { SupportDialogState } from "./interface";
 import { useAppStore } from "../../../store/useAppStore";
 import { Trans } from "react-i18next";
 import Lottie from "lottie-react";
@@ -23,6 +22,12 @@ import {
 } from "../../../utils/request/user";
 import TokenService from "../../../utils/storage/tokenService";
 import { proFeatures } from "../../../constants/loginList";
+
+export interface SupportDialogState {
+  isRedeemCode: boolean;
+  isExitPro: boolean;
+  redeemCode: string;
+}
 
 const SupportDialog = () => {
   const isAuthed = useAppStore((s) => s.manager.isAuthed);

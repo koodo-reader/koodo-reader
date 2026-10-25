@@ -8,7 +8,7 @@ import {
   MetadataDialogProps,
   MetadataResult,
   BookResultItem,
-} from "./interface";
+} from "./types";
 import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import copy from "copy-text-to-clipboard";

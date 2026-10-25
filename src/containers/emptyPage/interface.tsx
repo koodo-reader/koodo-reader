@@ -1,7 +1,0 @@
-
-export interface EmptyPageProps {
-
-
-
-
-}

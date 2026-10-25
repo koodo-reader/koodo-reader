@@ -1,5 +1,4 @@
 import "./modeControl.css";
-import { ModeControlProps } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook } from "../../../utils/common";
 import { Trans } from "react-i18next";

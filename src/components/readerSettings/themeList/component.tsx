@@ -1,9 +1,8 @@
 import { useTranslation } from "react-i18next";
-import React, { useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import { backgroundList, textList } from "../../../constants/themeList";
 import "./themeList.css";
 import { Trans } from "react-i18next";
-import { ThemeListProps, ThemeListState } from "./interface";
 import {
   ConfigService,
   KookitConfig,
@@ -12,6 +11,17 @@ import { HexColorPicker } from "react-colorful";
 import toast from "react-hot-toast";
 import { normalizePickerColor, parseColorInput } from "../../../utils/common";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface ThemeListState {
+  currentBackgroundIndex: number;
+  currentTextIndex: number;
+  isShowTextPicker: boolean;
+  isShowBgPicker: boolean;
+  bgColorInput: string;
+  textColorInput: string;
+  pendingBgColor: string;
+  pendingTextColor: string;
+}
 
 const ThemeList = () => {
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);

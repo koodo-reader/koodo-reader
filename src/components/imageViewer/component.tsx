@@ -1,8 +1,7 @@
 import { useLatest } from "../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./imageViewer.css";
-import { ImageViewerProps, ImageViewerStates } from "./interface";
 import { saveAs } from "file-saver";
 import { getIframeDoc } from "../../utils/reader/docUtil";
 import {
@@ -13,6 +12,24 @@ import {
 } from "../../utils/reader/shortcutUtil";
 import toast from "react-hot-toast";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface ImageViewerProps {
+  rendition: any;
+  isShow: boolean;
+  handleLeaveReader: (position: string) => void;
+  handleEnterReader: (position: string) => void;
+}
+
+export interface ImageViewerStates {
+  isShowImage: boolean;
+  imageRatio: string;
+  imageName: string;
+  zoomIndex: number;
+  rotateIndex: number;
+  imageList: string[];
+  currentIndex: number;
+}
+
 declare var window: any;
 declare var ClipboardItem: any;
 

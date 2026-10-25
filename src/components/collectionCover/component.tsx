@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./collectionCover.css";
-import { CollectionCoverItem, CollectionCoverProps } from "./interface";
 import DatabaseService from "../../utils/storage/databaseService";
 import CoverUtil from "../../utils/file/coverUtil";
 import EmptyCover from "../emptyCover";
+
+export interface CollectionCoverProps {
+  bookKeys: string[];
+  refreshBookKey: string;
+  width: number;
+  height: number;
+}
+
+export interface CollectionCoverItem {
+  cover: string;
+  title: string;
+  format: string;
+}
 
 const MAX_COVER_COUNT = 4;
 

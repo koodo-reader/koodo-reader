@@ -1,10 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { SettingInfoProps } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import { isElectron } from "react-device-detect";
-import _ from "underscore";
 import {
   generalSettingList,
   langList,
@@ -14,6 +12,33 @@ import {
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import SwitchRow from "../../../components/readerSettings/switchRow";
+
+export interface SettingInfoState {
+  isMergeWord: boolean;
+
+  isImportPath: boolean;
+
+  isDisableTrashBin: boolean;
+  isDeleteShelfBook: boolean;
+  isPreventSleep: boolean;
+  isAlwaysOnTop: boolean;
+  isAutoMaximizeWin: boolean;
+  isAutoLaunch: boolean;
+  isMinimizeToTray: boolean;
+  isOpenInMain: boolean;
+  isDisableUpdate: boolean;
+  isExportOriginalName: boolean;
+  isDisableAI: boolean;
+  isUseOriginalName: boolean;
+  isAIAnalyzeTitle: boolean;
+  isPrecacheBook: boolean;
+  isUseBuiltIn: boolean;
+  isDeleteOriginal: boolean;
+
+  isHideShelfBook: boolean;
+  isPreventAdd: boolean;
+  startupShelf: string;
+}
 
 declare var window: any;
 const GeneralSetting = () => {

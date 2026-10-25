@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { SettingInfoProps } from "./interface";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
@@ -8,6 +7,25 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readingSettingList } from "../../../constants/settingList";
 import SwitchRow from "../../../components/readerSettings/switchRow";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface SettingInfoState {
+  isTouch: boolean;
+  isPreventTrigger: boolean;
+  isMergeWord: boolean;
+  isOpenBook: boolean;
+  isDisablePopup: boolean;
+  isDisableAutoScroll: boolean;
+  isManualScroll: boolean;
+
+  isOpenInMain: boolean;
+
+  isOverwriteLink: boolean;
+  isOverwriteText: boolean;
+  isOverwriteBackground: boolean;
+  isAutoFullscreen: boolean;
+  isAutoMaximize: boolean;
+}
+
 declare var window: any;
 
 const ReadingSetting = () => {

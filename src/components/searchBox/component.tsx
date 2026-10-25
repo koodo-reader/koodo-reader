@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import "./searchBox.css";
-import { SearchBoxProps } from "./interface";
 import {
   ConfigService,
   CollectionUtil,
@@ -9,6 +8,16 @@ import {
 import ConfigUtil from "../../utils/file/configUtil";
 import BookUtil from "../../utils/file/bookUtil";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface SearchBoxProps {
+  isNavSearch?: boolean;
+  mode?: string;
+  width?: string;
+  height?: string;
+
+  handleNavSearchState?: (state: string) => void;
+  handleSearchList?: (searchList: any) => void;
+}
 
 const collectionUtil = new CollectionUtil(ConfigService);
 

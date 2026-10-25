@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import "./noteList.css";
-import { NoteListProps } from "./interface";
 import CardList from "../cardList";
 import NoteTag from "../../../components/noteTag";
 import Empty from "../../emptyPage";

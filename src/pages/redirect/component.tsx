@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./manager.css";
-import { RedirectProps } from "./interface";
 import { Trans } from "react-i18next";
 import { getParamsFromUrl } from "../../utils/file/common";
 import copy from "copy-text-to-clipboard";
@@ -16,6 +15,7 @@ import * as Kookit from "../../assets/lib/kookit.min";
 import { removeSearchParams } from "../../utils/common";
 import { BookHelper } from "../../assets/lib/kookit.min";
 import { useAppStore } from "../../store/useAppStore";
+
 declare var window: any;
 
 const Redirect = () => {

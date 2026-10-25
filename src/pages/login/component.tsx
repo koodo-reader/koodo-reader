@@ -1,9 +1,8 @@
 import { useLatest } from "../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./login.css";
-import { LoginProps, LoginState } from "./interface";
 import { Trans } from "react-i18next";
 import { getLoginParamsFromUrl } from "../../utils/file/common";
 import toast, { Toaster } from "react-hot-toast";
@@ -45,7 +44,15 @@ import mobileQrZh from "../../assets/images/mobile-qr-zh.png";
 import mobileQr from "../../assets/images/mobile-qr.png";
 import { useAppStore } from "../../store/useAppStore";
 
-const Login = (props: LoginProps) => {
+export interface LoginState {
+  currentStep: number;
+  loginConfig: any;
+  isSendingCode: boolean;
+  countdown: number;
+  serverRegion: string;
+}
+
+const Login = () => {
   const isSettingOpen = useAppStore((s) => s.manager.isSettingOpen);
   const isShowLoading = useAppStore((s) => s.manager.isShowLoading);
   const isShowSupport = useAppStore((s) => s.manager.isShowSupport);
@@ -65,7 +72,6 @@ const Login = (props: LoginProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const currentProps = {
-    ...props,
     t,
     isSettingOpen,
     isShowLoading,

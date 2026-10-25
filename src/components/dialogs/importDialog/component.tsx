@@ -1,12 +1,10 @@
 import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "./importDialog.css";
 import { driveList } from "../../../constants/driveList";
 import { Trans } from "react-i18next";
-import { ImportDialogState } from "./interface";
 import { useAppStore } from "../../../store/useAppStore";
-import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 import { getCloudConfig } from "../../../utils/file/common";
@@ -24,6 +22,27 @@ import {
   SyncUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { GooglePickerUtil } from "../../../utils/file/googlePicker";
+
+export interface ImportDialogState {
+  currentDrive: string;
+  currentPath: string;
+  currentFileList: {
+    name: string;
+    size: number;
+    type: string;
+    modified: string;
+    path: string;
+  }[];
+  selectedFileList: {
+    name: string;
+    size: number;
+    type: string;
+    modified: string;
+    path: string;
+  }[];
+  isWaitList: boolean;
+}
+
 declare var window: any;
 type FileInfo = {
   name: string;

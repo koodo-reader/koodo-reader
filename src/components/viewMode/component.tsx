@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import "./viewMode.css";
-import { ViewModeProps } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { viewMode as viewModeList } from "../../constants/viewMode";
 import { useAppStore } from "../../store/useAppStore";

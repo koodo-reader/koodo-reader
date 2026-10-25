@@ -6,7 +6,6 @@ import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
 import { Toaster } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
-import { ReaderProps, ReaderState } from "./interface";
 import {
   ConfigService,
   ReadingTimeUtil,
@@ -35,6 +34,20 @@ import WindowControls from "../../components/windowControls";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
 import { isPaginatedBook, isReadingRawPDF, throttle } from "../../utils/common";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface ReaderState {
+  isOpenRightPanel: boolean;
+  isOpenTopPanel: boolean;
+  isOpenBottomPanel: boolean;
+  isOpenLeftPanel: boolean;
+  isTouch: boolean;
+  isPreventTrigger: boolean;
+  hoverPanel: string;
+  isNearEdge: boolean;
+  totalDuration: number;
+  currentDuration: number;
+}
+
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
@@ -73,7 +86,7 @@ const PANEL_OPEN_STATE: Record<
   top: "isOpenTopPanel",
   bottom: "isOpenBottomPanel",
 };
-const Reader = (props: ReaderProps) => {
+const Reader = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const htmlBook = useAppStore((s) => s.reader.htmlBook);
   const readerMode = useAppStore((s) => s.reader.readerMode);
@@ -110,7 +123,6 @@ const Reader = (props: ReaderProps) => {
   const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
   const { t } = useTranslation();
   const currentProps = {
-    ...props,
     t,
     currentBook,
     htmlBook,

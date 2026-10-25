@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useRef, useState } from "react";
-import { TextRule, TextSettingProps, TextSettingState } from "./interface";
+import { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import {
@@ -10,6 +9,41 @@ import {
 } from "../../../assets/lib/kookit-extra-browser.min";
 import BookUtil from "../../../utils/file/bookUtil";
 import { useAppStore } from "../../../store/useAppStore";
+
+export type TextRuleType = "replace" | "delete" | "highlight";
+
+export type TextRuleScope = "all" | "book";
+
+export type TextRuleMatchType = "regex" | "plain";
+
+export interface TextRule {
+  id: string;
+  type: TextRuleType;
+  pattern: string;
+  replacement?: string;
+  highlightStyle?: string;
+  highlightColor?: string;
+  matchType: TextRuleMatchType;
+  scope: TextRuleScope;
+  bookKey?: string;
+  bookName?: string;
+}
+
+export interface TextSettingState {
+  ruleList: string[];
+  bookNamesMap: { [key: string]: string };
+  isFormOpen: boolean;
+  isEditing: boolean;
+  editingId: string;
+  formType: TextRuleType;
+  formPattern: string;
+  formReplacement: string;
+  formMatchType: TextRuleMatchType;
+  formScope: TextRuleScope;
+  formBookKey: string;
+  formHighlightStyle: string;
+  formHighlightColor: string;
+}
 
 const HIGHLIGHT_STYLE_TYPES = KookitConfig.HighlightStyleTypes;
 const HIGHLIGHT_PRESET_COLORS = KookitConfig.HighlightPresetColors;

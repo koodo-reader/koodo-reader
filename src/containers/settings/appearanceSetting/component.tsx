@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import { SettingInfoProps, SettingInfoState } from "./interface";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
@@ -23,6 +22,24 @@ import {
   applyCustomSystemFont,
   syncNativeThemeSource,
 } from "../../../utils/reader/launchUtil";
+
+export interface SettingInfoState {
+  currentThemeIndex: number;
+  isShowCustomColorPicker: boolean;
+  customColor: string;
+  pendingCustomColor: string;
+  fontListVersion: number;
+  fontOptions: { label: string; value: string }[];
+  isDisablePDFCover: boolean;
+  isDisableCrop: boolean;
+  isShowShelfBookCount: boolean;
+  isCustomSystemCSS: boolean;
+  customSystemCSS: string;
+  ttsHighlightStyleType: string;
+  ttsHighlightColor: string;
+  searchHighlightStyleType: string;
+  searchHighlightColor: string;
+}
 
 const AppearanceSetting = () => {
   const { t } = useTranslation();

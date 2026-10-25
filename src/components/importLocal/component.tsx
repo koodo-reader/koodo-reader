@@ -7,7 +7,6 @@ import { Trans } from "react-i18next";
 import Dropzone from "react-dropzone";
 import JSZip from "jszip";
 import * as Kookit from "../../assets/lib/kookit.min";
-import { ImportLocalProps, ImportLocalState } from "./interface";
 import { isElectron } from "react-device-detect";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
@@ -37,6 +36,16 @@ import {
   importNoteRecords,
 } from "../../utils/file/importData";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface ImportLocalProps {
+  handleDrag: (isDrag: boolean) => void;
+}
+
+export interface ImportLocalState {
+  isOpenFile: boolean;
+  isMoreOptionsVisible: boolean;
+  width: number;
+}
 
 // Convert supportedFormats to react-dropzone v14+ accept format
 // Key is MIME type, value is array of file extensions

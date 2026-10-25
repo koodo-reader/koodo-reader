@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import { TextToSpeechProps, TextToSpeechState } from "./interface";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import { speedList } from "../../constants/dropdownList";
 import {
@@ -27,6 +26,26 @@ import { fetchUserInfo } from "../../utils/request/user";
 import { getSplitSentence } from "../../utils/request/reader";
 import { Howl } from "howler";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface TextToSpeechState {
+  isAudioOn: boolean;
+  isPaused: boolean;
+  currentIndex: number;
+  voiceLocale: string;
+  languageList: string[];
+  voiceList: any;
+  multiRoleEnabled: boolean;
+  multiRoleVoiceType: string;
+  multiRoleNarratorVoice: string;
+  multiRoleMaleVoice: string;
+  multiRoleFemaleVoice: string;
+  multiRoleNarratorEngine: string;
+  multiRoleMaleEngine: string;
+  multiRoleFemaleEngine: string;
+  multiRoleChildVoice: string;
+  multiRoleChildEngine: string;
+}
+
 declare var window: any;
 const TextToSpeech = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);

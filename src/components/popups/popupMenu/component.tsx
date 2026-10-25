@@ -4,7 +4,6 @@ import "./popupMenu.css";
 import { isFixedLayoutBook, isPaginatedBook } from "../../../utils/common";
 import PopupOption from "../popupOption";
 import ColorOption from "../../colorOption";
-import { PopupMenuProps } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import {
   ConfigService,
@@ -16,6 +15,15 @@ import {
 } from "../../../utils/reader/mouseEvent";
 import { createHighlight } from "../../../utils/reader/noteUtil";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface PopupMenuProps {
+  rendition: any;
+  // cfiRange: any;
+  rect: any;
+
+  chapterDocIndex: number;
+  chapter: string;
+}
 
 declare var window: any;
 

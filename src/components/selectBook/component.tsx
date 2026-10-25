@@ -1,9 +1,8 @@
 import { useTranslation } from "react-i18next";
-import React, { useState } from "react";
+import { useState } from "react";
 import BookModel from "../../models/Book";
 import "./selectBook.css";
 import { Trans } from "react-i18next";
-import { BookListProps, BookListState } from "./interface";
 import toast from "react-hot-toast";
 import {
   exportBookPackage,
@@ -18,6 +17,12 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
 import { preCacheAllBooks } from "../../utils/common";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface BookListState {
+  isShowExport: boolean;
+
+  exportSubmenu: string;
+}
 
 const SelectBook = () => {
   const books = useAppStore((s) => s.manager.books);

@@ -2,7 +2,6 @@ import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./popupAssist.css";
-import { PopupAssistProps, PopupAssistState, AiChatMessage } from "./interface";
 import {
   ConfigService,
   KookitConfig,
@@ -22,6 +21,28 @@ import { chatStream, llmReport } from "../../../utils/request/common";
 import { marked } from "marked";
 import { sampleQuestion } from "../../../constants/settingList";
 import { useAppStore } from "../../../store/useAppStore";
+
+export type AiChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+export interface PopupAssistProps {
+  isDockedRight: boolean;
+}
+
+export interface PopupAssistState {
+  aiService: string;
+  isAddNew: boolean;
+  isWaiting: boolean;
+  question: string;
+  askHistory: AiChatMessage[];
+  chatHistory: AiChatMessage[];
+  answer: string;
+  mode: string;
+  inputQuestion: string;
+}
+
 const MAX_HISTORY_LENGTH = 50;
 const AI_ASK_HISTORY_KEY = "aiAskHistory";
 const AI_CHAT_HISTORY_KEY = "aiChatHistory";

@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import "./noteTag.css";
-import { NoteTagProps } from "./interface";
 import DeleteIcon from "../deleteIcon";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface NoteTagProps {
+  isEdit: boolean;
+
+  isCard: boolean;
+  tag: string[];
+  handleTag: (tag: string[]) => void;
+}
 
 const NoteTag = (props: NoteTagProps) => {
   const isReading = useAppStore((s) => s.book.isReading);

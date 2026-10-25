@@ -11,8 +11,17 @@ import {
 } from "../../../constants/dropdownList";
 import { detectLocalLanguage } from "../../../utils/common";
 import SwitchRow from "../../readerSettings/switchRow";
-import { StudyLangDialogState } from "./interface";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface StudyLangDialogState {
+  fullTranslationModeValue: string;
+  fullTranslationTargetValue: string;
+  isWordDefinition: boolean;
+  wordDefinitionLang: string;
+  currentChineseLevel: string;
+  currentJapaneseLevel: string;
+  currentEnglishLevel: string;
+}
 
 const StudyLangDialog = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);

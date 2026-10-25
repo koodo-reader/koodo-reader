@@ -14,7 +14,6 @@ import {
   resetShortcutConfig,
   saveShortcutConfig,
 } from "../../../utils/reader/shortcutUtil";
-import { ShortcutSettingProps } from "./interface";
 import "./shortcutSetting.css";
 
 const ShortcutSetting = () => {

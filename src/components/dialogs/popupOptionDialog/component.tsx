@@ -3,13 +3,19 @@ import { useState } from "react";
 import "./popupOptionDialog.css";
 import { ReactSortable } from "react-sortablejs";
 import toast from "react-hot-toast";
-import { PopupOptionDialogItem } from "./interface";
 import { useAppStore } from "../../../store/useAppStore";
 import {
   getPopupOptionSettingList,
   POPUP_OPTION_LIMIT,
   savePopupOptionSettingList,
 } from "../../../constants/popupList";
+
+import { PopupOptionItem } from "../../../constants/popupList";
+
+export interface PopupOptionDialogItem extends PopupOptionItem {
+  id: string;
+  enabled: boolean;
+}
 
 const PopupOptionDialog = () => {
   const handlePopupOptionDialog = useAppStore((s) => s.handlePopupOptionDialog);

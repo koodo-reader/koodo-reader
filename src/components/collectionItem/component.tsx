@@ -1,6 +1,5 @@
 import React from "react";
 import "./collectionItem.css";
-import { CollectionItemProps } from "./interface";
 import ActionDialog from "../dialogs/actionDialog";
 import CollectionCover from "../collectionCover";
 import { Trans } from "react-i18next";
@@ -12,6 +11,17 @@ import {
   CONTEXT_MENU_WIDTH,
 } from "../../utils/common";
 import { useAppStore } from "../../store/useAppStore";
+
+import CollectionModel from "../../models/Collection";
+
+export interface CollectionItemProps {
+  collection: CollectionModel;
+  viewMode: string;
+  cardScale?: number;
+  isSelected: boolean;
+  allBooks?: { key: string }[];
+  bookIndex?: number;
+}
 
 declare var window: any;
 

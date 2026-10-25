@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 
 import "./popupOption.css";
 
-import { PopupOptionProps } from "./interface";
 import {
   getEnabledPopupOptionKeys,
   popupOptionMap,
@@ -28,6 +27,14 @@ import {
 import { createHighlight } from "../../../utils/reader/noteUtil";
 import { Tooltip } from "react-tooltip";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface PopupOptionProps {
+  noteKey: string;
+  rect: DOMRect;
+  cfiRange: string;
+  chapterDocIndex: number;
+  chapter: string;
+}
 
 declare var window: any;
 

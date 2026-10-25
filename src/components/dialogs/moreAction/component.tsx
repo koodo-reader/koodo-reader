@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
-import React, { useState } from "react";
+import { useState } from "react";
 import "./moreAction.css";
 import { Trans } from "react-i18next";
-import { MoreActionProps, MoreActionState } from "./interface";
 import { useAppStore } from "../../../store/useAppStore";
 import { saveAs } from "file-saver";
 import toast from "react-hot-toast";
@@ -32,6 +31,28 @@ import {
   estimateMenuHeight,
   SUBMENU_GAP,
 } from "../../../utils/common";
+
+import BookModel from "../../../models/Book";
+
+export interface MoreActionProps {
+  book: BookModel;
+
+  left: number;
+  top: number;
+
+  isShowExport: boolean;
+  isShowDetail: boolean;
+  isExceed: boolean;
+
+  handleMoreAction: (isShow: boolean) => void;
+  handleFetchBookmarks: () => void;
+  handleFetchNotes: () => void;
+}
+
+export interface MoreActionState {
+  exportSubmenu?: string;
+}
+
 declare var window: any;
 
 const MoreAction = (

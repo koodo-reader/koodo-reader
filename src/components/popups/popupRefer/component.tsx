@@ -1,8 +1,7 @@
 import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./popupRefer.css";
-import { PopupReferProps } from "./interface";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import {
   isReadingRawPDF,
@@ -13,6 +12,12 @@ import Parser from "html-react-parser";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface PopupReferProps {
+  menuMode: string;
+  rendition: any;
+  chapterDocIndex: number;
+}
 
 const escapeHtml = (text: string) =>
   text

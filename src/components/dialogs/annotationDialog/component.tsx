@@ -1,7 +1,6 @@
 import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useRef, useState } from "react";
-import { AnnotationDialogState } from "./interface";
+import { useEffect, useState } from "react";
 import { useAppStore } from "../../../store/useAppStore";
 import "./annotationDialog.css";
 import "../../readerSettings/dropdownList/dropdownList.css";
@@ -22,6 +21,24 @@ import {
   TEXT_SIZE_STEP,
 } from "../../../utils/common";
 import FontUtil from "../../../utils/file/fontUtil";
+
+export interface AnnotationDialogState {
+  annotationStyle: string;
+  annotationBrushColor: string;
+  annotationBrushWidth: number;
+  annotationHighlighterColor: string;
+  annotationHighlighterWidth: number;
+  annotationHighlighterOpacity: number;
+  annotationShapeType: string;
+  annotationShapeColor: string;
+  annotationShapeWidth: number;
+  annotationEraserWidth: number;
+  annotationQuickErase: string;
+  annotationTextSize: number;
+  annotationTextFont: string;
+  annotationTextColor: string;
+  fontOptions: { label: string; value: string }[];
+}
 
 const AnnotationDialog = () => {
   const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);

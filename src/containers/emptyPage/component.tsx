@@ -1,7 +1,6 @@
 import "./emptyPage.css";
 import { emptyList } from "../../constants/emptyList";
 import { Trans } from "react-i18next";
-import { EmptyPageProps } from "./interface";
 import emptyDark from "../../assets/images/empty-dark.svg";
 import emptyLight from "../../assets/images/empty-light.svg";
 import { useAppStore } from "../../store/useAppStore";

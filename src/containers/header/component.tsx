@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./header.css";
 import SearchBox from "../../components/searchBox";
 import ImportLocal from "../../components/importLocal";
-import { HeaderProps, HeaderState } from "./interface";
 import {
   ConfigService,
   KookitConfig,
@@ -50,6 +49,16 @@ import i18n from "../../i18n";
 import { getNotification } from "../../utils/request/common";
 import TokenService from "../../utils/storage/tokenService";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface HeaderProps {
+  handleDrag: (isDrag: boolean) => void;
+}
+
+export interface HeaderState {
+  isHidePro: boolean;
+  isSync: boolean;
+  notificationCount: number;
+}
 
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;

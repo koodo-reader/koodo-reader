@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./navigationPanel.css";
 import { isReadingRawPDF } from "../../../utils/common";
 import ContentList from "../../lists/contentList";
 import BookNavList from "../../lists/navList";
 import { Trans } from "react-i18next";
-import { NavigationPanelProps, NavigationPanelState } from "./interface";
 import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
@@ -20,6 +19,21 @@ import {
   READING_PANEL_TOGGLE_EVENT,
 } from "../../../utils/reader/mouseEvent";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface NavigationPanelProps {
+  totalDuration: number;
+}
+
+export interface NavigationPanelState {
+  currentTab: string;
+
+  searchState: string;
+  searchList: any;
+  cover: string;
+  isCoverExist: boolean;
+  activeSearchKey: string | null;
+  collapsedChapters: Set<number>;
+}
 
 export interface SearchItemWithKey {
   key: string;

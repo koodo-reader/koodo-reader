@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./sidebar.css";
 import { sideMenu } from "../../constants/sideMenu";
-import { SidebarProps, SidebarState } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { getWebsiteUrl, openInBrowser } from "../../utils/common";
 import { Trans } from "react-i18next";
@@ -20,6 +19,17 @@ import {
   parseBookDragData,
 } from "../../utils/reader/bookDrag";
 import { useAppStore } from "../../store/useAppStore";
+
+export interface SidebarState {
+  hoverMode: string;
+  hoverShelfTitle: string;
+  isCollpaseShelf: boolean;
+
+  newShelfName: string;
+
+  isCreateShelf: boolean;
+  dropTargetShelf: string;
+}
 
 const Sidebar = () => {
   const mode = useAppStore((s) => s.sidebar.mode);

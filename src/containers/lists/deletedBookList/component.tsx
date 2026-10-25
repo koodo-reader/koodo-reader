@@ -6,7 +6,6 @@ import BookListItem from "../../../components/bookListItem";
 import CollectionItem from "../../../components/collectionItem";
 import BookModel from "../../../models/Book";
 import { Trans } from "react-i18next";
-import { BookListProps } from "./interface";
 import ViewMode from "../../../components/viewMode";
 import DatabaseService from "../../../utils/storage/databaseService";
 import {
@@ -15,6 +14,10 @@ import {
 } from "../../../assets/lib/kookit-extra-browser.min";
 import EmptyPage from "../../emptyPage";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface BookListState {
+  fullBooksData: BookModel[];
+}
 
 const collectionUtil = new CollectionUtil(ConfigService);
 

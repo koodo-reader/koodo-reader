@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { Trans } from "react-i18next";
-import { SliderListProps } from "./interface";
 import "./sliderList.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface SliderListProps {
+  item: any;
+}
 
 const SliderList = (props: SliderListProps) => {
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);

@@ -5,19 +5,33 @@ import "./editDialog.css";
 import "../metadataDialog/metadataDialog.css";
 
 import { Trans } from "react-i18next";
-import { EditDialogState } from "./interface";
 import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import CoverUtil from "../../../utils/file/coverUtil";
 import { isElectron } from "react-device-detect";
 import MetadataDialog from "../metadataDialog";
-import { MetadataResult } from "../metadataDialog/interface";
+import { MetadataResult } from "../metadataDialog/types";
 import {
   formatDateToDay,
   trimSpecialCharacters,
 } from "../../../utils/common";
 import { analyzeBookTitle } from "../../../utils/request/reader";
+
+export interface EditDialogState {
+  isCheck: boolean;
+  coverPreview: string;
+  bookPath: string;
+  isMetadataDialogOpen: boolean;
+  pendingName: string;
+  pendingAuthor: string;
+  pendingPublisher: string;
+  pendingDescription: string;
+  pendingPublishedDate: string;
+  pendingCover: string;
+  isAnalyzing: boolean;
+}
+
 declare var window: any;
 
 const EditDialog = () => {

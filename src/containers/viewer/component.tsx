@@ -1,7 +1,6 @@
 import { useLatest } from "../../utils/hooks/useLatest";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
-import { ViewerProps, ViewerState } from "./interface";
 import BookUtil from "../../utils/file/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
 import Background from "../../components/background";
@@ -58,6 +57,31 @@ import { getBuiltinOcr } from "../../utils/plugins/rendererRegistry";
 import { resolveStoredPlugin } from "../../utils/plugins/records";
 import type { PluginConfig } from "../../utils/plugins/types";
 import { useAppStore } from "../../store/useAppStore";
+
+import BookModel from "../../models/Book";
+
+export interface ViewerProps {
+  book: BookModel;
+  rendition: any;
+
+  isShow: boolean;
+
+  handleLeaveReader: (position: string) => void;
+  handleEnterReader: (position: string) => void;
+}
+
+export interface ViewerState {
+  isTouch: boolean;
+
+  isDisablePopup: boolean;
+  chapter: string;
+  pageOffset: string;
+  pageWidth: string;
+  chapterDocIndex: number;
+
+  rect: any;
+  rendition: any;
+}
 
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;

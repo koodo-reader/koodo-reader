@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./stats.css";
-import { StatsProps, StatsState } from "./interface";
 import { Trans } from "react-i18next";
 import {
   ConfigService,
@@ -21,6 +20,21 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+
+export interface StatsProps {
+  t: (title: string) => string;
+}
+
+export interface StatsState {
+  totalBooks: number;
+  totalSeconds: number;
+  longestStreak: number;
+  avgDailySeconds: number;
+  last30Days: { date: string; seconds: number }[];
+  heatmapData: { date: string; seconds: number }[];
+  chartTab: "line" | "bar";
+  isLoading: boolean;
+}
 
 const Stats = () => {
   const { t } = useTranslation();

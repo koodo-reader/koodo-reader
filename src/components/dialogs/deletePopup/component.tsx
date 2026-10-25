@@ -1,7 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { Trans } from "react-i18next";
-import { DeletePopupProps } from "./interface";
 import toast from "react-hot-toast";
+
+export interface DeletePopupProps {
+  name: string;
+  title: string;
+  description: string;
+  handleDeletePopup: (isOpenDelete: boolean) => void;
+  handleDeleteOpearion: () => void;
+}
 
 const DeletePopup = (props: DeletePopupProps) => {
   const { t } = useTranslation();

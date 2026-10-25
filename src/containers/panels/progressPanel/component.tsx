@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./progressPanel.css";
 import { Trans } from "react-i18next";
-import { ProgressPanelProps } from "./interface";
 import _ from "underscore";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook, scrollContents } from "../../../utils/common";

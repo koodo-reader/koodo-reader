@@ -1,13 +1,28 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import "./chapterSetting.css";
-import { SettingInfoProps, SettingInfoState, TxtParser } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import {
   ConfigService,
   KookitConfig,
 } from "../../../assets/lib/kookit-extra-browser.min";
+
+export interface TxtParser {
+  label: string;
+  value: string;
+  subtitle: string;
+  regex: string;
+}
+
+export interface SettingInfoState {
+  parserList: string[];
+  isAddNew: boolean;
+  isEditing: boolean;
+  editingLabel: string;
+  formLabel: string;
+  formRegex: string;
+}
 
 const ChapterSetting = () => {
   const { t } = useTranslation();

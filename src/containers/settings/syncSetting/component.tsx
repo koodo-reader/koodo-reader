@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
-import { SettingInfoProps, SettingInfoState } from "./interface";
+import { useState } from "react";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import { removeCloudConfig } from "../../../utils/file/common";
@@ -49,6 +48,20 @@ import Book from "../../../models/Book";
 import ConfigUtil from "../../../utils/file/configUtil";
 import TokenService from "../../../utils/storage/tokenService";
 import { useAppStore } from "../../../store/useAppStore";
+
+export interface SettingInfoState {
+  isKeepLocal: boolean;
+  isEnableKoodoSync: boolean;
+  isDisableAutoSync: boolean;
+  autoOffline: boolean;
+  hideSyncProgress: boolean;
+  driveConfig: any;
+  scheduledSyncInterval: string;
+  backupDrive: string;
+  restoreDrive: string;
+  showDefaultSyncAddGrid: boolean;
+}
+
 declare var window: any;
 
 const SyncSetting = () => {
