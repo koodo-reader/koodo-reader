@@ -1,3 +1,16 @@
+.popup-box-container {
+  opacity: 1;
+  border-radius: 10px;
+  position: absolute;
+  width: 500px;
+  height: 320px;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  z-index: 10;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
 .popup-resize-handle {
   position: absolute;
   top: 0;
@@ -52,6 +65,12 @@
   justify-content: center;
   font-size: 18px;
   margin-top: 2px;
+}
+@media screen and (max-width: 576px) {
+  .popup-box-container {
+    width: 90%;
+    left: 5%;
+  }
 }
 .delete-highlighter-container {
   position: relative;

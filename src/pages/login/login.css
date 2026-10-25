@@ -217,6 +217,9 @@
   justify-content: flex-end;
   align-items: center;
 }
+.login-mobile-qr {
+  width: 300px;
+}
 .login-mobile-container {
   width: 100%;
   height: 70%;

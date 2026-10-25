@@ -20,6 +20,14 @@
   padding: 70px 30px;
   line-height: 30px;
 }
+.drag-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: 9;
+}
 .drag-info {
   position: absolute;
   top: 50%;

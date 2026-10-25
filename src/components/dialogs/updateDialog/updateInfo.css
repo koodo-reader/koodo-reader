@@ -1,3 +1,15 @@
+.new-version {
+  width: 346px;
+  height: 480px;
+  position: absolute;
+  left: calc(50% - 173px);
+  top: calc(50% - 240px);
+  overflow: hidden;
+  opacity: 1;
+  z-index: 20;
+  border-radius: 5px;
+  animation: popup 0.1s ease-in-out 0s 1;
+}
 .update-log-out-button {
   min-width: 70px;
   display: flex;
@@ -8,6 +20,29 @@
   position: absolute;
   right: 12px;
 }
+.new-version-title {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 15px;
+  opacity: 1;
+  margin: 20px 0px 10px;
+  text-align: center;
+  width: 346px;
+}
+.new-version-open {
+  margin-top: -5px;
+  min-width: 80px;
+  padding: 0px 10px;
+  height: 36px;
+  opacity: 1;
+  border-radius: 25px;
+  line-height: 36px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.1s;
+  z-index: 50;
+  font-size: 15px;
+}
 .new-version-copy {
   cursor: pointer;
   font-size: 13px;
@@ -16,6 +51,15 @@
   text-align: center;
   margin-left: 148px;
   display: inline-block;
+}
+.update-dialog-new-title,
+.update-dialog-fix-title {
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 15px;
+  opacity: 1;
+  margin-top: 10px;
+  margin-left: 20px;
 }
 .update-dialog-list {
   font-size: 15px;

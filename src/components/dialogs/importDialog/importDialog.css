@@ -17,6 +17,27 @@
 .import-dialog-folder-icon {
   font-size: 20px;
 }
+.backup-dialog-title {
+  width: 120px;
+  height: 20px;
+  font-size: 18px;
+  opacity: 1;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 22px;
+  font-weight: 500;
+}
+.cloud-drive-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  padding-right: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
 .cloud-drive-label {
   font-size: 15px;
   line-height: 1.5;
@@ -32,6 +53,21 @@
   width: 20px;
   position: relative;
   bottom: 4px;
+}
+.import-dialog-option {
+  width: calc(100% - 10px);
+  padding-left: 10px;
+  overflow-y: scroll;
+  position: absolute;
+  top: 50px;
+  bottom: 50px;
+}
+.import-dialog-back-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
 .cloud-drive-label:hover {
   color: #f16464;

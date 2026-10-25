@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import "./assets/styles/reset.css";
 import "./assets/styles/global.css";
 import "./assets/styles/style.css";
-import "./assets/styles/sharedStyles";
 import "./i18n";
 import Router from "./router/index";
 import StyleUtil from "./utils/reader/styleUtil";

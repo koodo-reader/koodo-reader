@@ -67,3 +67,36 @@
   outline: none;
   background: transparent;
 }
+.add-dialog-button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: absolute;
+  right: 25px;
+  bottom: 15px;
+}
+.add-dialog-cancel {
+  min-width: 60px;
+  height: 30px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 13px;
+  margin-right: 10px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+.add-dialog-confirm {
+  min-width: 64px;
+  height: 30px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 13px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+}
