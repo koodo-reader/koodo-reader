@@ -61,12 +61,6 @@
   flex-wrap: wrap;
   gap: 4px;
 }
-.book-manage-title {
-  font-size: 15px;
-  font-weight: 500;
-  padding: 6px 10px;
-  border-radius: 5px;
-}
 .book-list-page-navigator {
   display: flex;
   justify-content: center;

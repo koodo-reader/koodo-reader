@@ -14,14 +14,3 @@
   width: 100%;
   min-height: 30px;
 }
-.scale-page-fit-switch {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 10px;
-  padding-top: 16px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  user-select: none;
-}

@@ -137,12 +137,6 @@
   height: 50px;
   z-index: 1;
 }
-.header-search-container {
-  position: absolute;
-  top: 23px;
-  margin-left: 40px;
-  width: 220px;
-}
 .setting-icon {
   float: left;
 }

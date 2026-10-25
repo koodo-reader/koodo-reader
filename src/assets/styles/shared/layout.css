@@ -1,0 +1,52 @@
+.drag-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: 9;
+}
+
+.header-search-container {
+  position: absolute;
+  top: 23px;
+  margin-left: 40px;
+  width: 220px;
+}
+
+.book-manage-title {
+  font-size: 15px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 5px;
+}
+
+.login-mobile-qr {
+  width: 300px;
+}
+
+.empty-page-illustration {
+  height: 80%;
+  position: absolute;
+  bottom: 30px;
+  right: 40px;
+}
+
+.empty-page-info-container {
+  position: absolute;
+  left: 30px;
+  top: 80px;
+}
+
+.empty-page-info-main {
+  font-size: 32px;
+  line-height: 50px;
+  opacity: 1;
+}
+
+.empty-page-info-sub {
+  width: 400px;
+  font-size: 24px;
+  line-height: 30px;
+  opacity: 0.49;
+}

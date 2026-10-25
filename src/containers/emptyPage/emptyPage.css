@@ -6,12 +6,6 @@
   height: calc(100vh - 75px);
   overflow: hidden;
 }
-.empty-page-illustration {
-  height: 80%;
-  position: absolute;
-  bottom: 30px;
-  right: 40px;
-}
 .empty-illustration-container {
   height: 350px;
   position: absolute;
@@ -20,21 +14,4 @@
 
   z-index: -1;
   overflow: hidden;
-}
-.empty-page-info-container {
-  position: absolute;
-  left: 30px;
-  top: 80px;
-}
-.empty-page-info-main {
-  font-size: 32px;
-  line-height: 50px;
-  opacity: 1;
-}
-.empty-page-info-sub {
-  width: 400px;
-  font-size: 24px;
-
-  line-height: 30px;
-  opacity: 0.49;
 }
