@@ -86,13 +86,6 @@ interface Window {
 }
 
 
-declare namespace NodeJS {
-  interface ProcessEnv {
-    NODE_ENV: "development" | "production" | "test";
-    PUBLIC_URL: string;
-  }
-}
-
 declare module "@mozilla/readability" {
   export class Readability {
     constructor(document: Document);

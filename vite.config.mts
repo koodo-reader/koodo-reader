@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig(({ command }) => ({
   base: command === "build" ? "./" : "/",
@@ -13,6 +14,15 @@ export default defineConfig(({ command }) => ({
         process: true,
       },
     }),
+    ...(process.env.ANALYZE
+      ? [
+          visualizer({
+            filename: "build/stats.html",
+            gzipSize: true,
+            brotliSize: true,
+          }),
+        ]
+      : []),
   ],
   server: {
     port: 3000,

@@ -1,13 +1,13 @@
 ## Architecture Overview
 
-Koodo Reader 是一个跨平台电子书阅读器（Electron + React CRA + Redux）。
+Koodo Reader 是一个跨平台电子书阅读器（Electron + Vite + React 19 + Zustand）。
 
 ### 四层架构
 
 | 层              | 位置                                  | 职责                                                    |
 | --------------- | ------------------------------------- | ------------------------------------------------------- |
 | Electron 主进程 | `main.js`                             | IPC handlers, SQLite (better-sqlite3), 云同步, 原生集成 |
-| React 渲染进程  | `src/`                                | UI, Redux 状态管理, 书籍渲染                            |
+| React 渲染进程  | `src/`                                | UI, Zustand 状态管理, 书籍渲染                          |
 | 阅读引擎        | `src/assets/lib/kookit-extra.min.mjs` | 闭源 ESM — 书籍解析、SQL 语句、同步工具                 |
 | Go HTTP 服务    | `httpserver/`                         | 可选的 KOReader / OPDS 集成                             |
 
@@ -31,25 +31,39 @@ Koodo Reader 是一个跨平台电子书阅读器（Electron + React CRA + Redux
 - `cloud-upload` / `cloud-download` — 云同步
 - `before-reader-close` → `reader-close-ready` — 阅读器两阶段关闭
 
-### Redux 切片
+### Zustand Store
 
-`book`, `reader`, `manager`, `viewArea`, `backupPage`, `sidebar`, `progressPanel`
+唯一状态源是 `src/store/useAppStore.ts`，保留 8 个命名空间：
 
-每个切片在 `src/store/actions/` 和 `src/store/reducers/` 中各有一个文件。
+`manager`, `book`, `reader`, `progressPanel`, `viewArea`, `sidebar`, `backupPage`, `collection`
 
-### Redux State 类型
+组件使用字段级 selector，禁止整 store 订阅：
 
-`stateType` 定义在 `src/store/index.tsx` 中，所有 `mapStateToProps` 应使用此类型。
+```ts
+const books = useAppStore((s) => s.manager.books);
+const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+```
+
+非组件代码使用 `useAppStore.getState().handleXxx()`。不再使用 `connect` / `mapStateToProps` / `src/store/actions` / `src/store/reducers`。
+
+### State 类型
+
+`AppState` 定义在 `src/store/useAppStore.ts`。不要新增 CRA / Redux 时代的 `stateType` 导入。
 
 ### Container 模式
 
-`index.tsx` (Redux connect) → `component.tsx` → `interface.tsx`，位于 `src/containers/` 下。
+`index.tsx` 仅做 `export { default } from "./component";`；`component.tsx` 是函数组件，使用 hooks 读取状态、翻译和路由；`interface.tsx` 只保留自身 props。新增组件一律使用函数组件 + hooks，不要新增 `connect` / `withRouter` / `withTranslation`。
 
 ### 页面路由
 
+使用 `react-router-dom` v7（`HashRouter` + `Routes` + `Route element`）。
+
 - `/manager/*` — 主界面（书库、笔记、回收站等）
-- `/epub`, `/pdf`, `/mobi`, `/txt`, `/md` 等格式路径 — 阅读器
-- `/login`, `/stats`, `/redirect`
+- `/epub/*`, `/pdf/*`, `/mobi/*`, `/txt/*`, `/md/*` 等格式路径 — 阅读器
+- `/login`, `/stats`
+- `/` — 重定向入口
+
+注意：v7 默认精确匹配，带子路径的路由必须使用 `/*` 通配符。
 
 ### 支持的电子书格式
 
@@ -70,8 +84,17 @@ yarn start
 # 构建生产版本
 yarn build
 
-# 运行测试
+# 类型检查
+yarn typecheck
+
+# 单元测试（Vitest）
 yarn test
+
+# 监听模式
+yarn test:watch
+
+# 分析产物体积
+yarn analyze
 
 # 打包分发
 yarn release
@@ -83,15 +106,18 @@ yarn rebuild
 ## 开发规范
 
 - **不要主动提交代码**：修改完代码后，只展示改动内容和说明，由用户自行决定是否提交。除非用户明确要求提交，否则不要执行 `git commit`、`git push` 等操作。
-- 用户可见文本必须使用 `react-i18next` 的 `t("key")`，不得硬编码
+- 用户可见文本必须使用 `react-i18next` 的 `useTranslation()` + `t("key")`，不得硬编码
 - TypeScript 避免 `any`，在 `interface.tsx` 中定义类型
-- 状态类型用 `stateType`（`src/store/index.tsx`）
+- 状态统一使用 `useAppStore` 字段级 selector；禁止新增 Redux / connect 相关代码
+- 翻译统一使用 `useTranslation`；路由统一使用 `useNavigate` / `useLocation`，禁止新增 `withTranslation` / `withRouter` HOC
+- 组件 CSS 必须在 `component.tsx` 或 `index.tsx` 中显式导入，不要依赖其他路由文件的副作用导入
 - 不要从渲染进程直接操作 SQLite，所有数据库操作通过 `database-command` IPC
 - 新增 i18n key 需在 `src/assets/locales/en.json` 中添加
 - Reader 工具函数（`src/utils/reader/`）会影响 iframe 中书籍渲染，修改后需手动回归测试
 - 添加窗口打开通道时需遵循 `new-tab` → `WebContentsView` / `open-book` → `BrowserWindow` 模式
 - 所有 IPC 参数需校验后再执行文件系统/数据库/Shell 操作
 - 不要将令牌、密码或完整书籍路径记录到 info 级别日志
+- 单元测试使用 Vitest（`src/**/*.test.ts`）；E2E 后续使用 Playwright
 
 ## 项目结构
 
@@ -100,15 +126,18 @@ yarn rebuild
 ├── main.js                 # Electron 主进程
 ├── httpserver/             # Go HTTP 服务 (KOReader/OPDS)
 ├── public/                 # 静态资源 + WASM 库 (7z, unrar, pdfjs)
+├── index.html              # Vite HTML 入口
+├── vite.config.mts         # Vite 配置
+├── vitest.config.ts        # Vitest 配置
 ├── src/
 │   ├── assets/
 │   │   ├── lib/            # 阅读引擎 (kookit-extra.min.mjs) + 类型定义
 │   │   ├── locales/        # 多语言翻译 JSON (40+ 语言)
 │   │   ├── styles/         # 全局 CSS
 │   │   └── images/         # 图片资源
-│   ├── components/         # 可复用 UI 组件
+│   ├── components/         # 可复用 UI 组件 (函数组件)
 │   ├── constants/          # 常量定义
-│   ├── containers/         # 容器组件 (Redux stateful)
+│   ├── containers/         # 容器组件 (函数组件 + hooks)
 │   │   ├── lists/          # 列表 (bookList, cardList, noteList, navList, contentList)
 │   │   ├── panels/         # 面板 (navigationPanel, operationPanel, progressPanel, settingPanel)
 │   │   ├── settings/       # 设置页面各选项卡
@@ -116,8 +145,8 @@ yarn rebuild
 │   │   └── viewer/         # 书籍阅读视图
 │   ├── models/             # 数据模型 (Book, Bookmark, Note, HtmlBook, Plugin)
 │   ├── pages/              # 页面级组件 (manager, reader, login, redirect, stats)
-│   ├── router/             # React Router 路由配置
-│   ├── store/              # Redux (actions + reducers)
+│   ├── router/             # React Router v7 路由配置
+│   ├── store/              # Zustand (useAppStore.ts)
 │   └── utils/              # 工具函数
 │       ├── file/           # 文件操作 (bookUtil, coverUtil, fontUtil, sqlUtil, export, backup, restore)
 │       ├── reader/         # 阅读器逻辑 (highlightUtil, noteUtil, styleUtil, ttsUtil, themeUtil, etc.)
