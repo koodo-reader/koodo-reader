@@ -113,7 +113,7 @@ const Header = (props: HeaderProps) => {
     null
   );
   const handleCloudSyncRef = useRef<
-    (userInfo: any) => Promise<false | undefined>
+    (userInfo?: any) => Promise<false | undefined>
   >(async () => undefined);
   const handleFinishReadingRef = useRef<() => Promise<void>>(
     async () => undefined
@@ -366,7 +366,9 @@ const Header = (props: HeaderProps) => {
     setIsSync(isSyncing);
   };
 
-  const handleCloudSync = async (userInfo: any): Promise<false | undefined> => {
+  const handleCloudSync = async (
+    userInfo?: any
+  ): Promise<false | undefined> => {
     if (isSyncingRef.current) {
       console.info("Sync already in progress, skipping...");
       return false;
@@ -381,7 +383,9 @@ const Header = (props: HeaderProps) => {
         return false;
       }
 
-      let res = await beforeSync(userInfo);
+      let res = await beforeSync(
+        userInfo ?? useAppStore.getState().manager.userInfo
+      );
       if (!res) {
         clearInterval(timerRef.current);
         setIsSync(false);
@@ -668,7 +672,9 @@ const Header = (props: HeaderProps) => {
           handleLocalFileDialog(true);
         }
       }
-      handleCloudSyncFunc(handleCloudSyncRef.current);
+      handleCloudSyncFunc(async (userInfo?: any) => {
+        await handleCloudSyncRef.current(userInfo);
+      });
       visibilityHandler = async () => {
         if (
           document.visibilityState === "visible" &&

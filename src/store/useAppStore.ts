@@ -74,7 +74,9 @@ const initialBook = {
   currentBook: {} as BookModel,
   renderBookFunc: (() => {}) as () => void,
   importBookFunc: (() => {}) as unknown as (file: any) => Promise<void>,
-  cloudSyncFunc: (() => {}) as unknown as () => Promise<void>,
+  cloudSyncFunc: (() => {}) as unknown as (
+    userInfo?: any
+  ) => Promise<void>,
 };
 
 const initialReader = {
@@ -879,8 +881,8 @@ export const useAppStore = create<AppState>()((set, get) => {
       setBook({ renderBookFunc }),
     handleImportBookFunc: (importBookFunc: () => void) =>
       setBook({ importBookFunc: importBookFunc as any }),
-    handleCloudSyncFunc: (cloudSyncFunc: () => void) =>
-      setBook({ cloudSyncFunc: cloudSyncFunc as any }),
+    handleCloudSyncFunc: (cloudSyncFunc: (userInfo?: any) => Promise<void>) =>
+      setBook({ cloudSyncFunc }),
     handleActionDialog: (mode: boolean) =>
       setBook({ isOpenActionDialog: mode }),
     handleReadingState: (state: boolean) => setBook({ isReading: state }),

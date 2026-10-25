@@ -112,8 +112,9 @@ const Login = () => {
     if (res.code === 200) {
       propsRef.current.handleLoadingDialog(false);
       let result = await handleAutoCloudSync();
+      const userInfo = await propsRef.current.handleFetchUserInfo();
       if (result) {
-        propsRef.current.cloudSyncFunc();
+        await propsRef.current.cloudSyncFunc(userInfo);
       } else {
         ConfigService.removeItem("defaultSyncOption");
         ConfigService.removeItem("dataSourceList");
@@ -123,7 +124,6 @@ const Login = () => {
       propsRef.current.handleFetchDefaultSyncOption();
       removeSearchParams();
       propsRef.current.handleFetchAuthed();
-      await propsRef.current.handleFetchUserInfo();
       toast.success(propsRef.current.t("Login successful"));
       updateState({ currentStep: result ? 4 : 3 });
       if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {

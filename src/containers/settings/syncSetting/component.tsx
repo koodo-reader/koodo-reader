@@ -72,9 +72,7 @@ const SyncSetting = () => {
   const defaultSyncOption = useAppStore(
     (s) => s.backupPage.defaultSyncOption
   );
-  const cloudSyncFunc = useAppStore((s) => s.book.cloudSyncFunc) as (
-    userInfo?: any
-  ) => Promise<void>;
+  const cloudSyncFunc = useAppStore((s) => s.book.cloudSyncFunc);
   const handleSetting = useAppStore((s) => s.handleSetting);
   const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
   const handleFetchDataSourceList = useAppStore(
