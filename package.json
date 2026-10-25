@@ -74,7 +74,6 @@
     "@types/react-dom": "^19.3.0",
     "@types/underscore": "^1.13.0",
     "@playwright/test": "^1.64.1",
-    "classnames": "^2.2.6",
     "concurrently": "^5.0.1",
     "cross-env": "^6.0.3",
     "electron": "^35.0.0",
