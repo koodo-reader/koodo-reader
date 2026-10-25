@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
@@ -62,108 +62,34 @@ const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
-class Viewer extends React.Component<ViewerProps, ViewerState> {
-  private resizeHandler: (() => void) | null = null;
-  private _pendingRerender = false;
-  lock: boolean;
-  constructor(props: ViewerProps) {
-    super(props);
-    this.state = {
-      rect: null,
-      isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
-      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
-      chapterDocIndex: parseInt(
-        ConfigService.getObjectConfig(
-          this.props.currentBook.key,
-          "recordLocation",
-          {}
-        ).chapterDocIndex || 0
-      ),
-      pageOffset: "",
-      pageWidth: "",
-      chapter: "",
-      rendition: null,
-    };
-    this.lock = false;
-  }
-  UNSAFE_componentWillMount() {
-    this.props.handleFetchBookmarks();
-    this.props.handleFetchNotes();
-    this.props.handleFetchBooks();
-    this.props.handleFetchPlugins();
-  }
-  componentDidMount() {
-    this.handleRenderBook();
-    //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
-    this.setState(
-      getPageWidth(
-        this.props.readerMode,
-        this.props.scale,
-        parseInt(this.props.margin),
-        this.props.isNavLocked,
-        this.props.isSettingLocked || this.props.isDockedRight,
-        this.props.isFitPage
-      )
-    );
-    // 刷新页面后，若 popupBox 处于固定右侧状态，自动恢复显示 popupAssist
-    if (this.props.isDockedRight) {
-      this.props.handleMenuMode("assistant");
-      this.props.handleOpenMenu(true);
-    }
-    this.props.handleRenderBookFunc(this.handleRenderBook);
-    this.resizeHandler = throttle(() => {
-      flushSync(() => {
-        this.setState(
-          getPageWidth(
-            this.props.readerMode,
-            this.props.scale,
-            parseInt(this.props.margin),
-            this.props.isNavLocked,
-            this.props.isSettingLocked || this.props.isDockedRight,
-            this.props.isFitPage
-          )
-        );
-      });
-      if (lock) {
-        this._pendingRerender = true;
-      } else {
-        this.handleRenderBook();
-      }
-    });
-    window.addEventListener("resize", this.resizeHandler);
-  }
-  componentWillUnmount() {
-    if (this.resizeHandler) {
-      window.removeEventListener("resize", this.resizeHandler);
-      this.resizeHandler = null;
-    }
-  }
-  async UNSAFE_componentWillReceiveProps(nextProps: ViewerProps) {
-    if (
-      nextProps.margin !== this.props.margin ||
-      nextProps.scale !== this.props.scale ||
-      nextProps.readerMode !== this.props.readerMode ||
-      nextProps.isNavLocked !== this.props.isNavLocked ||
-      nextProps.isSettingLocked !== this.props.isSettingLocked ||
-      nextProps.isFitPage !== this.props.isFitPage ||
-      nextProps.isDockedRight !== this.props.isDockedRight
-    ) {
-      this.setState(
-        getPageWidth(
-          nextProps.readerMode,
-          nextProps.scale,
-          parseInt(nextProps.margin),
-          nextProps.isNavLocked,
-          nextProps.isSettingLocked || nextProps.isDockedRight,
-          nextProps.isFitPage
-        )
-      );
-    }
-  }
-  handleHighlight = async (rendition: any) => {
+const Viewer = (props: ViewerProps) => {
+  const propsRef = useRef(props);
+  propsRef.current = props;
+  const [state, setState] = useState<ViewerState>({
+    rect: null,
+    isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
+    isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
+    chapterDocIndex: parseInt(
+      ConfigService.getObjectConfig(props.currentBook.key, "recordLocation", {})
+        .chapterDocIndex || 0
+    ),
+    pageOffset: "",
+    pageWidth: "",
+    chapter: "",
+    rendition: null,
+  });
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const updateState = (patch: Partial<ViewerState>) =>
+    setState((prev) => ({ ...prev, ...patch }));
+  const resizeHandlerRef = useRef<(() => void) | null>(null);
+  const pendingRerenderRef = useRef(false);
+  const prevWidthPropsRef = useRef(props);
+
+  const handleHighlight = async (rendition: any) => {
     if (!rendition) return;
     let highlighters: any = await DatabaseService.getRecordsByBookKey(
-      this.props.currentBook.key,
+      propsRef.current.currentBook.key,
       "notes"
     );
     if (!highlighters) return;
@@ -173,16 +99,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         // epub from 1.5.2 or older
         return (
           item.chapter ===
-          rendition.getChapterDoc()[this.state.chapterDocIndex].label
+          rendition.getChapterDoc()[stateRef.current.chapterDocIndex].label
         );
       } else if (cfi.fingerprint) {
         // pdf from 1.7.4 or older
-        return cfi.page - 1 === this.state.chapterDocIndex;
+        return cfi.page - 1 === stateRef.current.chapterDocIndex;
       } else {
-        return item.chapterIndex === this.state.chapterDocIndex;
+        return item.chapterIndex === stateRef.current.chapterDocIndex;
       }
     });
-    if (this.props.currentBook.format === "PDF") {
+    if (propsRef.current.currentBook.format === "PDF") {
       highlightersByChapter = highlightersByChapter.map((item: Note) => {
         let cfi = JSON.parse(item.cfi);
         if (cfi.fingerprint) {
@@ -195,24 +121,22 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         return item;
       });
     }
-    await rendition.renderHighlighters(
-      highlightersByChapter,
-      this.handleNoteClick
-    );
+    await rendition.renderHighlighters(highlightersByChapter, handleNoteClick);
     if (
-      isReadingRawPDF(this.props.currentBook) &&
-      (this.props.readerMode === "double" || this.props.readerMode === "scroll")
+      isReadingRawPDF(propsRef.current.currentBook) &&
+      (propsRef.current.readerMode === "double" ||
+        propsRef.current.readerMode === "scroll")
     ) {
       let highlightersByChapter = highlighters.filter((item: Note) => {
         let cfi = JSON.parse(item.cfi);
         if (cfi.fingerprint) {
           // pdf from 1.7.4 or older
-          return cfi.page === this.state.chapterDocIndex;
+          return cfi.page === stateRef.current.chapterDocIndex;
         } else {
-          return item.chapterIndex === this.state.chapterDocIndex + 1;
+          return item.chapterIndex === stateRef.current.chapterDocIndex + 1;
         }
       });
-      if (this.props.currentBook.format === "PDF") {
+      if (propsRef.current.currentBook.format === "PDF") {
         highlightersByChapter = highlightersByChapter.map((item: Note) => {
           let cfi = JSON.parse(item.cfi);
           if (cfi.fingerprint) {
@@ -227,42 +151,42 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }
       await rendition.renderHighlighters(
         highlightersByChapter,
-        this.handleNoteClick
+        handleNoteClick
       );
     }
   };
-  handleNoteClick = (event: Event) => {
-    this.props.handleNoteKey((event.target as any).dataset.key);
-    this.props.handleMenuMode("note");
-    this.props.handleOpenMenu(true);
+  const handleNoteClick = (event: Event) => {
+    propsRef.current.handleNoteKey((event.target as any).dataset.key);
+    propsRef.current.handleMenuMode("note");
+    propsRef.current.handleOpenMenu(true);
   };
-  handleRenderBook = async () => {
+  const handleRenderBook = async () => {
     if (lock) return;
-    let { key, path, format, name } = this.props.currentBook;
+    let { key, path, format, name } = propsRef.current.currentBook;
     if (ConfigService.getAllListConfig("seperateStyleBooks").includes(key)) {
       window.currentBookKey = key;
-      this.props.handleBackgroundColor(
+      propsRef.current.handleBackgroundColor(
         ConfigService.getReaderConfig("backgroundColor") || ""
       );
     } else {
       window.currentBookKey = "";
     }
-    this.props.handleHtmlBook(null);
-    if (this.state.rendition) {
+    propsRef.current.handleHtmlBook(null);
+    if (stateRef.current.rendition) {
       // 停止旧渲染实例的自动滚动定时器，避免重渲染后旧循环继续占用滚动容器
-      this.state.rendition.autoScroll?.(0, "no");
-      this.state.rendition.autoScrollPDF?.("no");
-      this.state.rendition.removeContent();
+      stateRef.current.rendition.autoScroll?.(0, "no");
+      stateRef.current.rendition.autoScrollPDF?.("no");
+      stateRef.current.rendition.removeContent();
     }
     let result;
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, "zip", path);
-    if (isFixedLayoutComic(this.props.currentBook)) {
+    if (isFixedLayoutComic(propsRef.current.currentBook)) {
       isCacheExsit = false;
     }
     if (
       isElectron &&
-      (this.props.currentBook.format === "CBZ" ||
-        this.props.currentBook.format === "CBT")
+      (propsRef.current.currentBook.format === "CBZ" ||
+        propsRef.current.currentBook.format === "CBT")
     ) {
       result = new ArrayBuffer(0);
       clearComicTemp();
@@ -276,7 +200,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
 
     const crop = ConfigService.getObjectConfig(
-      this.props.currentBook.key,
+      propsRef.current.currentBook.key,
       "pdfCrop",
       null
     );
@@ -291,14 +215,14 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }
     }
     const ocrLangKey =
-      this.props.currentBook.description.indexOf("scanned") > -1
+      propsRef.current.currentBook.description.indexOf("scanned") > -1
         ? "scannedOcrLang"
         : "textOcrLang";
     const isScannedBook =
-      this.props.currentBook.description.indexOf("scanned") > -1;
-    const rawOcrEngine = getDefaultOcrEngine(this.props.currentBook);
+      propsRef.current.currentBook.description.indexOf("scanned") > -1;
+    const rawOcrEngine = getDefaultOcrEngine(propsRef.current.currentBook);
     let ocrEngine = rawOcrEngine;
-    let ocrLang = getDefaultOcrLang(rawOcrEngine, this.props.currentBook);
+    let ocrLang = getDefaultOcrLang(rawOcrEngine, propsRef.current.currentBook);
     let externalWorker: {
       recognize: (input: string) => Promise<unknown>;
     } = {
@@ -349,26 +273,26 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       result,
       {
         format: isCacheExsit ? "CACHE" : format,
-        isFixedLayout: isFixedLayoutComic(this.props.currentBook)
+        isFixedLayout: isFixedLayoutComic(propsRef.current.currentBook)
           ? "yes"
           : "no",
-        readerMode: this.props.readerMode,
-        charset: this.props.currentBook.charset,
+        readerMode: propsRef.current.readerMode,
+        charset: propsRef.current.currentBook.charset,
         animation: ConfigService.getReaderConfig("animation") || "none",
         convertChinese: ConfigService.getReaderConfig("convertChinese"),
         bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
-        textRules: getTextRules(this.props.currentBook.key),
+        textRules: getTextRules(propsRef.current.currentBook.key),
         codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
         revertDirection:
           ConfigService.getReaderConfig("revertDirection") || "no",
         parserRegex: getParserRegex(
-          this.props.currentBook.format,
-          this.props.currentBook.key
+          propsRef.current.currentBook.format,
+          propsRef.current.currentBook.key
         ),
         fullTranslationMode:
           ConfigService.getAllListConfig("fullTranslationBooks").includes(
-            this.props.currentBook.key
-          ) && this.props.isAuthed
+            propsRef.current.currentBook.key
+          ) && propsRef.current.isAuthed
             ? ConfigService.getReaderConfig("fullTranslationMode")
             : "no",
         textOrientation: ConfigService.getReaderConfig("textOrientation"),
@@ -400,19 +324,19 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ),
         isEnableKoReaderSync:
           ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes",
-        password: getPdfPassword(this.props.currentBook),
+        password: getPdfPassword(propsRef.current.currentBook),
         pdfCrop,
-        scale: parseFloat(this.props.scale),
+        scale: parseFloat(propsRef.current.scale),
         isConvertPDF: ConfigService.getAllListConfig(
           "convertPDFBooks"
-        ).includes(this.props.currentBook.key)
+        ).includes(propsRef.current.currentBook.key)
           ? "yes"
           : "no",
         ocrLang,
         externalWorker,
         ocrEngine,
         serverRegion:
-          getServerRegion() === "china" && this.props.isAuthed
+          getServerRegion() === "china" && propsRef.current.isAuthed
             ? "china"
             : "global",
         paraSpacingValue:
@@ -420,7 +344,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         titleSizeValue:
           ConfigService.getReaderConfig("titleSizeValue") || "1.2",
         isScannedPDF:
-          this.props.currentBook.description.indexOf("scanned") > -1
+          propsRef.current.currentBook.description.indexOf("scanned") > -1
             ? "yes"
             : "no",
         brushColor:
@@ -473,16 +397,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         getZipBuffer: getZipBuffer,
         getTarEntries: getTarEntries,
         getZipEntries: getZipEntries,
-        filePath: BookUtil.getBookPath(this.props.currentBook),
-        bookKey: this.props.currentBook.key,
+        filePath: BookUtil.getBookPath(propsRef.current.currentBook),
+        bookKey: propsRef.current.currentBook.key,
         getOcrCache: getOcrCache,
         saveOcrCache: saveOcrCache,
       },
       Kookit
     );
-    if (this.props.currentBook.format === "TXT") {
+    if (propsRef.current.currentBook.format === "TXT") {
       let bookLocation = ConfigService.getObjectConfig(
-        this.props.currentBook.key,
+        propsRef.current.currentBook.key,
         "recordLocation",
         {}
       );
@@ -494,10 +418,10 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       await rendition.renderTo(document.getElementById("page-area"));
     }
 
-    await this.handleRest(rendition);
+    await handleRest(rendition);
     if (
       ConfigService.getReaderConfig("isAutoReading") === "yes" &&
-      this.props.readerMode === "scroll"
+      propsRef.current.readerMode === "scroll"
     ) {
       // 自动阅读开启：每次重渲染后以保存的速率重新启动自动滚动
       const rate = parseFloat(
@@ -506,41 +430,41 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       rendition.autoScroll?.(rate, "yes");
       rendition.autoScrollPDF?.("yes");
     }
-    this.props.handleReadingState(true);
+    propsRef.current.handleReadingState(true);
 
     ConfigService.setListConfig(
-      collectionUtil.getRecentBookKey(this.props.currentBook.key),
+      collectionUtil.getRecentBookKey(propsRef.current.currentBook.key),
       "recentBooks"
     );
     document.title = name + " - Koodo Reader";
   };
 
-  handleRest = async (rendition: any) => {
+  const handleRest = async (rendition: any) => {
     htmlMouseEvent(
       rendition,
-      this.props.currentBook,
-      this.props.readerMode,
+      propsRef.current.currentBook,
+      propsRef.current.readerMode,
       (scale: string) => {
         flushSync(() => {
-          this.props.handleScale(scale);
+          propsRef.current.handleScale(scale);
         });
       },
-      this.props.renderBookFunc
+      propsRef.current.renderBookFunc
     );
     let chapters = rendition.getChapter();
     let chapterDocs = rendition.getChapterDoc();
     let flattenChapters = rendition.flatChapter(chapters);
-    this.props.handleHtmlBook({
-      key: this.props.currentBook.key,
+    propsRef.current.handleHtmlBook({
+      key: propsRef.current.currentBook.key,
       chapters,
       flattenChapters,
       rendition: rendition,
     });
-    this.setState({ rendition });
-    if (isReadingRawPDF(this.props.currentBook)) {
+    updateState({ rendition });
+    if (isReadingRawPDF(propsRef.current.currentBook)) {
       //ignore
     } else {
-      StyleUtil.addDefaultCss(this.props.currentBook.key);
+      StyleUtil.addDefaultCss(propsRef.current.currentBook.key);
       await StyleUtil.applyReaderFonts(rendition);
     }
 
@@ -555,7 +479,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       page: string;
       xpath: string;
     } = ConfigService.getObjectConfig(
-      this.props.currentBook.key,
+      propsRef.current.currentBook.key,
       "recordLocation",
       {}
     );
@@ -584,7 +508,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       }
     }
     rendition.on("rendered", async () => {
-      this.handleLocation();
+      handleLocation();
       let bookLocation: {
         text: string;
         count: string;
@@ -592,14 +516,15 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapterDocIndex: string;
         chapterHref: string;
       } = ConfigService.getObjectConfig(
-        this.props.currentBook.key,
+        propsRef.current.currentBook.key,
         "recordLocation",
         {}
       );
 
       let chapter =
         bookLocation.chapterTitle ||
-        (this.props.htmlBook && this.props.htmlBook.flattenChapters[0]
+        (propsRef.current.htmlBook &&
+        propsRef.current.htmlBook.flattenChapters[0]
           ? ""
           : "Unknown chapter");
       let chapterDocIndex = 0;
@@ -607,9 +532,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         chapterDocIndex = parseInt(bookLocation.chapterDocIndex);
       } else {
         chapterDocIndex =
-          bookLocation.chapterTitle && this.props.htmlBook
+          bookLocation.chapterTitle && propsRef.current.htmlBook
             ? _.findLastIndex(
-                this.props.htmlBook.flattenChapters.map((item) => {
+                propsRef.current.htmlBook.flattenChapters.map((item) => {
                   item.label = item.label.trim();
                   return item;
                 }),
@@ -619,34 +544,34 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
               )
             : 0;
       }
-      this.props.handleCurrentChapter(chapter);
-      this.props.handleCurrentChapterIndex(chapterDocIndex);
+      propsRef.current.handleCurrentChapter(chapter);
+      propsRef.current.handleCurrentChapterIndex(chapterDocIndex);
 
-      this.setState({
+      updateState({
         chapter,
         chapterDocIndex,
       });
-      if (isReadingRawPDF(this.props.currentBook)) {
+      if (isReadingRawPDF(propsRef.current.currentBook)) {
         //ignore
       } else {
-        StyleUtil.addDefaultCss(this.props.currentBook.key);
+        StyleUtil.addDefaultCss(propsRef.current.currentBook.key);
         await StyleUtil.applyReaderFonts(rendition);
       }
       // rendition.tranformText();
-      this.handleBindGesture();
-      await this.handleHighlight(rendition);
+      handleBindGesture();
+      await handleHighlight(rendition);
       lock = true;
       setTimeout(() => {
         lock = false;
-        if (this._pendingRerender) {
-          this._pendingRerender = false;
-          this.handleRenderBook();
+        if (pendingRerenderRef.current) {
+          pendingRerenderRef.current = false;
+          handleRenderBook();
         }
       }, 1000);
       return false;
     });
     if (
-      this.props.currentBook.format === "TXT" &&
+      propsRef.current.currentBook.format === "TXT" &&
       rendition.format !== "CACHE"
     ) {
       if (
@@ -659,8 +584,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         await rendition.refreshContent();
         let chapters = rendition.getChapter();
         let flattenChapters = rendition.flatChapter(chapters);
-        this.props.handleHtmlBook({
-          key: this.props.currentBook.key,
+        propsRef.current.handleHtmlBook({
+          key: propsRef.current.currentBook.key,
           chapters,
           flattenChapters,
           rendition: rendition,
@@ -669,66 +594,67 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
   };
 
-  handleLocation = () => {
-    if (!this.props.htmlBook) {
+  const handleLocation = () => {
+    if (!propsRef.current.htmlBook) {
       return;
     }
-    let position = this.props.htmlBook.rendition.getPosition();
+    let position = propsRef.current.htmlBook.rendition.getPosition();
     ConfigService.setObjectConfig(
-      this.props.currentBook.key,
+      propsRef.current.currentBook.key,
       position,
       "recordLocation"
     );
   };
-  handleBindGesture = () => {
-    let docs = getIframeDoc(this.props.currentBook);
+  const handleBindGesture = () => {
+    let docs = getIframeDoc(propsRef.current.currentBook);
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
       doc.addEventListener("click", () => {
-        this.props.handleLeaveReader("left");
-        this.props.handleLeaveReader("right");
-        this.props.handleLeaveReader("top");
-        this.props.handleLeaveReader("bottom");
+        propsRef.current.handleLeaveReader("left");
+        propsRef.current.handleLeaveReader("right");
+        propsRef.current.handleLeaveReader("top");
+        propsRef.current.handleLeaveReader("bottom");
       });
       doc.addEventListener("pointerup", (event) => {
-        if (isPaginatedBook(this.props.currentBook)) {
+        if (isPaginatedBook(propsRef.current.currentBook)) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
           let id = targetIframe?.getAttribute("id") || "";
           let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
-          this.setState({ chapterDocIndex });
+          updateState({ chapterDocIndex });
         }
 
-        if (this.state.isDisablePopup) {
+        if (stateRef.current.isDisablePopup) {
           if (doc!.getSelection()!.toString().trim().length === 0) {
             let rect = doc!
               .getSelection()!
               .getRangeAt(0)
               .getBoundingClientRect();
-            this.setState({ rect });
+            updateState({ rect });
           }
         }
-        if (this.state.isDisablePopup) return;
+        if (stateRef.current.isDisablePopup) return;
         let selection = doc!.getSelection();
         if (!selection || selection.rangeCount === 0) return;
 
         var rect = selection.getRangeAt(0).getBoundingClientRect();
-        this.setState({ rect });
+        updateState({ rect });
       });
       doc.addEventListener("contextmenu", (event) => {
-        if (isPaginatedBook(this.props.currentBook)) {
+        if (isPaginatedBook(propsRef.current.currentBook)) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
           let id = targetIframe?.getAttribute("id") || "";
           let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
-          this.setState({ chapterDocIndex });
+          updateState({ chapterDocIndex });
         }
         if (document.location.href.indexOf("localhost") === -1) {
           event.preventDefault();
         }
 
-        if (!this.state.isDisablePopup && !this.state.isTouch) return;
+        if (!stateRef.current.isDisablePopup && !stateRef.current.isTouch)
+          return;
 
         if (
           !doc!.getSelection() ||
@@ -740,101 +666,177 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
 
         if (!selection || selection.rangeCount === 0) return;
         var rect = selection.getRangeAt(0).getBoundingClientRect();
-        this.setState({ rect });
+        updateState({ rect });
       });
     }
   };
-  render() {
-    let isReadingAid =
-      !isReadingRawPDF(this.props.currentBook) &&
-      (this.props.isParagraphMode || this.props.isSpeedReading);
-    return (
-      <>
-        {this.props.htmlBook && !isReadingAid ? (
-          <PopupMenu
-            {...({
-              rendition: this.props.htmlBook.rendition,
-              rect: this.state.rect,
-              chapterDocIndex: this.state.chapterDocIndex,
-              chapter: this.state.chapter,
-            } as any)}
-          />
-        ) : null}
-        {this.props.htmlBook ? (
-          <PopupRefer
-            {...({
-              rendition: this.props.htmlBook.rendition,
-              chapterDocIndex: this.state.chapterDocIndex,
-            } as any)}
-          />
-        ) : null}
-        {this.props.htmlBook &&
-        (this.props.isDockedRight ||
-          (this.props.isOpenMenu &&
-            (this.props.menuMode === "dict" ||
-              this.props.menuMode === "trans" ||
-              this.props.menuMode === "assistant" ||
-              this.props.menuMode === "note"))) ? (
-          <PopupBox
-            {...({
-              rendition: this.props.htmlBook.rendition,
-              rect: this.state.rect,
-              chapterDocIndex: this.state.chapterDocIndex,
-              chapter: this.state.chapter,
-            } as any)}
-          />
-        ) : null}
-        {this.props.htmlBook && this.props.currentBook.format !== "PDF" && (
-          <ImageViewer
-            {...({
-              isShow: this.props.isShow,
-              rendition: this.props.htmlBook.rendition,
-              handleEnterReader: this.props.handleEnterReader,
-              handleLeaveReader: this.props.handleLeaveReader,
-            } as any)}
-          />
-        )}
-        <div
-          className={
-            this.props.readerMode === "scroll" &&
-            !isReadingAidMode(
-              this.props.currentBook.format,
-              this.props.currentBook.key
-            )
-              ? "html-viewer-page scrolling-html-viewer-page"
-              : "html-viewer-page"
-          }
-          id="page-area"
-          style={
-            this.props.readerMode === "scroll" &&
-            document.body.clientWidth >= 570
-              ? {
-                  // marginLeft: this.state.pageOffset,
-                  // marginRight: this.state.pageOffset,
-                  paddingLeft: "0px",
-                  paddingRight: "0px",
-                  left: this.state.pageOffset,
-                  width: this.state.pageWidth,
-                }
-              : {
-                  left: this.state.pageOffset,
-                  width: this.state.pageWidth,
-                }
-          }
-        ></div>
-        <PageWidget />
-        {this.props.isHideBackground ||
-        this.props.textOrientation === "vertical" ||
-        this.props.isShowPageBorder ||
-        ((this.props.isParagraphMode ||
-          this.props.isReadingRuler ||
-          this.props.isSpeedReading) &&
-          !isReadingRawPDF(this.props.currentBook)) ||
-        this.props.isMergeWord ? null : this.props.currentBook.key ? (
-          <Background />
-        ) : null}
-      </>
+
+  useEffect(() => {
+    propsRef.current.handleFetchBookmarks();
+    propsRef.current.handleFetchNotes();
+    propsRef.current.handleFetchBooks();
+    propsRef.current.handleFetchPlugins();
+
+    handleRenderBook();
+    //make sure page width is always 12 times, section = Math.floor(element.clientWidth / 12), or text will be blocked
+    updateState(
+      getPageWidth(
+        propsRef.current.readerMode,
+        propsRef.current.scale,
+        parseInt(propsRef.current.margin),
+        propsRef.current.isNavLocked,
+        propsRef.current.isSettingLocked || propsRef.current.isDockedRight,
+        propsRef.current.isFitPage
+      )
     );
-  }
-}
+    // 刷新页面后，若 popupBox 处于固定右侧状态，自动恢复显示 popupAssist
+    if (propsRef.current.isDockedRight) {
+      propsRef.current.handleMenuMode("assistant");
+      propsRef.current.handleOpenMenu(true);
+    }
+    propsRef.current.handleRenderBookFunc(handleRenderBook);
+    const resizeHandler = throttle(() => {
+      flushSync(() => {
+        updateState(
+          getPageWidth(
+            propsRef.current.readerMode,
+            propsRef.current.scale,
+            parseInt(propsRef.current.margin),
+            propsRef.current.isNavLocked,
+            propsRef.current.isSettingLocked || propsRef.current.isDockedRight,
+            propsRef.current.isFitPage
+          )
+        );
+      });
+      if (lock) {
+        pendingRerenderRef.current = true;
+      } else {
+        handleRenderBook();
+      }
+    });
+    resizeHandlerRef.current = resizeHandler;
+    window.addEventListener("resize", resizeHandler);
+    return () => {
+      if (resizeHandlerRef.current) {
+        window.removeEventListener("resize", resizeHandlerRef.current);
+        resizeHandlerRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const nextProps = props;
+    const prevProps = prevWidthPropsRef.current;
+    prevWidthPropsRef.current = props;
+    if (
+      nextProps.margin !== prevProps.margin ||
+      nextProps.scale !== prevProps.scale ||
+      nextProps.readerMode !== prevProps.readerMode ||
+      nextProps.isNavLocked !== prevProps.isNavLocked ||
+      nextProps.isSettingLocked !== prevProps.isSettingLocked ||
+      nextProps.isFitPage !== prevProps.isFitPage ||
+      nextProps.isDockedRight !== prevProps.isDockedRight
+    ) {
+      updateState(
+        getPageWidth(
+          nextProps.readerMode,
+          nextProps.scale,
+          parseInt(nextProps.margin),
+          nextProps.isNavLocked,
+          nextProps.isSettingLocked || nextProps.isDockedRight,
+          nextProps.isFitPage
+        )
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+
+  let isReadingAid =
+    !isReadingRawPDF(props.currentBook) &&
+    (props.isParagraphMode || props.isSpeedReading);
+  return (
+    <>
+      {props.htmlBook && !isReadingAid ? (
+        <PopupMenu
+          {...({
+            rendition: props.htmlBook.rendition,
+            rect: state.rect,
+            chapterDocIndex: state.chapterDocIndex,
+            chapter: state.chapter,
+          } as any)}
+        />
+      ) : null}
+      {props.htmlBook ? (
+        <PopupRefer
+          {...({
+            rendition: props.htmlBook.rendition,
+            chapterDocIndex: state.chapterDocIndex,
+          } as any)}
+        />
+      ) : null}
+      {props.htmlBook &&
+      (props.isDockedRight ||
+        (props.isOpenMenu &&
+          (props.menuMode === "dict" ||
+            props.menuMode === "trans" ||
+            props.menuMode === "assistant" ||
+            props.menuMode === "note"))) ? (
+        <PopupBox
+          {...({
+            rendition: props.htmlBook.rendition,
+            rect: state.rect,
+            chapterDocIndex: state.chapterDocIndex,
+            chapter: state.chapter,
+          } as any)}
+        />
+      ) : null}
+      {props.htmlBook && props.currentBook.format !== "PDF" && (
+        <ImageViewer
+          {...({
+            isShow: props.isShow,
+            rendition: props.htmlBook.rendition,
+            handleEnterReader: props.handleEnterReader,
+            handleLeaveReader: props.handleLeaveReader,
+          } as any)}
+        />
+      )}
+      <div
+        className={
+          props.readerMode === "scroll" &&
+          !isReadingAidMode(props.currentBook.format, props.currentBook.key)
+            ? "html-viewer-page scrolling-html-viewer-page"
+            : "html-viewer-page"
+        }
+        id="page-area"
+        style={
+          props.readerMode === "scroll" && document.body.clientWidth >= 570
+            ? {
+                // marginLeft: this.state.pageOffset,
+                // marginRight: this.state.pageOffset,
+                paddingLeft: "0px",
+                paddingRight: "0px",
+                left: state.pageOffset,
+                width: state.pageWidth,
+              }
+            : {
+                left: state.pageOffset,
+                width: state.pageWidth,
+              }
+        }
+      ></div>
+      <PageWidget />
+      {props.isHideBackground ||
+      props.textOrientation === "vertical" ||
+      props.isShowPageBorder ||
+      ((props.isParagraphMode ||
+        props.isReadingRuler ||
+        props.isSpeedReading) &&
+        !isReadingRawPDF(props.currentBook)) ||
+      props.isMergeWord ? null : props.currentBook.key ? (
+        <Background />
+      ) : null}
+    </>
+  );
+};
 export default withRouter(Viewer as any);

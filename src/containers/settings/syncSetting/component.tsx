@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
@@ -47,48 +47,58 @@ import Book from "../../../models/Book";
 import ConfigUtil from "../../../utils/file/configUtil";
 import TokenService from "../../../utils/storage/tokenService";
 declare var window: any;
-class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
-  constructor(props: SettingInfoProps) {
-    super(props);
-    this.state = {
-      isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
-      autoOffline: ConfigService.getReaderConfig("autoOffline") === "yes",
-      isDisableAutoSync:
-        ConfigService.getReaderConfig("isDisableAutoSync") === "yes",
-      isEnableKoodoSync:
-        ConfigService.getReaderConfig("isEnableKoodoSync") === "yes",
-      hideSyncProgress:
-        ConfigService.getReaderConfig("hideSyncProgress") === "yes",
-      driveConfig: {},
-      scheduledSyncInterval:
-        ConfigService.getReaderConfig("scheduledSyncInterval") || "",
-      backupDrive: "",
-      restoreDrive: "",
-      showDefaultSyncAddGrid: false,
-    };
-  }
 
-  handleRest = (_bool: boolean) => {
-    toast.success(this.props.t("Change successful"));
+const SyncSetting = (props: SettingInfoProps) => {
+  const [state, setState] = useState<SettingInfoState>(() => ({
+    isKeepLocal: ConfigService.getReaderConfig("isKeepLocal") === "yes",
+    autoOffline: ConfigService.getReaderConfig("autoOffline") === "yes",
+    isDisableAutoSync:
+      ConfigService.getReaderConfig("isDisableAutoSync") === "yes",
+    isEnableKoodoSync:
+      ConfigService.getReaderConfig("isEnableKoodoSync") === "yes",
+    hideSyncProgress:
+      ConfigService.getReaderConfig("hideSyncProgress") === "yes",
+    driveConfig: {},
+    scheduledSyncInterval:
+      ConfigService.getReaderConfig("scheduledSyncInterval") || "",
+    backupDrive: "",
+    restoreDrive: "",
+    showDefaultSyncAddGrid: false,
+  }));
+
+  const setPartialState = (partial: Partial<SettingInfoState>) => {
+    setState((prevState) => ({ ...prevState, ...partial }));
   };
-  handleJump = (url: string) => {
+
+  const handleRest = (_bool: boolean) => {
+    toast.success(props.t("Change successful"));
+  };
+
+  const handleJump = (url: string) => {
     openInBrowser(url);
   };
-  handleSetting = (stateName: string) => {
-    this.setState({ [stateName]: !this.state[stateName] } as any);
-    ConfigService.setReaderConfig(
-      stateName,
-      this.state[stateName] ? "no" : "yes"
+
+  const handleSetting = (stateName: string) => {
+    const currentValue = (state as any)[stateName];
+    setState(
+      (prevState) =>
+        ({
+          ...prevState,
+          [stateName]: !(prevState as any)[stateName],
+        }) as any
     );
-    this.handleRest(this.state[stateName]);
+    ConfigService.setReaderConfig(stateName, currentValue ? "no" : "yes");
+    handleRest(currentValue);
   };
-  handleAddDataSourceFromGrid = async (targetDrive: string) => {
-    await this.handleAddDataSource({ target: { value: targetDrive } });
-    if (this.props.settingDrive) {
-      this.setState({ showDefaultSyncAddGrid: false });
+
+  const handleAddDataSourceFromGrid = async (targetDrive: string) => {
+    await handleAddDataSource({ target: { value: targetDrive } });
+    if (props.settingDrive) {
+      setPartialState({ showDefaultSyncAddGrid: false });
     }
   };
-  handleAddDataSource = async (event: any) => {
+
+  const handleAddDataSource = async (event: any) => {
     let targetDrive = event.target.value;
     if (!targetDrive) {
       return;
@@ -100,16 +110,16 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       !isElectron
     ) {
       toast(
-        this.props.t(
+        props.t(
           "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
         )
       );
       return;
     }
-    if (!this.props.isAuthed) {
-      toast(this.props.t("Please upgrade to Pro to use this feature"));
-      this.props.handleSetting(true);
-      this.props.handleSettingMode("account");
+    if (!props.isAuthed) {
+      toast(props.t("Please upgrade to Pro to use this feature"));
+      props.handleSetting(true);
+      props.handleSettingMode("account");
       return;
     }
     if (
@@ -122,14 +132,14 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     if (
       driveList.find((item) => item.value === targetDrive)?.isPro &&
-      !this.props.isAuthed
+      !props.isAuthed
     ) {
-      toast(this.props.t("Please upgrade to Pro to use this feature"));
-      this.props.handleSetting(true);
-      this.props.handleSettingMode("account");
+      toast(props.t("Please upgrade to Pro to use this feature"));
+      props.handleSetting(true);
+      props.handleSettingMode("account");
       return;
     }
-    this.props.handleSettingDrive(targetDrive);
+    props.handleSettingDrive(targetDrive);
     let settingDrive = targetDrive;
     if (settingDrive === "icloud" || settingDrive === "folder") {
       let drivePath = "";
@@ -137,14 +147,14 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         drivePath = getICloudDrivePath();
         if (!drivePath) {
           toast.error(
-            this.props.t(
+            props.t(
               "Can't find Koodo Reader's folder in the default iCloud path, please make sure iCloud Drive is installed and set up correctly, and you have already synced your library to iCloud Drive on the iOS version first."
             ),
             {
               duration: 6000,
             }
           );
-          this.props.handleSettingDrive("");
+          props.handleSettingDrive("");
           return;
         }
       } else if (settingDrive === "folder") {
@@ -152,7 +162,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         drivePath = await ipcRenderer.invoke("select-path");
         if (!drivePath) {
           toast.error(i18n.t("Please select a folder"));
-          this.props.handleSettingDrive("");
+          props.handleSettingDrive("");
           return;
         }
       }
@@ -164,7 +174,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
       } else {
         toast.error(i18n.t("Binding failed"), { id: "adding-sync-id" });
-        this.props.handleSettingDrive("");
+        props.handleSettingDrive("");
         return;
       }
       SyncService.removeSyncUtil(settingDrive);
@@ -178,7 +188,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       ConfigService.setListConfig(settingDrive, "dataSourceList");
       toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
       if (
-        this.props.isAuthed &&
+        props.isAuthed &&
         !ConfigService.getItem("defaultSyncOption") &&
         settingDrive !== "microsoft_exp"
       ) {
@@ -186,10 +196,10 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
           resetKoodoSync();
         }
-        this.props.handleFetchDefaultSyncOption();
+        props.handleFetchDefaultSyncOption();
       }
-      this.props.handleFetchDataSourceList();
-      this.props.handleSettingDrive("");
+      props.handleFetchDataSourceList();
+      props.handleSettingDrive("");
       return;
     }
     if (
@@ -204,7 +214,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       settingDrive === "microsoft_exp" ||
       settingDrive === "microsoft"
     ) {
-      this.handleJump(
+      handleJump(
         new SyncUtil(settingDrive, {}).getAuthUrl(
           getServerRegion() === "china" &&
             (settingDrive === "microsoft" ||
@@ -218,7 +228,8 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       );
     }
   };
-  handleDeleteDataSource = async (event: any) => {
+
+  const handleDeleteDataSource = async (event: any) => {
     let targetDrive = event.target.value;
     if (!targetDrive) {
       return;
@@ -233,24 +244,25 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       });
     }
     ConfigService.deleteListConfig(targetDrive, "dataSourceList");
-    this.props.handleFetchDataSourceList();
+    props.handleFetchDataSourceList();
     if (targetDrive === ConfigService.getItem("defaultSyncOption")) {
       ConfigService.removeItem("defaultSyncOption");
-      this.props.handleFetchDefaultSyncOption();
+      props.handleFetchDefaultSyncOption();
       if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
         resetKoodoSync();
       }
     }
-    toast.success(this.props.t("Deletion successful"));
+    toast.success(props.t("Deletion successful"));
   };
-  handleSetDefaultSyncOption = async (newValue: string) => {
+
+  const handleSetDefaultSyncOption = async (newValue: string) => {
     if (!newValue) {
       return;
     }
-    if (!this.props.isAuthed) {
-      toast(this.props.t("Please upgrade to Pro to use this feature"));
-      this.props.handleSetting(true);
-      this.props.handleSettingMode("account");
+    if (!props.isAuthed) {
+      toast(props.t("Please upgrade to Pro to use this feature"));
+      props.handleSetting(true);
+      props.handleSettingMode("account");
       return;
     }
 
@@ -258,14 +270,14 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
       resetKoodoSync();
     }
-    this.props.handleFetchDefaultSyncOption();
-    toast.success(this.props.t("Change successful"));
+    props.handleFetchDefaultSyncOption();
+    toast.success(props.t("Change successful"));
     if (
       !(await ConfigUtil.isCloudEmpty()) &&
       ConfigService.getReaderConfig("isEnableKoodoSync") === "yes"
     ) {
       toast(
-        this.props.t(
+        props.t(
           "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync."
         ),
         {
@@ -274,20 +286,22 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       );
     }
   };
-  handleSelectBackupOrRestoreSource = async (
+
+  const handleSelectBackupOrRestoreSource = async (
     event: any,
     mode: "backup" | "restore"
   ) => {
     let targetDrive = event.target.value;
     if (!targetDrive) {
-      this.setState({
-        backupDrive: mode === "backup" ? "" : this.state.backupDrive,
-        restoreDrive: mode === "restore" ? "" : this.state.restoreDrive,
-      });
+      setState((prevState) => ({
+        ...prevState,
+        backupDrive: mode === "backup" ? "" : prevState.backupDrive,
+        restoreDrive: mode === "restore" ? "" : prevState.restoreDrive,
+      }));
       return;
     }
     if (targetDrive === "add") {
-      this.setState({ showDefaultSyncAddGrid: true });
+      setPartialState({ showDefaultSyncAddGrid: true });
       return;
     }
     if (
@@ -298,7 +312,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       !isElectron
     ) {
       toast(
-        this.props.t(
+        props.t(
           "Koodo Reader's web version are limited by the browser, for more powerful features, please download the desktop version."
         )
       );
@@ -306,24 +320,26 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     if (
       driveList.find((item) => item.value === targetDrive)?.isPro &&
-      !this.props.isAuthed
+      !props.isAuthed
     ) {
-      toast(this.props.t("Please upgrade to Pro to use this feature"));
-      this.props.handleSetting(true);
-      this.props.handleSettingMode("account");
+      toast(props.t("Please upgrade to Pro to use this feature"));
+      props.handleSetting(true);
+      props.handleSettingMode("account");
       return;
     }
-    this.setState({
-      backupDrive: mode === "backup" ? targetDrive : this.state.backupDrive,
-      restoreDrive: mode === "restore" ? targetDrive : this.state.restoreDrive,
-    });
+    setState((prevState) => ({
+      ...prevState,
+      backupDrive: mode === "backup" ? targetDrive : prevState.backupDrive,
+      restoreDrive: mode === "restore" ? targetDrive : prevState.restoreDrive,
+    }));
     if (mode === "backup") {
-      this.handleBackupLibrary(targetDrive);
+      handleBackupLibrary(targetDrive);
     } else {
-      this.handleRestoreLibrary(targetDrive);
+      handleRestoreLibrary(targetDrive);
     }
   };
-  handleBackupLibrary = async (name: string) => {
+
+  const handleBackupLibrary = async (name: string) => {
     if (!name) {
       return;
     }
@@ -335,44 +351,45 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       }
       if (result === "success") {
         toast.dismiss("backup");
-        toast.success(this.props.t("Execute successful"));
-        this.props.handleFetchBooks();
+        toast.success(props.t("Execute successful"));
+        props.handleFetchBooks();
         await generateSyncRecord();
       } else {
         toast.dismiss("backup");
-        toast.error(this.props.t("Backup failed"));
+        toast.error(props.t("Backup failed"));
       }
       return;
     }
     if (!(await TokenService.getToken(name + "_token"))) {
-      this.props.handleTokenDialog(true);
+      props.handleTokenDialog(true);
       return;
     }
     toast.dismiss("backup");
-    toast(this.props.t("Uploading, please wait"), {
+    toast(props.t("Uploading, please wait"), {
       position: "bottom-center",
       id: "backup",
     });
-    this.props.handleLoadingDialog(true);
+    props.handleLoadingDialog(true);
     let result = await backup(name);
     if (result === "cancel") {
-      this.props.handleLoadingDialog(false);
+      props.handleLoadingDialog(false);
       toast.dismiss("backup");
       return;
     }
     if (result === "success") {
-      this.props.handleLoadingDialog(false);
+      props.handleLoadingDialog(false);
       toast.dismiss("backup");
-      toast.success(this.props.t("Execute successful"));
-      this.props.handleFetchBooks();
+      toast.success(props.t("Execute successful"));
+      props.handleFetchBooks();
       await generateSyncRecord();
     } else {
-      this.props.handleLoadingDialog(false);
+      props.handleLoadingDialog(false);
       toast.dismiss("backup");
-      toast.error(this.props.t("Upload failed, check your connection"));
+      toast.error(props.t("Upload failed, check your connection"));
     }
   };
-  handleRestoreLibrary = async (name: string) => {
+
+  const handleRestoreLibrary = async (name: string) => {
     if (!name) {
       return;
     }
@@ -384,61 +401,61 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       }
       if (result === "success") {
         toast.dismiss("backup");
-        toast.success(this.props.t("Execute successful"));
-        this.props.handleFetchBooks();
+        toast.success(props.t("Execute successful"));
+        props.handleFetchBooks();
         await generateSyncRecord();
         setTimeout(() => {
-          this.props.history.push("/manager/home");
+          props.history.push("/manager/home");
         }, 2000);
       } else {
         toast.dismiss("backup");
-        toast.error(
-          this.props.t("Download failed,network problem or no backup")
-        );
+        toast.error(props.t("Download failed,network problem or no backup"));
       }
       return;
     }
     if (!(await TokenService.getToken(name + "_token"))) {
-      this.props.handleTokenDialog(true);
+      props.handleTokenDialog(true);
       return;
     }
-    this.props.handleLoadingDialog(true);
+    props.handleLoadingDialog(true);
     toast.dismiss("backup");
-    toast(this.props.t("Downloading, please wait"));
+    toast(props.t("Downloading, please wait"));
     let result = await restore(name);
     if (result === "cancel") {
-      this.props.handleLoadingDialog(false);
+      props.handleLoadingDialog(false);
       toast.dismiss("backup");
       return;
     }
     if (result === "success") {
-      this.props.handleLoadingDialog(false);
+      props.handleLoadingDialog(false);
       toast.dismiss("backup");
-      toast.success(this.props.t("Execute successful"));
-      this.props.handleFetchBooks();
+      toast.success(props.t("Execute successful"));
+      props.handleFetchBooks();
       await generateSyncRecord();
       setTimeout(() => {
-        this.props.history.push("/manager/home");
+        props.history.push("/manager/home");
       }, 2000);
     } else {
-      this.props.handleLoadingDialog(false);
+      props.handleLoadingDialog(false);
       toast.dismiss("backup");
-      toast.error(this.props.t("Download failed,network problem or no backup"));
+      toast.error(props.t("Download failed,network problem or no backup"));
     }
   };
-  handleCancelDrive = () => {
-    this.props.handleSettingDrive("");
+
+  const handleCancelDrive = () => {
+    props.handleSettingDrive("");
   };
-  checkCorsForDrive = async (): Promise<boolean> => {
+
+  const checkCorsForDrive = async (): Promise<boolean> => {
     toast.loading(i18n.t("Testing connection..."), {
       id: "testing-connection-id",
     });
-    let corsResult = await testCORS(this.state.driveConfig.url);
+    let corsResult = await testCORS(state.driveConfig.url);
     if (!corsResult && !isElectron) {
       const extensionInfo = await detectKoodoExtension();
       if (extensionInfo.installed) {
         vexComfirmAsync(
-          this.props.t(
+          props.t(
             "Please click the Koodo Reader extension icon in the upper right corner of the browser, authorize the request to this endpoint, and try again"
           )
         );
@@ -451,13 +468,12 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     toast.dismiss("testing-connection-id");
     return true;
   };
-  handleConfirmDrive = async () => {
+
+  const handleConfirmDrive = async () => {
     let flag = true;
-    for (let item of driveInputConfig[this.props.settingDrive]) {
-      if (!this.state.driveConfig[item.value] && item.required) {
-        toast.error(
-          this.props.t("Missing parameters") + ": " + this.props.t(item.label)
-        );
+    for (let item of driveInputConfig[props.settingDrive]) {
+      if (!state.driveConfig[item.value] && item.required) {
+        toast.error(props.t("Missing parameters") + ": " + props.t(item.label));
         flag = false;
         break;
       }
@@ -466,54 +482,48 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       return;
     }
     if (
-      this.props.settingDrive === "webdav" ||
-      this.props.settingDrive === "docker" ||
-      this.props.settingDrive === "ftp" ||
-      this.props.settingDrive === "sftp" ||
-      this.props.settingDrive === "mega" ||
-      this.props.settingDrive === "s3compatible"
+      props.settingDrive === "webdav" ||
+      props.settingDrive === "docker" ||
+      props.settingDrive === "ftp" ||
+      props.settingDrive === "sftp" ||
+      props.settingDrive === "mega" ||
+      props.settingDrive === "s3compatible"
     ) {
       toast.loading(i18n.t("Adding"), { id: "adding-sync-id" });
-      let res = await encryptToken(
-        this.props.settingDrive,
-        this.state.driveConfig
-      );
+      let res = await encryptToken(props.settingDrive, state.driveConfig);
       if (res.code === 200) {
-        ConfigService.setListConfig(this.props.settingDrive, "dataSourceList");
+        ConfigService.setListConfig(props.settingDrive, "dataSourceList");
         toast.success(i18n.t("Binding successful"), { id: "adding-sync-id" });
       } else {
         toast.error(i18n.t("Binding failed"), { id: "adding-sync-id" });
       }
     } else {
-      await onSyncCallback(
-        this.props.settingDrive,
-        this.state.driveConfig.token
-      );
+      await onSyncCallback(props.settingDrive, state.driveConfig.token);
     }
-    SyncService.removeSyncUtil(this.props.settingDrive);
-    removeCloudConfig(this.props.settingDrive);
+    SyncService.removeSyncUtil(props.settingDrive);
+    removeCloudConfig(props.settingDrive);
     if (isElectron) {
       const ipcRenderer = window.electronAPI;
       await ipcRenderer.invoke("cloud-close", {
-        service: this.props.settingDrive,
+        service: props.settingDrive,
       });
     }
     if (
-      this.props.isAuthed &&
+      props.isAuthed &&
       !ConfigService.getItem("defaultSyncOption") &&
-      this.props.settingDrive !== "microsoft_exp"
+      props.settingDrive !== "microsoft_exp"
     ) {
-      ConfigService.setItem("defaultSyncOption", this.props.settingDrive);
+      ConfigService.setItem("defaultSyncOption", props.settingDrive);
       if (ConfigService.getReaderConfig("isEnableKoodoSync") === "yes") {
         resetKoodoSync();
       }
-      this.props.handleFetchDefaultSyncOption();
+      props.handleFetchDefaultSyncOption();
     }
-    this.props.handleFetchDataSourceList();
-    this.props.handleSettingDrive("");
+    props.handleFetchDataSourceList();
+    props.handleSettingDrive("");
   };
 
-  renderSwitchOption = (optionList: any[]) => {
+  const renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
         <div
@@ -523,34 +533,34 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <SwitchRow
             variant="setting"
             title={<Trans>{item.title}</Trans>}
-            isEnabled={this.state[item.propName]}
+            isEnabled={(state as any)[item.propName]}
             onClick={async () => {
               switch (item.propName) {
                 case "isEnableKoodoSync":
-                  this.handleSetting(item.propName);
+                  handleSetting(item.propName);
                   let encryptToken = await TokenService.getToken(
-                    this.props.defaultSyncOption + "_token"
+                    props.defaultSyncOption + "_token"
                   );
                   await updateUserConfig({
                     is_enable_koodo_sync:
                       ConfigService.getReaderConfig("isEnableKoodoSync"),
-                    default_sync_option: this.props.defaultSyncOption,
+                    default_sync_option: props.defaultSyncOption,
                     default_sync_token: encryptToken || "",
                   });
-                  let userInfo = await this.props.handleFetchUserInfo();
+                  let userInfo = await props.handleFetchUserInfo();
                   if (
                     ConfigService.getReaderConfig("isEnableKoodoSync") === "yes"
                   ) {
-                    this.props.cloudSyncFunc(userInfo);
+                    props.cloudSyncFunc(userInfo);
                   }
 
                   break;
                 case "autoOffline":
-                  this.handleSetting(item.propName);
-                  if (!this.state.autoOffline) {
-                    if (this.props.defaultSyncOption === "adrive") {
+                  handleSetting(item.propName);
+                  if (!state.autoOffline) {
+                    if (props.defaultSyncOption === "adrive") {
                       toast.error(
-                        this.props.t(
+                        props.t(
                           "Due to Aliyun Drive's stringent concurrency restrictions, we have bypassed the synchronization of books and covers. Please manually download the books by clicking on them"
                         ),
                         { id: "autoOffline" }
@@ -572,7 +582,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     );
                     clearInterval(timer);
 
-                    toast.success(this.props.t("Download completed"), {
+                    toast.success(props.t("Download completed"), {
                       id: "autoOffline",
                     });
 
@@ -583,7 +593,7 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
 
                   break;
                 default:
-                  this.handleSetting(item.propName);
+                  handleSetting(item.propName);
                   break;
               }
             }}
@@ -595,676 +605,673 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       );
     });
   };
-  render() {
-    const { showDefaultSyncAddGrid } = this.state;
-    return (
-      <>
-        <div
-          className="add-source-card"
-          onClick={() => {
-            this.setState({
-              showDefaultSyncAddGrid: !this.state.showDefaultSyncAddGrid,
-            });
+
+  const { showDefaultSyncAddGrid } = state;
+  return (
+    <>
+      <div
+        className="add-source-card"
+        onClick={() => {
+          setState((prevState) => ({
+            ...prevState,
+            showDefaultSyncAddGrid: !prevState.showDefaultSyncAddGrid,
+          }));
+        }}
+      >
+        <svg
+          className="add-source-card-icon"
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{
+            transform: showDefaultSyncAddGrid
+              ? "rotate(45deg)"
+              : "rotate(0deg)",
+            transition: "transform 0.25s ease",
           }}
         >
-          <svg
-            className="add-source-card-icon"
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{
-              transform: showDefaultSyncAddGrid
-                ? "rotate(45deg)"
-                : "rotate(0deg)",
-              transition: "transform 0.25s ease",
-            }}
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          <span className="add-source-card-label">
-            <Trans>Add data source</Trans>
-          </span>
-        </div>
-        {this.state.showDefaultSyncAddGrid && (
-          <div
-            className="account-login-grid"
-            style={{
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-              marginLeft: "25px",
-              marginRight: "25px",
-              fontWeight: 500,
-              marginBottom: "20px",
-            }}
-          >
-            {driveList
-              .filter((item) => !this.props.dataSourceList.includes(item.value))
-              .filter((item) => {
-                if (item.value === "microsoft_exp") {
-                  return false;
-                }
-                if (!isElectron) {
-                  return item.support.includes("browser");
-                }
-                return true;
-              })
-              .filter((item) => {
-                if (
-                  isElectron &&
-                  window.electronAPI?.runtime?.platform !== "darwin" &&
-                  item.value === "icloud"
-                ) {
-                  return false;
-                }
-                return true;
-              })
-              .map((item) => (
-                <div
-                  className="account-login-option"
-                  key={item.value}
-                  onClick={() => {
-                    this.handleAddDataSourceFromGrid(item.value);
-                  }}
-                >
-                  <span className="account-login-option-label">
-                    {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
-                  </span>
-                </div>
-              ))}
-          </div>
-        )}
-        {this.props.settingDrive && (
-          <div
-            className="voice-add-new-container"
-            style={{
-              marginLeft: "25px",
-              width: "calc(100% - 50px)",
-              fontWeight: 500,
-            }}
-          >
-            {this.props.settingDrive === "webdav" ||
-            this.props.settingDrive === "docker" ||
-            this.props.settingDrive === "ftp" ||
-            this.props.settingDrive === "sftp" ||
-            this.props.settingDrive === "mega" ||
-            this.props.settingDrive === "s3compatible" ? (
-              <>
-                {driveInputConfig[this.props.settingDrive].map((item) => {
-                  return (
-                    <div key={item.value}>
-                      <input
-                        type={item.type}
-                        name={item.value}
-                        key={item.value}
-                        placeholder={
-                          this.props.t(item.label) +
-                          (item.required
-                            ? ""
-                            : " (" + this.props.t("Optional") + ")")
-                        }
-                        onChange={(e) => {
-                          if (e.target.value) {
-                            this.setState((prevState) => ({
-                              driveConfig: {
-                                ...prevState.driveConfig,
-                                [item.value]: e.target.value.trim(),
-                              },
-                            }));
-                          }
-                        }}
-                        onContextMenu={() => {
-                          handleContextMenu(
-                            "token-dialog-" + item.value + "-box",
-                            true
-                          );
-                        }}
-                        id={"token-dialog-" + item.value + "-box"}
-                        className="token-dialog-username-box"
-                      />
-                      {item.value === "endpoint" ? (
-                        <div
-                          style={{
-                            marginTop: "5px",
-                            marginLeft: "2px",
-                            fontSize: "12px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {this.props.t(
-                            "This endpoint usually don't contain bucket name"
-                          )}
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                      {item.example && (
-                        <div
-                          style={{
-                            marginTop: "5px",
-                            marginBottom: "2px",
-                            marginLeft: "2px",
-                            fontSize: "12px",
-                            opacity: 0.8,
-                          }}
-                        >
-                          {this.props.t("Example")}: {item.example}
-                        </div>
-                      )}
-                      {item.note && (
-                        <div
-                          style={{
-                            marginTop: "5px",
-                            marginBottom: "2px",
-                            marginLeft: "2px",
-                            fontSize: "12px",
-                            opacity: 0.8,
-                          }}
-                        >
-                          {this.props.t(item.note)}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </>
-            ) : (
-              <>
-                <textarea
-                  className="token-dialog-token-box"
-                  id="token-dialog-token-box"
-                  placeholder={this.props.t(
-                    "Please click the authorize button below to authorize your account, enter the obtained credentials here, and then click the bind button below"
-                  )}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      this.setState((prevState) => ({
-                        driveConfig: {
-                          ...prevState.driveConfig,
-                          token: e.target.value.trim(),
-                        },
-                      }));
-                    }
-                  }}
-                  onContextMenu={() => {
-                    handleContextMenu("token-dialog-token-box");
-                  }}
-                />
-              </>
-            )}
-            {this.props.settingDrive === "webdav" && !isElectron && (
-              <div
-                className="token-dialog-tip"
-                style={{
-                  marginTop: "10px",
-                  fontSize: "13px",
-                  lineHeight: "16px",
-                  color: "rgba(231, 69, 69, 0.8)",
-                }}
-              >
-                {this.props.t(
-                  "Only WebDAV service provided by Alist is directly supported in Browser, Other WebDAV services need to enable CORS to work properly. Also due to browser's security restrictions, the WebDAV service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocol."
-                )}
-              </div>
-            )}
-            {this.props.settingDrive === "docker" && !isElectron && (
-              <div
-                className="token-dialog-tip"
-                style={{
-                  marginTop: "10px",
-                  fontSize: "13px",
-                  lineHeight: "16px",
-                  color: "rgba(231, 69, 69, 0.8)",
-                }}
-              >
-                {this.props.t(
-                  "The Koodo Reader Docker version does not support the data source feature by default. You need to modify the configuration parameters during deployment to manually enable it. Also due to browser's security restrictions, the Docker service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocol."
-                )}
-              </div>
-            )}
-            {this.props.settingDrive === "s3compatible" && !isElectron && (
-              <div
-                className="token-dialog-tip"
-                style={{
-                  marginTop: "10px",
-                  fontSize: "13px",
-                  lineHeight: "16px",
-                  color: "rgba(231, 69, 69, 0.8)",
-                }}
-              >
-                {this.props.t(
-                  "Some S3 services are not compatible with browser environments. If you encounter connection issues, please refer to the service provider's official documentation for instructions on enabling CORS. Also due to browser's security restrictions, the S3 service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocol."
-                )}
-              </div>
-            )}
-            <div className="token-dialog-button-container">
-              <div
-                className="voice-add-confirm"
-                onClick={async () => {
-                  if (this.props.settingDrive === "webdav") {
-                    if (!(await this.checkCorsForDrive())) {
-                      return;
-                    }
-                  }
-                  if (
-                    this.props.settingDrive === "webdav" ||
-                    this.props.settingDrive === "docker" ||
-                    this.props.settingDrive === "ftp" ||
-                    this.props.settingDrive === "sftp" ||
-                    this.props.settingDrive === "mega" ||
-                    this.props.settingDrive === "s3compatible"
-                  ) {
-                    let connectionResult = await testConnection(
-                      this.props.settingDrive,
-                      this.state.driveConfig
-                    );
-                    if (!connectionResult) {
-                      return;
-                    }
-                  }
-                  this.handleConfirmDrive();
-                }}
-              >
-                <Trans>Bind</Trans>
-              </div>
-
-              <div className="voice-add-button-container">
-                <div
-                  className="voice-add-cancel"
-                  onClick={() => {
-                    this.handleCancelDrive();
-                  }}
-                >
-                  <Trans>Cancel</Trans>
-                </div>
-                {(this.props.settingDrive === "dropbox" ||
-                  this.props.settingDrive === "dubox" ||
-                  this.props.settingDrive === "yandex" ||
-                  this.props.settingDrive === "yiyiwu" ||
-                  this.props.settingDrive === "google" ||
-                  this.props.settingDrive === "boxnet" ||
-                  this.props.settingDrive === "pcloud" ||
-                  this.props.settingDrive === "adrive" ||
-                  this.props.settingDrive === "microsoft_exp" ||
-                  this.props.settingDrive === "microsoft") && (
-                  <div
-                    className="voice-add-confirm"
-                    style={{ marginRight: "10px" }}
-                    onClick={async () => {
-                      this.handleJump(
-                        new SyncUtil(this.props.settingDrive, {}).getAuthUrl(
-                          getServerRegion() === "china" &&
-                            (this.props.settingDrive === "microsoft" ||
-                              this.props.settingDrive === "microsoft_exp" ||
-                              this.props.settingDrive === "dubox" ||
-                              this.props.settingDrive === "yiyiwu" ||
-                              this.props.settingDrive === "adrive")
-                            ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
-                            : KookitConfig.ThirdpartyConfig.callbackUrl
-                        )
-                      );
-                    }}
-                  >
-                    <Trans>Authorize</Trans>
-                  </div>
-                )}
-                {(this.props.settingDrive === "webdav" ||
-                  this.props.settingDrive === "docker" ||
-                  this.props.settingDrive === "ftp" ||
-                  this.props.settingDrive === "sftp" ||
-                  this.props.settingDrive === "mega" ||
-                  this.props.settingDrive === "s3compatible") && (
-                  <div
-                    className="voice-add-confirm"
-                    style={{ marginRight: "10px" }}
-                    onClick={async () => {
-                      if (this.props.settingDrive === "webdav") {
-                        if (!(await this.checkCorsForDrive())) {
-                          return;
-                        }
-                      }
-                      testConnection(
-                        this.props.settingDrive,
-                        this.state.driveConfig
-                      );
-                    }}
-                  >
-                    <Trans>Test</Trans>
-                  </div>
-                )}
-                {(this.props.settingDrive === "webdav" ||
-                  this.props.settingDrive === "ftp" ||
-                  this.props.settingDrive === "s3compatible" ||
-                  this.props.settingDrive === "sftp") &&
-                  ConfigService.getReaderConfig("lang") &&
-                  ConfigService.getReaderConfig("lang").startsWith("zh") && (
-                    <div
-                      className="voice-add-cancel"
-                      style={{ borderWidth: 0, lineHeight: "30px" }}
-                  onClick={() => {
-                    openExternalUrl(
-                      getWebsiteUrl() + getWebsiteLang() + "/add-source"
-                    );
-                  }}
-                    >
-                      {this.props.t("How to fill out")}
-                    </div>
-                  )}
-              </div>
-            </div>
-          </div>
-        )}
-        <div className="setting-dialog-new-title">
-          <Trans>Set default sync option</Trans>
-          <select
-            name=""
-            className="lang-setting-dropdown"
-            value={this.props.defaultSyncOption}
-            onChange={async (event) => {
-              event.preventDefault();
-              const newValue = event.target.value;
-              if (newValue === "add") {
-                this.setState({
-                  showDefaultSyncAddGrid: !this.state.showDefaultSyncAddGrid,
-                });
-                event.target.value = this.props.defaultSyncOption;
-                return;
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        <span className="add-source-card-label">
+          <Trans>Add data source</Trans>
+        </span>
+      </div>
+      {state.showDefaultSyncAddGrid && (
+        <div
+          className="account-login-grid"
+          style={{
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            marginLeft: "25px",
+            marginRight: "25px",
+            fontWeight: 500,
+            marginBottom: "20px",
+          }}
+        >
+          {driveList
+            .filter((item) => !props.dataSourceList.includes(item.value))
+            .filter((item) => {
+              if (item.value === "microsoft_exp") {
+                return false;
               }
-              const currentValue = this.props.defaultSyncOption;
-              let onlineBooks: Book[] = [];
-              for (let i = 0; i < this.props.books.length; i++) {
-                if (!(await BookUtil.isBookOffline(this.props.books[i].key))) {
-                  onlineBooks.push(this.props.books[i]);
-                }
+              if (!isElectron) {
+                return item.support.includes("browser");
               }
+              return true;
+            })
+            .filter((item) => {
               if (
-                onlineBooks.length > 0 &&
-                this.props.defaultSyncOption &&
-                newValue !== this.props.defaultSyncOption
+                isElectron &&
+                window.electronAPI?.runtime?.platform !== "darwin" &&
+                item.value === "icloud"
               ) {
-                let result = await vexComfirmAsync(
-                  "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
-                );
-                if (result) {
-                  this.handleSetDefaultSyncOption(newValue);
-                } else {
-                  event.target.value = currentValue;
-                }
-              } else {
-                this.handleSetDefaultSyncOption(newValue);
+                return false;
               }
-            }}
-          >
-            {[
-              {
-                label: "Please select",
-                value: "",
-                isPro: false,
-                support: ["desktop", "browser", "phone"],
-              },
-              ...driveList,
-              {
-                label: "Add data source",
-                value: "add",
-                isPro: false,
-                support: ["desktop", "browser", "phone"],
-              },
-            ]
-              .filter(
-                (item) =>
-                  item.value === "add" ||
-                  item.value === "" ||
-                  this.props.dataSourceList.includes(item.value)
-              )
-              .filter((item) => {
-                if (item.value === "add" || item.value === "") {
-                  return true;
-                }
-                if (!isElectron) {
-                  return item.support.includes("browser");
-                }
-                return true;
-              })
-              .filter((item) => {
-                if (
-                  isElectron &&
-                  window.electronAPI?.runtime?.platform !== "darwin" &&
-                  item.value === "icloud"
-                ) {
-                  return false;
-                }
-                return true;
-              })
-              .map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Delete data source</Trans>
-          <select
-            name=""
-            className="lang-setting-dropdown"
-            onChange={this.handleDeleteDataSource}
-          >
-            {[{ label: "Please select", value: "", isPro: false }, ...driveList]
-              .filter(
-                (item) =>
-                  this.props.dataSourceList.includes(item.value) ||
-                  item.value === ""
-              )
-              .map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Backup library</Trans>
-          <select
-            name=""
-            className="lang-setting-dropdown"
-            value={this.state.backupDrive}
-            onChange={(event) =>
-              this.handleSelectBackupOrRestoreSource(event, "backup")
-            }
-          >
-            <option value="" className="lang-setting-option">
-              {this.props.t("Please select")}
-            </option>
-            {[
-              { label: "Local", value: "local", isPro: false },
-              ...driveList,
-              { label: "Add data source", value: "add", isPro: false },
-            ]
-              .filter(
-                (item) =>
-                  this.props.dataSourceList.includes(item.value) ||
-                  item.value === "local" ||
-                  item.value === "add"
-              )
-              .map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
-                </option>
-              ))}
-          </select>
-        </div>
-        <div className="setting-dialog-new-title">
-          <Trans>Restore library</Trans>
-          <select
-            name=""
-            className="lang-setting-dropdown"
-            value={this.state.restoreDrive}
-            onChange={(event) =>
-              this.handleSelectBackupOrRestoreSource(event, "restore")
-            }
-          >
-            <option value="" className="lang-setting-option">
-              {this.props.t("Please select")}
-            </option>
-            {[
-              { label: "Local", value: "local", isPro: false },
-              ...driveList,
-              { label: "Add data source", value: "add", isPro: false },
-            ]
-              .filter(
-                (item) =>
-                  this.props.dataSourceList.includes(item.value) ||
-                  item.value === "local" ||
-                  item.value === "add"
-              )
-              .map((item) => (
-                <option
-                  value={item.value}
-                  key={item.value}
-                  className="lang-setting-option"
-                >
-                  {this.props.t(item.label) + (item.isPro ? " (Pro)" : "")}
-                </option>
-              ))}
-          </select>
-        </div>
-
-        {this.props.isAuthed && this.renderSwitchOption(syncSettingList)}
-        {this.props.isAuthed && (
-          <>
-            <div className="setting-dialog-new-title">
-              <Trans>Scheduled sync interval</Trans>
-              <select
-                name=""
-                className="lang-setting-dropdown"
-                value={this.state.scheduledSyncInterval}
-                onChange={(event) => {
-                  const value = event.target.value;
-                  ConfigService.setReaderConfig("scheduledSyncInterval", value);
-                  this.setState({ scheduledSyncInterval: value });
-                  toast.success(this.props.t("Change successful"));
-                  toast(
-                    this.props.t(
-                      "The new sync interval will take effect after restarting Koodo Reader"
-                    )
-                  );
-                }}
-              >
-                <option value="" className="lang-setting-option">
-                  {this.props.t("Disabled")}
-                </option>
-                <option value="1" className="lang-setting-option">
-                  {i18n.t("Minute duration", {
-                    tts: 1,
-                  })}
-                </option>
-                <option value="5" className="lang-setting-option">
-                  {i18n.t("Minute duration", {
-                    tts: 5,
-                  })}
-                </option>
-                <option value="10" className="lang-setting-option">
-                  {i18n.t("Minute duration", {
-                    tts: 10,
-                  })}
-                </option>
-                <option value="15" className="lang-setting-option">
-                  {i18n.t("Minute duration", {
-                    tts: 15,
-                  })}
-                </option>
-                <option value="30" className="lang-setting-option">
-                  {i18n.t("Minute duration", {
-                    tts: 30,
-                  })}
-                </option>
-                <option value="60" className="lang-setting-option">
-                  {i18n.t("Hour duration", {
-                    tts: 1,
-                  })}
-                </option>
-                <option value="120" className="lang-setting-option">
-                  {i18n.t("Hour duration", {
-                    tts: 2,
-                  })}
-                </option>
-                <option value="360" className="lang-setting-option">
-                  {i18n.t("Hour duration", {
-                    tts: 6,
-                  })}
-                </option>
-                <option value="720" className="lang-setting-option">
-                  {i18n.t("Hour duration", {
-                    tts: 12,
-                  })}
-                </option>
-                <option value="1440" className="lang-setting-option">
-                  {i18n.t("Hour duration", {
-                    tts: 24,
-                  })}
-                </option>
-              </select>
-            </div>
-            <p className="setting-option-subtitle">
-              <Trans>
-                {
-                  "Automatically sync your library with cloud at the specified interval."
-                }
-              </Trans>
-            </p>
-            <div className="setting-dialog-new-title">
-              <Trans>Reset sync records</Trans>
-
-              <span
-                className="change-location-button"
-                onClick={async () => {
-                  await generateSyncRecord();
-                  toast.success(this.props.t("Reset successful"));
-                }}
-              >
-                <Trans>Reset</Trans>
-              </span>
-            </div>
-            <p className="setting-option-subtitle">
-              <Trans>
-                {
-                  "Data in other devices is messed up, but the data in this device is normal. You can reset the sync record in this device, delete the KoodoReader/config folder in the data source(Turn off Koodo Sync if necessary), and sync again. This should resolve the issue"
-                }
-              </Trans>
-            </p>
-            <div className="setting-dialog-new-plugin">
-              <span
-                style={{ textDecoration: "underline" }}
+              return true;
+            })
+            .map((item) => (
+              <div
+                className="account-login-option"
+                key={item.value}
                 onClick={() => {
-                  openExternalUrl(
-                    getWebsiteUrl() + getWebsiteLang() + "/use-sync"
-                  );
+                  handleAddDataSourceFromGrid(item.value);
                 }}
               >
-                <Trans>How to sync library across devices</Trans>
-              </span>
+                <span className="account-login-option-label">
+                  {props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+                </span>
+              </div>
+            ))}
+        </div>
+      )}
+      {props.settingDrive && (
+        <div
+          className="voice-add-new-container"
+          style={{
+            marginLeft: "25px",
+            width: "calc(100% - 50px)",
+            fontWeight: 500,
+          }}
+        >
+          {props.settingDrive === "webdav" ||
+          props.settingDrive === "docker" ||
+          props.settingDrive === "ftp" ||
+          props.settingDrive === "sftp" ||
+          props.settingDrive === "mega" ||
+          props.settingDrive === "s3compatible" ? (
+            <>
+              {driveInputConfig[props.settingDrive].map((item) => {
+                return (
+                  <div key={item.value}>
+                    <input
+                      type={item.type}
+                      name={item.value}
+                      key={item.value}
+                      placeholder={
+                        props.t(item.label) +
+                        (item.required ? "" : " (" + props.t("Optional") + ")")
+                      }
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          setState((prevState) => ({
+                            ...prevState,
+                            driveConfig: {
+                              ...prevState.driveConfig,
+                              [item.value]: e.target.value.trim(),
+                            },
+                          }));
+                        }
+                      }}
+                      onContextMenu={() => {
+                        handleContextMenu(
+                          "token-dialog-" + item.value + "-box",
+                          true
+                        );
+                      }}
+                      id={"token-dialog-" + item.value + "-box"}
+                      className="token-dialog-username-box"
+                    />
+                    {item.value === "endpoint" ? (
+                      <div
+                        style={{
+                          marginTop: "5px",
+                          marginLeft: "2px",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {props.t(
+                          "This endpoint usually don't contain bucket name"
+                        )}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {item.example && (
+                      <div
+                        style={{
+                          marginTop: "5px",
+                          marginBottom: "2px",
+                          marginLeft: "2px",
+                          fontSize: "12px",
+                          opacity: 0.8,
+                        }}
+                      >
+                        {props.t("Example")}: {item.example}
+                      </div>
+                    )}
+                    {item.note && (
+                      <div
+                        style={{
+                          marginTop: "5px",
+                          marginBottom: "2px",
+                          marginLeft: "2px",
+                          fontSize: "12px",
+                          opacity: 0.8,
+                        }}
+                      >
+                        {props.t(item.note)}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </>
+          ) : (
+            <>
+              <textarea
+                className="token-dialog-token-box"
+                id="token-dialog-token-box"
+                placeholder={props.t(
+                  "Please click the authorize button below to authorize your account, enter the obtained credentials here, and then click the bind button below"
+                )}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setState((prevState) => ({
+                      ...prevState,
+                      driveConfig: {
+                        ...prevState.driveConfig,
+                        token: e.target.value.trim(),
+                      },
+                    }));
+                  }
+                }}
+                onContextMenu={() => {
+                  handleContextMenu("token-dialog-token-box");
+                }}
+              />
+            </>
+          )}
+          {props.settingDrive === "webdav" && !isElectron && (
+            <div
+              className="token-dialog-tip"
+              style={{
+                marginTop: "10px",
+                fontSize: "13px",
+                lineHeight: "16px",
+                color: "rgba(231, 69, 69, 0.8)",
+              }}
+            >
+              {props.t(
+                "Only WebDAV service provided by Alist is directly supported in Browser, Other WebDAV services need to enable CORS to work properly. Also due to browser's security restrictions, the WebDAV service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocol."
+              )}
             </div>
-          </>
-        )}
-      </>
-    );
-  }
-}
+          )}
+          {props.settingDrive === "docker" && !isElectron && (
+            <div
+              className="token-dialog-tip"
+              style={{
+                marginTop: "10px",
+                fontSize: "13px",
+                lineHeight: "16px",
+                color: "rgba(231, 69, 69, 0.8)",
+              }}
+            >
+              {props.t(
+                "The Koodo Reader Docker version does not support the data source feature by default. You need to modify the configuration parameters during deployment to manually enable it. Also due to browser's security restrictions, the Docker service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocol."
+              )}
+            </div>
+          )}
+          {props.settingDrive === "s3compatible" && !isElectron && (
+            <div
+              className="token-dialog-tip"
+              style={{
+                marginTop: "10px",
+                fontSize: "13px",
+                lineHeight: "16px",
+                color: "rgba(231, 69, 69, 0.8)",
+              }}
+            >
+              {props.t(
+                "Some S3 services are not compatible with browser environments. If you encounter connection issues, please refer to the service provider's official documentation for instructions on enabling CORS. Also due to browser's security restrictions, the S3 service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocol."
+              )}
+            </div>
+          )}
+          <div className="token-dialog-button-container">
+            <div
+              className="voice-add-confirm"
+              onClick={async () => {
+                if (props.settingDrive === "webdav") {
+                  if (!(await checkCorsForDrive())) {
+                    return;
+                  }
+                }
+                if (
+                  props.settingDrive === "webdav" ||
+                  props.settingDrive === "docker" ||
+                  props.settingDrive === "ftp" ||
+                  props.settingDrive === "sftp" ||
+                  props.settingDrive === "mega" ||
+                  props.settingDrive === "s3compatible"
+                ) {
+                  let connectionResult = await testConnection(
+                    props.settingDrive,
+                    state.driveConfig
+                  );
+                  if (!connectionResult) {
+                    return;
+                  }
+                }
+                handleConfirmDrive();
+              }}
+            >
+              <Trans>Bind</Trans>
+            </div>
+
+            <div className="voice-add-button-container">
+              <div
+                className="voice-add-cancel"
+                onClick={() => {
+                  handleCancelDrive();
+                }}
+              >
+                <Trans>Cancel</Trans>
+              </div>
+              {(props.settingDrive === "dropbox" ||
+                props.settingDrive === "dubox" ||
+                props.settingDrive === "yandex" ||
+                props.settingDrive === "yiyiwu" ||
+                props.settingDrive === "google" ||
+                props.settingDrive === "boxnet" ||
+                props.settingDrive === "pcloud" ||
+                props.settingDrive === "adrive" ||
+                props.settingDrive === "microsoft_exp" ||
+                props.settingDrive === "microsoft") && (
+                <div
+                  className="voice-add-confirm"
+                  style={{ marginRight: "10px" }}
+                  onClick={async () => {
+                    handleJump(
+                      new SyncUtil(props.settingDrive, {}).getAuthUrl(
+                        getServerRegion() === "china" &&
+                          (props.settingDrive === "microsoft" ||
+                            props.settingDrive === "microsoft_exp" ||
+                            props.settingDrive === "dubox" ||
+                            props.settingDrive === "yiyiwu" ||
+                            props.settingDrive === "adrive")
+                          ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                          : KookitConfig.ThirdpartyConfig.callbackUrl
+                      )
+                    );
+                  }}
+                >
+                  <Trans>Authorize</Trans>
+                </div>
+              )}
+              {(props.settingDrive === "webdav" ||
+                props.settingDrive === "docker" ||
+                props.settingDrive === "ftp" ||
+                props.settingDrive === "sftp" ||
+                props.settingDrive === "mega" ||
+                props.settingDrive === "s3compatible") && (
+                <div
+                  className="voice-add-confirm"
+                  style={{ marginRight: "10px" }}
+                  onClick={async () => {
+                    if (props.settingDrive === "webdav") {
+                      if (!(await checkCorsForDrive())) {
+                        return;
+                      }
+                    }
+                    testConnection(props.settingDrive, state.driveConfig);
+                  }}
+                >
+                  <Trans>Test</Trans>
+                </div>
+              )}
+              {(props.settingDrive === "webdav" ||
+                props.settingDrive === "ftp" ||
+                props.settingDrive === "s3compatible" ||
+                props.settingDrive === "sftp") &&
+                ConfigService.getReaderConfig("lang") &&
+                ConfigService.getReaderConfig("lang").startsWith("zh") && (
+                  <div
+                    className="voice-add-cancel"
+                    style={{ borderWidth: 0, lineHeight: "30px" }}
+                    onClick={() => {
+                      openExternalUrl(
+                        getWebsiteUrl() + getWebsiteLang() + "/add-source"
+                      );
+                    }}
+                  >
+                    {props.t("How to fill out")}
+                  </div>
+                )}
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="setting-dialog-new-title">
+        <Trans>Set default sync option</Trans>
+        <select
+          name=""
+          className="lang-setting-dropdown"
+          value={props.defaultSyncOption}
+          onChange={async (event) => {
+            event.preventDefault();
+            const newValue = event.target.value;
+            if (newValue === "add") {
+              setState((prevState) => ({
+                ...prevState,
+                showDefaultSyncAddGrid: !prevState.showDefaultSyncAddGrid,
+              }));
+              event.target.value = props.defaultSyncOption;
+              return;
+            }
+            const currentValue = props.defaultSyncOption;
+            let onlineBooks: Book[] = [];
+            for (let i = 0; i < props.books.length; i++) {
+              if (!(await BookUtil.isBookOffline(props.books[i].key))) {
+                onlineBooks.push(props.books[i]);
+              }
+            }
+            if (
+              onlineBooks.length > 0 &&
+              props.defaultSyncOption &&
+              newValue !== props.defaultSyncOption
+            ) {
+              let result = await vexComfirmAsync(
+                "Some of your books are currently not downloaded to the local. Changing the default sync option may lead to data loss. We recommend downloading all books to the local by turn on Auto download cloud books in the setting before changing the default sync option. Click 'OK' to proceed without downloading."
+              );
+              if (result) {
+                handleSetDefaultSyncOption(newValue);
+              } else {
+                event.target.value = currentValue;
+              }
+            } else {
+              handleSetDefaultSyncOption(newValue);
+            }
+          }}
+        >
+          {[
+            {
+              label: "Please select",
+              value: "",
+              isPro: false,
+              support: ["desktop", "browser", "phone"],
+            },
+            ...driveList,
+            {
+              label: "Add data source",
+              value: "add",
+              isPro: false,
+              support: ["desktop", "browser", "phone"],
+            },
+          ]
+            .filter(
+              (item) =>
+                item.value === "add" ||
+                item.value === "" ||
+                props.dataSourceList.includes(item.value)
+            )
+            .filter((item) => {
+              if (item.value === "add" || item.value === "") {
+                return true;
+              }
+              if (!isElectron) {
+                return item.support.includes("browser");
+              }
+              return true;
+            })
+            .filter((item) => {
+              if (
+                isElectron &&
+                window.electronAPI?.runtime?.platform !== "darwin" &&
+                item.value === "icloud"
+              ) {
+                return false;
+              }
+              return true;
+            })
+            .map((item) => (
+              <option
+                value={item.value}
+                key={item.value}
+                className="lang-setting-option"
+              >
+                {props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+              </option>
+            ))}
+        </select>
+      </div>
+      <div className="setting-dialog-new-title">
+        <Trans>Delete data source</Trans>
+        <select
+          name=""
+          className="lang-setting-dropdown"
+          onChange={handleDeleteDataSource}
+        >
+          {[{ label: "Please select", value: "", isPro: false }, ...driveList]
+            .filter(
+              (item) =>
+                props.dataSourceList.includes(item.value) || item.value === ""
+            )
+            .map((item) => (
+              <option
+                value={item.value}
+                key={item.value}
+                className="lang-setting-option"
+              >
+                {props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+              </option>
+            ))}
+        </select>
+      </div>
+      <div className="setting-dialog-new-title">
+        <Trans>Backup library</Trans>
+        <select
+          name=""
+          className="lang-setting-dropdown"
+          value={state.backupDrive}
+          onChange={(event) =>
+            handleSelectBackupOrRestoreSource(event, "backup")
+          }
+        >
+          <option value="" className="lang-setting-option">
+            {props.t("Please select")}
+          </option>
+          {[
+            { label: "Local", value: "local", isPro: false },
+            ...driveList,
+            { label: "Add data source", value: "add", isPro: false },
+          ]
+            .filter(
+              (item) =>
+                props.dataSourceList.includes(item.value) ||
+                item.value === "local" ||
+                item.value === "add"
+            )
+            .map((item) => (
+              <option
+                value={item.value}
+                key={item.value}
+                className="lang-setting-option"
+              >
+                {props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+              </option>
+            ))}
+        </select>
+      </div>
+      <div className="setting-dialog-new-title">
+        <Trans>Restore library</Trans>
+        <select
+          name=""
+          className="lang-setting-dropdown"
+          value={state.restoreDrive}
+          onChange={(event) =>
+            handleSelectBackupOrRestoreSource(event, "restore")
+          }
+        >
+          <option value="" className="lang-setting-option">
+            {props.t("Please select")}
+          </option>
+          {[
+            { label: "Local", value: "local", isPro: false },
+            ...driveList,
+            { label: "Add data source", value: "add", isPro: false },
+          ]
+            .filter(
+              (item) =>
+                props.dataSourceList.includes(item.value) ||
+                item.value === "local" ||
+                item.value === "add"
+            )
+            .map((item) => (
+              <option
+                value={item.value}
+                key={item.value}
+                className="lang-setting-option"
+              >
+                {props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+              </option>
+            ))}
+        </select>
+      </div>
+
+      {props.isAuthed && renderSwitchOption(syncSettingList)}
+      {props.isAuthed && (
+        <>
+          <div className="setting-dialog-new-title">
+            <Trans>Scheduled sync interval</Trans>
+            <select
+              name=""
+              className="lang-setting-dropdown"
+              value={state.scheduledSyncInterval}
+              onChange={(event) => {
+                const value = event.target.value;
+                ConfigService.setReaderConfig("scheduledSyncInterval", value);
+                setPartialState({ scheduledSyncInterval: value });
+                toast.success(props.t("Change successful"));
+                toast(
+                  props.t(
+                    "The new sync interval will take effect after restarting Koodo Reader"
+                  )
+                );
+              }}
+            >
+              <option value="" className="lang-setting-option">
+                {props.t("Disabled")}
+              </option>
+              <option value="1" className="lang-setting-option">
+                {i18n.t("Minute duration", {
+                  tts: 1,
+                })}
+              </option>
+              <option value="5" className="lang-setting-option">
+                {i18n.t("Minute duration", {
+                  tts: 5,
+                })}
+              </option>
+              <option value="10" className="lang-setting-option">
+                {i18n.t("Minute duration", {
+                  tts: 10,
+                })}
+              </option>
+              <option value="15" className="lang-setting-option">
+                {i18n.t("Minute duration", {
+                  tts: 15,
+                })}
+              </option>
+              <option value="30" className="lang-setting-option">
+                {i18n.t("Minute duration", {
+                  tts: 30,
+                })}
+              </option>
+              <option value="60" className="lang-setting-option">
+                {i18n.t("Hour duration", {
+                  tts: 1,
+                })}
+              </option>
+              <option value="120" className="lang-setting-option">
+                {i18n.t("Hour duration", {
+                  tts: 2,
+                })}
+              </option>
+              <option value="360" className="lang-setting-option">
+                {i18n.t("Hour duration", {
+                  tts: 6,
+                })}
+              </option>
+              <option value="720" className="lang-setting-option">
+                {i18n.t("Hour duration", {
+                  tts: 12,
+                })}
+              </option>
+              <option value="1440" className="lang-setting-option">
+                {i18n.t("Hour duration", {
+                  tts: 24,
+                })}
+              </option>
+            </select>
+          </div>
+          <p className="setting-option-subtitle">
+            <Trans>
+              {
+                "Automatically sync your library with cloud at the specified interval."
+              }
+            </Trans>
+          </p>
+          <div className="setting-dialog-new-title">
+            <Trans>Reset sync records</Trans>
+
+            <span
+              className="change-location-button"
+              onClick={async () => {
+                await generateSyncRecord();
+                toast.success(props.t("Reset successful"));
+              }}
+            >
+              <Trans>Reset</Trans>
+            </span>
+          </div>
+          <p className="setting-option-subtitle">
+            <Trans>
+              {
+                "Data in other devices is messed up, but the data in this device is normal. You can reset the sync record in this device, delete the KoodoReader/config folder in the data source(Turn off Koodo Sync if necessary), and sync again. This should resolve the issue"
+              }
+            </Trans>
+          </p>
+          <div className="setting-dialog-new-plugin">
+            <span
+              style={{ textDecoration: "underline" }}
+              onClick={() => {
+                openExternalUrl(
+                  getWebsiteUrl() + getWebsiteLang() + "/use-sync"
+                );
+              }}
+            >
+              <Trans>How to sync library across devices</Trans>
+            </span>
+          </div>
+        </>
+      )}
+    </>
+  );
+};
 
 export default SyncSetting;

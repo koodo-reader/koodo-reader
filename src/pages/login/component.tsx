@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LoginProps, LoginState } from "./interface";
 import { Trans } from "react-i18next";
 import { getLoginParamsFromUrl } from "../../utils/file/common";
@@ -41,85 +41,49 @@ import background3 from "../../assets/images/background3.png";
 import mobileQrZh from "../../assets/images/mobile-qr-zh.png";
 import mobileQr from "../../assets/images/mobile-qr.png";
 
-class Login extends React.Component<LoginProps, LoginState> {
-  private lastLoginClickTime: number = 0;
-  constructor(props: LoginProps) {
-    super(props);
-    this.state = {
-      currentStep: 0,
-      loginConfig: {},
-      countdown: 0,
-      isSendingCode: false,
-      serverRegion: getServerRegion(),
-    };
-  }
+const Login = (props: LoginProps) => {
+  const propsRef = useRef(props);
+  propsRef.current = props;
+  const [state, setState] = useState<LoginState>({
+    currentStep: 0,
+    loginConfig: {},
+    countdown: 0,
+    isSendingCode: false,
+    serverRegion: getServerRegion(),
+  });
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const updateState = (patch: Partial<LoginState>) =>
+    setState((prev) => ({ ...prev, ...patch }));
+  const prevPropsRef = useRef(props);
+  const lastLoginClickTimeRef = useRef<number>(0);
 
-  componentDidMount() {
-    if (isElectron) {
-      const ipcRenderer = window.electronAPI;
-      ipcRenderer.on("oauth-callback", (config) => {
-        let code = config.code;
-        let state = config.state;
-        this.setState({ currentStep: 2 });
-        if (state) {
-          let { service } = JSON.parse(decodeURIComponent(state.split("|")[1]));
-          this.handleLogin(code, service);
-        }
-      });
-    } else {
-      let url = document.location.href;
-      if (url.indexOf("code") > -1) {
-        let params: any = getLoginParamsFromUrl();
-        let code = params.code;
-        let state = params.state;
-        this.setState({ currentStep: 2 });
-        if (state) {
-          let { service } = JSON.parse(decodeURIComponent(state.split("|")[1]));
-          this.handleLogin(code, service);
-        }
-      }
-    }
-  }
-  UNSAFE_componentWillReceiveProps(
-    nextProps: Readonly<LoginProps>,
-    _nextContext: any
-  ): void {
-    if (
-      nextProps.isShowSupport &&
-      nextProps.isShowSupport !== this.props.isShowSupport
-    ) {
-      toast(
-        this.props.t(
-          "Your Pro trial has expired, please renew it to continue using the Pro features"
-        )
-      );
-      this.props.history.push("/manager/home");
-    }
-  }
-  handleLogin = async (code: string, service: string) => {
+  const handleLogin = async (code: string, service: string) => {
     if (!service || !code) {
-      toast.error(this.props.t("Missing parameters") + this.props.t("Token"));
+      toast.error(
+        propsRef.current.t("Missing parameters") + propsRef.current.t("Token")
+      );
       return;
     }
-    this.props.handleLoadingDialog(true);
+    propsRef.current.handleLoadingDialog(true);
     let res = await loginRegister(service, code);
     if (res.code === 200) {
-      this.props.handleLoadingDialog(false);
+      propsRef.current.handleLoadingDialog(false);
       let result = await handleAutoCloudSync();
       if (result) {
-        this.props.cloudSyncFunc();
+        propsRef.current.cloudSyncFunc();
       } else {
         ConfigService.removeItem("defaultSyncOption");
         ConfigService.removeItem("dataSourceList");
       }
 
-      this.props.handleFetchDataSourceList();
-      this.props.handleFetchDefaultSyncOption();
+      propsRef.current.handleFetchDataSourceList();
+      propsRef.current.handleFetchDefaultSyncOption();
       removeSearchParams();
-      this.props.handleFetchAuthed();
-      await this.props.handleFetchUserInfo();
-      toast.success(this.props.t("Login successful"));
-      this.setState({ currentStep: result ? 4 : 3 });
+      propsRef.current.handleFetchAuthed();
+      await propsRef.current.handleFetchUserInfo();
+      toast.success(propsRef.current.t("Login successful"));
+      updateState({ currentStep: result ? 4 : 3 });
       if (ConfigService.getReaderConfig("isProUpgraded") !== "yes") {
         try {
           ConfigService.setReaderConfig("isProUpgraded", "yes");
@@ -129,764 +93,768 @@ class Login extends React.Component<LoginProps, LoginState> {
         }
       }
     } else {
-      this.props.handleLoadingDialog(false);
+      propsRef.current.handleLoadingDialog(false);
       if (service === "email") {
-        toast(this.props.t("Please make sure the email and code are correct"));
+        toast(
+          propsRef.current.t("Please make sure the email and code are correct")
+        );
       }
-      toast.error(this.props.t("Login failed, error code") + ": " + res.msg);
+      toast.error(
+        propsRef.current.t("Login failed, error code") + ": " + res.msg
+      );
     }
   };
-  handleServerRegionChange = (region: string) => {
+  const handleServerRegionChange = (region: string) => {
     ConfigService.setItem("serverRegion", region);
-    this.setState({ serverRegion: region });
+    updateState({ serverRegion: region });
     resetReaderRequest();
     resetUserRequest();
     resetThirdpartyRequest();
   };
 
-  render() {
-    return (
-      <>
-        <Toaster
-          toastOptions={{
-            style: {
-              padding: "8px 10px",
-              wordWrap: "break-word",
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              overflowWrap: "break-word",
-            },
-          }}
-        />
+  useEffect(() => {
+    if (isElectron) {
+      const ipcRenderer = window.electronAPI;
+      ipcRenderer.on("oauth-callback", (config) => {
+        let code = config.code;
+        let state = config.state;
+        updateState({ currentStep: 2 });
+        if (state) {
+          let { service } = JSON.parse(decodeURIComponent(state.split("|")[1]));
+          handleLogin(code, service);
+        }
+      });
+    } else {
+      let url = document.location.href;
+      if (url.indexOf("code") > -1) {
+        let params: any = getLoginParamsFromUrl();
+        let code = params.code;
+        let state = params.state;
+        updateState({ currentStep: 2 });
+        if (state) {
+          let { service } = JSON.parse(decodeURIComponent(state.split("|")[1]));
+          handleLogin(code, service);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const prevProps = prevPropsRef.current;
+    prevPropsRef.current = props;
+    if (
+      props.isShowSupport &&
+      props.isShowSupport !== prevProps.isShowSupport
+    ) {
+      toast(
+        prevProps.t(
+          "Your Pro trial has expired, please renew it to continue using the Pro features"
+        )
+      );
+      prevProps.history.push("/manager/home");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+
+  return (
+    <>
+      <Toaster
+        toastOptions={{
+          style: {
+            padding: "8px 10px",
+            wordWrap: "break-word",
+            wordBreak: "break-word",
+            whiteSpace: "normal",
+            overflowWrap: "break-word",
+          },
+        }}
+      />
+      <div
+        className="login-close-container"
+        onClick={() => {
+          props.history.push("/manager/home");
+        }}
+      >
+        <span className="icon-close login-close-icon theme-color-delete"></span>
+      </div>
+      {props.isSettingOpen && <SettingDialog />}
+      {props.isShowLoading && <LoadingDialog />}
+      {state.currentStep === 0 && (
         <div
-          className="login-close-container"
-          onClick={() => {
-            this.props.history.push("/manager/home");
+          className="login-container"
+          style={{
+            backgroundColor: "#f2ede5",
           }}
         >
-          <span className="icon-close login-close-icon theme-color-delete"></span>
+          <div
+            className="login-cover-container"
+            style={{
+              backgroundColor: "#e5e2dd",
+            }}
+          >
+            <div className="login-logo">
+              <img src={logoLogin} alt="logo" className="login-logo-img" />
+            </div>
+
+            <img src={background1} alt="cover" className="login-cover-img" />
+          </div>
+          <div className="login-content-container">
+            <img
+              src={illustration1}
+              alt="logo"
+              className="login-content-illustration"
+            />
+
+            <div className="login-title">
+              <Trans>
+                {props.t("Meticulously designed and built for Android and iOS")}
+              </Trans>
+            </div>
+            <div className="login-subtitle">
+              {props.t(
+                "After three years of design and development, the mobile version of Koodo Reader is finally out"
+              )}
+            </div>
+            <div
+              className="login-next-button"
+              onClick={() => {
+                updateState({
+                  currentStep: 1,
+                });
+              }}
+            >
+              {props.t("Next step")}
+            </div>
+          </div>
         </div>
-        {this.props.isSettingOpen && <SettingDialog />}
-        {this.props.isShowLoading && <LoadingDialog />}
-        {this.state.currentStep === 0 && (
+      )}
+      {state.currentStep === 1 && (
+        <div
+          className="login-container"
+          style={{
+            backgroundColor: "#dfdedd",
+          }}
+        >
           <div
-            className="login-container"
+            className="login-cover-container"
             style={{
-              backgroundColor: "#f2ede5",
+              backgroundColor: "#eae9e5",
             }}
           >
-            <div
-              className="login-cover-container"
-              style={{
-                backgroundColor: "#e5e2dd",
-              }}
-            >
-              <div className="login-logo">
-                <img
-                  src={logoLogin}
-                  alt="logo"
-                  className="login-logo-img"
-                />
-              </div>
-
-              <img
-                src={background1}
-                alt="cover"
-                className="login-cover-img"
-              />
+            <div className="login-logo">
+              <img src={logoLogin} alt="logo" className="login-logo-img" />
             </div>
-            <div className="login-content-container">
-              <img
-                src={illustration1}
-                alt="logo"
-                className="login-content-illustration"
-              />
 
-              <div className="login-title">
-                <Trans>
-                  {this.props.t(
-                    "Meticulously designed and built for Android and iOS"
-                  )}
-                </Trans>
-              </div>
-              <div className="login-subtitle">
-                {this.props.t(
-                  "After three years of design and development, the mobile version of Koodo Reader is finally out"
-                )}
+            <img src={background2} alt="cover" className="login-cover-img" />
+          </div>
+          <div className="login-content-container">
+            <img
+              src={illustration2}
+              alt="logo"
+              className="login-content-illustration"
+              style={{
+                width: "45%",
+              }}
+            />
+
+            <div className="login-title" style={{ marginTop: "20%" }}>
+              {props.t(
+                "Synchronize books and reading progress across all your devices"
+              )}
+            </div>
+            <div className="login-subtitle">
+              {props.t(
+                "With the integration of popular cloud storage services, WebDAV, FTP, SFTP, SMB, Docker, and object storage, all your data remains securely in your control"
+              )}
+            </div>
+            <div>
+              <div
+                className="login-next-button"
+                onClick={() => {
+                  updateState({
+                    currentStep: 0,
+                  });
+                }}
+                style={{
+                  borderWidth: "0px",
+                  right: "140px",
+                }}
+              >
+                {props.t("Last step")}
               </div>
               <div
                 className="login-next-button"
                 onClick={() => {
-                  this.setState({
-                    currentStep: 1,
+                  updateState({
+                    currentStep: 2,
                   });
                 }}
               >
-                {this.props.t("Next step")}
+                {props.t("Next step")}
               </div>
             </div>
           </div>
-        )}
-        {this.state.currentStep === 1 && (
+        </div>
+      )}
+      {state.currentStep === 2 && (
+        <div
+          className="login-container"
+          style={{
+            backgroundColor: "#dcd7c7",
+          }}
+        >
           <div
-            className="login-container"
+            className="login-cover-container"
             style={{
-              backgroundColor: "#dfdedd",
+              backgroundColor: "#e4e1d8",
             }}
           >
-            <div
-              className="login-cover-container"
-              style={{
-                backgroundColor: "#eae9e5",
-              }}
-            >
-              <div className="login-logo">
-                <img
-                  src={logoLogin}
-                  alt="logo"
-                  className="login-logo-img"
-                />
-              </div>
-
-              <img
-                src={background2}
-                alt="cover"
-                className="login-cover-img"
-              />
+            <div className="login-logo">
+              <img src={logoLogin} alt="logo" className="login-logo-img" />
             </div>
-            <div className="login-content-container">
-              <img
-                src={illustration2}
-                alt="logo"
-                className="login-content-illustration"
-                style={{
-                  width: "45%",
-                }}
-              />
 
-              <div className="login-title" style={{ marginTop: "20%" }}>
-                {this.props.t(
-                  "Synchronize books and reading progress across all your devices"
-                )}
-              </div>
-              <div className="login-subtitle">
-                {this.props.t(
-                  "With the integration of popular cloud storage services, WebDAV, FTP, SFTP, SMB, Docker, and object storage, all your data remains securely in your control"
-                )}
-              </div>
+            <img src={background3} alt="cover" className="login-cover-img" />
+          </div>
+          <div className="login-content-container">
+            <div
+              className="login-title"
+              style={{ marginTop: "50px", marginBottom: "30px" }}
+            >
+              {props.t(
+                "Embark on your journey of exploration with Koodo Reader Pro"
+              )}
+            </div>
+            <div className="login-option-box">
               <div>
-                <div
-                  className="login-next-button"
-                  onClick={() => {
-                    this.setState({
-                      currentStep: 0,
-                    });
-                  }}
-                  style={{
-                    borderWidth: "0px",
-                    right: "140px",
-                  }}
-                >
-                  {this.props.t("Last step")}
-                </div>
-                <div
-                  className="login-next-button"
-                  onClick={() => {
-                    this.setState({
-                      currentStep: 2,
-                    });
-                  }}
-                >
-                  {this.props.t("Next step")}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        {this.state.currentStep === 2 && (
-          <div
-            className="login-container"
-            style={{
-              backgroundColor: "#dcd7c7",
-            }}
-          >
-            <div
-              className="login-cover-container"
-              style={{
-                backgroundColor: "#e4e1d8",
-              }}
-            >
-              <div className="login-logo">
-                <img
-                  src={logoLogin}
-                  alt="logo"
-                  className="login-logo-img"
-                />
-              </div>
-
-              <img
-                src={background3}
-                alt="cover"
-                className="login-cover-img"
-              />
-            </div>
-            <div className="login-content-container">
-              <div
-                className="login-title"
-                style={{ marginTop: "50px", marginBottom: "30px" }}
-              >
-                {this.props.t(
-                  "Embark on your journey of exploration with Koodo Reader Pro"
-                )}
-              </div>
-              <div className="login-option-box">
-                <div>
-                  <div className="login-region-container">
-                    <div className="login-region-title">
-                      {this.props.t("Server region")}
-                    </div>
-                    <div>
-                      <span
-                        onClick={() => {
-                          this.handleServerRegionChange("global");
-                        }}
-                        style={
-                          this.state.serverRegion === "global"
-                            ? { textDecoration: "underline" }
-                            : {}
-                        }
-                      >
-                        {this.props.t("Global")}
-                      </span>
-                      <span>{" | "}</span>
-                      <span
-                        onClick={() => {
-                          this.handleServerRegionChange("china");
-                        }}
-                        style={
-                          this.state.serverRegion === "china"
-                            ? { textDecoration: "underline" }
-                            : {}
-                        }
-                      >
-                        {this.props.t("China")}
-                      </span>
-                    </div>
+                <div className="login-region-container">
+                  <div className="login-region-title">
+                    {props.t("Server region")}
                   </div>
-                  {loginList.map((item) => {
-                    return (
-                      <div
-                        className="login-option-container"
-                        key={item.value}
-                        style={{}}
-                        onClick={() => {
-                          if (item.value === "email") {
-                            this.setState({ currentStep: 5 });
-                            return;
+                  <div>
+                    <span
+                      onClick={() => {
+                        handleServerRegionChange("global");
+                      }}
+                      style={
+                        state.serverRegion === "global"
+                          ? { textDecoration: "underline" }
+                          : {}
+                      }
+                    >
+                      {props.t("Global")}
+                    </span>
+                    <span>{" | "}</span>
+                    <span
+                      onClick={() => {
+                        handleServerRegionChange("china");
+                      }}
+                      style={
+                        state.serverRegion === "china"
+                          ? { textDecoration: "underline" }
+                          : {}
+                      }
+                    >
+                      {props.t("China")}
+                    </span>
+                  </div>
+                </div>
+                {loginList.map((item) => {
+                  return (
+                    <div
+                      className="login-option-container"
+                      key={item.value}
+                      style={{}}
+                      onClick={() => {
+                        if (item.value === "email") {
+                          updateState({ currentStep: 5 });
+                          return;
+                        }
+                        let url = LoginHelper.getAuthUrl(
+                          item.value,
+                          isElectron ? "desktop" : "browser",
+                          getServerRegion() === "china" &&
+                            item.value === "microsoft"
+                            ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
+                            : KookitConfig.ThirdpartyConfig.callbackUrl
+                        );
+                        if (url) {
+                          if (isElectron) {
+                            openInBrowser(url);
+                          } else {
+                            window.location.replace(url);
                           }
-                          let url = LoginHelper.getAuthUrl(
-                            item.value,
-                            isElectron ? "desktop" : "browser",
-                            getServerRegion() === "china" &&
-                              item.value === "microsoft"
-                              ? KookitConfig.ThirdpartyConfig.cnCallbackUrl
-                              : KookitConfig.ThirdpartyConfig.callbackUrl
-                          );
-                          if (url) {
-                            if (isElectron) {
-                              openInBrowser(url);
-                            } else {
-                              window.location.replace(url);
-                            }
-                          }
-                        }}
-                      >
-                        <div className="login-option-icon">
-                          <span
-                            className={item.icon + " login-option-icon"}
-                            style={{ fontSize: item.fontsize }}
-                          ></span>
-                        </div>
-                        <div className="login-option-title">
-                          <Trans i18nKey="Continue with" label={item.label}>
-                            Continue with {{ label: this.props.t(item.label) }}
-                          </Trans>
-                        </div>
+                        }
+                      }}
+                    >
+                      <div className="login-option-icon">
+                        <span
+                          className={item.icon + " login-option-icon"}
+                          style={{ fontSize: item.fontsize }}
+                        ></span>
                       </div>
+                      <div className="login-option-title">
+                        <Trans i18nKey="Continue with" label={item.label}>
+                          Continue with {{ label: props.t(item.label) }}
+                        </Trans>
+                      </div>
+                    </div>
+                  );
+                })}
+                <div className="login-billing-info">
+                  {props.t(
+                    "7-day free trial upon registration, then billed $4.99 per Year"
+                  )}
+                </div>
+                <div
+                  className="login-billing-info"
+                  style={{
+                    marginTop: "-25px",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                  }}
+                  onClick={() => {
+                    openInBrowser(
+                      getWebsiteUrl() + getWebsiteLang() + "/pricing"
                     );
-                  })}
-                  <div className="login-billing-info">
-                    {this.props.t(
-                      "7-day free trial upon registration, then billed $4.99 per Year"
-                    )}
-                  </div>
-                  <div
-                    className="login-billing-info"
-                    style={{
-                      marginTop: "-25px",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                      textDecoration: "underline",
-                    }}
-                    onClick={() => {
-                      openInBrowser(
-                        getWebsiteUrl() + getWebsiteLang() + "/pricing"
-                      );
-                    }}
-                  >
-                    {this.props.t("Compare Free and Pro features")}
-                  </div>
-                  <div
-                    className="login-manual-token"
-                    onClick={() => {
-                      this.props.handleSetting(true);
-                      this.props.handleSettingMode("account");
-                    }}
-                  >
-                    {this.props.t("Manually enter login credentials")}
-                  </div>
-                  <div className="login-term">
-                    {this.props.t(
-                      "By clicking continue, you acknowledge that you have carefully read and agree to accept Koodo Reader's Terms of Service and Privacy Policy"
-                    )}
-                  </div>
+                  }}
+                >
+                  {props.t("Compare Free and Pro features")}
+                </div>
+                <div
+                  className="login-manual-token"
+                  onClick={() => {
+                    props.handleSetting(true);
+                    props.handleSettingMode("account");
+                  }}
+                >
+                  {props.t("Manually enter login credentials")}
+                </div>
+                <div className="login-term">
+                  {props.t(
+                    "By clicking continue, you acknowledge that you have carefully read and agree to accept Koodo Reader's Terms of Service and Privacy Policy"
+                  )}
                 </div>
               </div>
             </div>
           </div>
-        )}
-        {this.state.currentStep === 3 && (
+        </div>
+      )}
+      {state.currentStep === 3 && (
+        <div
+          className="login-container"
+          style={{
+            backgroundColor: "#dcd7c7",
+          }}
+        >
           <div
-            className="login-container"
+            className="login-cover-container"
             style={{
-              backgroundColor: "#dcd7c7",
+              backgroundColor: "#e4e1d8",
             }}
           >
-            <div
-              className="login-cover-container"
-              style={{
-                backgroundColor: "#e4e1d8",
-              }}
-            >
-              <div className="login-logo">
-                <img
-                  src={logoLogin}
-                  alt="logo"
-                  className="login-logo-img"
-                />
-              </div>
-
-              <img
-                src={background3}
-                alt="cover"
-                className="login-cover-img"
-              />
+            <div className="login-logo">
+              <img src={logoLogin} alt="logo" className="login-logo-img" />
             </div>
-            <div className="login-content-container">
-              <div
-                className="login-title"
-                style={{ marginTop: "80px", marginBottom: "10%" }}
-              >
-                {this.props.t(
-                  "Add a data source for data synchronization and backup"
-                )}
-              </div>
-              <div className="login-sync-container">
-                {driveList
-                  .filter((item) => {
-                    if (!isElectron) {
-                      return item.support.includes("browser");
-                    } else {
-                      return true;
-                    }
-                  })
-                  .filter((item) => {
-                    if (
-                      isElectron &&
-                      window.electronAPI?.runtime?.platform !== "darwin"
-                    ) {
-                      return item.value !== "icloud";
-                    }
+
+            <img src={background3} alt="cover" className="login-cover-img" />
+          </div>
+          <div className="login-content-container">
+            <div
+              className="login-title"
+              style={{ marginTop: "80px", marginBottom: "10%" }}
+            >
+              {props.t("Add a data source for data synchronization and backup")}
+            </div>
+            <div className="login-sync-container">
+              {driveList
+                .filter((item) => {
+                  if (!isElectron) {
+                    return item.support.includes("browser");
+                  } else {
                     return true;
-                  })
-                  .map((item) => {
-                    return (
-                      <div
-                        className="login-sync-box"
-                        key={item.value}
-                        style={{}}
-                        onClick={() => {
-                          this.props.handleSetting(true);
-                          this.props.handleSettingMode("sync");
-                          this.props.handleSettingDrive(item.value);
-                        }}
-                      >
-                        <div className="login-sync-title">
-                          {this.props.t(item.label)}
-                        </div>
-                        <div className="login-sync-icon-container">
-                          <span className={"icon-add login-sync-icon"}></span>
-                        </div>
-                        {ConfigService.getReaderConfig("lang") &&
-                          ConfigService.getReaderConfig("lang").startsWith(
-                            "zh"
-                          ) &&
-                          item.value === "webdav" &&
-                          isElectron && (
-                            <div className="login-sync-text">
-                              {this.props.t("Recommended (use with Nutstore)")}
-                            </div>
-                          )}
-                        {ConfigService.getReaderConfig("lang") &&
-                          ConfigService.getReaderConfig("lang").startsWith(
-                            "zh"
-                          ) &&
-                          item.value === "microsoft" && (
-                            <div className="login-sync-text">
-                              {this.props.t("Access may be unstable in China")}
-                            </div>
-                          )}
-                        {ConfigService.getReaderConfig("lang") &&
-                          ConfigService.getReaderConfig("lang").startsWith(
-                            "zh"
-                          ) &&
-                          item.value === "yiyiwu" && (
-                            <div className="login-sync-text">
-                              {this.props.t("Only recommended for VIP users")}
-                            </div>
-                          )}
-                        <div className="login-sync-subtitle">
-                          <div>
-                            {item.support.map((support) => {
-                              return (
-                                <span
-                                  key={support}
-                                  className={
-                                    "icon-" + support + " login-sync-support"
-                                  }
-                                ></span>
-                              );
-                            })}
+                  }
+                })
+                .filter((item) => {
+                  if (
+                    isElectron &&
+                    window.electronAPI?.runtime?.platform !== "darwin"
+                  ) {
+                    return item.value !== "icloud";
+                  }
+                  return true;
+                })
+                .map((item) => {
+                  return (
+                    <div
+                      className="login-sync-box"
+                      key={item.value}
+                      style={{}}
+                      onClick={() => {
+                        props.handleSetting(true);
+                        props.handleSettingMode("sync");
+                        props.handleSettingDrive(item.value);
+                      }}
+                    >
+                      <div className="login-sync-title">
+                        {props.t(item.label)}
+                      </div>
+                      <div className="login-sync-icon-container">
+                        <span className={"icon-add login-sync-icon"}></span>
+                      </div>
+                      {ConfigService.getReaderConfig("lang") &&
+                        ConfigService.getReaderConfig("lang").startsWith(
+                          "zh"
+                        ) &&
+                        item.value === "webdav" &&
+                        isElectron && (
+                          <div className="login-sync-text">
+                            {props.t("Recommended (use with Nutstore)")}
                           </div>
+                        )}
+                      {ConfigService.getReaderConfig("lang") &&
+                        ConfigService.getReaderConfig("lang").startsWith(
+                          "zh"
+                        ) &&
+                        item.value === "microsoft" && (
+                          <div className="login-sync-text">
+                            {props.t("Access may be unstable in China")}
+                          </div>
+                        )}
+                      {ConfigService.getReaderConfig("lang") &&
+                        ConfigService.getReaderConfig("lang").startsWith(
+                          "zh"
+                        ) &&
+                        item.value === "yiyiwu" && (
+                          <div className="login-sync-text">
+                            {props.t("Only recommended for VIP users")}
+                          </div>
+                        )}
+                      <div className="login-sync-subtitle">
+                        <div>
+                          {item.support.map((support) => {
+                            return (
+                              <span
+                                key={support}
+                                className={
+                                  "icon-" + support + " login-sync-support"
+                                }
+                              ></span>
+                            );
+                          })}
                         </div>
                       </div>
-                    );
-                  })}
-              </div>
-              <div
-                className="login-next-button"
-                onClick={() => {
-                  this.setState({
-                    currentStep: 4,
-                  });
-                }}
-                style={{
-                  borderWidth: "0px",
-                  right: "0px",
-                  // bottom: "10px",
-                }}
-              >
-                {this.props.t("Skip")}
-              </div>
+                    </div>
+                  );
+                })}
             </div>
-          </div>
-        )}
-        {this.state.currentStep === 4 && (
-          <div
-            className="login-container"
-            style={{
-              backgroundColor: "#dcd7c7",
-            }}
-          >
             <div
-              className="login-cover-container"
+              className="login-next-button"
+              onClick={() => {
+                updateState({
+                  currentStep: 4,
+                });
+              }}
               style={{
-                backgroundColor: "#e4e1d8",
+                borderWidth: "0px",
+                right: "0px",
+                // bottom: "10px",
               }}
             >
-              <div className="login-logo">
-                <img
-                  src={logoLogin}
-                  alt="logo"
-                  className="login-logo-img"
-                />
-              </div>
+              {props.t("Skip")}
+            </div>
+          </div>
+        </div>
+      )}
+      {state.currentStep === 4 && (
+        <div
+          className="login-container"
+          style={{
+            backgroundColor: "#dcd7c7",
+          }}
+        >
+          <div
+            className="login-cover-container"
+            style={{
+              backgroundColor: "#e4e1d8",
+            }}
+          >
+            <div className="login-logo">
+              <img src={logoLogin} alt="logo" className="login-logo-img" />
+            </div>
 
+            <img src={background3} alt="cover" className="login-cover-img" />
+          </div>
+          <div className="login-content-container">
+            <div
+              className="login-title"
+              style={{ marginTop: "50px", marginBottom: "20px" }}
+            >
+              {props.t(
+                "Download the mobile version to read and take notes anytime, anywhere"
+              )}
+            </div>
+            <div className="login-mobile-container">
               <img
-                src={background3}
-                alt="cover"
-                className="login-cover-img"
+                src={
+                  ConfigService.getReaderConfig("lang") &&
+                  ConfigService.getReaderConfig("lang").startsWith("zh")
+                    ? mobileQrZh
+                    : mobileQr
+                }
+                alt="logo"
+                className="login-mobile-qr"
+                style={{
+                  width: "40%",
+                }}
               />
             </div>
-            <div className="login-content-container">
-              <div
-                className="login-title"
-                style={{ marginTop: "50px", marginBottom: "20px" }}
-              >
-                {this.props.t(
-                  "Download the mobile version to read and take notes anytime, anywhere"
-                )}
-              </div>
-              <div className="login-mobile-container">
-                <img
-                  src={
-                    ConfigService.getReaderConfig("lang") &&
-                    ConfigService.getReaderConfig("lang").startsWith("zh")
-                      ? mobileQrZh
-                      : mobileQr
-                  }
-                  alt="logo"
-                  className="login-mobile-qr"
-                  style={{
-                    width: "40%",
+            <div
+              className="login-next-button"
+              onClick={() => {
+                props.history.push("/manager/home");
+              }}
+              style={{
+                borderWidth: "0px",
+                right: "0px",
+              }}
+            >
+              {props.t("Finish")}
+            </div>
+          </div>
+        </div>
+      )}
+      {state.currentStep === 5 && (
+        <div
+          className="login-container"
+          style={{
+            backgroundColor: "#dcd7c7",
+          }}
+        >
+          <div
+            className="login-cover-container"
+            style={{
+              backgroundColor: "#e4e1d8",
+            }}
+          >
+            <div className="login-logo">
+              <img src={logoLogin} alt="logo" className="login-logo-img" />
+            </div>
+
+            <img src={background3} alt="cover" className="login-cover-img" />
+          </div>
+          <div className="login-content-container">
+            <div
+              className="login-title"
+              style={{ marginTop: "80px", marginBottom: "50px" }}
+            >
+              {props.t(
+                "Embark on your journey of exploration with Koodo Reader Pro"
+              )}
+            </div>
+            <div className="login-option-box">
+              <div>
+                <input
+                  type={"text"}
+                  name={"email"}
+                  placeholder={props.t("Enter your email")}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setState((prevState) => ({
+                        ...prevState,
+                        loginConfig: {
+                          ...prevState.loginConfig,
+                          ["email"]: e.target.value.trim(),
+                        },
+                      }));
+                    }
                   }}
+                  onContextMenu={() => {
+                    handleContextMenu("token-dialog-email-box", true);
+                  }}
+                  onBlur={(e) => {
+                    const email = e.target.value.trim();
+                    if (email) {
+                      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                      if (email && !emailRegex.test(email)) {
+                        toast.error(props.t("Invalid email format"));
+                        return;
+                      }
+                    }
+                  }}
+                  id={"token-dialog-email-box"}
+                  className="login-input-container"
+                  style={{}}
                 />
-              </div>
-              <div
-                className="login-next-button"
-                onClick={() => {
-                  this.props.history.push("/manager/home");
-                }}
-                style={{
-                  borderWidth: "0px",
-                  right: "0px",
-                }}
-              >
-                {this.props.t("Finish")}
-              </div>
-            </div>
-          </div>
-        )}
-        {this.state.currentStep === 5 && (
-          <div
-            className="login-container"
-            style={{
-              backgroundColor: "#dcd7c7",
-            }}
-          >
-            <div
-              className="login-cover-container"
-              style={{
-                backgroundColor: "#e4e1d8",
-              }}
-            >
-              <div className="login-logo">
-                <img
-                  src={logoLogin}
-                  alt="logo"
-                  className="login-logo-img"
-                />
-              </div>
-
-              <img
-                src={background3}
-                alt="cover"
-                className="login-cover-img"
-              />
-            </div>
-            <div className="login-content-container">
-              <div
-                className="login-title"
-                style={{ marginTop: "80px", marginBottom: "50px" }}
-              >
-                {this.props.t(
-                  "Embark on your journey of exploration with Koodo Reader Pro"
-                )}
-              </div>
-              <div className="login-option-box">
-                <div>
+                <div style={{ position: "relative" }}>
                   <input
                     type={"text"}
-                    name={"email"}
-                    placeholder={this.props.t("Enter your email")}
+                    name={"code"}
+                    placeholder={props.t("Enter code")}
                     onChange={(e) => {
                       if (e.target.value) {
-                        this.setState((prevState) => ({
+                        setState((prevState) => ({
+                          ...prevState,
                           loginConfig: {
                             ...prevState.loginConfig,
-                            ["email"]: e.target.value.trim(),
+                            ["token"]: e.target.value.trim(),
                           },
                         }));
                       }
                     }}
                     onContextMenu={() => {
-                      handleContextMenu("token-dialog-email-box", true);
+                      handleContextMenu("token-dialog-token-box", true);
                     }}
-                    onBlur={(e) => {
-                      const email = e.target.value.trim();
-                      if (email) {
-                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                        if (email && !emailRegex.test(email)) {
-                          toast.error(this.props.t("Invalid email format"));
-                          return;
-                        }
-                      }
-                    }}
-                    id={"token-dialog-email-box"}
+                    id={"token-dialog-token-box"}
                     className="login-input-container"
-                    style={{}}
                   />
-                  <div style={{ position: "relative" }}>
-                    <input
-                      type={"text"}
-                      name={"code"}
-                      placeholder={this.props.t("Enter code")}
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          this.setState((prevState) => ({
-                            loginConfig: {
-                              ...prevState.loginConfig,
-                              ["token"]: e.target.value.trim(),
-                            },
-                          }));
-                        }
-                      }}
-                      onContextMenu={() => {
-                        handleContextMenu("token-dialog-token-box", true);
-                      }}
-                      id={"token-dialog-token-box"}
-                      className="login-input-container"
-                    />
-
-                    <div
-                      className="login-manual-token"
-                      onClick={async () => {
-                        if (!this.state.loginConfig.email) {
-                          toast.error(this.props.t("Enter your email"));
-                          return;
-                        }
-                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                        if (!emailRegex.test(this.state.loginConfig.email)) {
-                          toast.error(this.props.t("Invalid email format"));
-                          return;
-                        }
-                        if (this.state.isSendingCode || this.state.countdown) {
-                          return;
-                        }
-                        this.setState({ isSendingCode: true });
-                        toast.loading(this.props.t("Sending"), {
-                          id: "send-email-code",
-                        });
-                        let userRequest = await getUserRequest();
-                        let response = await userRequest.sendEmailCode({
-                          email: this.state.loginConfig.email,
-                          lang: ConfigService.getReaderConfig("lang"),
-                        });
-                        if (response.code === 200) {
-                          toast.success(this.props.t("Send successfully"), {
-                            id: "send-email-code",
-                          });
-                          toast(
-                            this.props.t(
-                              "If you didn't receive the verification code, please check the spam folder or use another email provider"
-                            ),
-                            {
-                              duration: 6000,
-                            }
-                          );
-                          this.setState({ isSendingCode: false });
-                          let countdown = 60;
-                          let timer = setInterval(() => {
-                            countdown--;
-                            this.setState({ countdown });
-                            if (countdown === 0) {
-                              clearInterval(timer);
-                            }
-                          }, 1000);
-                        } else {
-                          this.setState({ isSendingCode: false });
-                          toast.error(
-                            this.props.t("Failed to send code, error code") +
-                              ": " +
-                              response.msg,
-                            { id: "send-email-code" }
-                          );
-                        }
-                      }}
-                      style={{
-                        position: "absolute",
-                        right: "30px",
-                        top: "30px",
-                        textAlign: "right",
-                        cursor: "pointer",
-                        fontSize: "15px",
-                      }}
-                    >
-                      {this.state.countdown ? (
-                        this.state.countdown + "s"
-                      ) : this.state.isSendingCode ? (
-                        <Trans>Sending</Trans>
-                      ) : (
-                        <Trans>Send code</Trans>
-                      )}
-                    </div>
-                  </div>
 
                   <div
                     className="login-manual-token"
                     onClick={async () => {
+                      if (!stateRef.current.loginConfig.email) {
+                        toast.error(propsRef.current.t("Enter your email"));
+                        return;
+                      }
+                      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                       if (
-                        !this.state.loginConfig.token ||
-                        !this.state.loginConfig.email
+                        !emailRegex.test(stateRef.current.loginConfig.email)
                       ) {
-                        toast.error(
-                          this.props.t("Missing parameters") +
-                            this.props.t("Token")
-                        );
+                        toast.error(propsRef.current.t("Invalid email format"));
                         return;
                       }
-                      const now = Date.now();
-                      if (now - this.lastLoginClickTime < 3000) {
-                        toast.error(
-                          this.props.t(
-                            "You are clicking too fast, please try again later"
-                          )
-                        );
+                      if (
+                        stateRef.current.isSendingCode ||
+                        stateRef.current.countdown
+                      ) {
                         return;
                       }
-                      this.lastLoginClickTime = now;
-                      this.handleLogin(
-                        this.state.loginConfig.email +
-                          "#" +
-                          this.state.loginConfig.token,
-                        "email"
-                      );
-                    }}
-                    style={{
-                      margin: "10px",
-                    }}
-                  >
-                    {this.props.t("Continue")}
-                  </div>
-                  <div className="login-term">
-                    {this.props.t(
-                      "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows"
-                    )}
-                    <br />
-                    {CommonTool.EmailProviders.join(", ")}
-                  </div>
-                  <div
-                    className="login-next-button"
-                    onClick={() => {
-                      this.setState({
-                        currentStep: 2,
+                      updateState({ isSendingCode: true });
+                      toast.loading(propsRef.current.t("Sending"), {
+                        id: "send-email-code",
                       });
+                      let userRequest = await getUserRequest();
+                      let response = await userRequest.sendEmailCode({
+                        email: stateRef.current.loginConfig.email,
+                        lang: ConfigService.getReaderConfig("lang"),
+                      });
+                      if (response.code === 200) {
+                        toast.success(propsRef.current.t("Send successfully"), {
+                          id: "send-email-code",
+                        });
+                        toast(
+                          propsRef.current.t(
+                            "If you didn't receive the verification code, please check the spam folder or use another email provider"
+                          ),
+                          {
+                            duration: 6000,
+                          }
+                        );
+                        updateState({ isSendingCode: false });
+                        let countdown = 60;
+                        let timer = setInterval(() => {
+                          countdown--;
+                          updateState({ countdown });
+                          if (countdown === 0) {
+                            clearInterval(timer);
+                          }
+                        }, 1000);
+                      } else {
+                        updateState({ isSendingCode: false });
+                        toast.error(
+                          propsRef.current.t(
+                            "Failed to send code, error code"
+                          ) +
+                            ": " +
+                            response.msg,
+                          { id: "send-email-code" }
+                        );
+                      }
                     }}
                     style={{
-                      borderWidth: "0px",
-                      right: "0px",
+                      position: "absolute",
+                      right: "30px",
+                      top: "30px",
+                      textAlign: "right",
+                      cursor: "pointer",
+                      fontSize: "15px",
                     }}
                   >
-                    {this.props.t("Back")}
+                    {state.countdown ? (
+                      state.countdown + "s"
+                    ) : state.isSendingCode ? (
+                      <Trans>Sending</Trans>
+                    ) : (
+                      <Trans>Send code</Trans>
+                    )}
                   </div>
+                </div>
+
+                <div
+                  className="login-manual-token"
+                  onClick={async () => {
+                    if (
+                      !stateRef.current.loginConfig.token ||
+                      !stateRef.current.loginConfig.email
+                    ) {
+                      toast.error(
+                        propsRef.current.t("Missing parameters") +
+                          propsRef.current.t("Token")
+                      );
+                      return;
+                    }
+                    const now = Date.now();
+                    if (now - lastLoginClickTimeRef.current < 3000) {
+                      toast.error(
+                        propsRef.current.t(
+                          "You are clicking too fast, please try again later"
+                        )
+                      );
+                      return;
+                    }
+                    lastLoginClickTimeRef.current = now;
+                    handleLogin(
+                      stateRef.current.loginConfig.email +
+                        "#" +
+                        stateRef.current.loginConfig.token,
+                      "email"
+                    );
+                  }}
+                  style={{
+                    margin: "10px",
+                  }}
+                >
+                  {props.t("Continue")}
+                </div>
+                <div className="login-term">
+                  {props.t(
+                    "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows"
+                  )}
+                  <br />
+                  {CommonTool.EmailProviders.join(", ")}
+                </div>
+                <div
+                  className="login-next-button"
+                  onClick={() => {
+                    updateState({
+                      currentStep: 2,
+                    });
+                  }}
+                  style={{
+                    borderWidth: "0px",
+                    right: "0px",
+                  }}
+                >
+                  {props.t("Back")}
                 </div>
               </div>
             </div>
           </div>
-        )}
-      </>
-    );
-  }
-}
+        </div>
+      )}
+    </>
+  );
+};
 
 export default withRouter(Login as any);

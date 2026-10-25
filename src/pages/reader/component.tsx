@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React, { useEffect, useRef, useState } from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
@@ -70,58 +70,334 @@ const PANEL_OPEN_STATE: Record<
   top: "isOpenTopPanel",
   bottom: "isOpenBottomPanel",
 };
-class Reader extends React.Component<ReaderProps, ReaderState> {
-  messageTimer!: NodeJS.Timeout;
-  tickTimer!: NodeJS.Timeout;
-  private autoShowTimer: NodeJS.Timeout | null = null;
-  private hideQuickButtonsTimer: NodeJS.Timeout | null = null;
-  private dialogAnchorIcon: HTMLElement | null = null;
-  private readingTimeUtil = new ReadingTimeUtil(
-    ConfigService,
-    isElectron
-      ? {
-          registerUnloadHandler(callback: () => void): () => void {
-            const ipcRenderer = window.electronAPI;
-            // Separate reader window close
-            ipcRenderer.on("before-reader-close", callback);
-            // In-app tab (WebContentsView) close
-            ipcRenderer.on("before-tab-close", callback);
-            return () => {
-              ipcRenderer.removeListener("before-reader-close", callback);
-              ipcRenderer.removeListener("before-tab-close", callback);
-            };
-          },
-          onBeforeClose(): void {
-            const ipcRenderer = window.electronAPI;
-            // Reply to whichever close signal is active
-            ipcRenderer.send("reader-close-ready");
-            ipcRenderer.send("tab-close-ready");
-          },
-        }
-      : {
-          registerUnloadHandler(callback: () => void): () => void {
-            window.addEventListener("beforeunload", callback);
-            return () => window.removeEventListener("beforeunload", callback);
-          },
-        }
-  );
-  constructor(props: ReaderProps) {
-    super(props);
-    this.state = {
-      isOpenTopPanel: false,
-      isOpenBottomPanel: false,
-      hoverPanel: "",
-      isOpenLeftPanel: this.props.isNavLocked,
-      isOpenRightPanel: this.props.isSettingLocked,
-      totalDuration: 0,
-      currentDuration: 0,
-      isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
-      isPreventTrigger:
-        ConfigService.getReaderConfig("isPreventTrigger") === "yes",
-      isNearEdge: false,
-    };
+const Reader = (props: ReaderProps) => {
+  const propsRef = useRef(props);
+  propsRef.current = props;
+  const [state, setState] = useState<ReaderState>({
+    isOpenTopPanel: false,
+    isOpenBottomPanel: false,
+    hoverPanel: "",
+    isOpenLeftPanel: props.isNavLocked,
+    isOpenRightPanel: props.isSettingLocked,
+    totalDuration: 0,
+    currentDuration: 0,
+    isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
+    isPreventTrigger:
+      ConfigService.getReaderConfig("isPreventTrigger") === "yes",
+    isNearEdge: false,
+  });
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const updateState = (patch: Partial<ReaderState>) =>
+    setState((prev) => ({ ...prev, ...patch }));
+  const messageTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const tickTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const autoShowTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const hideQuickButtonsTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const dialogAnchorIconRef = useRef<HTMLElement | null>(null);
+  const didMountRef = useRef(false);
+  const readingTimeUtilRef = useRef<InstanceType<
+    typeof ReadingTimeUtil
+  > | null>(null);
+  if (!readingTimeUtilRef.current) {
+    readingTimeUtilRef.current = new ReadingTimeUtil(
+      ConfigService,
+      isElectron
+        ? {
+            registerUnloadHandler(callback: () => void): () => void {
+              const ipcRenderer = window.electronAPI;
+              // Separate reader window close
+              ipcRenderer.on("before-reader-close", callback);
+              // In-app tab (WebContentsView) close
+              ipcRenderer.on("before-tab-close", callback);
+              return () => {
+                ipcRenderer.removeListener("before-reader-close", callback);
+                ipcRenderer.removeListener("before-tab-close", callback);
+              };
+            },
+            onBeforeClose(): void {
+              const ipcRenderer = window.electronAPI;
+              // Reply to whichever close signal is active
+              ipcRenderer.send("reader-close-ready");
+              ipcRenderer.send("tab-close-ready");
+            },
+          }
+        : {
+            registerUnloadHandler(callback: () => void): () => void {
+              window.addEventListener("beforeunload", callback);
+              return () => window.removeEventListener("beforeunload", callback);
+            },
+          }
+    );
   }
-  componentDidMount() {
+
+  const cancelEnterReader = (position: string) => {
+    isEdgeHovering[position] = false;
+    if (enterTimers[position]) {
+      clearTimeout(enterTimers[position]!);
+      enterTimers[position] = null;
+    }
+  };
+
+  const scheduleEnterReader = (position: string) => {
+    cancelEnterReader(position);
+    isEdgeHovering[position] = true;
+    const delay = stateRef.current.isPreventTrigger ? 0 : PANEL_ENTER_DELAY;
+    enterTimers[position] = setTimeout(() => {
+      enterTimers[position] = null;
+      if (!isEdgeHovering[position] || isMouseMoving) return;
+      handleEnterReader(position);
+    }, delay);
+  };
+
+  const cancelLeaveReader = (position: string) => {
+    if (leaveTimers[position]) {
+      clearTimeout(leaveTimers[position]!);
+      leaveTimers[position] = null;
+    }
+  };
+
+  const scheduleLeaveReader = (position: string) => {
+    cancelLeaveReader(position);
+    leaveTimers[position] = setTimeout(() => {
+      leaveTimers[position] = null;
+      handleLeaveReader(position);
+    }, PANEL_LEAVE_DELAY);
+  };
+
+  const handleEdgeMouseEnter = (position: PanelPosition) => {
+    if (
+      stateRef.current.isTouch ||
+      stateRef.current[PANEL_OPEN_STATE[position]] ||
+      stateRef.current.isPreventTrigger
+    ) {
+      cancelLeaveReader(position);
+      updateState({ hoverPanel: position });
+      return;
+    }
+    scheduleEnterReader(position);
+  };
+
+  const handleEdgeMouseLeave = (position: PanelPosition) => {
+    cancelEnterReader(position);
+    updateState({ hoverPanel: "" });
+  };
+
+  const handleEnterReader = (position: string) => {
+    cancelEnterReader(position);
+    cancelLeaveReader(position);
+    switch (position) {
+      case "right":
+        updateState({
+          isOpenRightPanel: true,
+        });
+        break;
+      case "left":
+        updateState({
+          isOpenLeftPanel: true,
+        });
+        break;
+      case "top":
+        updateState({
+          isOpenTopPanel: true,
+        });
+        break;
+      case "bottom":
+        updateState({
+          isOpenBottomPanel: true,
+        });
+        break;
+      default:
+        break;
+    }
+  };
+  const handleLeaveReader = (position: string) => {
+    cancelLeaveReader(position);
+    switch (position) {
+      case "right":
+        if (propsRef.current.isSettingLocked) {
+          break;
+        } else {
+          updateState({ isOpenRightPanel: false });
+          break;
+        }
+
+      case "left":
+        if (
+          propsRef.current.isNavLocked ||
+          ConfigService.getReaderConfig("isTempLocked") === "yes"
+        ) {
+          break;
+        } else {
+          updateState({ isOpenLeftPanel: false });
+          break;
+        }
+      case "top":
+        updateState({ isOpenTopPanel: false });
+        break;
+      case "bottom":
+        updateState({ isOpenBottomPanel: false });
+        break;
+      default:
+        break;
+    }
+  };
+  const handleReadingPanelToggle = (event: Event) => {
+    const position = (event as CustomEvent<{ position: string }>).detail
+      ?.position;
+    if (!PANEL_POSITIONS.includes(position as PanelPosition)) return;
+    const stateKey = PANEL_OPEN_STATE[position as PanelPosition];
+    if (stateRef.current[stateKey]) {
+      handleLeaveReader(position);
+    } else {
+      handleEnterReader(position);
+    }
+  };
+  const closeSettingDialogs = () => {
+    propsRef.current.handleScalePageDialog(false);
+    propsRef.current.handleConvertDialog(false);
+    propsRef.current.handlePdfCropDialog(false);
+    propsRef.current.handleStudyLangDialog(false);
+    propsRef.current.handleAssistReadDialog(false);
+  };
+  const updateSettingDialogPosition = () => {
+    const anchor = document.querySelector<HTMLElement>(
+      ".reader-setting-dialog-anchor"
+    );
+    const dialog = anchor?.querySelector<HTMLElement>(".sort-dialog-container");
+    if (!anchor || !dialog) return;
+    const icon = dialogAnchorIconRef.current;
+    if (!icon || !icon.isConnected) return;
+    const iconRect = icon.getBoundingClientRect();
+    const iconCenter = iconRect.left + iconRect.width / 2;
+    const viewportWidth =
+      document.documentElement.clientWidth || window.innerWidth;
+    const reservedRight =
+      propsRef.current.isSettingLocked || propsRef.current.isDockedRight
+        ? 300
+        : 0;
+    const dialogWidth = dialog.offsetWidth;
+    if (!dialogWidth) return;
+    const minLeft = 8;
+    const maxLeft = Math.max(
+      minLeft,
+      viewportWidth - reservedRight - dialogWidth - 8
+    );
+    const left = Math.min(
+      maxLeft,
+      Math.max(minLeft, iconCenter - dialogWidth / 2)
+    );
+    document.documentElement.style.setProperty(
+      "--reader-dialog-anchor-x",
+      `${iconCenter}px`
+    );
+    anchor.style.left = `${left}px`;
+  };
+  const handleDialogButtonHover = (
+    handleDialog: (isOpen: boolean) => void,
+    dialogSelector: string
+  ) => ({
+    onMouseEnter: (event: React.MouseEvent<HTMLDivElement>) => {
+      dialogAnchorIconRef.current = event.currentTarget;
+      closeSettingDialogs();
+      handleDialog(true);
+      updateSettingDialogPosition();
+      window.requestAnimationFrame(updateSettingDialogPosition);
+    },
+    onMouseLeave: () => {
+      window.setTimeout(() => {
+        if (!document.querySelector(`${dialogSelector}:hover`)) {
+          handleDialog(false);
+        }
+      }, 200);
+    },
+  });
+  const showQuickButtons = () => {
+    if (autoShowTimerRef.current) {
+      clearTimeout(autoShowTimerRef.current);
+      autoShowTimerRef.current = null;
+    }
+    if (hideQuickButtonsTimerRef.current) {
+      clearTimeout(hideQuickButtonsTimerRef.current);
+      hideQuickButtonsTimerRef.current = null;
+    }
+    if (!stateRef.current.isNearEdge) {
+      updateState({ isNearEdge: true });
+    }
+  };
+  const hideQuickButtons = () => {
+    if (hideQuickButtonsTimerRef.current) {
+      clearTimeout(hideQuickButtonsTimerRef.current);
+    }
+    hideQuickButtonsTimerRef.current = setTimeout(() => {
+      hideQuickButtonsTimerRef.current = null;
+      updateState({ isNearEdge: false });
+    }, 200);
+  };
+  const handleLocation = () => {
+    let position = propsRef.current.htmlBook.rendition.getPosition();
+
+    ConfigService.setObjectConfig(
+      propsRef.current.currentBook.key,
+      position,
+      "recordLocation"
+    );
+  };
+
+  useEffect(() => {
+    const run = async () => {
+      let url = document.location.href;
+      let firstIndexOfQuestion = url.indexOf("?");
+      let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
+      let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
+      if (ConfigService.getAllListConfig("seperateStyleBooks").includes(key)) {
+        window.currentBookKey = key;
+        propsRef.current.handleBackgroundColor(
+          ConfigService.getReaderConfig("backgroundColor") || ""
+        );
+      } else {
+        window.currentBookKey = "";
+      }
+      propsRef.current.handleFetchBooks();
+      propsRef.current.handleFetchAuthed();
+      if (
+        key &&
+        ConfigService.getAllListConfig("convertPDFBooks").includes(key) &&
+        ConfigService.getReaderConfig(
+          propsRef.current.currentBook?.description?.indexOf("scanned") > -1
+            ? "scannedOcrEngine"
+            : "textOcrEngine"
+        ) === "official-ai-ocr"
+      ) {
+        await propsRef.current.handleFetchUserInfo();
+      }
+      DatabaseService.getRecord(key, "books").then((book: Book | null) => {
+        book = book || JSON.parse(ConfigService.getItem("tempBook") || "{}");
+        if (!book) return;
+
+        propsRef.current.handleFetchPercentage(book);
+        let readerMode = isPaginatedBook(book)
+          ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
+          : ConfigService.getReaderConfig("readerMode") || "double";
+        propsRef.current.handleReaderMode(readerMode);
+        propsRef.current.handleReadingBook(book);
+        // Start event-driven reading-time tracking
+        readingTimeUtilRef.current!.start(book.key);
+        // Initialise UI duration from persisted total
+        const savedTotal = readingTimeUtilRef.current!.getTotalSeconds(
+          book.key
+        );
+        updateState({ totalDuration: savedTotal, currentDuration: 0 });
+        if (isElectron) {
+          updateDiscordPresence(book);
+        }
+      });
+    };
+    run();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (ConfigService.getReaderConfig("isMergeWord") === "yes") {
       document
         .querySelector("body")
@@ -131,9 +407,10 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     // Update UI counters every second so the navigation panel still shows
     // live reading-time values, but actual storage writes only happen when
     // a reading session ends (visibility hidden / blur / unmount).
-    this.tickTimer = setInterval(() => {
-      if (!this.props.currentBook.key) return;
-      this.setState((prev) => ({
+    tickTimerRef.current = setInterval(() => {
+      if (!propsRef.current.currentBook.key) return;
+      setState((prev) => ({
+        ...prev,
         totalDuration: prev.totalDuration + 60,
         currentDuration: prev.currentDuration + 60,
       }));
@@ -154,867 +431,602 @@ class Reader extends React.Component<ReaderProps, ReaderState> {
     window.addEventListener("mousemove", throttledMouseMove);
     window.addEventListener(
       READING_PANEL_TOGGLE_EVENT,
-      this.handleReadingPanelToggle
+      handleReadingPanelToggle
     );
-    window.addEventListener("resize", this.updateSettingDialogPosition);
+    window.addEventListener("resize", updateSettingDialogPosition);
 
-    // 进入阅读器后主动展示快捷按钮 3 秒，提示用户位置后自动隐藏
-    this.setState({ isNearEdge: true });
-    this.autoShowTimer = setTimeout(() => {
-      this.autoShowTimer = null;
-      this.setState({ isNearEdge: false });
+    // Show quick buttons briefly after entering the reader
+    updateState({ isNearEdge: true });
+    autoShowTimerRef.current = setTimeout(() => {
+      autoShowTimerRef.current = null;
+      updateState({ isNearEdge: false });
     }, 1500);
-  }
-  componentDidUpdate() {
-    if (document.querySelector(".reader-setting-dialog-anchor")) {
-      this.updateSettingDialogPosition();
-    }
-  }
-  async UNSAFE_componentWillMount() {
-    let url = document.location.href;
-    let firstIndexOfQuestion = url.indexOf("?");
-    let lastIndexOfSlash = url.lastIndexOf("/", firstIndexOfQuestion);
-    let key = url.substring(lastIndexOfSlash + 1, firstIndexOfQuestion);
-    if (ConfigService.getAllListConfig("seperateStyleBooks").includes(key)) {
-      window.currentBookKey = key;
-      this.props.handleBackgroundColor(
-        ConfigService.getReaderConfig("backgroundColor") || ""
+    return () => {
+      window.removeEventListener(
+        READING_PANEL_TOGGLE_EVENT,
+        handleReadingPanelToggle
       );
-    } else {
-      window.currentBookKey = "";
-    }
-    this.props.handleFetchBooks();
-    this.props.handleFetchAuthed();
-    if (
-      key &&
-      ConfigService.getAllListConfig("convertPDFBooks").includes(key) &&
-      ConfigService.getReaderConfig(
-        this.props.currentBook?.description?.indexOf("scanned") > -1
-          ? "scannedOcrEngine"
-          : "textOcrEngine"
-      ) === "official-ai-ocr"
-    ) {
-      await this.props.handleFetchUserInfo();
-    }
-    DatabaseService.getRecord(key, "books").then((book: Book | null) => {
-      book = book || JSON.parse(ConfigService.getItem("tempBook") || "{}");
-      if (!book) return;
-
-      this.props.handleFetchPercentage(book);
-      let readerMode = isPaginatedBook(book)
-        ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
-        : ConfigService.getReaderConfig("readerMode") || "double";
-      this.props.handleReaderMode(readerMode);
-      this.props.handleReadingBook(book);
-      // Start event-driven reading-time tracking
-      this.readingTimeUtil.start(book.key);
-      // Initialise UI duration from persisted total
-      const savedTotal = this.readingTimeUtil.getTotalSeconds(book.key);
-      this.setState({ totalDuration: savedTotal, currentDuration: 0 });
-      if (isElectron) {
-        updateDiscordPresence(book);
+      window.removeEventListener("resize", updateSettingDialogPosition);
+      if (hideQuickButtonsTimerRef.current) {
+        clearTimeout(hideQuickButtonsTimerRef.current);
+        hideQuickButtonsTimerRef.current = null;
       }
-    });
-  }
+      if (isElectron) {
+        clearDiscordPresence();
+      }
+      if (tickTimerRef.current) {
+        clearInterval(tickTimerRef.current);
+      }
+      if (autoShowTimerRef.current) {
+        clearTimeout(autoShowTimerRef.current);
+        autoShowTimerRef.current = null;
+      }
+      PANEL_POSITIONS.forEach((position) => {
+        cancelEnterReader(position);
+        cancelLeaveReader(position);
+      });
+      // Flush any in-flight session time before the component tears down
+      readingTimeUtilRef.current!.stop();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  componentWillUnmount() {
-    window.removeEventListener(
-      READING_PANEL_TOGGLE_EVENT,
-      this.handleReadingPanelToggle
-    );
-    window.removeEventListener("resize", this.updateSettingDialogPosition);
-    if (this.hideQuickButtonsTimer) {
-      clearTimeout(this.hideQuickButtonsTimer);
-      this.hideQuickButtonsTimer = null;
-    }
-    if (isElectron) {
-      clearDiscordPresence();
-    }
-    clearInterval(this.tickTimer);
-    if (this.autoShowTimer) {
-      clearTimeout(this.autoShowTimer);
-      this.autoShowTimer = null;
-    }
-    PANEL_POSITIONS.forEach((position) => {
-      this.cancelEnterReader(position);
-      this.cancelLeaveReader(position);
-    });
-    // Flush any in-flight session time before the component tears down
-    this.readingTimeUtil.stop();
-  }
-
-  cancelEnterReader = (position: string) => {
-    isEdgeHovering[position] = false;
-    if (enterTimers[position]) {
-      clearTimeout(enterTimers[position]!);
-      enterTimers[position] = null;
-    }
-  };
-
-  scheduleEnterReader = (position: string) => {
-    this.cancelEnterReader(position);
-    isEdgeHovering[position] = true;
-    const delay = this.state.isPreventTrigger ? 0 : PANEL_ENTER_DELAY;
-    enterTimers[position] = setTimeout(() => {
-      enterTimers[position] = null;
-      if (!isEdgeHovering[position] || isMouseMoving) return;
-      this.handleEnterReader(position);
-    }, delay);
-  };
-
-  cancelLeaveReader = (position: string) => {
-    if (leaveTimers[position]) {
-      clearTimeout(leaveTimers[position]!);
-      leaveTimers[position] = null;
-    }
-  };
-
-  scheduleLeaveReader = (position: string) => {
-    this.cancelLeaveReader(position);
-    leaveTimers[position] = setTimeout(() => {
-      leaveTimers[position] = null;
-      this.handleLeaveReader(position);
-    }, PANEL_LEAVE_DELAY);
-  };
-
-  handleEdgeMouseEnter = (position: PanelPosition) => {
-    if (
-      this.state.isTouch ||
-      this.state[PANEL_OPEN_STATE[position]] ||
-      this.state.isPreventTrigger
-    ) {
-      this.cancelLeaveReader(position);
-      this.setState({ hoverPanel: position });
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
       return;
     }
-    this.scheduleEnterReader(position);
-  };
-
-  handleEdgeMouseLeave = (position: PanelPosition) => {
-    this.cancelEnterReader(position);
-    this.setState({ hoverPanel: "" });
-  };
-
-  handleEnterReader = (position: string) => {
-    this.cancelEnterReader(position);
-    this.cancelLeaveReader(position);
-    switch (position) {
-      case "right":
-        this.setState({
-          isOpenRightPanel: true,
-        });
-        break;
-      case "left":
-        this.setState({
-          isOpenLeftPanel: true,
-        });
-        break;
-      case "top":
-        this.setState({
-          isOpenTopPanel: true,
-        });
-        break;
-      case "bottom":
-        this.setState({
-          isOpenBottomPanel: true,
-        });
-        break;
-      default:
-        break;
+    if (document.querySelector(".reader-setting-dialog-anchor")) {
+      updateSettingDialogPosition();
     }
-  };
-  handleLeaveReader = (position: string) => {
-    this.cancelLeaveReader(position);
-    switch (position) {
-      case "right":
-        if (this.props.isSettingLocked) {
-          break;
-        } else {
-          this.setState({ isOpenRightPanel: false });
-          break;
-        }
-
-      case "left":
-        if (
-          this.props.isNavLocked ||
-          ConfigService.getReaderConfig("isTempLocked") === "yes"
-        ) {
-          break;
-        } else {
-          this.setState({ isOpenLeftPanel: false });
-          break;
-        }
-      case "top":
-        this.setState({ isOpenTopPanel: false });
-        break;
-      case "bottom":
-        this.setState({ isOpenBottomPanel: false });
-        break;
-      default:
-        break;
-    }
-  };
-  handleReadingPanelToggle = (event: Event) => {
-    const position = (event as CustomEvent<{ position: string }>).detail
-      ?.position;
-    if (!PANEL_POSITIONS.includes(position as PanelPosition)) return;
-    const stateKey = PANEL_OPEN_STATE[position as PanelPosition];
-    if (this.state[stateKey]) {
-      this.handleLeaveReader(position);
-    } else {
-      this.handleEnterReader(position);
-    }
-  };
-  closeSettingDialogs = () => {
-    this.props.handleScalePageDialog(false);
-    this.props.handleConvertDialog(false);
-    this.props.handlePdfCropDialog(false);
-    this.props.handleStudyLangDialog(false);
-    this.props.handleAssistReadDialog(false);
-  };
-  updateSettingDialogPosition = () => {
-    const anchor = document.querySelector<HTMLElement>(
-      ".reader-setting-dialog-anchor"
-    );
-    const dialog = anchor?.querySelector<HTMLElement>(".sort-dialog-container");
-    if (!anchor || !dialog) return;
-    const icon = this.dialogAnchorIcon;
-    if (!icon || !icon.isConnected) return;
-    const iconRect = icon.getBoundingClientRect();
-    const iconCenter = iconRect.left + iconRect.width / 2;
-    const viewportWidth =
-      document.documentElement.clientWidth || window.innerWidth;
-    const reservedRight =
-      this.props.isSettingLocked || this.props.isDockedRight ? 300 : 0;
-    const dialogWidth = dialog.offsetWidth;
-    if (!dialogWidth) return;
-    const minLeft = 8;
-    const maxLeft = Math.max(
-      minLeft,
-      viewportWidth - reservedRight - dialogWidth - 8
-    );
-    const left = Math.min(
-      maxLeft,
-      Math.max(minLeft, iconCenter - dialogWidth / 2)
-    );
-    document.documentElement.style.setProperty(
-      "--reader-dialog-anchor-x",
-      `${iconCenter}px`
-    );
-    anchor.style.left = `${left}px`;
-  };
-  handleDialogButtonHover = (
-    handleDialog: (isOpen: boolean) => void,
-    dialogSelector: string
-  ) => ({
-    onMouseEnter: (event: React.MouseEvent<HTMLDivElement>) => {
-      this.dialogAnchorIcon = event.currentTarget;
-      this.closeSettingDialogs();
-      handleDialog(true);
-      this.updateSettingDialogPosition();
-      window.requestAnimationFrame(this.updateSettingDialogPosition);
-    },
-    onMouseLeave: () => {
-      window.setTimeout(() => {
-        if (!document.querySelector(`${dialogSelector}:hover`)) {
-          handleDialog(false);
-        }
-      }, 200);
-    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   });
-  showQuickButtons = () => {
-    if (this.autoShowTimer) {
-      clearTimeout(this.autoShowTimer);
-      this.autoShowTimer = null;
-    }
-    if (this.hideQuickButtonsTimer) {
-      clearTimeout(this.hideQuickButtonsTimer);
-      this.hideQuickButtonsTimer = null;
-    }
-    if (!this.state.isNearEdge) {
-      this.setState({ isNearEdge: true });
-    }
-  };
-  hideQuickButtons = () => {
-    if (this.hideQuickButtonsTimer) {
-      clearTimeout(this.hideQuickButtonsTimer);
-    }
-    this.hideQuickButtonsTimer = setTimeout(() => {
-      this.hideQuickButtonsTimer = null;
-      this.setState({ isNearEdge: false });
-    }, 200);
-  };
-  handleLocation = () => {
-    let position = this.props.htmlBook.rendition.getPosition();
 
-    ConfigService.setObjectConfig(
-      this.props.currentBook.key,
-      position,
-      "recordLocation"
-    );
+  const isSeparateElectronWindow =
+    isElectron && ConfigService.getReaderConfig("isOpenInMain") !== "yes";
+  const isMacOS =
+    isElectron && window.electronAPI?.runtime?.platform === "darwin";
+  const isMergeWord = ConfigService.getReaderConfig("isMergeWord") === "yes";
+  const showCustomWindowControls =
+    isSeparateElectronWindow && (!isMacOS || isMergeWord);
+  const renditionProps = {
+    handleLeaveReader: handleLeaveReader,
+    handleEnterReader: handleEnterReader,
+    isShow:
+      state.isOpenLeftPanel ||
+      state.isOpenTopPanel ||
+      state.isOpenBottomPanel ||
+      state.isOpenRightPanel,
   };
-  render() {
-    const isSeparateElectronWindow =
-      isElectron && ConfigService.getReaderConfig("isOpenInMain") !== "yes";
-    const isMacOS =
-      isElectron && window.electronAPI?.runtime?.platform === "darwin";
-    const isMergeWord = ConfigService.getReaderConfig("isMergeWord") === "yes";
-    const showCustomWindowControls =
-      isSeparateElectronWindow && (!isMacOS || isMergeWord);
-    const renditionProps = {
-      handleLeaveReader: this.handleLeaveReader,
-      handleEnterReader: this.handleEnterReader,
-      isShow:
-        this.state.isOpenLeftPanel ||
-        this.state.isOpenTopPanel ||
-        this.state.isOpenBottomPanel ||
-        this.state.isOpenRightPanel,
-    };
-    return (
-      <div className="viewer">
-        <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
-        {isSeparateElectronWindow && (
-          <div className="reader-window-drag-region" />
-        )}
+  return (
+    <div className="viewer">
+      <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
+      {isSeparateElectronWindow && (
+        <div className="reader-window-drag-region" />
+      )}
 
+      <div
+        className="previous-chapter-single-container reader-quick-buttons"
+        onMouseEnter={showQuickButtons}
+        onMouseLeave={hideQuickButtons}
+        onClick={async () => {
+          if (lock) return;
+          lock = true;
+          // RTL direction handling
+          if (
+            ConfigService.getReaderConfig("revertDirection") === "yes" &&
+            ConfigService.getReaderConfig("textOrientation") !== "vertical"
+          ) {
+            await props.htmlBook.rendition.next();
+          } else {
+            await props.htmlBook.rendition.prev();
+          }
+          handleLocation();
+          setTimeout(() => (lock = false), throttleTime);
+        }}
+        style={{
+          left: props.isNavLocked ? 315 : 15,
+          opacity: state.isNearEdge ? undefined : 0,
+          transition: "opacity 0.3s ease",
+        }}
+      >
+        <span className="icon-dropdown previous-chapter-single"></span>
+      </div>
+      <div
+        className="reader-quick-buttons"
+        onMouseEnter={showQuickButtons}
+        onMouseLeave={hideQuickButtons}
+        style={{
+          position: "absolute",
+          bottom: 10,
+          right: props.isSettingLocked || props.isDockedRight ? 315 : 15,
+          display: "flex",
+          flexDirection: "column-reverse",
+          alignItems: "center",
+          gap: "8px",
+          zIndex: 10,
+          opacity: state.isNearEdge ? 1 : 0,
+          transition: "opacity 0.3s ease",
+        }}
+      >
         <div
-          className="previous-chapter-single-container reader-quick-buttons"
-          onMouseEnter={this.showQuickButtons}
-          onMouseLeave={this.hideQuickButtons}
+          className="next-chapter-single-container"
           onClick={async () => {
             if (lock) return;
             lock = true;
-            // RTL 下左侧箭头翻到下一页
+            // RTL direction handling
             if (
               ConfigService.getReaderConfig("revertDirection") === "yes" &&
               ConfigService.getReaderConfig("textOrientation") !== "vertical"
             ) {
-              await this.props.htmlBook.rendition.next();
+              await props.htmlBook.rendition.prev();
             } else {
-              await this.props.htmlBook.rendition.prev();
+              await props.htmlBook.rendition.next();
             }
-            this.handleLocation();
+            handleLocation();
             setTimeout(() => (lock = false), throttleTime);
           }}
-          style={{
-            left: this.props.isNavLocked ? 315 : 15,
-            opacity: this.state.isNearEdge ? undefined : 0,
-            transition: "opacity 0.3s ease",
-          }}
+          style={{ position: "static" }}
         >
-          <span className="icon-dropdown previous-chapter-single"></span>
+          <span className="icon-dropdown next-chapter-single"></span>
         </div>
         <div
-          className="reader-quick-buttons"
-          onMouseEnter={this.showQuickButtons}
-          onMouseLeave={this.hideQuickButtons}
-          style={{
-            position: "absolute",
-            bottom: 10,
-            right:
-              this.props.isSettingLocked || this.props.isDockedRight ? 315 : 15,
-            display: "flex",
-            flexDirection: "column-reverse",
-            alignItems: "center",
-            gap: "8px",
-            zIndex: 10,
-            opacity: this.state.isNearEdge ? 1 : 0,
-            transition: "opacity 0.3s ease",
+          className="next-chapter-single-container"
+          onClick={async () => {
+            props.handleSpeechDialog(!props.isSpeechOpen);
           }}
+          style={{ position: "static", transform: "rotate(0deg)" }}
         >
+          <span
+            style={
+              props.isSpeechOpen ? { fontWeight: "bold", marginTop: "4px" } : {}
+            }
+            className={`icon-${props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
+          ></span>
+        </div>
+        {ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
           <div
             className="next-chapter-single-container"
             onClick={async () => {
-              if (lock) return;
-              lock = true;
-              // RTL 下右侧箭头翻到上一页
-              if (
-                ConfigService.getReaderConfig("revertDirection") === "yes" &&
-                ConfigService.getReaderConfig("textOrientation") !== "vertical"
-              ) {
-                await this.props.htmlBook.rendition.prev();
-              } else {
-                await this.props.htmlBook.rendition.next();
-              }
-              this.handleLocation();
-              setTimeout(() => (lock = false), throttleTime);
+              props.handleMenuMode("assistant");
+              props.handleOriginalText(
+                await props.htmlBook.rendition.chapterText()
+              );
+              props.handleOpenMenu(true);
             }}
-            style={{ position: "static" }}
-          >
-            <span className="icon-dropdown next-chapter-single"></span>
-          </div>
-          <div
-            className="next-chapter-single-container"
-            onClick={async () => {
-              this.props.handleSpeechDialog(!this.props.isSpeechOpen);
+            style={{
+              position: "static",
+              transform: "rotate(0deg)",
+              fontWeight: "bold",
+              fontSize: "17px",
             }}
-            style={{ position: "static", transform: "rotate(0deg)" }}
           >
-            <span
-              style={
-                this.props.isSpeechOpen
-                  ? { fontWeight: "bold", marginTop: "4px" }
-                  : {}
-              }
-              className={`icon-${this.props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
-            ></span>
+            AI
           </div>
-          {ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
+        )}
+        {props.currentBook &&
+          isReadingRawPDF(props.currentBook) &&
+          props.currentBook.description.indexOf("scanned") > -1 && (
             <div
               className="next-chapter-single-container"
-              onClick={async () => {
-                this.props.handleMenuMode("assistant");
-                this.props.handleOriginalText(
-                  await this.props.htmlBook.rendition.chapterText()
-                );
-                this.props.handleOpenMenu(true);
+              onClick={() => {
+                props.htmlBook.rendition.applyAnnotationConfig({
+                  isDrawing: props.isAnnotationOpen ? "no" : "yes",
+                });
+                props.handleAnnotationDialog(!props.isAnnotationOpen);
               }}
-              style={{
-                position: "static",
-                transform: "rotate(0deg)",
-                fontWeight: "bold",
-                fontSize: "17px",
-              }}
+              style={{ position: "static", transform: "rotate(0deg)" }}
             >
-              AI
+              <span
+                style={
+                  props.isAnnotationOpen
+                    ? { fontWeight: "bold", marginTop: "4px" }
+                    : { fontSize: "17px" }
+                }
+                className={`icon-${props.isAnnotationOpen ? "close" : "edit"} next-chapter-single`}
+              ></span>
             </div>
           )}
-          {this.props.currentBook &&
-            isReadingRawPDF(this.props.currentBook) &&
-            this.props.currentBook.description.indexOf("scanned") > -1 && (
-              <div
-                className="next-chapter-single-container"
-                onClick={() => {
-                  this.props.htmlBook.rendition.applyAnnotationConfig({
-                    isDrawing: this.props.isAnnotationOpen ? "no" : "yes",
-                  });
-                  this.props.handleAnnotationDialog(
-                    !this.props.isAnnotationOpen
-                  );
-                }}
-                style={{ position: "static", transform: "rotate(0deg)" }}
-              >
-                <span
-                  style={
-                    this.props.isAnnotationOpen
-                      ? { fontWeight: "bold", marginTop: "4px" }
-                      : { fontSize: "17px" }
-                  }
-                  className={`icon-${this.props.isAnnotationOpen ? "close" : "edit"} next-chapter-single`}
-                ></span>
-              </div>
-            )}
-        </div>
+      </div>
 
+      <div
+        className="reader-quick-buttons"
+        onMouseEnter={showQuickButtons}
+        onMouseLeave={hideQuickButtons}
+        style={{
+          position: "absolute",
+          top: "0px",
+          ...(isSeparateElectronWindow && isMacOS
+            ? {
+                left: props.isNavLocked ? 315 : isMergeWord ? 15 : 82,
+                right: "auto",
+              }
+            : {
+                right: props.isSettingLocked || props.isDockedRight ? 300 : 15,
+              }),
+          zIndex: 14,
+          width: "max-content",
+          display: "flex",
+          flexDirection: "column",
+          alignItems:
+            isSeparateElectronWindow && isMacOS ? "flex-start" : "flex-end",
+          justifyContent: "flex-end",
+          opacity: state.isNearEdge ? 1 : 0,
+          transition: "opacity 0.3s ease",
+          color: ConfigService.getReaderConfig("textColor")
+            ? ConfigService.getReaderConfig("textColor")
+            : "",
+        }}
+      >
         <div
-          className="reader-quick-buttons"
-          onMouseEnter={this.showQuickButtons}
-          onMouseLeave={this.hideQuickButtons}
           style={{
-            position: "absolute",
-            top: "0px",
-            ...(isSeparateElectronWindow && isMacOS
-              ? {
-                  left: this.props.isNavLocked ? 315 : isMergeWord ? 15 : 82,
-                  right: "auto",
-                }
-              : {
-                  right:
-                    this.props.isSettingLocked || this.props.isDockedRight
-                      ? 300
-                      : 15,
-                }),
-            zIndex: 14,
-            width: "max-content",
             display: "flex",
-            flexDirection: "column",
-            alignItems:
-              isSeparateElectronWindow && isMacOS ? "flex-start" : "flex-end",
+            alignItems: "center",
             justifyContent: "flex-end",
-            opacity: this.state.isNearEdge ? 1 : 0,
-            transition: "opacity 0.3s ease",
-            color: ConfigService.getReaderConfig("textColor")
-              ? ConfigService.getReaderConfig("textColor")
-              : "",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-            }}
-          >
-            {this.props.currentBook &&
-              !isReadingRawPDF(this.props.currentBook) && (
-                <>
-                  <div
-                    className="reader-setting-icon-container"
-                    {...this.handleDialogButtonHover(
-                      this.props.handleStudyLangDialog,
-                      ".study-lang-dialog-container"
-                    )}
-                  >
-                    <span
-                      className="icon-trans reader-setting-icon"
-                      style={{ fontSize: 23 }}
-                    ></span>
-                  </div>
-                  <div
-                    className="reader-setting-icon-container"
-                    {...this.handleDialogButtonHover(
-                      this.props.handleAssistReadDialog,
-                      ".assist-read-dialog-container"
-                    )}
-                  >
-                    <span
-                      className="icon-pencil-ruler reader-setting-icon"
-                      style={{ fontSize: 21 }}
-                    ></span>
-                  </div>
-                </>
-              )}
-            {(this.props.readerMode === "scroll" ||
-              this.props.readerMode === "single") && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <div
-                  className="reader-setting-icon-container"
-                  {...this.handleDialogButtonHover(
-                    this.props.handleScalePageDialog,
-                    ".scale-page-dialog-container"
-                  )}
-                >
-                  <span
-                    className="icon-zoom-in reader-setting-icon"
-                    style={{ fontSize: 23 }}
-                  ></span>
-                </div>
-              </div>
-            )}
-
-            {this.props.currentBook.format === "PDF" &&
-              this.props.readerMode === "scroll" && (
-                <div
-                  className="reader-setting-icon-container"
-                  {...this.handleDialogButtonHover(
-                    this.props.handlePdfCropDialog,
-                    ".pdf-crop-dialog-container"
-                  )}
-                >
-                  <span
-                    className="icon-crop reader-setting-icon"
-                    style={{ fontSize: 24 }}
-                  ></span>
-                </div>
-              )}
-
-            {this.props.currentBook.format === "PDF" && (
+          {props.currentBook && !isReadingRawPDF(props.currentBook) && (
+            <>
               <div
                 className="reader-setting-icon-container"
-                {...this.handleDialogButtonHover(
-                  this.props.handleConvertDialog,
-                  ".convert-dialog-container"
+                {...handleDialogButtonHover(
+                  props.handleStudyLangDialog,
+                  ".study-lang-dialog-container"
                 )}
               >
                 <span
-                  className="icon-convert-text reader-setting-icon"
-                  style={{ fontSize: 26 }}
+                  className="icon-trans reader-setting-icon"
+                  style={{ fontSize: 23 }}
+                ></span>
+              </div>
+              <div
+                className="reader-setting-icon-container"
+                {...handleDialogButtonHover(
+                  props.handleAssistReadDialog,
+                  ".assist-read-dialog-container"
+                )}
+              >
+                <span
+                  className="icon-pencil-ruler reader-setting-icon"
+                  style={{ fontSize: 21 }}
+                ></span>
+              </div>
+            </>
+          )}
+          {(props.readerMode === "scroll" || props.readerMode === "single") && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
+              <div
+                className="reader-setting-icon-container"
+                {...handleDialogButtonHover(
+                  props.handleScalePageDialog,
+                  ".scale-page-dialog-container"
+                )}
+              >
+                <span
+                  className="icon-zoom-in reader-setting-icon"
+                  style={{ fontSize: 23 }}
+                ></span>
+              </div>
+            </div>
+          )}
+
+          {props.currentBook.format === "PDF" &&
+            props.readerMode === "scroll" && (
+              <div
+                className="reader-setting-icon-container"
+                {...handleDialogButtonHover(
+                  props.handlePdfCropDialog,
+                  ".pdf-crop-dialog-container"
+                )}
+              >
+                <span
+                  className="icon-crop reader-setting-icon"
+                  style={{ fontSize: 24 }}
                 ></span>
               </div>
             )}
+
+          {props.currentBook.format === "PDF" && (
             <div
               className="reader-setting-icon-container"
-              aria-label={this.props.t("Toggle menu")}
-              data-tooltip-id="my-tooltip"
-              data-tooltip-content={this.props.t("Toggle menu")}
-              onClick={() => {
-                this.handleEnterReader("left");
-                this.handleEnterReader("right");
-                this.handleEnterReader("bottom");
-                this.handleEnterReader("top");
-              }}
+              {...handleDialogButtonHover(
+                props.handleConvertDialog,
+                ".convert-dialog-container"
+              )}
             >
               <span
-                className="icon-grid reader-setting-icon"
-                style={{ fontSize: 20 }}
+                className="icon-convert-text reader-setting-icon"
+                style={{ fontSize: 26 }}
               ></span>
             </div>
-            {showCustomWindowControls && <WindowControls t={this.props.t} />}
+          )}
+          <div
+            className="reader-setting-icon-container"
+            aria-label={props.t("Toggle menu")}
+            data-tooltip-id="my-tooltip"
+            data-tooltip-content={props.t("Toggle menu")}
+            onClick={() => {
+              handleEnterReader("left");
+              handleEnterReader("right");
+              handleEnterReader("bottom");
+              handleEnterReader("top");
+            }}
+          >
+            <span
+              className="icon-grid reader-setting-icon"
+              style={{ fontSize: 20 }}
+            ></span>
           </div>
+          {showCustomWindowControls && <WindowControls t={props.t} />}
         </div>
-        {this.props.isSettingOpen && (
-          <>
-            <SettingDialog />
-            <div className="drag-background"></div>
-          </>
-        )}
-        <Toaster
-          toastOptions={{
-            style: {
-              padding: "8px 10px",
-              wordWrap: "break-word",
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              overflowWrap: "break-word",
-            },
-          }}
+      </div>
+      {props.isSettingOpen && (
+        <>
+          <SettingDialog />
+          <div className="drag-background"></div>
+        </>
+      )}
+      <Toaster
+        toastOptions={{
+          style: {
+            padding: "8px 10px",
+            wordWrap: "break-word",
+            wordBreak: "break-word",
+            whiteSpace: "normal",
+            overflowWrap: "break-word",
+          },
+        }}
+      />
+
+      <div
+        className="left-panel"
+        onMouseEnter={() => handleEdgeMouseEnter("left")}
+        onMouseLeave={() => handleEdgeMouseLeave("left")}
+        style={state.hoverPanel === "left" ? { opacity: 0.5 } : {}}
+        onClick={() => {
+          handleEnterReader("left");
+        }}
+      >
+        <span className="icon-grid panel-icon"></span>
+      </div>
+      <div
+        className="right-panel"
+        onMouseEnter={() => handleEdgeMouseEnter("right")}
+        onMouseLeave={() => handleEdgeMouseLeave("right")}
+        style={
+          state.hoverPanel === "right"
+            ? {
+                opacity: 0.5,
+                right: props.isDockedRight ? "299px" : "0px",
+              }
+            : { right: props.isDockedRight ? "299px" : "0px" }
+        }
+        onClick={() => {
+          handleEnterReader("right");
+        }}
+      >
+        <span className="icon-grid panel-icon"></span>
+      </div>
+      <div
+        className="top-panel"
+        onMouseEnter={() => handleEdgeMouseEnter("top")}
+        style={
+          state.hoverPanel === "top"
+            ? {
+                opacity: 0.5,
+                marginLeft:
+                  props.isNavLocked &&
+                  !props.isSettingLocked &&
+                  !props.isDockedRight
+                    ? 150
+                    : 0,
+              }
+            : {
+                marginLeft:
+                  props.isNavLocked &&
+                  !props.isSettingLocked &&
+                  !props.isDockedRight
+                    ? 150
+                    : 0,
+              }
+        }
+        onMouseLeave={() => handleEdgeMouseLeave("top")}
+        onClick={() => {
+          handleEnterReader("top");
+        }}
+      >
+        <span className="icon-grid panel-icon"></span>
+      </div>
+      <div
+        className="bottom-panel"
+        onMouseEnter={() => handleEdgeMouseEnter("bottom")}
+        onMouseLeave={() => handleEdgeMouseLeave("bottom")}
+        onClick={() => {
+          handleEnterReader("bottom");
+        }}
+        style={
+          state.hoverPanel === "bottom"
+            ? {
+                opacity: 0.5,
+                marginLeft:
+                  props.isNavLocked &&
+                  !props.isSettingLocked &&
+                  !props.isDockedRight
+                    ? 150
+                    : 0,
+              }
+            : {
+                marginLeft:
+                  props.isNavLocked &&
+                  !props.isSettingLocked &&
+                  !props.isDockedRight
+                    ? 150
+                    : 0,
+              }
+        }
+      >
+        <span className="icon-grid panel-icon"></span>
+      </div>
+
+      <div
+        className="setting-panel-container"
+        onMouseEnter={() => {
+          cancelLeaveReader("right");
+        }}
+        onMouseLeave={() => {
+          scheduleLeaveReader("right");
+        }}
+        style={
+          state.isOpenRightPanel
+            ? {}
+            : {
+                transform: "translateX(309px)",
+              }
+        }
+      >
+        <SettingPanel />
+      </div>
+      <div
+        className="navigation-panel-container"
+        onMouseEnter={() => {
+          cancelLeaveReader("left");
+        }}
+        onMouseLeave={() => {
+          scheduleLeaveReader("left");
+        }}
+        style={
+          state.isOpenLeftPanel
+            ? {}
+            : {
+                transform: "translateX(-309px)",
+              }
+        }
+      >
+        <NavigationPanel
+          {...({
+            totalDuration: state.totalDuration,
+          } as any)}
         />
-
-        <div
-          className="left-panel"
-          onMouseEnter={() => this.handleEdgeMouseEnter("left")}
-          onMouseLeave={() => this.handleEdgeMouseLeave("left")}
-          style={this.state.hoverPanel === "left" ? { opacity: 0.5 } : {}}
-          onClick={() => {
-            this.handleEnterReader("left");
-          }}
-        >
-          <span className="icon-grid panel-icon"></span>
-        </div>
-        <div
-          className="right-panel"
-          onMouseEnter={() => this.handleEdgeMouseEnter("right")}
-          onMouseLeave={() => this.handleEdgeMouseLeave("right")}
-          style={
-            this.state.hoverPanel === "right"
-              ? {
-                  opacity: 0.5,
-                  right: this.props.isDockedRight ? "299px" : "0px",
-                }
-              : { right: this.props.isDockedRight ? "299px" : "0px" }
-          }
-          onClick={() => {
-            this.handleEnterReader("right");
-          }}
-        >
-          <span className="icon-grid panel-icon"></span>
-        </div>
-        <div
-          className="top-panel"
-          onMouseEnter={() => this.handleEdgeMouseEnter("top")}
-          style={
-            this.state.hoverPanel === "top"
-              ? {
-                  opacity: 0.5,
-                  marginLeft:
-                    this.props.isNavLocked &&
-                    !this.props.isSettingLocked &&
-                    !this.props.isDockedRight
-                      ? 150
+      </div>
+      <div
+        className="progress-panel-container"
+        onMouseEnter={() => {
+          cancelLeaveReader("bottom");
+        }}
+        onMouseLeave={() => {
+          scheduleLeaveReader("bottom");
+        }}
+        style={
+          state.isOpenBottomPanel
+            ? {
+                marginLeft:
+                  props.isNavLocked && !props.isSettingLocked
+                    ? 150
+                    : !props.isNavLocked &&
+                        (props.isSettingLocked || props.isDockedRight)
+                      ? -150
                       : 0,
-                }
-              : {
-                  marginLeft:
-                    this.props.isNavLocked &&
-                    !this.props.isSettingLocked &&
-                    !this.props.isDockedRight
-                      ? 150
+              }
+            : {
+                transform: "translateY(110px)",
+                marginLeft:
+                  props.isNavLocked && !props.isSettingLocked
+                    ? 150
+                    : !props.isNavLocked &&
+                        (props.isSettingLocked || props.isDockedRight)
+                      ? -150
                       : 0,
-                }
-          }
-          onMouseLeave={() => this.handleEdgeMouseLeave("top")}
-          onClick={() => {
-            this.handleEnterReader("top");
-          }}
-        >
-          <span className="icon-grid panel-icon"></span>
-        </div>
-        <div
-          className="bottom-panel"
-          onMouseEnter={() => this.handleEdgeMouseEnter("bottom")}
-          onMouseLeave={() => this.handleEdgeMouseLeave("bottom")}
-          onClick={() => {
-            this.handleEnterReader("bottom");
-          }}
-          style={
-            this.state.hoverPanel === "bottom"
-              ? {
-                  opacity: 0.5,
-                  marginLeft:
-                    this.props.isNavLocked &&
-                    !this.props.isSettingLocked &&
-                    !this.props.isDockedRight
-                      ? 150
+              }
+        }
+      >
+        <ProgressPanel />
+      </div>
+      <div
+        className="operation-panel-container"
+        onMouseEnter={() => {
+          cancelLeaveReader("top");
+        }}
+        onMouseLeave={() => {
+          scheduleLeaveReader("top");
+        }}
+        style={
+          state.isOpenTopPanel
+            ? {
+                marginLeft:
+                  props.isNavLocked && !props.isSettingLocked
+                    ? 150
+                    : !props.isNavLocked &&
+                        (props.isSettingLocked || props.isDockedRight)
+                      ? -150
                       : 0,
-                }
-              : {
-                  marginLeft:
-                    this.props.isNavLocked &&
-                    !this.props.isSettingLocked &&
-                    !this.props.isDockedRight
-                      ? 150
+              }
+            : {
+                transform: "translateY(-110px)",
+                marginLeft:
+                  props.isNavLocked && !props.isSettingLocked
+                    ? 150
+                    : !props.isNavLocked &&
+                        (props.isSettingLocked || props.isDockedRight)
+                      ? -150
                       : 0,
-                }
-          }
-        >
-          <span className="icon-grid panel-icon"></span>
-        </div>
-
-        <div
-          className="setting-panel-container"
-          onMouseEnter={() => {
-            this.cancelLeaveReader("right");
-          }}
-          onMouseLeave={() => {
-            this.scheduleLeaveReader("right");
-          }}
-          style={
-            this.state.isOpenRightPanel
-              ? {}
-              : {
-                  transform: "translateX(309px)",
-                }
-          }
-        >
-          <SettingPanel />
-        </div>
-        <div
-          className="navigation-panel-container"
-          onMouseEnter={() => {
-            this.cancelLeaveReader("left");
-          }}
-          onMouseLeave={() => {
-            this.scheduleLeaveReader("left");
-          }}
-          style={
-            this.state.isOpenLeftPanel
-              ? {}
-              : {
-                  transform: "translateX(-309px)",
-                }
-          }
-        >
-          <NavigationPanel
+              }
+        }
+      >
+        {props.htmlBook && (
+          <OperationPanel
             {...({
-              totalDuration: this.state.totalDuration,
+              currentDuration: state.currentDuration,
             } as any)}
           />
-        </div>
-        <div
-          className="progress-panel-container"
-          onMouseEnter={() => {
-            this.cancelLeaveReader("bottom");
-          }}
-          onMouseLeave={() => {
-            this.scheduleLeaveReader("bottom");
-          }}
-          style={
-            this.state.isOpenBottomPanel
-              ? {
-                  marginLeft:
-                    this.props.isNavLocked && !this.props.isSettingLocked
-                      ? 150
-                      : !this.props.isNavLocked &&
-                          (this.props.isSettingLocked ||
-                            this.props.isDockedRight)
-                        ? -150
-                        : 0,
-                }
-              : {
-                  transform: "translateY(110px)",
-                  marginLeft:
-                    this.props.isNavLocked && !this.props.isSettingLocked
-                      ? 150
-                      : !this.props.isNavLocked &&
-                          (this.props.isSettingLocked ||
-                            this.props.isDockedRight)
-                        ? -150
-                        : 0,
-                }
-          }
-        >
-          <ProgressPanel />
-        </div>
-        <div
-          className="operation-panel-container"
-          onMouseEnter={() => {
-            this.cancelLeaveReader("top");
-          }}
-          onMouseLeave={() => {
-            this.scheduleLeaveReader("top");
-          }}
-          style={
-            this.state.isOpenTopPanel
-              ? {
-                  marginLeft:
-                    this.props.isNavLocked && !this.props.isSettingLocked
-                      ? 150
-                      : !this.props.isNavLocked &&
-                          (this.props.isSettingLocked ||
-                            this.props.isDockedRight)
-                        ? -150
-                        : 0,
-                }
-              : {
-                  transform: "translateY(-110px)",
-                  marginLeft:
-                    this.props.isNavLocked && !this.props.isSettingLocked
-                      ? 150
-                      : !this.props.isNavLocked &&
-                          (this.props.isSettingLocked ||
-                            this.props.isDockedRight)
-                        ? -150
-                        : 0,
-                }
-          }
-        >
-          {this.props.htmlBook && (
-            <OperationPanel
-              {...({
-                currentDuration: this.state.currentDuration,
-              } as any)}
-            />
-          )}
-        </div>
-
-        {this.props.currentBook.key && <Viewer {...(renditionProps as any)} />}
-        {((this.props.readerMode === "scroll" ||
-          this.props.readerMode === "single") &&
-          this.props.isScaleOpen) ||
-        this.props.isConvertOpen ||
-        this.props.isPdfCropOpen ||
-        this.props.isStudyLangOpen ||
-        this.props.isAssistReadOpen ? (
-          <div className="reader-setting-dialog-anchor">
-            {(this.props.readerMode === "scroll" ||
-              this.props.readerMode === "single") &&
-              this.props.isScaleOpen && <ScalePageDialog />}
-            {this.props.isConvertOpen && <ConvertDialog />}
-            {this.props.isPdfCropOpen && <PdfCropDialog />}
-            {this.props.isStudyLangOpen && <StudyLangDialog />}
-            {this.props.isAssistReadOpen && <AssistReadDialog />}
-          </div>
-        ) : null}
-        <SupportDialog />
-        {this.props.isOpenPopupOptionDialog && (
-          <>
-            <PopupOptionDialog />
-            <div className="drag-background"></div>
-          </>
         )}
-        {
-          <div
-            style={
-              this.props.isSpeechOpen
-                ? {}
-                : {
-                    display: "none",
-                  }
-            }
-          >
-            <SpeechDialog />
-          </div>
-        }
-        {this.props.isAnnotationOpen && <AnnotationDialog />}
       </div>
-    );
-  }
-}
+
+      {props.currentBook.key && <Viewer {...(renditionProps as any)} />}
+      {((props.readerMode === "scroll" || props.readerMode === "single") &&
+        props.isScaleOpen) ||
+      props.isConvertOpen ||
+      props.isPdfCropOpen ||
+      props.isStudyLangOpen ||
+      props.isAssistReadOpen ? (
+        <div className="reader-setting-dialog-anchor">
+          {(props.readerMode === "scroll" || props.readerMode === "single") &&
+            props.isScaleOpen && <ScalePageDialog />}
+          {props.isConvertOpen && <ConvertDialog />}
+          {props.isPdfCropOpen && <PdfCropDialog />}
+          {props.isStudyLangOpen && <StudyLangDialog />}
+          {props.isAssistReadOpen && <AssistReadDialog />}
+        </div>
+      ) : null}
+      <SupportDialog />
+      {props.isOpenPopupOptionDialog && (
+        <>
+          <PopupOptionDialog />
+          <div className="drag-background"></div>
+        </>
+      )}
+      {
+        <div
+          style={
+            props.isSpeechOpen
+              ? {}
+              : {
+                  display: "none",
+                }
+          }
+        >
+          <SpeechDialog />
+        </div>
+      }
+      {props.isAnnotationOpen && <AnnotationDialog />}
+    </div>
+  );
+};
 
 export default Reader;
+

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./opdsDialog.css";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -369,50 +369,30 @@ interface AuthenticatedImageState {
   isFailed: boolean;
 }
 
-class AuthenticatedImage extends React.PureComponent<
-  AuthenticatedImageProps,
-  AuthenticatedImageState
-> {
-  private currentBlobUrl = "";
+const AuthenticatedImage = ({
+  src,
+  alt,
+  className,
+  catalogAuth,
+  onError,
+}: AuthenticatedImageProps) => {
+  const [state, setState] = useState<AuthenticatedImageState>({
+    blobUrl: "",
+    isFailed: false,
+  });
+  const currentBlobUrl = useRef("");
 
-  constructor(props: AuthenticatedImageProps) {
-    super(props);
-    this.state = {
-      blobUrl: "",
-      isFailed: false,
-    };
-  }
-
-  componentDidMount() {
-    this.loadImage();
-  }
-
-  componentDidUpdate(prevProps: AuthenticatedImageProps) {
-    if (
-      prevProps.src !== this.props.src ||
-      prevProps.catalogAuth?.username !== this.props.catalogAuth?.username ||
-      prevProps.catalogAuth?.password !== this.props.catalogAuth?.password
-    ) {
-      this.loadImage();
+  const revokeBlobUrl = () => {
+    if (currentBlobUrl.current) {
+      URL.revokeObjectURL(currentBlobUrl.current);
+      currentBlobUrl.current = "";
     }
-  }
+  };
 
-  componentWillUnmount() {
-    this.revokeBlobUrl();
-  }
-
-  revokeBlobUrl() {
-    if (this.currentBlobUrl) {
-      URL.revokeObjectURL(this.currentBlobUrl);
-      this.currentBlobUrl = "";
-    }
-  }
-
-  async loadImage() {
-    const { src, catalogAuth, onError } = this.props;
+  const loadImage = async () => {
     if (!src) {
-      this.revokeBlobUrl();
-      this.setState({ blobUrl: "", isFailed: true });
+      revokeBlobUrl();
+      setState({ blobUrl: "", isFailed: true });
       return;
     }
 
@@ -422,49 +402,41 @@ class AuthenticatedImage extends React.PureComponent<
         throw new Error(`HTTP ${response.status}`);
       }
       const blob = await response.blob();
-      this.revokeBlobUrl();
+      revokeBlobUrl();
       const blobUrl = URL.createObjectURL(blob);
-      this.currentBlobUrl = blobUrl;
-      this.setState({ blobUrl, isFailed: false });
+      currentBlobUrl.current = blobUrl;
+      setState({ blobUrl, isFailed: false });
     } catch {
-      this.revokeBlobUrl();
-      this.setState({ blobUrl: "", isFailed: true });
+      revokeBlobUrl();
+      setState({ blobUrl: "", isFailed: true });
       onError?.();
     }
-  }
+  };
 
-  render() {
-    const { alt, className } = this.props;
-    const { blobUrl, isFailed } = this.state;
-    if (!blobUrl || isFailed) return null;
-    return <img src={blobUrl} alt={alt} className={className} />;
-  }
-}
+  const loadImageRef = useRef(loadImage);
+  loadImageRef.current = loadImage;
 
-class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
-  constructor(props: OPDSDialogProps) {
-    super(props);
-    this.state = {
-      view: "catalog",
-      userCatalogs: this.loadUserCatalogs(),
-      currentFeed: null,
-      feedStack: [],
-      currentCatalogAuth: null,
-      selectedBook: null,
-      isLoading: false,
-      isLoadingMore: false,
-      error: "",
-      searchQuery: "",
-      isAddingCatalog: false,
-      newCatalogUrl: "",
-      newCatalogTitle: "",
-      newCatalogUsername: "",
-      newCatalogPassword: "",
-      isTesting: false,
+  useEffect(() => {
+    loadImageRef.current();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src, catalogAuth?.username, catalogAuth?.password]);
+
+  useEffect(() => {
+    return () => {
+      if (currentBlobUrl.current) {
+        URL.revokeObjectURL(currentBlobUrl.current);
+        currentBlobUrl.current = "";
+      }
     };
-  }
+  }, []);
 
-  loadUserCatalogs(): OPDSCatalog[] {
+  const { blobUrl, isFailed } = state;
+  if (!blobUrl || isFailed) return null;
+  return <img src={blobUrl} alt={alt} className={className} />;
+};
+
+const OPDSDialog = (props: OPDSDialogProps) => {
+  const loadUserCatalogs = (): OPDSCatalog[] => {
     try {
       const catalogMap = ConfigService.getAllObjectConfig("opdsCatalogs") || {};
       const catalogList =
@@ -475,12 +447,38 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     } catch {
       return [];
     }
-  }
+  };
 
-  handleClose = () => this.props.handleOPDSDialog(false);
+  const [state, setState] = useState<OPDSDialogState>({
+    view: "catalog",
+    userCatalogs: loadUserCatalogs(),
+    currentFeed: null,
+    feedStack: [],
+    currentCatalogAuth: null,
+    selectedBook: null,
+    isLoading: false,
+    isLoadingMore: false,
+    error: "",
+    searchQuery: "",
+    isAddingCatalog: false,
+    newCatalogUrl: "",
+    newCatalogTitle: "",
+    newCatalogUsername: "",
+    newCatalogPassword: "",
+    isTesting: false,
+  });
 
-  openCatalog = async (catalog: OPDSCatalog) => {
-    this.setState({
+  const stateRef = useRef(state);
+  stateRef.current = state;
+
+  const mergeState = (patch: Partial<OPDSDialogState>) => {
+    setState((prev) => ({ ...prev, ...patch }));
+  };
+
+  const handleClose = () => props.handleOPDSDialog(false);
+
+  const openCatalog = async (catalog: OPDSCatalog) => {
+    mergeState({
       view: "feed",
       isLoading: true,
       isLoadingMore: false,
@@ -495,16 +493,16 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     });
     try {
       const feed = await fetchOPDSFeed(catalog.url, catalog);
-      this.setState({ currentFeed: feed, isLoading: false });
+      mergeState({ currentFeed: feed, isLoading: false });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      this.setState({ isLoading: false, error: msg });
-      toast.error(this.props.t("Failed to load catalog") + ": " + msg);
+      mergeState({ isLoading: false, error: msg });
+      toast.error(props.t("Failed to load catalog") + ": " + msg);
     }
   };
 
-  navigateToEntry = async (entry: OPDSEntry) => {
-    const { currentCatalogAuth } = this.state;
+  const navigateToEntry = async (entry: OPDSEntry) => {
+    const { currentCatalogAuth } = stateRef.current;
     const navLink = entry.links.find(
       (l) =>
         l.type?.includes("application/atom+xml") ||
@@ -513,7 +511,8 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         l.rel === "related"
     );
     if (!navLink) return;
-    this.setState((prev) => ({
+    setState((prev) => ({
+      ...prev,
       isLoading: true,
       isLoadingMore: false,
       error: "",
@@ -522,72 +521,76 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     }));
     try {
       const feed = await fetchOPDSFeed(navLink.href, currentCatalogAuth);
-      this.setState({ currentFeed: feed, isLoading: false });
+      mergeState({ currentFeed: feed, isLoading: false });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      this.setState((prev) => ({
+      setState((prev) => ({
+        ...prev,
         isLoading: false,
         error: msg,
         feedStack: prev.feedStack.slice(0, -1),
       }));
-      toast.error(this.props.t("Failed to load catalog") + ": " + msg);
+      toast.error(props.t("Failed to load catalog") + ": " + msg);
     }
   };
 
-  loadMore = async () => {
+  const loadMore = async () => {
     const { currentFeed, currentCatalogAuth, isLoading, isLoadingMore } =
-      this.state;
+      stateRef.current;
     if (isLoading || isLoadingMore || !currentFeed) return;
     const nextLink = currentFeed.links.find((l) => l.rel === "next");
     if (!nextLink) return;
     const originalFeed = currentFeed;
-    this.setState({ isLoadingMore: true });
+    mergeState({ isLoadingMore: true });
     try {
       const nextFeed = await fetchOPDSFeed(nextLink.href, currentCatalogAuth);
-      this.setState(
-        (prev): Pick<OPDSDialogState, "isLoadingMore" | "currentFeed"> => {
-          if (prev.currentFeed !== originalFeed) {
-            return { isLoadingMore: false, currentFeed: prev.currentFeed };
-          }
+      setState((prev) => {
+        if (prev.currentFeed !== originalFeed) {
           return {
+            ...prev,
             isLoadingMore: false,
-            currentFeed: {
-              ...prev.currentFeed,
-              entries: prev.currentFeed.entries.concat(nextFeed.entries),
-              links: nextFeed.links,
-            },
+            currentFeed: prev.currentFeed,
           };
         }
-      );
+        return {
+          ...prev,
+          isLoadingMore: false,
+          currentFeed: {
+            ...prev.currentFeed,
+            entries: prev.currentFeed.entries.concat(nextFeed.entries),
+            links: nextFeed.links,
+          },
+        };
+      });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      this.setState({ isLoadingMore: false });
-      if (this.state.currentFeed === originalFeed) {
-        toast.error(this.props.t("Failed to load more") + ": " + msg);
+      mergeState({ isLoadingMore: false });
+      if (stateRef.current.currentFeed === originalFeed) {
+        toast.error(props.t("Failed to load more") + ": " + msg);
       }
     }
   };
 
-  handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    if (this.state.view !== "feed") return;
-    const { isLoading, isLoadingMore, currentFeed } = this.state;
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    if (stateRef.current.view !== "feed") return;
+    const { isLoading, isLoadingMore, currentFeed } = stateRef.current;
     if (isLoading || isLoadingMore || !currentFeed) return;
     if (!currentFeed.links.some((l) => l.rel === "next")) return;
     const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
     if (scrollHeight - scrollTop - clientHeight < 150) {
-      this.loadMore();
+      loadMore();
     }
   };
 
-  handleBack = () => {
-    const { view, feedStack, currentCatalogAuth } = this.state;
+  const handleBack = () => {
+    const { view, feedStack, currentCatalogAuth } = stateRef.current;
     if (view === "detail") {
-      this.setState({ view: "feed", selectedBook: null });
+      mergeState({ view: "feed", selectedBook: null });
       return;
     }
     if (view === "feed") {
       if (feedStack.length <= 1) {
-        this.setState({
+        mergeState({
           view: "catalog",
           currentFeed: null,
           feedStack: [],
@@ -597,7 +600,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       }
       const newStack = feedStack.slice(0, -1);
       const parentUrl = newStack[newStack.length - 1].url;
-      this.setState({
+      mergeState({
         isLoading: true,
         isLoadingMore: false,
         error: "",
@@ -605,16 +608,16 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         searchQuery: "",
       });
       fetchOPDSFeed(parentUrl, currentCatalogAuth)
-        .then((feed) => this.setState({ currentFeed: feed, isLoading: false }))
+        .then((feed) => mergeState({ currentFeed: feed, isLoading: false }))
         .catch((err) => {
           const msg = err instanceof Error ? err.message : String(err);
-          this.setState({ isLoading: false, error: msg });
+          mergeState({ isLoading: false, error: msg });
         });
     }
   };
 
-  handleSearch = async () => {
-    const { currentFeed, searchQuery, currentCatalogAuth } = this.state;
+  const handleSearch = async () => {
+    const { currentFeed, searchQuery, currentCatalogAuth } = stateRef.current;
     if (!currentFeed?.searchTemplate || !searchQuery.trim()) return;
     let searchUrl = currentFeed.searchTemplate;
     if (!searchUrl.includes("searchTerms")) {
@@ -639,22 +642,24 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       .replace("{searchTerms}", encodeURIComponent(searchQuery.trim()))
       .replace("%7BsearchTerms%7D", encodeURIComponent(searchQuery.trim()));
     if (!finalUrl.startsWith("http")) {
-      const baseUrl = this.state.feedStack[0]?.url || currentFeed?.url || "";
+      const baseUrl =
+        stateRef.current.feedStack[0]?.url || currentFeed?.url || "";
       if (baseUrl) {
         finalUrl = new URL(finalUrl, baseUrl).href;
       }
     }
-    this.setState({ isLoading: true, isLoadingMore: false, error: "" });
+    mergeState({ isLoading: true, isLoadingMore: false, error: "" });
     try {
       const feed = await fetchOPDSFeed(finalUrl, currentCatalogAuth);
-      this.setState((prev) => ({
+      setState((prev) => ({
+        ...prev,
         currentFeed: {
           ...feed,
           searchTemplate: prev.currentFeed?.searchTemplate || "",
         },
         feedStack: [
           ...prev.feedStack,
-          { url: finalUrl, title: this.props.t("Search") + ": " + searchQuery },
+          { url: finalUrl, title: props.t("Search") + ": " + searchQuery },
         ],
         isLoading: false,
         searchQuery: "",
@@ -662,9 +667,10 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes("404")) {
-        this.setState((prev) => ({
+        setState((prev) => ({
+          ...prev,
           currentFeed: {
-            title: this.props.t("Search") + ": " + searchQuery,
+            title: props.t("Search") + ": " + searchQuery,
             url: finalUrl,
             entries: [],
             links: [],
@@ -674,27 +680,27 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
             ...prev.feedStack,
             {
               url: finalUrl,
-              title: this.props.t("Search") + ": " + searchQuery,
+              title: props.t("Search") + ": " + searchQuery,
             },
           ],
           isLoading: false,
           searchQuery: "",
         }));
       } else {
-        this.setState({ isLoading: false, error: msg });
-        toast.error(this.props.t("Search failed") + ": " + msg);
+        mergeState({ isLoading: false, error: msg });
+        toast.error(props.t("Search failed") + ": " + msg);
       }
     }
   };
 
-  handleDownloadBook = async (entry: OPDSEntry, link: OPDSLink) => {
-    const { currentCatalogAuth } = this.state;
+  const handleDownloadBook = async (entry: OPDSEntry, link: OPDSLink) => {
+    const { currentCatalogAuth } = stateRef.current;
     const ext = DOWNLOAD_TYPES[link.type] || link.href.split(".").pop() || "";
     if (!supportedFormats.includes("." + ext)) {
-      toast.error(this.props.t("Unsupported file format") + ": " + link.type);
+      toast.error(props.t("Unsupported file format") + ": " + link.type);
       return;
     }
-    toast.loading(this.props.t("Downloading") + ": " + entry.title, {
+    toast.loading(props.t("Downloading") + ": " + entry.title, {
       id: "opds-download",
       position: "bottom-center",
     });
@@ -709,24 +715,24 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       const fileName = entry.title.replace(/[/\\?%*:|"<>]/g, "-") + "." + ext;
       const file = new File([arrayBuffer], fileName);
       toast.dismiss("opds-download");
-      await this.props.importBookFunc(file);
+      await props.importBookFunc(file);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      toast.error(this.props.t("Import failed") + ": " + msg, {
+      toast.error(props.t("Import failed") + ": " + msg, {
         id: "opds-download",
       });
     }
   };
 
-  handleAddCatalog = () => {
+  const handleAddCatalog = () => {
     const {
       newCatalogUrl,
       newCatalogTitle,
       newCatalogUsername,
       newCatalogPassword,
-    } = this.state;
+    } = stateRef.current;
     if (!newCatalogUrl.trim()) {
-      toast.error(this.props.t("Please enter a valid URL"));
+      toast.error(props.t("Please enter a valid URL"));
       return;
     }
     const id = Date.now() + "";
@@ -739,8 +745,8 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
     };
     ConfigService.setObjectConfig(id, newCatalog, "opdsCatalogs");
     ConfigService.setListConfig(id, "opdsCatalogList");
-    this.setState({
-      userCatalogs: this.loadUserCatalogs(),
+    mergeState({
+      userCatalogs: loadUserCatalogs(),
       isAddingCatalog: false,
       newCatalogUrl: "",
       newCatalogTitle: "",
@@ -748,39 +754,39 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       newCatalogPassword: "",
       isTesting: false,
     });
-    toast.success(this.props.t("Added successfully"));
+    toast.success(props.t("Added successfully"));
   };
 
-  handleTestCatalog = async () => {
+  const handleTestCatalog = async () => {
     const { newCatalogUrl, newCatalogUsername, newCatalogPassword } =
-      this.state;
+      stateRef.current;
     if (!newCatalogUrl.trim()) {
-      toast.error(this.props.t("Please enter a valid URL"));
+      toast.error(props.t("Please enter a valid URL"));
       return;
     }
-    this.setState({ isTesting: true });
+    mergeState({ isTesting: true });
     try {
       const auth =
         newCatalogUsername || newCatalogPassword
           ? { username: newCatalogUsername, password: newCatalogPassword }
           : null;
       await fetchOPDSFeed(newCatalogUrl.trim(), auth);
-      toast.success(this.props.t("Connection successful"));
+      toast.success(props.t("Connection successful"));
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      toast.error(this.props.t("Connection failed") + ": " + msg);
+      toast.error(props.t("Connection failed") + ": " + msg);
     } finally {
-      this.setState({ isTesting: false });
+      mergeState({ isTesting: false });
     }
   };
 
-  handleRemoveCatalog = (id: string) => {
+  const handleRemoveCatalog = (id: string) => {
     ConfigService.deleteObjectConfig(id, "opdsCatalogs");
     ConfigService.deleteListConfig(id, "opdsCatalogList");
-    this.setState({ userCatalogs: this.loadUserCatalogs() });
+    mergeState({ userCatalogs: loadUserCatalogs() });
   };
 
-  getDownloadLinks(entry: OPDSEntry): OPDSLink[] {
+  const getDownloadLinks = (entry: OPDSEntry): OPDSLink[] => {
     return entry.links.filter(
       (l) =>
         ACQUISITION_RELS.some((rel) => l.rel === rel) &&
@@ -789,9 +795,9 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
             "." + l.href.split(".").pop()?.toLowerCase()
           ))
     );
-  }
+  };
 
-  renderCatalogView() {
+  const renderCatalogView = () => {
     const {
       userCatalogs,
       isAddingCatalog,
@@ -800,7 +806,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       newCatalogUsername,
       newCatalogPassword,
       isTesting,
-    } = this.state;
+    } = state;
 
     return (
       <>
@@ -810,50 +816,50 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
             <input
               className="token-dialog-username-box"
               type="url"
-              placeholder={this.props.t("OPDS Catalog URL")}
+              placeholder={props.t("OPDS Catalog URL")}
               value={newCatalogUrl}
-              onChange={(e) => this.setState({ newCatalogUrl: e.target.value })}
-              onKeyDown={(e) => e.key === "Enter" && this.handleAddCatalog()}
+              onChange={(e) => mergeState({ newCatalogUrl: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && handleAddCatalog()}
               autoFocus
             />
             <input
               className="token-dialog-username-box"
               type="text"
               placeholder={
-                this.props.t("Catalog Name") +
+                props.t("Catalog Name") +
                 " (" +
-                this.props.t("Optional") +
+                props.t("Optional") +
                 ")"
               }
               value={newCatalogTitle}
               onChange={(e) =>
-                this.setState({ newCatalogTitle: e.target.value })
+                mergeState({ newCatalogTitle: e.target.value })
               }
-              onKeyDown={(e) => e.key === "Enter" && this.handleAddCatalog()}
+              onKeyDown={(e) => e.key === "Enter" && handleAddCatalog()}
             />
             <input
               className="token-dialog-username-box"
               type="text"
               placeholder={
-                this.props.t("Username") + " (" + this.props.t("Optional") + ")"
+                props.t("Username") + " (" + props.t("Optional") + ")"
               }
               value={newCatalogUsername}
               onChange={(e) =>
-                this.setState({ newCatalogUsername: e.target.value })
+                mergeState({ newCatalogUsername: e.target.value })
               }
-              onKeyDown={(e) => e.key === "Enter" && this.handleAddCatalog()}
+              onKeyDown={(e) => e.key === "Enter" && handleAddCatalog()}
             />
             <input
               className="token-dialog-username-box"
               type="password"
               placeholder={
-                this.props.t("Password") + " (" + this.props.t("Optional") + ")"
+                props.t("Password") + " (" + props.t("Optional") + ")"
               }
               value={newCatalogPassword}
               onChange={(e) =>
-                this.setState({ newCatalogPassword: e.target.value })
+                mergeState({ newCatalogPassword: e.target.value })
               }
-              onKeyDown={(e) => e.key === "Enter" && this.handleAddCatalog()}
+              onKeyDown={(e) => e.key === "Enter" && handleAddCatalog()}
             />
             <div
               style={{
@@ -873,7 +879,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
                   opacity: isTesting ? 0.6 : 1,
                   pointerEvents: isTesting ? "none" : "auto",
                 }}
-                onClick={this.handleTestCatalog}
+                onClick={handleTestCatalog}
               >
                 {isTesting ? <Trans>Testing...</Trans> : <Trans>Test</Trans>}
               </span>
@@ -888,7 +894,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
                 <span
                   className="voice-add-cancel"
                   onClick={() =>
-                    this.setState({
+                    mergeState({
                       isAddingCatalog: false,
                       newCatalogUrl: "",
                       newCatalogTitle: "",
@@ -904,7 +910,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
                 <span
                   className="voice-add-confirm"
                   style={{ position: "static", fontSize: "14px" }}
-                  onClick={this.handleAddCatalog}
+                  onClick={handleAddCatalog}
                 >
                   <Trans>Add</Trans>
                 </span>
@@ -923,7 +929,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
               <div key={catalog.id} className="cloud-drive-item">
                 <span
                   className="cloud-drive-label"
-                  onClick={() => this.openCatalog(catalog)}
+                  onClick={() => openCatalog(catalog)}
                 >
                   {catalog.title}
                 </span>
@@ -932,12 +938,12 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
                   style={{ fontSize: "13px", marginRight: "8px" }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    this.handleRemoveCatalog(catalog.id);
+                    handleRemoveCatalog(catalog.id);
                   }}
                 ></span>
                 <span
                   className="icon-dropdown import-dialog-more-file"
-                  onClick={() => this.openCatalog(catalog)}
+                  onClick={() => openCatalog(catalog)}
                 ></span>
               </div>
             ))}
@@ -956,9 +962,9 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         )}
       </>
     );
-  }
+  };
 
-  renderFeedView() {
+  const renderFeedView = () => {
     const {
       currentFeed,
       isLoading,
@@ -966,7 +972,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
       error,
       searchQuery,
       currentCatalogAuth,
-    } = this.state;
+    } = state;
 
     return (
       <>
@@ -976,10 +982,10 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
             <input
               className="header-search-box"
               type="text"
-              placeholder={this.props.t("Search in catalog...")}
+              placeholder={props.t("Search in catalog...")}
               value={searchQuery}
-              onChange={(e) => this.setState({ searchQuery: e.target.value })}
-              onKeyDown={(e) => e.key === "Enter" && this.handleSearch()}
+              onChange={(e) => mergeState({ searchQuery: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
             <span
               className="header-search-text"
@@ -987,7 +993,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
             >
               <span
                 className="icon-search header-search-icon"
-                onClick={this.handleSearch}
+                onClick={handleSearch}
               ></span>
             </span>
           </div>
@@ -1037,9 +1043,9 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
               className="cloud-drive-item opds-entry-row"
               onClick={() => {
                 if (entry.isNavigation) {
-                  this.navigateToEntry(entry);
+                  navigateToEntry(entry);
                 } else {
-                  this.setState({ view: "detail", selectedBook: entry });
+                  mergeState({ view: "detail", selectedBook: entry });
                 }
               }}
             >
@@ -1094,10 +1100,10 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         )}
       </>
     );
-  }
+  };
 
-  renderDetailView() {
-    const { selectedBook, currentCatalogAuth } = this.state;
+  const renderDetailView = () => {
+    const { selectedBook, currentCatalogAuth } = state;
     if (!selectedBook) return null;
     const formatUpdated = (iso: string) => {
       if (!iso) return "";
@@ -1208,34 +1214,33 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         )}
       </div>
     );
-  }
+  };
 
-  renderTitle() {
-    const { view, feedStack } = this.state;
+  const renderTitle = () => {
+    const { view, feedStack } = state;
     if (view === "catalog") return <Trans>From OPDS</Trans>;
     if (view === "detail") return <Trans>Book Detail</Trans>;
     if (feedStack.length > 0) return feedStack[feedStack.length - 1].title;
     return <Trans>From OPDS</Trans>;
-  }
+  };
 
-  render() {
-    const { view, selectedBook } = this.state;
-    const downloadLinks =
-      view === "detail" && selectedBook
-        ? this.getDownloadLinks(selectedBook)
-        : [];
+  const { view, selectedBook } = state;
+  const downloadLinks =
+    view === "detail" && selectedBook
+      ? getDownloadLinks(selectedBook)
+      : [];
 
     return (
       <div
         className="backup-page-container"
         style={{ height: "450px", top: "calc(50% - 225px)" }}
       >
-        <div className="backup-dialog-title">{this.renderTitle()}</div>
+        <div className="backup-dialog-title">{renderTitle()}</div>
 
-        <div className="import-dialog-option" onScroll={this.handleScroll}>
-          {view === "catalog" && this.renderCatalogView()}
-          {view === "feed" && this.renderFeedView()}
-          {view === "detail" && this.renderDetailView()}
+        <div className="import-dialog-option" onScroll={handleScroll}>
+          {view === "catalog" && renderCatalogView()}
+          {view === "feed" && renderFeedView()}
+          {view === "detail" && renderDetailView()}
         </div>
 
         {/* Bottom bar */}
@@ -1250,7 +1255,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
               <div
                 key={i}
                 className="new-version-open"
-                onClick={() => this.handleDownloadBook(selectedBook!, link)}
+                onClick={() => handleDownloadBook(selectedBook!, link)}
                 style={{
                   padding: "0px 0px",
                   fontSize: "12px",
@@ -1272,19 +1277,19 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
         )}
 
         {view !== "catalog" && (
-          <div className="import-dialog-back-button" onClick={this.handleBack}>
+          <div className="import-dialog-back-button" onClick={handleBack}>
             <Trans>Back to parent</Trans>
           </div>
         )}
 
-        <div className="backup-page-close-icon" onClick={this.handleClose}>
+        <div className="backup-page-close-icon" onClick={handleClose}>
           <span className="icon-close backup-close-icon"></span>
         </div>
 
         {view === "catalog" && (
           <div
             className="cloud-drive-item"
-            onClick={() => this.setState({ isAddingCatalog: true })}
+            onClick={() => mergeState({ isAddingCatalog: true })}
             style={{
               position: "absolute",
               bottom: "0",
@@ -1306,8 +1311,7 @@ class OPDSDialog extends React.Component<OPDSDialogProps, OPDSDialogState> {
           </div>
         )}
       </div>
-    );
-  }
-}
+  );
+};
 
 export default OPDSDialog;
