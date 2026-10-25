@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import { useAppStore } from "../../../store/useAppStore";
 import "../../readerSettings/sliderList/sliderList.css";
@@ -177,12 +177,15 @@ const PdfCropDialog = () => {
     };
   });
 
+  const cropRef = useRef(crop);
+
   const handleValueChange = (mode: string, value: number) => {
-    setCrop((prev) => ({ ...prev, [mode]: value }));
+    cropRef.current = { ...cropRef.current, [mode]: value };
+    setCrop(cropRef.current);
   };
 
   const handleCommit = () => {
-    const { top, bottom, left, right } = crop;
+    const { top, bottom, left, right } = cropRef.current;
     const bookKey = currentBook.key;
     if (top === 0 && bottom === 0 && left === 0 && right === 0) {
       ConfigService.deleteObjectConfig(bookKey, "pdfCrop");

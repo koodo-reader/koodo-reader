@@ -320,6 +320,11 @@ const PopupBox = (props: PopupBoxProps) => {
       renderBookFunc();
     } else {
       // 当前未固定 → 直接固定到右侧
+      updateState({
+        isDockedRight: true,
+        isNearRight: false,
+        isNearBottom: false,
+      });
       syncDockedToRedux(true);
     }
   };

@@ -174,12 +174,13 @@ const PopupMenu = (props: PopupMenuProps) => {
   }, [props.rect]);
 
   const handleDigest = async () => {
+    const latestHighlight = useAppStore.getState().reader.highlight;
     await createHighlight({
       currentBook: currentBook,
       htmlBook: htmlBook,
       chapterDocIndex: props.chapterDocIndex,
       chapter: props.chapter,
-      color: highlightUtil.formatHighlightValue(highlight),
+      color: highlightUtil.formatHighlightValue(latestHighlight),
       t: t,
       onNoteClick: (event: Event) => {
         handleNoteKey((event.target as any).dataset.key);

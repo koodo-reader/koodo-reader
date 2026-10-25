@@ -183,8 +183,7 @@ const SettingDialog = () => {
 
   useEffect(() => {
     handleGetPluginList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [plugins]);
 
   return (
       <>

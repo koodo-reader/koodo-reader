@@ -66,12 +66,10 @@ declare var window: any;
 const Header = (props: HeaderProps) => {
   const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
   const currentBook = useAppStore((s) => s.book.currentBook);
-  const mode = useAppStore((s) => s.sidebar.mode);
   const isAuthed = useAppStore((s) => s.manager.isAuthed);
   const defaultSyncOption = useAppStore((s) => s.backupPage.defaultSyncOption);
   const userInfo = useAppStore((s) => s.manager.userInfo);
   const isSortDisplay = useAppStore((s) => s.manager.isSortDisplay);
-  const importBookFunc = useAppStore((s) => s.book.importBookFunc);
   const handleSortDisplay = useAppStore((s) => s.handleSortDisplay);
   const handleLocalFileDialog = useAppStore((s) => s.handleLocalFileDialog);
   const handleSetting = useAppStore((s) => s.handleSetting);
@@ -171,6 +169,7 @@ const Header = (props: HeaderProps) => {
       const folders =
         ConfigService.getAllListConfig(AUTO_IMPORT_FOLDERS_KEY) || [];
       if (folders.length === 0) return;
+      const importBookFunc = useAppStore.getState().book.importBookFunc;
       if (!importBookFunc) {
         console.error("Auto import: no import function available");
         return;
@@ -240,7 +239,7 @@ const Header = (props: HeaderProps) => {
   const handleFinishUpgrade = () => {
     handleFetchBooks();
     setTimeout(() => {
-      if (mode === "home") {
+      if (useAppStore.getState().sidebar.mode === "home") {
         navigate("/manager/home");
       }
     }, 2000);
@@ -450,7 +449,7 @@ const Header = (props: HeaderProps) => {
     }
     //when book is empty, need to refresh the book list
     setTimeout(async () => {
-      if (mode === "home") {
+      if (useAppStore.getState().sidebar.mode === "home") {
         navigate("/manager/home");
         if (
           ConfigService.getReaderConfig("isFirstSync") !== "no" &&
@@ -468,10 +467,11 @@ const Header = (props: HeaderProps) => {
           ) {
             return;
           }
+          const latestUserInfo = useAppStore.getState().manager.userInfo;
           if (
-            userInfo &&
-            userInfo.time_created &&
-            userInfo.time_created < 1769875200
+            latestUserInfo &&
+            latestUserInfo.time_created &&
+            latestUserInfo.time_created < 1769875200
           ) {
             return;
           }
@@ -488,12 +488,14 @@ const Header = (props: HeaderProps) => {
           );
           if (result) {
             ConfigService.setReaderConfig("isEnableKoodoSync", "yes");
+            const latestDefaultSyncOption =
+              useAppStore.getState().backupPage.defaultSyncOption;
             let encryptedToken = await TokenService.getToken(
-              defaultSyncOption + "_token"
+              latestDefaultSyncOption + "_token"
             );
             await updateUserConfig({
               is_enable_koodo_sync: "yes",
-              default_sync_option: defaultSyncOption,
+              default_sync_option: latestDefaultSyncOption,
               default_sync_token: encryptedToken || "",
             });
             let userInfo = await handleFetchUserInfo();

@@ -248,9 +248,11 @@ const BookList = () => {
   };
 
   // Migrated comment
-  const loadFullBooksData = async () => {
+  const loadFullBooksData = async (
+    displayedBooksCount = stateRef.current.displayedBooksCount
+  ) => {
     const { books } = handleBooks();
-    const displayedBooks = books.slice(0, stateRef.current.displayedBooksCount);
+    const displayedBooks = books.slice(0, displayedBooksCount);
 
     const fullBooksData: Book[] = [];
     for (let i = 0; i < displayedBooks.length; i++) {
@@ -353,9 +355,10 @@ const BookList = () => {
 
   // Migrated comment
   useEffect(() => {
+    const displayedBooksCount = getBookCountPerPage();
     setState((prevState) => ({
       ...prevState,
-      displayedBooksCount: getBookCountPerPage(),
+      displayedBooksCount,
     }));
 
     // Migrated comment
@@ -392,7 +395,7 @@ const BookList = () => {
     }
 
     // Migrated comment
-    loadFullBooksData();
+    loadFullBooksData(displayedBooksCount);
 
     return () => {
       // Migrated comment
@@ -438,9 +441,10 @@ const BookList = () => {
       prevProps.mode !== mode ||
       prevProps.shelfTitle !== shelfTitle
     ) {
+      const nextDisplayedBooksCount = getBookCountPerPage();
       setState((prevState) => ({
         ...prevState,
-        displayedBooksCount: getBookCountPerPage(),
+        displayedBooksCount: nextDisplayedBooksCount,
         isLoadingMore: false,
       }));
       handleLoadMore(false);
@@ -449,7 +453,7 @@ const BookList = () => {
         scrollContainer.current.scrollTop = 0;
       }
       // Migrated comment
-      loadFullBooksData();
+      loadFullBooksData(nextDisplayedBooksCount);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [books, searchResults, isSearch, mode, shelfTitle]);

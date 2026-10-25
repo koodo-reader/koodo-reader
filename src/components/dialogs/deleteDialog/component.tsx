@@ -17,8 +17,6 @@ import { isElectron } from "react-device-detect";
 const collectionUtil = new CollectionUtil(ConfigService);
 
 const DeleteDialog = () => {
-  const books = useAppStore((s) => s.manager.books);
-  const deletedBooks = useAppStore((s) => s.manager.deletedBooks);
   const isSearch = useAppStore((s) => s.manager.isSearch);
   const currentBook = useAppStore((s) => s.book.currentBook);
   const mode = useAppStore((s) => s.sidebar.mode);
@@ -130,26 +128,18 @@ const DeleteDialog = () => {
       id: "delete-books",
     });
     let keyArr = ConfigService.getAllListConfig("deletedBooks");
-    let fullDeteletedBooks: any[] = [];
-    for (let i = 0; i < deletedBooks.length; i++) {
-      let deletedBook = await DatabaseService.getRecord(
-        deletedBooks[i].key,
+    for (let i = 0; i < keyArr.length; i++) {
+      const deletedBook = await DatabaseService.getRecord(
+        keyArr[i],
         "books"
       );
-      if (deletedBook) {
-        fullDeteletedBooks.push(deletedBook);
-      }
-    }
-    for (let i = 0; i < keyArr.length; i++) {
-      let format = fullDeteletedBooks
-        .find((item) => item.key === keyArr[i])
-        ?.format.toLowerCase();
+      let format = deletedBook?.format.toLowerCase();
       await deleteBook(keyArr[i], format || "epub");
     }
-    if (books.length === 0) {
+    await handleFetchBooks();
+    if (useAppStore.getState().manager.books.length === 0) {
       navigate("/manager/empty");
     }
-    handleFetchBooks();
     handleFetchBookmarks();
     handleFetchNotes();
   };

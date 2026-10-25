@@ -133,6 +133,12 @@ const ImportLocal = (props: ImportLocalProps) => {
   const getMd5WithBrowserRef = useRef<((file: File) => Promise<void>) | null>(
     null
   );
+  const handleFilePathRef = useRef<
+    ((filePath: string) => Promise<void>) | null
+  >(null);
+  const handleURLImportRef = useRef<
+    ((e?: React.MouseEvent, externalUrl?: string) => Promise<void>) | null
+  >(null);
 
   useEffect(() => {
     let focusHandler: (() => void) | null = null;
@@ -147,12 +153,12 @@ const ImportLocal = (props: ImportLocalProps) => {
 
       const filePath = ipcRenderer.sendSync("get-file-data");
       if (filePath && filePath !== ".") {
-        handleFilePath(filePath);
+        handleFilePathRef.current?.(filePath);
       }
       focusHandler = () => {
         const _filePath = ipcRenderer.sendSync("get-file-data");
         if (_filePath && _filePath !== ".") {
-          handleFilePath(_filePath);
+          handleFilePathRef.current?.(_filePath);
         }
       };
       window.addEventListener("focus", focusHandler, false);
@@ -174,7 +180,7 @@ const ImportLocal = (props: ImportLocalProps) => {
           toast.error(t("Import cancelled"));
           return;
         }
-        handleURLImport(undefined as any, rawUrl);
+        handleURLImportRef.current?.(undefined, rawUrl);
       };
       ipcRenderer.on("import-url-from-link", importUrlHandlerRef.current);
     }
@@ -235,6 +241,7 @@ const ImportLocal = (props: ImportLocalProps) => {
     setState({ isOpenFile: true });
     await getMd5WithBrowser(fileTemp);
   };
+  handleFilePathRef.current = handleFilePath;
   const handleJump = (book: BookModel) => {
     ConfigService.setItem("tempBook", JSON.stringify(book));
     BookUtil.redirectBook(book);
@@ -1193,6 +1200,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       console.error("URL import error:", error);
     }
   };
+  handleURLImportRef.current = handleURLImport;
   const render = () => {
     return (
       <Dropzone

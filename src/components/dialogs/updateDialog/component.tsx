@@ -78,7 +78,7 @@ const UpdateInfo = () => {
         if (compareVersions(newVersion, packageInfo.version) > 0) {
           if (
             ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||
-            isAuthed
+            useAppStore.getState().manager.isAuthed
           ) {
             setUpdateLog(res);
             handleNewDialog(true);
