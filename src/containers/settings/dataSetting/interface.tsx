@@ -1,8 +1,5 @@
-import { RouteComponentProps } from "react-router-dom";
-export interface SettingInfoProps extends RouteComponentProps<any> {
-  t: (title: string, options?: any) => string;
+export interface SettingInfoProps {
 
-  handleFetchBooks: () => void;
 }
 export interface SettingInfoState {
   storageLocation: string;

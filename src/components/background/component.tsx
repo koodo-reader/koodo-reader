@@ -4,16 +4,44 @@ import { BackgroundProps } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { getPageWidth, throttle } from "../../utils/common";
 import BackgroundUtil from "../../utils/file/backgroundUtil";
+import { useAppStore } from "../../store/useAppStore";
 
 const Background = (props: BackgroundProps) => {
-  const [isSingle, setIsSingle] = useState(props.readerMode !== "double");
+  const readerMode = useAppStore((s) => s.reader.readerMode);
+  const isNavLocked = useAppStore((s) => s.reader.isNavLocked);
+  const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
+  const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
+  const backgroundColor = useAppStore((s) => s.reader.backgroundColor);
+  const scale = useAppStore((s) => s.reader.scale);
+  const isFitPage = useAppStore((s) => s.reader.isFitPage);
+  const margin = useAppStore((s) => s.reader.margin);
+  const readerBackgroundImage = useAppStore(
+    (s) => s.reader.readerBackgroundImage
+  );
+  const [isSingle, setIsSingle] = useState(readerMode !== "double");
   const [pageSize, setPageSize] = useState<{
     pageOffset: string;
     pageWidth: string;
   }>({ pageOffset: "", pageWidth: "" });
   const [readerBackgroundUrl, setReaderBackgroundUrl] = useState("");
-  const propsRef = useRef(props);
-  propsRef.current = props;
+  const propsRef = useRef({
+    readerMode,
+    scale,
+    margin,
+    isNavLocked,
+    isSettingLocked,
+    isDockedRight,
+    isFitPage,
+  });
+  propsRef.current = {
+    readerMode,
+    scale,
+    margin,
+    isNavLocked,
+    isSettingLocked,
+    isDockedRight,
+    isFitPage,
+  };
   const isFirstBackgroundEffect = useRef(true);
 
   const loadReaderBackground = async (imageId?: string) => {
@@ -63,35 +91,35 @@ const Background = (props: BackgroundProps) => {
   useEffect(() => {
     setPageSize(
       getPageWidth(
-        props.readerMode,
-        props.scale,
-        parseInt(props.margin),
-        props.isNavLocked,
-        props.isSettingLocked || props.isDockedRight,
-        props.isFitPage
+        readerMode,
+        scale,
+        parseInt(margin),
+        isNavLocked,
+        isSettingLocked || isDockedRight,
+        isFitPage
       )
     );
   }, [
-    props.margin,
-    props.scale,
-    props.readerMode,
-    props.isNavLocked,
-    props.isSettingLocked,
-    props.isDockedRight,
-    props.isFitPage,
+    margin,
+    scale,
+    readerMode,
+    isNavLocked,
+    isSettingLocked,
+    isDockedRight,
+    isFitPage,
   ]);
 
   useEffect(() => {
-    setIsSingle(props.readerMode !== "double");
-  }, [props.readerMode]);
+    setIsSingle(readerMode !== "double");
+  }, [readerMode]);
 
   useEffect(() => {
     if (isFirstBackgroundEffect.current) {
       isFirstBackgroundEffect.current = false;
       return;
     }
-    loadReaderBackground(props.readerBackgroundImage ?? "");
-  }, [props.readerBackgroundImage]);
+    loadReaderBackground(readerBackgroundImage ?? "");
+  }, [readerBackgroundImage]);
 
   return (
     <>
@@ -106,9 +134,8 @@ const Background = (props: BackgroundProps) => {
                 boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
               }
             : {
-                left: props.isNavLocked ? 305 : 5,
-                right:
-                  props.isSettingLocked || props.isDockedRight ? 305 : 5,
+                left: isNavLocked ? 305 : 5,
+                right: isSettingLocked || isDockedRight ? 305 : 5,
               }
         }
       ></div>
@@ -123,19 +150,18 @@ const Background = (props: BackgroundProps) => {
                 width: `calc(${pageSize.pageWidth} + 100px)`,
               }
             : {
-                left: props.isNavLocked ? 307 : 7,
-                right:
-                  props.isSettingLocked || props.isDockedRight ? 307 : 7,
+                left: isNavLocked ? 307 : 7,
+                right: isSettingLocked || isDockedRight ? 307 : 7,
               }
         }
       >
         {(() => {
           const isDarkMode =
-            (!props.backgroundColor &&
+            (!backgroundColor &&
               (ConfigService.getReaderConfig("appSkin") === "night" ||
                 (ConfigService.getReaderConfig("appSkin") === "system" &&
                   ConfigService.getReaderConfig("isOSNight") === "yes"))) ||
-            props.backgroundColor === "rgba(44,47,49,1)";
+            backgroundColor === "rgba(44,47,49,1)";
 
           const shadowOpacity = isDarkMode ? 0.5 : undefined;
 
@@ -185,9 +211,8 @@ const Background = (props: BackgroundProps) => {
                   : {}),
               }
             : {
-                left: props.isNavLocked ? 309 : 9,
-                right:
-                  props.isSettingLocked || props.isDockedRight ? 309 : 9,
+                left: isNavLocked ? 309 : 9,
+                right: isSettingLocked || isDockedRight ? 309 : 9,
                 ...(readerBackgroundUrl
                   ? {
                       backgroundImage: `url("${readerBackgroundUrl}")`,

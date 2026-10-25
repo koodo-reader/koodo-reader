@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -9,13 +10,22 @@ import {
 } from "../../../constants/dropdownList";
 import { detectLocalLanguage } from "../../../utils/common";
 import SwitchRow from "../../readerSettings/switchRow";
-import { StudyLangDialogProps, StudyLangDialogState } from "./interface";
+import { StudyLangDialogState } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 
-const StudyLangDialog = (props: StudyLangDialogProps) => {
+const StudyLangDialog = () => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
+  const handleStudyLangDialog = useAppStore((s) => s.handleStudyLangDialog);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const { t } = useTranslation();
   const [state, setState] = useState<StudyLangDialogState>({
     fullTranslationModeValue: ConfigService.getAllListConfig(
       "fullTranslationBooks"
-    ).includes(props.currentBook?.key)
+    ).includes(currentBook?.key)
       ? ConfigService.getReaderConfig("fullTranslationMode") || ""
       : "",
     fullTranslationTargetValue:
@@ -24,7 +34,7 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
       "zhCN",
     isWordDefinition: ConfigService.getAllListConfig(
       "wordDefinitionBooks"
-    ).includes(props.currentBook?.key),
+    ).includes(currentBook?.key),
     wordDefinitionLang: "",
     currentChineseLevel:
       ConfigService.getReaderConfig("currentChineseLevel") || "HSK3",
@@ -35,8 +45,8 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
   });
   const stateRef = useRef(state);
   stateRef.current = state;
-  const prevHtmlBookRef = useRef(props.htmlBook);
-  const prevBookKeyRef = useRef(props.currentBook?.key);
+  const prevHtmlBookRef = useRef(htmlBook);
+  const prevBookKeyRef = useRef(currentBook?.key);
 
   const mergeState = (patch: Partial<StudyLangDialogState>) => {
     stateRef.current = { ...stateRef.current, ...patch };
@@ -44,9 +54,9 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
   };
 
   const refreshWordDefinitionLang = async () => {
-    if (!props.htmlBook?.rendition) return;
+    if (!htmlBook?.rendition) return;
     try {
-      const text = await props.htmlBook.rendition.audioText();
+      const text = await htmlBook.rendition.audioText();
       if (text && text.length > 0) {
         mergeState({
           wordDefinitionLang: detectLocalLanguage(text.slice(0, 500).join(" ")),
@@ -65,14 +75,14 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
   }, []);
 
   useEffect(() => {
-    if (props.currentBook?.key !== prevBookKeyRef.current) {
+    if (currentBook?.key !== prevBookKeyRef.current) {
       const isWordDefinition = ConfigService.getAllListConfig(
         "wordDefinitionBooks"
-      ).includes(props.currentBook?.key);
+      ).includes(currentBook?.key);
       mergeState({
         fullTranslationModeValue: ConfigService.getAllListConfig(
           "fullTranslationBooks"
-        ).includes(props.currentBook?.key)
+        ).includes(currentBook?.key)
           ? ConfigService.getReaderConfig("fullTranslationMode") || ""
           : "",
         isWordDefinition,
@@ -88,60 +98,60 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
         refreshWordDefinitionLang();
       }
     }
-    prevBookKeyRef.current = props.currentBook?.key;
+    prevBookKeyRef.current = currentBook?.key;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.currentBook?.key]);
+  }, [currentBook?.key]);
 
   useEffect(() => {
     if (
-      prevHtmlBookRef.current !== props.htmlBook &&
+      prevHtmlBookRef.current !== htmlBook &&
       stateRef.current.isWordDefinition &&
       !stateRef.current.wordDefinitionLang
     ) {
       refreshWordDefinitionLang();
     }
-    prevHtmlBookRef.current = props.htmlBook;
+    prevHtmlBookRef.current = htmlBook;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.htmlBook]);
+  }, [htmlBook]);
 
   const handleFullTranslationChange = (value: string) => {
     mergeState({ fullTranslationModeValue: value });
     if (value === "no" || value === "") {
       ConfigService.deleteListConfig(
-        props.currentBook.key,
+        currentBook.key,
         "fullTranslationBooks"
       );
     } else {
-      if (!props.isAuthed) {
+      if (!isAuthed) {
         mergeState({ fullTranslationModeValue: "no" });
-        toast(props.t("Please upgrade to Pro to use this feature"));
-        props.handleSetting(true);
-        props.handleSettingMode("account");
+        toast(t("Please upgrade to Pro to use this feature"));
+        handleSetting(true);
+        handleSettingMode("account");
         ConfigService.setReaderConfig("fullTranslationMode", "no");
         return;
       }
       ConfigService.setListConfig(
-        props.currentBook.key,
+        currentBook.key,
         "fullTranslationBooks"
       );
     }
-    toast.success(props.t("Setup successful"));
-    props.renderBookFunc();
+    toast.success(t("Setup successful"));
+    renderBookFunc();
   };
 
   const handleWordDefinitionToggle = async () => {
     const next = !stateRef.current.isWordDefinition;
     if (next) {
-      if (!props.isAuthed) {
-        toast(props.t("Please upgrade to Pro to use this feature"));
-        props.handleSetting(true);
-        props.handleSettingMode("account");
+      if (!isAuthed) {
+        toast(t("Please upgrade to Pro to use this feature"));
+        handleSetting(true);
+        handleSettingMode("account");
         ConfigService.setReaderConfig("fullTranslationMode", "no");
         return;
       }
       if (ConfigService.getReaderConfig("isBionic") === "yes") {
         toast.error(
-          props.t(
+          t(
             "Word definitions and fast reading mode cannot be enabled at the same time"
           )
         );
@@ -150,14 +160,14 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
       const lang = await detectWordDefinitionLang();
       if (lang === "ko") {
         toast.error(
-          props.t(
+          t(
             "Unsupported language for word definition, currently only Chinese, Japanese and English are supported"
           )
         );
         return;
       }
       ConfigService.setListConfig(
-        props.currentBook.key,
+        currentBook.key,
         "wordDefinitionBooks"
       );
       mergeState({
@@ -166,7 +176,7 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
       });
     } else {
       ConfigService.deleteListConfig(
-        props.currentBook.key,
+        currentBook.key,
         "wordDefinitionBooks"
       );
       mergeState({
@@ -174,16 +184,16 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
         wordDefinitionLang: "",
       });
     }
-    toast(props.t("Change successful"));
+    toast(t("Change successful"));
     setTimeout(() => {
-      props.renderBookFunc();
+      renderBookFunc();
     }, 500);
   };
 
   const detectWordDefinitionLang = async () => {
-    if (!props.htmlBook?.rendition) return "";
+    if (!htmlBook?.rendition) return "";
     try {
-      const text = await props.htmlBook.rendition.audioText();
+      const text = await htmlBook.rendition.audioText();
       if (text && text.length > 0) {
         return detectLocalLanguage(text.slice(0, 500).join(" "));
       }
@@ -225,8 +235,8 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
             const value = event.target.value;
             mergeState({ [langKey]: value } as Partial<StudyLangDialogState>);
             ConfigService.setReaderConfig(langKey, value);
-            toast(props.t("Change successful"));
-            props.renderBookFunc();
+            toast(t("Change successful"));
+            renderBookFunc();
           }}
         >
           {levelItem.option.map((option, index) => (
@@ -235,7 +245,7 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
               value={option.value}
               className="lang-setting-option"
             >
-              {props.t(option.label)}
+              {t(option.label)}
             </option>
           ))}
         </select>
@@ -255,10 +265,10 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
     <div
       className="sort-dialog-container scale-page-dialog-container study-lang-dialog-container"
       onMouseLeave={() => {
-        props.handleStudyLangDialog(false);
+        handleStudyLangDialog(false);
       }}
       onMouseEnter={() => {
-        props.handleStudyLangDialog(true);
+        handleStudyLangDialog(true);
       }}
       style={{
         top: "50px",
@@ -286,7 +296,7 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
                 value={option.value}
                 className="lang-setting-option"
               >
-                {props.t(option.label)}
+                {t(option.label)}
               </option>
             ))}
           </select>
@@ -308,8 +318,8 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
                 const value = event.target.value;
                 mergeState({ fullTranslationTargetValue: value });
                 ConfigService.setReaderConfig("fullTranslationTarget", value);
-                toast(props.t("Change successful"));
-                props.renderBookFunc();
+                toast(t("Change successful"));
+                renderBookFunc();
               }}
             >
               {fullTranslationLangList.map((option) => (
@@ -318,7 +328,7 @@ const StudyLangDialog = (props: StudyLangDialogProps) => {
                   value={option.code}
                   className="lang-setting-option"
                 >
-                  {props.t(option.label)}
+                  {t(option.label)}
                 </option>
               ))}
             </select>

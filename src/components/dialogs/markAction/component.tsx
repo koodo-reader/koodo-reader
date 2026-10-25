@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import "../actionDialog/actionDialog.css";
 import { Trans } from "react-i18next";
 import { MarkActionProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import {
   ConfigService,
@@ -19,13 +21,28 @@ const MENU_ITEM_HEIGHT = 33;
 const MENU_CONTAINER_PADDING = 5;
 const DEFAULT_MENU_INDEX = 6;
 
-const MarkAction = (props: MarkActionProps) => {
+const MarkAction = (
+  props: Pick<
+    MarkActionProps,
+    | "left"
+    | "top"
+    | "isShowMark"
+    | "isExceed"
+    | "menuItemIndex"
+    | "handleMarkAction"
+  >
+) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const handleActionDialog = useAppStore((s) => s.handleActionDialog);
+  const handleRefreshBookCover = useAppStore((s) => s.handleRefreshBookCover);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const { t } = useTranslation();
   const getMenuIndex = () => {
     return props.menuItemIndex ?? DEFAULT_MENU_INDEX;
   };
 
   const handleMarkAsFinished = () => {
-    const key = props.currentBook.key;
+    const key = currentBook.key;
     if (collectionUtil.isCollection(key)) {
       let collection = collectionUtil.getCollection(key);
       if (collection) {
@@ -50,15 +67,15 @@ const MarkAction = (props: MarkActionProps) => {
         "recordLocation"
       );
     }
-    toast.success(props.t("Modification successful"));
-    props.handleRefreshBookCover(key);
-    props.handleFetchBooks();
+    toast.success(t("Modification successful"));
+    handleRefreshBookCover(key);
+    handleFetchBooks();
     props.handleMarkAction(false);
-    props.handleActionDialog(false);
+    handleActionDialog(false);
   };
 
   const handleMarkAsUnread = () => {
-    const key = props.currentBook.key;
+    const key = currentBook.key;
     if (collectionUtil.isCollection(key)) {
       let collection = collectionUtil.getCollection(key);
       if (collection) {
@@ -69,11 +86,11 @@ const MarkAction = (props: MarkActionProps) => {
     } else {
       ConfigService.deleteObjectConfig(key, "recordLocation");
     }
-    toast.success(props.t("Modification successful"));
-    props.handleRefreshBookCover(key);
-    props.handleFetchBooks();
+    toast.success(t("Modification successful"));
+    handleRefreshBookCover(key);
+    handleFetchBooks();
     props.handleMarkAction(false);
-    props.handleActionDialog(false);
+    handleActionDialog(false);
   };
 
   const menuIndex = getMenuIndex();
@@ -84,11 +101,11 @@ const MarkAction = (props: MarkActionProps) => {
       className="action-dialog-container"
       onMouseLeave={() => {
         props.handleMarkAction(false);
-        props.handleActionDialog(false);
+        handleActionDialog(false);
       }}
       onMouseEnter={(event) => {
         props.handleMarkAction(true);
-        props.handleActionDialog(true);
+        handleActionDialog(true);
         event?.stopPropagation();
       }}
       style={

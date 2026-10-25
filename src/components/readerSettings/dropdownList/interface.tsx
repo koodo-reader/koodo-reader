@@ -1,15 +1,9 @@
 import BookModel from "../../../models/Book";
 
 export interface DropdownListProps {
-  t: (title: string) => string;
 
   group?: string;
-  currentBook: BookModel;
-  renderBookFunc: () => void;
 
-  handleTextOrientation: (textOrientation: string) => void;
-  handleSetting: (isOpenSetting: boolean) => void;
-  handleSettingMode: (mode: string) => void;
 }
 export interface DropdownListState {
   currentFontFamilyValue: string;

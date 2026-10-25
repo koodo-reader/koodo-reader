@@ -1,6 +1,7 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import "./updateInfo.css";
-import { UpdateInfoProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import packageInfo from "../../../../package.json";
 import { Trans } from "react-i18next";
 import Lottie from "lottie-react";
@@ -22,13 +23,27 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { isWindows } from "react-device-detect";
 
-const UpdateInfo = (props: UpdateInfoProps) => {
+const UpdateInfo = () => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const isShowNew = useAppStore((s) => s.manager.isShowNew);
+  const handleNewDialog = useAppStore((s) => s.handleNewDialog);
+  const handleNewWarning = useAppStore((s) => s.handleNewWarning);
+  const handleFetchAuthed = useAppStore((s) => s.handleFetchAuthed);
+  const handleLoginOptionList = useAppStore((s) => s.handleLoginOptionList);
+  const handleFetchDataSourceList = useAppStore(
+    (s) => s.handleFetchDataSourceList
+  );
+  const handleFetchDefaultSyncOption = useAppStore(
+    (s) => s.handleFetchDefaultSyncOption
+  );
+  const { t } = useTranslation();
   const [updateLog, setUpdateLog] = useState<any>("");
   const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     (async () => {
-      if (!props.currentBook.key) {
+      if (!currentBook.key) {
         if (!isElectron) {
           return;
         }
@@ -64,12 +79,12 @@ const UpdateInfo = (props: UpdateInfoProps) => {
         if (compareVersions(newVersion, packageInfo.version) > 0) {
           if (
             ConfigService.getReaderConfig("isDisableUpdate") !== "yes" ||
-            props.isAuthed
+            isAuthed
           ) {
             setUpdateLog(res);
-            props.handleNewDialog(true);
+            handleNewDialog(true);
           } else {
-            props.handleNewWarning(true);
+            handleNewWarning(true);
           }
         }
       }
@@ -88,12 +103,12 @@ const UpdateInfo = (props: UpdateInfoProps) => {
   };
 
   const handleClose = () => {
-    props.handleNewDialog(false);
+    handleNewDialog(false);
   };
 
   return (
     <>
-      {updateLog && props.isShowNew && (
+      {updateLog && isShowNew && (
         <div className="new-version">
           <div className="new-version-title">
             <Trans>Update to</Trans>
@@ -107,15 +122,15 @@ const UpdateInfo = (props: UpdateInfoProps) => {
                     : "rgba(92, 143, 211, 1)",
               }}
             >
-              {props.t(
+              {t(
                 updateLog.stable === "yes"
                   ? "Stable version"
                   : "Developer version"
               )}
             </div>
           </div>
-          {(props.isAuthed && updateLog.skippable === "yes") ||
-          !props.isAuthed ? (
+          {(isAuthed && updateLog.skippable === "yes") ||
+          !isAuthed ? (
             <div
               className="setting-close-container"
               onClick={() => {
@@ -130,15 +145,15 @@ const UpdateInfo = (props: UpdateInfoProps) => {
               style={{}}
               onClick={async () => {
                 await handleClearToken();
-                props.handleFetchAuthed();
-                props.handleFetchDataSourceList();
-                props.handleFetchDefaultSyncOption();
-                props.handleLoginOptionList([]);
-                toast.success(props.t("Log out successful"));
+                handleFetchAuthed();
+                handleFetchDataSourceList();
+                handleFetchDefaultSyncOption();
+                handleLoginOptionList([]);
+                toast.success(t("Log out successful"));
                 handleClose();
               }}
             >
-              {props.t("Exit Pro")}
+              {t("Exit Pro")}
             </div>
           )}
           <div className="update-dialog-info" style={{ height: 420 }}>
@@ -167,7 +182,7 @@ const UpdateInfo = (props: UpdateInfoProps) => {
                         "download-app-progress",
                         (config: any) => {
                           toast.loading(
-                            props.t("Downloading") +
+                            t("Downloading") +
                               `(${config.downloadedMB} / ${config.totalMB} MB)`,
                             {
                               id: "download-progress",
@@ -183,7 +198,7 @@ const UpdateInfo = (props: UpdateInfoProps) => {
                       ipcRenderer.invoke("cancel-download-app", {});
                       setIsDownloading(false);
                       setTimeout(() => {
-                        toast.success(props.t("Cancellation successful"), {
+                        toast.success(t("Cancellation successful"), {
                           id: "download-progress",
                         });
                       }, 500);

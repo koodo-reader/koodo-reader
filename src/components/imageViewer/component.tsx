@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./imageViewer.css";
 import { ImageViewerProps, ImageViewerStates } from "./interface";
@@ -10,6 +11,7 @@ import {
   matchShortcut,
 } from "../../utils/reader/shortcutUtil";
 import toast from "react-hot-toast";
+import { useAppStore } from "../../store/useAppStore";
 declare var window: any;
 declare var ClipboardItem: any;
 
@@ -25,6 +27,9 @@ const findImageIndex = (href: string, list: string[]) => {
 };
 
 const ImageViewer = (props: ImageViewerProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
+  const { t } = useTranslation();
   const [state, setState] = useState<ImageViewerStates>({
     isShowImage: false,
     imageRatio: "horizontal",
@@ -37,7 +42,7 @@ const ImageViewer = (props: ImageViewerProps) => {
 
   const stateRef = useRef(state);
   stateRef.current = state;
-  const propsRef = useRef(props);
+  const propsRef = useRef<any>(props);
   propsRef.current = props;
   const lockRef = useRef(false);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -145,7 +150,6 @@ const ImageViewer = (props: ImageViewerProps) => {
       const tag = (keyEvent.target as HTMLElement)?.tagName?.toLowerCase();
       if (tag === "textarea" || tag === "input") return;
 
-      const { readerMode } = propsRef.current;
       const shortcuts = getShortcutConfig();
 
       if (matchShortcut(keyEvent, shortcuts.exitReader)) {
@@ -167,7 +171,7 @@ const ImageViewer = (props: ImageViewerProps) => {
       keyEvent.stopImmediatePropagation();
       await shiftImage(isPrevPageKey(keyEvent, readerMode) ? -1 : 1);
     },
-    [hideImage, shiftImage]
+    [hideImage, shiftImage, readerMode]
   );
 
   const showImage = useCallback(
@@ -236,7 +240,7 @@ const ImageViewer = (props: ImageViewerProps) => {
   const bindDocEvents = useCallback(
     (bind: boolean) => {
       const method = bind ? "addEventListener" : "removeEventListener";
-      getIframeDoc(propsRef.current.currentBook).forEach((doc) => {
+      getIframeDoc(currentBook).forEach((doc) => {
         if (!doc) return;
         doc[method]("click", showImage);
         doc[method]("keydown", handleKeyDown, true);
@@ -312,7 +316,7 @@ const ImageViewer = (props: ImageViewerProps) => {
     }, "image/png");
 
     URL.revokeObjectURL(img.src);
-    toast.success(props.t("Image copied to clipboard"));
+    toast.success(t("Image copied to clipboard"));
   };
 
   const handleClock = () => {

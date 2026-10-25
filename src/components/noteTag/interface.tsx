@@ -1,6 +1,4 @@
 export interface NoteTagProps {
-  isReading: boolean;
-  isShowPopupNote: boolean;
   isEdit: boolean;
 
   isCard: boolean;

@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import "./importLocal.css";
 import BookModel from "../../models/Book";
@@ -7,7 +9,6 @@ import JSZip from "jszip";
 import * as Kookit from "../../assets/lib/kookit.min";
 import { ImportLocalProps, ImportLocalState } from "./interface";
 import { isElectron } from "react-device-detect";
-import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import DOMPurify from "dompurify";
@@ -35,6 +36,7 @@ import {
   buildImportRecords,
   importNoteRecords,
 } from "../../utils/file/importData";
+import { useAppStore } from "../../store/useAppStore";
 
 // Convert supportedFormats to react-dropzone v14+ accept format
 // Key is MIME type, value is array of file extensions
@@ -80,6 +82,21 @@ const getComicImageExt = (name: string) => {
 };
 
 const ImportLocal = (props: ImportLocalProps) => {
+  const books = useAppStore((s) => s.manager.books);
+  const cloudSyncFunc = useAppStore((s) => s.cloudSyncFunc);
+  const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
+  const deletedBooks = useAppStore((s) => s.manager.deletedBooks);
+  const mode = useAppStore((s) => s.sidebar.mode);
+  const shelfTitle = useAppStore((s) => s.sidebar.shelfTitle);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleReadingBook = useAppStore((s) => s.handleReadingBook);
+  const handleImportDialog = useAppStore((s) => s.handleImportDialog);
+  const handleOPDSDialog = useAppStore((s) => s.handleOPDSDialog);
+  const handleAutoImportDialog = useAppStore((s) => s.handleAutoImportDialog);
+  const handleImportBookFunc = useAppStore((s) => s.handleImportBookFunc);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [state, setStateObj] = useState<ImportLocalState>(() => ({
     isOpenFile: false,
     width: document.body.clientWidth,
@@ -135,7 +152,7 @@ const ImportLocal = (props: ImportLocalProps) => {
         const rawUrl = config?.url;
         if (!rawUrl || typeof rawUrl !== "string") return;
         const confirmed = await vexComfirmAsync(
-          props.t(
+          t(
             "Do you want to download and import the book from this URL?"
           ) +
             "<br><span style='word-break:break-all'>" +
@@ -145,7 +162,7 @@ const ImportLocal = (props: ImportLocalProps) => {
           "Cancel"
         );
         if (!confirmed) {
-          toast.error(props.t("Import cancelled"));
+          toast.error(t("Import cancelled"));
           return;
         }
         handleURLImport(undefined as any, rawUrl);
@@ -157,7 +174,7 @@ const ImportLocal = (props: ImportLocalProps) => {
     });
     const resizeHandler = resizeHandlerRef.current;
     window.addEventListener("resize", resizeHandler);
-    props.handleImportBookFunc((file: File) =>
+    handleImportBookFunc((file: File) =>
       getMd5WithBrowserRef.current!(file)
     );
 
@@ -212,7 +229,7 @@ const ImportLocal = (props: ImportLocalProps) => {
   const handleJump = (book: BookModel) => {
     ConfigService.setItem("tempBook", JSON.stringify(book));
     BookUtil.redirectBook(book);
-    props.history.push("/manager/home");
+    navigate("/manager/home");
   };
   const handleAddBook = (
     book: BookModel,
@@ -222,7 +239,7 @@ const ImportLocal = (props: ImportLocalProps) => {
   ) => {
     return new Promise<void>(async (resolve) => {
       toast.loading(
-        props.t("Importing") + ": " + book.name.substring(0, 50),
+        t("Importing") + ": " + book.name.substring(0, 50),
         {
           id: "add-book",
         }
@@ -243,7 +260,7 @@ const ImportLocal = (props: ImportLocalProps) => {
         if (isPreventAdd) {
           //ignore
         } else if (
-          props.isAuthed &&
+          isAuthed &&
           ConfigService.getItem("defaultSyncOption")
         ) {
           await BookUtil.addBook(
@@ -274,7 +291,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       } else {
         if (
           !isImportPath ||
-          (props.isAuthed && ConfigService.getItem("defaultSyncOption"))
+          (isAuthed && ConfigService.getItem("defaultSyncOption"))
         ) {
           await BookUtil.addBook(
             book.key,
@@ -287,20 +304,20 @@ const ImportLocal = (props: ImportLocalProps) => {
         await CoverUtil.addCover(book);
       }
 
-      props.handleReadingBook(book);
+      handleReadingBook(book);
       ConfigService.setListConfig(book.key, "recentBooks");
       DatabaseService.saveRecord(book, "books")
         .then(() => {
-          props.handleFetchBooks();
-          if (props.mode === "shelf") {
+          handleFetchBooks();
+          if (mode === "shelf") {
             ConfigService.setMapConfig(
-              props.shelfTitle,
+              shelfTitle,
               book.key,
               "shelfList"
             );
           }
           toast.success(
-            props.t("Addition successful") +
+            t("Addition successful") +
               ": " +
               book.name.substring(0, 50),
             {
@@ -317,14 +334,14 @@ const ImportLocal = (props: ImportLocalProps) => {
               return;
             }
             setState({ isOpenFile: false });
-            props.history.push("/manager/home");
+            navigate("/manager/home");
           }, 100);
           return resolve();
         })
         .catch((error) => {
           console.error(error, book.name);
           toast.error(
-            props.t("Import failed") + ": " + book.name.substring(0, 50),
+            t("Import failed") + ": " + book.name.substring(0, 50),
             {
               duration: 4000,
               id: "add-book",
@@ -338,7 +355,7 @@ const ImportLocal = (props: ImportLocalProps) => {
   const analyzeBookMetadata = async (book: BookModel, bookName: string) => {
     if (
       ConfigService.getReaderConfig("isAIAnalyzeTitle") !== "yes" ||
-      !props.isAuthed ||
+      !isAuthed ||
       book.name !== bookName
     ) {
       return;
@@ -359,7 +376,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       const md5 = await calculateFileMD5(file);
       if (!md5) {
         console.error("md5 error", file.name);
-        toast.error(props.t("Import failed") + ": " + file.name, {
+        toast.error(t("Import failed") + ": " + file.name, {
           duration: 4000,
         });
         return resolve();
@@ -391,18 +408,18 @@ const ImportLocal = (props: ImportLocalProps) => {
       let repeatBook: BookModel | null = await BookUtil.getBookByMd5(md5);
       if (repeatBook) {
         isRepeat = true;
-        if (props.books && props.books.length > 0) {
-          props.books.forEach((item) => {
+        if (books && books.length > 0) {
+          books.forEach((item) => {
             if (item.key === repeatBook!.key) {
-              toast.error(props.t("Duplicate book"));
+              toast.error(t("Duplicate book"));
               return resolve();
             }
           });
         }
-        if (props.deletedBooks && props.deletedBooks.length > 0) {
-          props.deletedBooks.forEach((item) => {
+        if (deletedBooks && deletedBooks.length > 0) {
+          deletedBooks.forEach((item) => {
             if (item.key === repeatBook!.key) {
-              toast.error(props.t("Duplicate book in trash bin"));
+              toast.error(t("Duplicate book in trash bin"));
               return resolve();
             }
           });
@@ -459,7 +476,7 @@ const ImportLocal = (props: ImportLocalProps) => {
             );
           } catch (error) {
             console.error(error, bookName);
-            toast.error(props.t("Import failed") + ": " + bookName, {
+            toast.error(t("Import failed") + ": " + bookName, {
               duration: 4000,
             });
             return resolve();
@@ -470,7 +487,7 @@ const ImportLocal = (props: ImportLocalProps) => {
         reader.onload = async (event) => {
           if (!event.target) {
             console.error("e.target error", bookName);
-            toast.error(props.t("Import failed") + ": " + bookName, {
+            toast.error(t("Import failed") + ": " + bookName, {
               duration: 4000,
             });
             return resolve();
@@ -489,7 +506,7 @@ const ImportLocal = (props: ImportLocalProps) => {
         };
         reader.onerror = () => {
           console.error("reader error", bookName);
-          toast.error(props.t("Import failed") + ": " + bookName, {
+          toast.error(t("Import failed") + ": " + bookName, {
             duration: 4000,
           });
           return resolve();
@@ -509,7 +526,7 @@ const ImportLocal = (props: ImportLocalProps) => {
   ) => {
     try {
       if (!isElectron) {
-        toast.error(props.t("Import failed") + ": " + bookName, {
+        toast.error(t("Import failed") + ": " + bookName, {
           duration: 4000,
         });
         return resolve();
@@ -539,7 +556,7 @@ const ImportLocal = (props: ImportLocalProps) => {
           })
         );
       if (images.length === 0) {
-        throw new Error(props.t("No image found in archive"));
+        throw new Error(t("No image found in archive"));
       }
       const coverEntry = images[0].entryPath;
       const extracted: string[] = await ipcRenderer.invoke(
@@ -549,7 +566,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       const extractedPath =
         Array.isArray(extracted) && extracted.length > 0 ? extracted[0] : "";
       if (!extractedPath || !fs.existsSync(extractedPath)) {
-        throw new Error(props.t("Extract cover failed"));
+        throw new Error(t("Extract cover failed"));
       }
       const buf = fs.readFileSync(extractedPath);
       clearComicTemp();
@@ -577,7 +594,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       return resolve();
     } catch (error) {
       console.error(error, bookName);
-      toast.error(props.t("Import failed") + ": " + bookName, {
+      toast.error(t("Import failed") + ": " + bookName, {
         duration: 4000,
       });
       return resolve();
@@ -646,7 +663,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       }
       const repeatBook: BookModel | null = await BookUtil.getBookByMd5(innerMd5);
       if (repeatBook) {
-        toast.error(props.t("Duplicate book"));
+        toast.error(t("Duplicate book"));
         return resolve();
       }
       const innerBookName = innerName.substring(
@@ -674,14 +691,14 @@ const ImportLocal = (props: ImportLocalProps) => {
         const preparedRecords = buildImportRecords(records);
         if (!preparedRecords) {
           console.error("Invalid data in kdz package: " + bookName);
-          toast.error(props.t("Invalid data"));
+          toast.error(t("Invalid data"));
           return resolve();
         }
         const result = await importNoteRecords(preparedRecords, {
           targetBookKey: (innerBook as BookModel).key,
         });
         if (result === "failed") {
-          toast.error(props.t("Failed to import"));
+          toast.error(t("Failed to import"));
           return resolve();
         }
         const { imported, skipped } = result as {
@@ -689,7 +706,7 @@ const ImportLocal = (props: ImportLocalProps) => {
           skipped: number;
         };
         toast.success(
-          props.t(
+          t(
             "Imported {{imported}} records, skipped {{skipped}} existing records",
             { imported, skipped }
           )
@@ -698,7 +715,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       return resolve();
     } catch (error) {
       console.error(error, bookName);
-      toast.error(props.t("Import failed") + ": " + bookName, {
+      toast.error(t("Import failed") + ": " + bookName, {
         duration: 4000,
       });
       return resolve();
@@ -739,12 +756,12 @@ const ImportLocal = (props: ImportLocalProps) => {
     try {
       if (isCajFormat(extension)) {
         toast.loading(
-          props.t("Converting to PDF") + ": " + bookName.substring(0, 50),
+          t("Converting to PDF") + ": " + bookName.substring(0, 50),
           { id: "add-book" }
         );
         const reportProgress = throttle((fraction: number) => {
           toast.loading(
-            props.t("Converting to PDF") +
+            t("Converting to PDF") +
               " (" +
               Math.round(fraction * 100) +
               "%)" +
@@ -806,7 +823,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       }
     } catch (error) {
       console.error(error, bookName);
-      toast.error(props.t("Import failed") + ": " + bookName, {
+      toast.error(t("Import failed") + ": " + bookName, {
         duration: 4000,
       });
       return null;
@@ -817,7 +834,7 @@ const ImportLocal = (props: ImportLocalProps) => {
     // get metadata failed
     if (!result || !result.key) {
       console.error("get metadata failed", bookName);
-      toast.error(props.t("Import failed") + ": " + bookName, {
+      toast.error(t("Import failed") + ": " + bookName, {
         duration: 4000,
       });
       return null;
@@ -951,7 +968,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       }
 
       const pct = Math.round(((i + 1) / total) * 100);
-      toast.loading(props.t("Downloading") + ": " + pct + "%", {
+      toast.loading(t("Downloading") + ": " + pct + "%", {
         id: toastId,
         position: "bottom-center",
       });
@@ -963,7 +980,7 @@ const ImportLocal = (props: ImportLocalProps) => {
     urlFileName: string,
     toastId: string
   ) => {
-    toast.loading(props.t("Downloading") + ": 0%", {
+    toast.loading(t("Downloading") + ": 0%", {
       id: toastId,
       position: "bottom-center",
     });
@@ -985,7 +1002,7 @@ const ImportLocal = (props: ImportLocalProps) => {
 
     if (!looksLikeHtml) {
       throw new Error(
-        props.t("Unsupported file format") +
+        t("Unsupported file format") +
           ": " +
           (contentType || "unknown")
       );
@@ -1053,21 +1070,21 @@ const ImportLocal = (props: ImportLocalProps) => {
     e.stopPropagation(); // Prevent triggering the Dropzone
     setState({ isMoreOptionsVisible: false });
 
-    props.handleImportDialog(true);
+    handleImportDialog(true);
   };
 
   // Handle OPDS import
   const handleOPDSImport = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent triggering the Dropzone
     setState({ isMoreOptionsVisible: false });
-    props.handleOPDSDialog(true);
+    handleOPDSDialog(true);
   };
 
   // Handle auto import folder
   const handleAutoImport = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent triggering the Dropzone
     setState({ isMoreOptionsVisible: false });
-    props.handleAutoImportDialog(true);
+    handleAutoImportDialog(true);
   };
 
   // Handle URL import
@@ -1078,7 +1095,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       typeof externalUrl === "string"
         ? externalUrl
         : await vexPromptAsync(
-            props.t("Enter book download URL or article URL"),
+            t("Enter book download URL or article URL"),
             "https://"
           );
     if (!url || typeof url !== "string") return;
@@ -1087,7 +1104,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       !trimmedUrl.startsWith("http://") &&
       !trimmedUrl.startsWith("https://")
     ) {
-      toast.error(props.t("Please enter a valid http or https URL"));
+      toast.error(t("Please enter a valid http or https URL"));
       return;
     }
     let fileName = decodeURIComponent(
@@ -1105,7 +1122,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
-        toast.error(props.t("Import failed") + ": " + errorMessage, {
+        toast.error(t("Import failed") + ": " + errorMessage, {
           id: toastId,
         });
         console.error("URL import error:", error);
@@ -1113,7 +1130,7 @@ const ImportLocal = (props: ImportLocalProps) => {
       return;
     }
 
-    toast.loading(props.t("Downloading") + ": 0%", {
+    toast.loading(t("Downloading") + ": 0%", {
       id: toastId,
       position: "bottom-center",
     });
@@ -1134,13 +1151,13 @@ const ImportLocal = (props: ImportLocalProps) => {
         received += value.length;
         if (total > 0) {
           const percent = Math.round((received / total) * 100);
-          toast.loading(props.t("Downloading") + ": " + percent + "%", {
+          toast.loading(t("Downloading") + ": " + percent + "%", {
             id: toastId,
             position: "bottom-center",
           });
         } else {
           toast.loading(
-            props.t("Downloading") +
+            t("Downloading") +
               ": " +
               (received / 1024).toFixed(1) +
               " KB",
@@ -1161,7 +1178,7 @@ const ImportLocal = (props: ImportLocalProps) => {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      toast.error(props.t("Import failed") + ": " + errorMessage, {
+      toast.error(t("Import failed") + ": " + errorMessage, {
         id: toastId,
       });
       console.error("URL import error:", error);
@@ -1179,7 +1196,7 @@ const ImportLocal = (props: ImportLocalProps) => {
             ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
             ConfigService.getItem("defaultSyncOption")
           ) {
-            await props.cloudSyncFunc();
+            await cloudSyncFunc();
           }
         }}
         accept={supportedFormatsAccept}
@@ -1190,12 +1207,12 @@ const ImportLocal = (props: ImportLocalProps) => {
             className="import-from-local"
             {...getRootProps()}
             style={
-              props.isCollapsed && document.body.clientWidth < 950
+              isCollapsed && document.body.clientWidth < 950
                 ? { width: "42px" }
                 : {}
             }
           >
-            {props.isCollapsed && stateRef.current.width < 950 ? null : (
+            {isCollapsed && stateRef.current.width < 950 ? null : (
               <div
                 className="more-import-option"
                 onClick={(e) => {
@@ -1306,7 +1323,7 @@ const ImportLocal = (props: ImportLocalProps) => {
                             ) !== "yes" &&
                             ConfigService.getItem("defaultSyncOption")
                           ) {
-                            await props.cloudSyncFunc();
+                            await cloudSyncFunc();
                           }
                         }
                       }}
@@ -1353,7 +1370,7 @@ const ImportLocal = (props: ImportLocalProps) => {
                               ) !== "yes" &&
                               ConfigService.getItem("defaultSyncOption")
                             ) {
-                              await props.cloudSyncFunc();
+                              await cloudSyncFunc();
                             }
                           }}
                         ></input>
@@ -1398,7 +1415,7 @@ const ImportLocal = (props: ImportLocalProps) => {
               </div>
             )}
             <div className="animation-mask-local"></div>
-            {props.isCollapsed && stateRef.current.width < 950 ? (
+            {isCollapsed && stateRef.current.width < 950 ? (
               <span
                 className="icon-folder"
                 style={{ fontSize: "15px", fontWeight: 500 }}
@@ -1448,7 +1465,7 @@ const ImportLocal = (props: ImportLocalProps) => {
                       "yes" &&
                     ConfigService.getItem("defaultSyncOption")
                   ) {
-                    await props.cloudSyncFunc();
+                    await cloudSyncFunc();
                   }
                 }}
               ></div>
@@ -1462,4 +1479,4 @@ const ImportLocal = (props: ImportLocalProps) => {
   return render();
 };
 
-export default withRouter(ImportLocal as any);
+export default ImportLocal;

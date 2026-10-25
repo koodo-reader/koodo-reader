@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./backgroundSetting.css";
 import {
@@ -10,10 +11,16 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { applyAppBackgroundImage } from "../../../utils/reader/launchUtil";
 import BackgroundUtil from "../../../utils/file/backgroundUtil";
+import { useAppStore } from "../../../store/useAppStore";
 
 const FEATURED_COUNT = 100;
 
 const BackgroundSetting = (props: SettingInfoProps) => {
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const handleReaderBackgroundImage = useAppStore(
+    (s) => s.handleReaderBackgroundImage
+  );
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const featuredObserver = useRef<IntersectionObserver | null>(null);
   const pendingFeaturedElements = useRef<HTMLDivElement[]>([]);
@@ -154,10 +161,10 @@ const BackgroundSetting = (props: SettingInfoProps) => {
           images: [...prev.images, newImage],
           loadedUrls: { ...prev.loadedUrls, [id]: dataUrl },
         }));
-        toast.success(props.t("Import successful"));
+        toast.success(t("Import successful"));
       } catch (err) {
         console.error(err);
-        toast.error(props.t("Import failed"));
+        toast.error(t("Import failed"));
       }
     };
     reader.readAsDataURL(file);
@@ -175,14 +182,14 @@ const BackgroundSetting = (props: SettingInfoProps) => {
     ConfigService.setReaderConfig("appBackgroundImage", image.id);
     setState((prev) => ({ ...prev, appBackgroundId: image.id }));
     applyAppBackgroundImage();
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
   const handleClearAppBackground = () => {
     ConfigService.setReaderConfig("appBackgroundImage", "");
     setState((prev) => ({ ...prev, appBackgroundId: "" }));
     applyAppBackgroundImage();
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
   const handleSetReaderBackground = (image: BackgroundImage) => {
@@ -194,15 +201,16 @@ const BackgroundSetting = (props: SettingInfoProps) => {
       ConfigService.setReaderConfig("backgroundColor", image.backgroundColor);
     }
     setState((prev) => ({ ...prev, readerBackgroundId: image.id }));
-    props.handleReaderBackgroundImage?.(image.id);
-    toast.success(props.t("Change successful"));
+    handleReaderBackgroundImage?.(image.id);
+    toast.success(t("Change successful"));
   };
 
   const handleClearReaderBackground = () => {
     ConfigService.setReaderConfig("readerBackgroundImage", "");
     setState((prev) => ({ ...prev, readerBackgroundId: "" }));
-    props.handleReaderBackgroundImage?.("");
-    toast.success(props.t("Change successful"));
+    handleReaderBackgroundImage?.(
+"");
+    toast.success(t("Change successful"));
     ConfigService.setReaderConfig("textColor", "");
     ConfigService.setReaderConfig("backgroundColor", "");
   };
@@ -249,12 +257,12 @@ const BackgroundSetting = (props: SettingInfoProps) => {
     try {
       const dataUrl = await BackgroundUtil.downloadFeaturedBackground(
         index,
-        props.isAuthed,
+        isAuthed,
         (progress) =>
           setState((prev) => ({ ...prev, downloadProgress: progress }))
       );
       if (!dataUrl) {
-        toast.error(props.t("Download failed"));
+        toast.error(t("Download failed"));
         return;
       }
       const meta = BackgroundUtil.getImageMeta(id);
@@ -275,10 +283,10 @@ const BackgroundSetting = (props: SettingInfoProps) => {
       } else {
         handleSetReaderBackground(newImage);
       }
-      toast.success(props.t("Download successful"));
+      toast.success(t("Download successful"));
     } catch (err) {
       console.error(err);
-      toast.error(props.t("Download failed"));
+      toast.error(t("Download failed"));
     } finally {
       setState((prev) => ({
         ...prev,
@@ -312,12 +320,12 @@ const BackgroundSetting = (props: SettingInfoProps) => {
       if (state.readerBackgroundId === image.id) {
         ConfigService.setReaderConfig("readerBackgroundImage", "");
         setState((prev) => ({ ...prev, readerBackgroundId: "" }));
-        props.handleReaderBackgroundImage?.("");
+    handleReaderBackgroundImage?.("");
       }
-      toast.success(props.t("Deletion successful"));
+      toast.success(t("Deletion successful"));
     } catch (err) {
       console.error(err);
-      toast.error(props.t("Deletion failed"));
+      toast.error(t("Deletion failed"));
     }
   };
 
@@ -474,7 +482,7 @@ const BackgroundSetting = (props: SettingInfoProps) => {
                     className="background-featured-img"
                     src={BackgroundUtil.getFeaturedThumbnailUrl(
                       index,
-                      props.isAuthed
+                      isAuthed
                     )}
                     alt={id}
                     loading="lazy"
@@ -589,7 +597,7 @@ const BackgroundSetting = (props: SettingInfoProps) => {
             className="background-preview-image"
             src={BackgroundUtil.getFeaturedOriginalUrl(
               previewFeatured,
-              props.isAuthed
+              isAuthed
             )}
             alt={BackgroundUtil.getFeaturedBackgroundId(previewFeatured)}
             onClick={(e) => e.stopPropagation()}

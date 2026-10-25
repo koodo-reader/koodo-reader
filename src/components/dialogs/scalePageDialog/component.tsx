@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -7,24 +8,31 @@ import {
 } from "../../../constants/dropdownList";
 import SliderList from "../../readerSettings/sliderList";
 import SwitchRow from "../../readerSettings/switchRow";
-import { ScalePageDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import "./scalePageDialog.css";
 
-const ScalePageDialog = (props: ScalePageDialogProps) => {
+const ScalePageDialog = () => {
+  const scale = useAppStore((s) => s.reader.scale);
+  const isFitPage = useAppStore((s) => s.reader.isFitPage);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
+  const handleScale = useAppStore((s) => s.handleScale);
+  const handleFitPage = useAppStore((s) => s.handleFitPage);
+  const handleScalePageDialog = useAppStore((s) => s.handleScalePageDialog);
+  const { t } = useTranslation();
   const handlePresetChange = (scale: string) => {
     ConfigService.setReaderConfig("scale", scale);
-    props.handleScale(scale);
-    props.renderBookFunc();
+    handleScale(scale);
+    renderBookFunc();
   };
 
   return (
     <div
       className="sort-dialog-container scale-page-dialog-container"
       onMouseLeave={() => {
-        props.handleScalePageDialog(false);
+        handleScalePageDialog(false);
       }}
       onMouseEnter={() => {
-        props.handleScalePageDialog(true);
+        handleScalePageDialog(true);
       }}
       style={{
         top: "50px",
@@ -40,8 +48,8 @@ const ScalePageDialog = (props: ScalePageDialogProps) => {
             name=""
             className="lang-setting-dropdown"
             value={
-              pageWidthPresetList.some((opt) => opt.value === props.scale)
-                ? props.scale
+              pageWidthPresetList.some((opt) => opt.value === scale)
+                ? scale
                 : ""
             }
             onChange={(event) => {
@@ -65,14 +73,14 @@ const ScalePageDialog = (props: ScalePageDialogProps) => {
 
         <SwitchRow
           title={<Trans>Fit to page</Trans>}
-          isEnabled={props.isFitPage}
+          isEnabled={isFitPage}
           onClick={() => {
-            const next = !props.isFitPage;
+            const next = !isFitPage;
             ConfigService.setReaderConfig("isFitPage", next ? "yes" : "no");
-            props.handleFitPage(next);
-            toast(props.t("Change successful"));
+            handleFitPage(next);
+            toast(t("Change successful"));
             setTimeout(() => {
-              props.renderBookFunc();
+              renderBookFunc();
             }, 300);
           }}
         />

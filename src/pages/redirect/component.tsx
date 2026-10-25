@@ -1,10 +1,11 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./manager.css";
 import { RedirectProps } from "./interface";
 import { Trans } from "react-i18next";
 import { getParamsFromUrl } from "../../utils/file/common";
 import copy from "copy-text-to-clipboard";
-import { withRouter } from "react-router-dom";
 import Lottie from "lottie-react";
 import emptyDark from "../../assets/images/empty-dark.svg";
 import emptyLight from "../../assets/images/empty-light.svg";
@@ -14,17 +15,22 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import { removeSearchParams } from "../../utils/common";
 import { BookHelper } from "../../assets/lib/kookit.min";
+import { useAppStore } from "../../store/useAppStore";
 declare var window: any;
 
 const Redirect = (props: RedirectProps) => {
+  const handleLoadingDialog = useAppStore((s) => s.handleLoadingDialog);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isAuthed, setIsAuthed] = useState(false);
   const [isError, setIsError] = useState(false);
   const [token, setToken] = useState("");
 
   useEffect(() => {
     let url = document.location.href;
-    if (document.location.hash === "#/" && url.indexOf("code") === -1) {
-      props.history.push("/manager/home");
+    const hash = document.location.hash;
+    if ((!hash || hash === "#" || hash === "#/") && url.indexOf("code") === -1) {
+      navigate("/manager/home");
     }
     if (url.indexOf("error") > -1) {
       setIsError(true);
@@ -75,10 +81,10 @@ const Redirect = (props: RedirectProps) => {
   }, []);
 
   const handleFinish = () => {
-    props.handleLoadingDialog(false);
+    handleLoadingDialog(false);
   };
   const showMessage = (message: string) => {
-    toast(props.t(message));
+    toast(t(message));
   };
 
   if (isError || isAuthed) {
@@ -116,7 +122,7 @@ const Redirect = (props: RedirectProps) => {
               className="token-dialog-token-text"
               onClick={() => {
                 copy(token);
-                toast.success(props.t("Copied"));
+                toast.success(t("Copied"));
               }}
             >
               <Trans>Copy token</Trans>
@@ -136,7 +142,7 @@ const Redirect = (props: RedirectProps) => {
         <div
           className="empty-page-info-sub"
           onClick={() => {
-            props.history.push("/manager/home");
+            navigate("/manager/home");
           }}
           style={{ marginTop: 10, cursor: "pointer" }}
         >
@@ -172,4 +178,4 @@ const Redirect = (props: RedirectProps) => {
   );
 };
 
-export default withRouter(Redirect as any);
+export default Redirect;

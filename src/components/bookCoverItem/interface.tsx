@@ -1,27 +1,10 @@
 import BookModel from "../../models/Book";
-import { RouteComponentProps } from "react-router";
 
-export interface BookCoverProps extends RouteComponentProps<any> {
+export interface BookCoverProps {
   book: BookModel;
-  currentBook: BookModel;
-  isOpenActionDialog: boolean;
-  isCollapsed: boolean;
-  isSelectBook: boolean;
-  isSelected: boolean;
-  selectedBooks: string[];
-  refreshBookKey: string;
+  isSelected?: boolean;
   allBooks?: BookModel[];
   bookIndex?: number;
-  handleSelectBook: (isSelectBook: boolean) => void;
-  handleRefreshBookCover: (key: string) => void;
-  handleReadingBook: (book: BookModel) => void;
-  handleActionDialog: (isShowActionDialog: boolean) => void;
-  t: (title: string) => string;
-  handleSelectedBooks: (selectedBooks: string[]) => void;
-  handleDeleteDialog: (isShow: boolean) => void;
-  handleFetchBooks: () => void;
-  handleCollectionDialogBooks: (books: string[]) => void;
-  handleAddCollectionDialog: (isOpen: boolean) => void;
 }
 export interface BookCoverState {
   isHover: boolean;

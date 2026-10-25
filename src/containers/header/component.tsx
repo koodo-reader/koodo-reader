@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import "./header.css";
 import SearchBox from "../../components/searchBox";
@@ -47,11 +49,46 @@ import { getTempToken, updateUserConfig } from "../../utils/request/user";
 import i18n from "../../i18n";
 import { getNotification } from "../../utils/request/common";
 import TokenService from "../../utils/storage/tokenService";
+import { useAppStore } from "../../store/useAppStore";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 
 const Header = (props: HeaderProps) => {
+  const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const mode = useAppStore((s) => s.sidebar.mode);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const defaultSyncOption = useAppStore((s) => s.backupPage.defaultSyncOption);
+  const userInfo = useAppStore((s) => s.manager.userInfo);
+  const isSortDisplay = useAppStore((s) => s.manager.isSortDisplay);
+  const importBookFunc = useAppStore((s) => s.book.importBookFunc);
+  const handleSortDisplay = useAppStore((s) => s.handleSortDisplay);
+  const handleLocalFileDialog = useAppStore((s) => s.handleLocalFileDialog);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handleAbout = useAppStore((s) => s.handleAbout);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleFetchNotes = useAppStore((s) => s.handleFetchNotes);
+  const handleFetchBookmarks = useAppStore((s) => s.handleFetchBookmarks);
+  const handleFetchAuthed = useAppStore((s) => s.handleFetchAuthed);
+  const handleFetchDefaultSyncOption = useAppStore(
+    (s) => s.handleFetchDefaultSyncOption
+  );
+  const handleFetchDataSourceList = useAppStore(
+    (s) => s.handleFetchDataSourceList
+  );
+  const handleCloudSyncFunc = useAppStore((s) => s.handleCloudSyncFunc);
+  const handleFetchUserInfo = useAppStore((s) => s.handleFetchUserInfo);
+  const handleReadingBook = useAppStore((s) => s.handleReadingBook);
+  const handleCollectionDetailDialog = useAppStore(
+    (s) => s.handleCollectionDetailDialog
+  );
+  const handleCurrentCollectionKey = useAppStore(
+    (s) => s.handleCurrentCollectionKey
+  );
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [state, setState] = useState<HeaderState>({
     isHidePro: false,
     isSync: false,
@@ -72,7 +109,7 @@ const Header = (props: HeaderProps) => {
   const handleFinishReadingRef = useRef<() => Promise<void>>(
     async () => undefined
   );
-  const prevIsAuthedRef = useRef<boolean>(props.isAuthed);
+  const prevIsAuthedRef = useRef<boolean>(isAuthed);
 
   const setPartialState = (partial: Partial<HeaderState>) => {
     setState((prevState) => ({ ...prevState, ...partial }));
@@ -112,7 +149,7 @@ const Header = (props: HeaderProps) => {
         return;
       }
       if (!isSyncRef.current && !isSyncingRef.current) {
-        const userInfo = await props.handleFetchUserInfo();
+        const userInfo = await handleFetchUserInfo();
         await handleCloudSyncRef.current(userInfo);
       }
     }, intervalMs);
@@ -125,7 +162,6 @@ const Header = (props: HeaderProps) => {
       const folders =
         ConfigService.getAllListConfig(AUTO_IMPORT_FOLDERS_KEY) || [];
       if (folders.length === 0) return;
-      const importBookFunc = props.importBookFunc;
       if (!importBookFunc) {
         console.error("Auto import: no import function available");
         return;
@@ -147,7 +183,7 @@ const Header = (props: HeaderProps) => {
     }
     if (
       ConfigService.getReaderConfig("isOpenBook") === "yes" &&
-      !props.currentBook.key &&
+      !currentBook.key &&
       !filePath
     ) {
       let lastReadBookKey = ConfigService.getAllListConfig("recentBooks")[0];
@@ -158,11 +194,11 @@ const Header = (props: HeaderProps) => {
         if (collectionKey) {
           let collection = collectionUtil.getCollection(collectionKey);
           if (collection) {
-            props.handleReadingBook(
+            handleReadingBook(
               collectionUtil.getCollectionAsBook(collection)
             );
-            props.handleCurrentCollectionKey(collectionKey);
-            props.handleCollectionDetailDialog(true);
+            handleCurrentCollectionKey(collectionKey);
+            handleCollectionDetailDialog(true);
             return;
           }
         }
@@ -171,7 +207,7 @@ const Header = (props: HeaderProps) => {
           "books"
         );
         if (fullBook) {
-          props.handleReadingBook(fullBook);
+          handleReadingBook(fullBook);
           BookUtil.redirectBook(fullBook);
         }
       }
@@ -185,7 +221,7 @@ const Header = (props: HeaderProps) => {
       !isSyncRef.current
     ) {
       ConfigService.setItem("isFinshReading", "yes");
-      let userInfo = await props.handleFetchUserInfo();
+      let userInfo = await handleFetchUserInfo();
       setIsSync(true);
       await handleCloudSync(userInfo);
       ConfigService.setItem("isFinshReading", "no");
@@ -193,10 +229,10 @@ const Header = (props: HeaderProps) => {
   };
 
   const handleFinishUpgrade = () => {
-    props.handleFetchBooks();
+    handleFetchBooks();
     setTimeout(() => {
-      if (props.mode === "home") {
-        props.history.push("/manager/home");
+      if (mode === "home") {
+        navigate("/manager/home");
       }
     }, 2000);
   };
@@ -206,7 +242,7 @@ const Header = (props: HeaderProps) => {
       return;
     }
 
-    toast.loading(props.t("Start syncing") + " (KOReader)", {
+    toast.loading(t("Start syncing") + " (KOReader)", {
       id: "koreader-sync",
       position: "bottom-center",
     });
@@ -219,15 +255,15 @@ const Header = (props: HeaderProps) => {
       const summary =
         await koReaderUtil.syncKOReaderProgress(getBookPartialMd5);
       if (summary.pulledBooks > 0 || summary.pushedBooks > 0) {
-        props.handleFetchBooks();
+        handleFetchBooks();
       }
-      toast.success(props.t("Synchronisation successful") + " (KOReader)", {
+      toast.success(t("Synchronisation successful") + " (KOReader)", {
         id: "koreader-sync",
       });
     } catch (error) {
       console.error(error);
       toast.error(
-        props.t("Sync failed") +
+        t("Sync failed") +
           " (KOReader): " +
           (error instanceof Error ? error.message : String(error)),
         {
@@ -241,23 +277,23 @@ const Header = (props: HeaderProps) => {
   const beforeSync = async (userInfo: any) => {
     if (!ConfigService.getItem("defaultSyncOption")) {
       toast.error(
-        props.t("Please add data source in the setting-Sync and backup first")
+        t("Please add data source in the setting-Sync and backup first")
       );
-      props.handleSetting(true);
-      props.handleSettingMode("sync");
+      handleSetting(true);
+      handleSettingMode("sync");
       return false;
     }
     if (
       ConfigService.getReaderConfig("isEnableKoodoSync") === "yes" &&
       userInfo &&
       userInfo.default_sync_option &&
-      userInfo.default_sync_option !== props.defaultSyncOption
+      userInfo.default_sync_option !== defaultSyncOption
     ) {
       toast.error(
-        props.t(
+        t(
           "The default sync options in the local and cloud are inconsistent, please set the local default sync option to "
         ) +
-          props.t(
+          t(
             driveList.find(
               (item) => item.value === userInfo.default_sync_option
             )?.label || ""
@@ -272,14 +308,14 @@ const Header = (props: HeaderProps) => {
       ConfigService.getItem("defaultSyncOption") || ""
     );
     if (Object.keys(config).length === 0) {
-      toast.error(props.t("Cannot get sync config"));
+      toast.error(t("Cannot get sync config"));
       return false;
     }
     await checkMissingBook();
     let checkResult = await checkBrokenDatabase();
     if (checkResult) {
       toast.error(
-        props.t(
+        t(
           "Broken data detected, please click the setting button to reset the sync records"
         )
       );
@@ -288,9 +324,9 @@ const Header = (props: HeaderProps) => {
     if (ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes") {
       if (ConfigService.getReaderConfig("hideSyncProgress") !== "yes") {
         toast.loading(
-          props.t("Start syncing") +
+          t("Start syncing") +
             " (" +
-            props.t(
+            t(
               driveList.find(
                 (item) =>
                   item.value === ConfigService.getItem("defaultSyncOption")
@@ -351,7 +387,7 @@ const Header = (props: HeaderProps) => {
     } catch (error) {
       console.error(error);
       toast.error(
-        props.t("Sync failed") +
+        t("Sync failed") +
           ": " +
           (error instanceof Error ? error.message : String(error))
       );
@@ -370,14 +406,14 @@ const Header = (props: HeaderProps) => {
 
   const handleSuccess = async () => {
     if (ConfigService.getItem("isFinshReading") !== "yes" || !isElectron) {
-      props.handleFetchBooks();
+      handleFetchBooks();
     }
 
-    props.handleFetchBookmarks();
-    props.handleFetchNotes();
+    handleFetchBookmarks();
+    handleFetchNotes();
 
     if (ConfigService.getReaderConfig("hideSyncProgress") !== "yes") {
-      toast.success(props.t("Synchronisation successful"), {
+      toast.success(t("Synchronisation successful"), {
         id: "syncing",
       });
     }
@@ -388,7 +424,7 @@ const Header = (props: HeaderProps) => {
     ) {
       ConfigService.setReaderConfig("hasShowAliyunWarning", "yes");
       toast.success(
-        props.t(
+        t(
           "We have bypassed the synchronization of book cover for Aliyun Drive, covers will be downloaded automatically when you open the book next time."
         ),
         {
@@ -401,8 +437,8 @@ const Header = (props: HeaderProps) => {
     }
     //when book is empty, need to refresh the book list
     setTimeout(async () => {
-      if (props.mode === "home") {
-        props.history.push("/manager/home");
+      if (mode === "home") {
+        navigate("/manager/home");
         if (
           ConfigService.getReaderConfig("isFirstSync") !== "no" &&
           ConfigService.getReaderConfig("isEnableKoodoSync") !== "yes"
@@ -420,19 +456,19 @@ const Header = (props: HeaderProps) => {
             return;
           }
           if (
-            props.userInfo &&
-            props.userInfo.time_created &&
-            props.userInfo.time_created < 1769875200
+            userInfo &&
+            userInfo.time_created &&
+            userInfo.time_created < 1769875200
           ) {
             return;
           }
           let result = await vexComfirmAsync(
-            `<h3>${props.t("Enable Koodo Sync")}</h3><p>${
-              props.t(
+            `<h3>${t("Enable Koodo Sync")}</h3><p>${
+              t(
                 "To enjoy a faster and seamless synchronization experience."
               ) +
               " " +
-              props.t(
+              t(
                 "Your reading progress, notes, highlights, bookmarks, and other data will be stored and synced through our cloud service. Your books and covers will still be synced by your added data sources. All your data will be encrypted and stored securely in our cloud. You can disable this feature anytime in the settings."
               )
             }</p>`
@@ -440,15 +476,15 @@ const Header = (props: HeaderProps) => {
           if (result) {
             ConfigService.setReaderConfig("isEnableKoodoSync", "yes");
             let encryptedToken = await TokenService.getToken(
-              props.defaultSyncOption + "_token"
+              defaultSyncOption + "_token"
             );
             await updateUserConfig({
               is_enable_koodo_sync: "yes",
-              default_sync_option: props.defaultSyncOption,
+              default_sync_option: defaultSyncOption,
               default_sync_token: encryptedToken || "",
             });
-            let userInfo = await props.handleFetchUserInfo();
-            toast.success(props.t("Setup successful"));
+            let userInfo = await handleFetchUserInfo();
+            toast.success(t("Setup successful"));
             handleCloudSync(userInfo);
           }
         }
@@ -477,7 +513,7 @@ const Header = (props: HeaderProps) => {
       let stats = await getTaskStats();
       if (stats.hasFailedTasks) {
         toast.error(
-          props.t(
+          t(
             "Tasks failed after multiple retries, please check the network connection or reauthorize the data source in the settings"
           ),
           {
@@ -488,7 +524,7 @@ const Header = (props: HeaderProps) => {
         return;
       }
       if (ConfigService.getReaderConfig("hideSyncProgress") !== "yes") {
-        toast.loading(props.t("Almost finished"), {
+        toast.loading(t("Almost finished"), {
           id: "syncing",
           position: "bottom-center",
         });
@@ -499,7 +535,7 @@ const Header = (props: HeaderProps) => {
       clearInterval(timerRef.current);
       setIsSync(false);
       toast.error(
-        props.t("Sync failed") +
+        t("Sync failed") +
           ": " +
           (error instanceof Error ? error.message : String(error))
       );
@@ -523,9 +559,9 @@ const Header = (props: HeaderProps) => {
           console.error("Failed to generate snapshot:", error);
         }
       }
-      props.handleFetchAuthed();
-      props.handleFetchDefaultSyncOption();
-      props.handleFetchDataSourceList();
+      handleFetchAuthed();
+      handleFetchDefaultSyncOption();
+      handleFetchDataSourceList();
       if (isElectron) {
         const fs = window.electronAPI.fs;
         const path = window.electronAPI.path;
@@ -610,20 +646,20 @@ const Header = (props: HeaderProps) => {
           !ConfigService.getItem("isUseLocal") &&
           LocalFileManager.isSupported()
         ) {
-          props.handleLocalFileDialog(true);
+          handleLocalFileDialog(true);
         } else if (
           ConfigService.getItem("isUseLocal") === "yes" &&
           !status.directoryName
         ) {
-          props.handleLocalFileDialog(true);
+          handleLocalFileDialog(true);
         } else if (
           ConfigService.getItem("isUseLocal") === "yes" &&
           (status.needsReauthorization || !status.hasAccess)
         ) {
-          props.handleLocalFileDialog(true);
+          handleLocalFileDialog(true);
         }
       }
-      props.handleCloudSyncFunc(handleCloudSyncRef.current);
+      handleCloudSyncFunc(handleCloudSyncRef.current);
       visibilityHandler = async () => {
         if (
           document.visibilityState === "visible" &&
@@ -672,8 +708,8 @@ const Header = (props: HeaderProps) => {
 
   useEffect(() => {
     const wasAuthed = prevIsAuthedRef.current;
-    prevIsAuthedRef.current = props.isAuthed;
-    if (!props.isAuthed || wasAuthed) {
+    prevIsAuthedRef.current = isAuthed;
+    if (!isAuthed || wasAuthed) {
       return;
     }
     const handleAuthed = async () => {
@@ -698,7 +734,7 @@ const Header = (props: HeaderProps) => {
           console.error(error);
         }
       }
-      let userInfo = await props.handleFetchUserInfo();
+      let userInfo = await handleFetchUserInfo();
       if (
         ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
         ConfigService.getItem("defaultSyncOption")
@@ -713,14 +749,14 @@ const Header = (props: HeaderProps) => {
     };
     handleAuthed();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.isAuthed]);
+  }, [isAuthed]);
 
   return (
     <div
       className="header"
-      style={props.isCollapsed ? { marginLeft: "40px" } : {}}
+      style={isCollapsed ? { marginLeft: "40px" } : {}}
     >
-      {props.isAuthed && (
+      {isAuthed && (
         <div
           className="header-chat-widget"
           onClick={async () => {
@@ -761,27 +797,27 @@ const Header = (props: HeaderProps) => {
       )}
       <div
         className="header-search-container"
-        style={props.isCollapsed ? { width: "369px" } : {}}
+        style={isCollapsed ? { width: "369px" } : {}}
       >
         <SearchBox />
       </div>
       <div
         className="setting-icon-parrent"
-        style={props.isCollapsed ? { marginLeft: "430px" } : {}}
+        style={isCollapsed ? { marginLeft: "430px" } : {}}
       >
         <div
           className="setting-icon-container"
           onClick={() => {
-            props.handleSortDisplay(!props.isSortDisplay);
+            handleSortDisplay(!isSortDisplay);
           }}
           onMouseLeave={() => {
-            props.handleSortDisplay(false);
+            handleSortDisplay(false);
           }}
           style={{ top: "18px" }}
         >
           <span
             data-tooltip-id="my-tooltip"
-            data-tooltip-content={props.t("Sort by")}
+            data-tooltip-content={t("Sort by")}
             data-tooltip-place="left"
           >
             <span className="icon-sort-desc header-sort-icon"></span>
@@ -790,17 +826,17 @@ const Header = (props: HeaderProps) => {
         <div
           className="setting-icon-container"
           onClick={() => {
-            props.handleSetting(true);
-            props.handleAbout(false);
+            handleSetting(true);
+            handleAbout(false);
           }}
           onMouseLeave={() => {
-            props.handleAbout(false);
+            handleAbout(false);
           }}
           style={{ marginTop: "2px" }}
         >
           <span
             data-tooltip-id="my-tooltip"
-            data-tooltip-content={props.t("Setting")}
+            data-tooltip-content={t("Setting")}
             data-tooltip-place="left"
           >
             <span
@@ -809,22 +845,22 @@ const Header = (props: HeaderProps) => {
             ></span>
           </span>
         </div>
-        {!props.isAuthed && (
+        {!isAuthed && (
           <div
             className="setting-icon-container"
             onClick={() => {
-              props.handleSetting(true);
-              props.handleSettingMode("account");
-              props.handleAbout(false);
+              handleSetting(true);
+              handleSettingMode("account");
+              handleAbout(false);
             }}
             onMouseLeave={() => {
-              props.handleAbout(false);
+              handleAbout(false);
             }}
             style={{ marginTop: "2px", fontWeight: "bold" }}
           >
             <span
               data-tooltip-id="my-tooltip"
-              data-tooltip-content={props.t("Register / Login")}
+              data-tooltip-content={t("Register / Login")}
               data-tooltip-place="left"
             >
               <span
@@ -837,27 +873,27 @@ const Header = (props: HeaderProps) => {
         <div
           className="setting-icon-container"
           onClick={async () => {
-            if (props.isAuthed) {
+            if (isAuthed) {
               if (!ConfigService.getItem("defaultSyncOption")) {
                 toast(
-                  props.t(
+                  t(
                     "Please add data source in the setting-Sync and backup first"
                   )
                 );
-                props.handleSetting(true);
-                props.handleSettingMode("sync");
+                handleSetting(true);
+                handleSettingMode("sync");
                 return;
               }
               setIsSync(true);
-              let userInfo = await props.handleFetchUserInfo();
+              let userInfo = await handleFetchUserInfo();
               await handleCloudSync(userInfo);
             } else {
               if (
                 ConfigService.getReaderConfig("isEnableKoReaderSync") !== "yes"
               ) {
-                toast(props.t("Please upgrade to Pro to use this feature"));
-                props.handleSetting(true);
-                props.handleSettingMode("account");
+                toast(t("Please upgrade to Pro to use this feature"));
+                handleSetting(true);
+                handleSettingMode("account");
                 setIsSync(false);
               } else {
                 setIsSync(true);
@@ -870,7 +906,7 @@ const Header = (props: HeaderProps) => {
         >
           <span
             data-tooltip-id="my-tooltip"
-            data-tooltip-content={props.t("Sync")}
+            data-tooltip-content={t("Sync")}
             data-tooltip-place="left"
           >
             <span
@@ -883,7 +919,7 @@ const Header = (props: HeaderProps) => {
         </div>
       </div>
 
-      {!props.isAuthed &&
+      {!isAuthed &&
       !state.isHidePro &&
       window.location.hostname !== "web.koodoreader.cn" ? (
         <div className="header-report-container">
@@ -894,11 +930,11 @@ const Header = (props: HeaderProps) => {
                 window.location.hostname !== "web.koodoreader.com" &&
                 !isElectron
               ) {
-                props.handleSetting(true);
-                props.handleSettingMode("account");
+                handleSetting(true);
+                handleSettingMode("account");
                 return;
               }
-              props.history.push("/login");
+              navigate("/login");
             }}
           >
             <Trans>Pro version</Trans>
@@ -914,20 +950,20 @@ const Header = (props: HeaderProps) => {
           ></span>
         </div>
       ) : null}
-      {props.isAuthed &&
-      props.userInfo &&
-      ((props.userInfo.type === "pro" &&
-        props.userInfo.valid_until <
+      {isAuthed &&
+      userInfo &&
+      ((userInfo.type === "pro" &&
+        userInfo.valid_until <
           new Date().getTime() / 1000 + 30 * 24 * 3600) ||
-        (props.userInfo.type === "trial" &&
-          props.userInfo.valid_until <
+        (userInfo.type === "trial" &&
+          userInfo.valid_until <
             new Date().getTime() / 1000 + 3 * 24 * 3600)) ? (
         <div className="header-report-container">
           <span
             data-tooltip-id="my-tooltip"
             data-tooltip-content={i18n.t("Your trial will expire in", {
               ttl: Math.ceil(
-                (props.userInfo.valid_until - new Date().getTime() / 1000) /
+                (userInfo.valid_until - new Date().getTime() / 1000) /
                   (24 * 3600)
               ),
             })}
@@ -948,7 +984,7 @@ const Header = (props: HeaderProps) => {
                       deviceUuid
                   );
                 } else if (response.code === 401) {
-                  props.handleFetchAuthed();
+                  handleFetchAuthed();
                 }
               }}
             >
@@ -957,17 +993,17 @@ const Header = (props: HeaderProps) => {
           </span>
         </div>
       ) : null}
-      {props.isAuthed &&
-      props.userInfo &&
-      props.userInfo.type === "trial" &&
-      props.userInfo.valid_until >
+      {isAuthed &&
+      userInfo &&
+      userInfo.type === "trial" &&
+      userInfo.valid_until >
         new Date().getTime() / 1000 + 3 * 24 * 3600 ? (
         <div className="header-report-container" style={{ right: "200px" }}>
           <span
             data-tooltip-id="my-tooltip"
             data-tooltip-content={i18n.t("Your trial will expire in", {
               ttl: Math.ceil(
-                (props.userInfo.valid_until - new Date().getTime() / 1000) /
+                (userInfo.valid_until - new Date().getTime() / 1000) /
                   (24 * 3600)
               ),
             })}
@@ -988,7 +1024,7 @@ const Header = (props: HeaderProps) => {
                       deviceUuid
                   );
                 } else if (response.code === 401) {
-                  props.handleFetchAuthed();
+                  handleFetchAuthed();
                 }
               }}
             >

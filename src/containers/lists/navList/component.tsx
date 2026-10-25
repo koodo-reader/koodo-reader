@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./navList.css";
 import { Trans } from "react-i18next";
@@ -13,6 +14,7 @@ import ConfigUtil from "../../../utils/file/configUtil";
 import Book from "../../../models/Book";
 import Bookmark from "../../../models/Bookmark";
 import Note from "../../../models/Note";
+import { useAppStore } from "../../../store/useAppStore";
 
 interface NavPrevProps {
   currentTab: string;
@@ -23,6 +25,14 @@ interface NavPrevProps {
 }
 
 const NavList = (props: NavListProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const highlights = useAppStore((s) => s.reader.highlights);
+  const bookmarks = useAppStore((s) => s.reader.bookmarks);
+  const notes = useAppStore((s) => s.reader.notes);
+  const handleShowBookmark = useAppStore((s) => s.handleShowBookmark);
+  const handleJumpPosition = useAppStore((s) => s.handleJumpPosition);
+  const { t } = useTranslation();
   const [state, setState] = useState<NavListState>(() => {
     let sortCode = 1;
     let orderCode = 2;
@@ -59,8 +69,6 @@ const NavList = (props: NavListProps) => {
     highlightUtilRef.current = new HighlightUtil(ConfigService);
   }
   const highlightUtil = highlightUtilRef.current;
-  const propsRef = useRef(props);
-  propsRef.current = props;
   const prevPropsRef = useRef<NavPrevProps | null>(null);
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -71,7 +79,7 @@ const NavList = (props: NavListProps) => {
       setState((prev) => ({ ...prev, searchResults: [] }));
       return;
     }
-    const { currentTab, currentBook } = propsRef.current;
+    const currentTab = props.currentTab;
     let results: any[] = [];
     if (currentTab === "bookmarks") {
       results = await ConfigUtil.searchBookmarksByKeyword(
@@ -137,18 +145,18 @@ const NavList = (props: NavListProps) => {
 
   const getSearchPlaceholder = () => {
     if (props.currentTab === "bookmarks") {
-      return props.t("Search bookmarks...");
+      return t("Search bookmarks...");
     }
     if (props.currentTab === "notes") {
-      return props.t("Search notes...");
+      return t("Search notes...");
     }
-    return props.t("Search highlights...");
+    return t("Search highlights...");
   };
 
   const handleJump = async (cfi: string) => {
     //bookmark redirect
     if (!cfi) {
-      toast(props.t("Wrong bookmark"));
+      toast(t("Wrong bookmark"));
       return;
     }
     let bookLocation;
@@ -160,12 +168,12 @@ const NavList = (props: NavListProps) => {
       };
     }
     const prevPosition = ConfigService.getObjectConfig(
-      props.currentBook.key,
+      currentBook.key,
       "recordLocation",
       {}
     );
-    props.handleJumpPosition(prevPosition);
-    await props.htmlBook.rendition.goToPosition(
+    handleJumpPosition(prevPosition);
+    await htmlBook.rendition.goToPosition(
       JSON.stringify({
         text: bookLocation.text,
         chapterTitle: bookLocation.chapterTitle,
@@ -232,7 +240,7 @@ const NavList = (props: NavListProps) => {
   };
 
   const handleDisplayBookmark = async () => {
-    propsRef.current.handleShowBookmark(false);
+    handleShowBookmark(false);
     let bookLocation: {
       text: string;
       count: string;
@@ -242,33 +250,33 @@ const NavList = (props: NavListProps) => {
       percentage: string;
       cfi: string;
     } = ConfigService.getObjectConfig(
-      propsRef.current.currentBook.key,
+      currentBook.key,
       "recordLocation",
       {}
     );
-    let bookmarks = await DatabaseService.getRecordsByBookKey(
-      propsRef.current.currentBook.key,
+    let currentBookmarks = await DatabaseService.getRecordsByBookKey(
+      currentBook.key,
       "bookmarks"
     );
-    for (let i = 0; i < bookmarks.length; i++) {
-      if (bookmarks[i].cfi === JSON.stringify(bookLocation)) {
-        propsRef.current.handleShowBookmark(true);
+    for (let i = 0; i < currentBookmarks.length; i++) {
+      if (currentBookmarks[i].cfi === JSON.stringify(bookLocation)) {
+        handleShowBookmark(true);
       }
     }
   };
 
   useEffect(() => {
-    const rendition = props.htmlBook.rendition;
+    const rendition = htmlBook.rendition;
     const onRendered = () => {
       handleDisplayBookmark();
     };
     rendition.on("rendered", onRendered);
     handleCurrentDataUpdate(
       props.currentTab,
-      props.currentBook,
-      props.bookmarks,
-      props.notes,
-      props.highlights
+      currentBook,
+      bookmarks,
+      notes,
+      highlights
     );
     return () => {
       rendition.off?.("rendered", onRendered);
@@ -280,17 +288,17 @@ const NavList = (props: NavListProps) => {
     const prevProps = prevPropsRef.current;
     prevPropsRef.current = {
       currentTab: props.currentTab,
-      currentBookKey: props.currentBook.key,
-      bookmarks: props.bookmarks,
-      notes: props.notes,
-      highlights: props.highlights,
+      currentBookKey: currentBook.key,
+      bookmarks,
+      notes,
+      highlights,
     };
 
     if (!prevProps) return;
 
     const tabOrBookChanged =
       props.currentTab !== prevProps.currentTab ||
-      props.currentBook.key !== prevProps.currentBookKey;
+      currentBook.key !== prevProps.currentBookKey;
 
     if (tabOrBookChanged) {
       setState((prev) => ({
@@ -304,27 +312,21 @@ const NavList = (props: NavListProps) => {
 
     if (
       tabOrBookChanged ||
-      props.bookmarks !== prevProps.bookmarks ||
-      props.notes !== prevProps.notes ||
-      props.highlights !== prevProps.highlights
+      bookmarks !== prevProps.bookmarks ||
+      notes !== prevProps.notes ||
+      highlights !== prevProps.highlights
     ) {
       handleCurrentDataUpdate(
         props.currentTab,
-        props.currentBook,
-        props.bookmarks,
-        props.notes,
-        props.highlights,
+        currentBook,
+        bookmarks,
+        notes,
+        highlights,
         tabOrBookChanged ? "" : undefined
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    props.currentTab,
-    props.currentBook,
-    props.bookmarks,
-    props.notes,
-    props.highlights,
-  ]);
+  }, [props.currentTab, currentBook, bookmarks, notes, highlights]);
 
   useEffect(() => {
     if (state.isSearchOpen) {

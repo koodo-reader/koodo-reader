@@ -5,8 +5,14 @@ import { ProgressPanelProps } from "./interface";
 import _ from "underscore";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook, scrollContents } from "../../../utils/common";
+import { useAppStore } from "../../../store/useAppStore";
 
 const ProgressPanel = (props: ProgressPanelProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const percentage = useAppStore((s) => s.progressPanel.percentage);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const handleFetchPercentage = useAppStore((s) => s.handleFetchPercentage);
+  const handleCurrentChapter = useAppStore((s) => s.handleCurrentChapter);
   const [state, setState] = useState<Record<string, any>>({
     currentPage: 0,
     totalPage: 0,
@@ -17,13 +23,9 @@ const ProgressPanel = (props: ProgressPanelProps) => {
   });
 
   const handleLocation = () => {
-    let position = props.htmlBook.rendition.getPosition();
-    ConfigService.setObjectConfig(
-      props.currentBook.key,
-      position,
-      "recordLocation"
-    );
-    props.handleCurrentChapter(position.chapterTitle);
+    let position = htmlBook.rendition.getPosition();
+    ConfigService.setObjectConfig(currentBook.key, position, "recordLocation");
+    handleCurrentChapter(position.chapterTitle);
     setTimeout(() => {
       scrollContents(position.chapterTitle, position.chapterHref);
     }, 1000);
@@ -36,7 +38,7 @@ const ProgressPanel = (props: ProgressPanelProps) => {
     if (!href) {
       return;
     }
-    let chapterIndex = _.findIndex(props.htmlBook.flattenChapters, {
+    let chapterIndex = _.findIndex(htmlBook.flattenChapters, {
       href,
     });
     setState((prev) => ({ ...prev, targetChapterIndex: chapterIndex + 1 }));
@@ -55,8 +57,8 @@ const ProgressPanel = (props: ProgressPanelProps) => {
   };
 
   useEffect(() => {
-    if (!props.htmlBook) return;
-    const rendition = props.htmlBook.rendition;
+    if (!htmlBook) return;
+    const rendition = htmlBook.rendition;
     (async () => {
       await handlePageNum(rendition);
     })();
@@ -64,7 +66,7 @@ const ProgressPanel = (props: ProgressPanelProps) => {
       handleLocation();
       await handlePageNum(rendition);
       handleCurrentChapterIndex(rendition);
-      props.handleFetchPercentage(props.currentBook);
+      handleFetchPercentage(currentBook);
     };
     const onRendered = async () => {
       await handlePageNum(rendition);
@@ -80,57 +82,59 @@ const ProgressPanel = (props: ProgressPanelProps) => {
       chapterHref: string;
       percentage: string;
     } = ConfigService.getObjectConfig(
-      props.currentBook.key,
+      currentBook.key,
       "recordLocation",
       {}
     );
     if (bookLocation.percentage) {
-      let percentage = (parseFloat(bookLocation.percentage) * 100).toFixed(2);
+      let nextPercentage = (parseFloat(bookLocation.percentage) * 100).toFixed(
+        2
+      );
       setState((prev) => ({
         ...prev,
-        currentPercentage: parseFloat(percentage),
+        currentPercentage: parseFloat(nextPercentage),
       }));
     }
     return () => {
       rendition.off?.("page-changed", onPageChanged);
       rendition.off?.("rendered", onRendered);
     };
-  }, [props.htmlBook]);
+  }, [htmlBook]);
 
   useEffect(() => {
-    if (props.htmlBook) {
-      let percentage = (props.percentage * 100).toFixed(2);
+    if (htmlBook) {
+      let nextPercentage = (percentage * 100).toFixed(2);
       setState((prev) => ({
         ...prev,
-        currentPercentage: parseFloat(percentage),
+        currentPercentage: parseFloat(nextPercentage),
       }));
     }
-  }, [props.percentage]);
+  }, [percentage]);
 
   const onProgressChange = async (event: any) => {
     const percentage = event.target.value / 100;
     setState((prev) => ({ ...prev, currentPercentage: event.target.value }));
-    await props.htmlBook.rendition.goToPercentage(percentage);
+    await htmlBook.rendition.goToPercentage(percentage);
   };
   const nextChapter = async () => {
-    if (props.htmlBook.flattenChapters.length > 0) {
-      await props.htmlBook.rendition.nextChapter();
+    if (htmlBook.flattenChapters.length > 0) {
+      await htmlBook.rendition.nextChapter();
     }
   };
   const prevChapter = async () => {
-    if (props.htmlBook.flattenChapters.length > 0) {
-      await props.htmlBook.rendition.prevChapter();
+    if (htmlBook.flattenChapters.length > 0) {
+      await htmlBook.rendition.prevChapter();
     }
   };
   const handleJumpChapter = async (event: any) => {
     let targetChapterIndex = parseInt(event.target.value.trim()) - 1;
-    await props.htmlBook.rendition.goToChapterIndex(targetChapterIndex);
+    await htmlBook.rendition.goToChapterIndex(targetChapterIndex);
   };
 
-  if (!props.htmlBook) {
+  if (!htmlBook) {
     return <div className="progress-panel">Loading</div>;
   }
-  let readerMode = isPaginatedBook(props.currentBook)
+  let readerMode = isPaginatedBook(currentBook)
     ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
     : ConfigService.getReaderConfig("readerMode") || "double";
   return (
@@ -153,7 +157,7 @@ const ProgressPanel = (props: ProgressPanelProps) => {
               ? state.targetPage
               : state.currentPage *
                 (readerMode === "double" &&
-                props.currentBook.format !== "PDF"
+                currentBook.format !== "PDF"
                   ? 2
                   : 1)
           }
@@ -166,7 +170,7 @@ const ProgressPanel = (props: ProgressPanelProps) => {
           }}
           onBlur={(event) => {
             if (event.target.value.trim()) {
-              props.htmlBook.rendition.goToPage(
+              htmlBook.rendition.goToPage(
                 parseInt(event.target.value.trim())
               );
             } else {
@@ -213,7 +217,7 @@ const ProgressPanel = (props: ProgressPanelProps) => {
             }
           }}
         />
-        <span>/ {props.htmlBook.flattenChapters.length}</span>
+        <span>/ {htmlBook.flattenChapters.length}</span>
       </p>
       <div
         style={{

@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
@@ -39,8 +41,12 @@ import {
   wordSyncSettingList,
 } from "../../../constants/settingList";
 import TokenService from "../../../utils/storage/tokenService";
+import { useAppStore } from "../../../store/useAppStore";
 declare var window: any;
 const DataSetting = (props: SettingInfoProps) => {
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [state, setStateObj] = useState<SettingInfoState>(() => ({
     storageLocation: getStorageLocation() || "",
     snapshotList: [],
@@ -136,18 +142,18 @@ const DataSetting = (props: SettingInfoProps) => {
   const handleClearTTSCache = async () => {
     try {
       await window.electronAPI.invoke("clear-tts", {});
-      toast.success(props.t("Clear successful"));
+      toast.success(t("Clear successful"));
     } catch (error) {
-      toast.error(props.t("Clear failed"));
+      toast.error(t("Clear failed"));
     }
     loadCacheSizes();
   };
   const handleClearTempCache = async () => {
     try {
       await window.electronAPI.invoke("clear-temp-cache", {});
-      toast.success(props.t("Clear successful"));
+      toast.success(t("Clear successful"));
     } catch (error) {
-      toast.error(props.t("Clear failed"));
+      toast.error(t("Clear failed"));
     }
     loadCacheSizes();
   };
@@ -155,7 +161,7 @@ const DataSetting = (props: SettingInfoProps) => {
     const currentValue = stateRef.current[stateName];
     setState({ [stateName]: !currentValue } as any);
     ConfigService.setReaderConfig(stateName, currentValue ? "no" : "yes");
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
   const handleKOReaderSyncSetting = async () => {
@@ -163,7 +169,7 @@ const DataSetting = (props: SettingInfoProps) => {
     if (currentlyEnabled) {
       setState({ isEnableKoReaderSync: false });
       ConfigService.setReaderConfig("isEnableKoReaderSync", "no");
-      toast.success(props.t("Change successful"));
+      toast.success(t("Change successful"));
       return;
     }
 
@@ -180,9 +186,9 @@ const DataSetting = (props: SettingInfoProps) => {
         {}
       ) || {};
     const labels = {
-      serverUrl: props.t("Server address"),
-      username: props.t("Username"),
-      password: props.t("Password"),
+      serverUrl: t("Server address"),
+      username: t("Username"),
+      password: t("Password"),
     };
     const result = await vexOpenAsync(
       {
@@ -193,15 +199,15 @@ const DataSetting = (props: SettingInfoProps) => {
         },
         username: {
           value: savedConfig.username || "",
-          placeholder: props.t("Enter username"),
+          placeholder: t("Enter username"),
           type: "text",
         },
         password: {
           value: "",
           placeholder:
             savedConfig.passwordHash && savedConfig.username
-              ? props.t("Leave blank to keep the current password")
-              : props.t("Enter password"),
+              ? t("Leave blank to keep the current password")
+              : t("Enter password"),
           type: "password",
         },
       },
@@ -215,16 +221,16 @@ const DataSetting = (props: SettingInfoProps) => {
     }
 
     if (!result.serverUrl || !result.username) {
-      toast.error(props.t("Please fill in all fields"));
+      toast.error(t("Please fill in all fields"));
       return;
     }
     if (!result.password && !savedConfig.passwordHash) {
-      toast.error(props.t("Please fill in all fields"));
+      toast.error(t("Please fill in all fields"));
       return;
     }
 
     try {
-      toast.loading(props.t("Validating server info..."), {
+      toast.loading(t("Validating server info..."), {
         id: "ko-reader-sync",
       });
       const koReaderUtil = new KOReaderUtil(
@@ -249,14 +255,14 @@ const DataSetting = (props: SettingInfoProps) => {
       );
       setState({ isEnableKoReaderSync: true });
       ConfigService.setReaderConfig("isEnableKoReaderSync", "yes");
-      toast.success(props.t("Validation successful"), {
+      toast.success(t("Validation successful"), {
         id: "ko-reader-sync",
       });
     } catch (error) {
       toast.error(
         error instanceof Error
           ? error.message
-          : props.t("Validation failed"),
+          : t("Validation failed"),
         {
           id: "ko-reader-sync",
         }
@@ -294,7 +300,7 @@ const DataSetting = (props: SettingInfoProps) => {
         );
         setState({ [item.propName]: true } as any);
         ConfigService.setReaderConfig(item.propName, "yes");
-        toast.success(props.t("Change successful"));
+        toast.success(t("Change successful"));
         return;
       }
 
@@ -317,8 +323,8 @@ const DataSetting = (props: SettingInfoProps) => {
         placeholder: string;
       }>) {
         defaultValues[field.key] =
-          savedValues[field.key] ?? "[" + props.t(field.placeholder) + "]";
-        labelsMap[field.key] = props.t(field.label);
+          savedValues[field.key] ?? "[" + t(field.placeholder) + "]";
+        labelsMap[field.key] = t(field.label);
       }
 
       const result = await vexOpenAsync(
@@ -338,7 +344,7 @@ const DataSetting = (props: SettingInfoProps) => {
         (v) => v && String(v).trim().length > 0
       );
       if (!allFilled) {
-        toast.error(props.t("Please fill in all fields"));
+        toast.error(t("Please fill in all fields"));
         return;
       }
 
@@ -352,12 +358,12 @@ const DataSetting = (props: SettingInfoProps) => {
       // Enable the setting
       setState({ [item.propName]: true } as any);
       ConfigService.setReaderConfig(item.propName, "yes");
-      toast.success(props.t("Change successful"));
+      toast.success(t("Change successful"));
     } else {
       // Disabling: just toggle off
       setState({ [item.propName]: false } as any);
       ConfigService.setReaderConfig(item.propName, "no");
-      toast.success(props.t("Change successful"));
+      toast.success(t("Change successful"));
     }
   };
 
@@ -455,7 +461,7 @@ const DataSetting = (props: SettingInfoProps) => {
     }
     let isSuccess = await changePath(newPath);
     if (!isSuccess) {
-      toast.error(props.t("Change failed"));
+      toast.error(t("Change failed"));
       return;
     }
     ConfigService.setItem("storageLocation", newPath);
@@ -465,8 +471,8 @@ const DataSetting = (props: SettingInfoProps) => {
       service: targetDrive,
     });
 
-    toast.success(props.t("Change successful"));
-    props.handleFetchBooks();
+    toast.success(t("Change successful"));
+    handleFetchBooks();
   };
   const handleSwitchLibrary = async () => {
     if (isElectron) {
@@ -477,7 +483,7 @@ const DataSetting = (props: SettingInfoProps) => {
       }
       let isSuccess = await changeLibrary(newPath);
       if (!isSuccess) {
-        toast.error(props.t("Switch failed"));
+        toast.error(t("Switch failed"));
         return;
       }
       ConfigService.setItem("storageLocation", newPath);
@@ -499,11 +505,11 @@ const DataSetting = (props: SettingInfoProps) => {
       await ipcRenderer.invoke("cloud-close", {
         service: targetDrive,
       });
-      toast.success(props.t("Switch successful"));
-      props.handleFetchBooks();
+      toast.success(t("Switch successful"));
+      handleFetchBooks();
       await generateSyncRecord();
       setTimeout(() => {
-        props.history.push("/manager/home");
+        navigate("/manager/home");
       }, 2000);
     } else {
       try {
@@ -516,14 +522,14 @@ const DataSetting = (props: SettingInfoProps) => {
             storageLocation: directoryHandle.name,
           });
           toast.success(
-            props.t("Local folder access granted successfully")
+            t("Local folder access granted successfully")
           );
-          props.handleFetchBooks();
+          handleFetchBooks();
           setTimeout(() => {
-            props.history.push("/manager/home");
+            navigate("/manager/home");
           }, 2000);
         } else {
-          toast.success(props.t("Failed to get folder access permission"));
+          toast.success(t("Failed to get folder access permission"));
         }
       } catch (error) {
         toast.error(
@@ -531,7 +537,7 @@ const DataSetting = (props: SettingInfoProps) => {
             (error instanceof Error ? error.message : String(error))
         );
         console.error("Error selecting folder:", error);
-        toast.success(props.t("Error occurred while selecting folder"));
+        toast.success(t("Error occurred while selecting folder"));
       }
     }
   };
@@ -541,7 +547,7 @@ const DataSetting = (props: SettingInfoProps) => {
       return;
     }
     let confirm = await vexComfirmAsync(
-      props.t(
+      t(
         "Restoring from a snapshot will overwrite your current data. Are you sure you want to continue?"
       )
     );
@@ -550,12 +556,12 @@ const DataSetting = (props: SettingInfoProps) => {
     }
     let result = await restoreFromSnapshot(targetFile);
     if (result) {
-      toast.success(props.t("Restore successful"), {
+      toast.success(t("Restore successful"), {
         id: "restore-snapshot",
       });
-      props.handleFetchBooks();
+      handleFetchBooks();
       setTimeout(() => {
-        props.history.push("/manager/home");
+        navigate("/manager/home");
       }, 2000);
     }
     event.target.value = "";
@@ -570,12 +576,12 @@ const DataSetting = (props: SettingInfoProps) => {
       skipped: number;
     };
     toast.success(
-      props.t(
+      t(
         "Imported {{imported}} records, skipped {{skipped}} existing records",
         { imported, skipped }
       )
     );
-    props.handleFetchBooks();
+    handleFetchBooks();
   };
   const render = () => {
     return (
@@ -676,7 +682,7 @@ const DataSetting = (props: SettingInfoProps) => {
                 onChange={handleRestoreSnapshot}
               >
                 <option value={""} className="lang-setting-option">
-                  {props.t("Please select")}
+                  {t("Please select")}
                 </option>
                 {stateRef.current.snapshotList
                   .map((item) => {
@@ -714,13 +720,13 @@ const DataSetting = (props: SettingInfoProps) => {
               if (books.length > 0) {
                 const result = await exportBooks(books);
                 if (result === "success") {
-                  toast.success(props.t("Export successful"), { id: "exporting" });
+                  toast.success(t("Export successful"), { id: "exporting" });
                 } else if (result === "failed") {
                   toast.dismiss("exporting");
-                  toast.error(props.t("Failed to export"), { id: "exporting" });
+                  toast.error(t("Failed to export"), { id: "exporting" });
                 }
               } else {
-                toast(props.t("Nothing to export"));
+                toast(t("Nothing to export"));
               }
             }}
           >
@@ -754,17 +760,17 @@ const DataSetting = (props: SettingInfoProps) => {
               if (notes.length > 0) {
                 const result = await exportNotes(notes, books, fmt);
                 if (result === "success") {
-                  toast.success(props.t("Export successful"), { id: "exporting" });
+                  toast.success(t("Export successful"), { id: "exporting" });
                 } else if (result === "failed") {
-                  toast.error(props.t("Failed to export"), { id: "exporting" });
+                  toast.error(t("Failed to export"), { id: "exporting" });
                 }
               } else {
-                toast(props.t("Nothing to export"));
+                toast(t("Nothing to export"));
               }
             }}
           >
             <option value="" className="lang-setting-option">
-              {props.t("Select format")}
+              {t("Select format")}
             </option>
             <option value="csv" className="lang-setting-option">
               CSV
@@ -808,17 +814,17 @@ const DataSetting = (props: SettingInfoProps) => {
               if (notes.length > 0) {
                 const result = await exportHighlights(notes, books, fmt);
                 if (result === "success") {
-                  toast.success(props.t("Export successful"), { id: "exporting" });
+                  toast.success(t("Export successful"), { id: "exporting" });
                 } else if (result === "failed") {
-                  toast.error(props.t("Failed to export"), { id: "exporting" });
+                  toast.error(t("Failed to export"), { id: "exporting" });
                 }
               } else {
-                toast(props.t("Nothing to export"));
+                toast(t("Nothing to export"));
               }
             }}
           >
             <option value="" className="lang-setting-option">
-              {props.t("Select format")}
+              {t("Select format")}
             </option>
             <option value="csv" className="lang-setting-option">
               CSV
@@ -854,17 +860,17 @@ const DataSetting = (props: SettingInfoProps) => {
               if (dictHistory.length > 0) {
                 const result = await exportDictionaryHistory(dictHistory, books, fmt);
                 if (result === "success") {
-                  toast.success(props.t("Export successful"), { id: "exporting" });
+                  toast.success(t("Export successful"), { id: "exporting" });
                 } else if (result === "failed") {
-                  toast.error(props.t("Failed to export"), { id: "exporting" });
+                  toast.error(t("Failed to export"), { id: "exporting" });
                 }
               } else {
-                toast(props.t("Nothing to export"));
+                toast(t("Nothing to export"));
               }
             }}
           >
             <option value="" className="lang-setting-option">
-              {props.t("Select format")}
+              {t("Select format")}
             </option>
             <option value="csv" className="lang-setting-option">
               CSV
@@ -896,19 +902,19 @@ const DataSetting = (props: SettingInfoProps) => {
             className="change-location-button"
             onClick={async () => {
               let answer = await vexPromptAsync(
-                props.t("Please type 'CLEAR' to confirm"),
+                t("Please type 'CLEAR' to confirm"),
                 "",
                 ""
               );
               window.vex.closeAll(); // 关闭对话框
               if (answer === "CLEAR") {
                 await clearAllData();
-                toast.success(props.t("Clear successful"));
+                toast.success(t("Clear successful"));
                 setTimeout(() => {
                   reloadManager();
                 }, 300);
               } else if (answer) {
-                toast.error(props.t("Please type 'CLEAR' to confirm"));
+                toast.error(t("Please type 'CLEAR' to confirm"));
               }
             }}
           >

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
@@ -24,6 +25,7 @@ import {
 } from "../../../utils/reader/launchUtil";
 
 const AppearanceSetting = (props: SettingInfoProps) => {
+  const { t } = useTranslation();
   const highlightUtilRef = useRef<any>(null);
   if (!highlightUtilRef.current) {
     highlightUtilRef.current = new HighlightUtil(ConfigService);
@@ -81,7 +83,7 @@ const AppearanceSetting = (props: SettingInfoProps) => {
   }, []);
 
   const handleRest = (_bool: boolean) => {
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
   const handleSetting = (stateName: string) => {
@@ -363,7 +365,7 @@ const AppearanceSetting = (props: SettingInfoProps) => {
               className="lang-setting-option"
             >
               {item.value === "Built-in font"
-                ? props.t(item.label)
+                ? t(item.label)
                 : item.label}
             </option>
           ))}
@@ -556,7 +558,7 @@ const AppearanceSetting = (props: SettingInfoProps) => {
         <div style={{ margin: "10px 25px" }}>
           <textarea
             className="token-dialog-token-box"
-            placeholder={"/* " + props.t("Enter custom CSS here") + " */"}
+            placeholder={"/* " + t("Enter custom CSS here") + " */"}
             value={state.customSystemCSS}
             onChange={(e) => {
               setState((prevState) => ({

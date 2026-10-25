@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./popupMenu.css";
 import PopupNote from "../popupNote";
@@ -8,6 +9,7 @@ import { getIframeDoc } from "../../../utils/reader/docUtil";
 import PopupAssist from "../popupAssist";
 import { isElectron } from "react-device-detect";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { useAppStore } from "../../../store/useAppStore";
 
 const SNAP_THRESHOLD_PX = 50;
 const RIGHT_SNAP_THRESHOLD_PX = 50;
@@ -72,6 +74,17 @@ function saveDockedToConfig(docked: boolean) {
 }
 
 const PopupBox = (props: PopupBoxProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const storeMenuMode = useAppStore((s) => s.viewArea.menuMode);
+  const isNavLocked = useAppStore((s) => s.reader.isNavLocked);
+  const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
+  const storeIsDockedRight = useAppStore((s) => s.reader.isDockedRight);
+  const renderBookFunc = useAppStore((s) => s.renderBookFunc);
+  const handleOpenMenu = useAppStore((s) => s.handleOpenMenu);
+  const handleMenuMode = useAppStore((s) => s.handleMenuMode);
+  const handleNoteKey = useAppStore((s) => s.handleNoteKey);
+  const handleDockedRight = useAppStore((s) => s.handleDockedRight);
+  const { t } = useTranslation();
   const [state, setState] = useState<PopupBoxStates>(() => {
     const savedSize = getSavedSize();
     const savedPos = getSavedPosition();
@@ -82,7 +95,7 @@ const PopupBox = (props: PopupBoxProps) => {
       popupWidth: savedSize ? savedSize.width : DEFAULT_WIDTH,
       popupHeight: savedSize
         ? savedSize.height
-        : getDefaultHeight(props.menuMode),
+        : getDefaultHeight(storeMenuMode),
       popupLeft: savedPos ? savedPos.left : 50,
       popupBottom: savedPos ? savedPos.bottom : 0,
       isDragging: false,
@@ -90,11 +103,11 @@ const PopupBox = (props: PopupBoxProps) => {
       dragStartY: 0,
       isNearBottom: false,
       isNearRight: false,
-      isDockedRight: props.isDockedRight,
+      isDockedRight: storeIsDockedRight,
     };
   });
   const [mode, setMode] = useState<string>(() =>
-    POPUP_MODES.includes(props.menuMode) ? props.menuMode : "assistant"
+    POPUP_MODES.includes(storeMenuMode) ? storeMenuMode : "assistant"
   );
 
   const stateRef = useRef(state);
@@ -114,10 +127,10 @@ const PopupBox = (props: PopupBoxProps) => {
 
   const syncDockedToRedux = (docked: boolean) => {
     saveDockedToConfig(docked);
-    propsRef.current.handleDockedRight(docked);
+    handleDockedRight(docked);
     if (docked) {
       setTimeout(() => {
-        propsRef.current.renderBookFunc();
+        renderBookFunc();
       }, 300);
     }
   };
@@ -179,8 +192,8 @@ const PopupBox = (props: PopupBoxProps) => {
       };
       isDragging.current = true;
       wasDocked.current = true;
-      propsRef.current.handleMenuMode("assistant");
-      propsRef.current.handleOpenMenu(true);
+      handleMenuMode("assistant");
+      handleOpenMenu(true);
       updateState({
         isDockedRight: false,
         popupLeft: newLeft,
@@ -260,7 +273,7 @@ const PopupBox = (props: PopupBoxProps) => {
     if (wasDocked.current) {
       wasDocked.current = false;
       setTimeout(() => {
-        propsRef.current.renderBookFunc();
+        renderBookFunc();
       }, 300);
     }
   };
@@ -280,7 +293,7 @@ const PopupBox = (props: PopupBoxProps) => {
         popupHeight: savedSize ? savedSize.height : getDefaultHeight(mode),
       });
       syncDockedToRedux(false);
-      propsRef.current.renderBookFunc();
+      renderBookFunc();
     } else {
       // 当前未固定 → 直接固定到右侧
       syncDockedToRedux(true);
@@ -288,10 +301,10 @@ const PopupBox = (props: PopupBoxProps) => {
   };
 
   const handleClose = () => {
-    propsRef.current.handleOpenMenu(false);
-    propsRef.current.handleNoteKey("");
-    propsRef.current.handleMenuMode("");
-    let docs = getIframeDoc(propsRef.current.currentBook);
+    handleOpenMenu(false);
+    handleNoteKey("");
+    handleMenuMode("");
+    let docs = getIframeDoc(currentBook);
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
@@ -300,16 +313,16 @@ const PopupBox = (props: PopupBoxProps) => {
   };
 
   useEffect(() => {
-    if (POPUP_MODES.includes(props.menuMode)) {
-      setMode(props.menuMode);
+    if (POPUP_MODES.includes(storeMenuMode)) {
+      setMode(storeMenuMode);
     }
-  }, [props.menuMode]);
+  }, [storeMenuMode]);
 
   useEffect(() => {
     if (isElectron) {
       const ipcRenderer = window.electronAPI;
       let isShowUrl = ipcRenderer.sendSync("url-window-status", {
-        type: propsRef.current.menuMode,
+        type: storeMenuMode,
       });
       updateState({ isShowUrl });
     }
@@ -336,7 +349,7 @@ const PopupBox = (props: PopupBoxProps) => {
     isDockedRight,
     isShowUrl,
   } = state;
-  const menuMode = isDockedRight ? mode : props.menuMode;
+  const menuMode = isDockedRight ? mode : storeMenuMode;
   const PopupProps = {
     chapterDocIndex: props.chapterDocIndex,
     chapter: props.chapter,
@@ -360,9 +373,9 @@ const PopupBox = (props: PopupBoxProps) => {
       }
     : {
         marginLeft:
-          props.isNavLocked && !props.isSettingLocked
+          isNavLocked && !isSettingLocked
             ? 150
-            : !props.isNavLocked && props.isSettingLocked
+            : !isNavLocked && isSettingLocked
               ? -150
               : 0,
         width: popupWidth,
@@ -410,7 +423,7 @@ const PopupBox = (props: PopupBoxProps) => {
         <span
           className={`icon-sidebar popup-pin-handle ${isDockedRight ? "" : "popup-close"}`}
           onClick={handleToggleDock}
-          title={props.t(isDockedRight ? "Unpin" : "Pin to right")}
+          title={t(isDockedRight ? "Unpin" : "Pin to right")}
           style={
             isDockedRight
               ? {
@@ -425,7 +438,7 @@ const PopupBox = (props: PopupBoxProps) => {
         <span
           className={`icon-menu popup-drag-handle ${isDockedRight ? "" : "popup-close"}`}
           onMouseDown={handleDragStart}
-          title={props.t("Move")}
+          title={t("Move")}
           style={
             isDockedRight
               ? {
@@ -442,7 +455,7 @@ const PopupBox = (props: PopupBoxProps) => {
           <div
             className="popup-resize-handle"
             onMouseDown={handleResizeStart}
-            title={props.t("Resize")}
+            title={t("Resize")}
           />
         )}
       </div>

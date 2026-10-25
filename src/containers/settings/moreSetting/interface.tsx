@@ -1,7 +1,5 @@
-import { RouteComponentProps } from "react-router-dom";
 
-export interface MoreSettingProps extends RouteComponentProps<any> {
-  t: (title: string) => string;
+export interface MoreSettingProps {
 }
 
 export interface MoreSettingState {

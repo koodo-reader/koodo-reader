@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import { TextToSpeechProps, TextToSpeechState } from "./interface";
 import { Trans } from "react-i18next";
@@ -25,8 +26,22 @@ import SwitchRow from "../readerSettings/switchRow";
 import { fetchUserInfo } from "../../utils/request/user";
 import { getSplitSentence } from "../../utils/request/reader";
 import { Howl } from "howler";
+import { useAppStore } from "../../store/useAppStore";
 declare var window: any;
 const TextToSpeech = (props: TextToSpeechProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const isReading = useAppStore((s) => s.book.isReading);
+  const plugins = useAppStore((s) => s.manager.plugins);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const speechStartText = useAppStore((s) => s.reader.speechStartText);
+  const isSpeechAutoStart = useAppStore((s) => s.reader.isSpeechAutoStart);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handleSpeechStartText = useAppStore((s) => s.handleSpeechStartText);
+  const handleSpeechAutoStart = useAppStore((s) => s.handleSpeechAutoStart);
+  const { t } = useTranslation();
   const [state, setStateObj] = useState<TextToSpeechState>(() => ({
     isAudioOn: false,
     isPaused: false,
@@ -37,7 +52,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       ConfigService.getReaderConfig("voiceLocale") || navigator.language,
     multiRoleEnabled: ConfigService.getAllListConfig(
       "multiRoleVoiceBooks"
-    ).includes(props.currentBook?.key),
+    ).includes(currentBook?.key),
     multiRoleVoiceType:
       ConfigService.getReaderConfig("multiRoleVoiceType") || "system",
     multiRoleNarratorVoice:
@@ -99,9 +114,9 @@ const TextToSpeech = (props: TextToSpeechProps) => {
     highlightUtilRef.current = new HighlightUtil(ConfigService);
   }
   const speechIntervalRef = useRef<number | undefined>(undefined);
-  const prevPluginsRef = useRef(props.plugins);
-  const prevBookKeyRef = useRef(props.currentBook?.key);
-  const prevIsSpeechAutoStartRef = useRef(props.isSpeechAutoStart);
+  const prevPluginsRef = useRef(plugins);
+  const prevBookKeyRef = useRef(currentBook?.key);
+  const prevIsSpeechAutoStartRef = useRef(isSpeechAutoStart);
 
   useEffect(() => {
     let isMounted = true;
@@ -136,14 +151,14 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       nativeVoicesRef.current = await setSpeech();
       if (!isMounted) return;
       if (isElectron) {
-        customVoicesRef.current = TTSUtil.getVoiceList(props.plugins);
+        customVoicesRef.current = TTSUtil.getVoiceList(plugins);
         voicesRef.current = [
           ...nativeVoicesRef.current,
           ...customVoicesRef.current,
         ];
       } else {
         customVoicesRef.current = getAllVoices(
-          props.plugins.filter(
+          plugins.filter(
             (item) => item.key === "official-ai-voice-plugin"
           )
         );
@@ -155,7 +170,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       handleVoiceLocaleList();
       if (
         voicesRef.current.length === 0 &&
-        getAllVoices(props.plugins).length === 0
+        getAllVoices(plugins).length === 0
       ) {
         return;
       }
@@ -211,34 +226,34 @@ const TextToSpeech = (props: TextToSpeechProps) => {
 
   useEffect(() => {
     //plugin更新后重新获取语音列表
-    if (prevPluginsRef.current !== props.plugins) {
-      prevPluginsRef.current = props.plugins;
-      customVoicesRef.current = TTSUtil.getVoiceList(props.plugins);
+    if (prevPluginsRef.current !== plugins) {
+      prevPluginsRef.current = plugins;
+      customVoicesRef.current = TTSUtil.getVoiceList(plugins);
       voicesRef.current = [
         ...nativeVoicesRef.current,
         ...customVoicesRef.current,
       ];
       handleVoiceLocaleList();
     }
-  }, [props.plugins]);
+  }, [plugins]);
 
   useEffect(() => {
-    if (prevBookKeyRef.current !== props.currentBook?.key) {
-      prevBookKeyRef.current = props.currentBook?.key;
+    if (prevBookKeyRef.current !== currentBook?.key) {
+      prevBookKeyRef.current = currentBook?.key;
       setState({
         multiRoleEnabled: ConfigService.getAllListConfig(
           "multiRoleVoiceBooks"
-        ).includes(props.currentBook?.key),
+        ).includes(currentBook?.key),
       });
     }
-  }, [props.currentBook?.key]);
+  }, [currentBook?.key]);
 
   useEffect(() => {
-    if (props.isSpeechAutoStart && !prevIsSpeechAutoStartRef.current) {
+    if (isSpeechAutoStart && !prevIsSpeechAutoStartRef.current) {
       handleSpeechAutoStartRequest();
     }
-    prevIsSpeechAutoStartRef.current = props.isSpeechAutoStart;
-  }, [props.isSpeechAutoStart]);
+    prevIsSpeechAutoStartRef.current = isSpeechAutoStart;
+  }, [isSpeechAutoStart]);
 
   useEffect(() => {
     return () => {
@@ -246,16 +261,14 @@ const TextToSpeech = (props: TextToSpeechProps) => {
     };
   }, []);
   const clearSpeechStartState = () => {
-    if (props.speechStartText) {
-      props.handleSpeechStartText("");
+    if (speechStartText) {
+      handleSpeechStartText("");
     }
-    if (props.isSpeechAutoStart) {
-      props.handleSpeechAutoStart(false);
+    if (isSpeechAutoStart) {
+      handleSpeechAutoStart(false);
     }
   };
   const getSpeechStartIndex = (nodeTextList: string[]) => {
-    const speechStartText = props.speechStartText;
-
     if (!speechStartText) return -1;
 
     return nodeTextList.findIndex((item) => {
@@ -270,19 +283,19 @@ const TextToSpeech = (props: TextToSpeechProps) => {
   };
   const handleMultiRoleToggle = (enabled: boolean) => {
     if (enabled) {
-      if (!props.isAuthed) {
-        toast(props.t("Please upgrade to Pro to use this feature"));
-        props.handleSetting(true);
-        props.handleSettingMode("account");
+      if (!isAuthed) {
+        toast(t("Please upgrade to Pro to use this feature"));
+        handleSetting(true);
+        handleSettingMode("account");
         return;
       }
       ConfigService.setListConfig(
-        props.currentBook.key,
+        currentBook.key,
         "multiRoleVoiceBooks"
       );
     } else {
       ConfigService.deleteListConfig(
-        props.currentBook.key,
+        currentBook.key,
         "multiRoleVoiceBooks"
       );
     }
@@ -317,13 +330,13 @@ const TextToSpeech = (props: TextToSpeechProps) => {
   };
   const handlePreviewVoice = async (voiceName: string, voiceEngine: string) => {
     if (!voiceName) {
-      toast(props.t("Please select"));
+      toast(t("Please select"));
       return;
     }
     const engine = voiceEngine || "system";
     const voice = getVoiceByNameAndEngine(voiceName, engine);
     if (!voice) {
-      toast.error(props.t("Audio loading failed, stopped playback"));
+      toast.error(t("Audio loading failed, stopped playback"));
       return;
     }
     const previewText = getPreviewText(voice);
@@ -339,30 +352,30 @@ const TextToSpeech = (props: TextToSpeechProps) => {
         nativeVoicesRef.current[0];
       msg.rate = speed;
       msg.onerror = () => {
-        toast.error(props.t("Audio loading failed, stopped playback"));
+        toast.error(t("Audio loading failed, stopped playback"));
       };
       window.speechSynthesis && window.speechSynthesis.speak(msg);
       return;
     }
 
     if (engine === "official-ai-voice-plugin") {
-      if (!props.isAuthed) {
-        toast(props.t("Please upgrade to Pro to use this feature"));
+      if (!isAuthed) {
+        toast(t("Please upgrade to Pro to use this feature"));
         return;
       }
       await fetchUserInfo();
     }
 
-    const plugin = props.plugins.find((item) => item.key === engine);
+    const plugin = plugins.find((item) => item.key === engine);
     if (!plugin) {
-      toast.error(props.t("Audio loading failed, stopped playback"));
+      toast.error(t("Audio loading failed, stopped playback"));
       return;
     }
     const pluginVoice = (plugin.voiceList as any[]).find(
       (item) => item.name === voiceName
     );
     if (!pluginVoice) {
-      toast.error(props.t("Audio loading failed, stopped playback"));
+      toast.error(t("Audio loading failed, stopped playback"));
       return;
     }
     const audioPath = await TTSUtil.getAudioPath(
@@ -374,14 +387,14 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       true
     );
     if (!audioPath) {
-      toast.error(props.t("Audio loading failed, stopped playback"));
+      toast.error(t("Audio loading failed, stopped playback"));
       return;
     }
     previewPlayerRef.current = new Howl({
       src: [audioPath],
       format: [getFormatFromAudioPath(audioPath)],
       onloaderror: () => {
-        toast.error(props.t("Audio loading failed, stopped playback"));
+        toast.error(t("Audio loading failed, stopped playback"));
       },
     });
     previewPlayerRef.current.play();
@@ -396,7 +409,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
         <Trans>{label}</Trans>
         <span
           className="tts-preview-btn"
-          title={props.t("Test")}
+          title={t("Test")}
           onClick={() => handlePreviewVoice(voiceName, voiceEngine)}
         >
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
@@ -429,10 +442,10 @@ const TextToSpeech = (props: TextToSpeechProps) => {
   };
   const handleStartAudio = async () => {
     if (
-      props.isAuthed &&
+      isAuthed &&
       ConfigService.getReaderConfig("voiceEngine") !== "system"
     ) {
-      toast.loading(props.t("Loading audio, please wait..."), {
+      toast.loading(t("Loading audio, please wait..."), {
         id: "tts-load",
       });
       await fetchUserInfo();
@@ -440,12 +453,12 @@ const TextToSpeech = (props: TextToSpeechProps) => {
     if (
       ConfigService.getReaderConfig("voiceEngine") ===
         "official-ai-voice-plugin" &&
-      !props.isAuthed
+      !isAuthed
     ) {
       ConfigService.setReaderConfig("voiceEngine", "system");
     }
     // 每次开始朗读前刷新文本规则（replace / delete）
-    TTSUtil.setTextRules(getTextRules(props.currentBook?.key));
+    TTSUtil.setTextRules(getTextRules(currentBook?.key));
     handleStartSpeech();
   };
   const handlePauseAudio = async () => {
@@ -529,8 +542,8 @@ const TextToSpeech = (props: TextToSpeechProps) => {
     const currentIndex = stateRef.current.currentIndex;
 
     // 鉴权检查（AI 语音）
-    if (newVoiceEngine === "official-ai-voice-plugin" && !props.isAuthed) {
-      toast(props.t("Please upgrade to Pro to use this feature"));
+    if (newVoiceEngine === "official-ai-voice-plugin" && !isAuthed) {
+      toast(t("Please upgrade to Pro to use this feature"));
       return;
     }
 
@@ -549,8 +562,8 @@ const TextToSpeech = (props: TextToSpeechProps) => {
     TTSUtil.setAudioPaths();
 
     // AI 语音需要刷新用户信息
-    if (props.isAuthed && newVoiceEngine !== "system") {
-      toast.loading(props.t("Loading audio, please wait..."), {
+    if (isAuthed && newVoiceEngine !== "system") {
+      toast.loading(t("Loading audio, please wait..."), {
         id: "tts-load",
       });
       await fetchUserInfo();
@@ -584,7 +597,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       return;
     }
     if (nodeListRef.current[0].voiceEngine !== "system") {
-      toast.loading(props.t("Loading audio, please wait..."), {
+      toast.loading(t("Loading audio, please wait..."), {
         id: "tts-load",
       });
 
@@ -598,7 +611,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       await sleep(1000);
     }
     let nodeList = [];
-    let nodeTextList = (await props.htmlBook.rendition.audioText()).filter(
+    let nodeTextList = (await htmlBook.rendition.audioText()).filter(
       (item: string) => item && item.trim()
     );
     let rawNodeList: string[][] = [];
@@ -614,7 +627,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       nodeTextList = nodeTextList.slice(speechStartIndex);
     }
     clearSpeechStartState();
-    if (!stateRef.current.multiRoleEnabled || !props.isAuthed) {
+    if (!stateRef.current.multiRoleEnabled || !isAuthed) {
       nodeList = nodeTextList.map((text: string) => {
         return {
           text,
@@ -665,11 +678,11 @@ const TextToSpeech = (props: TextToSpeechProps) => {
         });
         return nodeList;
       }
-      toast.loading(props.t("Analyzing roles, please wait..."), {
+      toast.loading(t("Analyzing roles, please wait..."), {
         id: "tts-load",
       });
       if (nodeTextList.join("").length > 50000) {
-        toast.error(props.t("The text is too long to analyze"), {
+        toast.error(t("The text is too long to analyze"), {
           id: "tts-load",
         });
         setState({ isAudioOn: false });
@@ -717,21 +730,21 @@ const TextToSpeech = (props: TextToSpeechProps) => {
           };
         });
       } else {
-        toast.error(props.t("Analysis failed"));
+        toast.error(t("Analysis failed"));
         setState({ isAudioOn: false });
         return [];
       }
     }
 
     if (nodeList.length === 0) {
-      if (isReadingRawPDF(props.currentBook)) {
-        let currentPosition = props.htmlBook.rendition.getPosition();
-        await props.htmlBook.rendition.goToChapterIndex(
+      if (isReadingRawPDF(currentBook)) {
+        let currentPosition = htmlBook.rendition.getPosition();
+        await htmlBook.rendition.goToChapterIndex(
           parseInt(currentPosition.chapterDocIndex) +
-            (props.readerMode === "double" ? 2 : 1)
+            (readerMode === "double" ? 2 : 1)
         );
       } else {
-        await props.htmlBook.rendition.next();
+        await htmlBook.rendition.next();
       }
 
       nodeList = await handleGetText();
@@ -749,15 +762,15 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       setState({ currentIndex: index });
       let node = nodeListRef.current[index];
       let style = highlightUtilRef.current.buildTtsHighlightStyle(
-        isReadingRawPDF(props.currentBook),
+        isReadingRawPDF(currentBook),
         ConfigService.getReaderConfig("textOrientation") === "vertical"
       );
-      props.htmlBook.rendition.highlightAudioNode(node.text, style);
+      htmlBook.rendition.highlightAudioNode(node.text, style);
       if (index === nodeIndex) {
         let result = await TTSUtil.cacheAudio(
           index,
           speed * 100 - 100,
-          props.plugins,
+          plugins,
           nodeListRef.current,
           10,
           true,
@@ -765,7 +778,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
         );
         toast.dismiss("tts-load");
         if (result === "error") {
-          toast.error(props.t("Audio loading failed, stopped playback"));
+          toast.error(t("Audio loading failed, stopped playback"));
           setState({ isAudioOn: false });
           nodeListRef.current = [];
           return;
@@ -779,7 +792,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       TTSUtil.cacheAudio(
         index + 1,
         speed * 100 - 100,
-        props.plugins,
+        plugins,
         nodeListRef.current,
         20,
         false,
@@ -787,13 +800,13 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       );
       let res = await handleSpeech(index);
       if (res === "error") {
-        toast.error(props.t("Audio loading failed, stopped playback"));
+        toast.error(t("Audio loading failed, stopped playback"));
         setState({ isAudioOn: false });
         nodeListRef.current = [];
         return;
       }
       if (stateRef.current.isPaused || !stateRef.current.isAudioOn) return;
-      let visibleTextList = await props.htmlBook.rendition.visibleText();
+      let visibleTextList = await htmlBook.rendition.visibleText();
       let lastVisibleTextList = visibleTextList;
 
       let rawNodeList = visibleTextList.map((text) => {
@@ -806,24 +819,24 @@ const TextToSpeech = (props: TextToSpeechProps) => {
         index,
         nodeListRef.current,
         lastVisibleTextList,
-        props.currentBook
+        currentBook
       );
       if (index === nodeListRef.current.length - 1) {
         isReachPageEnd = true;
       }
 
       if (isReachPageEnd) {
-        if (isReadingRawPDF(props.currentBook)) {
-          let currentPosition = props.htmlBook.rendition.getPosition();
-          await props.htmlBook.rendition.goToChapterIndex(
+        if (isReadingRawPDF(currentBook)) {
+          let currentPosition = htmlBook.rendition.getPosition();
+          await htmlBook.rendition.goToChapterIndex(
             parseInt(currentPosition.chapterDocIndex) +
-              (props.readerMode === "double" ? 2 : 1)
+              (readerMode === "double" ? 2 : 1)
           );
         } else {
           if (index === nodeListRef.current.length - 1) {
-            await props.htmlBook.rendition.nextChapter();
+            await htmlBook.rendition.nextChapter();
           } else {
-            await props.htmlBook.rendition.next();
+            await htmlBook.rendition.next();
           }
         }
       }
@@ -831,12 +844,12 @@ const TextToSpeech = (props: TextToSpeechProps) => {
         break;
       }
     }
-    if (stateRef.current.isAudioOn && props.isReading) {
+    if (stateRef.current.isAudioOn && isReading) {
       // 重置内存缓存；磁盘 tts 缓存按内容哈希命名，保留复用
       TTSUtil.setAudioPaths();
-      let position = props.htmlBook.rendition.getPosition();
+      let position = htmlBook.rendition.getPosition();
       ConfigService.setObjectConfig(
-        props.currentBook.key,
+        currentBook.key,
         position,
         "recordLocation"
       );
@@ -854,10 +867,10 @@ const TextToSpeech = (props: TextToSpeechProps) => {
     setState({ currentIndex: index });
     let node = nodeListRef.current[index];
     let style = highlightUtilRef.current.buildTtsHighlightStyle(
-      isReadingRawPDF(props.currentBook),
+      isReadingRawPDF(currentBook),
       ConfigService.getReaderConfig("textOrientation") === "vertical"
     );
-    props.htmlBook.rendition.highlightAudioNode(node.text, style);
+    htmlBook.rendition.highlightAudioNode(node.text, style);
     toast.dismiss("tts-load");
     let res = await handleSystemSpeech(
       index,
@@ -866,7 +879,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
     );
 
     if (res === "start") {
-      let visibleTextList = await props.htmlBook.rendition.visibleText();
+      let visibleTextList = await htmlBook.rendition.visibleText();
 
       let lastVisibleTextList = visibleTextList;
 
@@ -880,34 +893,34 @@ const TextToSpeech = (props: TextToSpeechProps) => {
         index,
         nodeListRef.current,
         lastVisibleTextList,
-        props.currentBook
+        currentBook
       );
       if (index === nodeListRef.current.length - 1) {
         isReachPageEnd = true;
       }
       if (isReachPageEnd) {
-        if (isReadingRawPDF(props.currentBook)) {
-          let currentPosition = props.htmlBook.rendition.getPosition();
-          await props.htmlBook.rendition.goToChapterIndex(
+        if (isReadingRawPDF(currentBook)) {
+          let currentPosition = htmlBook.rendition.getPosition();
+          await htmlBook.rendition.goToChapterIndex(
             parseInt(currentPosition.chapterDocIndex) +
-              (props.readerMode === "double" ? 2 : 1)
+              (readerMode === "double" ? 2 : 1)
           );
         } else {
           if (index === nodeListRef.current.length - 1) {
-            await props.htmlBook.rendition.nextChapter();
+            await htmlBook.rendition.nextChapter();
           } else {
-            await props.htmlBook.rendition.next();
+            await htmlBook.rendition.next();
           }
         }
       }
       if (
         stateRef.current.isAudioOn &&
-        props.isReading &&
+        isReading &&
         index === nodeListRef.current.length
       ) {
-        let position = props.htmlBook.rendition.getPosition();
+        let position = htmlBook.rendition.getPosition();
         ConfigService.setObjectConfig(
-          props.currentBook.key,
+          currentBook.key,
           position,
           "recordLocation"
         );
@@ -936,7 +949,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       } else {
         let player = TTSUtil.getPlayer();
         player.on("end", async () => {
-          if (!(stateRef.current.isAudioOn && props.isReading)) {
+          if (!(stateRef.current.isAudioOn && isReading)) {
             resolve("end");
           }
           resolve("start");
@@ -975,7 +988,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
       };
 
       msg.onend = async () => {
-        if (!(stateRef.current.isAudioOn && props.isReading)) {
+        if (!(stateRef.current.isAudioOn && isReading)) {
           resolve("end");
         }
         resolve("start");
@@ -1019,7 +1032,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
           <div className="tts-player-controls">
             <span
               className="tts-player-btn"
-              title={props.t("Stop")}
+              title={t("Stop")}
               onClick={() => handleStop()}
               style={
                 !stateRef.current.isAudioOn
@@ -1038,7 +1051,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
             </span>
             <span
               className="tts-player-btn"
-              title={props.t("Previous")}
+              title={t("Previous")}
               onClick={() => handlePrevSentence()}
               style={
                 !stateRef.current.isAudioOn
@@ -1059,10 +1072,10 @@ const TextToSpeech = (props: TextToSpeechProps) => {
               className="tts-player-btn tts-player-btn-main"
               title={
                 !stateRef.current.isAudioOn
-                  ? props.t("Play")
+                  ? t("Play")
                   : stateRef.current.isPaused
-                    ? props.t("Resume")
-                    : props.t("Pause")
+                    ? t("Resume")
+                    : t("Pause")
               }
               onClick={() => {
                 if (!stateRef.current.isAudioOn && !stateRef.current.isPaused) {
@@ -1096,7 +1109,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
             </span>
             <span
               className="tts-player-btn"
-              title={props.t("Next")}
+              title={t("Next")}
               onClick={() => handleNextSentence()}
               style={
                 !stateRef.current.isAudioOn
@@ -1115,7 +1128,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
             </span>
             <span
               className="tts-player-btn"
-              title={props.t("Stop")}
+              title={t("Stop")}
               onClick={() => handleStop()}
               style={
                 !stateRef.current.isAudioOn
@@ -1204,13 +1217,13 @@ const TextToSpeech = (props: TextToSpeechProps) => {
               const newEngine = voice.plugin || "system";
               if (
                 newEngine === "official-ai-voice-plugin" &&
-                !props.isAuthed
+                !isAuthed
               ) {
                 toast(
-                  props.t("Please upgrade to Pro to use this feature")
+                  t("Please upgrade to Pro to use this feature")
                 );
-                props.handleSetting(true);
-                props.handleSettingMode("account");
+                handleSetting(true);
+                handleSettingMode("account");
                 return;
               }
               ConfigService.setReaderConfig("voiceEngine", newEngine);
@@ -1219,7 +1232,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                 event.target.value.indexOf("Neural") > -1
               ) {
                 toast(
-                  props.t(
+                  t(
                     "Due to the high cost of Azure TTS voices, this voice will consume 5 times of your daily quota than normal voice"
                   ),
                   {
@@ -1228,7 +1241,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                   }
                 );
               }
-              toast.success(props.t("Setup successful"));
+              toast.success(t("Setup successful"));
               if (stateRef.current.isAudioOn) {
                 handleVoiceSwitch(voiceName, newEngine, previousEngine);
               }
@@ -1243,7 +1256,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                     key={[item.name, item.plugin].join("#")}
                     className="lang-setting-option"
                   >
-                    {props.t(item.displayName || item.name)}
+                    {t(item.displayName || item.name)}
                   </option>
                 );
               }
@@ -1264,7 +1277,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
             onChange={(event) => {
               ConfigService.setReaderConfig("voiceSpeed", event.target.value);
               if (stateRef.current.isAudioOn) {
-                toast(props.t("Take effect in a while"));
+                toast(t("Take effect in a while"));
               }
               forceUpdate();
             }}
@@ -1288,8 +1301,8 @@ const TextToSpeech = (props: TextToSpeechProps) => {
               textAlign: "center",
             }}
             onClick={() => {
-              props.handleSetting(true);
-              props.handleSettingMode("plugins");
+              handleSetting(true);
+              handleSettingMode("plugins");
             }}
           >
             <Trans>Add new voice</Trans>
@@ -1363,23 +1376,23 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                     multiRoleChildVoice: "",
                     multiRoleChildEngine: "",
                   });
-                  toast(props.t("Please reselect voices for all roles"));
+                  toast(t("Please reselect voices for all roles"));
                 }}
               >
                 <option value="" className="lang-setting-option">
-                  {props.t("Please select")}
+                  {t("Please select")}
                 </option>
                 <option value="system" className="lang-setting-option">
-                  {props.t("System voice")}
+                  {t("System voice")}
                 </option>
                 <option
                   value="official-ai-voice-plugin"
                   className="lang-setting-option"
                 >
-                  {props.t("Official AI Voice")}
+                  {t("Official AI Voice")}
                 </option>
                 <option value="custom" className="lang-setting-option">
-                  {props.t("Custom voice")}
+                  {t("Custom voice")}
                 </option>
               </select>
             </div>
@@ -1420,11 +1433,11 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                     multiRoleNarratorVoice: voiceName,
                     multiRoleNarratorEngine: plugin || "system",
                   });
-                  toast.success(props.t("Setup successful"));
+                  toast.success(t("Setup successful"));
                 }}
               >
                 <option value="" className="lang-setting-option">
-                  {props.t("Please select")}
+                  {t("Please select")}
                 </option>
                 {getVoicesByType(stateRef.current.multiRoleVoiceType).map(
                   (item) => (
@@ -1433,7 +1446,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
                     >
-                      {props.t(item.displayName || item.name)}
+                      {t(item.displayName || item.name)}
                     </option>
                   )
                 )}
@@ -1476,11 +1489,11 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                     multiRoleMaleVoice: voiceName,
                     multiRoleMaleEngine: plugin || "system",
                   });
-                  toast.success(props.t("Setup successful"));
+                  toast.success(t("Setup successful"));
                 }}
               >
                 <option value="" className="lang-setting-option">
-                  {props.t("Please select")}
+                  {t("Please select")}
                 </option>
                 {getVoicesByType(stateRef.current.multiRoleVoiceType)
                   .filter((item) => !item.gender || item.gender === "male")
@@ -1490,7 +1503,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
                     >
-                      {props.t(item.displayName || item.name)}
+                      {t(item.displayName || item.name)}
                     </option>
                   ))}
               </select>
@@ -1532,11 +1545,11 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                     multiRoleFemaleVoice: voiceName,
                     multiRoleFemaleEngine: plugin || "system",
                   });
-                  toast.success(props.t("Setup successful"));
+                  toast.success(t("Setup successful"));
                 }}
               >
                 <option value="" className="lang-setting-option">
-                  {props.t("Please select")}
+                  {t("Please select")}
                 </option>
                 {getVoicesByType(stateRef.current.multiRoleVoiceType)
                   .filter((item) => !item.gender || item.gender === "female")
@@ -1546,7 +1559,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
                     >
-                      {props.t(item.displayName || item.name)}
+                      {t(item.displayName || item.name)}
                     </option>
                   ))}
               </select>
@@ -1588,11 +1601,11 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                     multiRoleChildVoice: voiceName,
                     multiRoleChildEngine: plugin || "system",
                   });
-                  toast.success(props.t("Setup successful"));
+                  toast.success(t("Setup successful"));
                 }}
               >
                 <option value="" className="lang-setting-option">
-                  {props.t("Please select")}
+                  {t("Please select")}
                 </option>
                 {getVoicesByType(stateRef.current.multiRoleVoiceType).map(
                   (item) => (
@@ -1601,7 +1614,7 @@ const TextToSpeech = (props: TextToSpeechProps) => {
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
                     >
-                      {props.t(item.displayName || item.name)}
+                      {t(item.displayName || item.name)}
                     </option>
                   )
                 )}

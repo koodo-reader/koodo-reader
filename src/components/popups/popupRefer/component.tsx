@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import "./popupRefer.css";
 import { PopupReferProps } from "./interface";
@@ -10,6 +11,7 @@ import {
 import Parser from "html-react-parser";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
+import { useAppStore } from "../../../store/useAppStore";
 
 const escapeHtml = (text: string) =>
   text
@@ -20,6 +22,10 @@ const escapeHtml = (text: string) =>
     .replace(/'/g, "&#39;");
 
 const PopupRefer = (props: PopupReferProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
+  const handleJumpPosition = useAppStore((s) => s.handleJumpPosition);
+  const { t } = useTranslation();
   const [rect, setRect] = useState<any>({});
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [footnote, setFootnote] = useState("");
@@ -47,15 +53,15 @@ const PopupRefer = (props: PopupReferProps) => {
     }
     posX = posX - 135 + pageSize.left;
     if (
-      isReadingRawPDF(props.currentBook) &&
-      props.readerMode === "double" &&
+      isReadingRawPDF(currentBook) &&
+      readerMode === "double" &&
       props.chapterDocIndex % 2 === 1
     ) {
       posX = posX + pageSize.sectionWidth + pageSize.gap;
     }
     if (
-      isReadingRawPDF(props.currentBook) &&
-      props.readerMode === "scroll"
+      isReadingRawPDF(currentBook) &&
+      readerMode === "scroll"
     ) {
       posY = posY + props.chapterDocIndex * pageSize.sectionHeight;
     }
@@ -72,8 +78,8 @@ const PopupRefer = (props: PopupReferProps) => {
       posY = document.body.clientHeight - 250 - 20;
     }
     if (
-      props.readerMode === "scroll" &&
-      props.currentBook.format === "PDF"
+      readerMode === "scroll" &&
+      currentBook.format === "PDF"
     ) {
       posX = posX - pageSize.scrollLeft;
     }
@@ -104,7 +110,7 @@ const PopupRefer = (props: PopupReferProps) => {
     }
     if (result.external) {
       const confirm = await vexComfirmAsync(
-        props.t("Do you want to open this link in browser") +
+        t("Do you want to open this link in browser") +
           "<br><span style='word-break:break-all'>" +
           escapeHtml(targetHref) +
           "</span>"
@@ -116,17 +122,17 @@ const PopupRefer = (props: PopupReferProps) => {
     }
     if (result.redirectChapter) {
       let prevPosition = ConfigService.getObjectConfig(
-        props.currentBook.key,
+        currentBook.key,
         "recordLocation",
         {}
       );
-      props.handleJumpPosition(prevPosition);
+      handleJumpPosition(prevPosition);
     }
     if (result.isJump) {
       setIsJump(true);
       setReturnPosition(
         ConfigService.getObjectConfig(
-          props.currentBook.key,
+          currentBook.key,
           "recordLocation",
           {}
         )
@@ -156,7 +162,7 @@ const PopupRefer = (props: PopupReferProps) => {
 
   useEffect(() => {
     const onRendered = () => {
-      let docs = getIframeDoc(propsRef.current.currentBook);
+      let docs = getIframeDoc(currentBook);
       for (let i = 0; i < docs.length; i++) {
         let doc = docs[i];
         if (!doc) continue;
@@ -193,10 +199,10 @@ const PopupRefer = (props: PopupReferProps) => {
                 navigator.clipboard.writeText(
                   footnote.replace(/<[^>]+>/g, "").trim()
                 );
-                toast.success(props.t("Copying successful"));
+                toast.success(t("Copying successful"));
               }}
             >
-              {props.t("Copy")}
+              {t("Copy")}
             </span>
             {href && (
               <span
@@ -225,7 +231,7 @@ const PopupRefer = (props: PopupReferProps) => {
                   setIsJump(true);
                   setReturnPosition(
                     ConfigService.getObjectConfig(
-                      props.currentBook.key,
+                      currentBook.key,
                       "recordLocation",
                       {}
                     )
@@ -240,7 +246,7 @@ const PopupRefer = (props: PopupReferProps) => {
                   color: isJump ? "rgba(231, 69, 69, 0.8)" : "",
                 }}
               >
-                {props.t(isJump ? "Return" : "Go to")}
+                {t(isJump ? "Return" : "Go to")}
               </span>
             )}
           </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 ﻿import React, { useEffect, useRef, useState } from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
@@ -32,6 +33,7 @@ import SupportDialog from "../../components/dialogs/supportDialog";
 import WindowControls from "../../components/windowControls";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
 import { isPaginatedBook, isReadingRawPDF, throttle } from "../../utils/common";
+import { useAppStore } from "../../store/useAppStore";
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
@@ -71,14 +73,84 @@ const PANEL_OPEN_STATE: Record<
   bottom: "isOpenBottomPanel",
 };
 const Reader = (props: ReaderProps) => {
-  const propsRef = useRef(props);
-  propsRef.current = props;
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
+  const isNavLocked = useAppStore((s) => s.reader.isNavLocked);
+  const isConvertOpen = useAppStore((s) => s.reader.isConvertOpen);
+  const isScaleOpen = useAppStore((s) => s.reader.isScaleOpen);
+  const isPdfCropOpen = useAppStore((s) => s.reader.isPdfCropOpen);
+  const isStudyLangOpen = useAppStore((s) => s.reader.isStudyLangOpen);
+  const isAssistReadOpen = useAppStore((s) => s.reader.isAssistReadOpen);
+  const isSpeechOpen = useAppStore((s) => s.reader.isSpeechOpen);
+  const isAnnotationOpen = useAppStore((s) => s.reader.isAnnotationOpen);
+  const isOpenPopupOptionDialog = useAppStore(
+    (s) => s.backupPage.isOpenPopupOptionDialog
+  );
+  const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
+  const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
+  const isSettingOpen = useAppStore((s) => s.manager.isSettingOpen);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleReadingBook = useAppStore((s) => s.handleReadingBook);
+  const handleFetchPercentage = useAppStore((s) => s.handleFetchPercentage);
+  const handleReaderMode = useAppStore((s) => s.handleReaderMode);
+  const handleMenuMode = useAppStore((s) => s.handleMenuMode);
+  const handleOriginalText = useAppStore((s) => s.handleOriginalText);
+  const handleOpenMenu = useAppStore((s) => s.handleOpenMenu);
+  const handleConvertDialog = useAppStore((s) => s.handleConvertDialog);
+  const handleScalePageDialog = useAppStore((s) => s.handleScalePageDialog);
+  const handlePdfCropDialog = useAppStore((s) => s.handlePdfCropDialog);
+  const handleStudyLangDialog = useAppStore((s) => s.handleStudyLangDialog);
+  const handleAssistReadDialog = useAppStore((s) => s.handleAssistReadDialog);
+  const handleFetchAuthed = useAppStore((s) => s.handleFetchAuthed);
+  const handleSpeechDialog = useAppStore((s) => s.handleSpeechDialog);
+  const handleAnnotationDialog = useAppStore((s) => s.handleAnnotationDialog);
+  const handleFetchUserInfo = useAppStore((s) => s.handleFetchUserInfo);
+  const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
+  const { t } = useTranslation();
+  const propsRef = useRef<any>(props);
+  propsRef.current = {
+    ...props,
+    t,
+    currentBook,
+    htmlBook,
+    readerMode,
+    isNavLocked,
+    isConvertOpen,
+    isScaleOpen,
+    isPdfCropOpen,
+    isStudyLangOpen,
+    isAssistReadOpen,
+    isSpeechOpen,
+    isAnnotationOpen,
+    isOpenPopupOptionDialog,
+    isSettingLocked,
+    isDockedRight,
+    isSettingOpen,
+    handleFetchBooks,
+    handleReadingBook,
+    handleFetchPercentage,
+    handleReaderMode,
+    handleMenuMode,
+    handleOriginalText,
+    handleOpenMenu,
+    handleConvertDialog,
+    handleScalePageDialog,
+    handlePdfCropDialog,
+    handleStudyLangDialog,
+    handleAssistReadDialog,
+    handleFetchAuthed,
+    handleSpeechDialog,
+    handleAnnotationDialog,
+    handleFetchUserInfo,
+    handleBackgroundColor,
+  };
   const [state, setState] = useState<ReaderState>({
     isOpenTopPanel: false,
     isOpenBottomPanel: false,
     hoverPanel: "",
-    isOpenLeftPanel: props.isNavLocked,
-    isOpenRightPanel: props.isSettingLocked,
+    isOpenLeftPanel: isNavLocked,
+    isOpenRightPanel: isSettingLocked,
     totalDuration: 0,
     currentDuration: 0,
     isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
@@ -517,15 +589,15 @@ const Reader = (props: ReaderProps) => {
             ConfigService.getReaderConfig("revertDirection") === "yes" &&
             ConfigService.getReaderConfig("textOrientation") !== "vertical"
           ) {
-            await props.htmlBook.rendition.next();
+            await htmlBook.rendition.next();
           } else {
-            await props.htmlBook.rendition.prev();
+            await htmlBook.rendition.prev();
           }
           handleLocation();
           setTimeout(() => (lock = false), throttleTime);
         }}
         style={{
-          left: props.isNavLocked ? 315 : 15,
+          left: isNavLocked ? 315 : 15,
           opacity: state.isNearEdge ? undefined : 0,
           transition: "opacity 0.3s ease",
         }}
@@ -539,7 +611,7 @@ const Reader = (props: ReaderProps) => {
         style={{
           position: "absolute",
           bottom: 10,
-          right: props.isSettingLocked || props.isDockedRight ? 315 : 15,
+          right: isSettingLocked || isDockedRight ? 315 : 15,
           display: "flex",
           flexDirection: "column-reverse",
           alignItems: "center",
@@ -559,9 +631,9 @@ const Reader = (props: ReaderProps) => {
               ConfigService.getReaderConfig("revertDirection") === "yes" &&
               ConfigService.getReaderConfig("textOrientation") !== "vertical"
             ) {
-              await props.htmlBook.rendition.prev();
+              await htmlBook.rendition.prev();
             } else {
-              await props.htmlBook.rendition.next();
+              await htmlBook.rendition.next();
             }
             handleLocation();
             setTimeout(() => (lock = false), throttleTime);
@@ -573,26 +645,26 @@ const Reader = (props: ReaderProps) => {
         <div
           className="next-chapter-single-container"
           onClick={async () => {
-            props.handleSpeechDialog(!props.isSpeechOpen);
+            handleSpeechDialog(!isSpeechOpen);
           }}
           style={{ position: "static", transform: "rotate(0deg)" }}
         >
           <span
             style={
-              props.isSpeechOpen ? { fontWeight: "bold", marginTop: "4px" } : {}
+              isSpeechOpen ? { fontWeight: "bold", marginTop: "4px" } : {}
             }
-            className={`icon-${props.isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
+            className={`icon-${isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
           ></span>
         </div>
         {ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
           <div
             className="next-chapter-single-container"
             onClick={async () => {
-              props.handleMenuMode("assistant");
-              props.handleOriginalText(
-                await props.htmlBook.rendition.chapterText()
+              handleMenuMode("assistant");
+              handleOriginalText(
+                await htmlBook.rendition.chapterText()
               );
-              props.handleOpenMenu(true);
+              handleOpenMenu(true);
             }}
             style={{
               position: "static",
@@ -604,26 +676,26 @@ const Reader = (props: ReaderProps) => {
             AI
           </div>
         )}
-        {props.currentBook &&
-          isReadingRawPDF(props.currentBook) &&
-          props.currentBook.description.indexOf("scanned") > -1 && (
+        {currentBook &&
+          isReadingRawPDF(currentBook) &&
+          currentBook.description.indexOf("scanned") > -1 && (
             <div
               className="next-chapter-single-container"
               onClick={() => {
-                props.htmlBook.rendition.applyAnnotationConfig({
-                  isDrawing: props.isAnnotationOpen ? "no" : "yes",
+                htmlBook.rendition.applyAnnotationConfig({
+                  isDrawing: isAnnotationOpen ? "no" : "yes",
                 });
-                props.handleAnnotationDialog(!props.isAnnotationOpen);
+                handleAnnotationDialog(!isAnnotationOpen);
               }}
               style={{ position: "static", transform: "rotate(0deg)" }}
             >
               <span
                 style={
-                  props.isAnnotationOpen
+                  isAnnotationOpen
                     ? { fontWeight: "bold", marginTop: "4px" }
                     : { fontSize: "17px" }
                 }
-                className={`icon-${props.isAnnotationOpen ? "close" : "edit"} next-chapter-single`}
+                className={`icon-${isAnnotationOpen ? "close" : "edit"} next-chapter-single`}
               ></span>
             </div>
           )}
@@ -638,11 +710,11 @@ const Reader = (props: ReaderProps) => {
           top: "0px",
           ...(isSeparateElectronWindow && isMacOS
             ? {
-                left: props.isNavLocked ? 315 : isMergeWord ? 15 : 82,
+                left: isNavLocked ? 315 : isMergeWord ? 15 : 82,
                 right: "auto",
               }
             : {
-                right: props.isSettingLocked || props.isDockedRight ? 300 : 15,
+                right: isSettingLocked || isDockedRight ? 300 : 15,
               }),
           zIndex: 14,
           width: "max-content",
@@ -665,12 +737,12 @@ const Reader = (props: ReaderProps) => {
             justifyContent: "flex-end",
           }}
         >
-          {props.currentBook && !isReadingRawPDF(props.currentBook) && (
+          {currentBook && !isReadingRawPDF(currentBook) && (
             <>
               <div
                 className="reader-setting-icon-container"
                 {...handleDialogButtonHover(
-                  props.handleStudyLangDialog,
+                  handleStudyLangDialog,
                   ".study-lang-dialog-container"
                 )}
               >
@@ -682,7 +754,7 @@ const Reader = (props: ReaderProps) => {
               <div
                 className="reader-setting-icon-container"
                 {...handleDialogButtonHover(
-                  props.handleAssistReadDialog,
+                  handleAssistReadDialog,
                   ".assist-read-dialog-container"
                 )}
               >
@@ -693,7 +765,7 @@ const Reader = (props: ReaderProps) => {
               </div>
             </>
           )}
-          {(props.readerMode === "scroll" || props.readerMode === "single") && (
+          {(readerMode === "scroll" || readerMode === "single") && (
             <div
               style={{
                 display: "flex",
@@ -704,7 +776,7 @@ const Reader = (props: ReaderProps) => {
               <div
                 className="reader-setting-icon-container"
                 {...handleDialogButtonHover(
-                  props.handleScalePageDialog,
+                  handleScalePageDialog,
                   ".scale-page-dialog-container"
                 )}
               >
@@ -716,12 +788,12 @@ const Reader = (props: ReaderProps) => {
             </div>
           )}
 
-          {props.currentBook.format === "PDF" &&
-            props.readerMode === "scroll" && (
+          {currentBook.format === "PDF" &&
+            readerMode === "scroll" && (
               <div
                 className="reader-setting-icon-container"
                 {...handleDialogButtonHover(
-                  props.handlePdfCropDialog,
+                  handlePdfCropDialog,
                   ".pdf-crop-dialog-container"
                 )}
               >
@@ -732,11 +804,11 @@ const Reader = (props: ReaderProps) => {
               </div>
             )}
 
-          {props.currentBook.format === "PDF" && (
+          {currentBook.format === "PDF" && (
             <div
               className="reader-setting-icon-container"
               {...handleDialogButtonHover(
-                props.handleConvertDialog,
+                handleConvertDialog,
                 ".convert-dialog-container"
               )}
             >
@@ -748,9 +820,9 @@ const Reader = (props: ReaderProps) => {
           )}
           <div
             className="reader-setting-icon-container"
-            aria-label={props.t("Toggle menu")}
+            aria-label={t("Toggle menu")}
             data-tooltip-id="my-tooltip"
-            data-tooltip-content={props.t("Toggle menu")}
+            data-tooltip-content={t("Toggle menu")}
             onClick={() => {
               handleEnterReader("left");
               handleEnterReader("right");
@@ -763,10 +835,10 @@ const Reader = (props: ReaderProps) => {
               style={{ fontSize: 20 }}
             ></span>
           </div>
-          {showCustomWindowControls && <WindowControls t={props.t} />}
+          {showCustomWindowControls && <WindowControls t={t} />}
         </div>
       </div>
-      {props.isSettingOpen && (
+      {isSettingOpen && (
         <>
           <SettingDialog />
           <div className="drag-background"></div>
@@ -803,9 +875,9 @@ const Reader = (props: ReaderProps) => {
           state.hoverPanel === "right"
             ? {
                 opacity: 0.5,
-                right: props.isDockedRight ? "299px" : "0px",
+                right: isDockedRight ? "299px" : "0px",
               }
-            : { right: props.isDockedRight ? "299px" : "0px" }
+            : { right: isDockedRight ? "299px" : "0px" }
         }
         onClick={() => {
           handleEnterReader("right");
@@ -821,17 +893,17 @@ const Reader = (props: ReaderProps) => {
             ? {
                 opacity: 0.5,
                 marginLeft:
-                  props.isNavLocked &&
-                  !props.isSettingLocked &&
-                  !props.isDockedRight
+                  isNavLocked &&
+                  !isSettingLocked &&
+                  !isDockedRight
                     ? 150
                     : 0,
               }
             : {
                 marginLeft:
-                  props.isNavLocked &&
-                  !props.isSettingLocked &&
-                  !props.isDockedRight
+                  isNavLocked &&
+                  !isSettingLocked &&
+                  !isDockedRight
                     ? 150
                     : 0,
               }
@@ -855,17 +927,17 @@ const Reader = (props: ReaderProps) => {
             ? {
                 opacity: 0.5,
                 marginLeft:
-                  props.isNavLocked &&
-                  !props.isSettingLocked &&
-                  !props.isDockedRight
+                  isNavLocked &&
+                  !isSettingLocked &&
+                  !isDockedRight
                     ? 150
                     : 0,
               }
             : {
                 marginLeft:
-                  props.isNavLocked &&
-                  !props.isSettingLocked &&
-                  !props.isDockedRight
+                  isNavLocked &&
+                  !isSettingLocked &&
+                  !isDockedRight
                     ? 150
                     : 0,
               }
@@ -926,20 +998,20 @@ const Reader = (props: ReaderProps) => {
           state.isOpenBottomPanel
             ? {
                 marginLeft:
-                  props.isNavLocked && !props.isSettingLocked
+                  isNavLocked && !isSettingLocked
                     ? 150
-                    : !props.isNavLocked &&
-                        (props.isSettingLocked || props.isDockedRight)
+                    : !isNavLocked &&
+                        (isSettingLocked || isDockedRight)
                       ? -150
                       : 0,
               }
             : {
                 transform: "translateY(110px)",
                 marginLeft:
-                  props.isNavLocked && !props.isSettingLocked
+                  isNavLocked && !isSettingLocked
                     ? 150
-                    : !props.isNavLocked &&
-                        (props.isSettingLocked || props.isDockedRight)
+                    : !isNavLocked &&
+                        (isSettingLocked || isDockedRight)
                       ? -150
                       : 0,
               }
@@ -959,26 +1031,26 @@ const Reader = (props: ReaderProps) => {
           state.isOpenTopPanel
             ? {
                 marginLeft:
-                  props.isNavLocked && !props.isSettingLocked
+                  isNavLocked && !isSettingLocked
                     ? 150
-                    : !props.isNavLocked &&
-                        (props.isSettingLocked || props.isDockedRight)
+                    : !isNavLocked &&
+                        (isSettingLocked || isDockedRight)
                       ? -150
                       : 0,
               }
             : {
                 transform: "translateY(-110px)",
                 marginLeft:
-                  props.isNavLocked && !props.isSettingLocked
+                  isNavLocked && !isSettingLocked
                     ? 150
-                    : !props.isNavLocked &&
-                        (props.isSettingLocked || props.isDockedRight)
+                    : !isNavLocked &&
+                        (isSettingLocked || isDockedRight)
                       ? -150
                       : 0,
               }
         }
       >
-        {props.htmlBook && (
+        {htmlBook && (
           <OperationPanel
             {...({
               currentDuration: state.currentDuration,
@@ -987,24 +1059,24 @@ const Reader = (props: ReaderProps) => {
         )}
       </div>
 
-      {props.currentBook.key && <Viewer {...(renditionProps as any)} />}
-      {((props.readerMode === "scroll" || props.readerMode === "single") &&
-        props.isScaleOpen) ||
-      props.isConvertOpen ||
-      props.isPdfCropOpen ||
-      props.isStudyLangOpen ||
-      props.isAssistReadOpen ? (
+      {currentBook.key && <Viewer {...(renditionProps as any)} />}
+      {((readerMode === "scroll" || readerMode === "single") &&
+        isScaleOpen) ||
+      isConvertOpen ||
+      isPdfCropOpen ||
+      isStudyLangOpen ||
+      isAssistReadOpen ? (
         <div className="reader-setting-dialog-anchor">
-          {(props.readerMode === "scroll" || props.readerMode === "single") &&
-            props.isScaleOpen && <ScalePageDialog />}
-          {props.isConvertOpen && <ConvertDialog />}
-          {props.isPdfCropOpen && <PdfCropDialog />}
-          {props.isStudyLangOpen && <StudyLangDialog />}
-          {props.isAssistReadOpen && <AssistReadDialog />}
+          {(readerMode === "scroll" || readerMode === "single") &&
+            isScaleOpen && <ScalePageDialog />}
+          {isConvertOpen && <ConvertDialog />}
+          {isPdfCropOpen && <PdfCropDialog />}
+          {isStudyLangOpen && <StudyLangDialog />}
+          {isAssistReadOpen && <AssistReadDialog />}
         </div>
       ) : null}
       <SupportDialog />
-      {props.isOpenPopupOptionDialog && (
+      {isOpenPopupOptionDialog && (
         <>
           <PopupOptionDialog />
           <div className="drag-background"></div>
@@ -1013,7 +1085,7 @@ const Reader = (props: ReaderProps) => {
       {
         <div
           style={
-            props.isSpeechOpen
+            isSpeechOpen
               ? {}
               : {
                   display: "none",
@@ -1023,7 +1095,7 @@ const Reader = (props: ReaderProps) => {
           <SpeechDialog />
         </div>
       }
-      {props.isAnnotationOpen && <AnnotationDialog />}
+      {isAnnotationOpen && <AnnotationDialog />}
     </div>
   );
 };

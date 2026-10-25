@@ -1,6 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./updateInfo.css";
-import { DetailDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import { Trans } from "react-i18next";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
@@ -12,19 +13,24 @@ import copy from "copy-text-to-clipboard";
 import toast from "react-hot-toast";
 import i18n from "../../../i18n";
 
-const DetailDialog = (props: DetailDialogProps) => {
+const DetailDialog = () => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const handleDetailDialog = useAppStore((s) => s.handleDetailDialog);
+  const handleShelf = useAppStore((s) => s.handleShelf);
+  const handleMode = useAppStore((s) => s.handleMode);
+  const navigate = useNavigate();
   const [cover, setCover] = useState("");
   const [isCoverExist, setIsCoverExist] = useState(false);
   const [shelfLocation, setShelfLocation] = useState<string[]>([]);
 
   useEffect(() => {
     (async () => {
-      setCover(await CoverUtil.getCover(props.currentBook));
-      setIsCoverExist(await CoverUtil.isCoverExist(props.currentBook));
+      setCover(await CoverUtil.getCover(currentBook));
+      setIsCoverExist(await CoverUtil.isCoverExist(currentBook));
       let shelfList = ConfigService.getAllMapConfig("shelfList");
       let nextShelfLocation: string[] = [];
       for (let shelf in shelfList) {
-        if (shelfList[shelf].indexOf(props.currentBook.key) > -1) {
+        if (shelfList[shelf].indexOf(currentBook.key) > -1) {
           nextShelfLocation.push(shelf);
         }
       }
@@ -33,13 +39,13 @@ const DetailDialog = (props: DetailDialogProps) => {
   }, []);
 
   const handleClose = () => {
-    props.handleDetailDialog(false);
+    handleDetailDialog(false);
   };
   const handleShelfClick = (shelfTitle: string) => {
-    props.handleDetailDialog(false);
-    props.handleShelf(shelfTitle);
-    props.handleMode("shelf");
-    props.history.push("/manager/shelf");
+    handleDetailDialog(false);
+    handleShelf(shelfTitle);
+    handleMode("shelf");
+    navigate("/manager/shelf");
   };
 
   const renderShelfLocation = (shelfLocationList: string[]) => {
@@ -60,47 +66,47 @@ const DetailDialog = (props: DetailDialogProps) => {
       );
     });
   };
-  const fileSize = props.currentBook.size
-    ? props.currentBook.size / 1024 / 1024 > 1
-      ? parseFloat(props.currentBook.size / 1024 / 1024 + "").toFixed(2) + "Mb"
-      : parseInt(props.currentBook.size / 1024 + "") + "Kb"
+  const fileSize = currentBook.size
+    ? currentBook.size / 1024 / 1024 > 1
+      ? parseFloat(currentBook.size / 1024 / 1024 + "").toFixed(2) + "Mb"
+      : parseInt(currentBook.size / 1024 + "") + "Kb"
     : "0Kb";
   const infoFields: { label: string; value: string }[] = [
     {
       label: "Publisher",
-      value: props.currentBook.publisher || "-",
+      value: currentBook.publisher || "-",
     },
     {
       label: "Published date",
-      value: formatDateToDay(props.currentBook.published) || "-",
+      value: formatDateToDay(currentBook.published) || "-",
     },
     {
       label: "Modified date",
-      value: formatDateToDay(props.currentBook.modified) || "-",
+      value: formatDateToDay(currentBook.modified) || "-",
     },
     {
       label: "Language",
-      value: props.currentBook.language || "-",
+      value: currentBook.language || "-",
     },
     {
       label: "Rights",
-      value: props.currentBook.rights || "-",
+      value: currentBook.rights || "-",
     },
     { label: "File size", value: fileSize },
     {
       label: "Added on",
-      value: formatTimestamp(parseInt(props.currentBook.key)),
+      value: formatTimestamp(parseInt(currentBook.key)),
     },
     {
       label: "Format",
-      value: props.currentBook.format || "-",
+      value: currentBook.format || "-",
     },
   ];
   const metadataFields: { label: string; value: string }[] = [
-    { label: "Identifier", value: props.currentBook.identifier },
-    { label: "Subject", value: props.currentBook.subject },
-    { label: "ISBN", value: props.currentBook.isbn },
-    { label: "Layout", value: props.currentBook.layout },
+    { label: "Identifier", value: currentBook.identifier },
+    { label: "Subject", value: currentBook.subject },
+    { label: "ISBN", value: currentBook.isbn },
+    { label: "Layout", value: currentBook.layout },
   ].filter((item) => item.value);
 
   return (
@@ -124,8 +130,8 @@ const DetailDialog = (props: DetailDialogProps) => {
               >
                 <EmptyCover
                   {...{
-                    format: props.currentBook.format,
-                    title: props.currentBook.name,
+                    format: currentBook.format,
+                    title: currentBook.name,
                     scale: 1.2,
                   }}
                 />
@@ -134,9 +140,9 @@ const DetailDialog = (props: DetailDialogProps) => {
           </div>
         </div>
 
-        <p className="detail-dialog-book-title">{props.currentBook.name}</p>
+        <p className="detail-dialog-book-title">{currentBook.name}</p>
         <p className="detail-dialog-book-author">
-          <Trans>{props.currentBook.author || "Unknown author"}</Trans>
+          <Trans>{currentBook.author || "Unknown author"}</Trans>
         </p>
 
         <div className="detail-sub-info">
@@ -199,8 +205,8 @@ const DetailDialog = (props: DetailDialogProps) => {
             <Trans>Description</Trans>:
           </p>
           <div className="detail-dialog-book-detail">
-            {props.currentBook.description ? (
-              Parser(DOMPurify.sanitize(props.currentBook.description))
+            {currentBook.description ? (
+              Parser(DOMPurify.sanitize(currentBook.description))
             ) : (
               <Trans>Empty</Trans>
             )}

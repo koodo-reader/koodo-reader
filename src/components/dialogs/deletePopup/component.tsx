@@ -1,15 +1,17 @@
+import { useTranslation } from "react-i18next";
 import { Trans } from "react-i18next";
 import { DeletePopupProps } from "./interface";
 import toast from "react-hot-toast";
 
 const DeletePopup = (props: DeletePopupProps) => {
+  const { t } = useTranslation();
   const handleCancel = () => {
     props.handleDeletePopup(false);
   };
   const handleComfirm = () => {
     props.handleDeletePopup(false);
     props.handleDeleteOpearion();
-    toast.success(props.t("Deletion successful"));
+    toast.success(t("Deletion successful"));
   };
   return (
     <div className="delete-dialog-container">

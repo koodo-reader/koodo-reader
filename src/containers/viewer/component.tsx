@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { ViewerProps, ViewerState } from "./interface";
-import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
 import PopupMenu from "../../components/popups/popupMenu";
 import Background from "../../components/background";
@@ -57,20 +56,95 @@ import axios from "axios";
 import { getBuiltinOcr } from "../../utils/plugins/rendererRegistry";
 import { resolveStoredPlugin } from "../../utils/plugins/records";
 import type { PluginConfig } from "../../utils/plugins/types";
+import { useAppStore } from "../../store/useAppStore";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
 const Viewer = (props: ViewerProps) => {
-  const propsRef = useRef(props);
-  propsRef.current = props;
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const isNavLocked = useAppStore((s) => s.reader.isNavLocked);
+  const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
+  const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
+  const isOpenMenu = useAppStore((s) => s.viewArea.isOpenMenu);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
+  const menuMode = useAppStore((s) => s.viewArea.menuMode);
+  const scale = useAppStore((s) => s.reader.scale);
+  const isFitPage = useAppStore((s) => s.reader.isFitPage);
+  const margin = useAppStore((s) => s.reader.margin);
+  const isHideBackground = useAppStore((s) => s.reader.isHideBackground);
+  const isParagraphMode = useAppStore((s) => s.reader.isParagraphMode);
+  const isReadingRuler = useAppStore((s) => s.reader.isReadingRuler);
+  const isSpeedReading = useAppStore((s) => s.reader.isSpeedReading);
+  const isMergeWord = useAppStore((s) => s.reader.isMergeWord);
+  const isShowPageBorder = useAppStore((s) => s.reader.isShowPageBorder);
+  const textOrientation = useAppStore((s) => s.reader.textOrientation);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
+  const handleReadingState = useAppStore((s) => s.handleReadingState);
+  const handleHtmlBook = useAppStore((s) => s.handleHtmlBook);
+  const handleRenderBookFunc = useAppStore((s) => s.handleRenderBookFunc);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleOpenMenu = useAppStore((s) => s.handleOpenMenu);
+  const handleCurrentChapter = useAppStore((s) => s.handleCurrentChapter);
+  const handleNoteKey = useAppStore((s) => s.handleNoteKey);
+  const handleCurrentChapterIndex = useAppStore(
+    (s) => s.handleCurrentChapterIndex
+  );
+  const handleFetchNotes = useAppStore((s) => s.handleFetchNotes);
+  const handleFetchBookmarks = useAppStore((s) => s.handleFetchBookmarks);
+  const handleMenuMode = useAppStore((s) => s.handleMenuMode);
+  const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
+  const handleScale = useAppStore((s) => s.handleScale);
+  const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
+
+  const connected = {
+    currentBook,
+    htmlBook,
+    isNavLocked,
+    isSettingLocked,
+    isDockedRight,
+    isOpenMenu,
+    isAuthed,
+    readerMode,
+    menuMode,
+    scale,
+    isFitPage,
+    margin,
+    isHideBackground,
+    isParagraphMode,
+    isReadingRuler,
+    isSpeedReading,
+    isMergeWord,
+    isShowPageBorder,
+    textOrientation,
+    renderBookFunc,
+    handleReadingState,
+    handleHtmlBook,
+    handleRenderBookFunc,
+    handleFetchBooks,
+    handleOpenMenu,
+    handleCurrentChapter,
+    handleNoteKey,
+    handleCurrentChapterIndex,
+    handleFetchNotes,
+    handleFetchBookmarks,
+    handleMenuMode,
+    handleFetchPlugins,
+    handleScale,
+    handleBackgroundColor,
+    handleLeaveReader: props.handleLeaveReader,
+  };
+  const propsRef = useRef(connected);
+  propsRef.current = connected;
   const [state, setState] = useState<ViewerState>({
     rect: null,
     isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
     isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
     chapterDocIndex: parseInt(
-      ConfigService.getObjectConfig(props.currentBook.key, "recordLocation", {})
+      ConfigService.getObjectConfig(currentBook.key, "recordLocation", {})
         .chapterDocIndex || 0
     ),
     pageOffset: "",
@@ -84,7 +158,15 @@ const Viewer = (props: ViewerProps) => {
     setState((prev) => ({ ...prev, ...patch }));
   const resizeHandlerRef = useRef<(() => void) | null>(null);
   const pendingRerenderRef = useRef(false);
-  const prevWidthPropsRef = useRef(props);
+  const prevWidthPropsRef = useRef({
+    margin,
+    scale,
+    readerMode,
+    isNavLocked,
+    isSettingLocked,
+    isFitPage,
+    isDockedRight,
+  });
 
   const handleHighlight = async (rendition: any) => {
     if (!rendition) return;
@@ -726,9 +808,17 @@ const Viewer = (props: ViewerProps) => {
   }, []);
 
   useEffect(() => {
-    const nextProps = props;
+    const nextProps = {
+      margin,
+      scale,
+      readerMode,
+      isNavLocked,
+      isSettingLocked,
+      isFitPage,
+      isDockedRight,
+    };
     const prevProps = prevWidthPropsRef.current;
-    prevWidthPropsRef.current = props;
+    prevWidthPropsRef.current = nextProps;
     if (
       nextProps.margin !== prevProps.margin ||
       nextProps.scale !== prevProps.scale ||
@@ -753,49 +843,49 @@ const Viewer = (props: ViewerProps) => {
   });
 
   let isReadingAid =
-    !isReadingRawPDF(props.currentBook) &&
-    (props.isParagraphMode || props.isSpeedReading);
+    !isReadingRawPDF(currentBook) &&
+    (isParagraphMode || isSpeedReading);
   return (
     <>
-      {props.htmlBook && !isReadingAid ? (
+      {htmlBook && !isReadingAid ? (
         <PopupMenu
           {...({
-            rendition: props.htmlBook.rendition,
+            rendition: htmlBook.rendition,
             rect: state.rect,
             chapterDocIndex: state.chapterDocIndex,
             chapter: state.chapter,
           } as any)}
         />
       ) : null}
-      {props.htmlBook ? (
+      {htmlBook ? (
         <PopupRefer
           {...({
-            rendition: props.htmlBook.rendition,
+            rendition: htmlBook.rendition,
             chapterDocIndex: state.chapterDocIndex,
           } as any)}
         />
       ) : null}
-      {props.htmlBook &&
-      (props.isDockedRight ||
-        (props.isOpenMenu &&
-          (props.menuMode === "dict" ||
-            props.menuMode === "trans" ||
-            props.menuMode === "assistant" ||
-            props.menuMode === "note"))) ? (
+      {htmlBook &&
+      (isDockedRight ||
+        (isOpenMenu &&
+          (menuMode === "dict" ||
+            menuMode === "trans" ||
+            menuMode === "assistant" ||
+            menuMode === "note"))) ? (
         <PopupBox
           {...({
-            rendition: props.htmlBook.rendition,
+            rendition: htmlBook.rendition,
             rect: state.rect,
             chapterDocIndex: state.chapterDocIndex,
             chapter: state.chapter,
           } as any)}
         />
       ) : null}
-      {props.htmlBook && props.currentBook.format !== "PDF" && (
+      {htmlBook && currentBook.format !== "PDF" && (
         <ImageViewer
           {...({
             isShow: props.isShow,
-            rendition: props.htmlBook.rendition,
+            rendition: htmlBook.rendition,
             handleEnterReader: props.handleEnterReader,
             handleLeaveReader: props.handleLeaveReader,
           } as any)}
@@ -803,14 +893,14 @@ const Viewer = (props: ViewerProps) => {
       )}
       <div
         className={
-          props.readerMode === "scroll" &&
-          !isReadingAidMode(props.currentBook.format, props.currentBook.key)
+          readerMode === "scroll" &&
+          !isReadingAidMode(currentBook.format, currentBook.key)
             ? "html-viewer-page scrolling-html-viewer-page"
             : "html-viewer-page"
         }
         id="page-area"
         style={
-          props.readerMode === "scroll" && document.body.clientWidth >= 570
+          readerMode === "scroll" && document.body.clientWidth >= 570
             ? {
                 // marginLeft: this.state.pageOffset,
                 // marginRight: this.state.pageOffset,
@@ -826,17 +916,17 @@ const Viewer = (props: ViewerProps) => {
         }
       ></div>
       <PageWidget />
-      {props.isHideBackground ||
-      props.textOrientation === "vertical" ||
-      props.isShowPageBorder ||
-      ((props.isParagraphMode ||
-        props.isReadingRuler ||
-        props.isSpeedReading) &&
-        !isReadingRawPDF(props.currentBook)) ||
-      props.isMergeWord ? null : props.currentBook.key ? (
+      {isHideBackground ||
+      textOrientation === "vertical" ||
+      isShowPageBorder ||
+      ((isParagraphMode ||
+        isReadingRuler ||
+        isSpeedReading) &&
+        !isReadingRawPDF(currentBook)) ||
+      isMergeWord ? null : currentBook.key ? (
         <Background />
       ) : null}
     </>
   );
 };
-export default withRouter(Viewer as any);
+export default Viewer;

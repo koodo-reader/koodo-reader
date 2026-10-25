@@ -1,30 +1,11 @@
 import BookModel from "../../models/Book";
-import { RouteComponentProps } from "react-router";
 
-export interface BookItemProps extends RouteComponentProps<any> {
+export interface BookItemProps {
   book: BookModel;
-  percentage: number;
-  currentBook: BookModel;
-  isOpenActionDialog: boolean;
-  isSelectBook: boolean;
-  isSelected: boolean;
-  selectedBooks: string[];
-  refreshBookKey: string;
+  isSelected?: boolean;
   allBooks?: BookModel[];
   bookIndex?: number;
-  handleRefreshBookCover: (key: string) => void;
-  handleSelectBook: (isSelectBook: boolean) => void;
-  handleReadingBook: (book: BookModel) => void;
-  handleEditDialog: (isShow: boolean) => void;
-  handleDeleteDialog: (isShow: boolean) => void;
-  handleAddDialog: (isShow: boolean) => void;
-  handleActionDialog: (isShowActionDialog: boolean) => void;
 
-  t: (title: string) => string;
-  handleFetchBooks: () => void;
-  handleSelectedBooks: (selectedBooks: string[]) => void;
-  handleCollectionDialogBooks: (books: string[]) => void;
-  handleAddCollectionDialog: (isOpen: boolean) => void;
 }
 export interface BookItemState {
   isHover: boolean;

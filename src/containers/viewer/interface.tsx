@@ -4,52 +4,17 @@ import HtmlBook from "../../models/HtmlBook";
 export interface ViewerProps {
   book: BookModel;
   rendition: any;
-  currentBook: BookModel;
 
-  menuMode: string;
-  htmlBook: HtmlBook;
   isShow: boolean;
-  readerMode: string;
-  isOpenMenu: boolean;
-  isAuthed: boolean;
-  isNavLocked: boolean;
-  isSettingLocked: boolean;
-  isDockedRight: boolean;
-  isHideBackground: boolean;
-  isParagraphMode: boolean;
-  isReadingRuler: boolean;
-  isSpeedReading: boolean;
-  isMergeWord: boolean;
-  isShowPageBorder: boolean;
-  textOrientation: string;
-
-  scale: string;
-  isFitPage: boolean;
-  margin: string;
-  handleRenderBookFunc: (renderBookFunc: () => void) => void;
 
 
-  t: (title: string) => string;
-  handleReadingState: (isReading: boolean) => void;
 
-  handleHtmlBook: (htmlBook: HtmlBook | null) => void;
+
   handleLeaveReader: (position: string) => void;
   handleEnterReader: (position: string) => void;
-  handleFetchBooks: () => void;
-  handleFetchNotes: () => void;
-  handleFetchPlugins: () => void;
-  handleFetchBookmarks: () => void;
-  handleNoteKey: (key: string) => void;
-  handleOpenMenu: (isOpenMenu: boolean) => void;
-  handleMenuMode: (menu: string) => void;
-
-  handleCurrentChapter: (currentChapter: string) => void;
-  handleCurrentChapterIndex: (currentChapterIndex: number) => void;
 
 
-  handleScale: (scale: string) => void;
-  renderBookFunc: () => void;
-  handleBackgroundColor: (color: string) => void;
+
 }
 export interface ViewerState {
 

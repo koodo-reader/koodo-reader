@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import "./dictSetting.css";
 import { SettingInfoProps } from "./interface";
@@ -9,8 +10,12 @@ import DictUtil, {
 } from "../../../utils/file/dictUtil";
 import { getFileNameWithoutExtension } from "../../../utils/common";
 import { KookitConfig } from "../../../assets/lib/kookit-extra-browser.min";
+import { useAppStore } from "../../../store/useAppStore";
 
 const DictSetting = (props: SettingInfoProps) => {
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
+  const { t } = useTranslation();
   const [dicts, setDicts] = useState<DictMeta[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [downloadingId, setDownloadingId] = useState("");
@@ -56,11 +61,11 @@ const DictSetting = (props: SettingInfoProps) => {
 
       const newDict: DictMeta = { id, ...meta };
       setDicts((prev) => [...prev, newDict]);
-      props.handleFetchPlugins();
-      toast.success(props.t("Import successful"));
+      handleFetchPlugins();
+      toast.success(t("Import successful"));
     } catch (err) {
       console.error(err);
-      toast.error(props.t("Import failed"));
+      toast.error(t("Import failed"));
     }
   };
 
@@ -70,11 +75,11 @@ const DictSetting = (props: SettingInfoProps) => {
       DictUtil.deleteDictMeta(dict.id);
       DictUtil.removeDictId(dict.id);
       setDicts((prev) => prev.filter((d) => d.id !== dict.id));
-      props.handleFetchPlugins();
-      toast.success(props.t("Deletion successful"));
+      handleFetchPlugins();
+      toast.success(t("Deletion successful"));
     } catch (err) {
       console.error(err);
-      toast.error(props.t("Deletion failed"));
+      toast.error(t("Deletion failed"));
     }
   };
 
@@ -84,7 +89,7 @@ const DictSetting = (props: SettingInfoProps) => {
 
   const handleDownloadCloudDict = async (dict: CloudDictItem) => {
     if (isCloudDictInstalled(dict.id)) {
-      toast.success(props.t("Dictionary already downloaded"));
+      toast.success(t("Dictionary already downloaded"));
       return;
     }
     if (downloadingId) return;
@@ -93,21 +98,21 @@ const DictSetting = (props: SettingInfoProps) => {
     try {
       const success = await DictUtil.downloadCloudDict(
         dict,
-        props.isAuthed,
+        isAuthed,
         (progress) => {
           setDownloadProgress(progress);
         }
       );
       if (success) {
         loadDicts();
-        props.handleFetchPlugins();
-        toast.success(props.t("Download successful"));
+        handleFetchPlugins();
+        toast.success(t("Download successful"));
       } else {
-        toast.error(props.t("Download failed"));
+        toast.error(t("Download failed"));
       }
     } catch (err) {
       console.error(err);
-      toast.error(props.t("Download failed"));
+      toast.error(t("Download failed"));
     } finally {
       setDownloadingId(""); setDownloadProgress(0);
     }

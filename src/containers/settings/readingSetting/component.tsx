@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { SettingInfoProps } from "./interface";
 import { Trans } from "react-i18next";
@@ -6,9 +7,15 @@ import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readingSettingList } from "../../../constants/settingList";
 import SwitchRow from "../../../components/readerSettings/switchRow";
+import { useAppStore } from "../../../store/useAppStore";
 declare var window: any;
 
 const ReadingSetting = (props: SettingInfoProps) => {
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handleMergeWord = useAppStore((s) => s.handleMergeWord);
+  const { t } = useTranslation();
   const [state, setState] = useState<Record<string, boolean>>({
     isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
     isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
@@ -32,14 +39,14 @@ const ReadingSetting = (props: SettingInfoProps) => {
   });
 
   const handleRest = (_bool: boolean) => {
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
-  const handleSetting = (stateName: string) => {
-    if (stateName === "isLemmatizeWord" && !props.isAuthed) {
-      toast.error(props.t("Please upgrade to Pro to use this feature"));
-      props.handleSetting(true);
-      props.handleSettingMode("account");
+  const handleToggleSetting = (stateName: string) => {
+    if (stateName === "isLemmatizeWord" && !isAuthed) {
+      toast.error(t("Please upgrade to Pro to use this feature"));
+      handleSetting(true);
+      handleSettingMode("account");
       return;
     }
     setState((prev) => ({ ...prev, [stateName]: !prev[stateName] }));
@@ -49,30 +56,30 @@ const ReadingSetting = (props: SettingInfoProps) => {
 
   const handleResetReaderPosition = () => {
     window.electronAPI.invoke("reset-reader-position", "ping");
-    toast.success(props.t("Reset successful"));
+    toast.success(t("Reset successful"));
   };
 
-  const handleMergeWord = () => {
+  const handleMergeWordToggle = () => {
     if (state.isOpenInMain && !state.isMergeWord) {
-      toast(props.t("Please turn off open books in the main window"));
+      toast(t("Please turn off open books in the main window"));
       return;
     }
     if (state.isAutoFullscreen && !state.isMergeWord) {
-      toast(props.t("Please turn off auto open book in full screen"));
+      toast(t("Please turn off auto open book in full screen"));
       return;
     }
-    handleSetting("isMergeWord");
-    props.handleMergeWord(
+    handleToggleSetting("isMergeWord");
+    handleMergeWord(
       ConfigService.getReaderConfig("isMergeWord") === "yes"
     );
   };
 
   const handleOpenInMain = () => {
     if (state.isMergeWord && !state.isOpenInMain) {
-      toast(props.t("Please turn off merge with word first"));
+      toast(t("Please turn off merge with word first"));
       return;
     }
-    handleSetting("isOpenInMain");
+    handleToggleSetting("isOpenInMain");
   };
 
   const renderSwitchOption = (optionList: any[]) => {
@@ -89,13 +96,13 @@ const ReadingSetting = (props: SettingInfoProps) => {
             onClick={() => {
               switch (item.propName) {
                 case "isMergeWord":
-                  handleMergeWord();
+                  handleMergeWordToggle();
                   break;
                 case "isOpenInMain":
                   handleOpenInMain();
                   break;
                 default:
-                  handleSetting(item.propName);
+                  handleToggleSetting(item.propName);
                   break;
               }
             }}

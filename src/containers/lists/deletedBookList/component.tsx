@@ -7,7 +7,6 @@ import CollectionItem from "../../../components/collectionItem";
 import BookModel from "../../../models/Book";
 import { Trans } from "react-i18next";
 import { BookListProps } from "./interface";
-import { withRouter } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import DatabaseService from "../../../utils/storage/databaseService";
 import {
@@ -15,22 +14,29 @@ import {
   CollectionUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import EmptyPage from "../../emptyPage";
+import { useAppStore } from "../../../store/useAppStore";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 
 const BookList = (props: BookListProps) => {
+  const deletedBooks = useAppStore((s) => s.manager.deletedBooks);
+  const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
+  const viewMode = useAppStore((s) => s.manager.viewMode);
+  const selectedBooks = useAppStore((s) => s.manager.selectedBooks);
+  const handleDeleteDialog = useAppStore((s) => s.handleDeleteDialog);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
   const [fullBooksData, setFullBooksData] = useState<BookModel[]>([]);
 
   useEffect(() => {
-    props.handleFetchBooks();
+    handleFetchBooks();
   }, []);
 
   useEffect(() => {
     let cancelled = false;
     const loadDeletedBooks = async () => {
       let nextFullBooksData: BookModel[] = [];
-      for (let i = 0; i < props.deletedBooks.length; i++) {
-        let book = props.deletedBooks[i];
+      for (let i = 0; i < deletedBooks.length; i++) {
+        let book = deletedBooks[i];
         if (collectionUtil.isCollection(book.key)) {
           let collection = collectionUtil.getCollection(book.key);
           if (collection) {
@@ -53,7 +59,7 @@ const BookList = (props: BookListProps) => {
     return () => {
       cancelled = true;
     };
-  }, [props.deletedBooks]);
+  }, [deletedBooks]);
 
   const renderBookList = () => {
     let books = fullBooksData;
@@ -61,22 +67,22 @@ const BookList = (props: BookListProps) => {
       if (collectionUtil.isCollection(item.key)) {
         const collection = collectionUtil.getCollection(item.key);
         if (!collection) return null;
-        return props.viewMode === "list" ? (
+        return viewMode === "list" ? (
           <CollectionItem
             key={index}
             {...({
               collection,
               viewMode: "list",
-              isSelected: props.selectedBooks.indexOf(item.key) > -1,
+              isSelected: selectedBooks.indexOf(item.key) > -1,
             } as any)}
           />
-        ) : props.viewMode === "card" ? (
+        ) : viewMode === "card" ? (
           <CollectionItem
             key={index}
             {...({
               collection,
               viewMode: "card",
-              isSelected: props.selectedBooks.indexOf(item.key) > -1,
+              isSelected: selectedBooks.indexOf(item.key) > -1,
             } as any)}
           />
         ) : (
@@ -85,7 +91,7 @@ const BookList = (props: BookListProps) => {
             {...({
               collection,
               viewMode: "cover",
-              isSelected: props.selectedBooks.indexOf(item.key) > -1,
+              isSelected: selectedBooks.indexOf(item.key) > -1,
             } as any)}
           />
         );
@@ -93,19 +99,19 @@ const BookList = (props: BookListProps) => {
       if (!item.format || item.format === "COLLECTION") {
         return null;
       }
-      return props.viewMode === "list" ? (
+      return viewMode === "list" ? (
         <BookListItem
           {...{
             key: index,
             book: item,
           }}
         />
-      ) : props.viewMode === "card" ? (
+      ) : viewMode === "card" ? (
         <BookCardItem
           {...{
             key: index,
             book: item,
-            isSelected: props.selectedBooks.indexOf(item.key) > -1,
+            isSelected: selectedBooks.indexOf(item.key) > -1,
           }}
         />
       ) : (
@@ -113,7 +119,7 @@ const BookList = (props: BookListProps) => {
           {...{
             key: index,
             book: item,
-            isSelected: props.selectedBooks.indexOf(item.key) > -1,
+            isSelected: selectedBooks.indexOf(item.key) > -1,
           }}
         />
       );
@@ -126,7 +132,7 @@ const BookList = (props: BookListProps) => {
         <div
           className="book-list-container-parent"
           style={
-            props.isCollapsed
+            isCollapsed
               ? { width: "calc(100vw - 70px)", left: "70px" }
               : {}
           }
@@ -142,7 +148,7 @@ const BookList = (props: BookListProps) => {
         <div
           className="book-list-header"
           style={
-            props.isCollapsed
+            isCollapsed
               ? { width: "calc(100% - 70px)", left: "70px" }
               : {}
           }
@@ -151,9 +157,9 @@ const BookList = (props: BookListProps) => {
           <div
             className="booklist-delete-container"
             onClick={() => {
-              props.handleDeleteDialog(true);
+              handleDeleteDialog(true);
             }}
-            style={props.isCollapsed ? { left: "calc(50% - 60px)" } : {}}
+            style={isCollapsed ? { left: "calc(50% - 60px)" } : {}}
           >
             <Trans>Delete all books</Trans>
           </div>
@@ -164,4 +170,4 @@ const BookList = (props: BookListProps) => {
   );
 };
 
-export default withRouter(BookList as any);
+export default BookList;

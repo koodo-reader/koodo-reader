@@ -5,22 +5,25 @@ import {
   HighlightUtil,
   KookitConfig,
 } from "../../assets/lib/kookit-extra-browser.min";
+import { useAppStore } from "../../store/useAppStore";
 
 const highlightUtil: any = new HighlightUtil(ConfigService);
 
 const ColorOption = (props: ColorProps) => {
+  const highlight = useAppStore((s) => s.reader.highlight);
+  const handleHighlight = useAppStore((s) => s.handleHighlight);
   const handleStyleType = (styleType: string) => {
     const color = KookitConfig.HighlightPresetColors[styleType][0];
     const value = { styleType, color };
-    props.handleHighlight(value);
+    handleHighlight(value);
     highlightUtil.saveNoteHighlightValue(value);
   };
 
   const handlePresetColor = (index: number) => {
-    const styleType = props.highlight.styleType;
+    const styleType = highlight.styleType;
     const color = KookitConfig.HighlightPresetColors[styleType][index];
     const value = { styleType, color };
-    props.handleHighlight(value);
+    handleHighlight(value);
     highlightUtil.saveNoteHighlightValue(value);
     if (!props.isEdit) {
       setTimeout(() => {
@@ -29,7 +32,7 @@ const ColorOption = (props: ColorProps) => {
     }
   };
 
-  const { styleType, color } = props.highlight;
+  const { styleType, color } = highlight;
   const presetColors = KookitConfig.HighlightPresetColors[styleType];
 
   return (

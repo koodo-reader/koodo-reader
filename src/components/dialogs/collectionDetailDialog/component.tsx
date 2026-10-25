@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import "./collectionDetailDialog.css";
 import { Trans } from "react-i18next";
@@ -9,15 +10,21 @@ import {
 } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import BookModel from "../../../models/Book";
-import { CollectionDetailDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 
-const CollectionDetailDialog = (props: CollectionDetailDialogProps) => {
+const CollectionDetailDialog = () => {
+  const currentCollectionKey = useAppStore((s) => s.collection.currentCollectionKey);
+  const handleCollectionDetailDialog = useAppStore(
+    (s) => s.handleCollectionDetailDialog
+  );
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const { t } = useTranslation();
   const [books, setBooks] = useState<BookModel[]>([]);
 
   const loadBooks = async () => {
-    let collection = collectionUtil.getCollection(props.currentCollectionKey);
+    let collection = collectionUtil.getCollection(currentCollectionKey);
     if (!collection) {
       setBooks([]);
       return;
@@ -35,23 +42,23 @@ const CollectionDetailDialog = (props: CollectionDetailDialogProps) => {
 
   useEffect(() => {
     loadBooks();
-  }, [props.currentCollectionKey]);
+  }, [currentCollectionKey]);
 
   const handleCancel = () => {
-    props.handleCollectionDetailDialog(false);
+    handleCollectionDetailDialog(false);
   };
 
   const handleRemoveBook = (event: React.MouseEvent, book: BookModel) => {
     event.stopPropagation();
-    collectionUtil.removeBooksFromCollection(props.currentCollectionKey, [
+    collectionUtil.removeBooksFromCollection(currentCollectionKey, [
       book.key,
     ]);
-    toast.success(props.t("Modification successful"));
+    toast.success(t("Modification successful"));
     loadBooks();
-    props.handleFetchBooks();
+    handleFetchBooks();
   };
 
-  let collection = collectionUtil.getCollection(props.currentCollectionKey);
+  let collection = collectionUtil.getCollection(currentCollectionKey);
   if (!collection) {
     return null;
   }
@@ -86,7 +93,7 @@ const CollectionDetailDialog = (props: CollectionDetailDialogProps) => {
                 />
                 <span
                   className="icon-close collection-detail-book-remove"
-                  title={props.t("Remove from collection")}
+                  title={t("Remove from collection")}
                   onClick={(event) => {
                     handleRemoveBook(event, book);
                   }}

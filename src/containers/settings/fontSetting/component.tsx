@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./fontSetting.css";
 import { SettingInfoProps, SettingInfoState, InstalledFont } from "./interface";
@@ -10,8 +11,12 @@ import FontUtil, {
 } from "../../../utils/file/fontUtil";
 import { ChineseFonts, NonChineseFonts } from "../../../constants/fontConfig";
 import { applyCustomSystemFont } from "../../../utils/reader/launchUtil";
+import { useAppStore } from "../../../store/useAppStore";
 
 const FontSetting = (props: SettingInfoProps) => {
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const { t } = useTranslation();
   const [state, setState] = useState<SettingInfoState>(() => ({
     fonts: [],
     loadedUrls: {},
@@ -72,13 +77,13 @@ const FontSetting = (props: SettingInfoProps) => {
 
     const ext = FontUtil.getFontExtension(file.name);
     if (!FontUtil.isValidFontExtension(ext)) {
-      toast.error(props.t("Only ttf, otf, woff files are supported"));
+      toast.error(t("Only ttf, otf, woff files are supported"));
       return;
     }
 
     const fontKey = FontUtil.normalizeFontName(file.name);
     if (FontUtil.getFontMeta(fontKey)) {
-      toast.error(props.t("Font already exists"));
+      toast.error(t("Font already exists"));
       return;
     }
 
@@ -99,10 +104,10 @@ const FontSetting = (props: SettingInfoProps) => {
         fonts: [...prev.fonts, newFont],
       }));
       FontUtil.notifyFontListChanged();
-      toast.success(props.t("Font added successfully"));
+      toast.success(t("Font added successfully"));
     } catch (err) {
       console.error(err);
-      toast.error(props.t("Import failed"));
+      toast.error(t("Import failed"));
     }
   };
 
@@ -133,10 +138,10 @@ const FontSetting = (props: SettingInfoProps) => {
           prev.readerFontKey === font.key ? "" : prev.readerFontKey,
       }));
       FontUtil.notifyFontListChanged();
-      toast.success(props.t("Deletion successful"));
+      toast.success(t("Deletion successful"));
     } catch (err) {
       console.error(err);
-      toast.error(props.t("Deletion failed"));
+      toast.error(t("Deletion failed"));
     }
   };
 
@@ -150,7 +155,7 @@ const FontSetting = (props: SettingInfoProps) => {
     if (!url) {
       url = await FontUtil.getFontUrl(font.key);
       if (!url) {
-        toast.error(props.t("Import failed"));
+        toast.error(t("Import failed"));
         setState((prev) => ({
           ...prev,
           previewFont: null,
@@ -186,7 +191,7 @@ const FontSetting = (props: SettingInfoProps) => {
     await applyCustomSystemFont();
     setState((prev) => ({ ...prev, appFontKey: font.key }));
     FontUtil.notifyFontListChanged();
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
   const handleClearAppFont = async () => {
@@ -194,23 +199,23 @@ const FontSetting = (props: SettingInfoProps) => {
     await applyCustomSystemFont();
     setState((prev) => ({ ...prev, appFontKey: "" }));
     FontUtil.notifyFontListChanged();
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
   const handleSetReaderFont = (font: InstalledFont) => {
     ConfigService.setReaderConfig("fontFamily", font.key);
     setState((prev) => ({ ...prev, readerFontKey: font.key }));
     FontUtil.notifyFontListChanged();
-    props.renderBookFunc?.();
-    toast.success(props.t("Change successful"));
+    renderBookFunc?.();
+    toast.success(t("Change successful"));
   };
 
   const handleClearReaderFont = () => {
     ConfigService.setReaderConfig("fontFamily", "");
     setState((prev) => ({ ...prev, readerFontKey: "" }));
     FontUtil.notifyFontListChanged();
-    props.renderBookFunc?.();
-    toast.success(props.t("Change successful"));
+    renderBookFunc?.();
+    toast.success(t("Change successful"));
   };
 
   const renderBadge = (font: InstalledFont) => {
@@ -308,7 +313,7 @@ const FontSetting = (props: SettingInfoProps) => {
     url: string;
   }) => {
     if (isFontInstalled(font.id)) {
-      toast.success(props.t("Font already downloaded"));
+      toast.success(t("Font already downloaded"));
       return;
     }
     if (stateRef.current.downloadingId) return;
@@ -321,20 +326,20 @@ const FontSetting = (props: SettingInfoProps) => {
     try {
       const success = await FontUtil.downloadFeaturedFont(
         font,
-        props.isAuthed,
+        isAuthed,
         (progress) => {
           setState((prev) => ({ ...prev, downloadProgress: progress }));
         }
       );
       if (success) {
         await loadAllFonts();
-        toast.success(props.t("Download successful"));
+        toast.success(t("Download successful"));
       } else {
-        toast.error(props.t("Download failed"));
+        toast.error(t("Download failed"));
       }
     } catch (err) {
       console.error(err);
-      toast.error(props.t("Download failed"));
+      toast.error(t("Download failed"));
     } finally {
       setState((prev) => ({
         ...prev,
@@ -383,7 +388,7 @@ const FontSetting = (props: SettingInfoProps) => {
                 className="font-featured-family-header"
                 onClick={() => handleToggleFamily(family)}
               >
-                <span>{translateFontName(family, props.t)}</span>
+                <span>{translateFontName(family, t)}</span>
                 <span
                   className="icon-dropdown font-featured-family-icon"
                   style={
@@ -410,8 +415,8 @@ const FontSetting = (props: SettingInfoProps) => {
                           }}
                         >
                           <span>
-                            {translateFontName(font.fontName, props.t)}{" "}
-                            {translateFontStyle(font.style, props.t)}
+                            {translateFontName(font.fontName, t)}{" "}
+                            {translateFontStyle(font.style, t)}
                           </span>
                           {installed ? (
                             <span

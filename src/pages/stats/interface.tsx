@@ -1,6 +1,5 @@
-import { RouteComponentProps } from "react-router";
 
-export interface StatsProps extends RouteComponentProps<any> {
+export interface StatsProps {
   t: (title: string) => string;
 }
 

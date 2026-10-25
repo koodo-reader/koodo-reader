@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import React, { useRef, useState } from "react";
 import "./importDialog.css";
 import { driveList } from "../../../constants/driveList";
 import { Trans } from "react-i18next";
-import { ImportDialogProps, ImportDialogState } from "./interface";
+import { ImportDialogState } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import _ from "underscore";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
@@ -30,7 +32,15 @@ type FileInfo = {
   path: string;
 };
 
-const ImportDialog = (props: ImportDialogProps) => {
+const ImportDialog = () => {
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const dataSourceList = useAppStore((s) => s.backupPage.dataSourceList);
+  const importBookFunc = useAppStore((s) => s.book.importBookFunc);
+  const handleImportDialog = useAppStore((s) => s.handleImportDialog);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handleSettingDrive = useAppStore((s) => s.handleSettingDrive);
+  const { t } = useTranslation();
   const [state, setState] = useState<ImportDialogState>(() => ({
     currentDrive: "",
     currentPath: "",
@@ -43,36 +53,36 @@ const ImportDialog = (props: ImportDialogProps) => {
   stateRef.current = state;
 
   const handleClose = () => {
-    props.handleImportDialog(false);
+    handleImportDialog(false);
   };
 
   const showMessage = (message: string) => {
-    toast(props.t(message));
+    toast(t(message));
   };
   const handleSelectSource = (event: any) => {
-    if (!props.dataSourceList.includes(event.target.value)) {
+    if (!dataSourceList.includes(event.target.value)) {
       toast(
-        props.t("Please add data source in the setting-Sync and backup first")
+        t("Please add data source in the setting-Sync and backup first")
       );
-      props.handleSetting(true);
-      props.handleSettingMode("sync");
+      handleSetting(true);
+      handleSettingMode("sync");
       return;
     }
     if (
       driveList.find((item) => item.value === event.target.value)?.isPro &&
-      !props.isAuthed
+      !isAuthed
     ) {
-      toast(props.t("Please upgrade to Pro to use this feature"));
-      props.handleSetting(true);
-      props.handleSettingMode("account");
+      toast(t("Please upgrade to Pro to use this feature"));
+      handleSetting(true);
+      handleSettingMode("account");
       return;
     }
     if (event.target.value === "add") {
       toast(
-        props.t("Please add data source in the setting-Sync and backup first")
+        t("Please add data source in the setting-Sync and backup first")
       );
-      props.handleSetting(true);
-      props.handleSettingMode("sync");
+      handleSetting(true);
+      handleSettingMode("sync");
 
       return;
     }
@@ -121,11 +131,11 @@ const ImportDialog = (props: ImportDialogProps) => {
     );
     if (!isSupported) {
       toast.error(
-        props.t("Unsupported file format") + ": " + item.name.split(".").pop()
+        t("Unsupported file format") + ": " + item.name.split(".").pop()
       );
       return;
     }
-    toast.loading(props.t("Downloading"), {
+    toast.loading(t("Downloading"), {
       id: "offline-book-import",
       position: "bottom-center",
     });
@@ -188,10 +198,10 @@ const ImportDialog = (props: ImportDialogProps) => {
       file = new File([blob], fileName);
     }
     toast.dismiss("importing");
-    await props.importBookFunc(file);
+    await importBookFunc(file);
   };
   const listAllFilesRecursively = async (folderName: string) => {
-    toast.loading(props.t("Scanning folder"), {
+    toast.loading(t("Scanning folder"), {
       id: "scanning",
     });
 
@@ -205,7 +215,7 @@ const ImportDialog = (props: ImportDialogProps) => {
 
       if (fileInfoList.length === 0) {
         toast.dismiss("scanning");
-        toast(props.t("No files found in this folder"));
+        toast(t("No files found in this folder"));
         return;
       }
       let selectedFileList = fileInfoList.filter((file) =>
@@ -214,7 +224,7 @@ const ImportDialog = (props: ImportDialogProps) => {
         )
       );
       toast.dismiss("scanning");
-      toast.success(props.t("Successfully scanned folder"));
+      toast.success(t("Successfully scanned folder"));
       for (let i = 0; i < selectedFileList.length; i++) {
         let fileInfo = selectedFileList[i];
 
@@ -284,7 +294,7 @@ const ImportDialog = (props: ImportDialogProps) => {
     try {
       if (isElectron) {
         toast.loading(
-          props.t("Please select the books in the Google Drive Picker"),
+          t("Please select the books in the Google Drive Picker"),
           {
             id: "google-picker",
           }
@@ -317,7 +327,7 @@ const ImportDialog = (props: ImportDialogProps) => {
     } catch (error) {
       toast.error(error instanceof Error ? error.message : String(error));
       console.error("Error creating Google Picker:", error);
-      toast.error(props.t("Failed to open Google Picker"));
+      toast.error(t("Failed to open Google Picker"));
     }
   };
 
@@ -338,11 +348,11 @@ const ImportDialog = (props: ImportDialogProps) => {
       const fileExtension =
         "." + googleFile.name.split(".").pop()?.toLowerCase();
       if (!supportedFormats.includes(fileExtension)) {
-        toast.error(props.t("Unsupported file format") + ": " + fileExtension);
+        toast.error(t("Unsupported file format") + ": " + fileExtension);
         return;
       }
 
-      toast.loading(props.t("Downloading") + ": " + googleFile.name, {
+      toast.loading(t("Downloading") + ": " + googleFile.name, {
         id: "google-download-" + googleFile.id,
         position: "bottom-center",
       });
@@ -356,7 +366,7 @@ const ImportDialog = (props: ImportDialogProps) => {
 
       toast.dismiss("google-download-" + googleFile.id);
 
-      await props.importBookFunc(file);
+      await importBookFunc(file);
     } catch (error) {
       toast.error(
         "Error importing Google file: " +
@@ -366,7 +376,7 @@ const ImportDialog = (props: ImportDialogProps) => {
         }
       );
       console.error("Error importing Google file:", error);
-      toast.error(props.t("Failed to import") + ": " + googleFile.name);
+      toast.error(t("Failed to import") + ": " + googleFile.name);
     }
   };
 
@@ -392,19 +402,19 @@ const ImportDialog = (props: ImportDialogProps) => {
                   key={item.value}
                   className={`cloud-drive-item `}
                   onClick={() => {
-                    if (item.isPro && !props.isAuthed) {
+                    if (item.isPro && !isAuthed) {
                       toast(
-                        props.t("Please upgrade to Pro to use this feature")
+                        t("Please upgrade to Pro to use this feature")
                       );
-                      props.handleSetting(true);
-                      props.handleSettingMode("account");
+                      handleSetting(true);
+                      handleSettingMode("account");
                       return;
                     }
 
-                    if (!props.dataSourceList.includes(item.value)) {
-                      props.handleSetting(true);
-                      props.handleSettingMode("sync");
-                      props.handleSettingDrive(item.value);
+                    if (!dataSourceList.includes(item.value)) {
+                      handleSetting(true);
+                      handleSettingMode("sync");
+                      handleSettingDrive(item.value);
                       let settingDrive = item.value;
                       if (
                         settingDrive === "dropbox" ||
@@ -447,7 +457,7 @@ const ImportDialog = (props: ImportDialogProps) => {
                   }}
                 >
                   <span className="cloud-drive-label">
-                    {props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+                    {t(item.label) + (item.isPro ? " (Pro)" : "")}
                   </span>
                   <span className="icon-dropdown import-dialog-more-file"></span>
                 </div>
@@ -482,7 +492,7 @@ const ImportDialog = (props: ImportDialogProps) => {
                 >
                   <span
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content={props.t("Import folder")}
+                    data-tooltip-content={t("Import folder")}
                   >
                     <span className="icon-import import-dialog-folder-icon"></span>
                   </span>
@@ -541,7 +551,7 @@ const ImportDialog = (props: ImportDialogProps) => {
           state.currentFileList.length === 0 &&
           !state.isWaitList && (
             <div className="loading-animation" style={{ height: "100%" }}>
-              {props.t("Empty")}
+              {t("Empty")}
             </div>
           )}
       </div>
@@ -550,7 +560,7 @@ const ImportDialog = (props: ImportDialogProps) => {
         style={{ left: "20px", color: "rgb(231, 69, 69)" }}
         onClick={async () => {
           if (state.selectedFileList.length === 0) {
-            toast.error(props.t("No file selected"));
+            toast.error(t("No file selected"));
             return;
           }
           for (let i = 0; i < state.selectedFileList.length; i++) {
@@ -564,7 +574,7 @@ const ImportDialog = (props: ImportDialogProps) => {
           }));
         }}
       >
-        {props.t("Import") + " (" + state.selectedFileList.length + ")"}
+        {t("Import") + " (" + state.selectedFileList.length + ")"}
       </div>
       <div
         className="import-dialog-back-button"
@@ -582,7 +592,7 @@ const ImportDialog = (props: ImportDialogProps) => {
           listFolder(state.currentDrive, parentPath);
         }}
       >
-        {props.t("Back to parent")}
+        {t("Back to parent")}
       </div>
 
       <div

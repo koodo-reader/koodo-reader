@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Trans } from "react-i18next";
-import { PdfCropDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import "../../readerSettings/sliderList/sliderList.css";
 import BookUtil from "../../../utils/file/bookUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -160,10 +160,12 @@ const PdfCropSlider = (props: PdfCropSliderProps) => {
   );
 };
 
-const PdfCropDialog = (props: PdfCropDialogProps) => {
+const PdfCropDialog = () => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const handlePdfCropDialog = useAppStore((s) => s.handlePdfCropDialog);
   const [crop, setCrop] = useState<Record<string, number>>(() => {
     const initialCrop = ConfigService.getObjectConfig(
-      props.currentBook?.key,
+      currentBook?.key,
       "pdfCrop",
       null
     );
@@ -181,7 +183,7 @@ const PdfCropDialog = (props: PdfCropDialogProps) => {
 
   const handleCommit = () => {
     const { top, bottom, left, right } = crop;
-    const bookKey = props.currentBook.key;
+    const bookKey = currentBook.key;
     if (top === 0 && bottom === 0 && left === 0 && right === 0) {
       ConfigService.deleteObjectConfig(bookKey, "pdfCrop");
     } else {
@@ -191,17 +193,17 @@ const PdfCropDialog = (props: PdfCropDialogProps) => {
         "pdfCrop"
       );
     }
-    BookUtil.reloadBooks(props.currentBook);
+    BookUtil.reloadBooks(currentBook);
   };
 
   return (
     <div
       className="sort-dialog-container pdf-crop-dialog-container"
       onMouseLeave={() => {
-        props.handlePdfCropDialog(false);
+        handlePdfCropDialog(false);
       }}
       onMouseEnter={() => {
-        props.handlePdfCropDialog(true);
+        handlePdfCropDialog(true);
       }}
       style={{
         top: "50px",

@@ -1,9 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import "./autoImportDialog.css";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { AutoImportDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import {
   AUTO_IMPORT_FOLDERS_KEY,
   scanFolderForNewBooks,
@@ -22,16 +23,20 @@ const saveFolders = (folders: string[]) => {
   ConfigService.setAllListConfig(folders, AUTO_IMPORT_FOLDERS_KEY);
 };
 
-const AutoImportDialog = (props: AutoImportDialogProps) => {
+const AutoImportDialog = () => {
+  const importBookFunc = useAppStore((s) => s.book.importBookFunc);
+  const handleAutoImportDialog = useAppStore((s) => s.handleAutoImportDialog);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const { t } = useTranslation();
   const [folders, setFolders] = useState<string[]>(loadFolders);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClose = () => {
-    props.handleAutoImportDialog(false);
+    handleAutoImportDialog(false);
   };
 
   const scanAndImportFolder = async (folderPath: string) => {
-    return scanFolderForNewBooks(folderPath, props.importBookFunc);
+    return scanFolderForNewBooks(folderPath, importBookFunc);
   };
 
   const handleAddFolder = async () => {
@@ -39,7 +44,7 @@ const AutoImportDialog = (props: AutoImportDialogProps) => {
     const newPath = await ipcRenderer.invoke("select-path");
     if (!newPath) return;
     if (folders.includes(newPath)) {
-      toast.error(props.t("Folder already added"));
+      toast.error(t("Folder already added"));
       return;
     }
     setIsLoading(true);
@@ -49,16 +54,16 @@ const AutoImportDialog = (props: AutoImportDialogProps) => {
     setIsLoading(false);
     saveFolders(nextFolders);
     if (imported > 0) {
-      toast.success(props.t("Auto import complete") + ": " + imported);
-      props.handleFetchBooks();
+      toast.success(t("Auto import complete") + ": " + imported);
+      handleFetchBooks();
     } else {
-      toast.success(props.t("No new books found"));
+      toast.success(t("No new books found"));
     }
   };
 
   const handleScanAllFolders = async () => {
     if (folders.length === 0) {
-      toast.error(props.t("No auto import folder added yet"));
+      toast.error(t("No auto import folder added yet"));
       return;
     }
     setIsLoading(true);
@@ -68,10 +73,10 @@ const AutoImportDialog = (props: AutoImportDialogProps) => {
     }
     setIsLoading(false);
     if (imported > 0) {
-      toast.success(props.t("Auto import complete") + ": " + imported);
-      props.handleFetchBooks();
+      toast.success(t("Auto import complete") + ": " + imported);
+      handleFetchBooks();
     } else {
-      toast.success(props.t("No new books found"));
+      toast.success(t("No new books found"));
     }
   };
 
@@ -79,7 +84,7 @@ const AutoImportDialog = (props: AutoImportDialogProps) => {
     const nextFolders = folders.filter((item) => item !== folderPath);
     setFolders(nextFolders);
     saveFolders(nextFolders);
-    toast.success(props.t("Folder removed"));
+    toast.success(t("Folder removed"));
   };
 
   return (
@@ -88,7 +93,7 @@ const AutoImportDialog = (props: AutoImportDialogProps) => {
       style={{ height: "450px", top: "calc(50% - 225px)" }}
     >
       <div className="backup-dialog-title">
-        {props.t("Auto import folder")}
+        {t("Auto import folder")}
       </div>
 
       <div className="import-dialog-option">
@@ -98,9 +103,9 @@ const AutoImportDialog = (props: AutoImportDialogProps) => {
           </div>
         ) : folders.length === 0 ? (
           <div className="auto-import-empty">
-            <div>{props.t("No auto import folder added yet")}</div>
+            <div>{t("No auto import folder added yet")}</div>
             <div style={{ marginTop: "8px" }}>
-              {props.t(
+              {t(
                 "Auto scan and import books when starting the app or when clicking Scan"
               )}
             </div>

@@ -1,14 +1,10 @@
 import BookModel from "../../../models/Book";
 
 export interface PopupReferProps {
-  currentBook: BookModel;
 
   menuMode: string;
   rendition: any;
   chapterDocIndex: number;
-  readerMode: string;
-  t: (title: string) => string;
-  handleJumpPosition: (jumpPosition: object | null) => void;
 }
 export interface PopupReferStates {
   rect: any;

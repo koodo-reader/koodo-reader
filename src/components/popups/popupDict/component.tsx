@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./popupDict.css";
 import { PopupDictProps, PopupDictState } from "./interface";
@@ -33,10 +34,21 @@ import {
   executeCustomDictionary,
   isCustomRendererPlugin,
 } from "../../../utils/plugins/customPlugin";
+import { useAppStore } from "../../../store/useAppStore";
 
 const PopupDict = (props: PopupDictProps) => {
+  const originalText = useAppStore((s) => s.reader.originalText);
+  const originalSentence = useAppStore((s) => s.reader.originalSentence);
+  const plugins = useAppStore((s) => s.manager.plugins);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const handleOpenMenu = useAppStore((s) => s.handleOpenMenu);
+  const handleMenuMode = useAppStore((s) => s.handleMenuMode);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const { t } = useTranslation();
   const [state, setState] = useState<PopupDictState>(() => ({
-    dictText: props.t("Please wait"),
+    dictText: t("Please wait"),
     word: "",
     prototype: "",
     dictService: ConfigService.getReaderConfig("dictService"),
@@ -85,14 +97,14 @@ const PopupDict = (props: PopupDictProps) => {
     sentence: string,
     dictText: string = ""
   ) => {
-    let bookKey = props.currentBook.key;
+    let bookKey = currentBook.key;
     let bookLocation = ConfigService.getObjectConfig(
       bookKey,
       "recordLocation",
       {}
     );
     let chapter = bookLocation.chapterTitle || "";
-    let bookName = props.currentBook.name || "";
+    let bookName = currentBook.name || "";
     let word = new DictHistory(bookKey, text, chapter, sentence);
     await DatabaseService.saveRecord(word, "words");
     let wordSyncManager = new WordSyncManager(ConfigService);
@@ -113,7 +125,7 @@ const PopupDict = (props: PopupDictProps) => {
         text,
         "auto",
         getFullTranslationTarget(),
-        props.originalSentence,
+        originalSentence,
         isFullAnalysis,
         (result) => {
           if (result && result.text) {
@@ -145,7 +157,7 @@ const PopupDict = (props: PopupDictProps) => {
         ConfigService.getReaderConfig("dictService") === "custom-ai-dict-plugin"
       ) {
         updateState({ isAddNew: false });
-        let plugin = props.plugins.find(
+        let plugin = plugins.find(
           (item) => item.key === "custom-ai-dict-plugin"
         );
         if (!plugin) return "";
@@ -194,7 +206,7 @@ const PopupDict = (props: PopupDictProps) => {
         ConfigService.getReaderConfig("dictService")?.startsWith("dict-")
       ) {
         updateState({ isAddNew: false });
-        const plugin = props.plugins.find(
+        const plugin = plugins.find(
           (item) => item.key === ConfigService.getReaderConfig("dictService")
         );
         if (!plugin) return "";
@@ -203,7 +215,7 @@ const PopupDict = (props: PopupDictProps) => {
         if (!dictId) return "";
         dictText = await DictUtil.lookupWord(dictId, text);
       } else if (
-        props.isAuthed &&
+        isAuthed &&
         ConfigService.getReaderConfig("isDisableAI") !== "yes" &&
         ConfigService.getReaderConfig("dictService") ===
           "official-ai-dict-plugin"
@@ -221,7 +233,7 @@ const PopupDict = (props: PopupDictProps) => {
         ConfigService.getReaderConfig("dictService") !==
           "official-ai-dict-plugin"
       ) {
-        let plugin = props.plugins.find(
+        let plugin = plugins.find(
           (item) => item.key === ConfigService.getReaderConfig("dictService")
         );
         if (!plugin) return "";
@@ -237,14 +249,14 @@ const PopupDict = (props: PopupDictProps) => {
           "auto",
           stateRef.current.dictTarget || "en",
           axios,
-          props.t,
+          t,
           plugin.config as PluginConfig
         );
       }
 
       if (dictText.startsWith("https://")) {
         openExternalUrl(dictText, true, "dict");
-        let docs = getIframeDoc(props.currentBook);
+        let docs = getIframeDoc(currentBook);
         for (let i = 0; i < docs.length; i++) {
           let doc = docs[i];
           if (!doc) continue;
@@ -255,7 +267,7 @@ const PopupDict = (props: PopupDictProps) => {
         updateState({ dictText: dictText });
       }
       if (
-        props.isAuthed &&
+        isAuthed &&
         ConfigService.getReaderConfig("isDisableAI") !== "yes" &&
         ConfigService.getReaderConfig("dictService") ===
           "official-ai-dict-plugin"
@@ -265,13 +277,13 @@ const PopupDict = (props: PopupDictProps) => {
       return dictText;
     } catch (error) {
       toast.error(
-        props.t("Error happened") +
+        t("Error happened") +
           ": " +
           (error instanceof Error ? error.message : String(error))
       );
       console.error(error);
       updateState({
-        dictText: props.t("Error happened"),
+        dictText: t("Error happened"),
         isAiStreaming: false,
       });
       return "";
@@ -286,7 +298,7 @@ const PopupDict = (props: PopupDictProps) => {
       originalText = originalText;
     }
     if (!stateRef.current.dictService) {
-      let pluginList = props.plugins.filter(
+      let pluginList = plugins.filter(
         (item) =>
           item.type === "dictionary" && !item.key.startsWith("official-ai-")
       );
@@ -294,7 +306,7 @@ const PopupDict = (props: PopupDictProps) => {
         updateState({ dictService: pluginList[0].key });
         ConfigService.setReaderConfig("dictService", pluginList[0].key);
         await new Promise((resolve) => setTimeout(resolve, 100));
-      } else if (props.isAuthed) {
+      } else if (isAuthed) {
         updateState({
           dictService: "official-ai-dict-plugin",
           isAddNew: false,
@@ -308,7 +320,7 @@ const PopupDict = (props: PopupDictProps) => {
     const dictText = await handleDict(originalText);
     handleRecordHistory(
       originalText,
-      props.originalSentence || "",
+      originalSentence || "",
       dictText || ""
     );
   };
@@ -318,20 +330,20 @@ const PopupDict = (props: PopupDictProps) => {
 
   // componentDidMount: 首次查词
   useEffect(() => {
-    handleLookUpRef.current(props.originalText);
+    handleLookUpRef.current(originalText);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // UNSAFE_componentWillReceiveProps: originalText 变化时重新查词
-  const prevOriginalTextRef = useRef(props.originalText);
+  const prevOriginalTextRef = useRef(originalText);
   useEffect(() => {
     const prevOriginalText = prevOriginalTextRef.current;
-    prevOriginalTextRef.current = props.originalText;
-    if (props.originalText !== prevOriginalText) {
-      handleLookUpRef.current(props.originalText);
+    prevOriginalTextRef.current = originalText;
+    if (originalText !== prevOriginalText) {
+      handleLookUpRef.current(originalText);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.originalText]);
+  }, [originalText]);
 
   // 清理流式更新的定时器
   useEffect(() => {
@@ -363,10 +375,10 @@ const PopupDict = (props: PopupDictProps) => {
   }, [state.dictText]);
 
   const handleChangeDictService = (dictService: string) => {
-    if (dictService === "official-ai-dict-plugin" && !props.isAuthed) {
-      toast(props.t("Please upgrade to Pro to use this feature"));
-      props.handleSetting(true);
-      props.handleSettingMode("account");
+    if (dictService === "official-ai-dict-plugin" && !isAuthed) {
+      toast(t("Please upgrade to Pro to use this feature"));
+      handleSetting(true);
+      handleSettingMode("account");
       return;
     }
     updateState({
@@ -403,10 +415,10 @@ const PopupDict = (props: PopupDictProps) => {
             value={state.dictService}
             onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
               if (event.target.value === "add-new") {
-                props.handleOpenMenu(false);
-                props.handleMenuMode("");
-                props.handleSetting(true);
-                props.handleSettingMode("plugins");
+                handleOpenMenu(false);
+                handleMenuMode("");
+                handleSetting(true);
+                handleSettingMode("plugins");
                 return;
               }
               handleChangeDictService(event.target.value);
@@ -417,9 +429,9 @@ const PopupDict = (props: PopupDictProps) => {
               key={"select"}
               className="add-dialog-shelf-list-option"
             >
-              {props.t("Please select")}
+              {t("Please select")}
             </option>
-            {props.plugins
+            {plugins
               .filter((item) => item.type === "dictionary")
               .map((item) => {
                 return (
@@ -428,7 +440,7 @@ const PopupDict = (props: PopupDictProps) => {
                     key={item.key}
                     className="add-dialog-shelf-list-option"
                   >
-                    {props.t(item.displayName)}
+                    {t(item.displayName)}
                     {item.key === "official-ai-dict-plugin" && (
                       <span style={{ fontSize: "13px", color: "#f16464" }}>
                         {" "}
@@ -443,7 +455,7 @@ const PopupDict = (props: PopupDictProps) => {
               key={"add-new"}
               className="add-dialog-shelf-list-option"
             >
-              {props.t("Add new plugin")}
+              {t("Add new plugin")}
             </option>
           </select>
         </div>
@@ -468,11 +480,11 @@ const PopupDict = (props: PopupDictProps) => {
               handleLookUpRef.current(stateRef.current.word);
             }}
           >
-            {props.plugins.find(
+            {plugins.find(
               (item) => item.key === state.dictService
             )?.langList &&
               (
-                props.plugins.find(
+                plugins.find(
                   (item) => item.key === state.dictService
                 )?.langList as any[]
               ).map((item) => {
@@ -483,7 +495,7 @@ const PopupDict = (props: PopupDictProps) => {
                     className="add-dialog-shelf-list-option"
                     style={{ width: "80px" }}
                   >
-                    {props.t(item["nativeLang"])}
+                    {t(item["nativeLang"])}
                   </option>
                 );
               })}
@@ -520,10 +532,10 @@ const PopupDict = (props: PopupDictProps) => {
                 textAlign: "center",
               }}
               onClick={() => {
-                props.handleOpenMenu(false);
-                props.handleMenuMode("");
-                props.handleSetting(true);
-                props.handleSettingMode("plugins");
+                handleOpenMenu(false);
+                handleMenuMode("");
+                handleSetting(true);
+                handleSettingMode("plugins");
               }}
             >
               <Trans>Add new plugin</Trans>
@@ -547,7 +559,7 @@ const PopupDict = (props: PopupDictProps) => {
                 {state.isAiWaiting && !state.aiAnswer ? (
                   <div className="dict-ai-answer-waiting">
                     <span className="icon-loading popup-assistant-loading"></span>
-                    <span>{props.t("Thinking, please wait...")}</span>
+                    <span>{t("Thinking, please wait...")}</span>
                   </div>
                 ) : (
                   <div className="dict-ai-answer-content">
@@ -566,7 +578,7 @@ const PopupDict = (props: PopupDictProps) => {
                   !state.isAiStreaming &&
                   state.aiAnswer && (
                     <div className="popup-assist-disclaimer">
-                      {props.t(
+                      {t(
                         "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
                       )}
                     </div>

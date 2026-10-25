@@ -1,9 +1,5 @@
-import { RouteComponentProps } from "react-router-dom";
 
-export interface SettingInfoProps extends RouteComponentProps<any> {
-  isAuthed: boolean;
-  t: (title: string) => string;
-  handleReaderBackgroundImage?: (readerBackgroundImage: string) => void;
+export interface SettingInfoProps {
 }
 
 export interface BackgroundImage {

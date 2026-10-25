@@ -1,10 +1,5 @@
 export interface AnnotationDialogProps {
 
-  isSettingLocked: boolean;
-  isDockedRight: boolean;
-  handleAnnotationDialog: (isAnnotationOpen: boolean) => void;
-  t: (title: string) => string;
-  htmlBook: any;
 }
 
 export interface AnnotationDialogState {

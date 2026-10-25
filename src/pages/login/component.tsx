@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
+import "./login.css";
 import { LoginProps, LoginState } from "./interface";
 import { Trans } from "react-i18next";
 import { getLoginParamsFromUrl } from "../../utils/file/common";
-import { withRouter } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { loginList } from "../../constants/loginList";
 import {
@@ -40,10 +42,44 @@ import illustration2 from "../../assets/images/illustration2.png";
 import background3 from "../../assets/images/background3.png";
 import mobileQrZh from "../../assets/images/mobile-qr-zh.png";
 import mobileQr from "../../assets/images/mobile-qr.png";
+import { useAppStore } from "../../store/useAppStore";
 
 const Login = (props: LoginProps) => {
-  const propsRef = useRef(props);
-  propsRef.current = props;
+  const isSettingOpen = useAppStore((s) => s.manager.isSettingOpen);
+  const isShowLoading = useAppStore((s) => s.manager.isShowLoading);
+  const isShowSupport = useAppStore((s) => s.manager.isShowSupport);
+  const cloudSyncFunc = useAppStore((s) => s.book.cloudSyncFunc);
+  const handleLoadingDialog = useAppStore((s) => s.handleLoadingDialog);
+  const handleFetchAuthed = useAppStore((s) => s.handleFetchAuthed);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handleSettingDrive = useAppStore((s) => s.handleSettingDrive);
+  const handleFetchDataSourceList = useAppStore(
+    (s) => s.handleFetchDataSourceList
+  );
+  const handleFetchDefaultSyncOption = useAppStore(
+    (s) => s.handleFetchDefaultSyncOption
+  );
+  const handleFetchUserInfo = useAppStore((s) => s.handleFetchUserInfo);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const propsRef = useRef<any>(props);
+  propsRef.current = {
+    ...props,
+    t,
+    isSettingOpen,
+    isShowLoading,
+    isShowSupport,
+    cloudSyncFunc,
+    handleLoadingDialog,
+    handleFetchAuthed,
+    handleSetting,
+    handleSettingMode,
+    handleSettingDrive,
+    handleFetchDataSourceList,
+    handleFetchDefaultSyncOption,
+    handleFetchUserInfo,
+  };
   const [state, setState] = useState<LoginState>({
     currentStep: 0,
     loginConfig: {},
@@ -55,7 +91,7 @@ const Login = (props: LoginProps) => {
   stateRef.current = state;
   const updateState = (patch: Partial<LoginState>) =>
     setState((prev) => ({ ...prev, ...patch }));
-  const prevPropsRef = useRef(props);
+  const prevPropsRef = useRef(propsRef.current);
   const lastLoginClickTimeRef = useRef<number>(0);
 
   const handleLogin = async (code: string, service: string) => {
@@ -142,17 +178,17 @@ const Login = (props: LoginProps) => {
 
   useEffect(() => {
     const prevProps = prevPropsRef.current;
-    prevPropsRef.current = props;
+    prevPropsRef.current = propsRef.current;
     if (
-      props.isShowSupport &&
-      props.isShowSupport !== prevProps.isShowSupport
+      isShowSupport &&
+      isShowSupport !== prevProps.isShowSupport
     ) {
       toast(
-        prevProps.t(
+        t(
           "Your Pro trial has expired, please renew it to continue using the Pro features"
         )
       );
-      prevProps.history.push("/manager/home");
+      navigate("/manager/home");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   });
@@ -173,13 +209,13 @@ const Login = (props: LoginProps) => {
       <div
         className="login-close-container"
         onClick={() => {
-          props.history.push("/manager/home");
+          navigate("/manager/home");
         }}
       >
         <span className="icon-close login-close-icon theme-color-delete"></span>
       </div>
-      {props.isSettingOpen && <SettingDialog />}
-      {props.isShowLoading && <LoadingDialog />}
+      {isSettingOpen && <SettingDialog />}
+      {isShowLoading && <LoadingDialog />}
       {state.currentStep === 0 && (
         <div
           className="login-container"
@@ -208,11 +244,11 @@ const Login = (props: LoginProps) => {
 
             <div className="login-title">
               <Trans>
-                {props.t("Meticulously designed and built for Android and iOS")}
+                {t("Meticulously designed and built for Android and iOS")}
               </Trans>
             </div>
             <div className="login-subtitle">
-              {props.t(
+              {t(
                 "After three years of design and development, the mobile version of Koodo Reader is finally out"
               )}
             </div>
@@ -224,7 +260,7 @@ const Login = (props: LoginProps) => {
                 });
               }}
             >
-              {props.t("Next step")}
+              {t("Next step")}
             </div>
           </div>
         </div>
@@ -259,12 +295,12 @@ const Login = (props: LoginProps) => {
             />
 
             <div className="login-title" style={{ marginTop: "20%" }}>
-              {props.t(
+              {t(
                 "Synchronize books and reading progress across all your devices"
               )}
             </div>
             <div className="login-subtitle">
-              {props.t(
+              {t(
                 "With the integration of popular cloud storage services, WebDAV, FTP, SFTP, SMB, Docker, and object storage, all your data remains securely in your control"
               )}
             </div>
@@ -281,7 +317,7 @@ const Login = (props: LoginProps) => {
                   right: "140px",
                 }}
               >
-                {props.t("Last step")}
+                {t("Last step")}
               </div>
               <div
                 className="login-next-button"
@@ -291,7 +327,7 @@ const Login = (props: LoginProps) => {
                   });
                 }}
               >
-                {props.t("Next step")}
+                {t("Next step")}
               </div>
             </div>
           </div>
@@ -321,7 +357,7 @@ const Login = (props: LoginProps) => {
               className="login-title"
               style={{ marginTop: "50px", marginBottom: "30px" }}
             >
-              {props.t(
+              {t(
                 "Embark on your journey of exploration with Koodo Reader Pro"
               )}
             </div>
@@ -329,7 +365,7 @@ const Login = (props: LoginProps) => {
               <div>
                 <div className="login-region-container">
                   <div className="login-region-title">
-                    {props.t("Server region")}
+                    {t("Server region")}
                   </div>
                   <div>
                     <span
@@ -342,7 +378,7 @@ const Login = (props: LoginProps) => {
                           : {}
                       }
                     >
-                      {props.t("Global")}
+                      {t("Global")}
                     </span>
                     <span>{" | "}</span>
                     <span
@@ -355,7 +391,7 @@ const Login = (props: LoginProps) => {
                           : {}
                       }
                     >
-                      {props.t("China")}
+                      {t("China")}
                     </span>
                   </div>
                 </div>
@@ -395,14 +431,14 @@ const Login = (props: LoginProps) => {
                       </div>
                       <div className="login-option-title">
                         <Trans i18nKey="Continue with" label={item.label}>
-                          Continue with {{ label: props.t(item.label) }}
+                          Continue with {{ label: t(item.label) }}
                         </Trans>
                       </div>
                     </div>
                   );
                 })}
                 <div className="login-billing-info">
-                  {props.t(
+                  {t(
                     "7-day free trial upon registration, then billed $4.99 per Year"
                   )}
                 </div>
@@ -420,19 +456,19 @@ const Login = (props: LoginProps) => {
                     );
                   }}
                 >
-                  {props.t("Compare Free and Pro features")}
+                  {t("Compare Free and Pro features")}
                 </div>
                 <div
                   className="login-manual-token"
                   onClick={() => {
-                    props.handleSetting(true);
-                    props.handleSettingMode("account");
+                    handleSetting(true);
+                    handleSettingMode("account");
                   }}
                 >
-                  {props.t("Manually enter login credentials")}
+                  {t("Manually enter login credentials")}
                 </div>
                 <div className="login-term">
-                  {props.t(
+                  {t(
                     "By clicking continue, you acknowledge that you have carefully read and agree to accept Koodo Reader's Terms of Service and Privacy Policy"
                   )}
                 </div>
@@ -465,7 +501,7 @@ const Login = (props: LoginProps) => {
               className="login-title"
               style={{ marginTop: "80px", marginBottom: "10%" }}
             >
-              {props.t("Add a data source for data synchronization and backup")}
+              {t("Add a data source for data synchronization and backup")}
             </div>
             <div className="login-sync-container">
               {driveList
@@ -492,13 +528,13 @@ const Login = (props: LoginProps) => {
                       key={item.value}
                       style={{}}
                       onClick={() => {
-                        props.handleSetting(true);
-                        props.handleSettingMode("sync");
-                        props.handleSettingDrive(item.value);
+                        handleSetting(true);
+                        handleSettingMode("sync");
+                        handleSettingDrive(item.value);
                       }}
                     >
                       <div className="login-sync-title">
-                        {props.t(item.label)}
+                        {t(item.label)}
                       </div>
                       <div className="login-sync-icon-container">
                         <span className={"icon-add login-sync-icon"}></span>
@@ -510,7 +546,7 @@ const Login = (props: LoginProps) => {
                         item.value === "webdav" &&
                         isElectron && (
                           <div className="login-sync-text">
-                            {props.t("Recommended (use with Nutstore)")}
+                            {t("Recommended (use with Nutstore)")}
                           </div>
                         )}
                       {ConfigService.getReaderConfig("lang") &&
@@ -519,7 +555,7 @@ const Login = (props: LoginProps) => {
                         ) &&
                         item.value === "microsoft" && (
                           <div className="login-sync-text">
-                            {props.t("Access may be unstable in China")}
+                            {t("Access may be unstable in China")}
                           </div>
                         )}
                       {ConfigService.getReaderConfig("lang") &&
@@ -528,7 +564,7 @@ const Login = (props: LoginProps) => {
                         ) &&
                         item.value === "yiyiwu" && (
                           <div className="login-sync-text">
-                            {props.t("Only recommended for VIP users")}
+                            {t("Only recommended for VIP users")}
                           </div>
                         )}
                       <div className="login-sync-subtitle">
@@ -562,7 +598,7 @@ const Login = (props: LoginProps) => {
                 // bottom: "10px",
               }}
             >
-              {props.t("Skip")}
+              {t("Skip")}
             </div>
           </div>
         </div>
@@ -591,7 +627,7 @@ const Login = (props: LoginProps) => {
               className="login-title"
               style={{ marginTop: "50px", marginBottom: "20px" }}
             >
-              {props.t(
+              {t(
                 "Download the mobile version to read and take notes anytime, anywhere"
               )}
             </div>
@@ -613,14 +649,14 @@ const Login = (props: LoginProps) => {
             <div
               className="login-next-button"
               onClick={() => {
-                props.history.push("/manager/home");
+                navigate("/manager/home");
               }}
               style={{
                 borderWidth: "0px",
                 right: "0px",
               }}
             >
-              {props.t("Finish")}
+              {t("Finish")}
             </div>
           </div>
         </div>
@@ -649,7 +685,7 @@ const Login = (props: LoginProps) => {
               className="login-title"
               style={{ marginTop: "80px", marginBottom: "50px" }}
             >
-              {props.t(
+              {t(
                 "Embark on your journey of exploration with Koodo Reader Pro"
               )}
             </div>
@@ -658,7 +694,7 @@ const Login = (props: LoginProps) => {
                 <input
                   type={"text"}
                   name={"email"}
-                  placeholder={props.t("Enter your email")}
+                  placeholder={t("Enter your email")}
                   onChange={(e) => {
                     if (e.target.value) {
                       setState((prevState) => ({
@@ -678,7 +714,7 @@ const Login = (props: LoginProps) => {
                     if (email) {
                       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                       if (email && !emailRegex.test(email)) {
-                        toast.error(props.t("Invalid email format"));
+                        toast.error(t("Invalid email format"));
                         return;
                       }
                     }
@@ -691,7 +727,7 @@ const Login = (props: LoginProps) => {
                   <input
                     type={"text"}
                     name={"code"}
-                    placeholder={props.t("Enter code")}
+                    placeholder={t("Enter code")}
                     onChange={(e) => {
                       if (e.target.value) {
                         setState((prevState) => ({
@@ -825,10 +861,10 @@ const Login = (props: LoginProps) => {
                     margin: "10px",
                   }}
                 >
-                  {props.t("Continue")}
+                  {t("Continue")}
                 </div>
                 <div className="login-term">
-                  {props.t(
+                  {t(
                     "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows"
                   )}
                   <br />
@@ -846,7 +882,7 @@ const Login = (props: LoginProps) => {
                     right: "0px",
                   }}
                 >
-                  {props.t("Back")}
+                  {t("Back")}
                 </div>
               </div>
             </div>
@@ -857,4 +893,4 @@ const Login = (props: LoginProps) => {
   );
 };
 
-export default withRouter(Login as any);
+export default Login;

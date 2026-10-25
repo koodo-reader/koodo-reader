@@ -1,66 +1,72 @@
 import { useState } from "react";
 import "./sortDialog.css";
 import { Trans } from "react-i18next";
-import { SortDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 
-const SortDialog = (props: SortDialogProps) => {
-  const [isNote] = useState(
-    props.mode === "note" || props.mode === "highlight"
-  );
+const SortDialog = () => {
+  const bookSortCode = useAppStore((s) => s.manager.bookSortCode);
+  const noteSortCode = useAppStore((s) => s.manager.noteSortCode);
+  const mode = useAppStore((s) => s.sidebar.mode);
+  const handleBookSortCode = useAppStore((s) => s.handleBookSortCode);
+  const handleNoteSortCode = useAppStore((s) => s.handleNoteSortCode);
+  const handleSortDisplay = useAppStore((s) => s.handleSortDisplay);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleFetchNotes = useAppStore((s) => s.handleFetchNotes);
+  const [isNote] = useState(mode === "note" || mode === "highlight");
 
   const handleSort = (code: number) => {
     if (isNote) {
-      let noteSortCode = props.noteSortCode;
-      noteSortCode.sort = code;
-      props.handleNoteSortCode(noteSortCode);
+      let nextNoteSortCode = noteSortCode;
+      nextNoteSortCode.sort = code;
+      handleNoteSortCode(nextNoteSortCode);
       ConfigService.setReaderConfig(
         "noteSortCode",
-        JSON.stringify({ sort: code, order: props.noteSortCode.order })
+        JSON.stringify({ sort: code, order: noteSortCode.order })
       );
-      props.handleFetchNotes();
+      handleFetchNotes();
     } else {
-      let bookSortCode = props.bookSortCode;
-      bookSortCode.sort = code;
-      props.handleBookSortCode(bookSortCode);
+      let nextBookSortCode = bookSortCode;
+      nextBookSortCode.sort = code;
+      handleBookSortCode(nextBookSortCode);
       ConfigService.setReaderConfig(
         "bookSortCode",
-        JSON.stringify({ sort: code, order: props.bookSortCode.order })
+        JSON.stringify({ sort: code, order: bookSortCode.order })
       );
-      props.handleFetchBooks();
+      handleFetchBooks();
     }
   };
   const handleOrder = (code: number) => {
     if (isNote) {
-      let noteSortCode = props.noteSortCode;
-      noteSortCode.order = code;
+      let nextNoteSortCode = noteSortCode;
+      nextNoteSortCode.order = code;
       ConfigService.setReaderConfig(
         "noteSortCode",
-        JSON.stringify({ sort: props.noteSortCode.sort, order: code })
+        JSON.stringify({ sort: noteSortCode.sort, order: code })
       );
-      props.handleNoteSortCode(noteSortCode);
-      props.handleFetchNotes();
+      handleNoteSortCode(nextNoteSortCode);
+      handleFetchNotes();
     } else {
-      let bookSortCode = props.bookSortCode;
-      bookSortCode.order = code;
+      let nextBookSortCode = bookSortCode;
+      nextBookSortCode.order = code;
       ConfigService.setReaderConfig(
         "bookSortCode",
-        JSON.stringify({ sort: props.bookSortCode.sort, order: code })
+        JSON.stringify({ sort: bookSortCode.sort, order: code })
       );
-      props.handleBookSortCode(bookSortCode);
-      props.handleFetchBooks();
+      handleBookSortCode(nextBookSortCode);
+      handleFetchBooks();
     }
   };
 
-  let sortCode = isNote ? props.noteSortCode : props.bookSortCode;
+  let sortCode = isNote ? noteSortCode : bookSortCode;
   return (
     <div
       className="sort-dialog-container"
       onMouseLeave={() => {
-        props.handleSortDisplay(false);
+        handleSortDisplay(false);
       }}
       onMouseEnter={() => {
-        props.handleSortDisplay(true);
+        handleSortDisplay(true);
       }}
       style={isNote ? { height: "132px" } : {}}
     >

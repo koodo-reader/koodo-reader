@@ -19,7 +19,7 @@ export interface BookItemSharedProps {
   book: BookModel;
   refreshBookKey: string;
   isSelectBook: boolean;
-  isSelected: boolean;
+  isSelected?: boolean;
   selectedBooks: string[];
   allBooks?: BookModel[];
   bookIndex?: number;

@@ -1,9 +1,9 @@
+import { useTranslation } from "react-i18next";
 import React, { useState } from "react";
 import BookModel from "../../models/Book";
 import "./selectBook.css";
 import { Trans } from "react-i18next";
 import { BookListProps, BookListState } from "./interface";
-import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   exportBookPackage,
@@ -17,16 +17,35 @@ import { filterNonCollectionKeys } from "../../utils/reader/bookDrag";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
 import { preCacheAllBooks } from "../../utils/common";
+import { useAppStore } from "../../store/useAppStore";
 
 const SelectBook = (props: BookListProps) => {
+  const books = useAppStore((s) => s.manager.books);
+  const selectedBooks = useAppStore((s) => s.manager.selectedBooks);
+  const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
+  const isSearch = useAppStore((s) => s.manager.isSearch);
+  const searchResults = useAppStore((s) => s.manager.searchResults) as any[];
+  const shelfTitle = useAppStore((s) => s.sidebar.shelfTitle);
+  const isSelectBook = useAppStore((s) => s.manager.isSelectBook);
+  const handleDeleteDialog = useAppStore((s) => s.handleDeleteDialog);
+  const handleSelectBook = useAppStore((s) => s.handleSelectBook);
+  const handleAddDialog = useAppStore((s) => s.handleAddDialog);
+  const handleSelectedBooks = useAppStore((s) => s.handleSelectedBooks);
+  const handleAddCollectionDialog = useAppStore(
+    (s) => s.handleAddCollectionDialog
+  );
+  const handleCollectionDialogBooks = useAppStore(
+    (s) => s.handleCollectionDialogBooks
+  );
+  const { t } = useTranslation();
   const [state, setState] = useState<BookListState>({
     isShowExport: false,
     exportSubmenu: "",
   });
 
   const handleFilterShelfBook = (items: BookModel[]) => {
-    if (props.shelfTitle) {
-      let currentShelfTitle = props.shelfTitle;
+    if (shelfTitle) {
+      let currentShelfTitle = shelfTitle;
       if (!currentShelfTitle) return items;
       let currentShelfList = ConfigService.getMapConfig(
         currentShelfTitle,
@@ -75,15 +94,15 @@ const SelectBook = (props: BookListProps) => {
   return (
     <div
       className="booklist-manage-container"
-      style={props.isCollapsed ? { left: "75px" } : {}}
+      style={isCollapsed ? { left: "75px" } : {}}
     >
-      {props.isSelectBook && (
+      {isSelectBook && (
         <>
           <span
             onClick={() => {
-              props.handleSelectBook(!props.isSelectBook);
-              if (props.isSelectBook) {
-                props.handleSelectedBooks([]);
+              handleSelectBook(!isSelectBook);
+              if (isSelectBook) {
+                handleSelectedBooks([]);
               }
             }}
             className="book-manage-title"
@@ -95,22 +114,22 @@ const SelectBook = (props: BookListProps) => {
             className="book-manage-title"
             onClick={() => {
               if (
-                props.books.filter(
+                books.filter(
                   (item: BookModel) =>
-                    props.selectedBooks.indexOf(item.key) > -1
+                    selectedBooks.indexOf(item.key) > -1
                 ).length > 0
               ) {
-                props.selectedBooks.forEach((item) => {
+                selectedBooks.forEach((item) => {
                   ConfigService.setListConfig(item, "favoriteBooks");
                 });
 
-                props.handleSelectBook(!props.isSelectBook);
-                if (props.isSelectBook) {
-                  props.handleSelectedBooks([]);
+                handleSelectBook(!isSelectBook);
+                if (isSelectBook) {
+                  handleSelectedBooks([]);
                 }
-                toast.success(props.t("Add successful"));
+                toast.success(t("Add successful"));
               } else {
-                toast(props.t("Nothing to add"));
+                toast(t("Nothing to add"));
               }
             }}
           >
@@ -119,7 +138,7 @@ const SelectBook = (props: BookListProps) => {
           <span
             className="book-manage-title"
             onClick={() => {
-              props.handleAddDialog(true);
+              handleAddDialog(true);
             }}
           >
             <Trans>Add to shelf</Trans>
@@ -127,13 +146,13 @@ const SelectBook = (props: BookListProps) => {
           <span
             className="book-manage-title"
             onClick={() => {
-              let bookKeys = filterNonCollectionKeys(props.selectedBooks);
+              let bookKeys = filterNonCollectionKeys(selectedBooks);
               if (bookKeys.length === 0) {
-                toast(props.t("Nothing to add"));
+                toast(t("Nothing to add"));
                 return;
               }
-              props.handleCollectionDialogBooks(bookKeys);
-              props.handleAddCollectionDialog(true);
+              handleCollectionDialogBooks(bookKeys);
+              handleAddCollectionDialog(true);
             }}
           >
             <Trans>Add to collection</Trans>
@@ -141,7 +160,7 @@ const SelectBook = (props: BookListProps) => {
           <span
             className="book-manage-title"
             onClick={() => {
-              props.handleDeleteDialog(true);
+              handleDeleteDialog(true);
             }}
           >
             <Trans>Delete</Trans>
@@ -174,24 +193,24 @@ const SelectBook = (props: BookListProps) => {
               <span
                 className="book-manage-title select-book-action"
                 onClick={async () => {
-                  let books = await DatabaseService.getRecordsByKeys(
-                    props.selectedBooks,
+                  let bookList = await DatabaseService.getRecordsByKeys(
+                    selectedBooks,
                     "books"
                   );
-                  if (books.length > 0) {
-                    const result = await exportBookPackage(books);
+                  if (bookList.length > 0) {
+                    const result = await exportBookPackage(bookList);
                     if (result === "success") {
-                      toast.success(props.t("Export successful"), {
+                      toast.success(t("Export successful"), {
                         id: "exporting",
                       });
                     } else if (result === "failed") {
                       toast.dismiss("exporting");
-                      toast.error(props.t("Failed to export"), {
+                      toast.error(t("Failed to export"), {
                         id: "exporting",
                       });
                     }
                   } else {
-                    toast(props.t("Nothing to export"));
+                    toast(t("Nothing to export"));
                   }
                 }}
               >
@@ -200,24 +219,24 @@ const SelectBook = (props: BookListProps) => {
               <span
                 className="book-manage-title select-book-action"
                 onClick={async () => {
-                  let books = await DatabaseService.getRecordsByKeys(
-                    props.selectedBooks,
+                  let bookList = await DatabaseService.getRecordsByKeys(
+                    selectedBooks,
                     "books"
                   );
-                  if (books.length > 0) {
-                    const result = await exportBooks(books);
+                  if (bookList.length > 0) {
+                    const result = await exportBooks(bookList);
                     if (result === "success") {
-                      toast.success(props.t("Export successful"), {
+                      toast.success(t("Export successful"), {
                         id: "exporting",
                       });
                     } else if (result === "failed") {
                       toast.dismiss("exporting");
-                      toast.error(props.t("Failed to export"), {
+                      toast.error(t("Failed to export"), {
                         id: "exporting",
                       });
                     }
                   } else {
-                    toast(props.t("Nothing to export"));
+                    toast(t("Nothing to export"));
                   }
                 }}
               >
@@ -268,14 +287,14 @@ const SelectBook = (props: BookListProps) => {
                         key={fmt}
                         className="book-manage-title select-book-action"
                         onClick={async () => {
-                          let selectedBooks =
+                          let selectedBookList =
                             await DatabaseService.getRecordsByKeys(
-                              props.selectedBooks,
+                              selectedBooks,
                               "books"
                             );
                           let notes = (
                             await DatabaseService.getRecordsByBookKeys(
-                              props.selectedBooks,
+                              selectedBooks,
                               "notes"
                             )
                           ).filter(
@@ -285,20 +304,20 @@ const SelectBook = (props: BookListProps) => {
                           if (notes.length > 0) {
                             const result = await exportNotes(
                               notes,
-                              selectedBooks,
+                              selectedBookList,
                               fmt
                             );
                             if (result === "success") {
-                              toast.success(props.t("Export successful"), {
+                              toast.success(t("Export successful"), {
                                 id: "exporting",
                               });
                             } else if (result === "failed") {
-                              toast.error(props.t("Failed to export"), {
+                              toast.error(t("Failed to export"), {
                                 id: "exporting",
                               });
                             }
                           } else {
-                            toast(props.t("Nothing to export"));
+                            toast(t("Nothing to export"));
                           }
                           setState((prev) => ({
                             ...prev,
@@ -367,34 +386,34 @@ const SelectBook = (props: BookListProps) => {
                         key={fmt}
                         className="book-manage-title select-book-action"
                         onClick={async () => {
-                          let selectedBooks =
+                          let selectedBookList =
                             await DatabaseService.getRecordsByKeys(
-                              props.selectedBooks,
+                              selectedBooks,
                               "books"
                             );
                           let highlights = (
                             await DatabaseService.getRecordsByBookKeys(
-                              props.selectedBooks,
+                              selectedBooks,
                               "notes"
                             )
                           ).filter((note) => note.notes === "");
                           if (highlights.length > 0) {
                             const result = await exportHighlights(
                               highlights,
-                              selectedBooks,
+                              selectedBookList,
                               fmt
                             );
                             if (result === "success") {
-                              toast.success(props.t("Export successful"), {
+                              toast.success(t("Export successful"), {
                                 id: "exporting",
                               });
                             } else if (result === "failed") {
-                              toast.error(props.t("Failed to export"), {
+                              toast.error(t("Failed to export"), {
                                 id: "exporting",
                               });
                             }
                           } else {
-                            toast(props.t("Nothing to export"));
+                            toast(t("Nothing to export"));
                           }
                           setState((prev) => ({
                             ...prev,
@@ -462,33 +481,33 @@ const SelectBook = (props: BookListProps) => {
                       key={fmt}
                       className="book-manage-title select-book-action"
                       onClick={async () => {
-                        let selectedBooks =
+                        let selectedBookList =
                           await DatabaseService.getRecordsByKeys(
-                            props.selectedBooks,
+                            selectedBooks,
                             "books"
                           );
                         let dictHistory =
                           await DatabaseService.getRecordsByBookKeys(
-                            props.selectedBooks,
+                            selectedBooks,
                             "words"
                           );
                         if (dictHistory.length > 0) {
                           const result = await exportDictionaryHistory(
                             dictHistory,
-                            selectedBooks,
+                            selectedBookList,
                             fmt
                           );
                           if (result === "success") {
-                            toast.success(props.t("Export successful"), {
+                            toast.success(t("Export successful"), {
                               id: "exporting",
                             });
                           } else if (result === "failed") {
-                            toast.error(props.t("Failed to export"), {
+                            toast.error(t("Failed to export"), {
                               id: "exporting",
                             });
                           }
                         } else {
-                          toast(props.t("Nothing to export"));
+                          toast(t("Nothing to export"));
                         }
                         setState((prev) => ({
                           ...prev,
@@ -505,15 +524,15 @@ const SelectBook = (props: BookListProps) => {
               <span
                 className="book-manage-title select-book-action"
                 onClick={async () => {
-                  let selectedBooks = await DatabaseService.getRecordsByKeys(
-                    props.selectedBooks,
+                  let selectedBookList = await DatabaseService.getRecordsByKeys(
+                    selectedBooks,
                     "books"
                   );
-                  if (selectedBooks.length > 0) {
-                    await preCacheAllBooks(selectedBooks);
-                    toast.success(props.t("Pre-caching successful"));
+                  if (selectedBookList.length > 0) {
+                    await preCacheAllBooks(selectedBookList);
+                    toast.success(t("Pre-caching successful"));
                   } else {
-                    toast(props.t("Nothing to precache"));
+                    toast(t("Nothing to precache"));
                   }
                 }}
               >
@@ -522,18 +541,22 @@ const SelectBook = (props: BookListProps) => {
               <span
                 className="book-manage-title select-book-action"
                 onClick={async () => {
-                  let selectedBooks = await DatabaseService.getRecordsByKeys(
-                    props.selectedBooks,
+                  let selectedBookList = await DatabaseService.getRecordsByKeys(
+                    selectedBooks,
                     "books"
                   );
-                  if (selectedBooks.length === 0) {
-                    toast(props.t("Nothing to delete"));
+                  if (selectedBookList.length === 0) {
+                    toast(t("Nothing to delete"));
                     return;
                   }
-                  for (let index = 0; index < selectedBooks.length; index++) {
-                    const selectedBook = selectedBooks[index];
+                  for (
+                    let index = 0;
+                    index < selectedBookList.length;
+                    index++
+                  ) {
+                    const selectedBook = selectedBookList[index];
                     await BookUtil.deleteBook("cache-" + selectedBook.key, "zip");
-                    toast.success(props.t("Deletion successful"));
+                    toast.success(t("Deletion successful"));
                   }
                 }}
               >
@@ -545,24 +568,24 @@ const SelectBook = (props: BookListProps) => {
           <span
             className="book-manage-title"
             onClick={() => {
-              if (props.isSearch) {
-                props.handleSelectedBooks(
-                  props.searchResults.map((item) => item.key)
+              if (isSearch) {
+                handleSelectedBooks(
+                  searchResults.map((item) => item.key)
                 );
               } else if (
-                props.selectedBooks.length ===
-                handleFilterShelfBook(props.books).length
+                selectedBooks.length ===
+                handleFilterShelfBook(books).length
               ) {
-                props.handleSelectedBooks([]);
+                handleSelectedBooks([]);
               } else {
-                props.handleSelectedBooks(
-                  handleFilterShelfBook(props.books).map((item) => item.key)
+                handleSelectedBooks(
+                  handleFilterShelfBook(books).map((item) => item.key)
                 );
               }
             }}
           >
-            {props.selectedBooks.length ===
-            handleFilterShelfBook(props.books).length ? (
+            {selectedBooks.length ===
+            handleFilterShelfBook(books).length ? (
               <Trans>Deselect all</Trans>
             ) : (
               <Trans>Select all</Trans>
@@ -574,4 +597,4 @@ const SelectBook = (props: BookListProps) => {
   );
 };
 
-export default withRouter(SelectBook as any);
+export default SelectBook;

@@ -1,16 +1,1 @@
-import { connect } from "../../store/legacyConnect";
-import { stateType } from "../../store";
-import EmptyPage from "./component";
-import { withTranslation } from "react-i18next";
-import { withRouter } from "react-router-dom";
-const mapStateToProps = (state: stateType) => {
-  return {
-    mode: state.sidebar.mode,
-    isCollapsed: state.sidebar.isCollapsed,
-  };
-};
-const actionCreator = {};
-export default connect(
-  mapStateToProps,
-  actionCreator
-)(withTranslation()(withRouter(EmptyPage as any) as any) as any);
+export { default } from "./component";

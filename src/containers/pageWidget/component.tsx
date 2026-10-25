@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./pageWidget.css";
 import { PageWidgetProps, PageWidgetState } from "./interface";
@@ -16,11 +17,30 @@ import { isElectron } from "react-device-detect";
 import DatabaseService from "../../utils/storage/databaseService";
 import Note from "../../models/Note";
 import ConfigUtil from "../../utils/file/configUtil";
+import { useAppStore } from "../../store/useAppStore";
 declare var window: any;
 
 type TransCache = Record<string, Record<string, string>>;
 
 const PageWidget = (props: PageWidgetProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const currentChapter = useAppStore((s) => s.reader.currentChapter);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
+  const isNavLocked = useAppStore((s) => s.reader.isNavLocked);
+  const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
+  const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
+  const backgroundColor = useAppStore((s) => s.reader.backgroundColor);
+  const isHideFooter = useAppStore((s) => s.reader.isHideFooter);
+  const isHideHeader = useAppStore((s) => s.reader.isHideHeader);
+  const isShowPageBorder = useAppStore((s) => s.reader.isShowPageBorder);
+  const textOrientation = useAppStore((s) => s.reader.textOrientation);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const isShowBookmark = useAppStore((s) => s.viewArea.isShowBookmark);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const jumpPosition = useAppStore((s) => s.reader.jumpPosition);
+  const handleJumpPosition = useAppStore((s) => s.handleJumpPosition);
+  const handleFetchNotes = useAppStore((s) => s.handleFetchNotes);
+  const { t } = useTranslation();
   const getFormattedTime = () => {
     const now = new Date();
     return (
@@ -31,7 +51,7 @@ const PageWidget = (props: PageWidgetProps) => {
   };
 
   const [state, setState] = useState<PageWidgetState>({
-    isSingle: props.readerMode !== "double",
+    isSingle: readerMode !== "double",
     prevPage: 0,
     nextPage: 0,
     currentTime: getFormattedTime(),
@@ -62,7 +82,7 @@ const PageWidget = (props: PageWidgetProps) => {
     transCacheDirPath.current = transDir;
     return electron.path.join(
       transDir,
-      props.currentBook.key + "_" + chapterDocIndex + ".json"
+      currentBook.key + "_" + chapterDocIndex + ".json"
     );
   };
 
@@ -108,10 +128,10 @@ const PageWidget = (props: PageWidgetProps) => {
     const next = prev.then(async () => {
       if (
         !ConfigService.getAllListConfig("fullTranslationBooks").includes(
-          props.currentBook.key
+          currentBook.key
         ) ||
         ConfigService.getReaderConfig("fullTranslationMode") === "no" ||
-        !props.isAuthed
+        !isAuthed
       ) {
         return;
       }
@@ -172,9 +192,9 @@ const PageWidget = (props: PageWidgetProps) => {
     const next = prev.then(async () => {
       if (
         !ConfigService.getAllListConfig("wordDefinitionBooks").includes(
-          props.currentBook.key
+          currentBook.key
         ) ||
-        !props.isAuthed
+        !isAuthed
       ) {
         return;
       }
@@ -184,7 +204,7 @@ const PageWidget = (props: PageWidgetProps) => {
         let lang = detectLocalLanguage(wordTexts.slice(0, 500).join(" "));
         if (lang === "ko") {
           toast.error(
-            props.t(
+            t(
               "Unsupported language for word definition, currently only Chinese, Japanese and English are supported"
             )
           );
@@ -217,8 +237,8 @@ const PageWidget = (props: PageWidgetProps) => {
       return;
     }
     if (
-      isReadingRawPDF(props.currentBook) ||
-      isFixedLayoutComic(props.currentBook)
+      isReadingRawPDF(currentBook) ||
+      isFixedLayoutComic(currentBook)
     ) {
       setState((prev) => ({
         ...prev,
@@ -245,9 +265,6 @@ const PageWidget = (props: PageWidgetProps) => {
     handleWordDefinition,
   };
 
-  const propsRef = useRef(props);
-  propsRef.current = props;
-
   // componentDidMount + componentWillUnmount: 每分钟刷新一次时间
   useEffect(() => {
     timeInterval.current = setInterval(() => {
@@ -262,10 +279,10 @@ const PageWidget = (props: PageWidgetProps) => {
   }, []);
 
   // UNSAFE_componentWillReceiveProps: htmlBook 从无到有，注册 rendition 监听
-  const prevHtmlBookRef = useRef(props.htmlBook);
+  const prevHtmlBookRef = useRef(htmlBook);
   useEffect(() => {
     const prevHtmlBook = prevHtmlBookRef.current;
-    const nextHtmlBook = props.htmlBook;
+    const nextHtmlBook = htmlBook;
     prevHtmlBookRef.current = nextHtmlBook;
     if (nextHtmlBook && nextHtmlBook !== prevHtmlBook && !prevHtmlBook) {
       const rendition = nextHtmlBook.rendition;
@@ -277,7 +294,7 @@ const PageWidget = (props: PageWidgetProps) => {
           if (ignoreNextPageChange.current) {
             setIgnoreNextPageChange(false);
           } else {
-            propsRef.current.handleJumpPosition(null);
+            handleJumpPosition(null);
           }
         });
         rendition.on(
@@ -285,7 +302,7 @@ const PageWidget = (props: PageWidgetProps) => {
           async (chapterDocIndex: number) => {
             let annotationData = rendition.getAnnotationData(chapterDocIndex);
             let notes = await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
-              propsRef.current.currentBook.key,
+              currentBook.key,
               "annotation"
             );
             let note = notes.find(
@@ -310,12 +327,12 @@ const PageWidget = (props: PageWidgetProps) => {
                 page: string;
                 xpath: string;
               } = ConfigService.getObjectConfig(
-                propsRef.current.currentBook.key,
+                currentBook.key,
                 "recordLocation",
                 {}
               );
               let newNote = new Note(
-                propsRef.current.currentBook.key,
+                currentBook.key,
                 bookLocation.chapterTitle,
                 chapterDocIndex,
                 "",
@@ -328,7 +345,7 @@ const PageWidget = (props: PageWidgetProps) => {
               );
               await DatabaseService.saveRecord(newNote, "notes");
             }
-            propsRef.current.handleFetchNotes();
+            handleFetchNotes();
           }
         );
         rendition.on("rendered", async () => {
@@ -339,35 +356,32 @@ const PageWidget = (props: PageWidgetProps) => {
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.htmlBook]);
+  }, [htmlBook]);
 
   // UNSAFE_componentWillReceiveProps: readerMode 变化时更新单双页
-  const prevReaderModeRef = useRef(props.readerMode);
+  const prevReaderModeRef = useRef(readerMode);
   useEffect(() => {
     const prevReaderMode = prevReaderModeRef.current;
-    prevReaderModeRef.current = props.readerMode;
-    if (props.readerMode !== prevReaderMode) {
+    prevReaderModeRef.current = readerMode;
+    if (readerMode !== prevReaderMode) {
       setState((prev) => ({
         ...prev,
-        isSingle: props.readerMode !== "double",
+        isSingle: readerMode !== "double",
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.readerMode]);
+  }, [readerMode]);
 
   // UNSAFE_componentWillReceiveProps: jumpPosition 变化时忽略下一次翻页
-  const prevJumpPositionRef = useRef(props.jumpPosition);
+  const prevJumpPositionRef = useRef(jumpPosition);
   useEffect(() => {
     const prevJumpPosition = prevJumpPositionRef.current;
-    prevJumpPositionRef.current = props.jumpPosition;
-    if (
-      props.jumpPosition !== prevJumpPosition &&
-      props.jumpPosition !== null
-    ) {
+    prevJumpPositionRef.current = jumpPosition;
+    if (jumpPosition !== prevJumpPosition && jumpPosition !== null) {
       setIgnoreNextPageChange(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.jumpPosition]);
+  }, [jumpPosition]);
 
   return (
     <>
@@ -378,15 +392,15 @@ const PageWidget = (props: PageWidgetProps) => {
             ? ConfigService.getReaderConfig("textColor")
             : "",
           width:
-            !props.isNavLocked && !props.isSettingLocked && !props.isDockedRight
+            !isNavLocked && !isSettingLocked && !isDockedRight
               ? "100%"
-              : props.isNavLocked &&
-                  (props.isSettingLocked || props.isDockedRight)
+              : isNavLocked &&
+                  (isSettingLocked || isDockedRight)
                 ? "calc(100% - 600px)"
                 : "calc(100% - 300px)",
-          left: !props.isNavLocked ? "0" : "300px",
-          right: !props.isSettingLocked && !props.isDockedRight ? "0" : "300px",
-          backgroundColor: props.backgroundColor,
+          left: !isNavLocked ? "0" : "300px",
+          right: !isSettingLocked && !isDockedRight ? "0" : "300px",
+          backgroundColor: backgroundColor,
           filter: `brightness(${
             ConfigService.getReaderConfig("brightness") || 1
           }) invert(${
@@ -395,7 +409,7 @@ const PageWidget = (props: PageWidgetProps) => {
         }}
       >
         <div className="header-container">
-          {!props.isHideHeader && props.currentChapter + "" && (
+          {!isHideHeader && currentChapter + "" && (
             <p
               className="header-chapter-name"
               style={
@@ -407,11 +421,11 @@ const PageWidget = (props: PageWidgetProps) => {
                   : {}
               }
             >
-              {props.currentChapter}
+              {currentChapter}
             </p>
           )}
-          {!props.isHideHeader &&
-            props.currentChapter + "" &&
+          {!isHideHeader &&
+            currentChapter + "" &&
             !state.isSingle && (
               <p
                 className="header-book-name"
@@ -424,10 +438,10 @@ const PageWidget = (props: PageWidgetProps) => {
                     : {}
                 }
               >
-                {props.currentBook.name}
+                {currentBook.name}
               </p>
             )}
-          {!props.isHideHeader && (
+          {!isHideHeader && (
             <>
               <span className="footer-time">
                 {state.currentTime}
@@ -439,7 +453,7 @@ const PageWidget = (props: PageWidgetProps) => {
           )}
         </div>
         <div className="footer-container">
-          {!props.isHideFooter && state.prevPage > 0 && (
+          {!isHideFooter && state.prevPage > 0 && (
             <p
               className="background-page-left"
               style={
@@ -459,7 +473,7 @@ const PageWidget = (props: PageWidgetProps) => {
               </Trans>
             </p>
           )}
-          {!props.isHideFooter && state.nextPage > 0 && !state.isSingle && (
+          {!isHideFooter && state.nextPage > 0 && !state.isSingle && (
             <p className="background-page-right">
               <Trans i18nKey="Book page" count={state.nextPage}>
                 Page
@@ -471,9 +485,9 @@ const PageWidget = (props: PageWidgetProps) => {
           )}
         </div>
         <>
-          {props.isShowBookmark ? <div className="bookmark"></div> : null}
+          {isShowBookmark ? <div className="bookmark"></div> : null}
         </>
-        {props.isShowPageBorder && (
+        {isShowPageBorder && (
           <>
             <div className="page-border"></div>
             <div className="inner-page-border"></div>
@@ -483,7 +497,7 @@ const PageWidget = (props: PageWidgetProps) => {
               <div
                 className="page-border-center-line"
                 style={
-                  props.textOrientation === "vertical"
+                  textOrientation === "vertical"
                     ? {
                         top: "50%",
                         height: "1px",
@@ -498,21 +512,21 @@ const PageWidget = (props: PageWidgetProps) => {
           </>
         )}
       </div>
-      {props.jumpPosition && (
+      {jumpPosition && (
         <div className="jump-return-button-container">
           <button
             className="jump-return-button"
             onClick={async () => {
-              if (props.jumpPosition && props.htmlBook) {
+              if (jumpPosition && htmlBook) {
                 setIgnoreNextPageChange(true);
-                await props.htmlBook.rendition.goToPosition(
-                  JSON.stringify(props.jumpPosition)
+                await htmlBook.rendition.goToPosition(
+                  JSON.stringify(jumpPosition)
                 );
-                props.handleJumpPosition(null);
+                handleJumpPosition(null);
               }
             }}
           >
-            {props.t("Return")}
+            {t("Return")}
           </button>
         </div>
       )}

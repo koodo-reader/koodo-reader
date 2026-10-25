@@ -1,27 +1,32 @@
+import { useTranslation } from "react-i18next";
 import "./viewMode.css";
 import { ViewModeProps } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import { viewMode } from "../../constants/viewMode";
+import { viewMode as viewModeList } from "../../constants/viewMode";
+import { useAppStore } from "../../store/useAppStore";
 
 const ViewMode = (props: ViewModeProps) => {
+  const viewMode = useAppStore((s) => s.manager.viewMode);
+  const handleFetchViewMode = useAppStore((s) => s.handleFetchViewMode);
+  const { t } = useTranslation();
   const handleChange = (mode: string) => {
     ConfigService.setReaderConfig("viewMode", mode);
-    props.handleFetchViewMode();
+    handleFetchViewMode();
   };
   return (
     <div className="book-list-view">
-      {viewMode.map((item) => (
+      {viewModeList.map((item) => (
         <div
           className="card-list-mode"
           onClick={() => {
             handleChange(item.mode);
           }}
-          style={props.viewMode !== item.mode ? { opacity: 0.5 } : {}}
+          style={viewMode !== item.mode ? { opacity: 0.5 } : {}}
           key={item.mode}
         >
           <span
             data-tooltip-id="my-tooltip"
-            data-tooltip-content={props.t(item.name)}
+            data-tooltip-content={t(item.name)}
           >
             <span className={`icon-${item.icon}`}></span>
           </span>

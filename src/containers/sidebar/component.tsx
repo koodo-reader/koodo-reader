@@ -1,8 +1,9 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./sidebar.css";
 import { sideMenu } from "../../constants/sideMenu";
 import { SidebarProps, SidebarState } from "./interface";
-import { withRouter } from "react-router-dom";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { getWebsiteUrl, openInBrowser } from "../../utils/common";
 import { Trans } from "react-i18next";
@@ -18,8 +19,26 @@ import {
   moveBooksToTrash,
   parseBookDragData,
 } from "../../utils/reader/bookDrag";
+import { useAppStore } from "../../store/useAppStore";
 
 const Sidebar = (props: SidebarProps) => {
+  const mode = useAppStore((s) => s.sidebar.mode);
+  const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
+  const shelfTitle = useAppStore((s) => s.sidebar.shelfTitle);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const isOpenSortShelfDialog = useAppStore(
+    (s) => s.backupPage.isOpenSortShelfDialog
+  );
+  const handleMode = useAppStore((s) => s.handleMode);
+  const handleSearch = useAppStore((s) => s.handleSearch);
+  const handleSortDisplay = useAppStore((s) => s.handleSortDisplay);
+  const handleCollapse = useAppStore((s) => s.handleCollapse);
+  const handleSelectBook = useAppStore((s) => s.handleSelectBook);
+  const handleShelf = useAppStore((s) => s.handleShelf);
+  const handleSortShelfDialog = useAppStore((s) => s.handleSortShelfDialog);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [state, setState] = useState<SidebarState>(() => ({
     hoverMode: "",
     hoverShelfTitle: "",
@@ -31,14 +50,14 @@ const Sidebar = (props: SidebarProps) => {
     dropTargetShelf: "",
   }));
   const newShelfInput = useRef<HTMLInputElement>(null);
-  const prevIsOpenSortShelfDialog = useRef(props.isOpenSortShelfDialog);
+  const prevIsOpenSortShelfDialog = useRef(isOpenSortShelfDialog);
 
   const handleDocumentDragEnd = useCallback(() => {
     setState((prev) => ({ ...prev, dropTargetShelf: "" }));
   }, []);
 
   useEffect(() => {
-    props.handleMode(
+    handleMode(
       document.URL.split("/").reverse()[0] === "empty"
         ? "home"
         : document.URL.split("/").reverse()[0]
@@ -59,23 +78,23 @@ const Sidebar = (props: SidebarProps) => {
 
   useEffect(() => {
     // check for isOpenSortShelfDialog update the component
-    if (prevIsOpenSortShelfDialog.current !== props.isOpenSortShelfDialog) {
-      prevIsOpenSortShelfDialog.current = props.isOpenSortShelfDialog;
+    if (prevIsOpenSortShelfDialog.current !== isOpenSortShelfDialog) {
+      prevIsOpenSortShelfDialog.current = isOpenSortShelfDialog;
       setState((prev) => ({
         ...prev,
         isCreateShelf: false,
         newShelfName: "",
       }));
     }
-  }, [props.isOpenSortShelfDialog]);
+  }, [isOpenSortShelfDialog]);
 
   const handleSidebar = (mode: string) => {
-    props.handleSelectBook(false);
-    props.history.push(`/manager/${mode}`);
-    props.handleMode(mode);
-    props.handleShelf("");
-    props.handleSearch(false);
-    props.handleSortDisplay(false);
+    handleSelectBook(false);
+    navigate(`/manager/${mode}`);
+    handleMode(mode);
+    handleShelf("");
+    handleSearch(false);
+    handleSortDisplay(false);
   };
   const handleHover = (mode: string) => {
     setState((prev) => ({ ...prev, hoverMode: mode }));
@@ -83,9 +102,9 @@ const Sidebar = (props: SidebarProps) => {
   const handleShelfHover = (hoverShelfTitle: string) => {
     setState((prev) => ({ ...prev, hoverShelfTitle }));
   };
-  const handleCollapse = (isCollapsed: boolean) => {
+  const handleCollapseSidebar = (isCollapsed: boolean) => {
     setState((prev) => ({ ...prev, isCollapsed }));
-    props.handleCollapse(isCollapsed);
+    handleCollapse(isCollapsed);
     ConfigService.setReaderConfig("isCollapsed", isCollapsed ? "yes" : "no");
   };
   const handleJump = (url: string) => {
@@ -93,7 +112,7 @@ const Sidebar = (props: SidebarProps) => {
   };
   const handleCreateShelf = () => {
     if (!state.newShelfName) {
-      toast(props.t("Shelf Title is Empty"));
+      toast(t("Shelf Title is Empty"));
       setState((prev) => ({
         ...prev,
         isCreateShelf: false,
@@ -103,13 +122,13 @@ const Sidebar = (props: SidebarProps) => {
     }
     let shelfList = ConfigService.getAllMapConfig("shelfList");
     if (shelfList.hasOwnProperty(state.newShelfName)) {
-      toast(props.t("Duplicate shelf"));
+      toast(t("Duplicate shelf"));
       return;
     }
     ConfigService.setListConfig(state.newShelfName, "sortedShelfList");
 
     ConfigService.setOneMapConfig(state.newShelfName, [], "shelfList");
-    toast.success(props.t("Created successfully"));
+    toast.success(t("Created successfully"));
     setState((prev) => ({
       ...prev,
       isCreateShelf: false,
@@ -127,14 +146,14 @@ const Sidebar = (props: SidebarProps) => {
 
     const added = addBooksToShelf(bookKeys, shelfTitle);
     if (added === 0) {
-      toast(props.t("Duplicate book"));
+      toast(t("Duplicate book"));
       return;
     }
-    toast.success(props.t("Addition successful"));
-    props.handleFetchBooks();
-    props.handleShelf(shelfTitle);
-    props.handleMode("shelf");
-    props.history.push("/manager/shelf");
+    toast.success(t("Addition successful"));
+    handleFetchBooks();
+    handleShelf(shelfTitle);
+    handleMode("shelf");
+    navigate("/manager/shelf");
   };
   const handleFavoriteDrop = (event: React.DragEvent) => {
     event.preventDefault();
@@ -147,14 +166,14 @@ const Sidebar = (props: SidebarProps) => {
 
     const added = addBooksToFavorite(bookKeys);
     if (added === 0) {
-      toast(props.t("Duplicate book"));
+      toast(t("Duplicate book"));
       return;
     }
-    toast.success(props.t("Addition successful"));
-    props.handleFetchBooks();
-    props.handleShelf("");
-    props.handleMode("favorite");
-    props.history.push("/manager/favorite");
+    toast.success(t("Addition successful"));
+    handleFetchBooks();
+    handleShelf("");
+    handleMode("favorite");
+    navigate("/manager/favorite");
   };
   const handleTrashDrop = (event: React.DragEvent) => {
     event.preventDefault();
@@ -167,14 +186,14 @@ const Sidebar = (props: SidebarProps) => {
 
     const moved = moveBooksToTrash(bookKeys);
     if (moved === 0) {
-      toast(props.t("Duplicate book in trash bin"));
+      toast(t("Duplicate book in trash bin"));
       return;
     }
-    toast.success(props.t("Deletion successful"));
-    props.handleFetchBooks();
-    props.handleShelf("");
-    props.handleMode("trash");
-    props.history.push("/manager/trash");
+    toast.success(t("Deletion successful"));
+    handleFetchBooks();
+    handleShelf("");
+    handleMode("trash");
+    navigate("/manager/trash");
   };
   const getBookDragHandlers = (
     targetId: string,
@@ -209,7 +228,7 @@ const Sidebar = (props: SidebarProps) => {
         <li
           key={item.name}
           className={
-            (props.mode === item.mode
+            (mode === item.mode
               ? "active side-menu-item"
               : "side-menu-item") +
             (state.dropTargetShelf === item.mode ? " shelf-drop-target" : "")
@@ -224,7 +243,7 @@ const Sidebar = (props: SidebarProps) => {
           onMouseLeave={() => {
             handleHover("");
           }}
-          style={props.isCollapsed ? { width: 40, marginLeft: 15 } : {}}
+          style={isCollapsed ? { width: 40, marginLeft: 15 } : {}}
           {...(isDropTarget
             ? getBookDragHandlers(
                 item.mode,
@@ -234,7 +253,7 @@ const Sidebar = (props: SidebarProps) => {
               )
             : {})}
         >
-          {props.mode === item.mode ? (
+          {mode === item.mode ? (
             <div className="side-menu-selector-container"></div>
           ) : null}
           {state.hoverMode === item.mode ? (
@@ -242,23 +261,23 @@ const Sidebar = (props: SidebarProps) => {
           ) : null}
           <div
             className={
-              props.mode === item.mode
+              mode === item.mode
                 ? "side-menu-selector active-selector"
                 : "side-menu-selector "
             }
           >
             <div
               className="side-menu-icon"
-              style={props.isCollapsed ? {} : { marginLeft: "38px" }}
+              style={isCollapsed ? {} : { marginLeft: "38px" }}
             >
               <span
                 className={
-                  props.mode === item.mode
+                  mode === item.mode
                     ? `icon-${item.icon}  active-icon`
                     : `icon-${item.icon}`
                 }
                 style={
-                  props.isCollapsed
+                  isCollapsed
                     ? { position: "relative", marginLeft: "-9px" }
                     : {}
                 }
@@ -267,12 +286,12 @@ const Sidebar = (props: SidebarProps) => {
 
             <span
               style={
-                props.isCollapsed
+                isCollapsed
                   ? { display: "none", width: "70%" }
                   : { width: "60%" }
               }
             >
-              {props.t(item.name)}
+              {t(item.name)}
             </span>
           </div>
         </li>
@@ -296,16 +315,16 @@ const Sidebar = (props: SidebarProps) => {
           <li
             key={item}
             className={
-              (props.shelfTitle === item
+              (shelfTitle === item
                 ? "active side-menu-item"
                 : "side-menu-item") +
               (state.dropTargetShelf === item ? " shelf-drop-target" : "")
             }
             id={`sidebar-${index}`}
             onClick={() => {
-              props.handleShelf(item);
-              props.handleMode("shelf");
-              props.history.push("/manager/shelf");
+              handleShelf(item);
+              handleMode("shelf");
+              navigate("/manager/shelf");
             }}
             {...getBookDragHandlers(item, (event) => {
               handleBookDrop(item, event);
@@ -316,9 +335,9 @@ const Sidebar = (props: SidebarProps) => {
             onMouseLeave={() => {
               handleShelfHover("");
             }}
-            style={props.isCollapsed ? { width: 40, marginLeft: 15 } : {}}
+            style={isCollapsed ? { width: 40, marginLeft: 15 } : {}}
           >
-            {props.shelfTitle === item ? (
+            {shelfTitle === item ? (
               <div className="side-menu-selector-container"></div>
             ) : null}
             {state.hoverShelfTitle === item ? (
@@ -326,24 +345,24 @@ const Sidebar = (props: SidebarProps) => {
             ) : null}
             <div
               className={
-                props.shelfTitle === item
+                shelfTitle === item
                   ? "side-menu-selector active-selector"
                   : "side-menu-selector "
               }
             >
               <div
                 className="side-menu-icon"
-                style={props.isCollapsed ? {} : { marginLeft: "38px" }}
+                style={isCollapsed ? {} : { marginLeft: "38px" }}
               >
                 <span data-tooltip-id="my-tooltip" data-tooltip-content={item}>
                   <span
                     className={
-                      props.shelfTitle === item
+                      shelfTitle === item
                         ? `icon-bookshelf-line  active-icon sidebar-shelf-icon`
                         : `icon-bookshelf-line sidebar-shelf-icon`
                     }
                     style={
-                      props.isCollapsed
+                      isCollapsed
                         ? { position: "relative", marginLeft: "-8px" }
                         : {}
                     }
@@ -354,10 +373,10 @@ const Sidebar = (props: SidebarProps) => {
               <span
                 className="sidebar-shelf-content"
                 style={
-                  props.isCollapsed ? { display: "none", width: "70%" } : {}
+                  isCollapsed ? { display: "none", width: "70%" } : {}
                 }
               >
-                <span className="sidebar-shelf-name">{props.t(item)}</span>
+                <span className="sidebar-shelf-name">{t(item)}</span>
                 {isShowShelfBookCount && (
                   <span className="sidebar-shelf-count">{shelfBookCount}</span>
                 )}
@@ -375,7 +394,7 @@ const Sidebar = (props: SidebarProps) => {
         <div
           className="sidebar-list-icon"
           onClick={() => {
-            handleCollapse(!state.isCollapsed);
+            handleCollapseSidebar(!isCollapsed);
           }}
         >
           <span className="icon-menu sidebar-list"></span>
@@ -386,10 +405,10 @@ const Sidebar = (props: SidebarProps) => {
             ConfigService.getReaderConfig("appSkin") === "night" ||
             (ConfigService.getReaderConfig("appSkin") === "system" &&
               ConfigService.getReaderConfig("isOSNight") === "yes")
-              ? props.isAuthed
+              ? isAuthed
                 ? logoDarkPro
                 : logoDark
-              : props.isAuthed
+              : isAuthed
               ? logoLightPro
               : logoLight
           }
@@ -397,18 +416,18 @@ const Sidebar = (props: SidebarProps) => {
           onClick={() => {
             handleJump(getWebsiteUrl());
           }}
-          style={state.isCollapsed ? { display: "none" } : {}}
+          style={isCollapsed ? { display: "none" } : {}}
           className="logo"
         />
         <div
           className="side-menu-container-parent"
-          style={state.isCollapsed ? { width: "70px" } : {}}
+          style={isCollapsed ? { width: "70px" } : {}}
         >
           <ul className="side-menu-container">{renderSideMenu()}</ul>
           <div
             className="side-shelf-title-container"
             style={
-              state.isCollapsed
+              isCollapsed
                 ? { display: "none" }
                 : state.isCollpaseShelf
                 ? {}
@@ -431,7 +450,7 @@ const Sidebar = (props: SidebarProps) => {
               }
             ></span>
           </div>
-          {props.isCollapsed ? null : !state.isCreateShelf ? (
+          {isCollapsed ? null : !state.isCreateShelf ? (
             <div className={"side-menu-selector"} style={{ cursor: "pointer" }}>
               <div
                 className="side-menu-icon"
@@ -453,7 +472,7 @@ const Sidebar = (props: SidebarProps) => {
 
               <span
                 style={
-                  props.isCollapsed
+                  isCollapsed
                     ? { display: "none", width: "70%" }
                     : { width: "60%" }
                 }
@@ -461,7 +480,7 @@ const Sidebar = (props: SidebarProps) => {
                   setState((prev) => ({ ...prev, isCreateShelf: true }));
                 }}
               >
-                {props.t("New shelf")}
+                {t("New shelf")}
               </span>
             </div>
           ) : (
@@ -509,12 +528,12 @@ const Sidebar = (props: SidebarProps) => {
               ></span>
             </div>
           )}
-          {!props.isCollapsed && (
+          {!isCollapsed && (
             <div
               className={"side-menu-selector"}
               style={{ cursor: "pointer" }}
               onClick={() => {
-                props.handleSortShelfDialog(true);
+                handleSortShelfDialog(true);
               }}
             >
               <div
@@ -537,12 +556,12 @@ const Sidebar = (props: SidebarProps) => {
 
               <span
                 style={
-                  props.isCollapsed
+                  isCollapsed
                     ? { display: "none", width: "70%" }
                     : { width: "60%" }
                 }
               >
-                {props.t("Manage shelf")}
+                {t("Manage shelf")}
               </span>
             </div>
           )}
@@ -556,13 +575,13 @@ const Sidebar = (props: SidebarProps) => {
             className={"side-menu-selector"}
             style={{ cursor: "pointer" }}
             onClick={() => {
-              props.history.push("/stats");
+              navigate("/stats");
             }}
           >
             <div
               className="side-menu-icon"
               style={
-                props.isCollapsed
+                isCollapsed
                   ? {}
                   : { marginLeft: "20px", marginRight: "15px" }
               }
@@ -570,7 +589,7 @@ const Sidebar = (props: SidebarProps) => {
               <span
                 className="icon-chart sidebar-shelf-icon"
                 style={
-                  props.isCollapsed
+                  isCollapsed
                     ? {
                         position: "relative",
                         marginLeft: "-0px",
@@ -582,12 +601,12 @@ const Sidebar = (props: SidebarProps) => {
             </div>
             <span
               style={
-                props.isCollapsed
+                isCollapsed
                   ? { display: "none", width: "70%" }
                   : { width: "61%" }
               }
             >
-              {props.t("Reading Stats")}
+              {t("Reading Stats")}
             </span>
           </div>
         </div>
@@ -596,4 +615,4 @@ const Sidebar = (props: SidebarProps) => {
   );
 };
 
-export default withRouter(Sidebar as any);
+export default Sidebar;

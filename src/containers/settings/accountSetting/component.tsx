@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
@@ -32,9 +33,30 @@ import copyTextToClipboard from "copy-text-to-clipboard";
 import { resetReaderRequest } from "../../../utils/request/reader";
 import { resetThirdpartyRequest } from "../../../utils/request/thirdparty";
 import TokenService from "../../../utils/storage/tokenService";
+import { useAppStore } from "../../../store/useAppStore";
 declare var window: any;
 
 const AccountSetting = (props: SettingInfoProps) => {
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const isShowSupport = useAppStore((s) => s.manager.isShowSupport);
+  const userInfo = useAppStore((s) => s.manager.userInfo);
+  const loginOptionList = useAppStore((s) => s.backupPage.loginOptionList);
+  const cloudSyncFunc = useAppStore((s) => s.book.cloudSyncFunc);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleFetchDataSourceList = useAppStore(
+    (s) => s.handleFetchDataSourceList
+  );
+  const handleFetchDefaultSyncOption = useAppStore(
+    (s) => s.handleFetchDefaultSyncOption
+  );
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handleFetchLoginOptionList = useAppStore(
+    (s) => s.handleFetchLoginOptionList
+  );
+  const handleFetchAuthed = useAppStore((s) => s.handleFetchAuthed);
+  const handleLoginOptionList = useAppStore((s) => s.handleLoginOptionList);
+  const handleFetchUserInfo = useAppStore((s) => s.handleFetchUserInfo);
+  const { t } = useTranslation();
   const [state, setState] = useState<SettingInfoState>({
     settingLogin: "",
     loginConfig: {},
@@ -47,41 +69,28 @@ const AccountSetting = (props: SettingInfoProps) => {
 
   const lastBindClickTimeRef = useRef<number>(0);
   const countdownTimerRef = useRef<any>(null);
-  const prevIsShowSupportRef = useRef<boolean>(props.isShowSupport);
+  const prevIsShowSupportRef = useRef<boolean>(isShowSupport);
 
   const setPartialState = (partial: Partial<SettingInfoState>) => {
     setState((prevState) => ({ ...prevState, ...partial }));
   };
 
   const handleRest = (_bool: boolean) => {
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
   const handleJump = (url: string) => {
     openInBrowser(url);
   };
 
-  const handleSetting = (stateName: string) => {
-    const currentValue = (state as any)[stateName];
-    setState(
-      (prevState) =>
-        ({
-          ...prevState,
-          [stateName]: !(prevState as any)[stateName],
-        }) as any
-    );
-    ConfigService.setReaderConfig(stateName, currentValue ? "no" : "yes");
-    handleRest(currentValue);
-  };
-
   const handleLogout = async () => {
     await handleClearToken();
 
-    props.handleFetchAuthed();
-    props.handleLoginOptionList([]);
-    props.handleFetchDataSourceList();
-    props.handleFetchDefaultSyncOption();
-    toast.success(props.t("Log out successful"));
+    handleFetchAuthed();
+    handleLoginOptionList([]);
+    handleFetchDataSourceList();
+    handleFetchDefaultSyncOption();
+    toast.success(t("Log out successful"));
   };
 
   const handleAddLoginOption = (value: string) => {
@@ -105,11 +114,11 @@ const AccountSetting = (props: SettingInfoProps) => {
     if (!targetValue) {
       return;
     }
-    if (props.loginOptionList.length === 1) {
-      toast.error(props.t("At least one login option should be kept"));
+    if (loginOptionList.length === 1) {
+      toast.error(t("At least one login option should be kept"));
       return;
     }
-    toast.loading(props.t("Removing"), {
+    toast.loading(t("Removing"), {
       id: "remove-login-option",
     });
     let userRequest = await getUserRequest();
@@ -117,18 +126,18 @@ const AccountSetting = (props: SettingInfoProps) => {
       provider: targetValue,
     });
     if (response.code === 200) {
-      toast.success(props.t("Removal successful"), {
+      toast.success(t("Removal successful"), {
         id: "remove-login-option",
       });
-      props.handleFetchLoginOptionList();
+      handleFetchLoginOptionList();
     } else if (response.code === 401) {
-      toast.error(props.t("Removal failed, error code") + ": " + response.msg, {
+      toast.error(t("Removal failed, error code") + ": " + response.msg, {
         id: "remove-login-option",
       });
       handleExitApp();
       return;
     } else {
-      toast.error(props.t("Removal failed, error code") + ": " + response.msg, {
+      toast.error(t("Removal failed, error code") + ": " + response.msg, {
         id: "remove-login-option",
       });
     }
@@ -140,16 +149,16 @@ const AccountSetting = (props: SettingInfoProps) => {
 
   const handleConfirmLoginOption = async () => {
     if (!state.loginConfig.token || !state.settingLogin) {
-      toast.error(props.t("Missing parameters") + props.t("Token"));
+      toast.error(t("Missing parameters") + t("Token"));
       return;
     }
     const now = Date.now();
     if (now - lastBindClickTimeRef.current < 3000) {
-      toast.error(props.t("You are clicking too fast, please try again later"));
+      toast.error(t("You are clicking too fast, please try again later"));
       return;
     }
     lastBindClickTimeRef.current = now;
-    toast.loading(props.t("Adding"), {
+    toast.loading(t("Adding"), {
       id: "adding",
     });
     let userRequest = await getUserRequest();
@@ -165,16 +174,16 @@ const AccountSetting = (props: SettingInfoProps) => {
     });
 
     if (res.code === 200) {
-      props.handleFetchLoginOptionList();
-      toast.success(props.t("Addition successful"), {
+      handleFetchLoginOptionList();
+      toast.success(t("Addition successful"), {
         id: "adding",
       });
       setPartialState({ settingLogin: "" });
     } else {
       if (state.settingLogin === "email") {
-        toast(props.t("Please make sure the email and code are correct"));
+        toast(t("Please make sure the email and code are correct"));
       }
-      toast.error(props.t("Login failed, error code") + ": " + res.msg, {
+      toast.error(t("Login failed, error code") + ": " + res.msg, {
         id: "adding",
       });
     }
@@ -182,51 +191,51 @@ const AccountSetting = (props: SettingInfoProps) => {
 
   const handleLoginRegister = async () => {
     if (!state.loginConfig.token || !state.settingLogin) {
-      toast.error(props.t("Missing parameters") + props.t("Token"));
+      toast.error(t("Missing parameters") + t("Token"));
       return;
     }
     const now = Date.now();
     if (now - lastBindClickTimeRef.current < 3000) {
-      toast.error(props.t("You are clicking too fast, please try again later"));
+      toast.error(t("You are clicking too fast, please try again later"));
       return;
     }
     lastBindClickTimeRef.current = now;
-    toast.loading(props.t("Logging in"), {
+    toast.loading(t("Logging in"), {
       id: "bind-login-option",
     });
     let res = await loginRegister(state.settingLogin, state.loginConfig.token);
 
     if (res.code === 200) {
-      props.handleFetchAuthed();
-      props.handleFetchLoginOptionList();
+      handleFetchAuthed();
+      handleFetchLoginOptionList();
       let result = await handleAutoCloudSync();
       if (result) {
-        props.cloudSyncFunc();
+        cloudSyncFunc();
       } else {
         ConfigService.removeItem("defaultSyncOption");
         ConfigService.removeItem("dataSourceList");
       }
-      toast.success(props.t("Login successful"), {
+      toast.success(t("Login successful"), {
         id: "bind-login-option",
       });
-      props.handleFetchDataSourceList();
-      props.handleFetchDefaultSyncOption();
-      props.handleFetchUserInfo();
+      handleFetchDataSourceList();
+      handleFetchDefaultSyncOption();
+      handleFetchUserInfo();
       setPartialState({ settingLogin: "" });
     } else {
       if (state.settingLogin === "email") {
-        toast(props.t("Please make sure the email and code are correct"));
+        toast(t("Please make sure the email and code are correct"));
       }
-      toast.error(props.t("Login failed, error code") + ": " + res.msg, {
+      toast.error(t("Login failed, error code") + ": " + res.msg, {
         id: "bind-login-option",
       });
     }
   };
 
   useEffect(() => {
-    if (props.isAuthed) {
-      props.handleFetchLoginOptionList();
-      props.handleFetchUserInfo();
+    if (isAuthed) {
+      handleFetchLoginOptionList();
+      handleFetchUserInfo();
     }
     return () => {
       if (countdownTimerRef.current) {
@@ -239,18 +248,18 @@ const AccountSetting = (props: SettingInfoProps) => {
 
   useEffect(() => {
     const wasShowSupport = prevIsShowSupportRef.current;
-    prevIsShowSupportRef.current = props.isShowSupport;
-    if (props.isShowSupport && !wasShowSupport) {
+    prevIsShowSupportRef.current = isShowSupport;
+    if (isShowSupport && !wasShowSupport) {
       toast(
-        props.t(
+        t(
           "Your Pro trial has expired, please renew it to continue using the Pro features"
         )
       );
-      props.handleSetting(false);
-      props.handleSettingMode("general");
+      handleSetting(false);
+      handleSettingMode("general");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.isShowSupport]);
+  }, [isShowSupport]);
 
   return (
     <>
@@ -268,7 +277,7 @@ const AccountSetting = (props: SettingInfoProps) => {
           <textarea
             className="token-dialog-token-box"
             id="token-dialog-token-box"
-            placeholder={props.t(
+            placeholder={t(
               "Please click the authorize button below to authorize your account, enter the obtained credentials here, and then click the bind button below"
             )}
             onContextMenu={() => {
@@ -290,7 +299,7 @@ const AccountSetting = (props: SettingInfoProps) => {
             <div
               className="voice-add-confirm"
               onClick={async () => {
-                if (props.isAuthed) {
+                if (isAuthed) {
                   handleConfirmLoginOption();
                   return;
                 }
@@ -342,7 +351,7 @@ const AccountSetting = (props: SettingInfoProps) => {
           <input
             type={"text"}
             name={"email"}
-            placeholder={props.t("Enter your email")}
+            placeholder={t("Enter your email")}
             onChange={(e) => {
               if (e.target.value) {
                 setState((prevState) => ({
@@ -359,7 +368,7 @@ const AccountSetting = (props: SettingInfoProps) => {
               if (email) {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (email && !emailRegex.test(email)) {
-                  toast.error(props.t("Invalid email format"));
+                  toast.error(t("Invalid email format"));
                   return;
                 }
                 // clear code and token if email changed
@@ -388,7 +397,7 @@ const AccountSetting = (props: SettingInfoProps) => {
           <input
             type={"text"}
             name={"code"}
-            placeholder={props.t("Enter code")}
+            placeholder={t("Enter code")}
             onChange={(e) => {
               if (e.target.value) {
                 setState((prevState) => ({
@@ -411,7 +420,7 @@ const AccountSetting = (props: SettingInfoProps) => {
             <div
               className="voice-add-confirm"
               onClick={async () => {
-                if (props.isAuthed) {
+                if (isAuthed) {
                   handleConfirmLoginOption();
                   return;
                 }
@@ -438,19 +447,19 @@ const AccountSetting = (props: SettingInfoProps) => {
                 }}
                 onClick={async () => {
                   if (!state.loginConfig.email) {
-                    toast.error(props.t("Enter your email"));
+                    toast.error(t("Enter your email"));
                     return;
                   }
                   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                   if (!emailRegex.test(state.loginConfig.email)) {
-                    toast.error(props.t("Invalid email format"));
+                    toast.error(t("Invalid email format"));
                     return;
                   }
                   if (state.isSendingCode || state.countdown) {
                     return;
                   }
                   setPartialState({ isSendingCode: true });
-                  toast.loading(props.t("Sending"), {
+                  toast.loading(t("Sending"), {
                     id: "send-email-code",
                   });
                   let userRequest = await getUserRequest();
@@ -459,11 +468,11 @@ const AccountSetting = (props: SettingInfoProps) => {
                     lang: ConfigService.getReaderConfig("lang"),
                   });
                   if (response.code === 200) {
-                    toast.success(props.t("Send successfully"), {
+                    toast.success(t("Send successfully"), {
                       id: "send-email-code",
                     });
                     toast(
-                      props.t(
+                      t(
                         "If you didn't receive the verification code, please check the spam folder or use another email provider"
                       ),
                       {
@@ -483,7 +492,7 @@ const AccountSetting = (props: SettingInfoProps) => {
                   } else {
                     setPartialState({ isSendingCode: false });
                     toast.error(
-                      props.t("Failed to send code, error code") +
+                      t("Failed to send code, error code") +
                         ": " +
                         response.msg,
                       { id: "send-email-code" }
@@ -509,7 +518,7 @@ const AccountSetting = (props: SettingInfoProps) => {
               marginTop: "10px",
             }}
           >
-            {props.t(
+            {t(
               "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows"
             )}
             <br />
@@ -529,7 +538,7 @@ const AccountSetting = (props: SettingInfoProps) => {
           <input
             type={"text"}
             name={"redeemCode"}
-            placeholder={props.t("Enter your redemption code")}
+            placeholder={t("Enter your redemption code")}
             onChange={(e) => {
               if (e.target.value) {
                 setPartialState({
@@ -548,7 +557,7 @@ const AccountSetting = (props: SettingInfoProps) => {
             <div
               className="voice-add-confirm"
               onClick={async () => {
-                toast.loading(props.t("Verifying..."), {
+                toast.loading(t("Verifying..."), {
                   id: "redeem-code",
                 });
                 let userRequest = await getUserRequest();
@@ -556,15 +565,15 @@ const AccountSetting = (props: SettingInfoProps) => {
                   code: state.redeemCode,
                 });
                 if (response.code === 200) {
-                  props.handleFetchUserInfo();
-                  toast.success(props.t("Redeem successful"), {
+                  handleFetchUserInfo();
+                  toast.success(t("Redeem successful"), {
                     id: "redeem-code",
                   });
 
                   setPartialState({ isRedeemCode: false });
                 } else if (response.code === 401) {
                   toast.error(
-                    props.t("Redeem failed, error code") + ": " + response.msg,
+                    t("Redeem failed, error code") + ": " + response.msg,
                     {
                       id: "redeem-code",
                     }
@@ -573,7 +582,7 @@ const AccountSetting = (props: SettingInfoProps) => {
                   return;
                 } else if (response.code === 10010) {
                   toast.error(
-                    props.t(
+                    t(
                       "This code has already been used, if you have redeemed it before, there is no need to redeem it again. Just log in to same account to use Pro features"
                     ),
                     {
@@ -583,7 +592,7 @@ const AccountSetting = (props: SettingInfoProps) => {
                   );
                 } else {
                   toast.error(
-                    props.t("Redeem failed, error code") + ": " + response.msg,
+                    t("Redeem failed, error code") + ": " + response.msg,
                     {
                       id: "redeem-code",
                     }
@@ -591,7 +600,7 @@ const AccountSetting = (props: SettingInfoProps) => {
                   if (response.code === 10009) {
                     if (state.redeemCode.startsWith("CD")) {
                       toast(
-                        props.t(
+                        t(
                           "This is the order number not the redemption code, please check your email again, the redemption code is below the order number"
                         ),
                         {
@@ -600,7 +609,7 @@ const AccountSetting = (props: SettingInfoProps) => {
                       );
                     } else {
                       toast(
-                        props.t(
+                        t(
                           "Please make sure you entered the correct redemption code and the code matches your server region, if you have any questions, please contact our support team"
                         ),
                         {
@@ -627,7 +636,7 @@ const AccountSetting = (props: SettingInfoProps) => {
           </div>
         </div>
       )}
-      {!props.isAuthed && !state.showLoginOptions && (
+      {!isAuthed && !state.showLoginOptions && (
         <div className="pro-banner-container">
           <div className="pro-banner">
             <div className="pro-banner-overlay"></div>
@@ -697,11 +706,11 @@ const AccountSetting = (props: SettingInfoProps) => {
           </div>
         </div>
       )}
-      {(props.isAuthed || state.showLoginOptions) && (
+      {(isAuthed || state.showLoginOptions) && (
         <div className="setting-dialog-new-title">
           <div>
             <Trans>
-              {props.isAuthed ? "Server region" : "Select server region"}
+              {isAuthed ? "Server region" : "Select server region"}
             </Trans>
             {ConfigService.getReaderConfig("lang").startsWith("zh") && (
               <span
@@ -723,7 +732,7 @@ const AccountSetting = (props: SettingInfoProps) => {
               </span>
             )}
           </div>
-          {props.isAuthed ? (
+          {isAuthed ? (
             <div
               className="lang-setting-option"
               style={{ display: "flex", alignItems: "center" }}
@@ -765,7 +774,7 @@ const AccountSetting = (props: SettingInfoProps) => {
                 resetReaderRequest();
                 resetUserRequest();
                 resetThirdpartyRequest();
-                toast.success(props.t("Setup successful"));
+                toast.success(t("Setup successful"));
               }}
             >
               {[
@@ -778,14 +787,14 @@ const AccountSetting = (props: SettingInfoProps) => {
                   key={item.value}
                   className="lang-setting-option"
                 >
-                  {props.t(item.label)}
+                  {t(item.label)}
                 </option>
               ))}
             </select>
           )}
         </div>
       )}
-      {!props.isAuthed && state.showLoginOptions && (
+      {!isAuthed && state.showLoginOptions && (
         <>
           <div className="setting-dialog-new-title">
             <Trans>Select login method</Trans>
@@ -805,7 +814,7 @@ const AccountSetting = (props: SettingInfoProps) => {
                     style={{ fontSize: item.fontsize }}
                   ></span>
                   <span className="account-login-option-label">
-                    {props.t(item.label)}
+                    {t(item.label)}
                   </span>
                 </div>
               );
@@ -813,7 +822,7 @@ const AccountSetting = (props: SettingInfoProps) => {
           </div>
         </>
       )}
-      {!props.isAuthed && state.showLoginOptions && (
+      {!isAuthed && state.showLoginOptions && (
         <>
           <div
             className="account-login-tips"
@@ -821,7 +830,7 @@ const AccountSetting = (props: SettingInfoProps) => {
               opacity: 1,
             }}
           >
-            {props.t(
+            {t(
               "7-day free trial upon registration, then billed $4.99 per Year"
             )}
           </div>
@@ -838,14 +847,14 @@ const AccountSetting = (props: SettingInfoProps) => {
               opacity: 1,
             }}
           >
-            {props.t("Compare Free and Pro features")}
+            {t("Compare Free and Pro features")}
           </div>
         </>
       )}
-      {props.isAuthed &&
+      {isAuthed &&
         loginList.map((login) => (
           <div className="setting-dialog-new-title" key={login.value}>
-            <Trans>{props.t(login.label)}</Trans>
+            <Trans>{t(login.label)}</Trans>
             <div
               style={{
                 display: "flex",
@@ -854,7 +863,7 @@ const AccountSetting = (props: SettingInfoProps) => {
               }}
               onClick={() => {
                 if (
-                  !props.loginOptionList.find(
+                  !loginOptionList.find(
                     (item) => item.provider === login.value
                   )
                 ) {
@@ -863,27 +872,27 @@ const AccountSetting = (props: SettingInfoProps) => {
               }}
             >
               <div>
-                {props.loginOptionList.find(
+                {loginOptionList.find(
                   (item) => item.provider === login.value
                 ) ? (
-                  props.loginOptionList.find(
+                  loginOptionList.find(
                     (item) => item.provider === login.value
                   )?.email ? (
                     <span>
                       {
-                        props.loginOptionList.find(
+                        loginOptionList.find(
                           (item) => item.provider === login.value
                         )?.email
                       }
                     </span>
                   ) : (
-                    <span>{props.t("Bound")}</span>
+                    <span>{t("Bound")}</span>
                   )
                 ) : (
-                  <span style={{ opacity: 0.4 }}>{props.t("Not bound")}</span>
+                  <span style={{ opacity: 0.4 }}>{t("Not bound")}</span>
                 )}
               </div>
-              {props.loginOptionList.find(
+              {loginOptionList.find(
                 (item) => item.provider === login.value
               ) ? (
                 <span
@@ -913,7 +922,7 @@ const AccountSetting = (props: SettingInfoProps) => {
           </div>
         ))}
 
-      {props.isAuthed && (
+      {isAuthed && (
         <div className="setting-dialog-new-title">
           <Trans>Log out</Trans>
 
@@ -928,7 +937,7 @@ const AccountSetting = (props: SettingInfoProps) => {
           </span>
         </div>
       )}
-      {props.isAuthed && (
+      {isAuthed && (
         <div className="setting-dialog-new-title">
           <Trans>Get device identifier</Trans>
 
@@ -937,14 +946,14 @@ const AccountSetting = (props: SettingInfoProps) => {
             onClick={async () => {
               let fingerPrint = await TokenService.getFingerprint();
               copyTextToClipboard(fingerPrint);
-              toast.success(props.t("Copied"));
+              toast.success(t("Copied"));
             }}
           >
             <Trans>Copy</Trans>
           </span>
         </div>
       )}
-      {props.isAuthed && (
+      {isAuthed && (
         <div className="setting-dialog-new-title">
           <Trans>Delete account</Trans>
 
@@ -952,7 +961,7 @@ const AccountSetting = (props: SettingInfoProps) => {
             className="change-location-button"
             onClick={async () => {
               vexComfirmAsync(
-                props.t(
+                t(
                   "To delete your account, you need to use the mobile app. After logging in, go to Settings → Account, and follow the instructions."
                 )
               );
@@ -962,31 +971,31 @@ const AccountSetting = (props: SettingInfoProps) => {
           </span>
         </div>
       )}
-      {props.isAuthed && props.userInfo && (
+      {isAuthed && userInfo && (
         <div className="setting-dialog-new-title">
           <Trans>AI voice character quota</Trans>
           <div style={{ display: "flex", alignItems: "center" }}>
             <span>
-              {props.userInfo.type === "trial"
-                ? props.t("Trial quota")
-                : (props.userInfo && props.userInfo.free_credits
-                    ? props.userInfo.free_credits
+              {userInfo.type === "trial"
+                ? t("Trial quota")
+                : (userInfo && userInfo.free_credits
+                    ? userInfo.free_credits
                     : 0) +
-                  (props.userInfo &&
-                  props.userInfo.tts_credits &&
-                  props.userInfo.tts_credits > 0
-                    ? " + " + props.userInfo.tts_credits
+                  (userInfo &&
+                  userInfo.tts_credits &&
+                  userInfo.tts_credits > 0
+                    ? " + " + userInfo.tts_credits
                     : "")}
             </span>
             <span
               className="change-location-button"
               style={{ marginLeft: "10px", cursor: "pointer" }}
               onClick={async () => {
-                toast.loading(props.t("Refreshing"), {
+                toast.loading(t("Refreshing"), {
                   id: "refresh-user-info",
                 });
-                await props.handleFetchUserInfo();
-                toast.success(props.t("Refresh successful"), {
+                await handleFetchUserInfo();
+                toast.success(t("Refresh successful"), {
                   id: "refresh-user-info",
                 });
               }}
@@ -996,30 +1005,30 @@ const AccountSetting = (props: SettingInfoProps) => {
           </div>
         </div>
       )}
-      {props.isAuthed && (
+      {isAuthed && (
         <p className="setting-option-subtitle">
-          {props.t(
+          {t(
             "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character."
           )}
         </p>
       )}
-      {props.isAuthed && props.userInfo && (
+      {isAuthed && userInfo && (
         <div className="setting-dialog-new-title">
           <Trans>Account type</Trans>
           <div style={{ display: "flex", alignItems: "center" }}>
             <span>
               <Trans>
-                {props.userInfo.type === "trial"
+                {userInfo.type === "trial"
                   ? "Trial user"
-                  : props.userInfo.type === "pro"
+                  : userInfo.type === "pro"
                     ? "Pro user"
                     : "Free user"}
               </Trans>
               {" ("}
-              <Trans i18nKey="Valid until" label={props.userInfo.valid_until}>
+              <Trans i18nKey="Valid until" label={userInfo.valid_until}>
                 Valid until
                 {{
-                  label: formatTimestamp(props.userInfo.valid_until * 1000),
+                  label: formatTimestamp(userInfo.valid_until * 1000),
                 }}
               </Trans>
               {")"}
@@ -1028,11 +1037,11 @@ const AccountSetting = (props: SettingInfoProps) => {
               className="change-location-button"
               style={{ marginLeft: "10px", cursor: "pointer" }}
               onClick={async () => {
-                toast.loading(props.t("Refreshing"), {
+                toast.loading(t("Refreshing"), {
                   id: "refresh-user-info",
                 });
-                await props.handleFetchUserInfo();
-                toast.success(props.t("Refresh successful"), {
+                await handleFetchUserInfo();
+                toast.success(t("Refresh successful"), {
                   id: "refresh-user-info",
                 });
               }}
@@ -1060,7 +1069,7 @@ const AccountSetting = (props: SettingInfoProps) => {
       >
         <div
           onClick={async () => {
-            if (!props.isAuthed) {
+            if (!isAuthed) {
               openInBrowser(getWebsiteUrl() + getWebsiteLang() + "/pricing");
               return;
             }
@@ -1077,7 +1086,7 @@ const AccountSetting = (props: SettingInfoProps) => {
                   deviceUuid
               );
             } else if (response.code === 401) {
-              props.handleFetchAuthed();
+              handleFetchAuthed();
             }
           }}
           style={{
@@ -1088,8 +1097,8 @@ const AccountSetting = (props: SettingInfoProps) => {
           }}
         >
           <Trans>
-            {props.isAuthed && props.userInfo
-              ? props.userInfo.valid_until <
+            {isAuthed && userInfo
+              ? userInfo.valid_until <
                 parseInt(new Date().getTime() / 1000 + "")
                 ? "Upgrade to Pro"
                 : "Renew Pro"
@@ -1098,8 +1107,8 @@ const AccountSetting = (props: SettingInfoProps) => {
         </div>
         <div
           onClick={async () => {
-            if (!props.isAuthed) {
-              toast(props.t("Please log in first"));
+            if (!isAuthed) {
+              toast(t("Please log in first"));
               return;
             }
             setPartialState({ isRedeemCode: true });

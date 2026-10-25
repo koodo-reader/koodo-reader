@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { SettingInfoProps } from "./interface";
 import { Trans } from "react-i18next";
@@ -16,6 +17,7 @@ import { checkDeveloperUpdate } from "../../../utils/request/common";
 declare var window: any;
 
 const AboutSetting = (props: SettingInfoProps) => {
+  const { t } = useTranslation();
   const [updateChannel, setUpdateChannel] = useState(
     ConfigService.getReaderConfig("updateChannel")
   );
@@ -32,18 +34,18 @@ const AboutSetting = (props: SettingInfoProps) => {
               className="change-location-button"
               style={{ marginLeft: "10px", cursor: "pointer" }}
               onClick={async () => {
-                toast.loading(props.t("Checking for update") + "...", {
+                toast.loading(t("Checking for update") + "...", {
                   id: "checking_update",
                 });
                 let res = await checkDeveloperUpdate();
                 const newVersion = res.version;
                 if (newVersion === packageJson.version) {
-                  toast.success(props.t("You are using the latest version"), {
+                  toast.success(t("You are using the latest version"), {
                     id: "checking_update",
                   });
                 } else {
                   toast.success(
-                    props.t("A new version is available") + ": " + newVersion,
+                    t("A new version is available") + ": " + newVersion,
                     {
                       id: "checking_update",
                     }
@@ -73,7 +75,7 @@ const AboutSetting = (props: SettingInfoProps) => {
           onChange={(event) => {
             ConfigService.setReaderConfig("updateChannel", event.target.value);
             setUpdateChannel(event.target.value);
-            toast.success(props.t("Change successful"));
+            toast.success(t("Change successful"));
           }}
         >
           {[
@@ -86,7 +88,7 @@ const AboutSetting = (props: SettingInfoProps) => {
               key={item.value}
               className="lang-setting-option"
             >
-              {props.t(item.label)}
+              {t(item.label)}
             </option>
           ))}
         </select>
@@ -188,7 +190,7 @@ const AboutSetting = (props: SettingInfoProps) => {
           className="change-location-button"
           onClick={() => {
             copyTextToClipboard("feedback@koodoreader.com");
-            toast.success(props.t("Email copied to clipboard"));
+            toast.success(t("Email copied to clipboard"));
           }}
         >
           <Trans>Copy</Trans>

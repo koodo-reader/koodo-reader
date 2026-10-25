@@ -1,6 +1,7 @@
+import { useTranslation } from "react-i18next";
 ﻿import { useReducer, useState } from "react";
 import { Trans } from "react-i18next";
-import { ConvertDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import { isElectron } from "react-device-detect";
 import "./convertDialog.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -19,10 +20,17 @@ import {
 } from "../../../utils/common";
 import SwitchRow from "../../readerSettings/switchRow";
 
-const ConvertDialog = (props: ConvertDialogProps) => {
+const ConvertDialog = () => {
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const plugins = useAppStore((s) => s.manager.plugins || []);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleConvertDialog = useAppStore((s) => s.handleConvertDialog);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const { t } = useTranslation();
   const [isConvertPDF, setIsConvertPDF] = useState(
     ConfigService.getAllListConfig("convertPDFBooks").includes(
-      props.currentBook?.key
+      currentBook?.key
     )
   );
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -31,14 +39,14 @@ const ConvertDialog = (props: ConvertDialogProps) => {
     const next = !isConvertPDF;
     setIsConvertPDF(next);
     if (next) {
-      ConfigService.setListConfig(props.currentBook.key, "convertPDFBooks");
+      ConfigService.setListConfig(currentBook.key, "convertPDFBooks");
     } else {
       ConfigService.deleteListConfig(
-        props.currentBook.key,
+        currentBook.key,
         "convertPDFBooks"
       );
     }
-    BookUtil.reloadBooks(props.currentBook);
+    BookUtil.reloadBooks(currentBook);
   };
 
   const renderSelectRow = (
@@ -64,7 +72,7 @@ const ConvertDialog = (props: ConvertDialogProps) => {
   };
 
   const isScanned =
-      props.currentBook.description.indexOf("scanned") > -1;
+      currentBook.description.indexOf("scanned") > -1;
     const isDefaultOcrEngine =
       !isScanned &&
       (ConfigService.getReaderConfig("textOcrEngine") === "system-ocr" ||
@@ -72,7 +80,7 @@ const ConvertDialog = (props: ConvertDialogProps) => {
     const ocrEngine = ConfigService.getReaderConfig(
       isScanned ? "scannedOcrEngine" : "textOcrEngine"
     );
-    const engineList = getOcrEngineList(props.plugins);
+    const engineList = getOcrEngineList(plugins);
     const filteredOcrEngineList = engineList.filter((item) => {
       if (!isElectron && isScanned) {
         return item.value !== "system-ocr";
@@ -80,17 +88,17 @@ const ConvertDialog = (props: ConvertDialogProps) => {
       return true;
     });
     const ocrLangList = getOcrLangList(
-      getDefaultOcrEngine(props.currentBook)
+      getDefaultOcrEngine(currentBook)
     );
 
     return (
       <div
         className="sort-dialog-container scale-page-dialog-container convert-dialog-container"
         onMouseLeave={() => {
-          props.handleConvertDialog(false);
+          handleConvertDialog(false);
         }}
         onMouseEnter={() => {
-          props.handleConvertDialog(true);
+          handleConvertDialog(true);
         }}
         style={{
           top: "50px",
@@ -110,17 +118,17 @@ const ConvertDialog = (props: ConvertDialogProps) => {
             "OCR engine",
             <select
               className="lang-setting-dropdown"
-              value={getDefaultOcrEngine(props.currentBook)}
+              value={getDefaultOcrEngine(currentBook)}
               onChange={(event) => {
                 if (
                   event.target.value === "official-ai-ocr" &&
-                  !props.isAuthed
+                  !isAuthed
                 ) {
                   toast(
-                    props.t("Please upgrade to Pro to use this feature")
+                    t("Please upgrade to Pro to use this feature")
                   );
-                  props.handleSetting(true);
-                  props.handleSettingMode("account");
+                  handleSetting(true);
+                  handleSettingMode("account");
                   return;
                 }
                 ConfigService.setReaderConfig(
@@ -145,11 +153,11 @@ const ConvertDialog = (props: ConvertDialogProps) => {
                 }
                 if (
                   ConfigService.getAllListConfig("convertPDFBooks").includes(
-                    props.currentBook.key
+                    currentBook.key
                   )
                 ) {
-                  clearOcrCache(props.currentBook.key);
-                  BookUtil.reloadBooks(props.currentBook);
+                  clearOcrCache(currentBook.key);
+                  BookUtil.reloadBooks(currentBook);
                 }
                 forceUpdate();
               }}
@@ -160,7 +168,7 @@ const ConvertDialog = (props: ConvertDialogProps) => {
                   key={item.value}
                   className="lang-setting-option"
                 >
-                  {props.t(item.label) + (item.isPro ? " (Pro)" : "")}
+                  {t(item.label) + (item.isPro ? " (Pro)" : "")}
                 </option>
               ))}
             </select>
@@ -183,9 +191,9 @@ const ConvertDialog = (props: ConvertDialogProps) => {
                     if (
                       ConfigService.getAllListConfig(
                         "convertPDFBooks"
-                      ).includes(props.currentBook.key)
+                      ).includes(currentBook.key)
                     ) {
-                      BookUtil.reloadBooks(props.currentBook);
+                      BookUtil.reloadBooks(currentBook);
                     }
                     forceUpdate();
                   }}
@@ -199,7 +207,7 @@ const ConvertDialog = (props: ConvertDialogProps) => {
                       key={item.value}
                       className="lang-setting-option"
                     >
-                      {props.t(item.label)}
+                      {t(item.label)}
                     </option>
                   ))}
                 </select>,
@@ -220,9 +228,9 @@ const ConvertDialog = (props: ConvertDialogProps) => {
                     if (
                       ConfigService.getAllListConfig(
                         "convertPDFBooks"
-                      ).includes(props.currentBook.key)
+                      ).includes(currentBook.key)
                     ) {
-                      BookUtil.reloadBooks(props.currentBook);
+                      BookUtil.reloadBooks(currentBook);
                     }
                     forceUpdate();
                   }}
@@ -236,7 +244,7 @@ const ConvertDialog = (props: ConvertDialogProps) => {
                       key={item.value}
                       className="lang-setting-option"
                     >
-                      {props.t(item.label)}
+                      {t(item.label)}
                     </option>
                   ))}
                 </select>,
@@ -268,11 +276,11 @@ const ConvertDialog = (props: ConvertDialogProps) => {
                   );
                   if (
                     ConfigService.getAllListConfig("convertPDFBooks").includes(
-                      props.currentBook.key
+                      currentBook.key
                     )
                   ) {
-                    clearOcrCache(props.currentBook.key);
-                    BookUtil.reloadBooks(props.currentBook);
+                    clearOcrCache(currentBook.key);
+                    BookUtil.reloadBooks(currentBook);
                   }
                   forceUpdate();
                 }}
@@ -286,7 +294,7 @@ const ConvertDialog = (props: ConvertDialogProps) => {
                     key={item.value}
                     className="lang-setting-option"
                   >
-                    {props.t(item.label)}
+                    {t(item.label)}
                   </option>
                 ))}
               </select>

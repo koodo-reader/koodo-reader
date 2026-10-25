@@ -1,6 +1,7 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
-import { AddCollectionDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import "./addCollectionDialog.css";
 import toast from "react-hot-toast";
 import {
@@ -16,33 +17,48 @@ const collectionUtil = new CollectionUtil(ConfigService);
 
 const NEW_COLLECTION_OPTION = "New collection";
 
-const AddCollectionDialog = (props: AddCollectionDialogProps) => {
+const AddCollectionDialog = () => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const isSelectBook = useAppStore((s) => s.manager.isSelectBook);
+  const selectedBooks = useAppStore((s) => s.manager.selectedBooks);
+  const dialogBooks = useAppStore((s) => s.collection.collectionDialogBooks);
+  const handleAddCollectionDialog = useAppStore(
+    (s) => s.handleAddCollectionDialog
+  );
+  const handleActionDialog = useAppStore((s) => s.handleActionDialog);
+  const handleSelectBook = useAppStore((s) => s.handleSelectBook);
+  const handleSelectedBooks = useAppStore((s) => s.handleSelectedBooks);
+  const handleCollectionDialogBooks = useAppStore(
+    (s) => s.handleCollectionDialogBooks
+  );
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const { t } = useTranslation();
   const [isNew, setIsNew] = useState(true);
   const [collectionKey, setCollectionKey] = useState("");
-  const dialogBooksRef = useRef(props.dialogBooks);
-  dialogBooksRef.current = props.dialogBooks;
+  const dialogBooksRef = useRef(dialogBooks);
+  dialogBooksRef.current = dialogBooks;
 
   useEffect(() => {
     return () => {
       if (dialogBooksRef.current && dialogBooksRef.current.length > 0) {
-        props.handleCollectionDialogBooks([]);
+        handleCollectionDialogBooks([]);
       }
     };
   }, []);
 
   const handleCancel = () => {
-    props.handleAddCollectionDialog(false);
+    handleAddCollectionDialog(false);
   };
 
   const getBookKeys = (): string[] => {
     let bookKeys =
-      props.dialogBooks && props.dialogBooks.length > 0
-        ? props.dialogBooks
-        : props.isSelectBook &&
-            props.selectedBooks.includes(props.currentBook?.key)
-          ? props.selectedBooks
-          : props.currentBook?.key
-            ? [props.currentBook.key]
+      dialogBooks && dialogBooks.length > 0
+        ? dialogBooks
+        : isSelectBook &&
+            selectedBooks.includes(currentBook?.key)
+          ? selectedBooks
+          : currentBook?.key
+            ? [currentBook.key]
             : [];
     return filterNonCollectionKeys(bookKeys).filter((key) => {
       return !collectionUtil.isDeletedKey(key);
@@ -57,11 +73,11 @@ const AddCollectionDialog = (props: AddCollectionDialogProps) => {
       ) as HTMLInputElement;
       let name = (inputElement?.value || "").trim();
       if (!name) {
-        toast(props.t("Collection name is required"));
+        toast(t("Collection name is required"));
         return;
       }
       if (collectionUtil.isCollectionNameExists(name)) {
-        toast(props.t("Collection name already exists"));
+        toast(t("Collection name already exists"));
         return;
       }
       let collection = collectionUtil.createCollection(name, []);
@@ -78,7 +94,7 @@ const AddCollectionDialog = (props: AddCollectionDialogProps) => {
       return collection!.books.indexOf(key) === -1;
     });
     if (bookKeys.length === 0) {
-      toast(props.t("Duplicate book"));
+      toast(t("Duplicate book"));
       return;
     }
     let { added, movedFrom } = collectionUtil.addBooksToCollection(
@@ -87,16 +103,16 @@ const AddCollectionDialog = (props: AddCollectionDialogProps) => {
     );
     if (added > 0 || movedFrom.length > 0) {
       toast.success(
-        props.t("Addition successful") + getMovedFromSuffix(movedFrom)
+        t("Addition successful") + getMovedFromSuffix(movedFrom)
       );
     }
-    if (props.isSelectBook) {
-      props.handleSelectBook(false);
-      props.handleSelectedBooks([]);
+    if (isSelectBook) {
+      handleSelectBook(false);
+      handleSelectedBooks([]);
     }
-    props.handleAddCollectionDialog(false);
-    props.handleActionDialog(false);
-    props.handleFetchBooks();
+    handleAddCollectionDialog(false);
+    handleActionDialog(false);
+    handleFetchBooks();
   };
 
   const handleChange = (nextCollectionKey: string) => {
@@ -117,7 +133,7 @@ const AddCollectionDialog = (props: AddCollectionDialogProps) => {
         key={NEW_COLLECTION_OPTION}
         className="add-collection-dialog-list-option"
       >
-        {props.t("New collection")}
+        {t("New collection")}
       </option>,
       ...collections.map((collection) => {
         return (

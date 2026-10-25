@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { SettingSwitchProps } from "./interface";
 import { Trans } from "react-i18next";
@@ -7,8 +8,17 @@ import toast from "react-hot-toast";
 import { isReadingRawPDF } from "../../../utils/common";
 import BookUtil from "../../../utils/file/bookUtil";
 import SwitchRow from "../switchRow";
+import { useAppStore } from "../../../store/useAppStore";
 
 const SettingSwitch = (props: SettingSwitchProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const renderBookFunc = useAppStore((s) => s.renderBookFunc);
+  const handleHideFooter = useAppStore((s) => s.handleHideFooter);
+  const handleHideHeader = useAppStore((s) => s.handleHideHeader);
+  const handleHideBackground = useAppStore((s) => s.handleHideBackground);
+  const handleShowBorder = useAppStore((s) => s.handleShowBorder);
+  const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
+  const { t } = useTranslation();
   const [state, setState] = useState<Record<string, any>>({
     isBold: ConfigService.getReaderConfig("isBold") === "yes",
     isIndent: ConfigService.getReaderConfig("isIndent") === "yes",
@@ -39,7 +49,7 @@ const SettingSwitch = (props: SettingSwitchProps) => {
     customBookCSS: ConfigService.getReaderConfig("customBookCSS") || "",
     isSeperateStyle: ConfigService.getAllListConfig(
       "seperateStyleBooks"
-    ).includes(props.currentBook?.key),
+    ).includes(currentBook?.key),
   });
 
   useEffect(() => {
@@ -47,17 +57,17 @@ const SettingSwitch = (props: SettingSwitchProps) => {
       ...prev,
       isSeperateStyle: ConfigService.getAllListConfig(
         "seperateStyleBooks"
-      ).includes(props.currentBook?.key),
+      ).includes(currentBook?.key),
     }));
-  }, [props.currentBook?.key]);
+  }, [currentBook?.key]);
 
   const _handleChange = (stateName: string) => {
     const next = !state[stateName];
     setState((prev) => ({ ...prev, [stateName]: next }));
     ConfigService.setReaderConfig(stateName, next ? "yes" : "no");
-    toast(props.t("Change successful"));
+    toast(t("Change successful"));
     setTimeout(async () => {
-      await props.renderBookFunc();
+      await renderBookFunc();
     }, 500);
   };
 
@@ -65,7 +75,7 @@ const SettingSwitch = (props: SettingSwitchProps) => {
     const next = !state[stateName];
     setState((prev) => ({ ...prev, [stateName]: next }));
     ConfigService.setReaderConfig(stateName, next ? "yes" : "no");
-    toast(props.t("Change successful"));
+    toast(t("Change successful"));
   };
 
   const isMoreGroup = !props.group || props.group === "more";
@@ -103,9 +113,9 @@ const SettingSwitch = (props: SettingSwitchProps) => {
               if (!state.customBookCSS) {
                 return;
               }
-              toast(props.t("Change successful"));
+              toast(t("Change successful"));
               setTimeout(async () => {
-                await props.renderBookFunc();
+                await renderBookFunc();
               }, 500);
             }}
           />
@@ -114,7 +124,7 @@ const SettingSwitch = (props: SettingSwitchProps) => {
               <textarea
                 className="token-dialog-token-box"
                 placeholder={
-                  "/* " + props.t("Enter custom CSS here") + " */"
+                  "/* " + t("Enter custom CSS here") + " */"
                 }
                 value={state.customBookCSS}
                 onChange={(e) => {
@@ -126,9 +136,9 @@ const SettingSwitch = (props: SettingSwitchProps) => {
                     "customBookCSS",
                     state.customBookCSS
                   );
-                  toast(props.t("Change successful"));
+                  toast(t("Change successful"));
                   setTimeout(async () => {
-                    await props.renderBookFunc();
+                    await renderBookFunc();
                   }, 500);
                 }}
               />
@@ -142,22 +152,22 @@ const SettingSwitch = (props: SettingSwitchProps) => {
               const next = !state.isSeperateStyle;
               if (next) {
                 ConfigService.setListConfig(
-                  props.currentBook.key,
+                  currentBook.key,
                   "seperateStyleBooks"
                 );
                 setState((prev) => ({ ...prev, isSeperateStyle: true }));
               } else {
                 ConfigService.deleteListConfig(
-                  props.currentBook.key,
+                  currentBook.key,
                   "seperateStyleBooks"
                 );
                 setState((prev) => ({ ...prev, isSeperateStyle: false }));
               }
-              toast(props.t("Change successful"));
-              props.handleBackgroundColor(
+              toast(t("Change successful"));
+              handleBackgroundColor(
                 ConfigService.getReaderConfig("backgroundColor") || ""
               );
-              props.renderBookFunc();
+              renderBookFunc();
             }}
           />
         </>
@@ -167,7 +177,7 @@ const SettingSwitch = (props: SettingSwitchProps) => {
           if (props.group && item.group !== props.group) {
             return false;
           }
-          if (isReadingRawPDF(props.currentBook)) {
+          if (isReadingRawPDF(currentBook)) {
             return item.isPDF;
           }
           return true;
@@ -183,10 +193,10 @@ const SettingSwitch = (props: SettingSwitchProps) => {
               const renderProps: Partial<
                 Record<string, (val: boolean) => void>
               > = {
-                isHideFooter: props.handleHideFooter,
-                isHideHeader: props.handleHideHeader,
-                isHideBackground: props.handleHideBackground,
-                isShowPageBorder: props.handleShowBorder,
+                isHideFooter: handleHideFooter,
+                isHideHeader: handleHideHeader,
+                isHideBackground: handleHideBackground,
+                isShowPageBorder: handleShowBorder,
               };
 
               if (propName === "isBionic") {
@@ -194,10 +204,10 @@ const SettingSwitch = (props: SettingSwitchProps) => {
                   !state.isBionic &&
                   ConfigService.getAllListConfig(
                     "wordDefinitionBooks"
-                  ).includes(props.currentBook.key)
+                  ).includes(currentBook.key)
                 ) {
                   toast.error(
-                    props.t(
+                    t(
                       "Word definitions and fast reading mode cannot be enabled at the same time"
                     )
                   );
@@ -205,12 +215,12 @@ const SettingSwitch = (props: SettingSwitchProps) => {
                 }
                 _handleChange(propName);
               } else if (propName === "isShowPageBorder") {
-                props.handleShowBorder(!state.isShowPageBorder);
+                handleShowBorder(!state.isShowPageBorder);
                 handleChange("isShowPageBorder");
               } else if (propName === "isAllowScript") {
                 handleChange(propName);
                 setTimeout(() => {
-                  BookUtil.reloadBooks(props.currentBook);
+                  BookUtil.reloadBooks(currentBook);
                 }, 500);
               } else if (propName === "isRevertDirection") {
                 const next = !state.isRevertDirection;
@@ -222,9 +232,9 @@ const SettingSwitch = (props: SettingSwitchProps) => {
                   "revertDirection",
                   next ? "yes" : "no"
                 );
-                toast(props.t("Change successful"));
+                toast(t("Change successful"));
                 setTimeout(async () => {
-                  await props.renderBookFunc();
+                  await renderBookFunc();
                 }, 500);
               } else if (propName in renderProps) {
                 renderProps[propName]!(!state[propName]);

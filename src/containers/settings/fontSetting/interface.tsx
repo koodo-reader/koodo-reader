@@ -1,10 +1,6 @@
-import { RouteComponentProps } from "react-router-dom";
 import { FontItem } from "../../../utils/file/fontUtil";
 
-export interface SettingInfoProps extends RouteComponentProps<any> {
-  t: (title: string) => string;
-  isAuthed: boolean;
-  renderBookFunc?: () => void;
+export interface SettingInfoProps {
 }
 
 export interface InstalledFont extends FontItem {

@@ -1,7 +1,10 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import "./actionDialog.css";
 import { Trans } from "react-i18next";
 import { ActionDialogProps, ActionDialogState } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import MoreAction from "../moreAction";
 import MarkAction from "../markAction";
@@ -18,7 +21,35 @@ import {
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 
-const ActionDialog = (props: ActionDialogProps) => {
+const ActionDialog = (
+  props: Pick<ActionDialogProps, "left" | "top">
+) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const mode = useAppStore((s) => s.sidebar.mode);
+  const handleEditDialog = useAppStore((s) => s.handleEditDialog);
+  const handleAddDialog = useAppStore((s) => s.handleAddDialog);
+  const handleDeleteDialog = useAppStore((s) => s.handleDeleteDialog);
+  const handleReadingBook = useAppStore((s) => s.handleReadingBook);
+  const handleActionDialog = useAppStore((s) => s.handleActionDialog);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleDetailDialog = useAppStore((s) => s.handleDetailDialog);
+  const handleSelectBook = useAppStore((s) => s.handleSelectBook);
+  const handleSelectedBooks = useAppStore((s) => s.handleSelectedBooks);
+  const handleCollectionDialog = useAppStore((s) => s.handleCollectionDialog);
+  const handleCollectionDialogKey = useAppStore(
+    (s) => s.handleCollectionDialogKey
+  );
+  const handleCollectionDetailDialog = useAppStore(
+    (s) => s.handleCollectionDetailDialog
+  );
+  const handleCurrentCollectionKey = useAppStore(
+    (s) => s.handleCurrentCollectionKey
+  );
+  const handleAddCollectionDialog = useAppStore(
+    (s) => s.handleAddCollectionDialog
+  );
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [state, setState] = useState<ActionDialogState>(() => ({
     isShowExport: false,
     isShowMark: false,
@@ -30,89 +61,89 @@ const ActionDialog = (props: ActionDialogProps) => {
   };
 
   const handleDeleteBook = () => {
-    props.handleReadingBook(props.currentBook);
-    props.handleDeleteDialog(true);
-    props.handleActionDialog(false);
+    handleReadingBook(currentBook);
+    handleDeleteDialog(true);
+    handleActionDialog(false);
   };
   const handleEditBook = () => {
-    if (collectionUtil.isCollection(props.currentBook.key)) {
-      props.handleCollectionDialogKey(props.currentBook.key);
-      props.handleCollectionDialog(true);
-      props.handleActionDialog(false);
+    if (collectionUtil.isCollection(currentBook.key)) {
+      handleCollectionDialogKey(currentBook.key);
+      handleCollectionDialog(true);
+      handleActionDialog(false);
       return;
     }
-    props.handleEditDialog(true);
-    props.handleReadingBook(props.currentBook);
-    props.handleActionDialog(false);
+    handleEditDialog(true);
+    handleReadingBook(currentBook);
+    handleActionDialog(false);
   };
   const handleDetailBook = () => {
-    if (collectionUtil.isCollection(props.currentBook.key)) {
-      props.handleCurrentCollectionKey(props.currentBook.key);
-      props.handleCollectionDetailDialog(true);
-      props.handleActionDialog(false);
+    if (collectionUtil.isCollection(currentBook.key)) {
+      handleCurrentCollectionKey(currentBook.key);
+      handleCollectionDetailDialog(true);
+      handleActionDialog(false);
       return;
     }
-    props.handleDetailDialog(true);
-    props.handleReadingBook(props.currentBook);
-    props.handleActionDialog(false);
+    handleDetailDialog(true);
+    handleReadingBook(currentBook);
+    handleActionDialog(false);
   };
   const handleAddShelf = () => {
-    props.handleAddDialog(true);
-    props.handleReadingBook(props.currentBook);
-    props.handleActionDialog(false);
+    handleAddDialog(true);
+    handleReadingBook(currentBook);
+    handleActionDialog(false);
   };
   const handleAddCollection = () => {
-    props.handleAddCollectionDialog(true);
-    props.handleReadingBook(props.currentBook);
-    props.handleActionDialog(false);
+    handleAddCollectionDialog(true);
+    handleReadingBook(currentBook);
+    handleActionDialog(false);
   };
   const handleDissolveCollection = async () => {
-    let key = props.currentBook.key;
+    let key = currentBook.key;
     let collection = collectionUtil.getCollection(key);
     if (!collection) return;
     let result = await vexComfirmAsync(
-      `<h3>${props.t("Dissolve collection")}</h3><p>${props.t(
+      `<h3>${t("Dissolve collection")}</h3><p>${t(
         "The collection will be removed and all books will be kept in your library."
       )}</p>`
     );
     if (!result) return;
     collectionUtil.dissolveCollection(key);
-    toast.success(props.t("Deletion successful"));
-    props.handleActionDialog(false);
-    props.handleFetchBooks();
+    toast.success(t("Deletion successful"));
+    handleActionDialog(false);
+    handleFetchBooks();
   };
   const handleRestoreBook = () => {
-    ConfigService.deleteListConfig(props.currentBook.key, "deletedBooks");
-    props.handleActionDialog(false);
-    toast.success(props.t("Restore successful"));
-    props.handleFetchBooks();
+    ConfigService.deleteListConfig(currentBook.key, "deletedBooks");
+    handleActionDialog(false);
+    toast.success(t("Restore successful"));
+    handleFetchBooks();
   };
   const handleLoveBook = () => {
-    ConfigService.setListConfig(props.currentBook.key, "favoriteBooks");
-    toast.success(props.t("Addition successful"));
-    props.handleActionDialog(false);
+    ConfigService.setListConfig(currentBook.key, "favoriteBooks");
+    toast.success(t("Addition successful"));
+    handleActionDialog(false);
   };
   const handleMultiSelect = () => {
-    props.handleSelectBook(true);
-    props.handleSelectedBooks([props.currentBook.key]);
-    props.handleActionDialog(false);
+    handleSelectBook(true);
+    handleSelectedBooks([currentBook.key]);
+    handleActionDialog(false);
   };
   const handleTopBook = () => {
-    ConfigService.setListConfig(props.currentBook.key, "topBooks");
-    toast.success(props.t("Addition successful"));
-    props.handleActionDialog(false);
-    props.handleFetchBooks();
+    ConfigService.setListConfig(currentBook.key, "topBooks");
+    toast.success(t("Addition successful"));
+    handleActionDialog(false);
+    handleFetchBooks();
   };
   const handleCancelTopBook = () => {
-    ConfigService.deleteListConfig(props.currentBook.key, "topBooks");
-    toast.success(props.t("Cancellation successful"));
-    props.handleActionDialog(false);
-    props.handleFetchBooks();
+    ConfigService.deleteListConfig(currentBook.key, "topBooks");
+    toast.success(t("Cancellation successful"));
+    handleActionDialog(false);
+    handleFetchBooks();
   };
   const handleCancelLoveBook = () => {
-    ConfigService.deleteListConfig(props.currentBook.key, "favoriteBooks");
-    if (collectionUtil.isCollection(props.currentBook.key)) {
-      let collection = collectionUtil.getCollection(props.currentBook.key);
+    ConfigService.deleteListConfig(currentBook.key, "favoriteBooks");
+    if (collectionUtil.isCollection(currentBook.key)) {
+      let collection = collectionUtil.getCollection(currentBook.key);
       if (collection) {
         collection.books.forEach((bookKey) => {
           ConfigService.deleteListConfig(bookKey, "favoriteBooks");
@@ -121,13 +152,13 @@ const ActionDialog = (props: ActionDialogProps) => {
     }
     if (
       Object.keys(ConfigService.getAllListConfig("favoriteBooks")).length === 0 &&
-      props.mode === "favorite"
+      mode === "favorite"
     ) {
-      props.history.push("/manager/empty");
+      navigate("/manager/empty");
     }
-    toast.success(props.t("Cancellation successful"));
-    props.handleActionDialog(false);
-    props.handleFetchBooks();
+    toast.success(t("Cancellation successful"));
+    handleActionDialog(false);
+    handleFetchBooks();
   };
   const handleMoreAction = (isShow: boolean) => {
     updateState({ isShowExport: isShow });
@@ -136,14 +167,14 @@ const ActionDialog = (props: ActionDialogProps) => {
     updateState({ isShowMark: isShow });
   };
 
-  const isCollection = collectionUtil.isCollection(props.currentBook.key);
+  const isCollection = collectionUtil.isCollection(currentBook.key);
   const collection = isCollection
-    ? collectionUtil.getCollection(props.currentBook.key)
+    ? collectionUtil.getCollection(currentBook.key)
     : null;
   const isFavorite = collection
     ? collectionUtil.isCollectionFavorite(collection)
     : ConfigService.getAllListConfig("favoriteBooks").indexOf(
-        props.currentBook.key
+        currentBook.key
       ) > -1;
   const moreActionProps = {
     left: props.left,
@@ -160,15 +191,15 @@ const ActionDialog = (props: ActionDialogProps) => {
     handleMarkAction: handleMarkAction,
     menuItemIndex: isCollection ? 6 : 7,
   };
-  if (props.mode === "trash") {
+  if (mode === "trash") {
     return (
       <div
         className="action-dialog-container"
         onMouseLeave={() => {
-          props.handleActionDialog(false);
+          handleActionDialog(false);
         }}
         onMouseEnter={() => {
-          props.handleActionDialog(true);
+          handleActionDialog(true);
         }}
         style={{
           left: props.left,
@@ -196,10 +227,10 @@ const ActionDialog = (props: ActionDialogProps) => {
       <div
         className="action-dialog-container"
         onMouseLeave={() => {
-          props.handleActionDialog(false);
+          handleActionDialog(false);
         }}
         onMouseEnter={() => {
-          props.handleActionDialog(true);
+          handleActionDialog(true);
         }}
         style={{ left: props.left, top: props.top }}
       >
@@ -266,7 +297,7 @@ const ActionDialog = (props: ActionDialogProps) => {
             onClick={() => {
               if (
                 ConfigService.getAllListConfig("topBooks").indexOf(
-                  props.currentBook.key
+                  currentBook.key
                 ) > -1
               ) {
                 handleCancelTopBook();
@@ -281,7 +312,7 @@ const ActionDialog = (props: ActionDialogProps) => {
             ></span>
             <p className="action-name">
               {ConfigService.getAllListConfig("topBooks").indexOf(
-                props.currentBook.key
+                currentBook.key
               ) > -1 ? (
                 <Trans>Unpin from top</Trans>
               ) : (

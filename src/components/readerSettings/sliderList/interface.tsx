@@ -2,13 +2,7 @@ import HtmlBookModel from "../../../models/HtmlBook";
 
 export interface SliderListProps {
   item: any;
-  renderBookFunc: () => void;
-  t: (title: string) => string;
-  scale: string;
 
-  htmlBook?: HtmlBookModel | null;
-  handleScale: (scale: string) => void;
-  handleMargin: (margin: string) => void;
 }
 export interface SliderListState {
   inputValue: string;
@@ -18,7 +12,6 @@ export interface SliderListState {
   letterSpacing: string;
   paraSpacing: string;
   brightness: string;
-  scale: string;
   margin: string;
   readingRulerLineHeight?: string;
   readingRulerBackgroundOpacity?: string;

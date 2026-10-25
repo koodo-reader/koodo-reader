@@ -1,7 +1,5 @@
-import { RouteComponentProps } from "react-router-dom";
 
-export interface ShortcutSettingProps extends RouteComponentProps<any> {
-  t: (title: string) => string;
+export interface ShortcutSettingProps {
 }
 
 export type RecordingTarget = {

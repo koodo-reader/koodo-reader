@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import "./settingDialog.css";
-import { SettingInfoProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import { Trans } from "react-i18next";
 import GeneralSetting from "../../../containers/settings/generalSetting";
 import SyncSetting from "../../../containers/settings/syncSetting";
@@ -19,18 +19,28 @@ import DictSetting from "../../../containers/settings/dictSetting";
 import MoreSetting from "../../../containers/settings/moreSetting";
 import ShortcutSetting from "../../../containers/settings/shortcutSetting";
 import { isElectron } from "react-device-detect";
-const SettingDialog = (props: SettingInfoProps) => {
+const SettingDialog = () => {
+  const settingMode = useAppStore((s) => s.manager.settingMode);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
+  const handleFetchDataSourceList = useAppStore(
+    (s) => s.handleFetchDataSourceList
+  );
+  const handleFetchDefaultSyncOption = useAppStore(
+    (s) => s.handleFetchDefaultSyncOption
+  );
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    props.handleFetchPlugins();
-    props.handleFetchDataSourceList();
-    props.handleFetchDefaultSyncOption();
+    handleFetchPlugins();
+    handleFetchDataSourceList();
+    handleFetchDefaultSyncOption();
   }, []);
 
   useEffect(() => {
     contentRef.current?.scrollTo(0, 0);
-  }, [props.settingMode]);
+  }, [settingMode]);
 
   const renderSidebarItem = (
     mode: string,
@@ -38,12 +48,12 @@ const SettingDialog = (props: SettingInfoProps) => {
     labelKey: string,
     fontSize: string
   ) => {
-    const isActive = props.settingMode === mode;
+    const isActive = settingMode === mode;
     return (
       <div
         className={"setting-dialog-sidebar-item" + (isActive ? " active" : "")}
         onClick={() => {
-          props.handleSettingMode(mode);
+          handleSettingMode(mode);
         }}
       >
         <span
@@ -56,7 +66,7 @@ const SettingDialog = (props: SettingInfoProps) => {
   };
 
   const getCurrentPageTitle = () => {
-    switch (props.settingMode) {
+    switch (settingMode) {
       case "general":
         return "General";
       case "reading":
@@ -188,43 +198,43 @@ const SettingDialog = (props: SettingInfoProps) => {
           <div
             className="setting-close-container"
             onClick={() => {
-              props.handleSetting(false);
-              props.handleSettingMode("general");
+              handleSetting(false);
+              handleSettingMode("general");
             }}
           >
             <span className="icon-close setting-close"></span>
           </div>
 
           <div className="setting-dialog-info" ref={contentRef}>
-            {props.settingMode === "general" ? (
+            {settingMode === "general" ? (
               <GeneralSetting />
-            ) : props.settingMode === "reading" ? (
+            ) : settingMode === "reading" ? (
               <ReadingSetting />
-            ) : props.settingMode === "shortcut" ? (
+            ) : settingMode === "shortcut" ? (
               <ShortcutSetting />
-            ) : props.settingMode === "appearance" ? (
+            ) : settingMode === "appearance" ? (
               <AppearanceSetting />
-            ) : props.settingMode === "sync" ? (
+            ) : settingMode === "sync" ? (
               <SyncSetting />
-            ) : props.settingMode === "account" ? (
+            ) : settingMode === "account" ? (
               <AccountSetting />
-            ) : props.settingMode === "data" ? (
+            ) : settingMode === "data" ? (
               <DataSetting />
-            ) : props.settingMode === "about" ? (
+            ) : settingMode === "about" ? (
               <AboutSetting />
-            ) : props.settingMode === "ai" ? (
+            ) : settingMode === "ai" ? (
               <AISetting />
-            ) : props.settingMode === "background" ? (
+            ) : settingMode === "background" ? (
               <BackgroundSetting />
-            ) : props.settingMode === "font" ? (
+            ) : settingMode === "font" ? (
               <FontSetting />
-            ) : props.settingMode === "chapter" ? (
+            ) : settingMode === "chapter" ? (
               <ChapterSetting />
-            ) : props.settingMode === "text" ? (
+            ) : settingMode === "text" ? (
               <TextSetting />
-            ) : props.settingMode === "dict" ? (
+            ) : settingMode === "dict" ? (
               <DictSetting />
-            ) : props.settingMode === "more" ? (
+            ) : settingMode === "more" ? (
               <MoreSetting />
             ) : (
               <PluginSetting />

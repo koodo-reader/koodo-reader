@@ -1,24 +1,26 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import "./popupOptionDialog.css";
 import { ReactSortable } from "react-sortablejs";
 import toast from "react-hot-toast";
-import {
-  PopupOptionDialogItem,
-  PopupOptionDialogProps,
-} from "./interface";
+import { PopupOptionDialogItem } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import {
   getPopupOptionSettingList,
   POPUP_OPTION_LIMIT,
   savePopupOptionSettingList,
 } from "../../../constants/popupList";
 
-const PopupOptionDialog = (props: PopupOptionDialogProps) => {
+const PopupOptionDialog = () => {
+  const handlePopupOptionDialog = useAppStore((s) => s.handlePopupOptionDialog);
+  const handlePopupOptionUpdate = useAppStore((s) => s.handlePopupOptionUpdate);
+  const { t } = useTranslation();
   const [popupOptionList, setPopupOptionList] = useState<
     PopupOptionDialogItem[]
   >(getPopupOptionSettingList());
 
   const handleClose = () => {
-    props.handlePopupOptionDialog(false);
+    handlePopupOptionDialog(false);
   };
 
   const handleToggleOption = (targetKey: string) => {
@@ -31,7 +33,7 @@ const PopupOptionDialog = (props: PopupOptionDialogProps) => {
 
     if (!targetOption.enabled && enabledCount >= POPUP_OPTION_LIMIT) {
       toast(
-        props.t("You can enable up to {{count}} options", {
+        t("You can enable up to {{count}} options", {
           count: POPUP_OPTION_LIMIT,
         })
       );
@@ -51,7 +53,7 @@ const PopupOptionDialog = (props: PopupOptionDialogProps) => {
 
     setPopupOptionList(nextList);
     savePopupOptionSettingList(nextList);
-    props.handlePopupOptionUpdate(Date.now());
+    handlePopupOptionUpdate(Date.now());
   };
 
   return (
@@ -63,7 +65,7 @@ const PopupOptionDialog = (props: PopupOptionDialogProps) => {
       }}
     >
       <div className="backup-dialog-title">
-        {props.t("Customize popup menu")}
+        {t("Customize popup menu")}
       </div>
       <div className="import-dialog-option">
         <ReactSortable<PopupOptionDialogItem>
@@ -71,7 +73,7 @@ const PopupOptionDialog = (props: PopupOptionDialogProps) => {
           setList={(nextList) => {
             setPopupOptionList(nextList);
             savePopupOptionSettingList(nextList);
-            props.handlePopupOptionUpdate(Date.now());
+            handlePopupOptionUpdate(Date.now());
           }}
           animation={200}
           delayOnTouchStart={true}
@@ -93,7 +95,7 @@ const PopupOptionDialog = (props: PopupOptionDialogProps) => {
                   className={`icon-${item.icon} ${item.name}-icon popup-option-dialog-item-icon`}
                 ></span>
                 <span className="popup-option-dialog-item-label">
-                  {props.t(item.title)}
+                  {t(item.title)}
                 </span>
                 <span
                   className="single-control-switch popup-option-dialog-switch"
@@ -125,12 +127,12 @@ const PopupOptionDialog = (props: PopupOptionDialogProps) => {
         </ReactSortable>
       </div>
       <div className="popup-option-dialog-tip popup-option-dialog-limit">
-        {props.t("You can enable up to {{count}} options", {
+        {t("You can enable up to {{count}} options", {
           count: POPUP_OPTION_LIMIT,
         })}
       </div>
       <div className="import-dialog-back-button">
-        {props.t("Drag to sort")}
+        {t("Drag to sort")}
       </div>
 
       <div

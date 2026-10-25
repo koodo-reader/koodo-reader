@@ -2,7 +2,6 @@ import React from "react";
 import "./collectionItem.css";
 import { CollectionItemProps } from "./interface";
 import ActionDialog from "../dialogs/actionDialog";
-import { withRouter } from "react-router-dom";
 import CollectionCover from "../collectionCover";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
@@ -12,10 +11,27 @@ import {
   estimateMenuHeight,
   CONTEXT_MENU_WIDTH,
 } from "../../utils/common";
+import { useAppStore } from "../../store/useAppStore";
 
 declare var window: any;
 
 const CollectionItem: React.FC<CollectionItemProps> = (props) => {
+  const isOpenActionDialog = useAppStore((s) => s.book.isOpenActionDialog);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const isSelectBook = useAppStore((s) => s.manager.isSelectBook);
+  const selectedBooks = useAppStore((s) => s.manager.selectedBooks);
+  const refreshBookKey = useAppStore((s) => s.manager.refreshBookKey);
+  const handleReadingBook = useAppStore((s) => s.handleReadingBook);
+  const handleActionDialog = useAppStore((s) => s.handleActionDialog);
+  const handleSelectBook = useAppStore((s) => s.handleSelectBook);
+  const handleSelectedBooks = useAppStore((s) => s.handleSelectedBooks);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleCollectionDetailDialog = useAppStore(
+    (s) => s.handleCollectionDetailDialog
+  );
+  const handleCurrentCollectionKey = useAppStore(
+    (s) => s.handleCurrentCollectionKey
+  );
   const {
     left,
     setLeft,
@@ -35,7 +51,18 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
     handleCollectionDropDragEnter,
     handleCollectionDropDragLeave,
     handleCollectionBookDrop,
-  } = useCollectionItem(props);
+  } = useCollectionItem({
+    ...props,
+    refreshBookKey,
+    isSelectBook,
+    selectedBooks,
+    handleReadingBook,
+    handleSelectBook,
+    handleSelectedBooks,
+    handleFetchBooks,
+    handleCollectionDetailDialog,
+    handleCurrentCollectionKey,
+  });
 
   const { collection, viewMode } = props;
   const scale =
@@ -64,8 +91,8 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
     );
     setLeft(pos.left);
     setTop(pos.top);
-    props.handleActionDialog(true);
-    props.handleReadingBook(collectionBook);
+    handleActionDialog(true);
+    handleReadingBook(collectionBook);
   };
 
   const actionProps = { left, top };
@@ -100,7 +127,7 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
     >
       <CollectionCover
         bookKeys={collection.books}
-        refreshBookKey={props.refreshBookKey}
+        refreshBookKey={refreshBookKey}
         width={width}
         height={height}
       />
@@ -108,9 +135,9 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
     </div>
   );
   const renderActionDialog = () =>
-    props.isOpenActionDialog &&
-    props.currentBook &&
-    collection.key === props.currentBook.key ? (
+    isOpenActionDialog &&
+    currentBook &&
+    collection.key === currentBook.key ? (
       <div className="action-dialog-parent">
         <ActionDialog {...(actionProps as any)} />
       </div>
@@ -143,7 +170,7 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
           >
             {renderCover(43, 65)}
           </div>
-          {props.isSelectBook || isHover ? (
+          {isSelectBook || isHover ? (
             <span
               className="icon-message book-selected-icon"
               onMouseEnter={() => {
@@ -249,7 +276,7 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
             }}
           >
             {renderCover(120, 170)}
-            {props.isSelectBook || isHover ? (
+            {isSelectBook || isHover ? (
               <span
                 className="icon-message book-selected-icon"
                 onMouseEnter={() => {
@@ -325,7 +352,7 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
         >
           {renderCover(105 * scale, 137 * scale)}
         </div>
-        {props.isSelectBook || isHover ? (
+        {isSelectBook || isHover ? (
           <span
             className="icon-message book-selected-icon"
             onMouseEnter={() => {
@@ -375,4 +402,4 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
   );
 };
 
-export default withRouter(CollectionItem as any);
+export default CollectionItem;

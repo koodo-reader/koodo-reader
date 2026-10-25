@@ -4,8 +4,11 @@ import { NoteTagProps } from "./interface";
 import DeleteIcon from "../deleteIcon";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { useAppStore } from "../../store/useAppStore";
 
 const NoteTag = (props: NoteTagProps) => {
+  const isReading = useAppStore((s) => s.book.isReading);
+  const isShowPopupNote = useAppStore((s) => s.manager.isShowPopupNote);
   const [tagIndex, setTagIndex] = useState<number[]>([]);
   const [isInput, setIsInput] = useState(false);
   const [isEntered, setIsEntered] = useState(false);
@@ -34,10 +37,10 @@ const NoteTag = (props: NoteTagProps) => {
   };
 
   useEffect(() => {
-    if (props.isReading || props.isShowPopupNote) {
+    if (isReading || isShowPopupNote) {
       setTagIndex(tagToIndex(props.tag));
     }
-  }, [props.tag, props.isReading, props.isShowPopupNote]);
+  }, [props.tag, isReading, isShowPopupNote]);
 
   useEffect(() => {
     if (isInput) {
@@ -130,8 +133,8 @@ const NoteTag = (props: NoteTagProps) => {
           </div>
           <div className="delete-tag-container">
             {tagIndex.indexOf(index) > -1 &&
-            !props.isReading &&
-            !props.isShowPopupNote &&
+            !isReading &&
+            !isShowPopupNote &&
             !props.isCard ? (
               <DeleteIcon
                 {...({

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./popupAssist.css";
 import { PopupAssistProps, PopupAssistState, AiChatMessage } from "./interface";
@@ -19,6 +20,7 @@ import { getAnswerStream } from "../../../utils/request/reader";
 import { chatStream, llmReport } from "../../../utils/request/common";
 import { marked } from "marked";
 import { sampleQuestion } from "../../../constants/settingList";
+import { useAppStore } from "../../../store/useAppStore";
 const MAX_HISTORY_LENGTH = 50;
 const AI_ASK_HISTORY_KEY = "aiAskHistory";
 const AI_CHAT_HISTORY_KEY = "aiChatHistory";
@@ -28,6 +30,19 @@ const HISTORY_KEY_BY_MODE: Record<string, string> = {
 };
 
 const PopupAssist = (props: PopupAssistProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const originalText = useAppStore((s) => s.reader.originalText);
+  const quoteText = useAppStore((s) => s.reader.quoteText);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const plugins = useAppStore((s) => s.manager.plugins);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const userInfo = useAppStore((s) => s.manager.userInfo);
+  const handleOpenMenu = useAppStore((s) => s.handleOpenMenu);
+  const handleMenuMode = useAppStore((s) => s.handleMenuMode);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handleQuoteText = useAppStore((s) => s.handleQuoteText);
+  const { t } = useTranslation();
   const [state, setState] = useState<PopupAssistState>({
     answer: "",
     aiService: ConfigService.getReaderConfig("aiService") || "",
@@ -42,7 +57,7 @@ const PopupAssist = (props: PopupAssistProps) => {
 
   const stateRef = useRef(state);
   stateRef.current = state;
-  const propsRef = useRef(props);
+  const propsRef = useRef<any>(props);
   propsRef.current = props;
 
   const chatBoxRef = useRef<HTMLDivElement | null>(null);
@@ -129,7 +144,7 @@ const PopupAssist = (props: PopupAssistProps) => {
     }
   };
   const loadChatHistory = () => {
-    const bookKey = props.currentBook?.key;
+    const bookKey = currentBook?.key;
     if (!bookKey) {
       return;
     }
@@ -147,7 +162,7 @@ const PopupAssist = (props: PopupAssistProps) => {
     });
   };
   const saveChatHistory = () => {
-    const bookKey = propsRef.current.currentBook?.key;
+    const bookKey = currentBook?.key;
     if (!bookKey || isHydrating.current) {
       return;
     }
@@ -157,8 +172,8 @@ const PopupAssist = (props: PopupAssistProps) => {
   // componentDidMount: 加载历史、处理引用文本、初始化 AI 服务
   useEffect(() => {
     loadChatHistory();
-    if (props.quoteText) {
-      setState((prev) => ({ ...prev, inputQuestion: props.quoteText + "\n" }));
+    if (quoteText) {
+      setState((prev) => ({ ...prev, inputQuestion: quoteText + "\n" }));
       runAfterUpdate(() => {
         autoResizeTextarea();
         const el = textareaRef.current;
@@ -168,10 +183,10 @@ const PopupAssist = (props: PopupAssistProps) => {
           el.setSelectionRange(len, len);
         }
       });
-      props.handleQuoteText("");
+      handleQuoteText("");
     }
     if (!state.aiService) {
-      let pluginList = props.plugins.filter(
+      let pluginList = plugins.filter(
         (item) =>
           item.type === "assistant" && !item.key.startsWith("official-ai-")
       );
@@ -180,7 +195,7 @@ const PopupAssist = (props: PopupAssistProps) => {
           aiService: pluginList[0].key,
         });
         ConfigService.setReaderConfig("aiService", pluginList[0].key);
-      } else if (props.isAuthed) {
+      } else if (isAuthed) {
         mergeState({
           aiService: "official-ai-assistant-plugin",
           isAddNew: false,
@@ -199,21 +214,21 @@ const PopupAssist = (props: PopupAssistProps) => {
   }, []);
 
   // componentDidUpdate: 书籍变化时重新加载历史
-  const prevBookKeyRef = useRef(props.currentBook?.key);
+  const prevBookKeyRef = useRef(currentBook?.key);
   useEffect(() => {
-    if (prevBookKeyRef.current !== props.currentBook?.key) {
-      prevBookKeyRef.current = props.currentBook?.key;
+    if (prevBookKeyRef.current !== currentBook?.key) {
+      prevBookKeyRef.current = currentBook?.key;
       loadChatHistory();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.currentBook?.key]);
+  }, [currentBook?.key]);
 
   // componentDidUpdate: 历史变化时持久化
   useEffect(() => {
     if (isHydrating.current) {
       return;
     }
-    const bookKey = props.currentBook?.key;
+    const bookKey = currentBook?.key;
     if (!bookKey) {
       return;
     }
@@ -225,7 +240,7 @@ const PopupAssist = (props: PopupAssistProps) => {
     if (isHydrating.current) {
       return;
     }
-    const bookKey = props.currentBook?.key;
+    const bookKey = currentBook?.key;
     if (!bookKey) {
       return;
     }
@@ -280,9 +295,9 @@ const PopupAssist = (props: PopupAssistProps) => {
     }
   };
   const handleAnswer = async () => {
-    let originalText =
+    let answerText =
       stateRef.current.mode === "ask"
-        ? propsRef.current.originalText
+        ? originalText
             .replace(/(\r\n|\n|\r)/gm, "")
             .replace(/-/gm, "")
             // Remove common garbage characters
@@ -296,17 +311,17 @@ const PopupAssist = (props: PopupAssistProps) => {
         : "";
     if (
       (!ConfigService.getReaderConfig("aiService") ||
-        propsRef.current.plugins.findIndex(
+        plugins.findIndex(
           (item) => item.key === ConfigService.getReaderConfig("aiService")
         ) === -1) &&
-      !propsRef.current.isAuthed
+      !isAuthed
     ) {
       mergeState({ isAddNew: true });
     }
-    if (stateRef.current.mode === "ask" && !originalText) {
-      originalText = await propsRef.current.htmlBook.rendition.chapterText();
+    if (stateRef.current.mode === "ask" && !answerText) {
+      answerText = await htmlBook.rendition.chapterText();
     }
-    handleDoAnswer(originalText);
+    handleDoAnswer(answerText);
   };
   const handleDoAnswer = async (text: string) => {
     try {
@@ -315,7 +330,7 @@ const PopupAssist = (props: PopupAssistProps) => {
         ConfigService.getReaderConfig("aiService") ===
           "custom-ai-assistant-plugin"
       ) {
-        let plugin = propsRef.current.plugins.find(
+        let plugin = plugins.find(
           (item) => item.key === "custom-ai-assistant-plugin"
         );
         if (!plugin) {
@@ -395,8 +410,8 @@ const PopupAssist = (props: PopupAssistProps) => {
         ConfigService.getReaderConfig("aiService") !==
           "official-ai-assistant-plugin"
       ) {
-      } else if (propsRef.current.isAuthed) {
-        let plugin = propsRef.current.plugins.find(
+      } else if (isAuthed) {
+        let plugin = plugins.find(
           (item) => item.key === "official-ai-assistant-plugin"
         );
         if (!plugin) {
@@ -473,13 +488,13 @@ const PopupAssist = (props: PopupAssistProps) => {
     }
   };
   const handleChangeAiService = (aiService: string) => {
-    if (aiService === "official-ai-assistant-plugin" && !props.isAuthed) {
-      toast(props.t("Please upgrade to Pro to use this feature"));
-      props.handleSetting(true);
-      props.handleSettingMode("account");
+    if (aiService === "official-ai-assistant-plugin" && !isAuthed) {
+      toast(t("Please upgrade to Pro to use this feature"));
+      handleSetting(true);
+      handleSettingMode("account");
       return;
     }
-    let plugin = props.plugins.find((item) => item.key === aiService);
+    let plugin = plugins.find((item) => item.key === aiService);
     if (!plugin) {
       return;
     }
@@ -495,7 +510,7 @@ const PopupAssist = (props: PopupAssistProps) => {
   };
   const handleCopyAnswer = (content: string) => {
     navigator.clipboard.writeText(content || "").then(() => {
-      toast.success(props.t("Copied"));
+      toast.success(t("Copied"));
     });
   };
   const handleReportAnswer = async (content: string, index: number) => {
@@ -514,19 +529,19 @@ const PopupAssist = (props: PopupAssistProps) => {
     if (!reason) {
       return;
     }
-    toast.loading(props.t("Please wait"), { id: "report-feedback" });
+    toast.loading(t("Please wait"), { id: "report-feedback" });
     try {
       await llmReport({
         answer: content,
         question: userMessage?.content || "",
-        reason: props.t(reason),
-        user_id: (props.userInfo?.time_created || "") + "" || "anonymous",
+        reason: t(reason),
+        user_id: (userInfo?.time_created || "") + "" || "anonymous",
       });
-      toast.success(props.t("Thank you for your feedback"), {
+      toast.success(t("Thank you for your feedback"), {
         id: "report-feedback",
       });
     } catch (error) {
-      toast.success(props.t("Thank you for your feedback"), {
+      toast.success(t("Thank you for your feedback"), {
         id: "report-feedback",
       });
     }
@@ -568,7 +583,7 @@ const PopupAssist = (props: PopupAssistProps) => {
           )}
           {item.role === "assistant" && index === message.length - 1 && (
             <div className="popup-assist-disclaimer">
-              {props.t(
+              {t(
                 "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
               )}
             </div>
@@ -583,7 +598,7 @@ const PopupAssist = (props: PopupAssistProps) => {
         ? stateRef.current.askHistory
         : stateRef.current.chatHistory;
     if (messages.length === 0) {
-      toast(props.t("Nothing to export"));
+      toast(t("Nothing to export"));
       return;
     }
     const now = new Date();
@@ -594,7 +609,7 @@ const PopupAssist = (props: PopupAssistProps) => {
       day <= 9 ? "0" + day : day
     }`;
     const modeLabel = stateRef.current.mode === "ask" ? "Reading" : "Chat";
-    const bookName = props.currentBook?.name || "Unknown";
+    const bookName = currentBook?.name || "Unknown";
     const exportData = {
       bookName,
       mode: stateRef.current.mode,
@@ -607,14 +622,14 @@ const PopupAssist = (props: PopupAssistProps) => {
       }),
       `KoodoReader-${modeLabel}-Assistant-${bookName}-${dateStr}.json`
     );
-    toast.success(props.t("Export successful"), { id: "exporting" });
+    toast.success(t("Export successful"), { id: "exporting" });
   };
   const handleDeleteChatHistory = () => {
     clearHistory(
-      props.currentBook?.key || "",
+      currentBook?.key || "",
       stateRef.current.mode as "ask" | "chat"
     );
-    toast.success(props.t("Deletion successful"));
+    toast.success(t("Deletion successful"));
     if (stateRef.current.mode === "ask") {
       setState((prev) => ({ ...prev, askHistory: [] }));
     } else {
@@ -637,7 +652,7 @@ const PopupAssist = (props: PopupAssistProps) => {
     });
   };
   const handleNewQuestion = (question: string) => {
-    const content = props.t(question);
+    const content = t(question);
     if (stateRef.current.mode === "ask") {
       setState((prev) => ({
         ...prev,
@@ -663,7 +678,7 @@ const PopupAssist = (props: PopupAssistProps) => {
           },
         ],
         question: content,
-        answer: props.t(""),
+        answer: t(""),
         isWaiting: true,
       }));
     }
@@ -711,7 +726,7 @@ const PopupAssist = (props: PopupAssistProps) => {
               style={{ width: props.isDockedRight ? "50%" : undefined }}
             >
               <span className={`icon-bookmark trans-icon`}></span>
-              {props.t("Reading Assistant")}
+              {t("Reading Assistant")}
             </div>
             <div
               className={
@@ -728,7 +743,7 @@ const PopupAssist = (props: PopupAssistProps) => {
               }}
             >
               <span className={`icon-idea trans-icon`}></span>
-              {props.t("Chat Assistant")}
+              {t("Chat Assistant")}
             </div>
           </div>
 
@@ -752,7 +767,7 @@ const PopupAssist = (props: PopupAssistProps) => {
               >
                 <span
                   data-tooltip-id="my-tooltip"
-                  data-tooltip-content={props.t("Clear chat history")}
+                  data-tooltip-content={t("Clear chat history")}
                 >
                   <span className="icon-trash-line"></span>
                 </span>
@@ -763,7 +778,7 @@ const PopupAssist = (props: PopupAssistProps) => {
               >
                 <span
                   data-tooltip-id="my-tooltip"
-                  data-tooltip-content={props.t("Export chat history")}
+                  data-tooltip-content={t("Export chat history")}
                 >
                   <span className="icon-share"></span>
                 </span>
@@ -780,10 +795,10 @@ const PopupAssist = (props: PopupAssistProps) => {
               value={state.aiService}
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
                 if (event.target.value === "add-new") {
-                  props.handleOpenMenu(false);
-                  props.handleMenuMode("");
-                  props.handleSetting(true);
-                  props.handleSettingMode("ai");
+                  handleOpenMenu(false);
+                  handleMenuMode("");
+                  handleSetting(true);
+                  handleSettingMode("ai");
                   return;
                 }
                 handleChangeAiService(event.target.value);
@@ -794,9 +809,9 @@ const PopupAssist = (props: PopupAssistProps) => {
                 key={"select"}
                 className="add-dialog-shelf-list-option"
               >
-                {props.t("Please select")}
+                {t("Please select")}
               </option>
-              {props.plugins
+              {plugins
                 .filter((item) => item.type === "assistant")
                 .map((item) => {
                   return (
@@ -805,7 +820,7 @@ const PopupAssist = (props: PopupAssistProps) => {
                       key={item.key}
                       className="add-dialog-shelf-list-option"
                     >
-                      {props.t(item.displayName)}
+                      {t(item.displayName)}
                       {item.key === "official-ai-assistant-plugin" && (
                         <span style={{ fontSize: "13px", color: "#f16464" }}>
                           {" "}
@@ -820,7 +835,7 @@ const PopupAssist = (props: PopupAssistProps) => {
                 key={"add-new"}
                 className="add-dialog-shelf-list-option"
               >
-                {props.t("Add new plugin")}
+                {t("Add new plugin")}
               </option>
             </select>
           </div>
@@ -842,10 +857,10 @@ const PopupAssist = (props: PopupAssistProps) => {
                 textAlign: "center",
               }}
               onClick={() => {
-                props.handleOpenMenu(false);
-                props.handleMenuMode("");
-                props.handleSetting(true);
-                props.handleSettingMode("ai");
+                handleOpenMenu(false);
+                handleMenuMode("");
+                handleSetting(true);
+                handleSettingMode("ai");
               }}
             >
               <Trans>Add new plugin</Trans>
@@ -894,7 +909,7 @@ const PopupAssist = (props: PopupAssistProps) => {
                         marginTop: "5px",
                       }}
                     ></span>
-                    <span>{props.t("Thinking, please wait...")}</span>
+                    <span>{t("Thinking, please wait...")}</span>
                   </div>
                 ) : (state.mode === "ask"
                     ? state.askHistory
@@ -915,10 +930,10 @@ const PopupAssist = (props: PopupAssistProps) => {
                 ) : (
                   <div className="popup-message-assistant">
                     {state.mode === "ask"
-                      ? props.t(
+                      ? t(
                           "Hi there! What questions do you have about this chapter?"
                         )
-                      : props.t(
+                      : t(
                           "Hi there! I'm happy to help with any questions about reading or learning"
                         )}
                   </div>
@@ -943,7 +958,7 @@ const PopupAssist = (props: PopupAssistProps) => {
                             handleNewQuestion(item.question);
                           }}
                         >
-                          {item.emoji + " " + props.t(item.question)}
+                          {item.emoji + " " + t(item.question)}
                         </div>
                       );
                     })}
@@ -959,7 +974,7 @@ const PopupAssist = (props: PopupAssistProps) => {
                   <textarea
                     ref={textareaRef}
                     name="url"
-                    placeholder={props.t(
+                    placeholder={t(
                       state.mode === "ask"
                         ? "Ask anything about this chapter"
                         : "Ask anything about reading or learning"
@@ -1000,7 +1015,7 @@ const PopupAssist = (props: PopupAssistProps) => {
                     className="popup-assistant-send-button"
                     onClick={handleSendQuestion}
                   >
-                    {props.t("Send")}
+                    {t("Send")}
                   </div>
                 </div>
               </div>

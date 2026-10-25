@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { SettingInfoProps } from "./interface";
 import { Trans } from "react-i18next";
@@ -16,6 +17,7 @@ import SwitchRow from "../../../components/readerSettings/switchRow";
 
 declare var window: any;
 const GeneralSetting = (props: SettingInfoProps) => {
+  const { t } = useTranslation();
   const [state, setState] = useState<Record<string, any>>({
     isImportPath: ConfigService.getReaderConfig("isImportPath") === "yes",
     isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
@@ -55,7 +57,7 @@ const GeneralSetting = (props: SettingInfoProps) => {
   );
 
   const handleRest = (_bool: boolean) => {
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
@@ -76,7 +78,7 @@ const GeneralSetting = (props: SettingInfoProps) => {
 
   const handleOpenInMain = () => {
     if (state.isMergeWord && !state.isOpenInMain) {
-      toast(props.t("Please turn off merge with word first"));
+      toast(t("Please turn off merge with word first"));
       return;
     }
     handleSetting("isOpenInMain");
@@ -154,7 +156,7 @@ const GeneralSetting = (props: SettingInfoProps) => {
     window
       .electronAPI
       .invoke("reset-main-position", "ping");
-    toast.success(props.t("Reset successful"));
+    toast.success(t("Reset successful"));
   };
   return (
       <>
@@ -210,7 +212,7 @@ const GeneralSetting = (props: SettingInfoProps) => {
                 key={item.value}
                 className="lang-setting-option"
               >
-                {props.t(item.label)}
+                {t(item.label)}
               </option>
             ))}
           </select>
@@ -225,14 +227,14 @@ const GeneralSetting = (props: SettingInfoProps) => {
               const value = event.target.value;
               ConfigService.setReaderConfig("startupShelf", value);
               setState((prev) => ({ ...prev, startupShelf: value }));
-              toast.success(props.t("Change successful"));
+              toast.success(t("Change successful"));
             }}
           >
             <option
               value=""
               className="lang-setting-option"
             >
-              {props.t("Disabled")}
+              {t("Disabled")}
             </option>
             {Object.keys(ConfigService.getAllMapConfig("shelfList") || {}).map(
               (shelfName) => (

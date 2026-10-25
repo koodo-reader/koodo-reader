@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import { MoreSettingProps, MoreSettingState } from "./interface";
@@ -20,6 +21,7 @@ import TokenService from "../../../utils/storage/tokenService";
 import SwitchRow from "../../../components/readerSettings/switchRow";
 
 const MoreSetting = (props: MoreSettingProps) => {
+  const { t } = useTranslation();
   const [state, setState] = useState<MoreSettingState>({
     protectionMethod: "",
     biometricAvailable: false,
@@ -103,7 +105,7 @@ const MoreSetting = (props: MoreSettingProps) => {
           });
           pinCallback && pinCallback(next);
         } else {
-          toast.error(props.t("PINs do not match, please try again"));
+          toast.error(t("PINs do not match, please try again"));
           updateState({
             pinValue: "",
             pinFirstValue: "",
@@ -142,20 +144,20 @@ const MoreSetting = (props: MoreSettingProps) => {
       );
       if (!input) return false;
       const ok = await verifyPassword(input as string);
-      if (!ok) toast.error(props.t("Incorrect password"));
+      if (!ok) toast.error(t("Incorrect password"));
       return ok;
     } else if (protectionMethod === "pin") {
       const pin = await showPinKeypad("verify");
       if (pin === false) return false;
       const ok = await verifyPin(pin as string);
-      if (!ok) toast.error(props.t("Incorrect PIN"));
+      if (!ok) toast.error(t("Incorrect PIN"));
       return ok;
     } else if (protectionMethod === "biometric") {
       const result = await promptBiometricAuth(
         i18n.t("Authenticate to change protection settings")
       );
       if (!result.success) {
-        toast.error(getBiometricErrorMessage(result.code, props.t));
+        toast.error(getBiometricErrorMessage(result.code, t));
       }
       return result.success;
     }
@@ -169,7 +171,7 @@ const MoreSetting = (props: MoreSettingProps) => {
       if (!verified) return;
       await clearProtection();
       updateState({ protectionMethod: "" });
-      toast.success(props.t("Change successful"));
+      toast.success(t("Change successful"));
     } else {
       const methodOptions: { value: string; label: string }[] = [
         { value: "password", label: "Password" },
@@ -202,22 +204,22 @@ const MoreSetting = (props: MoreSettingProps) => {
         i18n.t("Confirm new password")
       );
       if (input === false) {
-        toast.error(props.t("Passwords do not match or input is empty"));
+        toast.error(t("Passwords do not match or input is empty"));
         return;
       }
       await setProtectionPassword(input as string);
       updateState({ protectionMethod: "password" });
-      toast.success(props.t("Change successful"));
+      toast.success(t("Change successful"));
     } else if (method === "pin") {
       const pin = await showPinKeypad("setup");
       if (pin === false) return;
       await setProtectionPin(pin as string);
       updateState({ protectionMethod: "pin" });
-      toast.success(props.t("Change successful"));
+      toast.success(t("Change successful"));
     } else if (method === "biometric") {
       if (!stateRef.current.biometricAvailable) {
         toast.error(
-          props.t("Biometric authentication is not available on this device")
+          t("Biometric authentication is not available on this device")
         );
         return;
       }
@@ -225,12 +227,12 @@ const MoreSetting = (props: MoreSettingProps) => {
         i18n.t("Authenticate to enable biometric protection")
       );
       if (!result.success) {
-        toast.error(getBiometricErrorMessage(result.code, props.t));
+        toast.error(getBiometricErrorMessage(result.code, t));
         return;
       }
       await setProtectionBiometric();
       updateState({ protectionMethod: "biometric" });
-      toast.success(props.t("Change successful"));
+      toast.success(t("Change successful"));
     }
   };
 
@@ -256,7 +258,7 @@ const MoreSetting = (props: MoreSettingProps) => {
           password: "",
         });
       }
-      toast.success(props.t("Change successful"));
+      toast.success(t("Change successful"));
       return;
     }
     updateState({
@@ -286,18 +288,18 @@ const MoreSetting = (props: MoreSettingProps) => {
     const { proxyType, proxyHost, proxyPort, proxyUsername, proxyPassword } =
       stateRef.current;
     if (!proxyHost || !proxyPort) {
-      toast.error(props.t("Please enter host and port"));
+      toast.error(t("Please enter host and port"));
       return;
     }
     const portNum = parseInt(proxyPort);
     if (isNaN(portNum) || portNum < 1 || portNum > 65535) {
-      toast.error(props.t("Please enter host and port"));
+      toast.error(t("Please enter host and port"));
       return;
     }
     if (!window.electronAPI) return;
     const ipcRenderer = window.electronAPI;
     updateState({ isTestingProxy: true });
-    toast.loading(props.t("Testing connection..."), {
+    toast.loading(t("Testing connection..."), {
       id: "proxy-test-id",
     });
     try {
@@ -310,17 +312,17 @@ const MoreSetting = (props: MoreSettingProps) => {
       });
       if (res && res.ok) {
         toast.success(
-          props.t("Connection successful") + ` (${res.elapsedMs}ms)`,
+          t("Connection successful") + ` (${res.elapsedMs}ms)`,
           { id: "proxy-test-id" }
         );
       } else {
         toast.error(
-          props.t("Connection failed") + `: ${res?.reason || res?.detail || ""}`,
+          t("Connection failed") + `: ${res?.reason || res?.detail || ""}`,
           { id: "proxy-test-id" }
         );
       }
     } catch (e) {
-      toast.error(props.t("Connection failed"), { id: "proxy-test-id" });
+      toast.error(t("Connection failed"), { id: "proxy-test-id" });
     } finally {
       updateState({ isTestingProxy: false });
     }
@@ -336,12 +338,12 @@ const MoreSetting = (props: MoreSettingProps) => {
       proxyPassword,
     } = stateRef.current;
     if (!proxyHost || !proxyPort) {
-      toast.error(props.t("Please enter host and port"));
+      toast.error(t("Please enter host and port"));
       return;
     }
     const portNum = parseInt(proxyPort);
     if (isNaN(portNum) || portNum < 1 || portNum > 65535) {
-      toast.error(props.t("Please enter host and port"));
+      toast.error(t("Please enter host and port"));
       return;
     }
     if (!window.electronAPI) return;
@@ -357,12 +359,12 @@ const MoreSetting = (props: MoreSettingProps) => {
       });
       if (res && res.ok) {
         updateState({ proxyEditing: false });
-        toast.success(props.t("Added successfully"));
+        toast.success(t("Added successfully"));
       } else {
-        toast.error(props.t("Save failed"));
+        toast.error(t("Save failed"));
       }
     } catch (e) {
-      toast.error(props.t("Save failed"));
+      toast.error(t("Save failed"));
     }
   };
 
@@ -485,10 +487,10 @@ const MoreSetting = (props: MoreSettingProps) => {
               onChange={(e) => handleChangeMethod(e.target.value)}
               style={{ textAlign: "left" }}
             >
-              <option value="password">{props.t("Password")}</option>
-              <option value="pin">{props.t("PIN")}</option>
+              <option value="password">{t("Password")}</option>
+              <option value="pin">{t("PIN")}</option>
               {showBiometricOption && (
-                <option value="biometric">{props.t("Biometric")}</option>
+                <option value="biometric">{t("Biometric")}</option>
               )}
             </select>
           </div>
@@ -547,7 +549,7 @@ const MoreSetting = (props: MoreSettingProps) => {
                   className="token-dialog-username-box"
                   value={proxyHost}
                   onChange={(e) => updateState({ proxyHost: e.target.value })}
-                  placeholder={props.t("Proxy host")}
+                  placeholder={t("Proxy host")}
                 />
               </div>
               <div
@@ -559,7 +561,7 @@ const MoreSetting = (props: MoreSettingProps) => {
                   opacity: 0.8,
                 }}
               >
-                {props.t("Example")}: {"127.0.0.1"}
+                {t("Example")}: {"127.0.0.1"}
               </div>
               <div key="proxy-port">
                 <input
@@ -567,7 +569,7 @@ const MoreSetting = (props: MoreSettingProps) => {
                   type="number"
                   value={proxyPort}
                   onChange={(e) => updateState({ proxyPort: e.target.value })}
-                  placeholder={props.t("Proxy port")}
+                  placeholder={t("Proxy port")}
                 />
               </div>
               <div
@@ -579,7 +581,7 @@ const MoreSetting = (props: MoreSettingProps) => {
                   opacity: 0.8,
                 }}
               >
-                {props.t("Example")}: {"1080"}
+                {t("Example")}: {"1080"}
               </div>
               <div key="proxy-username">
                 <input
@@ -589,9 +591,9 @@ const MoreSetting = (props: MoreSettingProps) => {
                     updateState({ proxyUsername: e.target.value })
                   }
                   placeholder={
-                    props.t("Proxy username") +
+                    t("Proxy username") +
                     " (" +
-                    props.t("Optional") +
+                    t("Optional") +
                     ")"
                   }
                 />
@@ -605,9 +607,9 @@ const MoreSetting = (props: MoreSettingProps) => {
                     updateState({ proxyPassword: e.target.value })
                   }
                   placeholder={
-                    props.t("Proxy password") +
+                    t("Proxy password") +
                     " (" +
-                    props.t("Optional") +
+                    t("Optional") +
                     ")"
                   }
                 />
@@ -642,8 +644,8 @@ const MoreSetting = (props: MoreSettingProps) => {
                   onClick={handleTestConnection}
                 >
                   {isTestingProxy
-                    ? props.t("Testing connection...")
-                    : props.t("Test connection")}
+                    ? t("Testing connection...")
+                    : t("Test connection")}
                 </div>
                 <div
                   className="voice-add-confirm"
@@ -652,7 +654,7 @@ const MoreSetting = (props: MoreSettingProps) => {
                   }}
                   onClick={handleSaveProxyConfig}
                 >
-                  {props.t("Save")}
+                  {t("Save")}
                 </div>
               </div>
             </div>

@@ -1,18 +1,27 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import "./cardList.css";
 import NoteModel from "../../../models/Note";
 import { Trans } from "react-i18next";
 import { CardListProps } from "./interface";
-import { withRouter } from "react-router-dom";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import BookModel from "../../../models/Book";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import Note from "../../../models/Note";
+import { useAppStore } from "../../../store/useAppStore";
 
 const CardList = (props: CardListProps) => {
+  const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
+  const chapters = useAppStore((s) => s.reader.chapters);
+  const books = useAppStore((s) => s.manager.books);
+  const noteSortCode = useAppStore((s) => s.manager.noteSortCode);
+  const handleReadingBook = useAppStore((s) => s.handleReadingBook);
+  const handleShowPopupNote = useAppStore((s) => s.handleShowPopupNote);
+  const handleNoteKey = useAppStore((s) => s.handleNoteKey);
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollTimerRef = useRef<any>(null);
   const [state, setState] = useState<Record<string, any>>({
@@ -123,7 +132,7 @@ const CardList = (props: CardListProps) => {
       return;
     }
     loadInitialCards();
-  }, [props.cards, props.noteSortCode]);
+  }, [props.cards, noteSortCode]);
 
   const formatTimestamp = (timestamp: string) => {
     try {
@@ -136,7 +145,6 @@ const CardList = (props: CardListProps) => {
 
   const handleJump = async (note: NoteModel) => {
     note = await DatabaseService.getRecord(note.key, "notes");
-    let { books } = props;
     let book: BookModel | null = null;
     for (let i = 0; i < books.length; i++) {
       if (books[i].key === note.bookKey) {
@@ -145,7 +153,7 @@ const CardList = (props: CardListProps) => {
       }
     }
     if (!book) {
-      toast(props.t("Book not exists"));
+      toast(t("Book not exists"));
       return;
     }
 
@@ -169,7 +177,7 @@ const CardList = (props: CardListProps) => {
   const { displayedCards, isLoading } = state;
 
   if (cards.length === 0) {
-    return <Redirect to="/manager/empty" />;
+    return <Navigate to="/manager/empty" replace />;
   }
 
   const renderCardListItem = (notes: any[]) => {
@@ -179,11 +187,11 @@ const CardList = (props: CardListProps) => {
           className="card-list-item"
           key={index}
           style={
-            props.mode === "note" && !props.isCollapsed
+            props.mode === "note" && !isCollapsed
               ? { height: "250px" }
-              : props.mode === "note" && props.isCollapsed
+              : props.mode === "note" && isCollapsed
                 ? { height: "250px", width: "calc(50vw - 70px)" }
-                : props.isCollapsed
+                : isCollapsed
                   ? { width: "calc(50vw - 70px)" }
                   : {}
           }
@@ -220,7 +228,7 @@ const CardList = (props: CardListProps) => {
             <div className="card-list-item-show-more-container">
               <span
                 data-tooltip-id="my-tooltip"
-                data-tooltip-content={props.t("Edit")}
+                data-tooltip-content={t("Edit")}
               >
                 <span
                   className="icon-edit-line"
@@ -230,15 +238,15 @@ const CardList = (props: CardListProps) => {
                     marginLeft: "15px",
                   }}
                   onClick={() => {
-                    props.handleNoteKey(item.key);
-                    props.handleShowPopupNote(true);
+                    handleNoteKey(item.key);
+                    handleShowPopupNote(true);
                   }}
                 ></span>
               </span>
 
               <span
                 data-tooltip-id="my-tooltip"
-                data-tooltip-content={props.t("Show in the book")}
+                data-tooltip-content={t("Show in the book")}
               >
                 <span
                   className="icon-idea-line"
@@ -255,7 +263,7 @@ const CardList = (props: CardListProps) => {
 
               <span
                 data-tooltip-id="my-tooltip"
-                data-tooltip-content={props.t("Copy note link")}
+                data-tooltip-content={t("Copy note link")}
               >
                 <span
                   className="icon-copy-line"
@@ -268,7 +276,7 @@ const CardList = (props: CardListProps) => {
                   onClick={() => {
                     const link = `koodo-reader://open-note?noteKey=${item.key}`;
                     navigator.clipboard.writeText(link).then(() => {
-                      toast(props.t("Copied"));
+                      toast(t("Copied"));
                     });
                   }}
                 ></span>
@@ -285,11 +293,11 @@ const CardList = (props: CardListProps) => {
       {renderCardListItem(displayedCards)}
       {isLoading && (
         <div className="card-list-loading">
-          <div className="loading-spinner">{props.t("Loading")}...</div>
+          <div className="loading-spinner">{t("Loading")}...</div>
         </div>
       )}
     </div>
   );
 };
 
-export default withRouter(CardList as any);
+export default CardList;

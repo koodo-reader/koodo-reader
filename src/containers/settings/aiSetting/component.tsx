@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useRef, useState } from "react";
 import { SettingInfoProps, SettingInfoState, AIModelConfig } from "./interface";
 import { Trans } from "react-i18next";
@@ -8,8 +9,11 @@ import {
   ConfigService,
   KookitConfig,
 } from "../../../assets/lib/kookit-extra-browser.min";
+import { useAppStore } from "../../../store/useAppStore";
 
 const AISetting = (props: SettingInfoProps) => {
+  const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
+  const { t } = useTranslation();
   const [state, setState] = useState<SettingInfoState>(() => ({
     isAddNew: false,
     isEditing: false,
@@ -127,7 +131,7 @@ const AISetting = (props: SettingInfoProps) => {
     );
     if (!provider || !provider.modelsEndpoint) {
       toast.error(
-        props.t(
+        t(
           "This provider does not support fetching model list, please fill in manually"
         )
       );
@@ -139,7 +143,7 @@ const AISetting = (props: SettingInfoProps) => {
       stateRef.current.selectedProvider !== "lmstudio" &&
       stateRef.current.selectedProvider !== "vllm"
     ) {
-      toast.error(props.t("Please enter API Key first"));
+      toast.error(t("Please enter API Key first"));
       return;
     }
     updateState({ isFetchingModels: true });
@@ -155,9 +159,9 @@ const AISetting = (props: SettingInfoProps) => {
       const data = JSON.parse(response.body);
       const rawModels = data.data || data.models || data.results || data || [];
       if (rawModels.length === 0) {
-        toast.error(props.t("No models found"));
+        toast.error(t("No models found"));
         toast.error(
-          props.t("You can add models manually by selecting the custom model")
+          t("You can add models manually by selecting the custom model")
         );
         return;
       }
@@ -170,12 +174,12 @@ const AISetting = (props: SettingInfoProps) => {
       );
       updateState({ fetchedModels: models });
       if (models.length > 0) {
-        toast.success(props.t("Fetched models") + ": " + models.length);
+        toast.success(t("Fetched models") + ": " + models.length);
       } else {
-        toast.error(props.t("No models found"));
+        toast.error(t("No models found"));
       }
     } catch (e: any) {
-      toast.error(props.t("Failed to fetch model list") + ": " + e.message);
+      toast.error(t("Failed to fetch model list") + ": " + e.message);
     } finally {
       updateState({ isFetchingModels: false });
     }
@@ -184,7 +188,7 @@ const AISetting = (props: SettingInfoProps) => {
   const handleTest = async () => {
     const { endpoint, modelId, apiKey } = stateRef.current;
     if (!endpoint || !modelId || !apiKey) {
-      toast.error(props.t("Please fill in all required fields"));
+      toast.error(t("Please fill in all required fields"));
       return;
     }
     updateState({ isTesting: true, testResult: "" });
@@ -217,10 +221,10 @@ const AISetting = (props: SettingInfoProps) => {
         data.choices?.[0]?.message?.content ||
         JSON.stringify(data).substring(0, 100);
       updateState({ testResult: "success" });
-      toast.success(props.t("Test successful") + ": " + reply);
+      toast.success(t("Test successful") + ": " + reply);
     } catch (e: any) {
       updateState({ testResult: "fail" });
-      toast.error(props.t("Test failed") + ": " + e.message);
+      toast.error(t("Test failed") + ": " + e.message);
     } finally {
       updateState({ isTesting: false });
     }
@@ -237,7 +241,7 @@ const AISetting = (props: SettingInfoProps) => {
       editingKey,
     } = stateRef.current;
     if (!endpoint || !modelName || !modelId || !apiKey) {
-      toast.error(props.t("Please fill in all required fields"));
+      toast.error(t("Please fill in all required fields"));
       return;
     }
     const provider = KookitConfig.AiProviderList.find(
@@ -261,12 +265,12 @@ const AISetting = (props: SettingInfoProps) => {
     try {
       ConfigService.setObjectConfig(key, modelEntry, "aiModelConfig");
       toast.success(
-        props.t(isEditing ? "Update successful" : "Addition successful")
+        t(isEditing ? "Update successful" : "Addition successful")
       );
-      props.handleFetchPlugins();
+      handleFetchPlugins();
       resetForm();
     } catch (e: any) {
-      toast.error(props.t("Operation failed") + ": " + e.message);
+      toast.error(t("Operation failed") + ": " + e.message);
     }
   };
 
@@ -286,11 +290,11 @@ const AISetting = (props: SettingInfoProps) => {
         updateState({ aiAssistanceModel: "" });
         ConfigService.setReaderConfig("aiAssistanceModel", "");
       }
-      toast.success(props.t("Deletion successful"));
+      toast.success(t("Deletion successful"));
     } catch (e: any) {
-      toast.error(props.t("Deletion failed") + ": " + e.message);
+      toast.error(t("Deletion failed") + ": " + e.message);
     }
-    props.handleFetchPlugins();
+    handleFetchPlugins();
   };
 
   const handleEdit = (plugin: any) => {
@@ -303,7 +307,7 @@ const AISetting = (props: SettingInfoProps) => {
       ? entry.config
       : parseConfig(plugin);
     if (!config) {
-      toast.error(props.t("Failed to parse model configuration"));
+      toast.error(t("Failed to parse model configuration"));
       return;
     }
     updateState({
@@ -329,13 +333,13 @@ const AISetting = (props: SettingInfoProps) => {
     const currentValue =
       (stateRef.current as any)[configKey] || KookitConfig.DefaultPrompts[type];
     const result = await vexTextareaAsync(
-      props.t("Edit prompt"),
+      t("Edit prompt"),
       currentValue
     );
     if (result === false) return;
     updateState({ [configKey]: result } as any);
     ConfigService.setReaderConfig(configKey, result);
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
   const renderAddForm = () => {
@@ -368,11 +372,11 @@ const AISetting = (props: SettingInfoProps) => {
             onChange={(e) => handleProviderChange(e.target.value)}
           >
             <option value="" className="lang-setting-option">
-              {props.t("Please select")}
+              {t("Please select")}
             </option>
             {KookitConfig.AiProviderList.map((p) => (
               <option key={p.id} value={p.id} className="lang-setting-option">
-                {props.t(p.name)}
+                {t(p.name)}
               </option>
             ))}
           </select>
@@ -386,7 +390,7 @@ const AISetting = (props: SettingInfoProps) => {
               <input
                 type="password"
                 className="token-dialog-username-box"
-                placeholder={props.t("Enter your API Key")}
+                placeholder={t("Enter your API Key")}
                 value={state.apiKey}
                 id="ai-api-key-box"
                 onContextMenu={() => {
@@ -432,7 +436,7 @@ const AISetting = (props: SettingInfoProps) => {
               onChange={(e) => handleModelSelect(e.target.value)}
             >
               <option value="" className="lang-setting-option">
-                {props.t("Please select a model")}
+                {t("Please select a model")}
               </option>
               {state.fetchedModels.map((m) => (
                 <option key={m.id} value={m.id} className="lang-setting-option">
@@ -472,7 +476,7 @@ const AISetting = (props: SettingInfoProps) => {
               <input
                 type="text"
                 className="token-dialog-username-box"
-                placeholder={props.t("Display name of the model")}
+                placeholder={t("Display name of the model")}
                 value={state.modelName}
                 id="ai-model-name-box"
                 onContextMenu={() => {
@@ -490,7 +494,7 @@ const AISetting = (props: SettingInfoProps) => {
               <input
                 type="text"
                 className="token-dialog-username-box"
-                placeholder={props.t("e.g. gpt-4o, claude-sonnet-4-20250514")}
+                placeholder={t("e.g. gpt-4o, claude-sonnet-4-20250514")}
                 value={state.modelId}
                 id="ai-model-id-box"
                 onContextMenu={() => {
@@ -566,7 +570,7 @@ const AISetting = (props: SettingInfoProps) => {
             <span>
               <span className="icon-ai-assist setting-plugin-icon"></span>
               <span className="setting-plugin-name">
-                {props.t(item.displayName)}
+                {t(item.displayName)}
               </span>
               {config && (
                 <span
@@ -635,12 +639,12 @@ const AISetting = (props: SettingInfoProps) => {
             const val = e.target.value;
             updateState({ aiTranslateModel: val });
             ConfigService.setReaderConfig("aiTranslateModel", val);
-            toast.success(props.t("Change successful"));
-            props.handleFetchPlugins();
+            toast.success(t("Change successful"));
+            handleFetchPlugins();
           }}
         >
           <option value="" className="lang-setting-option">
-            {props.t("Please select")}
+            {t("Please select")}
           </option>
           {aiModels.map((item) => (
             <option
@@ -672,12 +676,12 @@ const AISetting = (props: SettingInfoProps) => {
             const val = e.target.value;
             updateState({ aiDictModel: val });
             ConfigService.setReaderConfig("aiDictModel", val);
-            toast.success(props.t("Change successful"));
-            props.handleFetchPlugins();
+            toast.success(t("Change successful"));
+            handleFetchPlugins();
           }}
         >
           <option value="" className="lang-setting-option">
-            {props.t("Please select")}
+            {t("Please select")}
           </option>
           {aiModels.map((item) => (
             <option
@@ -709,12 +713,12 @@ const AISetting = (props: SettingInfoProps) => {
             const val = e.target.value;
             updateState({ aiAssistanceModel: val });
             ConfigService.setReaderConfig("aiAssistanceModel", val);
-            toast.success(props.t("Change successful"));
-            props.handleFetchPlugins();
+            toast.success(t("Change successful"));
+            handleFetchPlugins();
           }}
         >
           <option value="" className="lang-setting-option">
-            {props.t("Please select")}
+            {t("Please select")}
           </option>
           {aiModels.map((item) => (
             <option

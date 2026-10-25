@@ -4,9 +4,6 @@ export interface ImageViewerProps {
   isShow: boolean;
   handleLeaveReader: (position: string) => void;
   handleEnterReader: (position: string) => void;
-  t: any;
-  currentBook: BookModel;
-  readerMode: string;
 }
 export interface ImageViewerStates {
   isShowImage: boolean;

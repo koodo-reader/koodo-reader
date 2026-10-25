@@ -1,20 +1,11 @@
-import { RouteComponentProps } from "react-router-dom";
 
-export interface ImportDialogProps extends RouteComponentProps<any> {
-  handleImportDialog: (isOpenImportDialog: boolean) => void;
-
-  t: (title: string) => string;
+export interface ImportDialogProps {
 
 
 
-  importBookFunc: (file: any) => Promise<void>;
-  handleSetting: (isShow: boolean) => void;
-  handleSettingMode: (settingMode: string) => void;
-  handleSettingDrive: (settingDrive: string) => void;
+
   isOpenTokenDialog: boolean;
-  isAuthed: boolean;
 
-  dataSourceList: string[];
 }
 export interface ImportDialogState {
 

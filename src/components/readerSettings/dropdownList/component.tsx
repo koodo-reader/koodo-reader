@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 ﻿import { Fragment, useEffect, useState } from "react";
 import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
@@ -10,8 +11,15 @@ import {
 import FontUtil from "../../../utils/file/fontUtil";
 import toast from "react-hot-toast";
 import { isReadingRawPDF } from "../../../utils/common";
+import { useAppStore } from "../../../store/useAppStore";
 declare var window: any;
 const DropdownList = (props: DropdownListProps) => {
+  const renderBookFunc = useAppStore((s) => s.renderBookFunc);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const handleTextOrientation = useAppStore((s) => s.handleTextOrientation);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const { t } = useTranslation();
   const [state, setState] = useState<Record<string, any>>({
     currentFontFamilyValue:
       ConfigService.getReaderConfig("fontFamily") || "Built-in font",
@@ -31,7 +39,7 @@ const DropdownList = (props: DropdownListProps) => {
     currentSelectActionValue:
       ConfigService.getReaderConfig("selectAction") || "",
     currentTxtParserValue:
-      ConfigService.getObjectConfig(props.currentBook?.key, "bookRules", {})
+      ConfigService.getObjectConfig(currentBook?.key, "bookRules", {})
         ?.defaultTxtParser || "",
     txtParserOptions: [],
   });
@@ -61,10 +69,10 @@ const DropdownList = (props: DropdownListProps) => {
   useEffect(() => {
     updateState({
       currentTxtParserValue:
-        ConfigService.getObjectConfig(props.currentBook?.key, "bookRules", {})
+        ConfigService.getObjectConfig(currentBook?.key, "bookRules", {})
           ?.defaultTxtParser || "",
     });
-  }, [props.currentBook?.key]);
+  }, [currentBook?.key]);
 
   const loadMergedFonts = async () => {
     const options = await FontUtil.getMergedFontOptions();
@@ -137,38 +145,38 @@ const DropdownList = (props: DropdownListProps) => {
         updateState({
           currentTextOrientationValue: arr[0],
         });
-        props.handleTextOrientation(arr[0]);
+        handleTextOrientation(arr[0]);
 
         break;
       case "selectAction":
         updateState({
           currentSelectActionValue: arr[0],
         });
-        toast.success(props.t("Setup successful"));
+        toast.success(t("Setup successful"));
         return;
       case "txtParser": {
         updateState({ currentTxtParserValue: arr[0] });
         const rule = ConfigService.getObjectConfig(
-          props.currentBook.key,
+          currentBook.key,
           "bookRules",
           {}
         );
         ConfigService.setObjectConfig(
-          props.currentBook.key,
+          currentBook.key,
           { ...rule, defaultTxtParser: arr[0] },
           "bookRules"
         );
-        toast.success(props.t("Setup successful"));
-        props.renderBookFunc();
+        toast.success(t("Setup successful"));
+        renderBookFunc();
         return;
       }
       default:
         break;
     }
-    props.renderBookFunc();
+    renderBookFunc();
   }
-  const isTxt = props.currentBook?.format?.toUpperCase() === "TXT";
-    const isPDF = isReadingRawPDF(props.currentBook);
+  const isTxt = currentBook?.format?.toUpperCase() === "TXT";
+    const isPDF = isReadingRawPDF(currentBook);
     const renderParagraphCharacter = () => {
       return dropdownList
         .filter((item) => {
@@ -235,14 +243,14 @@ const DropdownList = (props: DropdownListProps) => {
                     >
                       {item.value === "codeHighlight"
                         ? subItem.value === ""
-                          ? props.t("Disable")
+                          ? t("Disable")
                           : subItem.label
                         : item.value === "fontFamily" ||
                             item.value === "subFontFamily"
                           ? subItem.value === "Built-in font"
-                            ? props.t(subItem.label)
+                            ? t(subItem.label)
                             : subItem.label
-                          : props.t(subItem.label)}
+                          : t(subItem.label)}
                     </option>
                   )
                 )}
@@ -265,8 +273,8 @@ const DropdownList = (props: DropdownListProps) => {
               value={state.currentTxtParserValue}
               onChange={(event) => {
                 if (event.target.value === "add-parser") {
-                  props.handleSetting(true);
-                  props.handleSettingMode("chapter");
+                  handleSetting(true);
+                  handleSettingMode("chapter");
                   return;
                 }
                 handleView(event, "txtParser");
@@ -278,7 +286,7 @@ const DropdownList = (props: DropdownListProps) => {
                   key={index}
                   className="general-setting-option"
                 >
-                  {props.t(option.label)}
+                  {t(option.label)}
                 </option>
               ))}
               <option
@@ -286,7 +294,7 @@ const DropdownList = (props: DropdownListProps) => {
                 key="add"
                 className="general-setting-option"
               >
-                {props.t("Add new parser")}
+                {t("Add new parser")}
               </option>
             </select>
           </li>

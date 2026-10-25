@@ -1,22 +1,7 @@
 import BookModel from "../../models/Book";
-import { RouteComponentProps } from "react-router";
-export interface ImportLocalProps extends RouteComponentProps<any> {
-  books: BookModel[];
-  deletedBooks: BookModel[];
+export interface ImportLocalProps {
 
-  isCollapsed: boolean;
-  isAuthed: boolean;
-  mode: string;
-  shelfTitle: string;
-  cloudSyncFunc: () => Promise<void>;
-  handleFetchBooks: () => void;
   handleDrag: (isDrag: boolean) => void;
-  handleImportDialog: (isOpenImportDialog: boolean) => void;
-  handleOPDSDialog: (isOpen: boolean) => void;
-  handleAutoImportDialog: (isOpen: boolean) => void;
-  handleImportBookFunc: (importBookFunc: (file: any) => Promise<void>) => void;
-  handleReadingBook: (book: BookModel) => void;
-  t: (title: string, options?: any) => string;
 }
 export interface ImportLocalState {
   isOpenFile: boolean;

@@ -1,11 +1,16 @@
 import { useEffect } from "react";
-import { SpeechDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import "./speechDialog.css";
 import TextToSpeech from "../../textToSpeech";
 
-const SpeechDialog = (props: SpeechDialogProps) => {
+const SpeechDialog = () => {
+  const plugins = useAppStore((s) => s.manager.plugins);
+  const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
+  const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
+  const handleSpeechDialog = useAppStore((s) => s.handleSpeechDialog);
+  const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
   useEffect(() => {
-    props.handleFetchPlugins();
+    handleFetchPlugins();
   }, []);
 
   return (
@@ -13,7 +18,7 @@ const SpeechDialog = (props: SpeechDialogProps) => {
       <div
         className="sort-dialog-container"
         onMouseEnter={() => {
-          props.handleSpeechDialog(true);
+          handleSpeechDialog(true);
         }}
         style={{
           left: "auto",
@@ -22,7 +27,7 @@ const SpeechDialog = (props: SpeechDialogProps) => {
           width: "300px",
           height: "340px",
           overflowY: "scroll",
-          right: props.isSettingLocked || props.isDockedRight ? 370 : 65,
+          right: isSettingLocked || isDockedRight ? 370 : 65,
         }}
       >
         <div className="speech-dialog-header">
@@ -30,11 +35,11 @@ const SpeechDialog = (props: SpeechDialogProps) => {
           <span
             className="icon-close speech-dialog-close"
             onClick={() => {
-              props.handleSpeechDialog(false);
+              handleSpeechDialog(false);
             }}
           ></span>
         </div>
-        {props.plugins && <TextToSpeech />}
+        {plugins && <TextToSpeech />}
       </div>
     </>
   );

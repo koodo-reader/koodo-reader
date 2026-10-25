@@ -6,6 +6,7 @@ import { scrollContents } from "../../../utils/common";
 import { Trans } from "react-i18next";
 import i18n from "../../../i18n";
 import _ from "underscore";
+import { useAppStore } from "../../../store/useAppStore";
 
 interface FlatChapterItem {
   item: any;
@@ -14,6 +15,15 @@ interface FlatChapterItem {
 }
 
 const ContentList = (props: ContentListProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const currentChapter = useAppStore((s) => s.reader.currentChapter);
+  const currentChapterIndex = useAppStore((s) => s.reader.currentChapterIndex);
+  const handleCurrentChapter = useAppStore((s) => s.handleCurrentChapter);
+  const handleCurrentChapterIndex = useAppStore(
+    (s) => s.handleCurrentChapterIndex
+  );
+  const handleJumpPosition = useAppStore((s) => s.handleJumpPosition);
   const [state, setState] = useState<ContentListState>(() => ({
     chapters: [],
     expandedItems: new Set<string>(), // 存储展开的项目路径
@@ -25,9 +35,7 @@ const ContentList = (props: ContentListProps) => {
   }));
 
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const propsRef = useRef(props);
-  propsRef.current = props;
-  const prevPropsRef = useRef(props);
+  const prevPropsRef = useRef({ htmlBook, currentChapterIndex });
   const pendingScrollRef = useRef<{ title: string; href: string } | null>(null);
 
   // 递归检查是否包含当前章节
@@ -178,7 +186,7 @@ const ContentList = (props: ContentListProps) => {
       chapterDocIndex: string;
       chapterHref: string;
     } = ConfigService.getObjectConfig(
-      propsRef.current.currentBook.key,
+      currentBook.key,
       "recordLocation",
       {}
     );
@@ -202,43 +210,39 @@ const ContentList = (props: ContentListProps) => {
 
   async function handleJump(item: any) {
     const prevPosition = ConfigService.getObjectConfig(
-      propsRef.current.currentBook.key,
+      currentBook.key,
       "recordLocation",
       {}
     );
-    propsRef.current.handleJumpPosition(prevPosition);
-    await propsRef.current.htmlBook.rendition.goToChapter(
-      item.index,
-      item.href,
-      item.label
-    );
-    propsRef.current.handleCurrentChapter(item.label);
-    propsRef.current.handleCurrentChapterIndex(item.index);
+    handleJumpPosition(prevPosition);
+    await htmlBook.rendition.goToChapter(item.index, item.href, item.label);
+    handleCurrentChapter(item.label);
+    handleCurrentChapterIndex(item.index);
     scrollContents(item.label, item.href);
   }
 
   useEffect(() => {
-    if (propsRef.current.htmlBook) {
-      handleScrollToChapter(propsRef.current.htmlBook);
+    if (htmlBook) {
+      handleScrollToChapter(htmlBook);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const prevProps = prevPropsRef.current;
-    if (props.htmlBook !== prevProps.htmlBook && props.htmlBook) {
-      handleScrollToChapter(props.htmlBook);
-      props.htmlBook.rendition.on("chapter-pages", () => {
-        handleScrollToChapter(props.htmlBook);
+    if (htmlBook !== prevProps.htmlBook && htmlBook) {
+      handleScrollToChapter(htmlBook);
+      htmlBook.rendition.on("chapter-pages", () => {
+        handleScrollToChapter(htmlBook);
       });
     }
     if (
-      props.currentChapterIndex !== prevProps.currentChapterIndex &&
+      currentChapterIndex !== prevProps.currentChapterIndex &&
       prevProps.htmlBook
     ) {
-      let chapter = _.find(props.htmlBook.flattenChapters, {
-        label: props.currentChapter,
-        index: props.currentChapterIndex,
+      let chapter = _.find(htmlBook.flattenChapters, {
+        label: currentChapter,
+        index: currentChapterIndex,
       });
       if (!chapter || !chapter.href) {
         return;
@@ -266,10 +270,10 @@ const ContentList = (props: ContentListProps) => {
       setState((prev) => ({ ...prev, expandedItems: expandedPaths }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.htmlBook, props.currentChapterIndex]);
+  }, [htmlBook, currentChapterIndex]);
 
   useEffect(() => {
-    prevPropsRef.current = props;
+    prevPropsRef.current = { htmlBook, currentChapterIndex };
   });
 
   useLayoutEffect(() => {
@@ -378,11 +382,11 @@ const ContentList = (props: ContentListProps) => {
 
   return (
     <div className="book-content-container">
-      {props.htmlBook && (
+      {htmlBook && (
         <div className="book-content-header">
           <div>
             <Trans>Total chapters</Trans>:
-            {props.htmlBook.flattenChapters.length}
+            {htmlBook.flattenChapters.length}
           </div>
           <div style={{ display: "flex", gap: "0px" }}>
             <div onClick={toggleSearch} className="book-content-expand">

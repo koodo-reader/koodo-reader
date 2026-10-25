@@ -1,9 +1,6 @@
-import { RouteComponentProps } from "react-router-dom";
-export interface SettingInfoProps extends RouteComponentProps<any> {
+export interface SettingInfoProps {
 
 
-  handleFetchPlugins: () => void;
-  t: (title: string) => string;
 }
 export interface AIModelConfig {
   endpoint: string;

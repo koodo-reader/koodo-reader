@@ -1,9 +1,5 @@
-import { RouteComponentProps } from "react-router-dom";
 
-export interface SortShelfDialogProps extends RouteComponentProps<any> {
-  handleSortShelfDialog: (isOpenSortShelfDialog: boolean) => void;
-  t: (title: string) => string;
-  handleShelf: (shelfTitle: string) => void;
+export interface SortShelfDialogProps {
 
 }
 export interface SortShelfDialogState {

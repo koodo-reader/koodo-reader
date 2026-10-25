@@ -19,6 +19,7 @@ import {
   openReadingPanel,
   READING_PANEL_TOGGLE_EVENT,
 } from "../../../utils/reader/mouseEvent";
+import { useAppStore } from "../../../store/useAppStore";
 
 export interface SearchItemWithKey {
   key: string;
@@ -82,6 +83,14 @@ export const groupSearchResults = (searchList: any[]): SearchResultGroup[] => {
 };
 
 const NavigationPanel = (props: NavigationPanelProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const backgroundColor = useAppStore((s) => s.reader.backgroundColor);
+  const isNavLocked = useAppStore((s) => s.reader.isNavLocked);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
+  const handleFetchBookmarks = useAppStore((s) => s.handleFetchBookmarks);
+  const handleSearch = useAppStore((s) => s.handleSearch);
+  const handleNavLock = useAppStore((s) => s.handleNavLock);
   const highlightUtilRef = useRef<any>(null);
   if (!highlightUtilRef.current) {
     highlightUtilRef.current = new HighlightUtil(ConfigService);
@@ -112,10 +121,10 @@ const NavigationPanel = (props: NavigationPanelProps) => {
       resetSearchState();
     }
     if (searchState) {
-      props.handleSearch(true);
+      handleSearch(true);
     } else {
       if (ConfigService.getReaderConfig("isNavLocked") !== "yes") {
-        props.handleSearch(false);
+        handleSearch(false);
       }
     }
   };
@@ -129,16 +138,16 @@ const NavigationPanel = (props: NavigationPanelProps) => {
   };
 
   // componentWillReceiveProps: 只在 currentBook.key 变化时重新获取封面
-  const prevBookKeyRef = useRef<string>(props.currentBook.key);
+  const prevBookKeyRef = useRef<string>(currentBook.key);
   useEffect(() => {
-    if (prevBookKeyRef.current === props.currentBook.key) {
+    if (prevBookKeyRef.current === currentBook.key) {
       return;
     }
-    prevBookKeyRef.current = props.currentBook.key;
+    prevBookKeyRef.current = currentBook.key;
     let isActive = true;
     (async () => {
-      const cover = await CoverUtil.getCover(props.currentBook);
-      const isCoverExist = await CoverUtil.isCoverExist(props.currentBook);
+      const cover = await CoverUtil.getCover(currentBook);
+      const isCoverExist = await CoverUtil.isCoverExist(currentBook);
       if (isActive) {
         setState((prev) => ({ ...prev, cover, isCoverExist }));
       }
@@ -147,7 +156,7 @@ const NavigationPanel = (props: NavigationPanelProps) => {
       isActive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.currentBook.key]);
+  }, [currentBook.key]);
 
   const isLeftPanelOpen = () => {
     const el = document.querySelector(
@@ -165,7 +174,7 @@ const NavigationPanel = (props: NavigationPanelProps) => {
     if (!tab) return;
     if (state.searchState) {
       handleNavSearchState("");
-      props.handleSearch(false);
+      handleSearch(false);
       resetSearchState();
     }
     if (isLeftPanelOpen() && state.currentTab === tab) {
@@ -189,7 +198,7 @@ const NavigationPanel = (props: NavigationPanelProps) => {
   // componentDidMount + componentWillUnmount
   useEffect(() => {
     const listener = (event: Event) => navTabToggleRef.current(event);
-    props.handleFetchBookmarks();
+    handleFetchBookmarks();
     window.addEventListener(NAV_TAB_TOGGLE_EVENT, listener);
     return () => {
       window.removeEventListener(NAV_TAB_TOGGLE_EVENT, listener);
@@ -198,13 +207,10 @@ const NavigationPanel = (props: NavigationPanelProps) => {
   }, []);
 
   const handleLock = () => {
-    props.handleNavLock(!props.isNavLocked);
-    ConfigService.setReaderConfig(
-      "isNavLocked",
-      !props.isNavLocked ? "yes" : "no"
-    );
+    handleNavLock(!isNavLocked);
+    ConfigService.setReaderConfig("isNavLocked", !isNavLocked ? "yes" : "no");
     setTimeout(() => {
-      props.renderBookFunc();
+      renderBookFunc();
     }, 300);
   };
 
@@ -222,7 +228,7 @@ const NavigationPanel = (props: NavigationPanelProps) => {
 
   const handleSearchItemClick = async (item: any) => {
     let bookLocation = JSON.parse(item.cfi) || {};
-    await props.htmlBook.rendition.goToPosition(
+    await htmlBook.rendition.goToPosition(
       JSON.stringify({
         text: bookLocation.text,
         chapterTitle: bookLocation.chapterTitle,
@@ -237,10 +243,10 @@ const NavigationPanel = (props: NavigationPanelProps) => {
       })
     );
     let style = highlightUtilRef.current.buildSearchHighlightStyle(
-      isReadingRawPDF(props.currentBook),
+      isReadingRawPDF(currentBook),
       ConfigService.getReaderConfig("textOrientation") === "vertical"
     );
-    props.htmlBook.rendition.highlightSearchNode(bookLocation.keyword, style);
+    htmlBook.rendition.highlightSearchNode(bookLocation.keyword, style);
   };
 
   const renderSearchList = () => {
@@ -326,8 +332,8 @@ const NavigationPanel = (props: NavigationPanelProps) => {
     <div
       className="navigation-panel"
       style={{
-        backgroundColor: props.isNavLocked ? props.backgroundColor : "",
-        color: props.isNavLocked
+        backgroundColor: isNavLocked ? backgroundColor : "",
+        color: isNavLocked
           ? ConfigService.getReaderConfig("textColor")
           : "",
       }}
@@ -344,7 +350,7 @@ const NavigationPanel = (props: NavigationPanelProps) => {
             className="nav-close-icon"
             onClick={() => {
               handleNavSearchState("");
-              props.handleSearch(false);
+              handleSearch(false);
               resetSearchState();
             }}
           >
@@ -375,7 +381,7 @@ const NavigationPanel = (props: NavigationPanelProps) => {
           <div className="navigation-header">
             <span
               className={
-                props.isNavLocked
+                isNavLocked
                   ? "icon-lock nav-lock-icon"
                   : "icon-unlock nav-lock-icon"
               }
@@ -390,18 +396,18 @@ const NavigationPanel = (props: NavigationPanelProps) => {
               <div className="book-cover">
                 <EmptyCover
                   {...{
-                    format: props.currentBook.format,
-                    title: props.currentBook.name,
+                    format: currentBook.format,
+                    title: currentBook.name,
                     scale: 0.86,
                   }}
                 />
               </div>
             )}
 
-            <p className="book-title">{props.currentBook.name}</p>
+            <p className="book-title">{currentBook.name}</p>
             <p className="book-arthur">
               <Trans>Author</Trans>:{" "}
-              <Trans>{props.currentBook.author || "Unknown author"}</Trans>
+              <Trans>{currentBook.author || "Unknown author"}</Trans>
             </p>
             <span className="reading-duration">
               <Trans>Reading time</Trans>:{" "}

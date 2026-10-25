@@ -1,13 +1,17 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import "./sortShelfDialog.css";
 import { Trans } from "react-i18next";
-import { SortShelfDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import { ReactSortable } from "react-sortablejs";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import DeletePopup from "../deletePopup";
 
-const SortShelfDialog = (props: SortShelfDialogProps) => {
+const SortShelfDialog = () => {
+  const handleSortShelfDialog = useAppStore((s) => s.handleSortShelfDialog);
+  const handleShelf = useAppStore((s) => s.handleShelf);
+  const { t } = useTranslation();
   const newShelfInput = useRef<HTMLInputElement>(null);
   const latestSortedShelfList = useRef<any[]>([]);
   const [sortedShelfList, setSortedShelfList] = useState<any[]>([]);
@@ -36,18 +40,18 @@ const SortShelfDialog = (props: SortShelfDialogProps) => {
   }, []);
 
   const handleClose = () => {
-    props.handleSortShelfDialog(false);
+    handleSortShelfDialog(false);
   };
   const handleRenameShelf = () => {
     if (!newShelfName) {
-      toast(props.t("Shelf Title is Empty"));
+      toast(t("Shelf Title is Empty"));
       setCurrentEditShelf("");
       setNewShelfName("");
       return;
     }
     let shelfList = ConfigService.getAllMapConfig("shelfList");
     if (shelfList.hasOwnProperty(newShelfName)) {
-      toast(props.t("Duplicate shelf"));
+      toast(t("Duplicate shelf"));
       return;
     }
     let newShelfList = sortedShelfList.map((item) => {
@@ -64,7 +68,7 @@ const SortShelfDialog = (props: SortShelfDialogProps) => {
     let shelfItemList = shelfList[currentEditShelf];
     ConfigService.deleteMapConfig(currentEditShelf, "shelfList");
     ConfigService.setOneMapConfig(newShelfName, shelfItemList, "shelfList");
-    toast.success(props.t("Renamed successfully"));
+    toast.success(t("Renamed successfully"));
     setCurrentEditShelf("");
     setNewShelfName("");
   };
@@ -74,7 +78,7 @@ const SortShelfDialog = (props: SortShelfDialogProps) => {
     ConfigService.deleteMapConfig(currentShelfTitle, "shelfList");
     ConfigService.deleteListConfig(currentShelfTitle, "sortedShelfList");
 
-    props.handleShelf("");
+    handleShelf("");
     let storedSortedShelfList =
       ConfigService.getAllListConfig("sortedShelfList") || [];
     let shelfList = ConfigService.getAllMapConfig("shelfList");
@@ -175,7 +179,7 @@ const SortShelfDialog = (props: SortShelfDialogProps) => {
                   onClick={() => {}}
                 >
                   <span className="sort-shelf-label">
-                    {props.t(item.name)}
+                    {t(item.name)}
                   </span>
                   <span
                     className="icon-trash-line "
@@ -206,7 +210,7 @@ const SortShelfDialog = (props: SortShelfDialogProps) => {
         }
       </div>
       <div className="import-dialog-back-button">
-        {props.t("Drag to sort")}
+        {t("Drag to sort")}
       </div>
 
       <div

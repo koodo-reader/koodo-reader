@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import "./metadataDialog.css";
 import { Trans } from "react-i18next";
@@ -8,12 +9,25 @@ import {
   MetadataResult,
   BookResultItem,
 } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import copy from "copy-text-to-clipboard";
 import { getBookMetadata } from "../../../utils/request/reader";
 import { formatDateToDay } from "../../../utils/common";
 
-const MetadataDialog = (props: MetadataDialogProps) => {
+const MetadataDialog = (
+  props: Pick<
+    MetadataDialogProps,
+    | "currentBookName"
+    | "currentBookAuthor"
+    | "handleMetadataDialog"
+    | "handleApplyMetadata"
+  >
+) => {
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const { t } = useTranslation();
   const [state, setState] = useState<Record<string, any>>({
     searchName: props.currentBookName || "",
     searchAuthor: props.currentBookAuthor || "",
@@ -34,14 +48,14 @@ const MetadataDialog = (props: MetadataDialogProps) => {
   const handleSearch = async () => {
     const { searchName, searchAuthor } = state;
     if (!searchName.trim()) {
-      toast(props.t("Please enter book name"));
+      toast(t("Please enter book name"));
       return;
     }
 
-    if (!props.isAuthed) {
-      toast(props.t("Please upgrade to Pro to use this feature"));
-      props.handleSetting(true);
-      props.handleSettingMode("account");
+    if (!isAuthed) {
+      toast(t("Please upgrade to Pro to use this feature"));
+      handleSetting(true);
+      handleSettingMode("account");
       return;
     }
 
@@ -61,18 +75,18 @@ const MetadataDialog = (props: MetadataDialogProps) => {
       } else if (res && res.code === 200 && !res.data) {
         updateState({
           isLoading: false,
-          error: props.t("No metadata found"),
+          error: t("No metadata found"),
         });
       } else {
         updateState({
           isLoading: false,
-          error: props.t("Failed to fetch metadata"),
+          error: t("Failed to fetch metadata"),
         });
       }
     } catch {
       updateState({
         isLoading: false,
-        error: props.t("Failed to fetch metadata"),
+        error: t("Failed to fetch metadata"),
       });
     }
   };
@@ -125,7 +139,7 @@ const MetadataDialog = (props: MetadataDialogProps) => {
             <input
               className="metadata-dialog-search-input"
               value={searchName}
-              placeholder={props.t("Book name")}
+              placeholder={t("Book name")}
               onChange={(e) => updateState({ searchName: e.target.value })}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               style={{ width: "155px" }}
@@ -135,7 +149,7 @@ const MetadataDialog = (props: MetadataDialogProps) => {
             <input
               className="metadata-dialog-search-input"
               value={searchAuthor}
-              placeholder={props.t("Author")}
+              placeholder={t("Author")}
               onChange={(e) => updateState({ searchAuthor: e.target.value })}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               style={{ width: "100px" }}
@@ -241,7 +255,7 @@ const MetadataDialog = (props: MetadataDialogProps) => {
                             onClick={(e) => {
                               e.stopPropagation();
                               copy(item.isbn || "");
-                              toast(props.t("Copying successful"));
+                              toast(t("Copying successful"));
                             }}
                           >
                             <span className="icon-copy"></span>

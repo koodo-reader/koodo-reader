@@ -3,17 +3,22 @@ import { ModeControlProps } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook } from "../../../utils/common";
 import { Trans } from "react-i18next";
+import { useAppStore } from "../../../store/useAppStore";
 
 const ModeControl = (props: ModeControlProps) => {
+  const renderBookFunc = useAppStore((s) => s.renderBookFunc);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const handleReaderMode = useAppStore((s) => s.handleReaderMode);
   const handleChangeMode = (mode: string) => {
-    if (isPaginatedBook(props.currentBook)) {
+    if (isPaginatedBook(currentBook)) {
       ConfigService.setReaderConfig("pdfReaderMode", mode);
     } else {
       ConfigService.setReaderConfig("readerMode", mode);
     }
 
-    props.handleReaderMode(mode);
-    props.renderBookFunc();
+    handleReaderMode(mode);
+    renderBookFunc();
   };
   return (
     <div className="background-color-setting">
@@ -29,7 +34,7 @@ const ModeControl = (props: ModeControlProps) => {
           onClick={() => {
             handleChangeMode("single");
           }}
-          style={props.readerMode === "single" ? {} : { opacity: 0.4 }}
+          style={readerMode === "single" ? {} : { opacity: 0.4 }}
         >
           <span className="icon-single-page single-page-icon"></span>
         </div>
@@ -39,7 +44,7 @@ const ModeControl = (props: ModeControlProps) => {
           onClick={() => {
             handleChangeMode("double");
           }}
-          style={props.readerMode === "double" ? {} : { opacity: 0.4 }}
+          style={readerMode === "double" ? {} : { opacity: 0.4 }}
         >
           <span className="icon-two-page two-page-icon"></span>
         </div>
@@ -49,7 +54,7 @@ const ModeControl = (props: ModeControlProps) => {
           onClick={() => {
             handleChangeMode("scroll");
           }}
-          style={props.readerMode === "scroll" ? {} : { opacity: 0.4 }}
+          style={readerMode === "scroll" ? {} : { opacity: 0.4 }}
         >
           <span className="icon-scroll two-page-icon"></span>
         </div>

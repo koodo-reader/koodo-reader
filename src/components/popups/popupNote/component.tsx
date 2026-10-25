@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import "./popupNote.css";
 import { isReadingRawPDF } from "../../../utils/common";
@@ -15,10 +16,22 @@ import {
 import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
+import { useAppStore } from "../../../store/useAppStore";
 
 const highlightUtil: any = new HighlightUtil(ConfigService);
 
 const PopupNote = (props: PopupNoteProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const highlight = useAppStore((s) => s.reader.highlight);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const noteKey = useAppStore((s) => s.reader.noteKey);
+  const handleNoteKey = useAppStore((s) => s.handleNoteKey);
+  const handleHighlight = useAppStore((s) => s.handleHighlight);
+  const handleOpenMenu = useAppStore((s) => s.handleOpenMenu);
+  const handleShowPopupNote = useAppStore((s) => s.handleShowPopupNote);
+  const handleMenuMode = useAppStore((s) => s.handleMenuMode);
+  const handleFetchNotes = useAppStore((s) => s.handleFetchNotes);
+  const { t } = useTranslation();
   const [tag, setTag] = useState<string[]>([]);
   const [text, setText] = useState("");
   const [note, setNote] = useState<Note | null>(null);
@@ -27,9 +40,9 @@ const PopupNote = (props: PopupNoteProps) => {
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
     (async () => {
-      if (props.noteKey) {
+      if (noteKey) {
         let loadedNote: Note = await DatabaseService.getRecord(
-          props.noteKey,
+          noteKey,
           "notes"
         );
         setText(loadedNote.text);
@@ -41,12 +54,12 @@ const PopupNote = (props: PopupNoteProps) => {
         let { styleType, color } = highlightUtil.getHighlightValue(
           loadedNote.color || "background-#FEF3CD"
         );
-        props.handleHighlight({
+        handleHighlight({
           styleType,
           color,
         });
       } else {
-        let docs = getIframeDoc(props.currentBook);
+        let docs = getIframeDoc(currentBook);
         let selectedText = "";
         for (let i = 0; i < docs.length; i++) {
           let doc = docs[i];
@@ -73,70 +86,70 @@ const PopupNote = (props: PopupNoteProps) => {
   };
 
   const handleNoteClick = (event: Event) => {
-    props.handleNoteKey((event.target as any).dataset.key);
-    props.handleMenuMode("note");
-    props.handleOpenMenu(true);
+    handleNoteKey((event.target as any).dataset.key);
+    handleMenuMode("note");
+    handleOpenMenu(true);
   };
 
   const createNote = async () => {
     let notes = (document.querySelector(".editor-box") as HTMLInputElement)
       .value;
 
-    if (props.noteKey) {
-      let newNote = await DatabaseService.getRecord(props.noteKey, "notes");
+    if (noteKey) {
+      let newNote = await DatabaseService.getRecord(noteKey, "notes");
       newNote.notes = notes;
       newNote.tag = tag;
       newNote.color =
-        highlightUtil.formatHighlightValue(props.highlight) || newNote.color;
+        highlightUtil.formatHighlightValue(highlight) || newNote.color;
       DatabaseService.updateRecord(newNote, "notes").then(() => {
-        props.handleOpenMenu(false);
-        props.handleFetchNotes();
-        props.handleMenuMode("");
-        props.handleNoteKey("");
-        props.handleShowPopupNote(false);
-        if (props.htmlBook && props.htmlBook.rendition) {
-          props.htmlBook.rendition.removeOneNote(
-            props.noteKey,
+        handleOpenMenu(false);
+        handleFetchNotes();
+        handleMenuMode("");
+        handleNoteKey("");
+        handleShowPopupNote(false);
+        if (htmlBook && htmlBook.rendition) {
+          htmlBook.rendition.removeOneNote(
+            noteKey,
             props.chapterDocIndex
           );
-          props.htmlBook.rendition.createOneNote(newNote, handleNoteClick);
+          htmlBook.rendition.createOneNote(newNote, handleNoteClick);
         }
       });
     } else {
       let cfi = JSON.stringify(
         ConfigService.getObjectConfig(
-          props.currentBook.key,
+          currentBook.key,
           "recordLocation",
           {}
         )
       );
-      if (isReadingRawPDF(props.currentBook)) {
-        let bookLocation = props.htmlBook.rendition.getPositionByChapter(
+      if (isReadingRawPDF(currentBook)) {
+        let bookLocation = htmlBook.rendition.getPositionByChapter(
           props.chapterDocIndex
         );
         cfi = JSON.stringify(bookLocation);
       }
-      let bookKey = props.currentBook.key;
+      let bookKey = currentBook.key;
       let range = JSON.stringify(
-        await props.htmlBook.rendition.getHighlightCoords(
+        await htmlBook.rendition.getHighlightCoords(
           props.chapterDocIndex
         )
       );
 
       let percentage = ConfigService.getObjectConfig(
-        props.currentBook.key,
+        currentBook.key,
         "recordLocation",
         {}
       ).percentage
         ? ConfigService.getObjectConfig(
-            props.currentBook.key,
+            currentBook.key,
             "recordLocation",
             {}
           ).percentage
         : "0";
 
       let color =
-        highlightUtil.formatHighlightValue(props.highlight) ||
+        highlightUtil.formatHighlightValue(highlight) ||
         "background-#FEF3CD";
 
       let newNote = new Note(
@@ -152,10 +165,10 @@ const PopupNote = (props: PopupNoteProps) => {
         tag
       );
       DatabaseService.saveRecord(newNote, "notes").then(async () => {
-        props.handleOpenMenu(false);
-        props.handleFetchNotes();
-        props.handleMenuMode("");
-        await props.htmlBook.rendition.createOneNote(
+        handleOpenMenu(false);
+        handleFetchNotes();
+        handleMenuMode("");
+        await htmlBook.rendition.createOneNote(
           newNote,
           handleNoteClick
         );
@@ -173,26 +186,26 @@ const PopupNote = (props: PopupNoteProps) => {
   const handleUpdateHighlight = () => {};
 
   const handleClose = () => {
-    if (props.noteKey) {
-      DatabaseService.deleteRecord(props.noteKey, "notes").then(() => {
-        toast.success(props.t("Deletion successful"));
-        props.handleMenuMode("");
-        props.handleFetchNotes();
-        props.handleNoteKey("");
-        if (props.htmlBook && props.htmlBook.rendition) {
-          props.htmlBook.rendition.removeOneNote(
-            props.noteKey,
+    if (noteKey) {
+      DatabaseService.deleteRecord(noteKey, "notes").then(() => {
+        toast.success(t("Deletion successful"));
+        handleMenuMode("");
+        handleFetchNotes();
+        handleNoteKey("");
+        if (htmlBook && htmlBook.rendition) {
+          htmlBook.rendition.removeOneNote(
+            noteKey,
             props.chapterDocIndex
           );
         }
 
-        props.handleOpenMenu(false);
-        props.handleShowPopupNote(false);
+        handleOpenMenu(false);
+        handleShowPopupNote(false);
       });
     } else {
-      props.handleOpenMenu(false);
-      props.handleMenuMode("");
-      props.handleNoteKey("");
+      handleOpenMenu(false);
+      handleMenuMode("");
+      handleNoteKey("");
     }
   };
 
@@ -234,7 +247,7 @@ const PopupNote = (props: PopupNoteProps) => {
         <NoteTag
           {...({
             handleTag: handleTag,
-            tag: props.noteKey && note ? note.tag : [],
+            tag: noteKey && note ? note.tag : [],
           } as any)}
         />
       </div>
@@ -244,7 +257,7 @@ const PopupNote = (props: PopupNoteProps) => {
           className="book-manage-title"
           onClick={() => {
             copy(text);
-            toast.success(props.t("Copying successful"));
+            toast.success(t("Copying successful"));
           }}
         >
           <Trans>Copy quotes</Trans>
@@ -255,7 +268,7 @@ const PopupNote = (props: PopupNoteProps) => {
             handleClose();
           }}
         >
-          {props.noteKey ? <Trans>Delete</Trans> : <Trans>Cancel</Trans>}
+          {noteKey ? <Trans>Delete</Trans> : <Trans>Cancel</Trans>}
         </span>
         <span
           className="book-manage-title"

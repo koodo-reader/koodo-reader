@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import "./popupTrans.css";
 import { PopupTransProps, PopupTransState } from "./interface";
@@ -18,8 +19,18 @@ import {
   executeCustomTranslation,
   isCustomRendererPlugin,
 } from "../../../utils/plugins/customPlugin";
+import { useAppStore } from "../../../store/useAppStore";
 
 const PopupTrans = (props: PopupTransProps) => {
+  const originalText = useAppStore((s) => s.reader.originalText);
+  const plugins = useAppStore((s) => s.manager.plugins);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const handleOpenMenu = useAppStore((s) => s.handleOpenMenu);
+  const handleMenuMode = useAppStore((s) => s.handleMenuMode);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const { t } = useTranslation();
   const [state, setState] = useState<PopupTransState>({
     translatedText: "",
     originalText: "",
@@ -67,7 +78,7 @@ const PopupTrans = (props: PopupTransProps) => {
         "official-ai-trans-plugin" &&
       ConfigService.getReaderConfig("transService") !== "custom-ai-trans-plugin"
     ) {
-      let plugin = props.plugins.find(
+      let plugin = plugins.find(
         (item) => item.key === ConfigService.getReaderConfig("transService")
       );
       if (!plugin) {
@@ -91,7 +102,7 @@ const PopupTrans = (props: PopupTransProps) => {
         .then((res: string) => {
           if (res.startsWith("https://")) {
             openExternalUrl(res, true, "trans");
-            let docs = getIframeDoc(props.currentBook);
+            let docs = getIframeDoc(currentBook);
             for (let i = 0; i < docs.length; i++) {
               let doc = docs[i];
               if (!doc) continue;
@@ -106,7 +117,7 @@ const PopupTrans = (props: PopupTransProps) => {
         })
         .catch((err) => {
           toast.error(
-            props.t("Translation failed") +
+            t("Translation failed") +
               ": " +
               (err instanceof Error ? err.message : String(err))
           );
@@ -120,7 +131,7 @@ const PopupTrans = (props: PopupTransProps) => {
         transService: "custom-ai-trans-plugin",
         isAddNew: false,
       }));
-      let plugin = props.plugins.find(
+      let plugin = plugins.find(
         (item) => item.key === "custom-ai-trans-plugin"
       );
       if (!plugin) {
@@ -172,7 +183,7 @@ const PopupTrans = (props: PopupTransProps) => {
         isAiWaiting: false,
       }));
     } else if (
-      props.isAuthed &&
+      isAuthed &&
       ConfigService.getReaderConfig("isDisableAI") !== "yes"
     ) {
       setState((prev) => ({
@@ -180,7 +191,7 @@ const PopupTrans = (props: PopupTransProps) => {
         transService: "official-ai-trans-plugin",
         isAddNew: false,
       }));
-      let plugin = props.plugins.find(
+      let plugin = plugins.find(
         (item) => item.key === "official-ai-trans-plugin"
       );
       if (!plugin) {
@@ -220,11 +231,11 @@ const PopupTrans = (props: PopupTransProps) => {
 
   // componentDidMount: 初始化翻译服务并发起首次翻译
   useEffect(() => {
-    const originalText = props.originalText.replace(/(\r\n|\n|\r)/gm, "");
-    setState((prev) => ({ ...prev, originalText }));
+    const nextOriginalText = originalText.replace(/(\r\n|\n|\r)/gm, "");
+    setState((prev) => ({ ...prev, originalText: nextOriginalText }));
     (async () => {
       if (!state.transService) {
-        let pluginList = props.plugins.filter(
+        let pluginList = plugins.filter(
           (item) =>
             item.type === "translation" && !item.key.startsWith("official-ai-")
         );
@@ -232,7 +243,7 @@ const PopupTrans = (props: PopupTransProps) => {
           setState((prev) => ({ ...prev, transService: pluginList[0].key }));
           ConfigService.setReaderConfig("transService", pluginList[0].key);
           await new Promise((resolve) => setTimeout(resolve, 100));
-        } else if (props.isAuthed) {
+        } else if (isAuthed) {
           setState((prev) => ({
             ...prev,
             transService: "official-ai-trans-plugin",
@@ -247,7 +258,7 @@ const PopupTrans = (props: PopupTransProps) => {
         }
       }
 
-      handleTransRef.current(originalText);
+      handleTransRef.current(nextOriginalText);
     })();
     return () => {
       if (updateInterval.current) {
@@ -259,32 +270,32 @@ const PopupTrans = (props: PopupTransProps) => {
   }, []);
 
   // UNSAFE_componentWillReceiveProps: originalText 变化时重新翻译
-  const prevOriginalTextRef = useRef(props.originalText);
+  const prevOriginalTextRef = useRef(originalText);
   useEffect(() => {
     const prevOriginalText = prevOriginalTextRef.current;
-    prevOriginalTextRef.current = props.originalText;
-    if (props.originalText !== prevOriginalText) {
-      let originalText = props.originalText.replace(/(\r\n|\n|\r)/gm, "");
+    prevOriginalTextRef.current = originalText;
+    if (originalText !== prevOriginalText) {
+      let nextOriginalText = originalText.replace(/(\r\n|\n|\r)/gm, "");
       setState((prev) => ({
         ...prev,
-        originalText,
+        originalText: nextOriginalText,
         translatedText: "",
       }));
-      handleTransRef.current(originalText);
+      handleTransRef.current(nextOriginalText);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.originalText]);
+  }, [originalText]);
 
   const handleChangeService = (target: string) => {
-    if (target === "official-ai-trans-plugin" && !props.isAuthed) {
-      toast(props.t("Please upgrade to Pro to use this feature"));
-      props.handleSetting(true);
-      props.handleSettingMode("account");
+    if (target === "official-ai-trans-plugin" && !isAuthed) {
+      toast(t("Please upgrade to Pro to use this feature"));
+      handleSetting(true);
+      handleSettingMode("account");
       return;
     }
     setState((prev) => ({ ...prev, transService: target }));
     ConfigService.setReaderConfig("transService", target);
-    let plugin = props.plugins.find((item) => item.key === target);
+    let plugin = plugins.find((item) => item.key === target);
     if (!plugin) {
       return;
     }
@@ -294,7 +305,7 @@ const PopupTrans = (props: PopupTransProps) => {
       getDefaultTransTarget(plugin?.langList)
     );
     ConfigService.setReaderConfig("transSource", autoValue);
-    handleTrans(props.originalText.replace(/(\r\n|\n|\r)/gm, ""));
+    handleTrans(originalText.replace(/(\r\n|\n|\r)/gm, ""));
   };
 
   const renderNoteEditor = () => {
@@ -304,16 +315,16 @@ const PopupTrans = (props: PopupTransProps) => {
           <div
             className="trans-service-selector-inactive"
             onClick={() => {
-              props.handleOpenMenu(false);
-              props.handleMenuMode("");
-              props.handleSetting(true);
-              props.handleSettingMode("plugins");
+              handleOpenMenu(false);
+              handleMenuMode("");
+              handleSetting(true);
+              handleSettingMode("plugins");
             }}
           >
             <span className="icon-add trans-add-icon"></span>
             <Trans>Add</Trans>
           </div>
-          {props.plugins
+          {plugins
             .filter((item) => item.type === "translation")
             .map((item) => {
               return (
@@ -329,7 +340,7 @@ const PopupTrans = (props: PopupTransProps) => {
                   }}
                 >
                   <span className={`icon-${item.icon} trans-icon`}></span>
-                  {props.t(item.displayName)}
+                  {t(item.displayName)}
                   {item.key === "official-ai-trans-plugin" && (
                     <span style={{ fontSize: "13px", color: "#f16464" }}>
                       {" "}
@@ -356,10 +367,10 @@ const PopupTrans = (props: PopupTransProps) => {
                 textAlign: "center",
               }}
               onClick={() => {
-                props.handleOpenMenu(false);
-                props.handleMenuMode("");
-                props.handleSetting(true);
-                props.handleSettingMode("plugins");
+                handleOpenMenu(false);
+                handleMenuMode("");
+                handleSetting(true);
+                handleSettingMode("plugins");
               }}
             >
               <Trans>Add new plugin</Trans>
@@ -402,16 +413,16 @@ const PopupTrans = (props: PopupTransProps) => {
                       let targetLang = event.target.value;
                       ConfigService.setReaderConfig("transSource", targetLang);
                       handleTrans(
-                        props.originalText.replace(/(\r\n|\n|\r)/gm, "")
+                        originalText.replace(/(\r\n|\n|\r)/gm, "")
                       );
                       forceUpdate();
                     }}
                   >
-                    {props.plugins.find(
+                    {plugins.find(
                       (item) => item.key === state.transService
                     )?.langList &&
                       Object.keys(
-                        props.plugins.find(
+                        plugins.find(
                           (item) => item.key === state.transService
                         )?.langList as any
                       ).map((item, index) => {
@@ -421,9 +432,9 @@ const PopupTrans = (props: PopupTransProps) => {
                             key={index}
                             className="add-dialog-shelf-list-option"
                           >
-                            {props.t(
+                            {t(
                               Object.values(
-                                props.plugins.find(
+                                plugins.find(
                                   (item) => item.key === state.transService
                                 )?.langList as any[]
                               )[index]
@@ -448,7 +459,7 @@ const PopupTrans = (props: PopupTransProps) => {
                     value={
                       ConfigService.getReaderConfig("transTarget") ||
                       getDefaultTransTarget(
-                        props.plugins.find(
+                        plugins.find(
                           (item) => item.key === state.transService
                         )?.langList
                       )
@@ -459,16 +470,16 @@ const PopupTrans = (props: PopupTransProps) => {
                       let targetLang = event.target.value;
                       ConfigService.setReaderConfig("transTarget", targetLang);
                       handleTrans(
-                        props.originalText.replace(/(\r\n|\n|\r)/gm, "")
+                        originalText.replace(/(\r\n|\n|\r)/gm, "")
                       );
                       forceUpdate();
                     }}
                   >
-                    {props.plugins.find(
+                    {plugins.find(
                       (item) => item.key === state.transService
                     )?.langList &&
                       Object.keys(
-                        props.plugins.find(
+                        plugins.find(
                           (item) => item.key === state.transService
                         )?.langList as any
                       ).map((item, index) => {
@@ -478,9 +489,9 @@ const PopupTrans = (props: PopupTransProps) => {
                             key={index}
                             className="add-dialog-shelf-list-option"
                           >
-                            {props.t(
+                            {t(
                               Object.values(
-                                props.plugins.find(
+                                plugins.find(
                                   (item) => item.key === state.transService
                                 )?.langList as any[]
                               )[index]
@@ -494,7 +505,7 @@ const PopupTrans = (props: PopupTransProps) => {
                   {state.isAiWaiting && !state.translatedText ? (
                     <div className="dict-ai-answer-waiting">
                       <span className="icon-loading popup-assistant-loading"></span>
-                      <span>{props.t("Thinking, please wait...")}</span>
+                      <span>{t("Thinking, please wait...")}</span>
                     </div>
                   ) : (
                     state.translatedText
@@ -505,7 +516,7 @@ const PopupTrans = (props: PopupTransProps) => {
                         className="dict-learn-more"
                         style={{ color: "#f16464" }}
                       >
-                        {props.t("Generated with AI")}
+                        {t("Generated with AI")}
                       </p>
                     )}
                 </div>

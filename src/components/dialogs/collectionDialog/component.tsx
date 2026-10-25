@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import "./collectionDialog.css";
 import { Trans } from "react-i18next";
@@ -6,23 +7,31 @@ import {
   ConfigService,
   CollectionUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
-import { CollectionDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 
-const CollectionDialog = (props: CollectionDialogProps) => {
+const CollectionDialog = () => {
+  const collectionDialogKey = useAppStore((s) => s.collection.collectionDialogKey);
+  const handleCollectionDialog = useAppStore((s) => s.handleCollectionDialog);
+  const handleCollectionDialogKey = useAppStore(
+    (s) => s.handleCollectionDialogKey
+  );
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleActionDialog = useAppStore((s) => s.handleActionDialog);
+  const { t } = useTranslation();
   const [name, setName] = useState("");
 
   useEffect(() => {
-    let collection = collectionUtil.getCollection(props.collectionDialogKey);
+    let collection = collectionUtil.getCollection(collectionDialogKey);
     if (collection) {
       setName(collection.name);
     }
   }, []);
 
   const closeDialog = () => {
-    props.handleCollectionDialog(false);
-    props.handleCollectionDialogKey("");
+    handleCollectionDialog(false);
+    handleCollectionDialogKey("");
   };
 
   const handleCancel = () => {
@@ -32,22 +41,22 @@ const CollectionDialog = (props: CollectionDialogProps) => {
   const handleComfirm = () => {
     let trimmedName = name.trim();
     if (!trimmedName) {
-      toast(props.t("Collection name is required"));
+      toast(t("Collection name is required"));
       return;
     }
     if (
       collectionUtil.isCollectionNameExists(
         trimmedName,
-        props.collectionDialogKey
+        collectionDialogKey
       )
     ) {
-      toast(props.t("Collection name already exists"));
+      toast(t("Collection name already exists"));
       return;
     }
-    collectionUtil.updateCollection(props.collectionDialogKey, trimmedName);
-    toast.success(props.t("Edition successful"));
-    props.handleFetchBooks();
-    props.handleActionDialog(false);
+    collectionUtil.updateCollection(collectionDialogKey, trimmedName);
+    toast.success(t("Edition successful"));
+    handleFetchBooks();
+    handleActionDialog(false);
     closeDialog();
   };
 

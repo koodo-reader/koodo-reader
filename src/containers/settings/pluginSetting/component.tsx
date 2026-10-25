@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
@@ -28,6 +29,7 @@ import {
   verifyCustomVoicePlugin,
 } from "../../../utils/plugins/customPlugin";
 import type { PluginConfig, PluginVoice } from "../../../utils/plugins/types";
+import { useAppStore } from "../../../store/useAppStore";
 
 const manualVoiceListPluginKeys = new Set([
   "ttsserver-voice-plugin",
@@ -37,6 +39,9 @@ const manualVoiceListPluginKeys = new Set([
 ]);
 
 const SettingDialog = (props: SettingInfoProps) => {
+  const plugins = useAppStore((s) => s.manager.plugins);
+  const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
+  const { t } = useTranslation();
   const translationRef = useRef<HTMLDivElement | null>(null);
   const dictionaryRef = useRef<HTMLDivElement | null>(null);
   const ocrRef = useRef<HTMLDivElement | null>(null);
@@ -54,7 +59,7 @@ const SettingDialog = (props: SettingInfoProps) => {
   };
 
   const handleGetPluginList = () => {
-    const installedPluginKeys = props.plugins.map((item) => item.key);
+    const installedPluginKeys = plugins.map((item) => item.key);
     const pluginList = getBuiltinPluginMarket(
       ConfigService.getReaderConfig("lang") || navigator.language
     ).filter((item) => {
@@ -93,21 +98,21 @@ const SettingDialog = (props: SettingInfoProps) => {
   };
   const handleFillVoiceList = (pluginKey: string, example: PluginVoice[]) =>
     new Promise<PluginVoice[] | false>((resolve) => {
-      window.vex.dialog.buttons.YES.text = props.t("Confirm");
-      window.vex.dialog.buttons.NO.text = props.t("Cancel");
+      window.vex.dialog.buttons.YES.text = t("Confirm");
+      window.vex.dialog.buttons.NO.text = t("Cancel");
       const placeholder = JSON.stringify(example, null, 2)
         .replace(/&/g, "&amp;")
         .replace(/"/g, "&quot;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
       window.vex.dialog.open({
-        message: props.t("Paste voice list JSON"),
+        message: t("Paste voice list JSON"),
         input: `<textarea name="voiceList" placeholder="${placeholder}" style="width:100%;height:320px;resize:vertical;font-family:monospace" required></textarea>`,
         buttons: [
           window.vex.dialog.buttons.YES,
           window.vex.dialog.buttons.NO,
           {
-            text: props.t("Tutorial"),
+            text: t("Tutorial"),
             type: "button",
             className: "vex-dialog-button-secondary",
             click: () => {
@@ -147,7 +152,7 @@ const SettingDialog = (props: SettingInfoProps) => {
               }))
             );
           } catch {
-            toast.error(props.t("Invalid voice list JSON"));
+            toast.error(t("Invalid voice list JSON"));
             resolve(false);
           }
         },
@@ -188,7 +193,7 @@ const SettingDialog = (props: SettingInfoProps) => {
           >
             <textarea
               name="url"
-              placeholder={props.t(
+              placeholder={t(
                 "Paste the code of the plugin here, check out document to learn how to get more plugins"
               )}
               id="voice-add-content-box"
@@ -215,7 +220,7 @@ const SettingDialog = (props: SettingInfoProps) => {
                       };
                       if (plugin.type === "voice" && !isElectron) {
                         toast.error(
-                          props.t(
+                          t(
                             "Only desktop version supports TTS plugin"
                           )
                         );
@@ -227,7 +232,7 @@ const SettingDialog = (props: SettingInfoProps) => {
                           !(await verifyCustomVoicePlugin(plugin))
                         ) {
                           toast.error(
-                            props.t("Plugin verification failed")
+                            t("Plugin verification failed")
                           );
                           return;
                         }
@@ -268,7 +273,7 @@ const SettingDialog = (props: SettingInfoProps) => {
                             }));
                           } catch {
                             toast.error(
-                              props.t("Failed to get TTS voice list")
+                              t("Failed to get TTS voice list")
                             );
                             return;
                           }
@@ -286,13 +291,13 @@ const SettingDialog = (props: SettingInfoProps) => {
                           !(await verifyCustomRendererPlugin(plugin))
                         ) {
                           toast.error(
-                            props.t("Plugin verification failed")
+                            t("Plugin verification failed")
                           );
                           return;
                         }
                       }
                       if (
-                        props.plugins.find(
+                        plugins.find(
                           (item) => item.key === plugin.key
                         )
                       ) {
@@ -300,13 +305,13 @@ const SettingDialog = (props: SettingInfoProps) => {
                       } else {
                         await DatabaseService.saveRecord(plugin, "plugins");
                       }
-                      props.handleFetchPlugins();
-                      toast.success(props.t("Addition successful"));
+                      handleFetchPlugins();
+                      toast.success(t("Addition successful"));
                     } catch (error) {
                       toast.error(
                         error instanceof Error
                           ? error.message
-                          : props.t("Plugin verification failed")
+                          : t("Plugin verification failed")
                       );
                       return;
                     }
@@ -354,8 +359,8 @@ const SettingDialog = (props: SettingInfoProps) => {
           </span>
         </div>
 
-        {props.plugins &&
-          props.plugins
+        {plugins &&
+          plugins
             .filter((item) => item.type !== "ai")
             .map((item) => {
               return (
@@ -374,7 +379,7 @@ const SettingDialog = (props: SettingInfoProps) => {
                       } setting-plugin-icon`}
                     ></span>
                     <span className="setting-plugin-name">
-                      {props.t(item.displayName)}
+                      {t(item.displayName)}
                     </span>
                   </span>
 
@@ -388,8 +393,8 @@ const SettingDialog = (props: SettingInfoProps) => {
                             item.key,
                             "plugins"
                           );
-                          props.handleFetchPlugins();
-                          toast.success(props.t("Deletion successful"));
+                          handleFetchPlugins();
+                          toast.success(t("Deletion successful"));
                           handleGetPluginList();
                         }}
                       >
@@ -417,10 +422,10 @@ const SettingDialog = (props: SettingInfoProps) => {
             .filter((type) => isElectron || type !== "voice")
             .map((type) => {
               const labelMap: Record<string, string> = {
-                translation: props.t("Translation"),
-                dictionary: props.t("Dictionary"),
-                ocr: props.t("Text recognition"),
-                voice: props.t("Voice"),
+                translation: t("Translation"),
+                dictionary: t("Dictionary"),
+                ocr: t("Text recognition"),
+                voice: t("Voice"),
               };
               const refMap: Record<string, React.RefObject<HTMLDivElement | null>> = {
                 translation: translationRef,
@@ -495,7 +500,7 @@ const SettingDialog = (props: SettingInfoProps) => {
                       } setting-plugin-icon`}
                     ></span>
                     <span className="setting-plugin-name">
-                      {props.t(item.name)}
+                      {t(item.name)}
                     </span>
                   </span>
                   <span
@@ -526,7 +531,7 @@ const SettingDialog = (props: SettingInfoProps) => {
 
                         if (plugin.type === "voice" && !isElectron) {
                           toast.error(
-                            props.t(
+                            t(
                               "Only desktop version supports TTS plugin"
                             )
                           );
@@ -569,17 +574,17 @@ const SettingDialog = (props: SettingInfoProps) => {
                               error
                             );
                             toast.error(
-                              props.t("Failed to get TTS voice list")
+                              t("Failed to get TTS voice list")
                             );
                             return;
                           }
                         }
                         if (
-                          props.plugins.find(
+                          plugins.find(
                             (installed) => installed.key === pluginKey
                           )
                         ) {
-                          toast.error(props.t("Plugin already installed"));
+                          toast.error(t("Plugin already installed"));
                           return;
                         }
                         const definition =
@@ -593,8 +598,8 @@ const SettingDialog = (props: SettingInfoProps) => {
                           ),
                           "plugins"
                         );
-                        props.handleFetchPlugins();
-                        toast.success(props.t("Addition successful"));
+                        handleFetchPlugins();
+                        toast.success(t("Addition successful"));
                         handleGetPluginList();
                       }}
                     >

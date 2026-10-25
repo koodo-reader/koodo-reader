@@ -1,4 +1,3 @@
-import { RouteComponentProps } from "react-router-dom";
 import BookModel from "../../../models/Book";
 
 export type TextRuleType = "replace" | "delete" | "highlight";
@@ -18,9 +17,7 @@ export interface TextRule {
   bookName?: string;
 }
 
-export interface TextSettingProps extends RouteComponentProps<any> {
-  t: (title: string) => string;
-  books: BookModel[];
+export interface TextSettingProps {
 }
 
 export interface TextSettingState {

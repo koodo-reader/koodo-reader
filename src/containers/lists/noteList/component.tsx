@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import "./noteList.css";
 import { NoteListProps } from "./interface";
@@ -8,8 +9,17 @@ import { Trans } from "react-i18next";
 import ConfigUtil from "../../../utils/file/configUtil";
 import BookUtil from "../../../utils/file/bookUtil";
 import Note from "../../../models/Note";
+import { useAppStore } from "../../../store/useAppStore";
 
 const NoteList = (props: NoteListProps) => {
+  const notes = useAppStore((s) => s.reader.notes);
+  const highlights = useAppStore((s) => s.reader.highlights);
+  const isSearch = useAppStore((s) => s.manager.isSearch);
+  const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
+  const searchResults = useAppStore((s) => s.manager.searchResults);
+  const tabMode = useAppStore((s) => s.sidebar.mode);
+  const handleFetchNotes = useAppStore((s) => s.handleFetchNotes);
+  const { t } = useTranslation();
   const [tag, setTag] = useState<string[]>([]);
   const [bookNamesMap, setBookNamesMap] = useState<Record<string, string>>({});
   const [cardList, setCardList] = useState<Note[]>([]);
@@ -22,26 +32,24 @@ const NoteList = (props: NoteListProps) => {
   };
 
   useEffect(() => {
-    props.handleFetchNotes();
+    handleFetchNotes();
   }, []);
 
   useEffect(() => {
-    const notes = props.tabMode === "note" ? props.notes : props.highlights;
-    setCardList(notes);
-    handleNamesMap(notes);
-  }, [props.notes, props.highlights, props.tabMode]);
+    const currentNotes = tabMode === "note" ? notes : highlights;
+    setCardList(currentNotes);
+    handleNamesMap(currentNotes);
+  }, [notes, highlights, tabMode]);
 
   const handleTag = async (newTag: string[]) => {
     if (newTag.length === 0) {
       setTag([]);
-      setCardList(
-        props.tabMode === "note" ? props.notes : props.highlights
-      );
+      setCardList(tabMode === "note" ? notes : highlights);
       return;
     }
     let nextCardList = await ConfigUtil.getNoteWithTags(newTag);
     nextCardList = nextCardList.filter((note) =>
-      props.tabMode === "note"
+      tabMode === "note"
         ? note.notes !== "" && note.notes !== "annotation"
         : note.notes === ""
     );
@@ -50,15 +58,15 @@ const NoteList = (props: NoteListProps) => {
   };
 
   const noteProps = {
-    cards: props.isSearch ? props.searchResults : cardList,
-    mode: props.tabMode,
+    cards: isSearch ? searchResults : cardList,
+    mode: tabMode,
     bookNamesMap: bookNamesMap,
   };
   return (
     <div
       className="note-list-container-parent"
       style={
-        props.isCollapsed
+        isCollapsed
           ? { width: "calc(100vw - 70px)", left: "70px" }
           : {}
       }
@@ -80,14 +88,14 @@ const NoteList = (props: NoteListProps) => {
                 setCardList(
                   await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
                     event.target.value,
-                    props.tabMode
+                    tabMode
                   )
                 );
               }}
             >
               {[
-                { value: "", label: props.t("Please select") },
-                ...(props.tabMode === "note" ? props.notes : props.highlights)
+                { value: "", label: t("Please select") },
+                ...(tabMode === "note" ? notes : highlights)
                   .map((note) => {
                     return {
                       label: bookNamesMap[note.bookKey] || "Unknown book",

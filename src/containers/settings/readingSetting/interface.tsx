@@ -1,10 +1,4 @@
-import { RouteComponentProps } from "react-router-dom";
-export interface SettingInfoProps extends RouteComponentProps<any> {
-  handleSetting: (isSettingOpen: boolean) => void;
-  handleSettingMode: (settingMode: string) => void;
-  handleMergeWord: (isMergeWord: boolean) => void;
-  t: (title: string) => string;
-  isAuthed: boolean;
+export interface SettingInfoProps {
 }
 export interface SettingInfoState {
   isTouch: boolean;

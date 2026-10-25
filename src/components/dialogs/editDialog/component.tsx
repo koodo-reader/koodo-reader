@@ -1,9 +1,11 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./editDialog.css";
 import "../metadataDialog/metadataDialog.css";
 
 import { Trans } from "react-i18next";
-import { EditDialogProps, EditDialogState } from "./interface";
+import { EditDialogState } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
 import CoverUtil from "../../../utils/file/coverUtil";
@@ -17,7 +19,16 @@ import {
 import { analyzeBookTitle } from "../../../utils/request/reader";
 declare var window: any;
 
-const EditDialog = (props: EditDialogProps) => {
+const EditDialog = () => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleEditDialog = useAppStore((s) => s.handleEditDialog);
+  const handleActionDialog = useAppStore((s) => s.handleActionDialog);
+  const handleRefreshBookCover = useAppStore((s) => s.handleRefreshBookCover);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const { t } = useTranslation();
   const [state, setState] = useState<EditDialogState>(() => ({
     isCheck: false,
     coverPreview: "",
@@ -51,52 +62,52 @@ const EditDialog = (props: EditDialogProps) => {
   useEffect(() => {
     (async () => {
       if (nameRef.current) {
-        nameRef.current.value = props.currentBook.name || "";
+        nameRef.current.value = currentBook.name || "";
       }
       if (authorRef.current) {
-        authorRef.current.value = props.currentBook.author || "";
+        authorRef.current.value = currentBook.author || "";
       }
       if (publisherRef.current) {
-        publisherRef.current.value = props.currentBook.publisher || "";
+        publisherRef.current.value = currentBook.publisher || "";
       }
       if (publishedRef.current) {
         publishedRef.current.value = formatDateToDay(
-          props.currentBook.published
+          currentBook.published
         );
       }
       if (modifiedRef.current) {
         modifiedRef.current.value = formatDateToDay(
-          props.currentBook.modified
+          currentBook.modified
         );
       }
       if (identifierRef.current) {
-        identifierRef.current.value = props.currentBook.identifier || "";
+        identifierRef.current.value = currentBook.identifier || "";
       }
       if (languageRef.current) {
-        languageRef.current.value = props.currentBook.language || "";
+        languageRef.current.value = currentBook.language || "";
       }
       if (subjectRef.current) {
-        subjectRef.current.value = props.currentBook.subject || "";
+        subjectRef.current.value = currentBook.subject || "";
       }
       if (rightsRef.current) {
-        rightsRef.current.value = props.currentBook.rights || "";
+        rightsRef.current.value = currentBook.rights || "";
       }
       if (isbnRef.current) {
-        isbnRef.current.value = props.currentBook.isbn || "";
+        isbnRef.current.value = currentBook.isbn || "";
       }
       if (layoutRef.current) {
-        layoutRef.current.value = props.currentBook.layout || "";
+        layoutRef.current.value = currentBook.layout || "";
       }
       if (descriptionRef.current) {
-        descriptionRef.current.value = props.currentBook.description || "";
+        descriptionRef.current.value = currentBook.description || "";
       }
-      const cover = await CoverUtil.getCover(props.currentBook);
+      const cover = await CoverUtil.getCover(currentBook);
       if (cover) {
         setState((prev) => ({ ...prev, coverPreview: cover }));
       }
       setState((prev) => ({
         ...prev,
-        bookPath: props.currentBook.path || "",
+        bookPath: currentBook.path || "",
       }));
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -155,15 +166,15 @@ const EditDialog = (props: EditDialogProps) => {
   };
 
   const handleAnalyzeTitle = async () => {
-    if (!props.isAuthed) {
-      toast(props.t("Please upgrade to Pro to use this feature"));
-      props.handleSetting(true);
-      props.handleSettingMode("account");
+    if (!isAuthed) {
+      toast(t("Please upgrade to Pro to use this feature"));
+      handleSetting(true);
+      handleSettingMode("account");
       return;
     }
     if (stateRef.current.isAnalyzing) return;
     const title = trimSpecialCharacters(
-      nameRef.current?.value || props.currentBook.name || ""
+      nameRef.current?.value || currentBook.name || ""
     );
     if (!title) return;
     setState((prev) => ({ ...prev, isAnalyzing: true }));
@@ -176,18 +187,18 @@ const EditDialog = (props: EditDialogProps) => {
         if (authorRef.current && response.data.author) {
           authorRef.current.value = response.data.author;
         }
-        toast.success(props.t("Title recognized successfully"));
+        toast.success(t("Title recognized successfully"));
       }
     } catch (error) {
       console.error(error, title);
-      toast.error(props.t("Failed to recognize title"));
+      toast.error(t("Failed to recognize title"));
     } finally {
       setState((prev) => ({ ...prev, isAnalyzing: false }));
     }
   };
 
   const handleCancel = () => {
-    props.handleEditDialog(false);
+    handleEditDialog(false);
   };
 
   const handleCoverSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -223,44 +234,44 @@ const EditDialog = (props: EditDialogProps) => {
     const layout = layoutRef.current?.value || "";
     const description = descriptionRef.current?.value || "";
 
-    props.currentBook.name = name;
-    props.currentBook.author = author;
-    props.currentBook.publisher = publisher;
-    props.currentBook.published = published;
-    props.currentBook.modified = modified;
-    props.currentBook.identifier = identifier;
-    props.currentBook.language = language;
-    props.currentBook.subject = subject;
-    props.currentBook.rights = rights;
-    props.currentBook.isbn = isbn;
-    props.currentBook.layout = layout;
-    props.currentBook.description = description;
+    currentBook.name = name;
+    currentBook.author = author;
+    currentBook.publisher = publisher;
+    currentBook.published = published;
+    currentBook.modified = modified;
+    currentBook.identifier = identifier;
+    currentBook.language = language;
+    currentBook.subject = subject;
+    currentBook.rights = rights;
+    currentBook.isbn = isbn;
+    currentBook.layout = layout;
+    currentBook.description = description;
     if (stateRef.current.bookPath) {
-      props.currentBook.path = stateRef.current.bookPath;
+      currentBook.path = stateRef.current.bookPath;
     }
 
     // Handle cover update: if user picked a new image (base64 data URL) or got cover from metadata
     let { coverPreview, pendingCover } = stateRef.current;
     if (coverPreview && coverPreview.startsWith("data:")) {
-      props.currentBook.cover = coverPreview;
-      await CoverUtil.addCover(props.currentBook);
-      props.handleRefreshBookCover(props.currentBook.key);
+      currentBook.cover = coverPreview;
+      await CoverUtil.addCover(currentBook);
+      handleRefreshBookCover(currentBook.key);
     } else if (pendingCover) {
       if (pendingCover.startsWith("http")) {
         let response = await fetch(pendingCover);
         let blob = await response.blob();
         pendingCover = await CoverUtil.blobToBase64(blob);
       }
-      props.currentBook.cover = pendingCover;
-      await CoverUtil.addCover(props.currentBook);
-      props.handleRefreshBookCover(props.currentBook.key);
+      currentBook.cover = pendingCover;
+      await CoverUtil.addCover(currentBook);
+      handleRefreshBookCover(currentBook.key);
     }
 
-    await DatabaseService.updateRecord(props.currentBook, "books");
-    props.handleEditDialog(false);
-    props.handleFetchBooks();
-    toast.success(props.t("Edition successful"));
-    props.handleActionDialog(false);
+    await DatabaseService.updateRecord(currentBook, "books");
+    handleEditDialog(false);
+    handleFetchBooks();
+    toast.success(t("Edition successful"));
+    handleActionDialog(false);
   };
 
   const { coverPreview } = state;
@@ -270,10 +281,10 @@ const EditDialog = (props: EditDialogProps) => {
         <MetadataDialog
           {...({
             currentBookName: trimSpecialCharacters(
-              nameRef.current?.value || props.currentBook.name || ""
+              nameRef.current?.value || currentBook.name || ""
             ),
             currentBookAuthor:
-              authorRef.current?.value || props.currentBook.author || "",
+              authorRef.current?.value || currentBook.author || "",
             handleMetadataDialog: (isShow) => {
               setState((prev) => ({
                 ...prev,
@@ -297,10 +308,10 @@ const EditDialog = (props: EditDialogProps) => {
             opacity: 0.8,
           }}
           onClick={() => {
-            if (!props.isAuthed) {
-              toast(props.t("Please upgrade to Pro to use this feature"));
-              props.handleSetting(true);
-              props.handleSettingMode("account");
+            if (!isAuthed) {
+              toast(t("Please upgrade to Pro to use this feature"));
+              handleSetting(true);
+              handleSettingMode("account");
               return;
             }
             setState((prev) => ({ ...prev, isMetadataDialogOpen: true }));
@@ -320,7 +331,7 @@ const EditDialog = (props: EditDialogProps) => {
           <div
             className="edit-dialog-cover-box"
             onClick={() => coverInputRef.current?.click()}
-            title={props.t("Click to select image")}
+            title={t("Click to select image")}
           >
             {coverPreview ? (
               <img
@@ -481,7 +492,7 @@ const EditDialog = (props: EditDialogProps) => {
                       !state.bookPath ||
                       !fs.existsSync(state.bookPath)
                     ) {
-                      toast.error(props.t("Book not exists"));
+                      toast.error(t("Book not exists"));
                       return;
                     }
                     ipcRenderer.invoke("open-explorer-folder", {

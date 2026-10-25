@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import "./operationPanel.css";
 import Bookmark from "../../../models/Bookmark";
@@ -5,16 +6,24 @@ import { Trans } from "react-i18next";
 
 import { OperationPanelProps } from "./interface";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import TTSUtil from "../../../utils/reader/ttsUtil";
 import { isElectron } from "react-device-detect";
 import { handleExitFullScreen, handleFullScreen } from "../../../utils/common";
 import DatabaseService from "../../../utils/storage/databaseService";
 import BookLocation from "../../../models/BookLocation";
+import { useAppStore } from "../../../store/useAppStore";
 declare var window: any;
 
 const OperationPanel = (props: OperationPanelProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const handleReadingState = useAppStore((s) => s.handleReadingState);
+  const handleFetchBookmarks = useAppStore((s) => s.handleFetchBookmarks);
+  const handleShowBookmark = useAppStore((s) => s.handleShowBookmark);
+  const handleSearch = useAppStore((s) => s.handleSearch);
+  const handleHtmlBook = useAppStore((s) => s.handleHtmlBook);
+  const { t } = useTranslation();
   const [state, setState] = useState<Record<string, any>>({
     timeLeft: 0,
     isFullscreen: ConfigService.getReaderConfig("isFullscreen") === "yes",
@@ -31,7 +40,7 @@ const OperationPanel = (props: OperationPanelProps) => {
   };
 
   const handleDisplayBookmark = async () => {
-    props.handleShowBookmark(false);
+    handleShowBookmark(false);
     let bookLocation: {
       text: string;
       count: string;
@@ -41,17 +50,17 @@ const OperationPanel = (props: OperationPanelProps) => {
       percentage: string;
       cfi: string;
     } = ConfigService.getObjectConfig(
-      props.currentBook.key,
+      currentBook.key,
       "recordLocation",
       {}
     );
     let bookmarks = await DatabaseService.getRecordsByBookKey(
-      props.currentBook.key,
+      currentBook.key,
       "bookmarks"
     );
     bookmarks.forEach((item) => {
       if (item.cfi === JSON.stringify(bookLocation)) {
-        props.handleShowBookmark(true);
+        handleShowBookmark(true);
       }
     });
   };
@@ -61,7 +70,7 @@ const OperationPanel = (props: OperationPanelProps) => {
     const onPageChanged = async () => {
       speedRef.current = Date.now() - timeStampRef.current;
       timeStampRef.current = Date.now();
-      let pageProgress = await props.htmlBook.rendition.getProgress();
+      let pageProgress = await htmlBook.rendition.getProgress();
       setState((prev) => ({
         ...prev,
         timeLeft:
@@ -71,10 +80,10 @@ const OperationPanel = (props: OperationPanelProps) => {
       }));
       handleDisplayBookmark();
     };
-    props.htmlBook.rendition.on("page-changed", onPageChanged);
+    htmlBook.rendition.on("page-changed", onPageChanged);
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      props.htmlBook.rendition.off?.("page-changed", onPageChanged);
+      htmlBook.rendition.off?.("page-changed", onPageChanged);
     };
   }, []);
 
@@ -92,13 +101,13 @@ const OperationPanel = (props: OperationPanelProps) => {
 
   const handleExit = async () => {
     ConfigService.setReaderConfig("isFullscreen", "no");
-    props.handleReadingState(false);
-    props.handleSearch(false);
+    handleReadingState(false);
+    handleSearch(false);
     window.speechSynthesis && window.speechSynthesis.cancel();
     TTSUtil.pauseAudio();
     handleExitFullScreen();
-    if (props.htmlBook) {
-      props.handleHtmlBook(null);
+    if (htmlBook) {
+      handleHtmlBook(null);
     }
     if (isElectron) {
       if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
@@ -113,7 +122,7 @@ const OperationPanel = (props: OperationPanelProps) => {
   };
 
   const handleAddBookmark = async () => {
-    let bookKey = props.currentBook.key;
+    let bookKey = currentBook.key;
     let bookLocation: BookLocation = ConfigService.getObjectConfig(
       bookKey,
       "recordLocation",
@@ -124,7 +133,7 @@ const OperationPanel = (props: OperationPanelProps) => {
     let percentage = bookLocation.percentage;
     let isDuplicate = false;
     let bookmarks = await DatabaseService.getRecordsByBookKey(
-      props.currentBook.key,
+      currentBook.key,
       "bookmarks"
     );
     for (let i = 0; i < bookmarks.length; i++) {
@@ -137,13 +146,13 @@ const OperationPanel = (props: OperationPanelProps) => {
       }
     }
     if (isDuplicate) {
-      toast.error(props.t("Bookmark already exists"));
+      toast.error(t("Bookmark already exists"));
       return;
     }
 
     let cfi = JSON.stringify(bookLocation);
     if (!text) {
-      text = (await props.htmlBook.rendition.visibleText()).join(" ");
+      text = (await htmlBook.rendition.visibleText()).join(" ");
     }
     text = text
       .replace(/\s\s/g, "")
@@ -160,8 +169,8 @@ const OperationPanel = (props: OperationPanelProps) => {
       chapter
     );
     await DatabaseService.saveRecord(bookmark, "bookmarks");
-    props.handleFetchBookmarks();
-    props.handleShowBookmark(true);
+    handleFetchBookmarks();
+    handleShowBookmark(true);
   };
 
   return (
@@ -248,4 +257,4 @@ const OperationPanel = (props: OperationPanelProps) => {
   );
 };
 
-export default withRouter(OperationPanel as any);
+export default OperationPanel;

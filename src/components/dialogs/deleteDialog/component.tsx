@@ -1,8 +1,9 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./deleteDialog.css";
 import { Trans } from "react-i18next";
-import { DeleteDialogProps } from "./interface";
-import { withRouter } from "react-router-dom";
+import { useAppStore } from "../../../store/useAppStore";
 import BookUtil from "../../../utils/file/bookUtil";
 import toast from "react-hot-toast";
 import CoverUtil from "../../../utils/file/coverUtil";
@@ -15,7 +16,24 @@ import { isElectron } from "react-device-detect";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 
-const DeleteDialog = (props: DeleteDialogProps) => {
+const DeleteDialog = () => {
+  const books = useAppStore((s) => s.manager.books);
+  const deletedBooks = useAppStore((s) => s.manager.deletedBooks);
+  const isSearch = useAppStore((s) => s.manager.isSearch);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const mode = useAppStore((s) => s.sidebar.mode);
+  const shelfTitle = useAppStore((s) => s.sidebar.shelfTitle);
+  const selectedBooks = useAppStore((s) => s.manager.selectedBooks);
+  const isSelectBook = useAppStore((s) => s.manager.isSelectBook);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleSelectBook = useAppStore((s) => s.handleSelectBook);
+  const handleDeleteDialog = useAppStore((s) => s.handleDeleteDialog);
+  const handleFetchBookmarks = useAppStore((s) => s.handleFetchBookmarks);
+  const handleSelectedBooks = useAppStore((s) => s.handleSelectedBooks);
+  const handleFetchNotes = useAppStore((s) => s.handleFetchNotes);
+  const handleSearch = useAppStore((s) => s.handleSearch);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isDeleteShelfBook, setIsDeleteShelfBook] = useState(
     ConfigService.getReaderConfig("isDeleteShelfBook") === "yes"
   );
@@ -24,17 +42,17 @@ const DeleteDialog = (props: DeleteDialogProps) => {
   );
 
   const handleCancel = () => {
-    props.handleDeleteDialog(false);
+    handleDeleteDialog(false);
   };
 
   const deleteKeyFromShelf = (key: string) => {
-    ConfigService.deleteFromMapConfig(props.shelfTitle, key, "shelfList");
+    ConfigService.deleteFromMapConfig(shelfTitle, key, "shelfList");
     if (collectionUtil.isCollection(key)) {
       let collection = collectionUtil.getCollection(key);
       if (collection) {
         collection.books.forEach((bookKey) => {
           ConfigService.deleteFromMapConfig(
-            props.shelfTitle,
+            shelfTitle,
             bookKey,
             "shelfList"
           );
@@ -44,20 +62,20 @@ const DeleteDialog = (props: DeleteDialogProps) => {
   };
 
   const deleteBookFromShelf = () => {
-    if (props.isSelectBook) {
-      props.selectedBooks.forEach((item) => {
+    if (isSelectBook) {
+      selectedBooks.forEach((item) => {
         deleteKeyFromShelf(item);
       });
-      props.handleSelectedBooks([]);
-      props.handleFetchBooks();
-      props.handleSelectBook(!props.isSelectBook);
-      props.handleDeleteDialog(false);
-      toast.success(props.t("Deletion successful"), {
+      handleSelectedBooks([]);
+      handleFetchBooks();
+      handleSelectBook(!isSelectBook);
+      handleDeleteDialog(false);
+      toast.success(t("Deletion successful"), {
         id: "delete-books",
       });
       return;
     }
-    deleteKeyFromShelf(props.currentBook.key);
+    deleteKeyFromShelf(currentBook.key);
   };
 
   const deleteBook = (key: string, format: string) => {
@@ -108,14 +126,14 @@ const DeleteDialog = (props: DeleteDialogProps) => {
   };
 
   const deleteAllBookInTrash = async () => {
-    toast.loading(props.t("Deleting..."), {
+    toast.loading(t("Deleting..."), {
       id: "delete-books",
     });
     let keyArr = ConfigService.getAllListConfig("deletedBooks");
     let fullDeteletedBooks: any[] = [];
-    for (let i = 0; i < props.deletedBooks.length; i++) {
+    for (let i = 0; i < deletedBooks.length; i++) {
       let deletedBook = await DatabaseService.getRecord(
-        props.deletedBooks[i].key,
+        deletedBooks[i].key,
         "books"
       );
       if (deletedBook) {
@@ -128,40 +146,40 @@ const DeleteDialog = (props: DeleteDialogProps) => {
         ?.format.toLowerCase();
       await deleteBook(keyArr[i], format || "epub");
     }
-    if (props.books.length === 0) {
-      props.history.push("/manager/empty");
+    if (books.length === 0) {
+      navigate("/manager/empty");
     }
-    props.handleFetchBooks();
-    props.handleFetchBookmarks();
-    props.handleFetchNotes();
+    handleFetchBooks();
+    handleFetchBookmarks();
+    handleFetchNotes();
   };
 
   const deleteSelectedBook = () => {
-    props.selectedBooks.forEach((item) => {
+    selectedBooks.forEach((item) => {
       ConfigService.setListConfig(item, "deletedBooks");
       ConfigService.deleteListConfig(item, "favoriteBooks");
     });
     collectionUtil.removeBooksFromAllCollections(
-      props.selectedBooks.filter((item) => {
+      selectedBooks.filter((item) => {
         return !collectionUtil.isCollection(item);
       })
     );
-    props.handleSelectedBooks([]);
-    props.handleFetchBooks();
-    props.handleSelectBook(!props.isSelectBook);
+    handleSelectedBooks([]);
+    handleFetchBooks();
+    handleSelectBook(!isSelectBook);
   };
 
   const deleteCurrentBook = () => {
-    ConfigService.setListConfig(props.currentBook.key, "deletedBooks");
-    ConfigService.deleteListConfig(props.currentBook.key, "favoriteBooks");
-    if (!collectionUtil.isCollection(props.currentBook.key)) {
-      collectionUtil.removeBooksFromAllCollections([props.currentBook.key]);
+    ConfigService.setListConfig(currentBook.key, "deletedBooks");
+    ConfigService.deleteListConfig(currentBook.key, "favoriteBooks");
+    if (!collectionUtil.isCollection(currentBook.key)) {
+      collectionUtil.removeBooksFromAllCollections([currentBook.key]);
     }
-    props.handleFetchBooks();
+    handleFetchBooks();
   };
 
   const deleteBooks = () => {
-    if (props.isSelectBook) {
+    if (isSelectBook) {
       deleteSelectedBook();
     } else {
       deleteCurrentBook();
@@ -170,12 +188,12 @@ const DeleteDialog = (props: DeleteDialogProps) => {
 
   const handleComfirm = async () => {
     if (
-      props.mode === "shelf" &&
+      mode === "shelf" &&
       !isDeleteShelfBook &&
       !isDisableTrashBin
     ) {
       deleteBookFromShelf();
-    } else if (props.mode === "trash") {
+    } else if (mode === "trash") {
       await deleteAllBookInTrash();
     } else if (isDisableTrashBin) {
       deleteBooks();
@@ -183,25 +201,25 @@ const DeleteDialog = (props: DeleteDialogProps) => {
     } else {
       deleteBooks();
     }
-    if (props.isSearch) {
-      props.handleSearch(false);
+    if (isSearch) {
+      handleSearch(false);
     }
-    props.handleDeleteDialog(false);
-    toast.success(props.t("Deletion successful"), {
+    handleDeleteDialog(false);
+    toast.success(t("Deletion successful"), {
       id: "delete-books",
     });
   };
 
   const isCollection = collectionUtil.isCollection(
-    props.currentBook?.key || ""
+    currentBook?.key || ""
   );
   return (
     <div className="delete-dialog-container">
-      {props.mode === "shelf" && !isDeleteShelfBook ? (
+      {mode === "shelf" && !isDeleteShelfBook ? (
         <div className="delete-dialog-title">
           <Trans>Delete from shelf</Trans>
         </div>
-      ) : props.mode === "trash" ? (
+      ) : mode === "trash" ? (
         <div className="delete-dialog-title">
           <Trans>Delete all books</Trans>
         </div>
@@ -214,25 +232,25 @@ const DeleteDialog = (props: DeleteDialogProps) => {
           <Trans>Delete this book</Trans>
         </div>
       )}
-      {props.mode === "trash" ? null : (
+      {mode === "trash" ? null : (
         <div className="delete-dialog-book">
           <div className="delete-dialog-book-title">
-            {props.isSelectBook ? (
-              <Trans i18nKey="Total books" count={props.selectedBooks.length}>
-                {"Total " + props.selectedBooks.length + " books"}
+            {isSelectBook ? (
+              <Trans i18nKey="Total books" count={selectedBooks.length}>
+                {"Total " + selectedBooks.length + " books"}
               </Trans>
             ) : (
-              props.currentBook.name
+              currentBook.name
             )}
           </div>
         </div>
       )}
 
-      {props.mode === "shelf" && !isDeleteShelfBook ? (
+      {mode === "shelf" && !isDeleteShelfBook ? (
         <div className="delete-dialog-other-option" style={{ top: "100px" }}>
           <Trans>This action won't delete the original book</Trans>
         </div>
-      ) : props.mode === "trash" ? (
+      ) : mode === "trash" ? (
         <div className="delete-dialog-other-option" style={{ top: "80px" }}>
           <Trans>
             This action will remove all the books in recycle bin,together with
@@ -283,4 +301,4 @@ const DeleteDialog = (props: DeleteDialogProps) => {
   );
 };
 
-export default withRouter(DeleteDialog as any);
+export default DeleteDialog;

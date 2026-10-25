@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./opdsDialog.css";
 import { Trans } from "react-i18next";
@@ -9,9 +10,9 @@ import {
   OPDSEntry,
   OPDSFeed,
   OPDSLink,
-  OPDSDialogProps,
   OPDSDialogState,
 } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import { supportedFormats } from "../../../utils/common";
 
 const DOWNLOAD_TYPES: Record<string, string> = {
@@ -435,7 +436,10 @@ const AuthenticatedImage = ({
   return <img src={blobUrl} alt={alt} className={className} />;
 };
 
-const OPDSDialog = (props: OPDSDialogProps) => {
+const OPDSDialog = () => {
+  const importBookFunc = useAppStore((s) => s.book.importBookFunc);
+  const handleOPDSDialog = useAppStore((s) => s.handleOPDSDialog);
+  const { t } = useTranslation();
   const loadUserCatalogs = (): OPDSCatalog[] => {
     try {
       const catalogMap = ConfigService.getAllObjectConfig("opdsCatalogs") || {};
@@ -475,7 +479,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
     setState((prev) => ({ ...prev, ...patch }));
   };
 
-  const handleClose = () => props.handleOPDSDialog(false);
+  const handleClose = () => handleOPDSDialog(false);
 
   const openCatalog = async (catalog: OPDSCatalog) => {
     mergeState({
@@ -497,7 +501,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       mergeState({ isLoading: false, error: msg });
-      toast.error(props.t("Failed to load catalog") + ": " + msg);
+      toast.error(t("Failed to load catalog") + ": " + msg);
     }
   };
 
@@ -530,7 +534,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
         error: msg,
         feedStack: prev.feedStack.slice(0, -1),
       }));
-      toast.error(props.t("Failed to load catalog") + ": " + msg);
+      toast.error(t("Failed to load catalog") + ": " + msg);
     }
   };
 
@@ -566,7 +570,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
       const msg = err instanceof Error ? err.message : String(err);
       mergeState({ isLoadingMore: false });
       if (stateRef.current.currentFeed === originalFeed) {
-        toast.error(props.t("Failed to load more") + ": " + msg);
+        toast.error(t("Failed to load more") + ": " + msg);
       }
     }
   };
@@ -659,7 +663,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
         },
         feedStack: [
           ...prev.feedStack,
-          { url: finalUrl, title: props.t("Search") + ": " + searchQuery },
+          { url: finalUrl, title: t("Search") + ": " + searchQuery },
         ],
         isLoading: false,
         searchQuery: "",
@@ -670,7 +674,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
         setState((prev) => ({
           ...prev,
           currentFeed: {
-            title: props.t("Search") + ": " + searchQuery,
+            title: t("Search") + ": " + searchQuery,
             url: finalUrl,
             entries: [],
             links: [],
@@ -680,7 +684,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
             ...prev.feedStack,
             {
               url: finalUrl,
-              title: props.t("Search") + ": " + searchQuery,
+              title: t("Search") + ": " + searchQuery,
             },
           ],
           isLoading: false,
@@ -688,7 +692,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
         }));
       } else {
         mergeState({ isLoading: false, error: msg });
-        toast.error(props.t("Search failed") + ": " + msg);
+        toast.error(t("Search failed") + ": " + msg);
       }
     }
   };
@@ -697,10 +701,10 @@ const OPDSDialog = (props: OPDSDialogProps) => {
     const { currentCatalogAuth } = stateRef.current;
     const ext = DOWNLOAD_TYPES[link.type] || link.href.split(".").pop() || "";
     if (!supportedFormats.includes("." + ext)) {
-      toast.error(props.t("Unsupported file format") + ": " + link.type);
+      toast.error(t("Unsupported file format") + ": " + link.type);
       return;
     }
-    toast.loading(props.t("Downloading") + ": " + entry.title, {
+    toast.loading(t("Downloading") + ": " + entry.title, {
       id: "opds-download",
       position: "bottom-center",
     });
@@ -715,10 +719,10 @@ const OPDSDialog = (props: OPDSDialogProps) => {
       const fileName = entry.title.replace(/[/\\?%*:|"<>]/g, "-") + "." + ext;
       const file = new File([arrayBuffer], fileName);
       toast.dismiss("opds-download");
-      await props.importBookFunc(file);
+      await importBookFunc(file);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      toast.error(props.t("Import failed") + ": " + msg, {
+      toast.error(t("Import failed") + ": " + msg, {
         id: "opds-download",
       });
     }
@@ -732,7 +736,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
       newCatalogPassword,
     } = stateRef.current;
     if (!newCatalogUrl.trim()) {
-      toast.error(props.t("Please enter a valid URL"));
+      toast.error(t("Please enter a valid URL"));
       return;
     }
     const id = Date.now() + "";
@@ -754,14 +758,14 @@ const OPDSDialog = (props: OPDSDialogProps) => {
       newCatalogPassword: "",
       isTesting: false,
     });
-    toast.success(props.t("Added successfully"));
+    toast.success(t("Added successfully"));
   };
 
   const handleTestCatalog = async () => {
     const { newCatalogUrl, newCatalogUsername, newCatalogPassword } =
       stateRef.current;
     if (!newCatalogUrl.trim()) {
-      toast.error(props.t("Please enter a valid URL"));
+      toast.error(t("Please enter a valid URL"));
       return;
     }
     mergeState({ isTesting: true });
@@ -771,10 +775,10 @@ const OPDSDialog = (props: OPDSDialogProps) => {
           ? { username: newCatalogUsername, password: newCatalogPassword }
           : null;
       await fetchOPDSFeed(newCatalogUrl.trim(), auth);
-      toast.success(props.t("Connection successful"));
+      toast.success(t("Connection successful"));
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      toast.error(props.t("Connection failed") + ": " + msg);
+      toast.error(t("Connection failed") + ": " + msg);
     } finally {
       mergeState({ isTesting: false });
     }
@@ -816,7 +820,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
             <input
               className="token-dialog-username-box"
               type="url"
-              placeholder={props.t("OPDS Catalog URL")}
+              placeholder={t("OPDS Catalog URL")}
               value={newCatalogUrl}
               onChange={(e) => mergeState({ newCatalogUrl: e.target.value })}
               onKeyDown={(e) => e.key === "Enter" && handleAddCatalog()}
@@ -826,9 +830,9 @@ const OPDSDialog = (props: OPDSDialogProps) => {
               className="token-dialog-username-box"
               type="text"
               placeholder={
-                props.t("Catalog Name") +
+                t("Catalog Name") +
                 " (" +
-                props.t("Optional") +
+                t("Optional") +
                 ")"
               }
               value={newCatalogTitle}
@@ -841,7 +845,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
               className="token-dialog-username-box"
               type="text"
               placeholder={
-                props.t("Username") + " (" + props.t("Optional") + ")"
+                t("Username") + " (" + t("Optional") + ")"
               }
               value={newCatalogUsername}
               onChange={(e) =>
@@ -853,7 +857,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
               className="token-dialog-username-box"
               type="password"
               placeholder={
-                props.t("Password") + " (" + props.t("Optional") + ")"
+                t("Password") + " (" + t("Optional") + ")"
               }
               value={newCatalogPassword}
               onChange={(e) =>
@@ -982,7 +986,7 @@ const OPDSDialog = (props: OPDSDialogProps) => {
             <input
               className="header-search-box"
               type="text"
-              placeholder={props.t("Search in catalog...")}
+              placeholder={t("Search in catalog...")}
               value={searchQuery}
               onChange={(e) => mergeState({ searchQuery: e.target.value })}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}

@@ -1,5 +1,7 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
-import { AnnotationDialogProps, AnnotationDialogState } from "./interface";
+import { AnnotationDialogState } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import "./annotationDialog.css";
 import "../../readerSettings/dropdownList/dropdownList.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -20,7 +22,12 @@ import {
 } from "../../../utils/common";
 import FontUtil from "../../../utils/file/fontUtil";
 
-const AnnotationDialog = (props: AnnotationDialogProps) => {
+const AnnotationDialog = () => {
+  const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
+  const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const handleAnnotationDialog = useAppStore((s) => s.handleAnnotationDialog);
+  const { t } = useTranslation();
   const [state, setState] = useState<AnnotationDialogState>(() => ({
     annotationStyle:
       ConfigService.getReaderConfig("annotationStyle") || "brush",
@@ -91,42 +98,42 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
 
   const handleSelectTab = (style: string) => {
     updateState({ annotationStyle: style });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       annotationStyle: style,
     });
     ConfigService.setReaderConfig("annotationStyle", style);
   };
   const handleSelectColor = (color: string) => {
     updateState({ annotationBrushColor: color });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       brushColor: color,
     });
     ConfigService.setReaderConfig("annotationBrushColor", color);
   };
   const handleSelectWidth = (width: number) => {
     updateState({ annotationBrushWidth: width });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       brushWidth: width,
     });
     ConfigService.setReaderConfig("annotationBrushWidth", width + "");
   };
   const handleSelectHighlighterColor = (color: string) => {
     updateState({ annotationHighlighterColor: color });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       highlighterColor: color,
     });
     ConfigService.setReaderConfig("annotationHighlighterColor", color);
   };
   const handleSelectHighlighterWidth = (width: number) => {
     updateState({ annotationHighlighterWidth: width });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       highlighterWidth: width,
     });
     ConfigService.setReaderConfig("annotationHighlighterWidth", width + "");
   };
   const handleSelectOpacity = (opacity: number) => {
     updateState({ annotationHighlighterOpacity: opacity });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       highlighterOpacity: opacity,
     });
   };
@@ -138,28 +145,28 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
   };
   const handleSelectShapeType = (annotationShapeType: string) => {
     updateState({ annotationShapeType });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       shapeType: annotationShapeType,
     });
     ConfigService.setReaderConfig("annotationShapeType", annotationShapeType);
   };
   const handleSelectShapeColor = (color: string) => {
     updateState({ annotationShapeColor: color });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       shapeColor: color,
     });
     ConfigService.setReaderConfig("annotationShapeColor", color);
   };
   const handleSelectShapeWidth = (width: number) => {
     updateState({ annotationShapeWidth: width });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       shapeWidth: width,
     });
     ConfigService.setReaderConfig("annotationShapeWidth", width + "");
   };
   const handleSelectEraserWidth = (width: number) => {
     updateState({ annotationEraserWidth: width });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       eraserWidth: width,
     });
     ConfigService.setReaderConfig("annotationEraserWidth", width + "");
@@ -174,14 +181,14 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
     const next =
       stateRef.current.annotationQuickErase === "yes" ? "no" : "yes";
     updateState({ annotationQuickErase: next });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       quickErase: next,
     });
     ConfigService.setReaderConfig("annotationQuickErase", next);
   };
   const handleSelectTextSize = (size: number) => {
     updateState({ annotationTextSize: size });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       textSize: size,
     });
   };
@@ -193,14 +200,14 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
   };
   const handleSelectTextFont = (font: string) => {
     updateState({ annotationTextFont: font });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       textFont: font,
     });
     ConfigService.setReaderConfig("annotationTextFont", font);
   };
   const handleSelectTextColor = (color: string) => {
     updateState({ annotationTextColor: color });
-    props.htmlBook.rendition.applyAnnotationConfig({
+    htmlBook.rendition.applyAnnotationConfig({
       textColor: color,
     });
     ConfigService.setReaderConfig("annotationTextColor", color);
@@ -254,8 +261,8 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
     }
   };
   const handleClose = () => {
-    props.handleAnnotationDialog(false);
-    props.htmlBook.rendition.applyAnnotationConfig({
+    handleAnnotationDialog(false);
+    htmlBook.rendition.applyAnnotationConfig({
       isDrawing: "no",
     });
   };
@@ -286,11 +293,11 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
         width: "210px",
         height: "320px",
         overflowY: "scroll",
-        right: props.isSettingLocked || props.isDockedRight ? 370 : 65,
+        right: isSettingLocked || isDockedRight ? 370 : 65,
       }}
     >
       <div className="annotation-dialog-header">
-        <span className="annotation-dialog-title">{props.t("Annotation")}</span>
+        <span className="annotation-dialog-title">{t("Annotation")}</span>
         <span
           className="icon-close annotation-dialog-close"
           onClick={handleClose}
@@ -305,7 +312,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
               : "annotation-dialog-tab"
           }
           onClick={() => handleSelectTab("brush")}
-          title={props.t("Brush")}
+          title={t("Brush")}
         >
           <span
             className="icon-edit-line annotation-dialog-tab-icon"
@@ -319,7 +326,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
               : "annotation-dialog-tab"
           }
           onClick={() => handleSelectTab("highlighter")}
-          title={props.t("Highlighter")}
+          title={t("Highlighter")}
         >
           <span
             className="icon-highlight-line annotation-dialog-tab-icon"
@@ -333,7 +340,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
               : "annotation-dialog-tab"
           }
           onClick={() => handleSelectTab("shape")}
-          title={props.t("Shape")}
+          title={t("Shape")}
         >
           <span className="annotation-dialog-tab-shape">
             <svg
@@ -357,7 +364,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
               : "annotation-dialog-tab"
           }
           onClick={() => handleSelectTab("text")}
-          title={props.t("Text")}
+          title={t("Text")}
         >
           <span className="icon-font annotation-dialog-tab-icon"></span>
         </span>
@@ -368,7 +375,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
               : "annotation-dialog-tab"
           }
           onClick={() => handleSelectTab("eraser")}
-          title={props.t("Eraser")}
+          title={t("Eraser")}
         >
           <span
             className="icon-eraser-line annotation-dialog-tab-icon"
@@ -380,7 +387,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
       {annotationStyle === "brush" ? (
         <>
           <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{props.t("Brush color")}</div>
+            <div className="annotation-dialog-label">{t("Brush color")}</div>
             <ul className="annotation-color-list">
               {BRUSH_COLORS.map((color) => (
                 <li
@@ -398,7 +405,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
           </div>
 
           <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{props.t("Brush width")}</div>
+            <div className="annotation-dialog-label">{t("Brush width")}</div>
             <ul className="annotation-width-list">
               {BRUSH_WIDTHS.map((width) => (
                 <li
@@ -427,7 +434,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
         <>
           <div className="annotation-dialog-section">
             <div className="annotation-dialog-label">
-              {props.t("Highlighter color")}
+              {t("Highlighter color")}
             </div>
             <ul className="annotation-color-list">
               {HIGHLIGHTER_COLORS.map((color) => (
@@ -454,7 +461,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
 
           <div className="annotation-dialog-section">
             <div className="annotation-dialog-label">
-              {props.t("Highlighter width")}
+              {t("Highlighter width")}
             </div>
             <ul className="annotation-width-list">
               {HIGHLIGHTER_WIDTHS.map((width) => (
@@ -483,7 +490,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
 
           <div className="annotation-dialog-section annotation-opacity-section">
             <div className="annotation-opacity-label">
-              <span>{props.t("Opacity")}</span>
+              <span>{t("Opacity")}</span>
               <span className="annotation-opacity-value">
                 {Math.round(annotationHighlighterOpacity * 100)}%
               </span>
@@ -505,7 +512,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
       ) : annotationStyle === "shape" ? (
         <>
           <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{props.t("Shape type")}</div>
+            <div className="annotation-dialog-label">{t("Shape type")}</div>
             <ul className="annotation-shape-list">
               {SHAPE_TYPES.map((type) => (
                 <li
@@ -516,7 +523,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
                       : "annotation-shape-item"
                   }
                   onClick={() => handleSelectShapeType(type)}
-                  title={props.t(type.charAt(0).toUpperCase() + type.slice(1))}
+                  title={t(type.charAt(0).toUpperCase() + type.slice(1))}
                 >
                   {renderShapeIcon(type)}
                 </li>
@@ -525,7 +532,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
           </div>
 
           <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{props.t("Shape color")}</div>
+            <div className="annotation-dialog-label">{t("Shape color")}</div>
             <ul className="annotation-color-list">
               {BRUSH_COLORS.map((color) => (
                 <li
@@ -543,7 +550,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
           </div>
 
           <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{props.t("Shape width")}</div>
+            <div className="annotation-dialog-label">{t("Shape width")}</div>
             <ul className="annotation-width-list">
               {BRUSH_WIDTHS.map((width) => (
                 <li
@@ -572,7 +579,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
         <>
           <div className="annotation-dialog-section annotation-text-size-section">
             <div className="annotation-opacity-label">
-              <span>{props.t("Eraser size")}</span>
+              <span>{t("Eraser size")}</span>
               <span className="annotation-opacity-value">
                 {annotationEraserWidth}
               </span>
@@ -597,7 +604,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
             onClick={handleToggleQuickErase}
           >
             <span className="annotation-quick-erase-title">
-              {props.t("Quick erase")}
+              {t("Quick erase")}
             </span>
             <span
               className="annotation-quick-erase-switch"
@@ -622,7 +629,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
         <>
           <div className="annotation-dialog-section annotation-text-size-section">
             <div className="annotation-opacity-label">
-              <span>{props.t("Text size")}</span>
+              <span>{t("Text size")}</span>
               <span className="annotation-opacity-value">
                 {annotationTextSize}
               </span>
@@ -642,7 +649,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
           </div>
 
           <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{props.t("Text font")}</div>
+            <div className="annotation-dialog-label">{t("Text font")}</div>
             <select
               className="general-setting-dropdown annotation-text-font-select"
               value={annotationTextFont}
@@ -661,7 +668,7 @@ const AnnotationDialog = (props: AnnotationDialogProps) => {
           </div>
 
           <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{props.t("Text color")}</div>
+            <div className="annotation-dialog-label">{t("Text color")}</div>
             <ul className="annotation-color-list">
               {TEXT_COLORS.map((color) => (
                 <li

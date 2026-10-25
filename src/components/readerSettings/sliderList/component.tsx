@@ -3,8 +3,14 @@ import { Trans } from "react-i18next";
 import { SliderListProps } from "./interface";
 import "./sliderList.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { useAppStore } from "../../../store/useAppStore";
 
 const SliderList = (props: SliderListProps) => {
+  const renderBookFunc = useAppStore((s) => s.renderBookFunc);
+  const scale = useAppStore((s) => s.reader.scale);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const handleMargin = useAppStore((s) => s.handleMargin);
+  const handleScale = useAppStore((s) => s.handleScale);
   const [state, setState] = useState<Record<string, any>>({
     isTyping: false,
     inputValue: "",
@@ -25,8 +31,8 @@ const SliderList = (props: SliderListProps) => {
   });
 
   useEffect(() => {
-    setState((prev) => ({ ...prev, scale: props.scale }));
-  }, [props.scale]);
+    setState((prev) => ({ ...prev, scale: scale }));
+  }, [scale]);
 
   const isPercentMode = () => props.item.mode === "scale";
 
@@ -60,25 +66,25 @@ const SliderList = (props: SliderListProps) => {
     ConfigService.setReaderConfig(mode, nextValue);
 
     if (mode === "scale") {
-      props.handleScale(nextValue);
+      handleScale(nextValue);
     }
 
     if (mode === "margin") {
-      props.handleMargin(nextValue);
+      handleMargin(nextValue);
     }
 
     if (
       mode === "autoScrollRate" &&
-      props.htmlBook &&
+      htmlBook &&
       ConfigService.getReaderConfig("isAutoReading") === "yes"
     ) {
-      props.htmlBook.rendition.autoScroll?.(parseFloat(nextValue), "yes");
-      props.htmlBook.rendition.autoScrollPDF?.("yes");
+      htmlBook.rendition.autoScroll?.(parseFloat(nextValue), "yes");
+      htmlBook.rendition.autoScrollPDF?.("yes");
     }
   };
 
   const handleRest = async (_mode: string) => {
-    props.renderBookFunc();
+    renderBookFunc();
   };
   const onValueChange = (
     event: any,

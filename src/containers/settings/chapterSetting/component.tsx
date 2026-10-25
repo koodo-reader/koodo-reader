@@ -1,4 +1,6 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import "./chapterSetting.css";
 import { SettingInfoProps, SettingInfoState, TxtParser } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -8,6 +10,7 @@ import {
 } from "../../../assets/lib/kookit-extra-browser.min";
 
 const ChapterSetting = (props: SettingInfoProps) => {
+  const { t } = useTranslation();
   const [state, setState] = useState<SettingInfoState>({
     parserList: ConfigService.getAllListConfig("txtParserList") || [],
     isAddNew: false,
@@ -75,11 +78,11 @@ const ChapterSetting = (props: SettingInfoProps) => {
     const regex = formRegex.trim();
 
     if (!label) {
-      toast.error(props.t("Please enter parser name"));
+      toast.error(t("Please enter parser name"));
       return;
     }
     if (!regex) {
-      toast.error(props.t("Please enter parser regex"));
+      toast.error(t("Please enter parser regex"));
       return;
     }
 
@@ -88,7 +91,7 @@ const ChapterSetting = (props: SettingInfoProps) => {
       const existingList =
         ConfigService.getAllListConfig("txtParserList") || [];
       if (existingList.includes(label)) {
-        toast.error(props.t("Parser name already exists"));
+        toast.error(t("Parser name already exists"));
         return;
       }
     }
@@ -106,7 +109,7 @@ const ChapterSetting = (props: SettingInfoProps) => {
       if (label !== editingLabel) {
         ConfigService.setListConfig(label, "txtParserList");
       }
-      toast.success(props.t("Modification successful"));
+      toast.success(t("Modification successful"));
     } else {
       ConfigService.setObjectConfig(
         label,
@@ -114,7 +117,7 @@ const ChapterSetting = (props: SettingInfoProps) => {
         "txtParsers"
       );
       ConfigService.setListConfig(label, "txtParserList");
-      toast.success(props.t("Addition successful"));
+      toast.success(t("Addition successful"));
     }
 
     fetchParserList();
@@ -125,7 +128,7 @@ const ChapterSetting = (props: SettingInfoProps) => {
     ConfigService.deleteListConfig(parserLabel, "txtParserList");
     ConfigService.deleteObjectConfig(parserLabel, "txtParsers");
     fetchParserList();
-    toast.success(props.t("Deletion successful"));
+    toast.success(t("Deletion successful"));
   };
 
   const renderForm = () => {
@@ -146,7 +149,7 @@ const ChapterSetting = (props: SettingInfoProps) => {
           <input
             type="text"
             className="token-dialog-username-box"
-            placeholder={props.t("Please enter parser name")}
+            placeholder={t("Please enter parser name")}
             value={formLabel}
             onChange={(e) => mergeState({ formLabel: e.target.value })}
           />
@@ -159,7 +162,7 @@ const ChapterSetting = (props: SettingInfoProps) => {
           <input
             type="text"
             className="token-dialog-username-box"
-            placeholder={props.t(
+            placeholder={t(
               "Regex example: ^(Chapter|Part|Book|CHAPTER|PART|BOOK)\\b.*$"
             )}
             value={formRegex}

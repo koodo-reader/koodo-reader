@@ -4,17 +4,20 @@ import { Trans } from "react-i18next";
 import { EmptyPageProps } from "./interface";
 import emptyDark from "../../assets/images/empty-dark.svg";
 import emptyLight from "../../assets/images/empty-light.svg";
+import { useAppStore } from "../../store/useAppStore";
 
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 
 const EmptyPage = (props: EmptyPageProps) => {
+  const mode = useAppStore((s) => s.sidebar.mode);
+  const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
   const renderEmptyList = () => {
     return emptyList.map((item) => {
       return (
         <div
           className="empty-page-info-container"
           key={item.mode}
-          style={props.mode === item.mode ? {} : { visibility: "hidden" }}
+          style={mode === item.mode ? {} : { visibility: "hidden" }}
         >
           <div className="empty-page-info-main">
             <Trans>{item.main}</Trans>
@@ -31,7 +34,7 @@ const EmptyPage = (props: EmptyPageProps) => {
       <div
         className="empty-page-container"
         style={
-          props.isCollapsed
+          isCollapsed
             ? { width: "calc(100vw - 100px)", left: "100px" }
             : {}
         }

@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./localFileDialog.css";
 import { Trans } from "react-i18next";
-import { LocalFileDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import Lottie from "lottie-react";
 import animationSuccess from "../../../assets/lotties/success.json";
 import animationSafe from "../../../assets/lotties/safe.json";
@@ -13,7 +15,11 @@ import {
   LocalFileManager,
 } from "../../../utils/file/localFile";
 
-const LocalFileDialog = (props: LocalFileDialogProps) => {
+const LocalFileDialog = () => {
+  const handleLocalFileDialog = useAppStore((s) => s.handleLocalFileDialog);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isFinish, setIsFinish] = useState(false);
   const [status, setStatus] = useState<{
     hasAccess: boolean;
@@ -34,10 +40,10 @@ const LocalFileDialog = (props: LocalFileDialogProps) => {
   }, []);
 
   const handleClose = () => {
-    props.handleLocalFileDialog(false);
+    handleLocalFileDialog(false);
   };
   const showMessage = (message: string) => {
-    toast(props.t(message));
+    toast(t(message));
   };
   const handleSelectFolder = async () => {
     if (!LocalFileManager.isSupported()) {
@@ -50,7 +56,7 @@ const LocalFileDialog = (props: LocalFileDialogProps) => {
 
       if (directoryHandle) {
         toast.loading(
-          props.t("Granting access to local folder, please wait"),
+          t("Granting access to local folder, please wait"),
           {
             id: "local-folder-access",
           }
@@ -64,9 +70,9 @@ const LocalFileDialog = (props: LocalFileDialogProps) => {
         setIsFinish(true);
         ConfigService.setItem("isUseLocal", "yes");
         showMessage("Local folder access granted successfully");
-        props.handleFetchBooks();
+        handleFetchBooks();
         setTimeout(() => {
-          props.history.push("/manager/home");
+          navigate("/manager/home");
         }, 2000);
       } else {
         showMessage("Failed to get folder access permission");
@@ -98,11 +104,11 @@ const LocalFileDialog = (props: LocalFileDialogProps) => {
             />
             <div className="backup-page-warning-text">
               {status.needsReauthorization ? (
-                props.t("Need to reauthorize the access to directory") +
+                t("Need to reauthorize the access to directory") +
                 " " +
                 status.directoryName +
                 ", " +
-                props.t(
+                t(
                   "Please click the allow on every visit button to avoid this popup once and for all"
                 )
               ) : (
@@ -131,9 +137,9 @@ const LocalFileDialog = (props: LocalFileDialogProps) => {
                   await LocalFileManager.ensureDirectoryAccess();
                   setIsFinish(true);
 
-                  props.handleFetchBooks();
+                  handleFetchBooks();
                   setTimeout(() => {
-                    props.history.push("/manager/home");
+                    navigate("/manager/home");
                   }, 2000);
                 }}
               >

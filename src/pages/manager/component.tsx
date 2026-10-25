@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import "./manager.css";
 import Sidebar from "../../containers/sidebar";
 import Header from "../../containers/header";
 import DeleteDialog from "../../components/dialogs/deleteDialog";
@@ -12,7 +15,7 @@ import AutoImportDialog from "../../components/dialogs/autoImportDialog";
 import { ManagerProps, ManagerState } from "./interface";
 import { Trans } from "react-i18next";
 import SettingDialog from "../../components/dialogs/settingDialog";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { routes } from "../../router/routes";
 import LoadingDialog from "../../components/dialogs/loadingDialog";
 import { Toaster } from "react-hot-toast";
@@ -32,14 +35,86 @@ import {
 } from "../../utils/reader/bookDrag";
 import Footer from "../../components/footer";
 import ProtectionOverlay from "../../components/protection";
+import { useAppStore } from "../../store/useAppStore";
 
 const Manager = (props: ManagerProps) => {
+  const books = useAppStore((s) => s.manager.books);
+  const isShowPopupNote = useAppStore((s) => s.manager.isShowPopupNote);
+  const importBookFunc = useAppStore((s) => s.book.importBookFunc);
+  const cloudSyncFunc = useAppStore((s) => s.book.cloudSyncFunc);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const isSettingOpen = useAppStore((s) => s.manager.isSettingOpen);
+  const isOpenImportDialog = useAppStore((s) => s.backupPage.isOpenImportDialog);
+  const isOpenOPDSDialog = useAppStore((s) => s.backupPage.isOpenOPDSDialog);
+  const isOpenAutoImportDialog = useAppStore(
+    (s) => s.backupPage.isOpenAutoImportDialog
+  );
+  const isOpenSortShelfDialog = useAppStore(
+    (s) => s.backupPage.isOpenSortShelfDialog
+  );
+  const isShowNew = useAppStore((s) => s.manager.isShowNew);
+  const isShowSupport = useAppStore((s) => s.manager.isShowSupport);
+  const isOpenDeleteDialog = useAppStore((s) => s.book.isOpenDeleteDialog);
+  const isOpenEditDialog = useAppStore((s) => s.book.isOpenEditDialog);
+  const isOpenLocalFileDialog = useAppStore(
+    (s) => s.backupPage.isOpenLocalFileDialog
+  );
+  const isDetailDialog = useAppStore((s) => s.manager.isDetailDialog);
+  const isOpenAddDialog = useAppStore((s) => s.book.isOpenAddDialog);
+  const isOpenCollectionDialog = useAppStore(
+    (s) => s.collection.isOpenCollectionDialog
+  );
+  const isOpenCollectionDetailDialog = useAppStore(
+    (s) => s.collection.isOpenCollectionDetailDialog
+  );
+  const isOpenAddCollectionDialog = useAppStore(
+    (s) => s.collection.isOpenAddCollectionDialog
+  );
+  const isShowLoading = useAppStore((s) => s.manager.isShowLoading);
+  const isSortDisplay = useAppStore((s) => s.manager.isSortDisplay);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
+  const handleFetchNotes = useAppStore((s) => s.handleFetchNotes);
+  const handleFetchBookmarks = useAppStore((s) => s.handleFetchBookmarks);
+  const handleFetchBookSortCode = useAppStore(
+    (s) => s.handleFetchBookSortCode
+  );
+  const handleFetchNoteSortCode = useAppStore(
+    (s) => s.handleFetchNoteSortCode
+  );
+  const handleFetchViewMode = useAppStore((s) => s.handleFetchViewMode);
+  const handleReadingState = useAppStore((s) => s.handleReadingState);
+  const handleShelf = useAppStore((s) => s.handleShelf);
+  const handleMode = useAppStore((s) => s.handleMode);
+  const handleEditDialog = useAppStore((s) => s.handleEditDialog);
+  const handleDeleteDialog = useAppStore((s) => s.handleDeleteDialog);
+  const handleAddDialog = useAppStore((s) => s.handleAddDialog);
+  const handleDetailDialog = useAppStore((s) => s.handleDetailDialog);
+  const handleLoadingDialog = useAppStore((s) => s.handleLoadingDialog);
+  const handleNewDialog = useAppStore((s) => s.handleNewDialog);
+  const handleShowSupport = useAppStore((s) => s.handleShowSupport);
+  const handleLocalFileDialog = useAppStore((s) => s.handleLocalFileDialog);
+  const handleImportDialog = useAppStore((s) => s.handleImportDialog);
+  const handleOPDSDialog = useAppStore((s) => s.handleOPDSDialog);
+  const handleAutoImportDialog = useAppStore((s) => s.handleAutoImportDialog);
+  const handleShowPopupNote = useAppStore((s) => s.handleShowPopupNote);
+  const handleSortShelfDialog = useAppStore((s) => s.handleSortShelfDialog);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleCollectionDialog = useAppStore((s) => s.handleCollectionDialog);
+  const handleCollectionDetailDialog = useAppStore(
+    (s) => s.handleCollectionDetailDialog
+  );
+  const handleAddCollectionDialog = useAppStore(
+    (s) => s.handleAddCollectionDialog
+  );
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [state, setState] = useState<ManagerState>({
     totalBooks: parseInt(ConfigService.getReaderConfig("totalBooks")) || 0,
     isDrag: false,
   });
   const isDraggingFromAppRef = useRef(false);
-  const prevBooksRef = useRef(props.books);
+  const prevBooksRef = useRef(books);
 
   const handleDrag = (isDrag: boolean) => {
     setState((prev) => ({ ...prev, isDrag }));
@@ -63,15 +138,15 @@ const Manager = (props: ManagerProps) => {
   };
 
   useEffect(() => {
-    props.handleFetchBooks();
-    props.handleFetchPlugins();
-    props.handleFetchNotes();
-    props.handleFetchBookmarks();
-    props.handleFetchBookSortCode();
-    props.handleFetchNoteSortCode();
-    props.handleFetchViewMode();
+    handleFetchBooks();
+    handleFetchPlugins();
+    handleFetchNotes();
+    handleFetchBookmarks();
+    handleFetchBookSortCode();
+    handleFetchNoteSortCode();
+    handleFetchViewMode();
 
-    props.handleReadingState(false);
+    handleReadingState(false);
     document.addEventListener("dragstart", handleDocumentDragStart, true);
     document.addEventListener("dragend", handleDocumentDragEnd, true);
     document.addEventListener("dragenter", handleExternalDragEnter, true);
@@ -80,9 +155,9 @@ const Manager = (props: ManagerProps) => {
     if (startupShelf) {
       const shelfList = ConfigService.getAllMapConfig("shelfList") || {};
       if (shelfList.hasOwnProperty(startupShelf)) {
-        props.handleShelf(startupShelf);
-        props.handleMode("shelf");
-        props.history.push("/manager/shelf");
+        handleShelf(startupShelf);
+        handleMode("shelf");
+        navigate("/manager/shelf");
       }
     }
     return () => {
@@ -103,21 +178,20 @@ const Manager = (props: ManagerProps) => {
 
   useEffect(() => {
     const prevBooks = prevBooksRef.current;
-    if (props.books && state.totalBooks !== props.books.length) {
-      const totalBooks = props.books.length;
+    if (books && state.totalBooks !== books.length) {
+      const totalBooks = books.length;
       setState((prev) =>
         prev.totalBooks === totalBooks ? prev : { ...prev, totalBooks }
       );
       ConfigService.setReaderConfig("totalBooks", totalBooks.toString());
     }
-    if (props.books && props.books.length === 1 && !prevBooks) {
-      props.history.push("/manager/home");
+    if (books && books.length === 1 && !prevBooks) {
+      navigate("/manager/home");
     }
-    prevBooksRef.current = props.books;
+    prevBooksRef.current = books;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.books]);
+  }, [books]);
 
-  let { books } = props;
   const PopupProps = {
     chapterDocIndex: 0,
     chapter: "test",
@@ -133,7 +207,7 @@ const Manager = (props: ManagerProps) => {
     >
       <ProtectionOverlay />
       <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
-      {props.isShowPopupNote && (
+      {isShowPopupNote && (
         <div
           className="popup-box-container"
           style={{
@@ -207,58 +281,58 @@ const Manager = (props: ManagerProps) => {
           for (const file of allFiles) {
             const ext = "." + file.name.split(".").pop()?.toLowerCase();
             if (!supportedFormats.includes(ext)) {
-              toast.error(props.t("Unsupported file format") + ": " + ext);
+              toast.error(t("Unsupported file format") + ": " + ext);
               continue;
             }
-            await props.importBookFunc(file);
+            await importBookFunc(file);
           }
           if (
             ConfigService.getReaderConfig("isDisableAutoSync") !== "yes" &&
             ConfigService.getItem("defaultSyncOption")
           ) {
-            await props.cloudSyncFunc();
+            await cloudSyncFunc();
           }
         }}
         onClick={() => {
-          props.handleEditDialog(false);
-          props.handleDeleteDialog(false);
-          props.handleAddDialog(false);
-          props.handleDetailDialog(false);
-          props.handleLoadingDialog(false);
-          if (!props.isAuthed) {
-            props.handleNewDialog(false);
-            props.handleShowSupport(false);
+          handleEditDialog(false);
+          handleDeleteDialog(false);
+          handleAddDialog(false);
+          handleDetailDialog(false);
+          handleLoadingDialog(false);
+          if (!isAuthed) {
+            handleNewDialog(false);
+            handleShowSupport(false);
           }
-          props.handleLocalFileDialog(false);
-          props.handleImportDialog(false);
-          props.handleOPDSDialog(false);
-          props.handleAutoImportDialog(false);
-          props.handleShowPopupNote(false);
-          props.handleSortShelfDialog(false);
-          props.handleSetting(false);
-          props.handleCollectionDialog(false);
-          props.handleCollectionDetailDialog(false);
-          props.handleAddCollectionDialog(false);
+          handleLocalFileDialog(false);
+          handleImportDialog(false);
+          handleOPDSDialog(false);
+          handleAutoImportDialog(false);
+          handleShowPopupNote(false);
+          handleSortShelfDialog(false);
+          handleSetting(false);
+          handleCollectionDialog(false);
+          handleCollectionDetailDialog(false);
+          handleAddCollectionDialog(false);
           handleDrag(false);
         }}
         style={
-          props.isSettingOpen ||
-          props.isOpenImportDialog ||
-          props.isOpenOPDSDialog ||
-          props.isOpenAutoImportDialog ||
-          props.isOpenSortShelfDialog ||
-          props.isShowNew ||
-          props.isShowSupport ||
-          props.isOpenDeleteDialog ||
-          props.isOpenEditDialog ||
-          props.isOpenLocalFileDialog ||
-          props.isDetailDialog ||
-          props.isShowPopupNote ||
-          props.isOpenAddDialog ||
-          props.isOpenCollectionDialog ||
-          props.isOpenCollectionDetailDialog ||
-          props.isOpenAddCollectionDialog ||
-          props.isShowLoading ||
+          isSettingOpen ||
+          isOpenImportDialog ||
+          isOpenOPDSDialog ||
+          isOpenAutoImportDialog ||
+          isOpenSortShelfDialog ||
+          isShowNew ||
+          isShowSupport ||
+          isOpenDeleteDialog ||
+          isOpenEditDialog ||
+          isOpenLocalFileDialog ||
+          isDetailDialog ||
+          isShowPopupNote ||
+          isOpenAddDialog ||
+          isOpenCollectionDialog ||
+          isOpenCollectionDetailDialog ||
+          isOpenAddCollectionDialog ||
+          isShowLoading ||
           state.isDrag
             ? {}
             : {
@@ -287,31 +361,31 @@ const Manager = (props: ManagerProps) => {
         }}
       />
       <Header {...({ handleDrag: handleDrag } as any)} />
-      {props.isOpenDeleteDialog && <DeleteDialog />}
-      {props.isOpenEditDialog && <EditDialog />}
-      {props.isOpenAddDialog && <AddDialog />}
-      {props.isShowLoading && <LoadingDialog />}
-      {props.isSortDisplay && <SortDialog />}
-      {props.isOpenLocalFileDialog && <LocalFileDialog />}
-      {props.isOpenImportDialog && <ImportDialog />}
-      {props.isOpenOPDSDialog && <OPDSDialog />}
-      {props.isOpenAutoImportDialog && <AutoImportDialog />}
-      {props.isOpenSortShelfDialog && <SortShelfDialog />}
-      {props.isSettingOpen && <SettingDialog />}
-      {props.isDetailDialog && <DetailDialog />}
-      {props.isOpenCollectionDialog && <CollectionDialog />}
-      {props.isOpenCollectionDetailDialog && <CollectionDetailDialog />}
-      {props.isOpenAddCollectionDialog && <AddCollectionDialog />}
+      {isOpenDeleteDialog && <DeleteDialog />}
+      {isOpenEditDialog && <EditDialog />}
+      {isOpenAddDialog && <AddDialog />}
+      {isShowLoading && <LoadingDialog />}
+      {isSortDisplay && <SortDialog />}
+      {isOpenLocalFileDialog && <LocalFileDialog />}
+      {isOpenImportDialog && <ImportDialog />}
+      {isOpenOPDSDialog && <OPDSDialog />}
+      {isOpenAutoImportDialog && <AutoImportDialog />}
+      {isOpenSortShelfDialog && <SortShelfDialog />}
+      {isSettingOpen && <SettingDialog />}
+      {isDetailDialog && <DetailDialog />}
+      {isOpenCollectionDialog && <CollectionDialog />}
+      {isOpenCollectionDetailDialog && <CollectionDetailDialog />}
+      {isOpenAddCollectionDialog && <AddCollectionDialog />}
       {(!books || books.length === 0) && state.totalBooks ? null : (
-        <Switch>
+        <Routes>
           {routes.map((ele) => (
             <Route
-              render={() => <ele.component />}
+              element={<ele.component />}
               key={ele.path}
               path={ele.path}
             />
           ))}
-        </Switch>
+        </Routes>
       )}
       <Footer />
     </div>

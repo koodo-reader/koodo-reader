@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import "./searchBox.css";
 import { SearchBoxProps } from "./interface";
@@ -7,10 +8,19 @@ import {
 } from "../../assets/lib/kookit-extra-browser.min";
 import ConfigUtil from "../../utils/file/configUtil";
 import BookUtil from "../../utils/file/bookUtil";
+import { useAppStore } from "../../store/useAppStore";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 
 const SearchBox = (props: SearchBoxProps) => {
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const isNavLocked = useAppStore((s) => s.reader.isNavLocked);
+  const isSearch = useAppStore((s) => s.manager.isSearch);
+  const isReading = useAppStore((s) => s.book.isReading);
+  const tabMode = useAppStore((s) => s.sidebar.mode);
+  const handleSearchResults = useAppStore((s) => s.handleSearchResults);
+  const handleSearch = useAppStore((s) => s.handleSearch);
+  const { t } = useTranslation();
   const searchBoxRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -23,12 +33,12 @@ const SearchBox = (props: SearchBoxProps) => {
 
   const handleGetSearchResults = async (keyword: string) => {
     let results =
-      props.tabMode === "note"
+      tabMode === "note"
         ? await ConfigUtil.searchNotesByKeyword(keyword, "", "note")
-        : props.tabMode === "highlight"
+        : tabMode === "highlight"
           ? await ConfigUtil.searchNotesByKeyword(keyword, "", "highlight")
           : await BookUtil.searchBooksByKeyword(keyword);
-    if (props.tabMode !== "note" && props.tabMode !== "highlight") {
+    if (tabMode !== "note" && tabMode !== "highlight") {
       let lowerKeyword = keyword.toLowerCase();
       collectionUtil.getCollectionList().forEach((collection) => {
         if (collectionUtil.isCollectionDeleted(collection.key)) return;
@@ -41,7 +51,7 @@ const SearchBox = (props: SearchBoxProps) => {
     results = results.filter((result: any) => {
       return !deletedBookKeys.includes(
         result[
-          props.tabMode === "note" || props.tabMode === "highlight"
+          tabMode === "note" || tabMode === "highlight"
             ? "bookKey"
             : "key"
         ]
@@ -51,10 +61,10 @@ const SearchBox = (props: SearchBoxProps) => {
   };
 
   const search = async (q: string) => {
-    props.handleNavSearchState("searching");
-    let searchList = await props.htmlBook.rendition.doSearch(q);
-    props.handleNavSearchState("pending");
-    props.handleSearchList(
+    props.handleNavSearchState?.("searching");
+    let searchList = await htmlBook.rendition.doSearch(q);
+    props.handleNavSearchState?.("pending");
+    props.handleSearchList?.(
       searchList.map((item: any) => {
         const regex = new RegExp(
           q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
@@ -67,7 +77,7 @@ const SearchBox = (props: SearchBoxProps) => {
         return item;
       })
     );
-    props.handleNavSearchState("done");
+    props.handleNavSearchState?.("done");
   };
 
   const handleMouse = async () => {
@@ -77,17 +87,17 @@ const SearchBox = (props: SearchBoxProps) => {
     }
     setIsFocused(false);
     if (props.mode === "nav") {
-      props.handleNavSearchState("searching");
+      props.handleNavSearchState?.("searching");
     }
     let keyword = (
       document.querySelector(".header-search-box") as HTMLInputElement
     ).value.toLowerCase();
     let results = await handleGetSearchResults(keyword);
     if (results) {
-      props.handleSearchResults(results);
-      props.handleSearch(true);
+      handleSearchResults(results);
+      handleSearch(true);
       if (props.mode === "nav") {
-        props.handleNavSearchState("done");
+        props.handleNavSearchState?.("done");
       }
     }
   };
@@ -97,7 +107,7 @@ const SearchBox = (props: SearchBoxProps) => {
       return;
     }
     let value = searchBoxRef.current?.value || "";
-    if (props.isNavSearch || props.isReading) {
+    if (props.isNavSearch || isReading) {
       value && search(value);
     }
     setIsFocused(false);
@@ -105,10 +115,10 @@ const SearchBox = (props: SearchBoxProps) => {
       let keyword = event.target.value.toLowerCase();
       let results = await handleGetSearchResults(keyword);
       if (results) {
-        props.handleSearchResults(results);
-        props.handleSearch(true);
+        handleSearchResults(results);
+        handleSearch(true);
         if (props.mode === "nav") {
-          props.handleNavSearchState("done");
+          props.handleNavSearchState?.("done");
         }
       }
     }
@@ -116,10 +126,10 @@ const SearchBox = (props: SearchBoxProps) => {
 
   const handleCancel = () => {
     if (props.isNavSearch) {
-      props.handleSearchList(null);
-      props.handleNavSearchState("done");
+      props.handleSearchList?.(null);
+      props.handleNavSearchState?.("done");
     }
-    props.handleSearch(false);
+    handleSearch(false);
     (document.querySelector(".header-search-box") as HTMLInputElement).value =
       "";
   };
@@ -137,17 +147,17 @@ const SearchBox = (props: SearchBoxProps) => {
           setIsFocused(true);
 
           if (props.mode === "nav") {
-            props.handleNavSearchState("focused");
+            props.handleNavSearchState?.("focused");
           }
         }}
         placeholder={
           props.isNavSearch || props.mode === "nav"
-            ? props.t("Search in the Book")
-            : props.tabMode === "note"
-              ? props.t("Search my notes")
-              : props.tabMode === "highlight"
-                ? props.t("Search my highlights")
-                : props.t("Search my library")
+            ? t("Search in the Book")
+            : tabMode === "note"
+              ? t("Search my notes")
+              : tabMode === "highlight"
+                ? t("Search my highlights")
+                : t("Search my library")
         }
         style={
           props.mode === "nav"
@@ -160,9 +170,9 @@ const SearchBox = (props: SearchBoxProps) => {
         }
         onCompositionStart={() => {
           if (props.mode === "nav") {
-            props.handleNavSearchState("focused");
+            props.handleNavSearchState?.("focused");
           }
-          if (props.isNavLocked) {
+          if (isNavLocked) {
             return;
           } else {
             ConfigService.setReaderConfig("isTempLocked", "yes");
@@ -176,7 +186,7 @@ const SearchBox = (props: SearchBoxProps) => {
           }
         }}
       />
-      {props.isSearch && !isFocused ? (
+      {isSearch && !isFocused ? (
         <span
           className="header-search-text"
           onClick={() => {

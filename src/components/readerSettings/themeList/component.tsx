@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useReducer, useState } from "react";
 import { backgroundList, textList } from "../../../constants/themeList";
 import "./themeList.css";
@@ -10,8 +11,12 @@ import {
 import { HexColorPicker } from "react-colorful";
 import toast from "react-hot-toast";
 import { normalizePickerColor, parseColorInput } from "../../../utils/common";
+import { useAppStore } from "../../../store/useAppStore";
 
 const ThemeList = (props: ThemeListProps) => {
+  const renderBookFunc = useAppStore((s) => s.renderBookFunc);
+  const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
+  const { t } = useTranslation();
   const [state, setState] = useState<ThemeListState>(() => ({
     currentBackgroundIndex: backgroundList
       .concat(ConfigService.getAllListConfig("themeColors"))
@@ -65,7 +70,7 @@ const ThemeList = (props: ThemeListProps) => {
 
   const handleChangeBgColor = (color: string, index: number = -1) => {
     ConfigService.setReaderConfig("backgroundColor", color);
-    props.handleBackgroundColor(color);
+    handleBackgroundColor(color);
     updateState({
       currentBackgroundIndex: index,
     });
@@ -77,7 +82,7 @@ const ThemeList = (props: ThemeListProps) => {
     ) {
       ConfigService.setReaderConfig("textColor", "rgba(0,0,0,1)");
     }
-    props.renderBookFunc();
+    renderBookFunc();
   };
 
   const handlePreviewBgColor = (color: string) => {
@@ -152,7 +157,7 @@ const ThemeList = (props: ThemeListProps) => {
       pendingTextColor: normalizePickerColor(color, "#000000"),
     });
     ConfigService.setReaderConfig("textColor", color);
-    props.renderBookFunc();
+    renderBookFunc();
   };
 
   const handleChoosePreset = (preset: {
@@ -161,7 +166,7 @@ const ThemeList = (props: ThemeListProps) => {
   }) => {
     ConfigService.setReaderConfig("backgroundColor", preset.backgroundColor);
     ConfigService.setReaderConfig("textColor", preset.textColor);
-    props.handleBackgroundColor(preset.backgroundColor);
+    handleBackgroundColor(preset.backgroundColor);
     const bgIndex = backgroundList
       .concat(ConfigService.getAllListConfig("themeColors"))
       .indexOf(preset.backgroundColor);
@@ -174,7 +179,7 @@ const ThemeList = (props: ThemeListProps) => {
       bgColorInput: normalizePickerColor(preset.backgroundColor, "#ffffff"),
       textColorInput: normalizePickerColor(preset.textColor, "#000000"),
     });
-    props.renderBookFunc();
+    renderBookFunc();
   };
 
   const renderBackgroundColorList = () => {
@@ -263,9 +268,9 @@ const ThemeList = (props: ThemeListProps) => {
           className="theme-color-clear-button"
           onClick={() => {
             ConfigService.setReaderConfig("backgroundColor", "");
-            props.handleBackgroundColor("");
-            toast.success(props.t("Removal successful"));
-            props.renderBookFunc();
+            handleBackgroundColor("");
+            toast.success(t("Removal successful"));
+            renderBookFunc();
           }}
         >
           <Trans>Clear</Trans>{" "}
@@ -331,8 +336,8 @@ const ThemeList = (props: ThemeListProps) => {
           className="theme-color-clear-button"
           onClick={() => {
             ConfigService.setReaderConfig("textColor", "");
-            toast.success(props.t("Removal successful"));
-            props.renderBookFunc();
+            toast.success(t("Removal successful"));
+            renderBookFunc();
           }}
         >
           <Trans>Clear</Trans>{" "}
@@ -412,7 +417,7 @@ const ThemeList = (props: ThemeListProps) => {
             >
               <span className="preset-theme-text">
                 {(ConfigService.getReaderConfig("lang") || "").startsWith("zh")
-                  ? props.t(item.title)
+                  ? t(item.title)
                   : "A"}
               </span>
             </div>

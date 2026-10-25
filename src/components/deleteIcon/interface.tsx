@@ -4,15 +4,9 @@ export interface DeleteIconProps {
   index: number;
   tagName: string;
   itemKey: string;
-  currentBook: BookModel;
-  handleFetchNotes: () => void;
-  handleFetchBookmarks: () => void;
   renderHighlighters: () => void;
   handleShowDelete: (Deletekey: string) => void;
-  t: (title: string) => string;
-  handleShowBookmark: (isShowBookmark: boolean) => void;
   handleChangeTag: (index: number) => void;
-  htmlBook: any;
 }
 export interface DeleteIconStates {
   isOpenDelete: boolean;

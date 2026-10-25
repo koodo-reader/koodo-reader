@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import "./supportDialog.css";
-import { SupportDialogProps, SupportDialogState } from "./interface";
+import { SupportDialogState } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import { Trans } from "react-i18next";
 import Lottie from "lottie-react";
 import supportAnimation from "../../../assets/lotties/support.json";
@@ -22,7 +24,20 @@ import {
 import TokenService from "../../../utils/storage/tokenService";
 import { proFeatures } from "../../../constants/loginList";
 
-const SupportDialog = (props: SupportDialogProps) => {
+const SupportDialog = () => {
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const isShowSupport = useAppStore((s) => s.manager.isShowSupport);
+  const handleShowSupport = useAppStore((s) => s.handleShowSupport);
+  const handleFetchAuthed = useAppStore((s) => s.handleFetchAuthed);
+  const handleLoginOptionList = useAppStore((s) => s.handleLoginOptionList);
+  const handleFetchUserInfo = useAppStore((s) => s.handleFetchUserInfo);
+  const handleFetchDataSourceList = useAppStore(
+    (s) => s.handleFetchDataSourceList
+  );
+  const handleFetchDefaultSyncOption = useAppStore(
+    (s) => s.handleFetchDefaultSyncOption
+  );
+  const { t } = useTranslation();
   const [state, setState] = useState<SupportDialogState>({
     isRedeemCode: false,
     isExitPro: false,
@@ -30,12 +45,12 @@ const SupportDialog = (props: SupportDialogProps) => {
   });
 
   const handleClose = () => {
-    props.handleShowSupport(false);
+    handleShowSupport(false);
   };
 
   return (
     <>
-      {props.isAuthed && props.isShowSupport && (
+      {isAuthed && isShowSupport && (
         <div className="new-version">
           {state.isExitPro ? (
             <>
@@ -47,19 +62,19 @@ const SupportDialog = (props: SupportDialogProps) => {
                   <div
                     onClick={async () => {
                       await handleClearToken();
-                      props.handleFetchAuthed();
-                      props.handleFetchDataSourceList();
-                      props.handleFetchDefaultSyncOption();
-                      props.handleLoginOptionList([]);
-                      props.handleShowSupport(false);
-                      toast.success(props.t("Log out successful"));
+                      handleFetchAuthed();
+                      handleFetchDataSourceList();
+                      handleFetchDefaultSyncOption();
+                      handleLoginOptionList([]);
+                      handleShowSupport(false);
+                      toast.success(t("Log out successful"));
                       handleClose();
                       setState((prev) => ({ ...prev, isExitPro: false }));
                     }}
                     className="support-us-need-help"
                     style={{ marginRight: 10 }}
                   >
-                    {props.t("Still refuse")}
+                    {t("Still refuse")}
                   </div>
                 </div>
                 <div
@@ -104,13 +119,13 @@ const SupportDialog = (props: SupportDialogProps) => {
                       marginRight: 0,
                     }}
                   >
-                    {props.t(
+                    {t(
                       "Once you exit the Pro version, you will no longer be able to use synchronization and other premium features"
                     )}
                   </p>
                   <ul className="support-dialog-benefit-list">
                     {proFeatures.map((feature, index) => (
-                      <li key={index}>{props.t(feature)}</li>
+                      <li key={index}>{t(feature)}</li>
                     ))}
                   </ul>
                 </div>
@@ -149,7 +164,7 @@ const SupportDialog = (props: SupportDialogProps) => {
                   <input
                     type={"text"}
                     name={"redeemCode"}
-                    placeholder={props.t("Enter your redemption code")}
+                    placeholder={t("Enter your redemption code")}
                     onChange={(e) => {
                       if (e.target.value) {
                         setState((prev) => ({
@@ -169,7 +184,7 @@ const SupportDialog = (props: SupportDialogProps) => {
                     <div
                       className="voice-add-confirm"
                       onClick={async () => {
-                        toast.loading(props.t("Verifying..."), {
+                        toast.loading(t("Verifying..."), {
                           id: "redeem-code",
                         });
                         let userRequest = await getUserRequest();
@@ -177,8 +192,8 @@ const SupportDialog = (props: SupportDialogProps) => {
                           code: state.redeemCode,
                         });
                         if (response.code === 200) {
-                          props.handleFetchUserInfo();
-                          toast.success(props.t("Redeem successful"), {
+                          handleFetchUserInfo();
+                          toast.success(t("Redeem successful"), {
                             id: "redeem-code",
                           });
 
@@ -186,10 +201,10 @@ const SupportDialog = (props: SupportDialogProps) => {
                             ...prev,
                             isRedeemCode: false,
                           }));
-                          props.handleShowSupport(false);
+                          handleShowSupport(false);
                         } else if (response.code === 401) {
                           toast.error(
-                            props.t("Redeem failed, error code") +
+                            t("Redeem failed, error code") +
                               ": " +
                               response.msg,
                             {
@@ -200,7 +215,7 @@ const SupportDialog = (props: SupportDialogProps) => {
                           return;
                         } else if (response.code === 10010) {
                           toast.error(
-                            props.t(
+                            t(
                               "This code has already been used, if you have redeemed it before, there is no need to redeem it again. Just log in to same account to use Pro features"
                             ),
                             {
@@ -210,7 +225,7 @@ const SupportDialog = (props: SupportDialogProps) => {
                           );
                         } else {
                           toast.error(
-                            props.t("Redeem failed, error code") +
+                            t("Redeem failed, error code") +
                               ": " +
                               response.msg,
                             {
@@ -220,7 +235,7 @@ const SupportDialog = (props: SupportDialogProps) => {
                           if (response.code === 10009) {
                             if (state.redeemCode.startsWith("CD")) {
                               toast(
-                                props.t(
+                                t(
                                   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number"
                                 ),
                                 {
@@ -229,7 +244,7 @@ const SupportDialog = (props: SupportDialogProps) => {
                               );
                             } else {
                               toast(
-                                props.t(
+                                t(
                                   "Please make sure you entered the correct redemption code and the code matches your server region, if you have any questions, please contact our support team"
                                 ),
                                 {
@@ -266,7 +281,7 @@ const SupportDialog = (props: SupportDialogProps) => {
                       fontSize: 14,
                     }}
                   >
-                    {props.t(
+                    {t(
                       "Redemption code has been sent to the email address you provided during checkout. If you haven't received the code, please check the spam foler or contact our support team for assistance."
                     )}
                   </p>
@@ -281,11 +296,11 @@ const SupportDialog = (props: SupportDialogProps) => {
                       className="support-us-need-help"
                       style={{ marginRight: 10 }}
                     >
-                      {props.t("Exit Pro")}
+                      {t("Exit Pro")}
                     </div>
                     <div
                       onClick={async () => {
-                        toast.loading(props.t("Checking payment status"), {
+                        toast.loading(t("Checking payment status"), {
                           id: "check-payment-status",
                         });
                         let res = await fetchUserInfo();
@@ -296,9 +311,9 @@ const SupportDialog = (props: SupportDialogProps) => {
                             parseInt(new Date().getTime() / 1000 + "")
                           ) {
                             toast.error(
-                              props.t("You haven't upgraded to Pro yet") +
+                              t("You haven't upgraded to Pro yet") +
                                 "\n" +
-                                props.t(
+                                t(
                                   "If you purchased a redemption code, please click the redeem button to redeem it, or contact our support team for assistance"
                                 ),
                               {
@@ -307,21 +322,21 @@ const SupportDialog = (props: SupportDialogProps) => {
                               }
                             );
                           } else {
-                            props.handleFetchUserInfo();
-                            toast.success(props.t("Thanks for your support"), {
+                            handleFetchUserInfo();
+                            toast.success(t("Thanks for your support"), {
                               id: "check-payment-status",
                             });
 
-                            props.handleShowSupport(false);
+                            handleShowSupport(false);
                           }
                         } else {
-                          toast.error(props.t("Failed to get user info"));
+                          toast.error(t("Failed to get user info"));
                         }
                       }}
                       className="support-us-need-help"
                       style={{ marginRight: 10, marginLeft: 10 }}
                     >
-                      {props.t("I've paid")}
+                      {t("I've paid")}
                     </div>
                   </div>
                   <div className="support-us-info" style={{ height: 420 }}>
@@ -342,7 +357,7 @@ const SupportDialog = (props: SupportDialogProps) => {
                       <div
                         className="new-version-open"
                         onClick={async () => {
-                          toast.loading(props.t("Generating payment link"), {
+                          toast.loading(t("Generating payment link"), {
                             id: "generate-payment-link",
                           });
                           let response = await getTempToken();
@@ -360,7 +375,7 @@ const SupportDialog = (props: SupportDialogProps) => {
                                 deviceUuid
                             );
                           } else if (response.code === 401) {
-                            props.handleFetchAuthed();
+                            handleFetchAuthed();
                           }
                         }}
                         style={{ fontWeight: "bold" }}
@@ -382,7 +397,7 @@ const SupportDialog = (props: SupportDialogProps) => {
                       className="support-dialog-list"
                       style={{ textAlign: "center", lineHeight: "1.5" }}
                     >
-                      {props.t(
+                      {t(
                         "For just the price of a cup of coffee per year, you can continue to enjoy the premium features and support our development"
                       )}
                     </p>

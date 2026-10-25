@@ -1,20 +1,12 @@
 import htmlBookModel from "../../models/HtmlBook";
 export interface SearchBoxProps {
-  isSearch: boolean;
-  isNavSearch: boolean;
-  isReading: boolean;
-  isNavLocked: boolean;
-  mode: string;
-  tabMode: string;
-  width: string;
-  height: string;
-  htmlBook: htmlBookModel;
+  isNavSearch?: boolean;
+  mode?: string;
+  width?: string;
+  height?: string;
 
-  handleSearchResults: (results: number[]) => void;
-  handleSearch: (isSearch: boolean) => void;
-  handleNavSearchState: (state: string) => void;
-  handleSearchList: (searchList: any) => void;
-  t: any;
+  handleNavSearchState?: (state: string) => void;
+  handleSearchList?: (searchList: any) => void;
 }
 export interface SearchBoxState {
   isFocused: boolean;

@@ -7,9 +7,4 @@ export interface MarkActionProps {
   isExceed: boolean;
   menuItemIndex?: number;
   handleMarkAction: (isShow: boolean) => void;
-  currentBook: BookModel;
-  handleActionDialog: (isShow: boolean) => void;
-  handleRefreshBookCover: (key: string) => void;
-  handleFetchBooks: () => void;
-  t: (title: string) => string;
 }

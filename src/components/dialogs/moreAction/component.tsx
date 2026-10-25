@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next";
 import React, { useState } from "react";
 import "./moreAction.css";
 import { Trans } from "react-i18next";
 import { MoreActionProps, MoreActionState } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import { saveAs } from "file-saver";
 import toast from "react-hot-toast";
 import BookUtil from "../../../utils/file/bookUtil";
@@ -32,7 +34,15 @@ import {
 } from "../../../utils/common";
 declare var window: any;
 
-const MoreAction = (props: MoreActionProps) => {
+const MoreAction = (
+  props: Pick<
+    MoreActionProps,
+    "left" | "top" | "isShowExport" | "isExceed" | "handleMoreAction"
+  >
+) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const handleActionDialog = useAppStore((s) => s.handleActionDialog);
+  const { t } = useTranslation();
   const [state, setState] = useState<MoreActionState>({ exportSubmenu: "" });
 
   const renderFormatSubmenu = (type: "notes" | "highlights" | "words") => {
@@ -74,23 +84,23 @@ const MoreAction = (props: MoreActionProps) => {
       let books = await DatabaseService.getAllRecords("books");
       let records = (
         await DatabaseService.getRecordsByBookKey(
-          props.currentBook.key,
+          currentBook.key,
           isWords ? "words" : "notes"
         )
       ).filter(filterFn);
       if (records.length > 0) {
         const result = await exportFn(records, books, format);
         if (result === "success") {
-          toast.success(props.t("Export successful"), { id: "exporting" });
+          toast.success(t("Export successful"), { id: "exporting" });
         } else if (result === "failed") {
-          toast.error(props.t("Failed to export"), { id: "exporting" });
+          toast.error(t("Failed to export"), { id: "exporting" });
         }
       } else {
-        toast(props.t("Nothing to export"));
+        toast(t("Nothing to export"));
       }
       setState((prev) => ({ ...prev, exportSubmenu: "" }));
       props.handleMoreAction(false);
-      props.handleActionDialog(false);
+      handleActionDialog(false);
     };
 
     const noteOffset = isWords ? 4 : isNotes ? 2 : 3;
@@ -134,7 +144,7 @@ const MoreAction = (props: MoreActionProps) => {
         onMouseLeave={() => {
           setState((prev) => ({ ...prev, exportSubmenu: "" }));
           props.handleMoreAction(false);
-          props.handleActionDialog(false);
+          handleActionDialog(false);
         }}
       >
         <div className="action-dialog-actions-container">
@@ -160,12 +170,12 @@ const MoreAction = (props: MoreActionProps) => {
         onMouseLeave={() => {
           if (!state.exportSubmenu) {
             props.handleMoreAction(false);
-            props.handleActionDialog(false);
+            handleActionDialog(false);
           }
         }}
         onMouseEnter={(event) => {
           props.handleMoreAction(true);
-          props.handleActionDialog(true);
+          handleActionDialog(true);
           event?.stopPropagation();
         }}
         style={
@@ -188,15 +198,15 @@ const MoreAction = (props: MoreActionProps) => {
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
               props.handleMoreAction(false);
-              props.handleActionDialog(false);
-              const result = await exportBookPackage([props.currentBook]);
+              handleActionDialog(false);
+              const result = await exportBookPackage([currentBook]);
               if (result === "success") {
-                toast.success(props.t("Export successful"), {
+                toast.success(t("Export successful"), {
                   id: "exporting",
                 });
               } else if (result === "failed") {
                 toast.dismiss("exporting");
-                toast.error(props.t("Failed to export"), {
+                toast.error(t("Failed to export"), {
                   id: "exporting",
                 });
               }
@@ -211,15 +221,15 @@ const MoreAction = (props: MoreActionProps) => {
             style={{ paddingLeft: "0px" }}
             onClick={() => {
               BookUtil.fetchBook(
-                props.currentBook.key,
-                props.currentBook.format.toLowerCase(),
+                currentBook.key,
+                currentBook.format.toLowerCase(),
                 true,
-                props.currentBook.path
+                currentBook.path
               ).then((result: any) => {
-                toast.success(props.t("Export successful"), {
+                toast.success(t("Export successful"), {
                   id: "exporting",
                 });
-                saveAs(new Blob([result]), getBookName(props.currentBook));
+                saveAs(new Blob([result]), getBookName(currentBook));
               });
             }}
           >
@@ -232,18 +242,18 @@ const MoreAction = (props: MoreActionProps) => {
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
               const isCoverExist = await CoverUtil.isCoverExist(
-                props.currentBook
+                currentBook
               );
               if (!isCoverExist) {
-                toast(props.t("Nothing to export"));
+                toast(t("Nothing to export"));
                 return;
               }
-              const cover = await CoverUtil.getCover(props.currentBook);
+              const cover = await CoverUtil.getCover(currentBook);
               if (cover.startsWith("blob:") || cover.startsWith("asset:")) {
                 const response = await fetch(cover);
                 const blob = await response.blob();
                 const ext = blob.type.split("/")[1] || "jpg";
-                saveAs(blob, `${props.currentBook.name}.${ext}`);
+                saveAs(blob, `${currentBook.name}.${ext}`);
               } else if (cover.startsWith("data:")) {
                 const mimeMatch = cover.match(/data:(image\/\w+);base64,/);
                 const mime = mimeMatch ? mimeMatch[1] : "image/jpeg";
@@ -254,7 +264,7 @@ const MoreAction = (props: MoreActionProps) => {
                 );
                 saveAs(
                   new Blob([byteArray], { type: mime }),
-                  `${props.currentBook.name}.${ext}`
+                  `${currentBook.name}.${ext}`
                 );
               } else if (isElectron) {
                 const fs = window.electronAPI.fs;
@@ -262,10 +272,10 @@ const MoreAction = (props: MoreActionProps) => {
                 const buffer = fs.readFileSync(cover);
                 saveAs(
                   new Blob([buffer], { type: `image/${ext}` }),
-                  `${props.currentBook.name}.${ext}`
+                  `${currentBook.name}.${ext}`
                 );
               }
-              toast.success(props.t("Export successful"), {
+              toast.success(t("Export successful"), {
                 id: "exporting",
               });
             }}
@@ -324,31 +334,31 @@ const MoreAction = (props: MoreActionProps) => {
             style={{ paddingLeft: "0px" }}
             onClick={() => {
               if (
-                props.currentBook.format === "PDF" ||
-                isFixedLayoutBook(props.currentBook)
+                currentBook.format === "PDF" ||
+                isFixedLayoutBook(currentBook)
               ) {
-                toast(props.t("Not supported yet"));
+                toast(t("Not supported yet"));
                 return;
               }
-              toast(props.t("Pre-caching"));
+              toast(t("Pre-caching"));
               BookUtil.fetchBook(
-                props.currentBook.key,
-                props.currentBook.format.toLowerCase(),
+                currentBook.key,
+                currentBook.format.toLowerCase(),
                 true,
-                props.currentBook.path
+                currentBook.path
               ).then(async (result: any) => {
                 let rendition = BookHelper.getRendition(
                   result,
                   {
-                    format: props.currentBook.format,
+                    format: currentBook.format,
                     readerMode: "",
-                    charset: props.currentBook.charset,
+                    charset: currentBook.charset,
                     animation:
                       ConfigService.getReaderConfig("animation") || "none",
                     convertChinese:
                       ConfigService.getReaderConfig("convertChinese"),
                     bookLayout: ConfigService.getReaderConfig("bookLayout"),
-                    textRules: getTextRules(props.currentBook.key),
+                    textRules: getTextRules(currentBook.key),
                     codeHighlight:
                       ConfigService.getReaderConfig("codeHighlight") || "",
                     fullTranslationMode: "no",
@@ -357,7 +367,7 @@ const MoreAction = (props: MoreActionProps) => {
                     parserRegex: "",
                     isDarkMode: "no",
                     isMobile: "no",
-                    password: getPdfPassword(props.currentBook),
+                    password: getPdfPassword(currentBook),
                     isScannedPDF: "no",
                     isKeepPDFBackground: "no",
                   },
@@ -366,15 +376,15 @@ const MoreAction = (props: MoreActionProps) => {
                 let cache = await rendition.preCache(result);
                 if (cache !== "err" || cache) {
                   await BookUtil.addBook(
-                    "cache-" + props.currentBook.key,
+                    "cache-" + currentBook.key,
                     "zip",
                     cache
                   );
-                  toast.success(props.t("Pre-caching successful"), {
+                  toast.success(t("Pre-caching successful"), {
                     id: "add-book",
                   });
                 } else {
-                  toast.error(props.t("Pre-caching failed"), {
+                  toast.error(t("Pre-caching failed"), {
                     id: "add-book",
                   });
                 }
@@ -389,8 +399,8 @@ const MoreAction = (props: MoreActionProps) => {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={async () => {
-              await BookUtil.deleteBook("cache-" + props.currentBook.key, "zip");
-              toast.success(props.t("Deletion successful"));
+              await BookUtil.deleteBook("cache-" + currentBook.key, "zip");
+              toast.success(t("Deletion successful"));
             }}
           >
             <p className="action-name">
@@ -401,12 +411,12 @@ const MoreAction = (props: MoreActionProps) => {
             className="action-dialog-edit"
             style={{ paddingLeft: "0px" }}
             onClick={() => {
-              const link = `koodo-reader://open-book?bookKey=${props.currentBook.key}`;
+              const link = `koodo-reader://open-book?bookKey=${currentBook.key}`;
               navigator.clipboard.writeText(link).then(() => {
-                toast.success(props.t("Copied"));
+                toast.success(t("Copied"));
               });
               props.handleMoreAction(false);
-              props.handleActionDialog(false);
+              handleActionDialog(false);
             }}
           >
             <p className="action-name">
@@ -420,20 +430,20 @@ const MoreAction = (props: MoreActionProps) => {
               onClick={async () => {
                 const fs = window.electronAPI.fs;
                 const path = window.electronAPI.path;
-                const localBookPath = props.currentBook.path;
+                const localBookPath = currentBook.path;
 
                 const libraryBookPath = path.join(
                   getStorageLocation() || "",
                   `book`,
-                  props.currentBook.key +
+                  currentBook.key +
                     "." +
-                    props.currentBook.format.toLowerCase()
+                    currentBook.format.toLowerCase()
                 );
                 if (
                   !fs.existsSync(localBookPath) &&
                   !fs.existsSync(libraryBookPath)
                 ) {
-                  toast.error(props.t("No path found for this book"));
+                  toast.error(t("No path found for this book"));
                   return;
                 }
                 if (fs.existsSync(localBookPath)) {

@@ -2,7 +2,6 @@ import React from "react";
 import "./bookCoverItem.css";
 import { BookCoverProps } from "./interface";
 import ActionDialog from "../dialogs/actionDialog";
-import { withRouter } from "react-router-dom";
 import EmptyCover from "../emptyCover";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
@@ -13,10 +12,29 @@ import {
   estimateMenuHeight,
   CONTEXT_MENU_WIDTH,
 } from "../../utils/common";
+import { useAppStore } from "../../store/useAppStore";
 
 declare var window: any;
 
 const BookCoverItem: React.FC<BookCoverProps> = (props) => {
+  const isOpenActionDialog = useAppStore((s) => s.book.isOpenActionDialog);
+  const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const isSelectBook = useAppStore((s) => s.manager.isSelectBook);
+  const selectedBooks = useAppStore((s) => s.manager.selectedBooks);
+  const refreshBookKey = useAppStore((s) => s.manager.refreshBookKey);
+  const handleReadingBook = useAppStore((s) => s.handleReadingBook);
+  const handleActionDialog = useAppStore((s) => s.handleActionDialog);
+  const handleRefreshBookCover = useAppStore((s) => s.handleRefreshBookCover);
+  const handleSelectBook = useAppStore((s) => s.handleSelectBook);
+  const handleSelectedBooks = useAppStore((s) => s.handleSelectedBooks);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleCollectionDialogBooks = useAppStore(
+    (s) => s.handleCollectionDialogBooks
+  );
+  const handleAddCollectionDialog = useAppStore(
+    (s) => s.handleAddCollectionDialog
+  );
   const {
     left,
     setLeft,
@@ -40,13 +58,25 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     getPercentage,
     isFavoriteBook,
     isTopBook,
-  } = useBookItem(props);
+  } = useBookItem({
+    ...props,
+    refreshBookKey,
+    isSelectBook,
+    selectedBooks,
+    handleRefreshBookCover,
+    handleReadingBook,
+    handleSelectBook,
+    handleSelectedBooks,
+    handleFetchBooks,
+    handleCollectionDialogBooks,
+    handleAddCollectionDialog,
+  });
 
   const handleMoreAction = (event: any) => {
     event.preventDefault();
     const e = event || window.event;
     let x = e.clientX;
-    if (x > document.body.clientWidth - 300 && !props.isCollapsed) {
+    if (x > document.body.clientWidth - 300 && !isCollapsed) {
       x = x - 180;
     }
     const pos = clampMenuPosition(
@@ -59,8 +89,8 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     );
     setLeft(pos.left);
     setTop(pos.top);
-    props.handleActionDialog(true);
-    props.handleReadingBook(props.book);
+    handleActionDialog(true);
+    handleReadingBook(props.book);
   };
 
   const percentage = getPercentage();
@@ -200,7 +230,7 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
               }}
             />
           )}
-          {props.isSelectBook || isHover ? (
+          {isSelectBook || isHover ? (
             <span
               className="icon-message book-selected-icon"
               onMouseEnter={() => {
@@ -252,11 +282,11 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
           </div>
         </div>
       </div>
-      {props.isOpenActionDialog && props.book.key === props.currentBook.key ? (
+      {isOpenActionDialog && props.book.key === currentBook.key ? (
         <ActionDialog {...(actionProps as any)} />
       ) : null}
     </>
   );
 };
 
-export default withRouter(BookCoverItem as any);
+export default BookCoverItem;

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -5,7 +6,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook } from "../../../utils/common";
 import SliderList from "../../readerSettings/sliderList";
 import SwitchRow from "../../readerSettings/switchRow";
-import { AssistReadDialogProps } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 
 const readingRulerSliderConfigs = [
   {
@@ -69,7 +70,17 @@ const exclusiveModeNames = [
 
 type ExclusiveModeName = (typeof exclusiveModeNames)[number];
 
-const AssistReadDialog = (props: AssistReadDialogProps) => {
+const AssistReadDialog = () => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
+  const handleAssistReadDialog = useAppStore((s) => s.handleAssistReadDialog);
+  const handleParagraphMode = useAppStore((s) => s.handleParagraphMode);
+  const handleReadingRuler = useAppStore((s) => s.handleReadingRuler);
+  const handleSpeedReading = useAppStore((s) => s.handleSpeedReading);
+  const handleAutoReading = useAppStore((s) => s.handleAutoReading);
+  const handleReaderMode = useAppStore((s) => s.handleReaderMode);
+  const { t } = useTranslation();
   const [state, setState] = useState<Record<ExclusiveModeName, boolean>>({
     isParagraphMode: ConfigService.getReaderConfig("isParagraphMode") === "yes",
     isReadingRuler: ConfigService.getReaderConfig("isReadingRuler") === "yes",
@@ -78,12 +89,12 @@ const AssistReadDialog = (props: AssistReadDialogProps) => {
   });
 
   const stopAutoScroll = () => {
-    if (!props.htmlBook) return;
+    if (!htmlBook) return;
     const rate = parseFloat(
       ConfigService.getReaderConfig("autoScrollRate") || "0.5"
     );
-    props.htmlBook.rendition.autoScroll?.(rate, "no");
-    props.htmlBook.rendition.autoScrollPDF?.("no");
+    htmlBook.rendition.autoScroll?.(rate, "no");
+    htmlBook.rendition.autoScrollPDF?.("no");
   };
 
   const handleExclusiveOff = (enabledName: ExclusiveModeName) => {
@@ -91,10 +102,10 @@ const AssistReadDialog = (props: AssistReadDialogProps) => {
       ExclusiveModeName,
       (value: boolean) => void
     > = {
-      isParagraphMode: props.handleParagraphMode,
-      isReadingRuler: props.handleReadingRuler,
-      isSpeedReading: props.handleSpeedReading,
-      isAutoReading: props.handleAutoReading,
+      isParagraphMode: handleParagraphMode,
+      isReadingRuler: handleReadingRuler,
+      isSpeedReading: handleSpeedReading,
+      isAutoReading: handleAutoReading,
     };
     const offNames = exclusiveModeNames.filter(
       (name) => name !== enabledName && state[name]
@@ -123,10 +134,10 @@ const AssistReadDialog = (props: AssistReadDialogProps) => {
     }
     setState((prev) => ({ ...prev, isParagraphMode: next }));
     ConfigService.setReaderConfig("isParagraphMode", next ? "yes" : "no");
-    props.handleParagraphMode(next);
-    toast(props.t("Change successful"));
+    handleParagraphMode(next);
+    toast(t("Change successful"));
     setTimeout(() => {
-      props.renderBookFunc();
+      renderBookFunc();
     }, 500);
   };
 
@@ -143,10 +154,10 @@ const AssistReadDialog = (props: AssistReadDialogProps) => {
     }
     setState((prev) => ({ ...prev, isReadingRuler: next }));
     ConfigService.setReaderConfig("isReadingRuler", next ? "yes" : "no");
-    props.handleReadingRuler(next);
-    toast(props.t("Change successful"));
+    handleReadingRuler(next);
+    toast(t("Change successful"));
     setTimeout(() => {
-      props.renderBookFunc();
+      renderBookFunc();
     }, 500);
   };
 
@@ -160,10 +171,10 @@ const AssistReadDialog = (props: AssistReadDialogProps) => {
     }
     setState((prev) => ({ ...prev, isSpeedReading: next }));
     ConfigService.setReaderConfig("isSpeedReading", next ? "yes" : "no");
-    props.handleSpeedReading(next);
-    toast(props.t("Change successful"));
+    handleSpeedReading(next);
+    toast(t("Change successful"));
     setTimeout(() => {
-      props.renderBookFunc();
+      renderBookFunc();
     }, 500);
   };
 
@@ -174,24 +185,24 @@ const AssistReadDialog = (props: AssistReadDialogProps) => {
     }
     setState((prev) => ({ ...prev, isAutoReading: next }));
     ConfigService.setReaderConfig("isAutoReading", next ? "yes" : "no");
-    props.handleAutoReading(next);
+    handleAutoReading(next);
     if (next) {
       if (!ConfigService.getReaderConfig("autoScrollRate")) {
         ConfigService.setReaderConfig("autoScrollRate", "0.5");
       }
-      if (isPaginatedBook(props.currentBook)) {
+      if (isPaginatedBook(currentBook)) {
         ConfigService.setReaderConfig("pdfReaderMode", "scroll");
       } else {
         ConfigService.setReaderConfig("readerMode", "scroll");
       }
-      props.handleReaderMode("scroll");
+      handleReaderMode("scroll");
     } else {
       stopAutoScroll();
     }
-    toast(props.t("Change successful"));
+    toast(t("Change successful"));
     if (next) {
       setTimeout(() => {
-        props.renderBookFunc();
+        renderBookFunc();
       }, 500);
     }
   };
@@ -200,10 +211,10 @@ const AssistReadDialog = (props: AssistReadDialogProps) => {
     <div
       className="sort-dialog-container scale-page-dialog-container assist-read-dialog-container"
       onMouseLeave={() => {
-        props.handleAssistReadDialog(false);
+        handleAssistReadDialog(false);
       }}
       onMouseEnter={() => {
-        props.handleAssistReadDialog(true);
+        handleAssistReadDialog(true);
       }}
       style={{
         top: "50px",

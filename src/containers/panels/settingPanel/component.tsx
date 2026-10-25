@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useState } from "react";
 import "./settingPanel.css";
 import { isReadingRawPDF } from "../../../utils/common";
@@ -15,6 +16,7 @@ import {
 import { sliderConfigs, dropdownList } from "../../../constants/dropdownList";
 import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
+import { useAppStore } from "../../../store/useAppStore";
 
 const SETTING_PANEL_TAB_KEY = "setting-panel-tab";
 
@@ -33,8 +35,15 @@ const panelTabs = [
 ];
 
 const SettingPanel = (props: SettingPanelProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const backgroundColor = useAppStore((s) => s.reader.backgroundColor);
+  const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
+  const handleSettingLock = useAppStore((s) => s.handleSettingLock);
+  const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
+  const { t } = useTranslation();
   const hasGroupItems = (group: string) => {
-    const isPDF = isReadingRawPDF(props.currentBook);
+    const isPDF = isReadingRawPDF(currentBook);
     return (
       sliderConfigs.some(
         (item) => item.group === group && (!isPDF || item.isPDF)
@@ -70,24 +79,24 @@ const SettingPanel = (props: SettingPanelProps) => {
   };
 
   const handleLock = () => {
-    props.handleSettingLock(!props.isSettingLocked);
+    handleSettingLock(!isSettingLocked);
     ConfigService.setReaderConfig(
       "isSettingLocked",
-      !props.isSettingLocked ? "yes" : "no"
+      !isSettingLocked ? "yes" : "no"
     );
     setTimeout(() => {
-      props.renderBookFunc();
+      renderBookFunc();
     }, 300);
   };
 
   const handleClearAllStyle = () => {
     if (
       ConfigService.getAllListConfig("seperateStyleBooks").includes(
-        props.currentBook.key
+        currentBook.key
       )
     ) {
       ConfigService.deleteObjectConfig(
-        props.currentBook.key,
+        currentBook.key,
         "seperateStyleConfig"
       );
     } else {
@@ -98,13 +107,13 @@ const SettingPanel = (props: SettingPanelProps) => {
       localStorage.setItem("readerConfig", JSON.stringify(readerConfig));
     }
 
-    toast.success(props.t("Clear successful"));
-    props.handleBackgroundColor("");
-    props.renderBookFunc();
+    toast.success(t("Clear successful"));
+    handleBackgroundColor("");
+    renderBookFunc();
   };
 
   const renderSliders = (group: string) => {
-    const isPDF = isReadingRawPDF(props.currentBook);
+    const isPDF = isReadingRawPDF(currentBook);
     return sliderConfigs
       .filter((item) => item.group === group && (!isPDF || item.isPDF))
       .map((item) => <SliderList key={item.mode} {...{ item }} />);
@@ -160,15 +169,15 @@ const SettingPanel = (props: SettingPanelProps) => {
     <div
       className="setting-panel-parent"
       style={{
-        backgroundColor: props.isSettingLocked ? props.backgroundColor : "",
-        color: props.isSettingLocked
+        backgroundColor: isSettingLocked ? backgroundColor : "",
+        color: isSettingLocked
           ? ConfigService.getReaderConfig("textColor")
           : "",
       }}
     >
       <span
         className={
-          props.isSettingLocked
+          isSettingLocked
             ? "icon-lock lock-icon"
             : "icon-unlock lock-icon"
         }

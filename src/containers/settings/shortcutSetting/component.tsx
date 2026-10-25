@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
@@ -17,6 +18,7 @@ import { ShortcutSettingProps } from "./interface";
 import "./shortcutSetting.css";
 
 const ShortcutSetting = (props: ShortcutSettingProps) => {
+  const { t } = useTranslation();
   const configRef = useRef<ShortcutConfig>(getShortcutConfig());
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const [recording, setRecording] = useState<{
@@ -59,14 +61,14 @@ const ShortcutSetting = (props: ShortcutSettingProps) => {
       recording.index
     );
     if (conflict) {
-      toast.error(props.t("Shortcut conflict"));
+      toast.error(t("Shortcut conflict"));
       return;
     }
 
     config[action][recording.index] = binding;
     persistConfig();
     setRecording(null);
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
   useEffect(() => {
@@ -94,14 +96,14 @@ const ShortcutSetting = (props: ShortcutSettingProps) => {
       setRecording(null);
     }
     persistConfig();
-    toast.success(props.t("Change successful"));
+    toast.success(t("Change successful"));
   };
 
   const handleReset = () => {
     configRef.current = resetShortcutConfig();
     setRecording(null);
     forceUpdate();
-    toast.success(props.t("Reset successful"));
+    toast.success(t("Reset successful"));
   };
 
   const renderChips = (action: ShortcutAction) => {

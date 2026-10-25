@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { TextRule, TextSettingProps, TextSettingState } from "./interface";
 import { Trans } from "react-i18next";
@@ -8,11 +9,14 @@ import {
   HighlightUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import BookUtil from "../../../utils/file/bookUtil";
+import { useAppStore } from "../../../store/useAppStore";
 
 const HIGHLIGHT_STYLE_TYPES = KookitConfig.HighlightStyleTypes;
 const HIGHLIGHT_PRESET_COLORS = KookitConfig.HighlightPresetColors;
 
 const TextSetting = (props: TextSettingProps) => {
+  const books = useAppStore((s) => s.manager.books);
+  const { t } = useTranslation();
   const highlightUtil = useRef<any>(null);
   if (!highlightUtil.current) {
     highlightUtil.current = new HighlightUtil(ConfigService);
@@ -36,10 +40,10 @@ const TextSetting = (props: TextSettingProps) => {
   useEffect(() => {
     loadBookNamesMap();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.books]);
+  }, [books]);
 
   const getBookKeys = () => {
-    const bookKeys = (props.books || []).map((book) => book.key);
+    const bookKeys = (books || []).map((book) => book.key);
     const ruleBookKeys = (ConfigService.getAllListConfig("textRuleList") || [])
       .map((id) => getRule(id))
       .filter(
@@ -168,19 +172,19 @@ const TextSetting = (props: TextSettingProps) => {
     const replacement = formReplacement.trim();
 
     if (!pattern) {
-      toast.error(props.t("Please enter match pattern"));
+      toast.error(t("Please enter match pattern"));
       return;
     }
     if (formType === "replace" && !replacement) {
-      toast.error(props.t("Please enter replacement"));
+      toast.error(t("Please enter replacement"));
       return;
     }
     if (formScope === "book" && !formBookKey) {
-      toast.error(props.t("Please select a book"));
+      toast.error(t("Please select a book"));
       return;
     }
     if (formMatchType === "regex" && !validateRegex(pattern)) {
-      toast.error(props.t("Invalid regex pattern"));
+      toast.error(t("Invalid regex pattern"));
       return;
     }
 
@@ -207,11 +211,11 @@ const TextSetting = (props: TextSettingProps) => {
 
     if (isEditing && editingId) {
       ConfigService.setObjectConfig(editingId, rule, "textRules");
-      toast.success(props.t("Modification successful"));
+      toast.success(t("Modification successful"));
     } else {
       ConfigService.setObjectConfig(rule.id, rule, "textRules");
       ConfigService.setListConfig(rule.id, "textRuleList");
-      toast.success(props.t("Addition successful"));
+      toast.success(t("Addition successful"));
     }
 
     fetchRuleList();
@@ -222,20 +226,20 @@ const TextSetting = (props: TextSettingProps) => {
     ConfigService.deleteListConfig(ruleId, "textRuleList");
     ConfigService.deleteObjectConfig(ruleId, "textRules");
     fetchRuleList();
-    toast.success(props.t("Deletion successful"));
+    toast.success(t("Deletion successful"));
   };
 
   const renderScopeLabel = (rule: TextRule) => {
     if (rule.scope === "book" && rule.bookName) {
       return rule.bookName;
     }
-    return props.t("All books");
+    return t("All books");
   };
 
   const renderMatchTypeLabel = (matchType: string) => {
     return matchType === "regex"
-      ? props.t("Regular expression")
-      : props.t("Plain text");
+      ? t("Regular expression")
+      : t("Plain text");
   };
 
   const renderForm = () => {
@@ -253,7 +257,7 @@ const TextSetting = (props: TextSettingProps) => {
     } = state;
 
     const scopeValue = formScope === "all" ? "all" : formBookKey;
-    const bookKeys = (props.books || []).map((book) => book.key);
+    const bookKeys = (books || []).map((book) => book.key);
     const presetColors =
       HIGHLIGHT_PRESET_COLORS[formHighlightStyle] ||
       HIGHLIGHT_PRESET_COLORS["background"];
@@ -282,10 +286,10 @@ const TextSetting = (props: TextSettingProps) => {
             }
           >
             <option value="plain" className="lang-setting-option">
-              {props.t("Plain text")}
+              {t("Plain text")}
             </option>
             <option value="regex" className="lang-setting-option">
-              {props.t("Regular expression")}
+              {t("Regular expression")}
             </option>
           </select>
         </div>
@@ -297,7 +301,7 @@ const TextSetting = (props: TextSettingProps) => {
           <input
             type="text"
             className="token-dialog-username-box"
-            placeholder={props.t("Please enter match pattern")}
+            placeholder={t("Please enter match pattern")}
             value={formPattern}
             onChange={(e) =>
               setState((prev) => ({ ...prev, formPattern: e.target.value }))
@@ -313,7 +317,7 @@ const TextSetting = (props: TextSettingProps) => {
             <input
               type="text"
               className="token-dialog-username-box"
-              placeholder={props.t("Please enter replacement")}
+              placeholder={t("Please enter replacement")}
               value={formReplacement}
               onChange={(e) =>
                 setState((prev) => ({
@@ -426,7 +430,7 @@ const TextSetting = (props: TextSettingProps) => {
             }}
           >
             <option value="all" className="lang-setting-option">
-              {props.t("All books")}
+              {t("All books")}
             </option>
             {bookKeys.map((bookKey) => (
               <option
@@ -543,7 +547,7 @@ const TextSetting = (props: TextSettingProps) => {
             >
               {type === "replace" && rule.replacement !== undefined && (
                 <span>
-                  {props.t("Replacement")}: {rule.replacement} ·{" "}
+                  {t("Replacement")}: {rule.replacement} ·{" "}
                 </span>
               )}
               {type === "highlight" &&
@@ -562,7 +566,7 @@ const TextSetting = (props: TextSettingProps) => {
                     >
                       Aa
                     </span>
-                    {props.t("Highlight style")}: {rule.highlightStyle} ·{" "}
+                    {t("Highlight style")}: {rule.highlightStyle} ·{" "}
                   </span>
                 )}
             </p>
@@ -577,7 +581,7 @@ const TextSetting = (props: TextSettingProps) => {
                 zIndex: -1,
               }}
             >
-              {props.t("Scope")}: {renderScopeLabel(rule)}
+              {t("Scope")}: {renderScopeLabel(rule)}
             </p>
           </div>
         ))}

@@ -1,10 +1,7 @@
 import { PopupOptionItem } from "../../../constants/popupList";
 
 export interface PopupOptionDialogProps {
-  handlePopupOptionDialog: (isOpenPopupOptionDialog: boolean) => void;
-  handlePopupOptionUpdate: (popupOptionUpdateIndex: number) => void;
 
-  t: (title: string, options?: Record<string, unknown>) => string;
 }
 
 export interface PopupOptionDialogItem extends PopupOptionItem {

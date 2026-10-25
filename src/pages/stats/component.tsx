@@ -1,7 +1,8 @@
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import "./stats.css";
 import { StatsProps, StatsState } from "./interface";
-import { withRouter } from "react-router-dom";
 import { Trans } from "react-i18next";
 import {
   ConfigService,
@@ -22,6 +23,8 @@ import {
 } from "recharts";
 
 const Stats = (props: StatsProps) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const readingTimeUtilRef = useRef<InstanceType<
     typeof ReadingTimeUtil
   > | null>(null);
@@ -313,28 +316,28 @@ const Stats = (props: StatsProps) => {
     {
       icon: "icon-bookshelf",
       value: totalBooks,
-      label: props.t("Books read"),
+      label: t("Books read"),
       color: textColor,
       iconSize: 24,
     },
     {
       icon: "icon-grid",
       value: formatTime(totalSeconds),
-      label: props.t("Total reading time"),
+      label: t("Total reading time"),
       color: textColor,
       iconSize: 22,
     },
     {
       icon: "icon-clock",
       value: `${longestStreak}`,
-      label: props.t("Reading streak (days)"),
+      label: t("Reading streak (days)"),
       color: textColor,
       iconSize: 28,
     },
     {
       icon: "icon-chart",
       value: formatTime(avgDailySeconds),
-      label: props.t("Daily average"),
+      label: t("Daily average"),
       color: textColor,
       iconSize: 22,
     },
@@ -355,7 +358,7 @@ const Stats = (props: StatsProps) => {
         className="stats-close-btn"
         style={{ color: textColor }}
         onClick={() => {
-          props.history.push("/manager/home");
+          navigate("/manager/home");
         }}
       >
         <span className="icon-close"></span>
@@ -577,4 +580,4 @@ const Stats = (props: StatsProps) => {
   );
 };
 
-export default withRouter(Stats as any);
+export default Stats;

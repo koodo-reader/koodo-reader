@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Route, Switch, HashRouter } from "react-router-dom";
+﻿import React, { useEffect } from "react";
+import { Route, Routes, HashRouter } from "react-router-dom";
 import Manager from "../pages/manager";
 import Login from "../pages/login";
 import Stats from "../pages/stats";
@@ -144,43 +144,44 @@ const Router = () => {
   }, []);
   return (
     <HashRouter>
-      <Switch>
-        <Route component={Manager as any} path="/manager" />
-        <Route component={Login as any} path="/login" />
-        <Route component={Stats as any} path="/stats" />
-        <Route component={HtmlReader as any} path="/epub" />
-        <Route component={HtmlReader as any} path="/mobi" />
-        <Route component={HtmlReader as any} path="/cbr" />
-        <Route component={HtmlReader as any} path="/cbt" />
-        <Route component={HtmlReader as any} path="/cbz" />
-        <Route component={HtmlReader as any} path="/cb7" />
-        <Route component={HtmlReader as any} path="/pptx" />
-        <Route component={HtmlReader as any} path="/ppt" />
-        <Route component={HtmlReader as any} path="/xps" />
-        <Route component={HtmlReader as any} path="/oxps" />
-        <Route component={HtmlReader as any} path="/djvu" />
-        <Route component={HtmlReader as any} path="/djv" />
-        <Route component={HtmlReader as any} path="/ofd" />
-        <Route component={HtmlReader as any} path="/azw3" />
-        <Route component={HtmlReader as any} path="/azw" />
-        <Route component={HtmlReader as any} path="/txt" />
-        <Route component={HtmlReader as any} path="/docx" />
-        <Route component={HtmlReader as any} path="/doc" />
-        <Route component={HtmlReader as any} path="/rtf" />
-        <Route component={HtmlReader as any} path="/md" />
-        <Route component={HtmlReader as any} path="/fb2" />
-        <Route component={HtmlReader as any} path="/chm" />
-        <Route component={HtmlReader as any} path="/html" />
-        <Route component={HtmlReader as any} path="/htm" />
-        <Route component={HtmlReader as any} path="/xml" />
-        <Route component={HtmlReader as any} path="/xhtml" />
-        <Route component={HtmlReader as any} path="/mhtml" />
-        <Route component={HtmlReader as any} path="/href" />
-        <Route component={HtmlReader as any} path="/pdf" />
-        <Route component={_Redirect as any} path="/" />
-      </Switch>
+      <Routes>
+        <Route element={<Manager />} path="/manager/*" />
+        <Route element={<Login />} path="/login" />
+        <Route element={<Stats />} path="/stats" />
+        <Route element={<HtmlReader />} path="/epub/*" />
+        <Route element={<HtmlReader />} path="/mobi/*" />
+        <Route element={<HtmlReader />} path="/cbr/*" />
+        <Route element={<HtmlReader />} path="/cbt/*" />
+        <Route element={<HtmlReader />} path="/cbz/*" />
+        <Route element={<HtmlReader />} path="/cb7/*" />
+        <Route element={<HtmlReader />} path="/pptx/*" />
+        <Route element={<HtmlReader />} path="/ppt/*" />
+        <Route element={<HtmlReader />} path="/xps/*" />
+        <Route element={<HtmlReader />} path="/oxps/*" />
+        <Route element={<HtmlReader />} path="/djvu/*" />
+        <Route element={<HtmlReader />} path="/djv/*" />
+        <Route element={<HtmlReader />} path="/ofd/*" />
+        <Route element={<HtmlReader />} path="/azw3/*" />
+        <Route element={<HtmlReader />} path="/azw/*" />
+        <Route element={<HtmlReader />} path="/txt/*" />
+        <Route element={<HtmlReader />} path="/docx/*" />
+        <Route element={<HtmlReader />} path="/doc/*" />
+        <Route element={<HtmlReader />} path="/rtf/*" />
+        <Route element={<HtmlReader />} path="/md/*" />
+        <Route element={<HtmlReader />} path="/fb2/*" />
+        <Route element={<HtmlReader />} path="/chm/*" />
+        <Route element={<HtmlReader />} path="/html/*" />
+        <Route element={<HtmlReader />} path="/htm/*" />
+        <Route element={<HtmlReader />} path="/xml/*" />
+        <Route element={<HtmlReader />} path="/xhtml/*" />
+        <Route element={<HtmlReader />} path="/mhtml/*" />
+        <Route element={<HtmlReader />} path="/href/*" />
+        <Route element={<HtmlReader />} path="/pdf/*" />
+        <Route element={<_Redirect />} path="/" />
+      </Routes>
     </HashRouter>
   );
 };
 
 export default Router;
+

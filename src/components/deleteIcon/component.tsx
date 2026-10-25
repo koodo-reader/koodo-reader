@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import "./deleteIcon.css";
 import { DeleteIconProps } from "./interface";
@@ -6,15 +7,20 @@ import toast from "react-hot-toast";
 import DatabaseService from "../../utils/storage/databaseService";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import ConfigUtil from "../../utils/file/configUtil";
+import { useAppStore } from "../../store/useAppStore";
 
 const DeleteIcon = (props: DeleteIconProps) => {
+  const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const handleFetchBookmarks = useAppStore((s) => s.handleFetchBookmarks);
+  const handleFetchNotes = useAppStore((s) => s.handleFetchNotes);
+  const handleShowBookmark = useAppStore((s) => s.handleShowBookmark);
+  const { t } = useTranslation();
   const [isOpenDelete, setIsOpenDelete] = useState(false);
 
   const handleDelete = async () => {
     let deleteFunc =
-      props.mode === "notes"
-        ? props.handleFetchNotes
-        : props.handleFetchBookmarks;
+      props.mode === "notes" ? handleFetchNotes : handleFetchBookmarks;
     if (props.mode === "tags") {
       ConfigService.deleteListConfig(props.tagName, "noteTags");
       handleDeleteTagFromNote(props.tagName);
@@ -30,7 +36,7 @@ const DeleteIcon = (props: DeleteIconProps) => {
         percentage: string;
         cfi: string;
       } = ConfigService.getObjectConfig(
-        props.currentBook.key,
+        currentBook.key,
         "recordLocation",
         {}
       );
@@ -40,19 +46,19 @@ const DeleteIcon = (props: DeleteIconProps) => {
       );
       if (!bookmark) return;
       if (bookLocation.percentage === bookmark.percentage) {
-        props.handleShowBookmark(false);
+        handleShowBookmark(false);
       }
       DatabaseService.deleteRecord(props.itemKey, "bookmarks").then(() => {
         deleteFunc();
-        toast.success(props.t("Deletion successful"));
+        toast.success(t("Deletion successful"));
       });
       return;
     }
     if (props.mode === "notes") {
       let note = await DatabaseService.getRecord(props.itemKey, "notes");
       if (!note) return;
-      if (props.htmlBook && props.htmlBook.rendition) {
-        props.htmlBook.rendition.removeOneNote(
+      if (htmlBook && htmlBook.rendition) {
+        htmlBook.rendition.removeOneNote(
           props.itemKey,
           note.chapterIndex
         );
@@ -60,7 +66,7 @@ const DeleteIcon = (props: DeleteIconProps) => {
 
       DatabaseService.deleteRecord(props.itemKey, "notes").then(() => {
         deleteFunc();
-        toast.success(props.t("Deletion successful"));
+        toast.success(t("Deletion successful"));
       });
 
       return;

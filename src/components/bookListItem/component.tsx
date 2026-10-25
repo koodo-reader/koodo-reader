@@ -2,7 +2,6 @@ import React from "react";
 import "./bookListItem.css";
 import { BookItemProps } from "./interface";
 import { Trans } from "react-i18next";
-import { withRouter } from "react-router-dom";
 import EmptyCover from "../emptyCover";
 import ActionDialog from "../dialogs/actionDialog";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
@@ -13,10 +12,28 @@ import {
   estimateMenuHeight,
   CONTEXT_MENU_WIDTH,
 } from "../../utils/common";
+import { useAppStore } from "../../store/useAppStore";
 
 declare var window: any;
 
 const BookListItem: React.FC<BookItemProps> = (props) => {
+  const isOpenActionDialog = useAppStore((s) => s.book.isOpenActionDialog);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const isSelectBook = useAppStore((s) => s.manager.isSelectBook);
+  const selectedBooks = useAppStore((s) => s.manager.selectedBooks);
+  const refreshBookKey = useAppStore((s) => s.manager.refreshBookKey);
+  const handleReadingBook = useAppStore((s) => s.handleReadingBook);
+  const handleActionDialog = useAppStore((s) => s.handleActionDialog);
+  const handleRefreshBookCover = useAppStore((s) => s.handleRefreshBookCover);
+  const handleSelectBook = useAppStore((s) => s.handleSelectBook);
+  const handleSelectedBooks = useAppStore((s) => s.handleSelectedBooks);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleCollectionDialogBooks = useAppStore(
+    (s) => s.handleCollectionDialogBooks
+  );
+  const handleAddCollectionDialog = useAppStore(
+    (s) => s.handleAddCollectionDialog
+  );
   const {
     left,
     setLeft,
@@ -39,7 +56,19 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
     getPercentage,
     isFavoriteBook,
     isTopBook,
-  } = useBookItem(props);
+  } = useBookItem({
+    ...props,
+    refreshBookKey,
+    isSelectBook,
+    selectedBooks,
+    handleRefreshBookCover,
+    handleReadingBook,
+    handleSelectBook,
+    handleSelectedBooks,
+    handleFetchBooks,
+    handleCollectionDialogBooks,
+    handleAddCollectionDialog,
+  });
 
   const handleMoreAction = (event: any) => {
     event.preventDefault();
@@ -58,8 +87,8 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
     );
     setLeft(pos.left);
     setTop(pos.top);
-    props.handleActionDialog(true);
-    props.handleReadingBook(props.book);
+    handleActionDialog(true);
+    handleReadingBook(props.book);
   };
 
   const percentage = getPercentage();
@@ -149,7 +178,7 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
             />
           </div>
         )}
-        {props.isSelectBook || isHover ? (
+        {isSelectBook || isHover ? (
           <span
             className="icon-message book-selected-icon"
             onMouseEnter={() => {
@@ -210,7 +239,7 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
           </div>
         </p>
       </div>
-      {props.isOpenActionDialog && props.book.key === props.currentBook.key ? (
+      {isOpenActionDialog && props.book.key === currentBook.key ? (
         <div className="action-dialog-parent">
           <ActionDialog {...(actionProps as any)} />
         </div>
@@ -219,4 +248,4 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
   );
 };
 
-export default withRouter(BookListItem as any);
+export default BookListItem;

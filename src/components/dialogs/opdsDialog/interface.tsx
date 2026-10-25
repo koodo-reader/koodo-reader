@@ -1,4 +1,3 @@
-import { RouteComponentProps } from "react-router-dom";
 
 export interface OPDSCatalog {
   id: string;
@@ -43,10 +42,7 @@ export interface OPDSFeed {
   searchTemplate: string;
 }
 
-export interface OPDSDialogProps extends RouteComponentProps<any> {
-  handleOPDSDialog: (isOpen: boolean) => void;
-  importBookFunc: (file: any) => Promise<void>;
-  t: (title: string) => string;
+export interface OPDSDialogProps {
 }
 
 export interface OPDSDialogState {
