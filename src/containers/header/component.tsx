@@ -169,13 +169,15 @@ const Header = (props: HeaderProps) => {
       const folders =
         ConfigService.getAllListConfig(AUTO_IMPORT_FOLDERS_KEY) || [];
       if (folders.length === 0) return;
-      const importBookFunc = useAppStore.getState().book.importBookFunc;
-      if (!importBookFunc) {
+      if (!useAppStore.getState().book.importBookFunc) {
         console.error("Auto import: no import function available");
         return;
       }
       for (const folderPath of folders) {
-        await scanFolderForNewBooks(folderPath, importBookFunc);
+        await scanFolderForNewBooks(
+          folderPath,
+          useAppStore.getState().book.importBookFunc
+        );
       }
     } catch (error) {
       console.error("Auto import folder scan error:", error);
@@ -467,11 +469,9 @@ const Header = (props: HeaderProps) => {
           ) {
             return;
           }
-          const latestUserInfo = useAppStore.getState().manager.userInfo;
           if (
-            latestUserInfo &&
-            latestUserInfo.time_created &&
-            latestUserInfo.time_created < 1769875200
+            useAppStore.getState().manager.userInfo?.time_created &&
+            useAppStore.getState().manager.userInfo?.time_created < 1769875200
           ) {
             return;
           }
@@ -488,14 +488,13 @@ const Header = (props: HeaderProps) => {
           );
           if (result) {
             ConfigService.setReaderConfig("isEnableKoodoSync", "yes");
-            const latestDefaultSyncOption =
-              useAppStore.getState().backupPage.defaultSyncOption;
             let encryptedToken = await TokenService.getToken(
-              latestDefaultSyncOption + "_token"
+              useAppStore.getState().backupPage.defaultSyncOption + "_token"
             );
             await updateUserConfig({
               is_enable_koodo_sync: "yes",
-              default_sync_option: latestDefaultSyncOption,
+              default_sync_option:
+                useAppStore.getState().backupPage.defaultSyncOption,
               default_sync_token: encryptedToken || "",
             });
             let userInfo = await handleFetchUserInfo();
