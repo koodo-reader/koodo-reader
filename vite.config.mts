@@ -48,7 +48,7 @@ export default defineConfig(({ command }) => ({
       output: {
         manualChunks(id) {
           if (id.includes("assets/lib/kookit")) {
-            return "reading-engine";
+            return "kookit";
           }
           if (id.includes("node_modules")) {
             return "vendor";
