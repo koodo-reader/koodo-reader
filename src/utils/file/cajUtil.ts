@@ -63,7 +63,9 @@ let entryPromise: Promise<Caj2PdfModule> | null = null;
 
 const loadEntry = () => {
   if (!entryPromise) {
-    entryPromise = import(/* webpackIgnore: true */ runtimeUrl("browser.mjs"))
+    entryPromise = import(
+      /* webpackIgnore: true */ /* @vite-ignore */ runtimeUrl("browser.mjs")
+    )
       .then((entry) => entry as Caj2PdfModule)
       .catch((error) => {
         entryPromise = null;

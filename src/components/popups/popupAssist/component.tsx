@@ -57,9 +57,6 @@ const PopupAssist = (props: PopupAssistProps) => {
 
   const stateRef = useRef(state);
   stateRef.current = state;
-  const propsRef = useRef<any>(props);
-  propsRef.current = props;
-
   const chatBoxRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const answerTextAccumulator = useRef("");
@@ -477,13 +474,13 @@ const PopupAssist = (props: PopupAssistProps) => {
       }
     } catch (error) {
       toast.error(
-        propsRef.current.t("Error happened") +
+        t("Error happened") +
           ": " +
           (error instanceof Error ? error.message : String(error))
       );
       console.error(error);
       mergeState({
-        answer: propsRef.current.t("Error happened"),
+        answer: t("Error happened"),
       });
     }
   };

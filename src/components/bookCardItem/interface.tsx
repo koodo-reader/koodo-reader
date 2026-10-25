@@ -7,13 +7,3 @@ export interface BookCardProps {
   allBooks?: BookModel[];
   bookIndex?: number;
 }
-export interface BookCardState {
-  isFavorite: boolean;
-  isHover: boolean;
-  left: number;
-  top: number;
-  direction: string;
-  cover: string;
-  isCoverExist: boolean;
-  isBookOffline: boolean;
-}

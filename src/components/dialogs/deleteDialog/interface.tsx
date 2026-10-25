@@ -5,7 +5,3 @@ export interface DeleteDialogProps {
 
 
 }
-export interface DeleteDialogState {
-  isDeleteShelfBook: boolean;
-  isDisableTrashBin: boolean;
-}

@@ -7,6 +7,3 @@ export interface SpeechDialogProps {
 
 
 }
-export interface SpeechDialogState {
-
-}

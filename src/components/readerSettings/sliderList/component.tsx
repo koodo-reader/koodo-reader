@@ -6,7 +6,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
 
 const SliderList = (props: SliderListProps) => {
-  const renderBookFunc = useAppStore((s) => s.renderBookFunc);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const scale = useAppStore((s) => s.reader.scale);
   const htmlBook = useAppStore((s) => s.reader.htmlBook);
   const handleMargin = useAppStore((s) => s.handleMargin);

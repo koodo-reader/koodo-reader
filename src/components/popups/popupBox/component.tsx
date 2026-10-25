@@ -79,7 +79,7 @@ const PopupBox = (props: PopupBoxProps) => {
   const isNavLocked = useAppStore((s) => s.reader.isNavLocked);
   const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
   const storeIsDockedRight = useAppStore((s) => s.reader.isDockedRight);
-  const renderBookFunc = useAppStore((s) => s.renderBookFunc);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const handleOpenMenu = useAppStore((s) => s.handleOpenMenu);
   const handleMenuMode = useAppStore((s) => s.handleMenuMode);
   const handleNoteKey = useAppStore((s) => s.handleNoteKey);

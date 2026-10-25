@@ -7,15 +7,3 @@ export interface BookItemProps {
   bookIndex?: number;
 
 }
-export interface BookItemState {
-  isHover: boolean;
-
-  isDeleteDialog: boolean;
-  isFavorite: boolean;
-  direction: string;
-  left: number;
-  top: number;
-  cover: string;
-  isCoverExist: boolean;
-  isBookOffline: boolean;
-}

@@ -1,12 +1,13 @@
-﻿import React, { useEffect } from "react";
+﻿import React, { lazy, Suspense, useEffect } from "react";
 import { Route, Routes, HashRouter } from "react-router-dom";
-import Manager from "../pages/manager";
-import Login from "../pages/login";
-import Stats from "../pages/stats";
-import HtmlReader from "../pages/reader";
-import _Redirect from "../pages/redirect";
 import i18n from "../i18n";
 import { ConfigService } from "../assets/lib/kookit-extra-browser.min";
+
+const Manager = lazy(() => import("../pages/manager"));
+const Login = lazy(() => import("../pages/login"));
+const Stats = lazy(() => import("../pages/stats"));
+const HtmlReader = lazy(() => import("../pages/reader"));
+const _Redirect = lazy(() => import("../pages/redirect"));
 
 const Router = () => {
   useEffect(() => {
@@ -144,7 +145,21 @@ const Router = () => {
   }, []);
   return (
     <HashRouter>
-      <Routes>
+      <Suspense
+        fallback={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            {i18n.t("Loading")}...
+          </div>
+        }
+      >
+        <Routes>
         <Route element={<Manager />} path="/manager/*" />
         <Route element={<Login />} path="/login" />
         <Route element={<Stats />} path="/stats" />
@@ -178,7 +193,8 @@ const Router = () => {
         <Route element={<HtmlReader />} path="/href/*" />
         <Route element={<HtmlReader />} path="/pdf/*" />
         <Route element={<_Redirect />} path="/" />
-      </Routes>
+        </Routes>
+      </Suspense>
     </HashRouter>
   );
 };

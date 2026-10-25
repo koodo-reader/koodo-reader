@@ -12,7 +12,7 @@ import { useAppStore } from "../../../store/useAppStore";
 
 const SettingSwitch = (props: SettingSwitchProps) => {
   const currentBook = useAppStore((s) => s.book.currentBook);
-  const renderBookFunc = useAppStore((s) => s.renderBookFunc);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const handleHideFooter = useAppStore((s) => s.handleHideFooter);
   const handleHideHeader = useAppStore((s) => s.handleHideHeader);
   const handleHideBackground = useAppStore((s) => s.handleHideBackground);

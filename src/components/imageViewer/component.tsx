@@ -42,7 +42,7 @@ const ImageViewer = (props: ImageViewerProps) => {
 
   const stateRef = useRef(state);
   stateRef.current = state;
-  const propsRef = useRef<any>(props);
+  const propsRef = useRef(props);
   propsRef.current = props;
   const lockRef = useRef(false);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -112,7 +112,7 @@ const ImageViewer = (props: ImageViewerProps) => {
         }
         const list = await loadChapterImages(step > 0 ? "next" : "prev");
         if (!list) {
-          toast(propsRef.current.t("No more images"));
+          toast(t("No more images"));
           return;
         }
         showAt(step > 0 ? 0 : list.length - 1, list);

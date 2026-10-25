@@ -7,7 +7,3 @@ export interface ConvertDialogProps {
 
 
 }
-export interface ConvertDialogState {
-
-  isConvertPDF: boolean;
-}

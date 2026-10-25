@@ -10,8 +10,3 @@ export interface OperationPanelProps {
 
 
 }
-
-export interface OperationPanelState {
-  timeLeft: number;
-  isFullscreen: boolean;
-}

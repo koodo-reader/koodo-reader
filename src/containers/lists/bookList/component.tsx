@@ -6,7 +6,8 @@ import BookListItem from "../../../components/bookListItem";
 import BookCoverItem from "../../../components/bookCoverItem";
 import CollectionItem from "../../../components/collectionItem";
 import BookModel from "../../../models/Book";
-import { BookListProps, BookListState } from "./interface";
+import { BookListState } from "./interface";
+
 import {
   ConfigService,
   CollectionUtil,
@@ -38,7 +39,7 @@ function getBookCountPerPage() {
   return columns * rows;
 }
 
-const BookList = (props: BookListProps) => {
+const BookList = () => {
   const books = useAppStore((s) => s.manager.books);
   const mode = useAppStore((s) => s.sidebar.mode);
   const selectedBooks = useAppStore((s) => s.manager.selectedBooks);

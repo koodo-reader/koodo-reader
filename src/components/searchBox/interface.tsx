@@ -8,6 +8,3 @@ export interface SearchBoxProps {
   handleNavSearchState?: (state: string) => void;
   handleSearchList?: (searchList: any) => void;
 }
-export interface SearchBoxState {
-  isFocused: boolean;
-}

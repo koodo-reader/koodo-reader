@@ -108,8 +108,7 @@ const Reader = (props: ReaderProps) => {
   const handleFetchUserInfo = useAppStore((s) => s.handleFetchUserInfo);
   const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
   const { t } = useTranslation();
-  const propsRef = useRef<any>(props);
-  propsRef.current = {
+  const currentProps = {
     ...props,
     t,
     currentBook,
@@ -145,6 +144,8 @@ const Reader = (props: ReaderProps) => {
     handleFetchUserInfo,
     handleBackgroundColor,
   };
+  const propsRef = useRef(currentProps);
+  propsRef.current = currentProps;
   const [state, setState] = useState<ReaderState>({
     isOpenTopPanel: false,
     isOpenBottomPanel: false,

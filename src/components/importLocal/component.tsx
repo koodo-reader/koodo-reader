@@ -83,7 +83,7 @@ const getComicImageExt = (name: string) => {
 
 const ImportLocal = (props: ImportLocalProps) => {
   const books = useAppStore((s) => s.manager.books);
-  const cloudSyncFunc = useAppStore((s) => s.cloudSyncFunc);
+  const cloudSyncFunc = useAppStore((s) => s.book.cloudSyncFunc);
   const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
   const deletedBooks = useAppStore((s) => s.manager.deletedBooks);
   const mode = useAppStore((s) => s.sidebar.mode);

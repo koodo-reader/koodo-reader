@@ -14,7 +14,7 @@ import { isReadingRawPDF } from "../../../utils/common";
 import { useAppStore } from "../../../store/useAppStore";
 declare var window: any;
 const DropdownList = (props: DropdownListProps) => {
-  const renderBookFunc = useAppStore((s) => s.renderBookFunc);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const currentBook = useAppStore((s) => s.book.currentBook);
   const handleTextOrientation = useAppStore((s) => s.handleTextOrientation);
   const handleSetting = useAppStore((s) => s.handleSetting);

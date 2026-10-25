@@ -40,12 +40,3 @@ export interface CloudBookItem {
 }
 
 export type BookResultItem = CloudBookItem;
-
-export interface MetadataDialogState {
-  searchName: string;
-  searchAuthor: string;
-  results: BookResultItem[];
-  selectedId: string | null;
-  isLoading: boolean;
-  error: string;
-}

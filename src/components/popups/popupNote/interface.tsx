@@ -9,8 +9,3 @@ export interface PopupNoteProps {
   chapterDocIndex: number;
   chapter: string;
 }
-export interface PopupNoteState {
-  tag: string[];
-  text: string;
-  note: NoteModel | null;
-}

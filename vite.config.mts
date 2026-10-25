@@ -28,6 +28,15 @@ export default defineConfig(({ command }) => ({
     port: 3000,
     host: "127.0.0.1",
     strictPort: true,
+    warmup: {
+      clientFiles: [
+        "./src/index.tsx",
+        "./src/router/index.tsx",
+        "./src/pages/manager/index.tsx",
+        "./src/pages/reader/index.tsx",
+        "./src/pages/login/index.tsx",
+      ],
+    },
   },
   build: {
     outDir: "build",
@@ -35,8 +44,41 @@ export default defineConfig(({ command }) => ({
     sourcemap: false,
     target: "chrome130",
     chunkSizeWarningLimit: 4000,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("assets/lib/kookit")) {
+            return "reading-engine";
+          }
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+        },
+      },
+    },
   },
   optimizeDeps: {
-    include: ["buffer"],
+    include: [
+      "buffer",
+      "axios",
+      "crypto-js",
+      "megajs",
+      "sse.js",
+      "webdav/dist/web/index.js",
+      "@aws-sdk/client-s3",
+      "chardet",
+      "fflate",
+      "js-untar",
+      "jszip",
+      "mammoth",
+      "marked",
+      "mhtml2html",
+      "rangy/lib/rangy-core.js",
+      "rangy/lib/rangy-textrange",
+      "underscore",
+    ],
+    esbuildOptions: {
+      target: "chrome130",
+    },
   },
 }));

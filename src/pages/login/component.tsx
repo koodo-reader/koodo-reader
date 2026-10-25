@@ -63,8 +63,7 @@ const Login = (props: LoginProps) => {
   const handleFetchUserInfo = useAppStore((s) => s.handleFetchUserInfo);
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const propsRef = useRef<any>(props);
-  propsRef.current = {
+  const currentProps = {
     ...props,
     t,
     isSettingOpen,
@@ -80,6 +79,8 @@ const Login = (props: LoginProps) => {
     handleFetchDefaultSyncOption,
     handleFetchUserInfo,
   };
+  const propsRef = useRef(currentProps);
+  propsRef.current = currentProps;
   const [state, setState] = useState<LoginState>({
     currentStep: 0,
     loginConfig: {},
