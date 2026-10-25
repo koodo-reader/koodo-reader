@@ -17,19 +17,14 @@
     <title>Koodo Reader</title>
     <script type="text/javascript" src="./lib/7z-wasm/7zz.umd.js"></script>
     <script type="text/javascript" src="./lib/libunrar/rpc.js"></script>
-    <script>
-      (function () {
-        var script = document.createElement("script");
-        script.type = "module";
-        script.src = new URL("lib/pdfjs/pdf.mjs", document.baseURI).href;
-        script.onload = function () {
-          window.pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-            "lib/pdfjs/pdf.worker.mjs",
-            document.baseURI
-          ).href;
-        };
-        document.head.appendChild(script);
-      })();
+    <script type="module" src="/lib/pdfjs/pdf.mjs"></script>
+    <script type="module">
+      if (window.pdfjsLib) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+          "lib/pdfjs/pdf.worker.mjs",
+          document.baseURI
+        ).href;
+      }
     </script>
     <script type="text/javascript" src="./lib/sqljs-wasm/sql-wasm.js"></script>
     <script
