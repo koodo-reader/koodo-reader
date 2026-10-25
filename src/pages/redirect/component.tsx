@@ -5,10 +5,9 @@ import "./manager.css";
 import { Trans } from "react-i18next";
 import { getParamsFromUrl } from "../../utils/file/common";
 import copy from "copy-text-to-clipboard";
-import Lottie from "lottie-react";
+import LazyLottie from "../../components/lazyLottie";
 import emptyDark from "../../assets/images/empty-dark.svg";
 import emptyLight from "../../assets/images/empty-light.svg";
-import animationSuccess from "../../assets/lotties/success.json";
 import toast, { Toaster } from "react-hot-toast";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
@@ -103,8 +102,8 @@ const Redirect = () => {
         />
         <div className="backup-page-finish" style={{ maxWidth: "70%" }}>
           {isAuthed ? (
-            <Lottie
-              animationData={animationSuccess}
+            <LazyLottie
+              animation="success"
               loop={false}
               style={{ height: 80, width: "100%" }}
             />

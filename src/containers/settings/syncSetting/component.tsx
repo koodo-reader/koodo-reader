@@ -132,7 +132,7 @@ const SyncSetting = () => {
 
   const handleAddDataSourceFromGrid = async (targetDrive: string) => {
     await handleAddDataSource({ target: { value: targetDrive } });
-    if (settingDrive) {
+    if (useAppStore.getState().manager.settingDrive) {
       setPartialState({ showDefaultSyncAddGrid: false });
     }
   };

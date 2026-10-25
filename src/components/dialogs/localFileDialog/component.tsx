@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import "./localFileDialog.css";
 import { Trans } from "react-i18next";
 import { useAppStore } from "../../../store/useAppStore";
-import Lottie from "lottie-react";
-import animationSuccess from "../../../assets/lotties/success.json";
-import animationSafe from "../../../assets/lotties/safe.json";
+import LazyLottie from "../../lazyLottie";
 import toast from "react-hot-toast";
 import { isElectron } from "react-device-detect";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -97,8 +95,8 @@ const LocalFileDialog = () => {
       {!isFinish ? (
         <div className="backup-page-option" style={{ bottom: "0px", top: "0px" }}>
           <div className="backup-page-finish">
-            <Lottie
-              animationData={animationSafe}
+            <LazyLottie
+              animation="safe"
               loop={false}
               style={{ height: 120, width: "100%" }}
             />
@@ -160,8 +158,8 @@ const LocalFileDialog = () => {
       ) : (
         <div className="backup-page-finish-container">
           <div className="backup-page-finish">
-            <Lottie
-              animationData={animationSuccess}
+            <LazyLottie
+              animation="success"
               loop={false}
               style={{ height: 80, width: "100%" }}
             />

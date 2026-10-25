@@ -4,8 +4,7 @@ import "./updateInfo.css";
 import { useAppStore } from "../../../store/useAppStore";
 import packageInfo from "../../../../package.json";
 import { Trans } from "react-i18next";
-import Lottie from "lottie-react";
-import animationNew from "../../../assets/lotties/new.json";
+import LazyLottie from "../../lazyLottie";
 import {
   compareVersions,
   getWebsiteLang,
@@ -158,8 +157,8 @@ const UpdateInfo = () => {
           )}
           <div className="update-dialog-info" style={{ height: 420 }}>
             <div className="new-version-animation">
-              <Lottie
-                animationData={animationNew}
+              <LazyLottie
+                animation="new"
                 loop={false}
                 style={{ height: 220, width: "100%" }}
               />

@@ -57,6 +57,9 @@ export default defineConfig(({ command }) => ({
       },
     },
   },
+  json: {
+    namedExports: false,
+  },
   optimizeDeps: {
     include: [
       "buffer",

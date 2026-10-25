@@ -3,9 +3,7 @@ import { useState } from "react";
 import "./supportDialog.css";
 import { useAppStore } from "../../../store/useAppStore";
 import { Trans } from "react-i18next";
-import Lottie from "lottie-react";
-import supportAnimation from "../../../assets/lotties/support.json";
-import exitAnimation from "../../../assets/lotties/exit.json";
+import LazyLottie from "../../lazyLottie";
 import {
   getServerRegion,
   getWebsiteLang,
@@ -91,8 +89,8 @@ const SupportDialog = () => {
                       className="new-version-animation"
                       style={{ marginLeft: 20 }}
                     >
-                      <Lottie
-                        animationData={exitAnimation}
+                      <LazyLottie
+                        animation="exit"
                         loop={true}
                         style={{ height: 180, width: "100%" }}
                       />
@@ -346,8 +344,8 @@ const SupportDialog = () => {
                   </div>
                   <div className="support-us-info" style={{ height: 420 }}>
                     <div className="new-version-animation">
-                      <Lottie
-                        animationData={supportAnimation}
+                      <LazyLottie
+                        animation="support"
                         loop={true}
                         style={{ height: 200, width: "100%" }}
                       />

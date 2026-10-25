@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Trans } from "react-i18next";
-import i18n from "../../../i18n";
+import { changeLanguage as changeI18nLanguage } from "../../../i18n";
 import { isElectron } from "react-device-detect";
 import {
   generalSettingList,
@@ -85,7 +85,7 @@ const GeneralSetting = () => {
     toast.success(t("Change successful"));
   };
   const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
+    changeI18nLanguage(lng);
     ConfigService.setReaderConfig("lang", lng);
   };
   const changeSearch = (nextSearchEngine: string) => {
