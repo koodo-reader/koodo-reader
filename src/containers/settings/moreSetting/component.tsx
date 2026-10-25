@@ -20,7 +20,7 @@ import { isElectron } from "react-device-detect";
 import TokenService from "../../../utils/storage/tokenService";
 import SwitchRow from "../../../components/readerSettings/switchRow";
 
-const MoreSetting = (props: MoreSettingProps) => {
+const MoreSetting = () => {
   const { t } = useTranslation();
   const [state, setState] = useState<MoreSettingState>({
     protectionMethod: "",

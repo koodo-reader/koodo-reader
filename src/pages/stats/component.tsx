@@ -22,7 +22,7 @@ import {
   CartesianGrid,
 } from "recharts";
 
-const Stats = (props: StatsProps) => {
+const Stats = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const readingTimeUtilRef = useRef<InstanceType<

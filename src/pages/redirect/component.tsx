@@ -18,7 +18,7 @@ import { BookHelper } from "../../assets/lib/kookit.min";
 import { useAppStore } from "../../store/useAppStore";
 declare var window: any;
 
-const Redirect = (props: RedirectProps) => {
+const Redirect = () => {
   const handleLoadingDialog = useAppStore((s) => s.handleLoadingDialog);
   const { t } = useTranslation();
   const navigate = useNavigate();

@@ -24,7 +24,7 @@ import {
   syncNativeThemeSource,
 } from "../../../utils/reader/launchUtil";
 
-const AppearanceSetting = (props: SettingInfoProps) => {
+const AppearanceSetting = () => {
   const { t } = useTranslation();
   const highlightUtilRef = useRef<any>(null);
   if (!highlightUtilRef.current) {

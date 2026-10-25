@@ -51,7 +51,7 @@ import TokenService from "../../../utils/storage/tokenService";
 import { useAppStore } from "../../../store/useAppStore";
 declare var window: any;
 
-const SyncSetting = (props: SettingInfoProps) => {
+const SyncSetting = () => {
   const books = useAppStore((s) => s.manager.books);
   const isAuthed = useAppStore((s) => s.manager.isAuthed);
   const settingDrive = useAppStore((s) => s.manager.settingDrive);

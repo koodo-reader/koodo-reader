@@ -13,7 +13,3 @@ export interface PopupMenuProps {
   chapter: string;
 
 }
-export interface PopupMenuStates {
-  // cfiRange: string;
-  rect: DOMRect | null;
-}

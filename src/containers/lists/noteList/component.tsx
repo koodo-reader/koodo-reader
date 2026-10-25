@@ -11,7 +11,7 @@ import BookUtil from "../../../utils/file/bookUtil";
 import Note from "../../../models/Note";
 import { useAppStore } from "../../../store/useAppStore";
 
-const NoteList = (props: NoteListProps) => {
+const NoteList = () => {
   const notes = useAppStore((s) => s.reader.notes);
   const highlights = useAppStore((s) => s.reader.highlights);
   const isSearch = useAppStore((s) => s.manager.isSearch);

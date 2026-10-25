@@ -17,7 +17,7 @@ import {
 import { ShortcutSettingProps } from "./interface";
 import "./shortcutSetting.css";
 
-const ShortcutSetting = (props: ShortcutSettingProps) => {
+const ShortcutSetting = () => {
   const { t } = useTranslation();
   const configRef = useRef<ShortcutConfig>(getShortcutConfig());
   const [, forceUpdate] = useReducer((x) => x + 1, 0);

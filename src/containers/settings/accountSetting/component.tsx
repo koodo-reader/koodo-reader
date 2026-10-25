@@ -36,7 +36,7 @@ import TokenService from "../../../utils/storage/tokenService";
 import { useAppStore } from "../../../store/useAppStore";
 declare var window: any;
 
-const AccountSetting = (props: SettingInfoProps) => {
+const AccountSetting = () => {
   const isAuthed = useAppStore((s) => s.manager.isAuthed);
   const isShowSupport = useAppStore((s) => s.manager.isShowSupport);
   const userInfo = useAppStore((s) => s.manager.userInfo);

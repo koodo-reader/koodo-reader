@@ -1,8 +1,4 @@
 import BookModel from "../../../models/Book";
-export interface EditDialogProps {
-
-
-}
 
 export interface EditDialogState {
   isCheck: boolean;

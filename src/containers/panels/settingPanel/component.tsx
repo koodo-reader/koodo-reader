@@ -34,7 +34,7 @@ const panelTabs = [
   { key: "more", title: "More" },
 ];
 
-const SettingPanel = (props: SettingPanelProps) => {
+const SettingPanel = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const backgroundColor = useAppStore((s) => s.reader.backgroundColor);
   const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);

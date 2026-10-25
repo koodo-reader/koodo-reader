@@ -18,7 +18,7 @@ import { useAppStore } from "../../../store/useAppStore";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 
-const BookList = (props: BookListProps) => {
+const BookList = () => {
   const deletedBooks = useAppStore((s) => s.manager.deletedBooks);
   const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
   const viewMode = useAppStore((s) => s.manager.viewMode);

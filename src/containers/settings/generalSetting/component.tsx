@@ -16,7 +16,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import SwitchRow from "../../../components/readerSettings/switchRow";
 
 declare var window: any;
-const GeneralSetting = (props: SettingInfoProps) => {
+const GeneralSetting = () => {
   const { t } = useTranslation();
   const [state, setState] = useState<Record<string, any>>({
     isImportPath: ConfigService.getReaderConfig("isImportPath") === "yes",

@@ -22,7 +22,7 @@ declare var window: any;
 
 type TransCache = Record<string, Record<string, string>>;
 
-const PageWidget = (props: PageWidgetProps) => {
+const PageWidget = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const currentChapter = useAppStore((s) => s.reader.currentChapter);
   const readerMode = useAppStore((s) => s.reader.readerMode);

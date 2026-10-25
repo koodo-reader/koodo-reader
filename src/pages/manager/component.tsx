@@ -37,7 +37,7 @@ import Footer from "../../components/footer";
 import ProtectionOverlay from "../../components/protection";
 import { useAppStore } from "../../store/useAppStore";
 
-const Manager = (props: ManagerProps) => {
+const Manager = () => {
   const books = useAppStore((s) => s.manager.books);
   const isShowPopupNote = useAppStore((s) => s.manager.isShowPopupNote);
   const importBookFunc = useAppStore((s) => s.book.importBookFunc);

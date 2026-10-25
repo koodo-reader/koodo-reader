@@ -16,7 +16,7 @@ import { isElectron } from "react-device-detect";
 import { checkDeveloperUpdate } from "../../../utils/request/common";
 declare var window: any;
 
-const AboutSetting = (props: SettingInfoProps) => {
+const AboutSetting = () => {
   const { t } = useTranslation();
   const [updateChannel, setUpdateChannel] = useState(
     ConfigService.getReaderConfig("updateChannel")

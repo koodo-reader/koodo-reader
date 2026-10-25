@@ -14,7 +14,7 @@ interface FlatChapterItem {
   path: string;
 }
 
-const ContentList = (props: ContentListProps) => {
+const ContentList = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const htmlBook = useAppStore((s) => s.reader.htmlBook);
   const currentChapter = useAppStore((s) => s.reader.currentChapter);

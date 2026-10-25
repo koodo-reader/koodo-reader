@@ -14,7 +14,7 @@ import { useAppStore } from "../../../store/useAppStore";
 const HIGHLIGHT_STYLE_TYPES = KookitConfig.HighlightStyleTypes;
 const HIGHLIGHT_PRESET_COLORS = KookitConfig.HighlightPresetColors;
 
-const TextSetting = (props: TextSettingProps) => {
+const TextSetting = () => {
   const books = useAppStore((s) => s.manager.books);
   const { t } = useTranslation();
   const highlightUtil = useRef<any>(null);

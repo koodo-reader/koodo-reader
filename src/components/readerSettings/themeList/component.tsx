@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import { normalizePickerColor, parseColorInput } from "../../../utils/common";
 import { useAppStore } from "../../../store/useAppStore";
 
-const ThemeList = (props: ThemeListProps) => {
+const ThemeList = () => {
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
   const { t } = useTranslation();

@@ -1,6 +1,4 @@
-export interface AnnotationDialogProps {
 
-}
 
 export interface AnnotationDialogState {
   annotationStyle: string;

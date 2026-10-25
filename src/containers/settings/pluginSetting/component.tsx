@@ -38,7 +38,7 @@ const manualVoiceListPluginKeys = new Set([
   "coquitts-voice-plugin",
 ]);
 
-const SettingDialog = (props: SettingInfoProps) => {
+const SettingDialog = () => {
   const plugins = useAppStore((s) => s.manager.plugins);
   const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
   const { t } = useTranslation();

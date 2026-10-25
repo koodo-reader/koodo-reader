@@ -9,7 +9,7 @@ import {
   KookitConfig,
 } from "../../../assets/lib/kookit-extra-browser.min";
 
-const ChapterSetting = (props: SettingInfoProps) => {
+const ChapterSetting = () => {
   const { t } = useTranslation();
   const [state, setState] = useState<SettingInfoState>({
     parserList: ConfigService.getAllListConfig("txtParserList") || [],

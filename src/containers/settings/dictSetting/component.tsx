@@ -12,7 +12,7 @@ import { getFileNameWithoutExtension } from "../../../utils/common";
 import { KookitConfig } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
 
-const DictSetting = (props: SettingInfoProps) => {
+const DictSetting = () => {
   const isAuthed = useAppStore((s) => s.manager.isAuthed);
   const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
   const { t } = useTranslation();

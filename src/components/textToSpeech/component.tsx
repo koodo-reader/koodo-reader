@@ -28,7 +28,7 @@ import { getSplitSentence } from "../../utils/request/reader";
 import { Howl } from "howler";
 import { useAppStore } from "../../store/useAppStore";
 declare var window: any;
-const TextToSpeech = (props: TextToSpeechProps) => {
+const TextToSpeech = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const htmlBook = useAppStore((s) => s.reader.htmlBook);
   const isReading = useAppStore((s) => s.book.isReading);

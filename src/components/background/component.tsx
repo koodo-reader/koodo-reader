@@ -6,7 +6,7 @@ import { getPageWidth, throttle } from "../../utils/common";
 import BackgroundUtil from "../../utils/file/backgroundUtil";
 import { useAppStore } from "../../store/useAppStore";
 
-const Background = (props: BackgroundProps) => {
+const Background = () => {
   const readerMode = useAppStore((s) => s.reader.readerMode);
   const isNavLocked = useAppStore((s) => s.reader.isNavLocked);
   const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);

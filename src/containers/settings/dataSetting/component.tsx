@@ -43,7 +43,7 @@ import {
 import TokenService from "../../../utils/storage/tokenService";
 import { useAppStore } from "../../../store/useAppStore";
 declare var window: any;
-const DataSetting = (props: SettingInfoProps) => {
+const DataSetting = () => {
   const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
   const { t } = useTranslation();
   const navigate = useNavigate();

@@ -11,7 +11,7 @@ import {
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
 
-const AISetting = (props: SettingInfoProps) => {
+const AISetting = () => {
   const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
   const { t } = useTranslation();
   const [state, setState] = useState<SettingInfoState>(() => ({

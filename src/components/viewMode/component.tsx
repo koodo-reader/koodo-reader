@@ -5,7 +5,7 @@ import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { viewMode as viewModeList } from "../../constants/viewMode";
 import { useAppStore } from "../../store/useAppStore";
 
-const ViewMode = (props: ViewModeProps) => {
+const ViewMode = () => {
   const viewMode = useAppStore((s) => s.manager.viewMode);
   const handleFetchViewMode = useAppStore((s) => s.handleFetchViewMode);
   const { t } = useTranslation();

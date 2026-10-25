@@ -5,7 +5,7 @@ import { isPaginatedBook } from "../../../utils/common";
 import { Trans } from "react-i18next";
 import { useAppStore } from "../../../store/useAppStore";
 
-const ModeControl = (props: ModeControlProps) => {
+const ModeControl = () => {
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const readerMode = useAppStore((s) => s.reader.readerMode);
   const currentBook = useAppStore((s) => s.book.currentBook);

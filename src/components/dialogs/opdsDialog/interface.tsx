@@ -42,9 +42,6 @@ export interface OPDSFeed {
   searchTemplate: string;
 }
 
-export interface OPDSDialogProps {
-}
-
 export interface OPDSDialogState {
   view: "catalog" | "feed" | "detail";
   userCatalogs: OPDSCatalog[];

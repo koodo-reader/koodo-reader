@@ -8,6 +8,3 @@ export interface DeleteIconProps {
   handleShowDelete: (Deletekey: string) => void;
   handleChangeTag: (index: number) => void;
 }
-export interface DeleteIconStates {
-  isOpenDelete: boolean;
-}

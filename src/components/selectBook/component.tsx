@@ -19,7 +19,7 @@ import DatabaseService from "../../utils/storage/databaseService";
 import { preCacheAllBooks } from "../../utils/common";
 import { useAppStore } from "../../store/useAppStore";
 
-const SelectBook = (props: BookListProps) => {
+const SelectBook = () => {
   const books = useAppStore((s) => s.manager.books);
   const selectedBooks = useAppStore((s) => s.manager.selectedBooks);
   const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);

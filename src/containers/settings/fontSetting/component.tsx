@@ -13,7 +13,7 @@ import { ChineseFonts, NonChineseFonts } from "../../../constants/fontConfig";
 import { applyCustomSystemFont } from "../../../utils/reader/launchUtil";
 import { useAppStore } from "../../../store/useAppStore";
 
-const FontSetting = (props: SettingInfoProps) => {
+const FontSetting = () => {
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const isAuthed = useAppStore((s) => s.manager.isAuthed);
   const { t } = useTranslation();

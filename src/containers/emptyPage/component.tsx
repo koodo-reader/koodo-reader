@@ -8,7 +8,7 @@ import { useAppStore } from "../../store/useAppStore";
 
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 
-const EmptyPage = (props: EmptyPageProps) => {
+const EmptyPage = () => {
   const mode = useAppStore((s) => s.sidebar.mode);
   const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
   const renderEmptyList = () => {

@@ -6,5 +6,3 @@ export interface ReaderWindowState {
   isMaximized: boolean;
   isFullScreen: boolean;
 }
-
-export type WindowControlsState = ReaderWindowState;

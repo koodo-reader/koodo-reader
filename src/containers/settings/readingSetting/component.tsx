@@ -10,7 +10,7 @@ import SwitchRow from "../../../components/readerSettings/switchRow";
 import { useAppStore } from "../../../store/useAppStore";
 declare var window: any;
 
-const ReadingSetting = (props: SettingInfoProps) => {
+const ReadingSetting = () => {
   const isAuthed = useAppStore((s) => s.manager.isAuthed);
   const handleSetting = useAppStore((s) => s.handleSetting);
   const handleSettingMode = useAppStore((s) => s.handleSettingMode);

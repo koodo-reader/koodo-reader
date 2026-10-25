@@ -15,7 +15,7 @@ import { useAppStore } from "../../../store/useAppStore";
 
 const FEATURED_COUNT = 100;
 
-const BackgroundSetting = (props: SettingInfoProps) => {
+const BackgroundSetting = () => {
   const isAuthed = useAppStore((s) => s.manager.isAuthed);
   const handleReaderBackgroundImage = useAppStore(
     (s) => s.handleReaderBackgroundImage

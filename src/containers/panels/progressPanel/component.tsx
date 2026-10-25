@@ -7,7 +7,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook, scrollContents } from "../../../utils/common";
 import { useAppStore } from "../../../store/useAppStore";
 
-const ProgressPanel = (props: ProgressPanelProps) => {
+const ProgressPanel = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const percentage = useAppStore((s) => s.progressPanel.percentage);
   const htmlBook = useAppStore((s) => s.reader.htmlBook);

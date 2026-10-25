@@ -1,12 +1,4 @@
 
-export interface ImportDialogProps {
-
-
-
-
-  isOpenTokenDialog: boolean;
-
-}
 export interface ImportDialogState {
 
   currentDrive: string;

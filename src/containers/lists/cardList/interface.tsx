@@ -6,9 +6,3 @@ export interface CardListProps {
   mode: string;
   bookNamesMap: { [key: string]: string };
 }
-export interface CardListStates {
-  displayedCards: NoteModel[];
-  currentPage: number;
-  itemsPerPage: number;
-  isLoading: boolean;
-}

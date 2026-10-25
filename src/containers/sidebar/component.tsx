@@ -21,7 +21,7 @@ import {
 } from "../../utils/reader/bookDrag";
 import { useAppStore } from "../../store/useAppStore";
 
-const Sidebar = (props: SidebarProps) => {
+const Sidebar = () => {
   const mode = useAppStore((s) => s.sidebar.mode);
   const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
   const shelfTitle = useAppStore((s) => s.sidebar.shelfTitle);
