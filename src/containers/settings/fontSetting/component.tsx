@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./fontSetting.css";
@@ -31,8 +32,7 @@ const FontSetting = () => {
   }));
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
 
   const loadAllFonts = useCallback(async () => {
     setState((prev) => ({ ...prev, isLoading: true }));

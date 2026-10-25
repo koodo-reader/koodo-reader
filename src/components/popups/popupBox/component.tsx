@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./popupMenu.css";
@@ -111,8 +112,7 @@ const PopupBox = (props: PopupBoxProps) => {
   );
 
   const stateRef = useRef(state);
-  const propsRef = useRef(props);
-  propsRef.current = props;
+  const propsRef = useLatest(props);
 
   const isResizing = useRef(false);
   const resizeStart = useRef({ x: 0, y: 0, width: 0, height: 0 });

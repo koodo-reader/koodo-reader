@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
@@ -38,8 +39,7 @@ const MoreSetting = () => {
     isTestingProxy: false,
     proxyEditing: false,
   });
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
 
   const updateState = (patch: Partial<MoreSettingState>) => {
     stateRef.current = { ...stateRef.current, ...patch };

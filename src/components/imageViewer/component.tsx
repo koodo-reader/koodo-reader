@@ -1,3 +1,4 @@
+import { useLatest } from "../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./imageViewer.css";
@@ -40,10 +41,8 @@ const ImageViewer = (props: ImageViewerProps) => {
     currentIndex: 0,
   });
 
-  const stateRef = useRef(state);
-  stateRef.current = state;
-  const propsRef = useRef(props);
-  propsRef.current = props;
+  const stateRef = useLatest(state);
+  const propsRef = useLatest(props);
   const lockRef = useRef(false);
   const previewRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);

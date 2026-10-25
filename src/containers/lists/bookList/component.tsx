@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 ﻿import React, { useEffect, useRef, useState } from "react";
 import "./booklist.css";
@@ -67,8 +68,7 @@ const BookList = () => {
 
   // Migrated comment
   // Migrated comment
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
 
   const handleKeyFilter = (items: any[], arr: string[]) => {
     let itemArr: any[] = [];
@@ -334,10 +334,8 @@ const BookList = () => {
   };
 
   // Migrated comment
-  const handleFinishReadingRef = useRef(handleFinishReading);
-  handleFinishReadingRef.current = handleFinishReading;
-  const handleScrollRef = useRef(handleScroll);
-  handleScrollRef.current = handleScroll;
+  const handleFinishReadingRef = useLatest(handleFinishReading);
+  const handleScrollRef = useLatest(handleScroll);
 
   // Migrated comment
   useEffect(() => {

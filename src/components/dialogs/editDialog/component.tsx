@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./editDialog.css";
@@ -56,8 +57,7 @@ const EditDialog = () => {
   const layoutRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
 
   useEffect(() => {
     (async () => {

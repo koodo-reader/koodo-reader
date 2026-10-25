@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import "./cardList.css";
@@ -30,10 +31,8 @@ const CardList = (props: CardListProps) => {
     itemsPerPage: 16,
     isLoading: false,
   });
-  const stateRef = useRef(state);
-  stateRef.current = state;
-  const propsRef = useRef(props);
-  propsRef.current = props;
+  const stateRef = useLatest(state);
+  const propsRef = useLatest(props);
 
   const loadInitialCards = async () => {
     let sortedCards = [...props.cards];

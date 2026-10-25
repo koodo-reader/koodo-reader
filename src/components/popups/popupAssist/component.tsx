@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./popupAssist.css";
@@ -55,8 +56,7 @@ const PopupAssist = (props: PopupAssistProps) => {
     inputQuestion: "",
   });
 
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
   const chatBoxRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const answerTextAccumulator = useRef("");

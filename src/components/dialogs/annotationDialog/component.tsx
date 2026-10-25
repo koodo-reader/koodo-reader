@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { AnnotationDialogState } from "./interface";
@@ -70,8 +71,7 @@ const AnnotationDialog = () => {
       ConfigService.getReaderConfig("annotationTextColor") || TEXT_COLORS[0],
     fontOptions: [],
   }));
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
 
   const updateState = (patch: Partial<AnnotationDialogState>) => {
     stateRef.current = { ...stateRef.current, ...patch };
@@ -84,8 +84,7 @@ const AnnotationDialog = () => {
     );
     updateState({ fontOptions: options });
   };
-  const loadFontOptionsRef = useRef(loadFontOptions);
-  loadFontOptionsRef.current = loadFontOptions;
+  const loadFontOptionsRef = useLatest(loadFontOptions);
 
   useEffect(() => {
     loadFontOptionsRef.current();

@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
@@ -43,8 +44,7 @@ const StudyLangDialog = () => {
     currentEnglishLevel:
       ConfigService.getReaderConfig("currentEnglishLevel") || "四级",
   });
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
   const prevHtmlBookRef = useRef(htmlBook);
   const prevBookKeyRef = useRef(currentBook?.key);
 

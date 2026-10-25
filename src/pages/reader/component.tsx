@@ -1,3 +1,4 @@
+import { useLatest } from "../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 ﻿import React, { useEffect, useRef, useState } from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
@@ -144,8 +145,7 @@ const Reader = (props: ReaderProps) => {
     handleFetchUserInfo,
     handleBackgroundColor,
   };
-  const propsRef = useRef(currentProps);
-  propsRef.current = currentProps;
+  const propsRef = useLatest(currentProps);
   const [state, setState] = useState<ReaderState>({
     isOpenTopPanel: false,
     isOpenBottomPanel: false,
@@ -159,8 +159,7 @@ const Reader = (props: ReaderProps) => {
       ConfigService.getReaderConfig("isPreventTrigger") === "yes",
     isNearEdge: false,
   });
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
   const updateState = (patch: Partial<ReaderState>) =>
     setState((prev) => ({ ...prev, ...patch }));
   const messageTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);

@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useRef, useState } from "react";
 import { SettingInfoProps, SettingInfoState, AIModelConfig } from "./interface";
@@ -38,8 +39,7 @@ const AISetting = () => {
     aiAssistancePrompt:
       ConfigService.getReaderConfig("aiAssistancePrompt") || "",
   }));
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
 
   const updateState = (patch: Partial<SettingInfoState>) => {
     stateRef.current = { ...stateRef.current, ...patch };

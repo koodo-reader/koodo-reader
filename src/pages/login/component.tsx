@@ -1,3 +1,4 @@
+import { useLatest } from "../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
@@ -79,8 +80,7 @@ const Login = (props: LoginProps) => {
     handleFetchDefaultSyncOption,
     handleFetchUserInfo,
   };
-  const propsRef = useRef(currentProps);
-  propsRef.current = currentProps;
+  const propsRef = useLatest(currentProps);
   const [state, setState] = useState<LoginState>({
     currentStep: 0,
     loginConfig: {},
@@ -88,8 +88,7 @@ const Login = (props: LoginProps) => {
     isSendingCode: false,
     serverRegion: getServerRegion(),
   });
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
   const updateState = (patch: Partial<LoginState>) =>
     setState((prev) => ({ ...prev, ...patch }));
   const prevPropsRef = useRef(propsRef.current);

@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./popupDict.css";
@@ -60,8 +61,7 @@ const PopupDict = (props: PopupDictProps) => {
   }));
 
   // 与 class 组件的 this.state 语义保持一致：在异步回调中读取最新已提交状态
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
 
   const updateState = (partial: Partial<PopupDictState>) => {
     stateRef.current = { ...stateRef.current, ...partial };
@@ -325,8 +325,7 @@ const PopupDict = (props: PopupDictProps) => {
     );
   };
 
-  const handleLookUpRef = useRef(handleLookUp);
-  handleLookUpRef.current = handleLookUp;
+  const handleLookUpRef = useLatest(handleLookUp);
 
   // componentDidMount: 首次查词
   useEffect(() => {

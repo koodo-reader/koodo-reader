@@ -1,3 +1,4 @@
+import { useLatest } from "../../utils/hooks/useLatest";
 import React, { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { ViewerProps, ViewerState } from "./interface";
@@ -137,8 +138,7 @@ const Viewer = (props: ViewerProps) => {
     handleBackgroundColor,
     handleLeaveReader: props.handleLeaveReader,
   };
-  const propsRef = useRef(connected);
-  propsRef.current = connected;
+  const propsRef = useLatest(connected);
   const [state, setState] = useState<ViewerState>({
     rect: null,
     isDisablePopup: ConfigService.getReaderConfig("isDisablePopup") === "yes",
@@ -152,8 +152,7 @@ const Viewer = (props: ViewerProps) => {
     chapter: "",
     rendition: null,
   });
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
   const updateState = (patch: Partial<ViewerState>) =>
     setState((prev) => ({ ...prev, ...patch }));
   const resizeHandlerRef = useRef<(() => void) | null>(null);

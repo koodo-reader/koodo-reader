@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useRef, useState } from "react";
 import "./importDialog.css";
@@ -49,8 +50,7 @@ const ImportDialog = () => {
     isWaitList: false,
   }));
   const googlePickerUtil = useRef<any>(null);
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
 
   const handleClose = () => {
     handleImportDialog(false);

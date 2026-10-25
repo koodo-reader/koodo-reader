@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./opdsDialog.css";
@@ -414,8 +415,7 @@ const AuthenticatedImage = ({
     }
   };
 
-  const loadImageRef = useRef(loadImage);
-  loadImageRef.current = loadImage;
+  const loadImageRef = useLatest(loadImage);
 
   useEffect(() => {
     loadImageRef.current();
@@ -472,8 +472,7 @@ const OPDSDialog = () => {
     isTesting: false,
   });
 
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
 
   const mergeState = (patch: Partial<OPDSDialogState>) => {
     setState((prev) => ({ ...prev, ...patch }));

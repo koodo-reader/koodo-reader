@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import "./popupTrans.css";
@@ -226,8 +227,7 @@ const PopupTrans = (props: PopupTransProps) => {
   };
 
   // 让回调始终调用最新一次渲染的 handleTrans
-  const handleTransRef = useRef(handleTrans);
-  handleTransRef.current = handleTrans;
+  const handleTransRef = useLatest(handleTrans);
 
   // componentDidMount: 初始化翻译服务并发起首次翻译
   useEffect(() => {

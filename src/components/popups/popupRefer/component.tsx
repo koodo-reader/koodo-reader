@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import "./popupRefer.css";
@@ -32,10 +33,8 @@ const PopupRefer = (props: PopupReferProps) => {
   const [href, setHref] = useState("");
   const [isJump, setIsJump] = useState(false);
   const [returnPosition, setReturnPosition] = useState<any>(null);
-  const propsRef = useRef(props);
-  propsRef.current = props;
-  const isOpenMenuRef = useRef(isOpenMenu);
-  isOpenMenuRef.current = isOpenMenu;
+  const propsRef = useLatest(props);
+  const isOpenMenuRef = useLatest(isOpenMenu);
 
   const getHtmlPosition = (menuRect: any) => {
     let pageSize = props.rendition.getPageSize();
@@ -157,8 +156,7 @@ const PopupRefer = (props: PopupReferProps) => {
     }
     handleLinkJump(event);
   };
-  const handleLinkRef = useRef(handleLink);
-  handleLinkRef.current = handleLink;
+  const handleLinkRef = useLatest(handleLink);
 
   useEffect(() => {
     const onRendered = () => {

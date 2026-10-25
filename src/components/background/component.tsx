@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import "./background.css";
-import { BackgroundProps } from "./interface";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { getPageWidth, throttle } from "../../utils/common";
 import BackgroundUtil from "../../utils/file/backgroundUtil";
 import { useAppStore } from "../../store/useAppStore";
+import { useLatest } from "../../utils/hooks/useLatest";
 
 const Background = () => {
   const readerMode = useAppStore((s) => s.reader.readerMode);
@@ -24,16 +24,7 @@ const Background = () => {
     pageWidth: string;
   }>({ pageOffset: "", pageWidth: "" });
   const [readerBackgroundUrl, setReaderBackgroundUrl] = useState("");
-  const propsRef = useRef({
-    readerMode,
-    scale,
-    margin,
-    isNavLocked,
-    isSettingLocked,
-    isDockedRight,
-    isFitPage,
-  });
-  propsRef.current = {
+  const currentProps = {
     readerMode,
     scale,
     margin,
@@ -42,6 +33,7 @@ const Background = () => {
     isDockedRight,
     isFitPage,
   };
+  const propsRef = useLatest(currentProps);
   const isFirstBackgroundEffect = useRef(true);
 
   const loadReaderBackground = async (imageId?: string) => {

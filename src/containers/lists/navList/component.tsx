@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import "./navList.css";
@@ -70,8 +71,7 @@ const NavList = (props: NavListProps) => {
   }
   const highlightUtil = highlightUtilRef.current;
   const prevPropsRef = useRef<NavPrevProps | null>(null);
-  const stateRef = useRef(state);
-  stateRef.current = state;
+  const stateRef = useLatest(state);
 
   const handleSearch = async (keyword: string) => {
     const trimmedKeyword = keyword.trim();

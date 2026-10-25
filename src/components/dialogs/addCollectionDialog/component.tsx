@@ -1,3 +1,4 @@
+import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
@@ -35,8 +36,7 @@ const AddCollectionDialog = () => {
   const { t } = useTranslation();
   const [isNew, setIsNew] = useState(true);
   const [collectionKey, setCollectionKey] = useState("");
-  const dialogBooksRef = useRef(dialogBooks);
-  dialogBooksRef.current = dialogBooks;
+  const dialogBooksRef = useLatest(dialogBooks);
 
   useEffect(() => {
     return () => {
