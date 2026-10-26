@@ -793,9 +793,6 @@ const Reader = () => {
           )}
           <div
             className="reader-setting-icon-container"
-            aria-label={t("Text to speech")}
-            data-tooltip-id="my-tooltip"
-            data-tooltip-content={t("Text to speech")}
             {...handleDialogButtonHover(
               handleSpeechDialog,
               ".speech-dialog-container"

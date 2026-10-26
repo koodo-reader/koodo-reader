@@ -1,9 +1,11 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useAppStore } from "../../../store/useAppStore";
 import "./speechDialog.css";
 import TextToSpeech from "../../textToSpeech";
 
 const SpeechDialog = () => {
+  const { t } = useTranslation();
   const plugins = useAppStore((s) => s.manager.plugins);
   const handleSpeechDialog = useAppStore((s) => s.handleSpeechDialog);
   const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
@@ -27,7 +29,7 @@ const SpeechDialog = () => {
       }}
     >
       <div className="speech-dialog-header">
-        <span className="speech-dialog-title"></span>
+        <span className="speech-dialog-title">{t("Text to speech")}</span>
         <span
           className="icon-close speech-dialog-close"
           onClick={() => {
