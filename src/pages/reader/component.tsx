@@ -181,7 +181,9 @@ const Reader = () => {
   const dialogAnchorIconRef = useRef<HTMLElement | null>(null);
   const didMountRef = useRef(false);
   useEffect(() => {
-    htmlBook?.rendition.applyAnnotationConfig({
+    const rendition = htmlBook?.rendition;
+    if (typeof rendition?.applyAnnotationConfig !== "function") return;
+    rendition.applyAnnotationConfig({
       isDrawing: isAnnotationOpen ? "yes" : "no",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
