@@ -809,11 +809,7 @@ const Reader = () => {
             isReadingRawPDF(currentBook) &&
             currentBook.description.indexOf("scanned") > -1 && (
               <div
-                className={
-                  isAnnotationOpen
-                    ? "reader-setting-icon-container active-reader-setting-icon"
-                    : "reader-setting-icon-container"
-                }
+                className="reader-setting-icon-container"
                 aria-label={t("Annotation")}
                 data-tooltip-id="my-tooltip"
                 data-tooltip-content={t("Annotation")}
