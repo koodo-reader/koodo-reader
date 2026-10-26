@@ -1,6 +1,6 @@
 import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
-﻿import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./booklist.css";
 import BookCardItem from "../../../components/bookCardItem";
 import BookListItem from "../../../components/bookListItem";
@@ -122,9 +122,7 @@ const BookList = () => {
       return true;
     }
     return memberKeys.some((bookKey) => {
-      return (
-        ConfigService.getFromAllMapConfig(bookKey, "shelfList").length > 0
-      );
+      return ConfigService.getFromAllMapConfig(bookKey, "shelfList").length > 0;
     });
   };
 
@@ -275,10 +273,7 @@ const BookList = () => {
 
   const handleFinishReading = async () => {
     if (!scrollContainer.current) return;
-    if (
-      scrollContainer.current &&
-      scrollContainer.current.scrollTop > 100
-    ) {
+    if (scrollContainer.current && scrollContainer.current.scrollTop > 100) {
       //ignore if the scroll is not at top
     } else {
       handleFetchBooks();
@@ -484,7 +479,7 @@ const BookList = () => {
     }
 
     // Migrated comment
-// Migrated comment
+    // Migrated comment
     const filteredKeys = new Set(books.map((b) => b.key));
     const displayedBooks = isSearch
       ? books
@@ -571,9 +566,7 @@ const BookList = () => {
     <>
       <div
         className="book-list-header"
-        style={
-          isCollapsed ? { width: "calc(100% - 70px)", left: "70px" } : {}
-        }
+        style={isCollapsed ? { width: "calc(100% - 70px)", left: "70px" } : {}}
       >
         <SelectBook />
 
@@ -633,17 +626,13 @@ const BookList = () => {
       </div>
       <div
         className="book-list-container-parent"
-        style={
-          isCollapsed ? { width: "calc(100vw - 70px)", left: "70px" } : {}
-        }
+        style={isCollapsed ? { width: "calc(100vw - 70px)", left: "70px" } : {}}
       >
         <div className="book-list-container">
           <ul
             className="book-list-item-box"
             ref={scrollContainer}
-            style={
-              { "--card-scale": state.cardScale } as React.CSSProperties
-            }
+            style={{ "--card-scale": state.cardScale } as React.CSSProperties}
           >
             {renderBookList(displayedBookList, bookMode)}
           </ul>
@@ -654,4 +643,3 @@ const BookList = () => {
 };
 
 export default BookList;
-

@@ -1,6 +1,6 @@
 import { useLatest } from "../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
-﻿import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import OperationPanel from "../../containers/panels/operationPanel";
@@ -662,9 +662,7 @@ const Reader = () => {
           style={{ position: "static", transform: "rotate(0deg)" }}
         >
           <span
-            style={
-              isSpeechOpen ? { fontWeight: "bold", marginTop: "4px" } : {}
-            }
+            style={isSpeechOpen ? { fontWeight: "bold", marginTop: "4px" } : {}}
             className={`icon-${isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
           ></span>
         </div>
@@ -673,9 +671,7 @@ const Reader = () => {
             className="next-chapter-single-container"
             onClick={async () => {
               handleMenuMode("assistant");
-              handleOriginalText(
-                await htmlBook.rendition.chapterText()
-              );
+              handleOriginalText(await htmlBook.rendition.chapterText());
               handleOpenMenu(true);
             }}
             style={{
@@ -800,21 +796,20 @@ const Reader = () => {
             </div>
           )}
 
-          {currentBook.format === "PDF" &&
-            readerMode === "scroll" && (
-              <div
-                className="reader-setting-icon-container"
-                {...handleDialogButtonHover(
-                  handlePdfCropDialog,
-                  ".pdf-crop-dialog-container"
-                )}
-              >
-                <span
-                  className="icon-crop reader-setting-icon"
-                  style={{ fontSize: 24 }}
-                ></span>
-              </div>
-            )}
+          {currentBook.format === "PDF" && readerMode === "scroll" && (
+            <div
+              className="reader-setting-icon-container"
+              {...handleDialogButtonHover(
+                handlePdfCropDialog,
+                ".pdf-crop-dialog-container"
+              )}
+            >
+              <span
+                className="icon-crop reader-setting-icon"
+                style={{ fontSize: 24 }}
+              ></span>
+            </div>
+          )}
 
           {currentBook.format === "PDF" && (
             <div
@@ -905,19 +900,11 @@ const Reader = () => {
             ? {
                 opacity: 0.5,
                 marginLeft:
-                  isNavLocked &&
-                  !isSettingLocked &&
-                  !isDockedRight
-                    ? 150
-                    : 0,
+                  isNavLocked && !isSettingLocked && !isDockedRight ? 150 : 0,
               }
             : {
                 marginLeft:
-                  isNavLocked &&
-                  !isSettingLocked &&
-                  !isDockedRight
-                    ? 150
-                    : 0,
+                  isNavLocked && !isSettingLocked && !isDockedRight ? 150 : 0,
               }
         }
         onMouseLeave={() => handleEdgeMouseLeave("top")}
@@ -939,19 +926,11 @@ const Reader = () => {
             ? {
                 opacity: 0.5,
                 marginLeft:
-                  isNavLocked &&
-                  !isSettingLocked &&
-                  !isDockedRight
-                    ? 150
-                    : 0,
+                  isNavLocked && !isSettingLocked && !isDockedRight ? 150 : 0,
               }
             : {
                 marginLeft:
-                  isNavLocked &&
-                  !isSettingLocked &&
-                  !isDockedRight
-                    ? 150
-                    : 0,
+                  isNavLocked && !isSettingLocked && !isDockedRight ? 150 : 0,
               }
         }
       >
@@ -1012,8 +991,7 @@ const Reader = () => {
                 marginLeft:
                   isNavLocked && !isSettingLocked
                     ? 150
-                    : !isNavLocked &&
-                        (isSettingLocked || isDockedRight)
+                    : !isNavLocked && (isSettingLocked || isDockedRight)
                       ? -150
                       : 0,
               }
@@ -1022,8 +1000,7 @@ const Reader = () => {
                 marginLeft:
                   isNavLocked && !isSettingLocked
                     ? 150
-                    : !isNavLocked &&
-                        (isSettingLocked || isDockedRight)
+                    : !isNavLocked && (isSettingLocked || isDockedRight)
                       ? -150
                       : 0,
               }
@@ -1045,8 +1022,7 @@ const Reader = () => {
                 marginLeft:
                   isNavLocked && !isSettingLocked
                     ? 150
-                    : !isNavLocked &&
-                        (isSettingLocked || isDockedRight)
+                    : !isNavLocked && (isSettingLocked || isDockedRight)
                       ? -150
                       : 0,
               }
@@ -1055,8 +1031,7 @@ const Reader = () => {
                 marginLeft:
                   isNavLocked && !isSettingLocked
                     ? 150
-                    : !isNavLocked &&
-                        (isSettingLocked || isDockedRight)
+                    : !isNavLocked && (isSettingLocked || isDockedRight)
                       ? -150
                       : 0,
               }
@@ -1072,8 +1047,7 @@ const Reader = () => {
       </div>
 
       {currentBook.key && <Viewer {...(renditionProps as any)} />}
-      {((readerMode === "scroll" || readerMode === "single") &&
-        isScaleOpen) ||
+      {((readerMode === "scroll" || readerMode === "single") && isScaleOpen) ||
       isConvertOpen ||
       isPdfCropOpen ||
       isStudyLangOpen ||
@@ -1113,4 +1087,3 @@ const Reader = () => {
 };
 
 export default Reader;
-
