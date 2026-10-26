@@ -276,9 +276,6 @@ const AnnotationDialog = () => {
   };
   const handleClose = () => {
     handleAnnotationDialog(false);
-    htmlBook.rendition.applyAnnotationConfig({
-      isDrawing: "no",
-    });
   };
 
   const {
@@ -298,31 +295,9 @@ const AnnotationDialog = () => {
     annotationTextColor,
   } = state;
   return (
-    <div
-      className="sort-dialog-container annotation-dialog-container"
-      onMouseEnter={() => {
-        handleAnnotationDialog(true);
-      }}
-      onMouseLeave={() => {
-        handleAnnotationDialog(false);
-      }}
-      style={{
-        top: "50px",
-        width: "280px",
-        overflowY: "auto",
-        maxHeight: "calc(100vh - 80px)",
-      }}
-    >
-      <div className="annotation-dialog-header">
-        <span className="annotation-dialog-title">{t("Annotation")}</span>
-        <span
-          className="icon-close annotation-dialog-close"
-          onClick={handleClose}
-        ></span>
-      </div>
-
-      <div className="annotation-dialog-tabs">
-        <span
+    <div className="annotation-dialog-container">
+      <ul className="annotation-dialog-tabs">
+        <li
           className={
             annotationStyle === "brush"
               ? "annotation-dialog-tab active-annotation-dialog-tab"
@@ -333,10 +308,10 @@ const AnnotationDialog = () => {
         >
           <span
             className="icon-edit-line annotation-dialog-tab-icon"
-            style={{ fontSize: "20px" }}
+            style={{ fontSize: 18 }}
           ></span>
-        </span>
-        <span
+        </li>
+        <li
           className={
             annotationStyle === "highlighter"
               ? "annotation-dialog-tab active-annotation-dialog-tab"
@@ -347,10 +322,10 @@ const AnnotationDialog = () => {
         >
           <span
             className="icon-highlight-line annotation-dialog-tab-icon"
-            style={{ fontSize: "20px" }}
+            style={{ fontSize: 18 }}
           ></span>
-        </span>
-        <span
+        </li>
+        <li
           className={
             annotationStyle === "shape"
               ? "annotation-dialog-tab active-annotation-dialog-tab"
@@ -361,8 +336,8 @@ const AnnotationDialog = () => {
         >
           <span className="annotation-dialog-tab-shape">
             <svg
-              width="20"
-              height="20"
+              width="18"
+              height="18"
               viewBox="0 0 18 18"
               fill="none"
               stroke="currentColor"
@@ -373,8 +348,8 @@ const AnnotationDialog = () => {
               <rect x="3" y="4" width="12" height="10" rx="1" />
             </svg>
           </span>
-        </span>
-        <span
+        </li>
+        <li
           className={
             annotationStyle === "text"
               ? "annotation-dialog-tab active-annotation-dialog-tab"
@@ -384,8 +359,8 @@ const AnnotationDialog = () => {
           title={t("Text")}
         >
           <span className="icon-font annotation-dialog-tab-icon"></span>
-        </span>
-        <span
+        </li>
+        <li
           className={
             annotationStyle === "eraser"
               ? "annotation-dialog-tab active-annotation-dialog-tab"
@@ -396,16 +371,15 @@ const AnnotationDialog = () => {
         >
           <span
             className="icon-eraser-line annotation-dialog-tab-icon"
-            style={{ fontSize: "20px" }}
+            style={{ fontSize: 18 }}
           ></span>
-        </span>
-      </div>
+        </li>
+      </ul>
 
-      {annotationStyle === "brush" ? (
-        <>
-          <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{t("Brush color")}</div>
-            <ul className="annotation-color-list">
+      <div className="annotation-dialog-options">
+        {annotationStyle === "brush" ? (
+          <>
+            <ul className="annotation-color-list" title={t("Brush color")}>
               {BRUSH_COLORS.map((color) => (
                 <li
                   key={color}
@@ -419,11 +393,7 @@ const AnnotationDialog = () => {
                 ></li>
               ))}
             </ul>
-          </div>
-
-          <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{t("Brush width")}</div>
-            <ul className="annotation-width-list">
+            <ul className="annotation-width-list" title={t("Brush width")}>
               {BRUSH_WIDTHS.map((width) => (
                 <li
                   key={width}
@@ -445,15 +415,13 @@ const AnnotationDialog = () => {
                 </li>
               ))}
             </ul>
-          </div>
-        </>
-      ) : annotationStyle === "highlighter" ? (
-        <>
-          <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">
-              {t("Highlighter color")}
-            </div>
-            <ul className="annotation-color-list">
+          </>
+        ) : annotationStyle === "highlighter" ? (
+          <>
+            <ul
+              className="annotation-color-list"
+              title={t("Highlighter color")}
+            >
               {HIGHLIGHTER_COLORS.map((color) => (
                 <li
                   key={color}
@@ -474,13 +442,10 @@ const AnnotationDialog = () => {
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">
-              {t("Highlighter width")}
-            </div>
-            <ul className="annotation-width-list">
+            <ul
+              className="annotation-width-list"
+              title={t("Highlighter width")}
+            >
               {HIGHLIGHTER_WIDTHS.map((width) => (
                 <li
                   key={width}
@@ -503,34 +468,22 @@ const AnnotationDialog = () => {
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div className="annotation-dialog-section annotation-opacity-section">
-            <div className="annotation-opacity-label">
-              <span>{t("Opacity")}</span>
-              <span className="annotation-opacity-value">
-                {Math.round(annotationHighlighterOpacity * 100)}%
-              </span>
-            </div>
             <input
               type="range"
               min="0.1"
               max="1"
               step="0.1"
               value={annotationHighlighterOpacity}
+              title={t("Opacity")}
               className="annotation-opacity-slider"
               onChange={(e) => handleSelectOpacity(parseFloat(e.target.value))}
               onPointerUp={handleOpacityRelease}
               onMouseUp={handleOpacityRelease}
-              style={{ width: "100%" }}
             />
-          </div>
-        </>
-      ) : annotationStyle === "shape" ? (
-        <>
-          <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{t("Shape type")}</div>
-            <ul className="annotation-shape-list">
+          </>
+        ) : annotationStyle === "shape" ? (
+          <>
+            <ul className="annotation-shape-list" title={t("Shape type")}>
               {SHAPE_TYPES.map((type) => (
                 <li
                   key={type}
@@ -546,11 +499,7 @@ const AnnotationDialog = () => {
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{t("Shape color")}</div>
-            <ul className="annotation-color-list">
+            <ul className="annotation-color-list" title={t("Shape color")}>
               {BRUSH_COLORS.map((color) => (
                 <li
                   key={color}
@@ -564,11 +513,7 @@ const AnnotationDialog = () => {
                 ></li>
               ))}
             </ul>
-          </div>
-
-          <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{t("Shape width")}</div>
-            <ul className="annotation-width-list">
+            <ul className="annotation-width-list" title={t("Shape width")}>
               {BRUSH_WIDTHS.map((width) => (
                 <li
                   key={width}
@@ -590,86 +535,65 @@ const AnnotationDialog = () => {
                 </li>
               ))}
             </ul>
-          </div>
-        </>
-      ) : annotationStyle === "eraser" ? (
-        <>
-          <div className="annotation-dialog-section annotation-text-size-section">
-            <div className="annotation-opacity-label">
-              <span>{t("Eraser size")}</span>
-              <span className="annotation-opacity-value">
-                {annotationEraserWidth}
-              </span>
-            </div>
+          </>
+        ) : annotationStyle === "eraser" ? (
+          <>
             <input
               type="range"
               min={ERASER_WIDTH_MIN}
               max={ERASER_WIDTH_MAX}
               step={ERASER_WIDTH_STEP}
               value={annotationEraserWidth}
+              title={`${t("Eraser size")}: ${annotationEraserWidth}`}
               className="annotation-opacity-slider"
               onChange={(e) =>
                 handleSelectEraserWidth(parseFloat(e.target.value))
               }
               onPointerUp={handleEraserWidthRelease}
               onMouseUp={handleEraserWidthRelease}
-              style={{ width: "100%" }}
             />
-          </div>
-          <div
-            className="annotation-quick-erase-container"
-            onClick={handleToggleQuickErase}
-          >
-            <span className="annotation-quick-erase-title">
-              {t("Quick erase")}
-            </span>
-            <span
-              className="annotation-quick-erase-switch"
-              style={
-                annotationQuickErase === "yes"
-                  ? { opacity: 1 }
-                  : { opacity: 0.4 }
-              }
+            <div
+              className="annotation-quick-erase-container"
+              title={t("Quick erase")}
+              onClick={handleToggleQuickErase}
             >
               <span
-                className="annotation-quick-erase-button"
+                className="annotation-quick-erase-switch"
                 style={
                   annotationQuickErase === "yes"
-                    ? { transform: "translateX(20px)" }
-                    : { transform: "translateX(0px)" }
+                    ? { opacity: 1 }
+                    : { opacity: 0.4 }
                 }
-              ></span>
-            </span>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="annotation-dialog-section annotation-text-size-section">
-            <div className="annotation-opacity-label">
-              <span>{t("Text size")}</span>
-              <span className="annotation-opacity-value">
-                {annotationTextSize}
+              >
+                <span
+                  className="annotation-quick-erase-button"
+                  style={
+                    annotationQuickErase === "yes"
+                      ? { transform: "translateX(20px)" }
+                      : { transform: "translateX(0px)" }
+                  }
+                ></span>
               </span>
             </div>
+          </>
+        ) : (
+          <>
             <input
               type="range"
               min={TEXT_SIZE_MIN}
               max={TEXT_SIZE_MAX}
               step={TEXT_SIZE_STEP}
               value={annotationTextSize}
+              title={`${t("Text size")}: ${annotationTextSize}`}
               className="annotation-opacity-slider"
               onChange={(e) => handleSelectTextSize(parseFloat(e.target.value))}
               onPointerUp={handleTextSizeRelease}
               onMouseUp={handleTextSizeRelease}
-              style={{ width: "100%" }}
             />
-          </div>
-
-          <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{t("Text font")}</div>
             <select
               className="general-setting-dropdown annotation-text-font-select"
               value={annotationTextFont}
+              title={t("Text font")}
               onChange={(e) => handleSelectTextFont(e.target.value)}
             >
               {state.fontOptions.map((font) => (
@@ -682,11 +606,7 @@ const AnnotationDialog = () => {
                 </option>
               ))}
             </select>
-          </div>
-
-          <div className="annotation-dialog-section">
-            <div className="annotation-dialog-label">{t("Text color")}</div>
-            <ul className="annotation-color-list">
+            <ul className="annotation-color-list" title={t("Text color")}>
               {TEXT_COLORS.map((color) => (
                 <li
                   key={color}
@@ -700,9 +620,15 @@ const AnnotationDialog = () => {
                 ></li>
               ))}
             </ul>
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
+
+      <span
+        className="icon-close annotation-dialog-close"
+        onClick={handleClose}
+        title={t("Close")}
+      ></span>
     </div>
   );
 };

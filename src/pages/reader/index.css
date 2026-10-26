@@ -260,6 +260,11 @@
 .reader-setting-icon-container:hover {
   border-radius: 50%;
 }
+.active-reader-setting-icon {
+  opacity: 0.85;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.15);
+}
 .reader-setting-dialog-anchor {
   position: absolute;
   top: 50px;

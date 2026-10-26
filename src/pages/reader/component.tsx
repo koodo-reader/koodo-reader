@@ -179,8 +179,13 @@ const Reader = () => {
   const autoShowTimerRef = useRef<NodeJS.Timeout | null>(null);
   const hideQuickButtonsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const dialogAnchorIconRef = useRef<HTMLElement | null>(null);
-  const [isDrawingEnabled, setIsDrawingEnabled] = useState(false);
   const didMountRef = useRef(false);
+  useEffect(() => {
+    htmlBook?.rendition.applyAnnotationConfig({
+      isDrawing: isAnnotationOpen ? "yes" : "no",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAnnotationOpen, htmlBook]);
   const readingTimeUtilRef = useRef<InstanceType<
     typeof ReadingTimeUtil
   > | null>(null);
@@ -345,7 +350,6 @@ const Reader = () => {
     propsRef.current.handleStudyLangDialog(false);
     propsRef.current.handleAssistReadDialog(false);
     propsRef.current.handleSpeechDialog(false);
-    propsRef.current.handleAnnotationDialog(false);
   };
   const updateSettingDialogPosition = () => {
     const anchor = document.querySelector<HTMLElement>(
@@ -805,20 +809,19 @@ const Reader = () => {
             isReadingRawPDF(currentBook) &&
             currentBook.description.indexOf("scanned") > -1 && (
               <div
-                className="reader-setting-icon-container"
+                className={
+                  isAnnotationOpen
+                    ? "reader-setting-icon-container active-reader-setting-icon"
+                    : "reader-setting-icon-container"
+                }
                 aria-label={t("Annotation")}
                 data-tooltip-id="my-tooltip"
                 data-tooltip-content={t("Annotation")}
-                {...handleDialogButtonHover(
-                  handleAnnotationDialog,
-                  ".annotation-dialog-container"
-                )}
                 onClick={() => {
-                  const next = !isDrawingEnabled;
-                  htmlBook.rendition.applyAnnotationConfig({
-                    isDrawing: next ? "yes" : "no",
-                  });
-                  setIsDrawingEnabled(next);
+                  if (isAnnotationOpen) return;
+                  dialogAnchorIconRef.current = null;
+                  closeSettingDialogs();
+                  handleAnnotationDialog(true);
                 }}
               >
                 <span
@@ -1072,8 +1075,7 @@ const Reader = () => {
       isPdfCropOpen ||
       isStudyLangOpen ||
       isAssistReadOpen ||
-      isSpeechOpen ||
-      isAnnotationOpen ? (
+      isSpeechOpen ? (
         <div className="reader-setting-dialog-anchor">
           {(readerMode === "scroll" || readerMode === "single") &&
             isScaleOpen && <ScalePageDialog />}
@@ -1084,9 +1086,9 @@ const Reader = () => {
           <div style={{ display: isSpeechOpen ? "block" : "none" }}>
             <SpeechDialog />
           </div>
-          {isAnnotationOpen && <AnnotationDialog />}
         </div>
       ) : null}
+      {isAnnotationOpen && <AnnotationDialog />}
       <SupportDialog />
       {isOpenPopupOptionDialog && (
         <>

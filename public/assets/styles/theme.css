@@ -54,8 +54,7 @@
   --card-border: 1px solid rgba(235, 235, 235, 0.1);
 }
 
-body,
-.active-annotation-dialog-tab {
+body {
   -webkit-tap-highlight-color: transparent;
   background: var(--app-bg);
   color: var(--text-color);
