@@ -21,7 +21,6 @@ const BG_SOLID_SELECTORS = [
   ".setting-dialog-sidebar-item.active",
   ".previous-chapter-single-container",
   ".next-chapter-single-container",
-  ".reader-setting-icon-container",
   ".book-bookmark-link",
   ".message-box-container",
   ".only-local-icon",

@@ -234,27 +234,31 @@
   height: 20px;
 }
 .reader-setting-icon {
-  font-size: 20px;
-  height: 20px;
+  margin: 8px;
+  opacity: 0.9;
+  width: 50px;
+  padding: 15px;
 }
 .text-to-speech-icon {
   font-size: 22px;
   margin-right: 10px;
 }
 .reader-setting-icon-container {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
   cursor: pointer;
-  opacity: 0.5;
+  z-index: 10;
+  transition: 0.1s;
+  line-height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-shrink: 0;
-  z-index: 10;
+  transition: 0, 2s;
+  float: right;
 }
 .reader-setting-icon-container:hover {
-  opacity: 0.7;
+  border-radius: 50%;
 }
 .reader-setting-dialog-anchor {
   position: absolute;
