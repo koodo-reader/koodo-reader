@@ -82,6 +82,40 @@ const SettingDialog = () => {
     activePluginTab: getInitialPluginTab(pluginSettingTab),
   });
 
+  const mergeState = (patch: Partial<SettingInfoState>) => {
+    setState((prev) => ({ ...prev, ...patch }));
+  };
+
+  const getPluginSectionRefMap = (): Record<
+    string,
+    React.RefObject<HTMLDivElement | null>
+  > => ({
+    translation: translationRef,
+    dictionary: dictionaryRef,
+    ocr: ocrRef,
+    voice: voiceRef,
+  });
+
+  const scrollToPluginSection = (type: string, retries = 20) => {
+    const ref = getPluginSectionRefMap()[type]?.current;
+    const scrollContainer = document.querySelector(
+      ".setting-dialog-info"
+    ) as HTMLElement | null;
+    if (!ref || !scrollContainer) {
+      if (retries > 0) {
+        window.setTimeout(() => {
+          scrollToPluginSection(type, retries - 1);
+        }, 100);
+      }
+      return;
+    }
+    const containerRect = scrollContainer.getBoundingClientRect();
+    const refRect = ref.getBoundingClientRect();
+    const tabBarHeight = 40;
+    scrollContainer.scrollTop +=
+      refRect.top - containerRect.top - tabBarHeight;
+  };
+
   useEffect(() => {
     if (pluginSettingTab) {
       const nextTab = getInitialPluginTab(pluginSettingTab);
@@ -91,13 +125,10 @@ const SettingDialog = () => {
           : prev
       );
       handlePluginSettingTab("");
+      scrollToPluginSection(nextTab);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pluginSettingTab]);
-
-  const mergeState = (patch: Partial<SettingInfoState>) => {
-    setState((prev) => ({ ...prev, ...patch }));
-  };
 
   const handleGetPluginList = () => {
     const installedPluginKeys = plugins.map((item) => item.key);
@@ -454,35 +485,13 @@ const SettingDialog = () => {
               voice: t("Voice"),
               ocr: t("OCR"),
             };
-            const refMap: Record<
-              string,
-              React.RefObject<HTMLDivElement | null>
-            > = {
-              translation: translationRef,
-              dictionary: dictionaryRef,
-              ocr: ocrRef,
-              voice: voiceRef,
-            };
             return (
               <div
                 key={type}
                 className={`plugin-tab-item${state.activePluginTab === type ? " plugin-tab-item-active" : ""}`}
                 onClick={() => {
                   mergeState({ activePluginTab: type });
-                  const ref = refMap[type].current;
-                  if (ref) {
-                    const scrollContainer = document.querySelector(
-                      ".setting-dialog-info"
-                    ) as HTMLElement;
-                    if (scrollContainer) {
-                      const containerRect =
-                        scrollContainer.getBoundingClientRect();
-                      const refRect = ref.getBoundingClientRect();
-                      const tabBarHeight = 40;
-                      scrollContainer.scrollTop +=
-                        refRect.top - containerRect.top - tabBarHeight;
-                    }
-                  }
+                  scrollToPluginSection(type);
                 }}
               >
                 {labelMap[type]}
