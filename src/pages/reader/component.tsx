@@ -179,6 +179,7 @@ const Reader = () => {
   const autoShowTimerRef = useRef<NodeJS.Timeout | null>(null);
   const hideQuickButtonsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const dialogAnchorIconRef = useRef<HTMLElement | null>(null);
+  const [isDrawingEnabled, setIsDrawingEnabled] = useState(false);
   const didMountRef = useRef(false);
   const readingTimeUtilRef = useRef<InstanceType<
     typeof ReadingTimeUtil
@@ -343,6 +344,8 @@ const Reader = () => {
     propsRef.current.handlePdfCropDialog(false);
     propsRef.current.handleStudyLangDialog(false);
     propsRef.current.handleAssistReadDialog(false);
+    propsRef.current.handleSpeechDialog(false);
+    propsRef.current.handleAnnotationDialog(false);
   };
   const updateSettingDialogPosition = () => {
     const anchor = document.querySelector<HTMLElement>(
@@ -662,59 +665,6 @@ const Reader = () => {
         >
           <span className="icon-dropdown next-chapter-single"></span>
         </div>
-        <div
-          className="next-chapter-single-container"
-          onClick={async () => {
-            handleSpeechDialog(!isSpeechOpen);
-          }}
-          style={{ position: "static", transform: "rotate(0deg)" }}
-        >
-          <span
-            style={isSpeechOpen ? { fontWeight: "bold", marginTop: "4px" } : {}}
-            className={`icon-${isSpeechOpen ? "close" : "earphone"} next-chapter-single`}
-          ></span>
-        </div>
-        {ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
-          <div
-            className="next-chapter-single-container"
-            onClick={async () => {
-              handleMenuMode("assistant");
-              handleOriginalText(await htmlBook.rendition.chapterText());
-              handleOpenMenu(true);
-            }}
-            style={{
-              position: "static",
-              transform: "rotate(0deg)",
-              fontWeight: "bold",
-              fontSize: "17px",
-            }}
-          >
-            AI
-          </div>
-        )}
-        {currentBook &&
-          isReadingRawPDF(currentBook) &&
-          currentBook.description.indexOf("scanned") > -1 && (
-            <div
-              className="next-chapter-single-container"
-              onClick={() => {
-                htmlBook.rendition.applyAnnotationConfig({
-                  isDrawing: isAnnotationOpen ? "no" : "yes",
-                });
-                handleAnnotationDialog(!isAnnotationOpen);
-              }}
-              style={{ position: "static", transform: "rotate(0deg)" }}
-            >
-              <span
-                style={
-                  isAnnotationOpen
-                    ? { fontWeight: "bold", marginTop: "4px" }
-                    : { fontSize: "17px" }
-                }
-                className={`icon-${isAnnotationOpen ? "close" : "edit"} next-chapter-single`}
-              ></span>
-            </div>
-          )}
       </div>
 
       <div
@@ -833,6 +783,67 @@ const Reader = () => {
               ></span>
             </div>
           )}
+          <div
+            className="reader-setting-icon-container"
+            aria-label={t("Text to speech")}
+            data-tooltip-id="my-tooltip"
+            data-tooltip-content={t("Text to speech")}
+            {...handleDialogButtonHover(
+              handleSpeechDialog,
+              ".speech-dialog-container"
+            )}
+          >
+            <span
+              className={`icon-${isSpeechOpen ? "close" : "earphone"} reader-setting-icon`}
+              style={{ fontSize: 20 }}
+            ></span>
+          </div>
+          {ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
+            <div
+              className="reader-setting-icon-container"
+              aria-label={t("Chat Assistant")}
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={t("Chat Assistant")}
+              onClick={async () => {
+                handleMenuMode("assistant");
+                handleOriginalText(await htmlBook.rendition.chapterText());
+                handleOpenMenu(true);
+              }}
+            >
+              <span
+                className="reader-setting-icon"
+                style={{ fontWeight: "bold", fontSize: 18 }}
+              >
+                AI
+              </span>
+            </div>
+          )}
+          {currentBook &&
+            isReadingRawPDF(currentBook) &&
+            currentBook.description.indexOf("scanned") > -1 && (
+              <div
+                className="reader-setting-icon-container"
+                aria-label={t("Annotation")}
+                data-tooltip-id="my-tooltip"
+                data-tooltip-content={t("Annotation")}
+                {...handleDialogButtonHover(
+                  handleAnnotationDialog,
+                  ".annotation-dialog-container"
+                )}
+                onClick={() => {
+                  const next = !isDrawingEnabled;
+                  htmlBook.rendition.applyAnnotationConfig({
+                    isDrawing: next ? "yes" : "no",
+                  });
+                  setIsDrawingEnabled(next);
+                }}
+              >
+                <span
+                  className={`icon-${isDrawingEnabled ? "close" : "edit"} reader-setting-icon`}
+                  style={{ fontSize: 20 }}
+                ></span>
+              </div>
+            )}
           <div
             className="reader-setting-icon-container"
             aria-label={t("Toggle menu")}
@@ -1059,7 +1070,9 @@ const Reader = () => {
       isConvertOpen ||
       isPdfCropOpen ||
       isStudyLangOpen ||
-      isAssistReadOpen ? (
+      isAssistReadOpen ||
+      isSpeechOpen ||
+      isAnnotationOpen ? (
         <div className="reader-setting-dialog-anchor">
           {(readerMode === "scroll" || readerMode === "single") &&
             isScaleOpen && <ScalePageDialog />}
@@ -1067,6 +1080,10 @@ const Reader = () => {
           {isPdfCropOpen && <PdfCropDialog />}
           {isStudyLangOpen && <StudyLangDialog />}
           {isAssistReadOpen && <AssistReadDialog />}
+          <div style={{ display: isSpeechOpen ? "block" : "none" }}>
+            <SpeechDialog />
+          </div>
+          {isAnnotationOpen && <AnnotationDialog />}
         </div>
       ) : null}
       <SupportDialog />
@@ -1076,20 +1093,6 @@ const Reader = () => {
           <div className="drag-background"></div>
         </>
       )}
-      {
-        <div
-          style={
-            isSpeechOpen
-              ? {}
-              : {
-                  display: "none",
-                }
-          }
-        >
-          <SpeechDialog />
-        </div>
-      }
-      {isAnnotationOpen && <AnnotationDialog />}
     </div>
   );
 };

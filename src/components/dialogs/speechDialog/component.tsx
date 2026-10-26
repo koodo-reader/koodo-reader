@@ -5,8 +5,6 @@ import TextToSpeech from "../../textToSpeech";
 
 const SpeechDialog = () => {
   const plugins = useAppStore((s) => s.manager.plugins);
-  const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
-  const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
   const handleSpeechDialog = useAppStore((s) => s.handleSpeechDialog);
   const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
   useEffect(() => {
@@ -14,34 +12,31 @@ const SpeechDialog = () => {
   }, []);
 
   return (
-    <>
-      <div
-        className="sort-dialog-container"
-        onMouseEnter={() => {
-          handleSpeechDialog(true);
-        }}
-        style={{
-          left: "auto",
-          top: "auto",
-          bottom: "60px",
-          width: "300px",
-          height: "340px",
-          overflowY: "scroll",
-          right: isSettingLocked || isDockedRight ? 370 : 65,
-        }}
-      >
-        <div className="speech-dialog-header">
-          <span className="speech-dialog-title"></span>
-          <span
-            className="icon-close speech-dialog-close"
-            onClick={() => {
-              handleSpeechDialog(false);
-            }}
-          ></span>
-        </div>
-        {plugins && <TextToSpeech />}
+    <div
+      className="sort-dialog-container speech-dialog-container"
+      onMouseEnter={() => {
+        handleSpeechDialog(true);
+      }}
+      onMouseLeave={() => {
+        handleSpeechDialog(false);
+      }}
+      style={{
+        width: "280px",
+        overflowY: "auto",
+        maxHeight: "calc(100vh - 80px)",
+      }}
+    >
+      <div className="speech-dialog-header">
+        <span className="speech-dialog-title"></span>
+        <span
+          className="icon-close speech-dialog-close"
+          onClick={() => {
+            handleSpeechDialog(false);
+          }}
+        ></span>
       </div>
-    </>
+      {plugins && <TextToSpeech />}
+    </div>
   );
 };
 

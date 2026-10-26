@@ -41,8 +41,6 @@ export interface AnnotationDialogState {
 }
 
 const AnnotationDialog = () => {
-  const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
-  const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
   const htmlBook = useAppStore((s) => s.reader.htmlBook);
   const handleAnnotationDialog = useAppStore((s) => s.handleAnnotationDialog);
   const { t } = useTranslation();
@@ -302,14 +300,16 @@ const AnnotationDialog = () => {
   return (
     <div
       className="sort-dialog-container annotation-dialog-container"
+      onMouseEnter={() => {
+        handleAnnotationDialog(true);
+      }}
+      onMouseLeave={() => {
+        handleAnnotationDialog(false);
+      }}
       style={{
-        left: "auto",
-        top: "auto",
-        bottom: "60px",
         width: "210px",
-        height: "320px",
-        overflowY: "scroll",
-        right: isSettingLocked || isDockedRight ? 370 : 65,
+        overflowY: "auto",
+        maxHeight: "calc(100vh - 80px)",
       }}
     >
       <div className="annotation-dialog-header">

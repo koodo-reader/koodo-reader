@@ -1174,5 +1174,6 @@
   "Failed to recognize title": "Failed to recognize title",
   "Show total page number (Experimental)": "Show total page number (Experimental)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.",
-  "Background opacity": "Background opacity"
+  "Background opacity": "Background opacity",
+  "Text to speech": "Text to speech"
 }
