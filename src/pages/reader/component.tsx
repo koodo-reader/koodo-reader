@@ -375,7 +375,15 @@ const Reader = () => {
       "--reader-dialog-anchor-x",
       `${iconCenter}px`
     );
-    anchor.style.left = `${left}px`;
+    if (!anchor.dataset.positioned) {
+      anchor.style.transition = "none";
+      anchor.style.left = `${left}px`;
+      void anchor.offsetWidth;
+      anchor.style.transition = "";
+      anchor.dataset.positioned = "true";
+    } else {
+      anchor.style.left = `${left}px`;
+    }
   };
   const handleDialogButtonHover = (
     handleDialog: (isOpen: boolean) => void,
