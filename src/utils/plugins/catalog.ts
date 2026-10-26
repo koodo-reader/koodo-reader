@@ -6340,7 +6340,6 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     defaultConfig: {
       apiKey: "[Your API Key]",
       secretKey: "[Your Secret Key]",
-      language: "CHN_ENG",
     },
     langList: {
       CHN_ENG: "Chinese & English",
@@ -6380,7 +6379,6 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     defaultConfig: {
       apiKey: "[Your API Key]",
       secretKey: "[Your Secret Key]",
-      language: "CHN_ENG",
     },
     langList: {
       CHN_ENG: "Chinese & English",

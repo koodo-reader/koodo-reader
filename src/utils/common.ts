@@ -2002,16 +2002,22 @@ export const getDefaultOcrEngine = (currentBook: any) => {
 export const getOcrLangList = (engine: string) => {
   const pluginDefinition = getBuiltinPluginDefinition(engine);
   if (pluginDefinition?.type === "ocr") {
-    if (!pluginDefinition.defaultConfig.language) {
-      return [];
-    }
     const langList = pluginDefinition.langList;
     if (Array.isArray(langList)) {
+      if (langList.length <= 1) {
+        return [];
+      }
       return langList.map((item) => ({
         label: item.nativeLang || item.lang,
         value: item.code,
         lang: item.code,
       }));
+    }
+    if (
+      Object.keys(langList).length <= 1 &&
+      !pluginDefinition.defaultConfig.language
+    ) {
+      return [];
     }
     return Object.entries(langList).map(([value, label]) => ({
       label: String(label),
