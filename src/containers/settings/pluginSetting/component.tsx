@@ -16,6 +16,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import {
   getBuiltinPluginDefinition,
+  getBuiltinPluginLocalizedName,
   getBuiltinPluginMarket,
 } from "../../../utils/plugins/catalog";
 import { createBuiltinPluginRecord } from "../../../utils/plugins/records";
@@ -56,7 +57,7 @@ const SettingDialog = () => {
   const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
   const pluginSettingTab = useAppStore((s) => s.manager.pluginSettingTab);
   const handlePluginSettingTab = useAppStore((s) => s.handlePluginSettingTab);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const translationRef = useRef<HTMLDivElement | null>(null);
   const dictionaryRef = useRef<HTMLDivElement | null>(null);
   const ocrRef = useRef<HTMLDivElement | null>(null);
@@ -440,7 +441,8 @@ const SettingDialog = () => {
                     } setting-plugin-icon`}
                   ></span>
                   <span className="setting-plugin-name">
-                    {t(item.displayName)}
+                    {getBuiltinPluginLocalizedName(item.key, i18n.language) ??
+                      t(item.displayName)}
                   </span>
                 </span>
 

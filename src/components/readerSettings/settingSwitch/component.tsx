@@ -29,7 +29,6 @@ const SettingSwitch = (props: SettingSwitchProps) => {
     isShadow: ConfigService.getReaderConfig("isShadow") === "yes",
     isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
     isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
-    isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
     isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
     isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
     isKeepPDFBackground:
@@ -202,22 +201,7 @@ const SettingSwitch = (props: SettingSwitchProps) => {
                 isShowPageBorder: handleShowBorder,
               };
 
-              if (propName === "isBionic") {
-                if (
-                  !state.isBionic &&
-                  ConfigService.getAllListConfig(
-                    "wordDefinitionBooks"
-                  ).includes(currentBook.key)
-                ) {
-                  toast.error(
-                    t(
-                      "Word definitions and fast reading mode cannot be enabled at the same time"
-                    )
-                  );
-                  return;
-                }
-                _handleChange(propName);
-              } else if (propName === "isShowPageBorder") {
+              if (propName === "isShowPageBorder") {
                 handleShowBorder(!state.isShowPageBorder);
                 handleChange("isShowPageBorder");
               } else if (propName === "isAllowScript") {

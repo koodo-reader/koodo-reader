@@ -6904,6 +6904,17 @@ const definitionsByKey = new Map(
 export const getBuiltinPluginDefinition = (key: string) =>
   definitionsByKey.get(key);
 
+export const getBuiltinPluginLocalizedName = (
+  key: string,
+  language: string
+): string | undefined => {
+  const definition = definitionsByKey.get(key);
+  if (!definition) return undefined;
+  return language.startsWith("zh")
+    ? definition.name.zhCN
+    : definition.name.en;
+};
+
 export const isBuiltinPluginKey = (key: string) => definitionsByKey.has(key);
 
 export const getBuiltinPluginMarket = (

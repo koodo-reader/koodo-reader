@@ -70,6 +70,8 @@ const exclusiveModeNames = [
 
 type ExclusiveModeName = (typeof exclusiveModeNames)[number];
 
+type AssistModeName = ExclusiveModeName | "isBionic";
+
 const AssistReadDialog = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const htmlBook = useAppStore((s) => s.reader.htmlBook);
@@ -81,10 +83,11 @@ const AssistReadDialog = () => {
   const handleAutoReading = useAppStore((s) => s.handleAutoReading);
   const handleReaderMode = useAppStore((s) => s.handleReaderMode);
   const { t } = useTranslation();
-  const [state, setState] = useState<Record<ExclusiveModeName, boolean>>({
+  const [state, setState] = useState<Record<AssistModeName, boolean>>({
     isParagraphMode: ConfigService.getReaderConfig("isParagraphMode") === "yes",
     isReadingRuler: ConfigService.getReaderConfig("isReadingRuler") === "yes",
     isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
+    isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
     isAutoReading: ConfigService.getReaderConfig("isAutoReading") === "yes",
   });
 
@@ -178,6 +181,29 @@ const AssistReadDialog = () => {
     }, 500);
   };
 
+  const handleBionicToggle = () => {
+    const next = !state.isBionic;
+    if (
+      next &&
+      ConfigService.getAllListConfig("wordDefinitionBooks").includes(
+        currentBook.key
+      )
+    ) {
+      toast.error(
+        t(
+          "Word definitions and fast reading mode cannot be enabled at the same time"
+        )
+      );
+      return;
+    }
+    setState((prev) => ({ ...prev, isBionic: next }));
+    ConfigService.setReaderConfig("isBionic", next ? "yes" : "no");
+    toast(t("Change successful"));
+    setTimeout(() => {
+      renderBookFunc();
+    }, 500);
+  };
+
   const handleAutoReadingToggle = () => {
     const next = !state.isAutoReading;
     if (next) {
@@ -260,6 +286,12 @@ const AssistReadDialog = () => {
           speedReadingSliderConfigs.map((item) => (
             <SliderList key={item.mode} {...{ item }} />
           ))}
+
+        <SwitchRow
+          title={<Trans>Fast reading mode (make the first half of the word bold)</Trans>}
+          isEnabled={state.isBionic}
+          onClick={handleBionicToggle}
+        />
       </ul>
     </div>
   );
