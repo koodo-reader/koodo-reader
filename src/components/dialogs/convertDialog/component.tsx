@@ -14,7 +14,6 @@ import {
 } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
 import {
-  clearOcrCache,
   getDefaultOcrEngine,
   getOcrLangList,
 } from "../../../utils/common";
@@ -165,7 +164,6 @@ const ConvertDialog = () => {
                     currentBook.key
                   )
                 ) {
-                  clearOcrCache(currentBook.key);
                   BookUtil.reloadBooks(currentBook);
                 }
                 forceUpdate();
@@ -295,7 +293,6 @@ const ConvertDialog = () => {
                       currentBook.key
                     )
                   ) {
-                    clearOcrCache(currentBook.key);
                     BookUtil.reloadBooks(currentBook);
                   }
                   forceUpdate();
