@@ -307,7 +307,8 @@ const AnnotationDialog = () => {
         handleAnnotationDialog(false);
       }}
       style={{
-        width: "210px",
+        top: "50px",
+        width: "280px",
         overflowY: "auto",
         maxHeight: "calc(100vh - 80px)",
       }}

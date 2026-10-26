@@ -351,7 +351,9 @@ const Reader = () => {
     const anchor = document.querySelector<HTMLElement>(
       ".reader-setting-dialog-anchor"
     );
-    const dialog = anchor?.querySelector<HTMLElement>(".sort-dialog-container");
+    const dialog = Array.from(
+      anchor?.querySelectorAll<HTMLElement>(".sort-dialog-container") || []
+    ).find((item) => item.offsetParent !== null && item.offsetWidth > 0);
     if (!anchor || !dialog) return;
     const icon = dialogAnchorIconRef.current;
     if (!icon || !icon.isConnected) return;
