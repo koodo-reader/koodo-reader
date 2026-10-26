@@ -180,7 +180,12 @@ const AISetting = () => {
     try {
       const headers: Record<string, string> = {};
       if (stateRef.current.apiKey) {
-        headers["Authorization"] = `Bearer ${stateRef.current.apiKey}`;
+        if (provider.authType === "x-api-key") {
+          headers["x-api-key"] = stateRef.current.apiKey;
+          headers["anthropic-version"] = "2023-06-01";
+        } else {
+          headers["Authorization"] = `Bearer ${stateRef.current.apiKey}`;
+        }
       }
       const response = await aiRequest(provider.modelsEndpoint, "GET", headers);
       if (!response.ok) {
