@@ -733,8 +733,8 @@ const Reader = () => {
                 )}
               >
                 <span
-                  className="icon-pencil-ruler reader-setting-icon"
-                  style={{ fontSize: 18 }}
+                  className="icon-light-bulb reader-setting-icon"
+                  style={{ fontSize: 20 }}
                 ></span>
               </div>
             </>
