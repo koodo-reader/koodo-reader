@@ -748,7 +748,7 @@ const Reader = () => {
               >
                 <span
                   className="icon-zoom-in reader-setting-icon"
-                  style={{ fontSize: 23 }}
+                  style={{ fontSize: 20 }}
                 ></span>
               </div>
             </div>
@@ -764,7 +764,7 @@ const Reader = () => {
             >
               <span
                 className="icon-crop reader-setting-icon"
-                style={{ fontSize: 24 }}
+                style={{ fontSize: 20 }}
               ></span>
             </div>
           )}
@@ -779,7 +779,7 @@ const Reader = () => {
             >
               <span
                 className="icon-convert-text reader-setting-icon"
-                style={{ fontSize: 26 }}
+                style={{ fontSize: 22 }}
               ></span>
             </div>
           )}
@@ -794,30 +794,11 @@ const Reader = () => {
             )}
           >
             <span
-              className={`icon-${isSpeechOpen ? "close" : "earphone"} reader-setting-icon`}
+              className={`icon-earphone-line reader-setting-icon`}
               style={{ fontSize: 20 }}
             ></span>
           </div>
-          {ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
-            <div
-              className="reader-setting-icon-container"
-              aria-label={t("Chat Assistant")}
-              data-tooltip-id="my-tooltip"
-              data-tooltip-content={t("Chat Assistant")}
-              onClick={async () => {
-                handleMenuMode("assistant");
-                handleOriginalText(await htmlBook.rendition.chapterText());
-                handleOpenMenu(true);
-              }}
-            >
-              <span
-                className="reader-setting-icon"
-                style={{ fontWeight: "bold", fontSize: 18 }}
-              >
-                AI
-              </span>
-            </div>
-          )}
+
           {currentBook &&
             isReadingRawPDF(currentBook) &&
             currentBook.description.indexOf("scanned") > -1 && (
@@ -839,11 +820,29 @@ const Reader = () => {
                 }}
               >
                 <span
-                  className={`icon-${isDrawingEnabled ? "close" : "edit"} reader-setting-icon`}
+                  className={`icon-pen-line reader-setting-icon`}
                   style={{ fontSize: 20 }}
                 ></span>
               </div>
             )}
+          {ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
+            <div
+              className="reader-setting-icon-container"
+              aria-label={t("Chat Assistant")}
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content={t("Chat Assistant")}
+              onClick={async () => {
+                handleMenuMode("assistant");
+                handleOriginalText(await htmlBook.rendition.chapterText());
+                handleOpenMenu(true);
+              }}
+            >
+              <span
+                className={`icon-star-line reader-setting-icon`}
+                style={{ fontSize: 20 }}
+              ></span>
+            </div>
+          )}
           <div
             className="reader-setting-icon-container"
             aria-label={t("Toggle menu")}
@@ -858,7 +857,7 @@ const Reader = () => {
           >
             <span
               className="icon-grid reader-setting-icon"
-              style={{ fontSize: 20 }}
+              style={{ fontSize: 16 }}
             ></span>
           </div>
           {showCustomWindowControls && <WindowControls t={t} />}
