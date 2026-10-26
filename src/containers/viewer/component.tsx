@@ -504,8 +504,17 @@ const Viewer = (props: ViewerProps) => {
         getZipEntries: getZipEntries,
         filePath: BookUtil.getBookPath(propsRef.current.currentBook),
         bookKey: propsRef.current.currentBook.key,
-        getOcrCache: getOcrCache,
-        saveOcrCache: saveOcrCache,
+        getOcrCache: (bookKey: string, chapterDocIndex: string) =>
+          getOcrCache(bookKey, chapterDocIndex, { ocrEngine, ocrLang }),
+        saveOcrCache: (
+          bookKey: string,
+          chapterDocIndex: string,
+          cache: { src?: string; text?: string }
+        ) =>
+          saveOcrCache(bookKey, chapterDocIndex, cache, {
+            ocrEngine,
+            ocrLang,
+          }),
       },
       Kookit
     );

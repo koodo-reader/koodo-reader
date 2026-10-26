@@ -2334,9 +2334,34 @@ export const getOfficialDictLang = () => {
     return "eng";
   }
 };
+// OCR 配置指纹：把引擎/语言等 OCR 配置做到缓存 key 里，
+// 切换 OCR 引擎或语言后旧缓存自动失效，不再命中旧结果
+const sanitizeOcrConfigValue = (value: unknown): string => {
+  const str = String(value ?? "").trim();
+  return str ? str.replace(/[^A-Za-z0-9_-]/g, "-") : "default";
+};
+
+export const getOcrConfigKey = (ocrConfig?: {
+  ocrEngine?: string;
+  ocrLang?: string;
+}): string => {
+  if (ocrConfig && (ocrConfig.ocrEngine || ocrConfig.ocrLang)) {
+    return (
+      sanitizeOcrConfigValue(ocrConfig.ocrEngine) +
+      "_" +
+      sanitizeOcrConfigValue(ocrConfig.ocrLang)
+    );
+  }
+  // 兜底：阅读器按当前 OCR 配置推导指纹
+  return ["scannedOcrEngine", "scannedOcrLang", "textOcrEngine", "textOcrLang"]
+    .map((key) => sanitizeOcrConfigValue(ConfigService.getReaderConfig(key)))
+    .join("_");
+};
+
 export const getOcrCachePath = (
   bookKey: string,
-  chapterDocIndex: string
+  chapterDocIndex: string,
+  ocrConfig?: { ocrEngine?: string; ocrLang?: string }
 ): string => {
   const electron = window.electronAPI;
   const dirPath = electron.sendSync("user-data", "ping");
@@ -2344,7 +2369,10 @@ export const getOcrCachePath = (
   if (!electron.fs.existsSync(ocrDir)) {
     electron.fs.mkdirSync(ocrDir, { recursive: true });
   }
-  return electron.path.join(ocrDir, bookKey + "_" + chapterDocIndex + ".json");
+  return electron.path.join(
+    ocrDir,
+    bookKey + "_" + chapterDocIndex + "_" + getOcrConfigKey(ocrConfig) + ".json"
+  );
 };
 export const clearOcrCache = (bookKey: string) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
@@ -2410,14 +2438,18 @@ export const isFixedLayoutBook = (book: Book) => {
     isFixedLayoutComic(book)
   );
 };
-export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {
+export const getOcrCache = (
+  bookKey: string,
+  chapterDocIndex: string,
+  ocrConfig?: { ocrEngine?: string; ocrLang?: string }
+) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
     return null;
   }
   let cache = null;
   if (isElectron && window.electronAPI && window.electronAPI.fs) {
     try {
-      const cachePath = getOcrCachePath(bookKey, chapterDocIndex);
+      const cachePath = getOcrCachePath(bookKey, chapterDocIndex, ocrConfig);
       const fs = window.electronAPI.fs;
       if (fs.existsSync(cachePath)) {
         cache = JSON.parse(fs.readFileSync(cachePath, "utf-8")) || {};
@@ -2442,7 +2474,8 @@ export const isRateLimitedResult = (text: string): boolean => {
 export const saveOcrCache = (
   bookKey: string,
   chapterDocIndex: string,
-  cache: { src?: string; text?: string }
+  cache: { src?: string; text?: string },
+  ocrConfig?: { ocrEngine?: string; ocrLang?: string }
 ) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
     return;
@@ -2451,7 +2484,7 @@ export const saveOcrCache = (
     return;
   }
   try {
-    const cachePath = getOcrCachePath(bookKey, chapterDocIndex);
+    const cachePath = getOcrCachePath(bookKey, chapterDocIndex, ocrConfig);
     window.electronAPI.fs.writeFileSync(
       cachePath,
       JSON.stringify(cache),
