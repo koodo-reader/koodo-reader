@@ -602,7 +602,7 @@ const Reader = () => {
       state.isOpenRightPanel,
   };
   return (
-    <div className="viewer">
+    <div className={"viewer" + (state.isNearEdge ? " quick-buttons-shown" : "")}>
       <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
       {isSeparateElectronWindow && (
         <div className="reader-window-drag-region" />

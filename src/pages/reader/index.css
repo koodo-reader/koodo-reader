@@ -290,3 +290,10 @@
     transform: scale(1);
   }
 }
+
+.header-book-name {
+  transition: opacity 0.3s ease;
+}
+.viewer.quick-buttons-shown .header-book-name {
+  opacity: 0;
+}
