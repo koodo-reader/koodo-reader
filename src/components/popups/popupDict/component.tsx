@@ -64,6 +64,7 @@ const PopupDict = (props: PopupDictProps) => {
   const handleMenuMode = useAppStore((s) => s.handleMenuMode);
   const handleSetting = useAppStore((s) => s.handleSetting);
   const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handlePluginSettingTab = useAppStore((s) => s.handlePluginSettingTab);
   const { t } = useTranslation();
   const [state, setState] = useState<PopupDictState>(() => ({
     dictText: t("Please wait"),
@@ -433,6 +434,7 @@ const PopupDict = (props: PopupDictProps) => {
               if (event.target.value === "add-new") {
                 handleOpenMenu(false);
                 handleMenuMode("");
+                handlePluginSettingTab("dictionary");
                 handleSetting(true);
                 handleSettingMode("plugins");
                 return;
@@ -550,8 +552,10 @@ const PopupDict = (props: PopupDictProps) => {
               onClick={() => {
                 handleOpenMenu(false);
                 handleMenuMode("");
+                handlePluginSettingTab("dictionary");
                 handleSetting(true);
                 handleSettingMode("plugins");
+                return;
               }}
             >
               <Trans>Add new plugin</Trans>

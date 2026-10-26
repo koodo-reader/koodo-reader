@@ -43,6 +43,7 @@ const PopupTrans = (props: PopupTransProps) => {
   const handleMenuMode = useAppStore((s) => s.handleMenuMode);
   const handleSetting = useAppStore((s) => s.handleSetting);
   const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handlePluginSettingTab = useAppStore((s) => s.handlePluginSettingTab);
   const { t } = useTranslation();
   const [state, setState] = useState<PopupTransState>({
     translatedText: "",
@@ -329,6 +330,7 @@ const PopupTrans = (props: PopupTransProps) => {
             onClick={() => {
               handleOpenMenu(false);
               handleMenuMode("");
+              handlePluginSettingTab("translation");
               handleSetting(true);
               handleSettingMode("plugins");
             }}
@@ -381,6 +383,7 @@ const PopupTrans = (props: PopupTransProps) => {
               onClick={() => {
                 handleOpenMenu(false);
                 handleMenuMode("");
+                handlePluginSettingTab("translation");
                 handleSetting(true);
                 handleSettingMode("plugins");
               }}

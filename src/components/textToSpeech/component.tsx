@@ -58,6 +58,7 @@ const TextToSpeech = () => {
   const isSpeechAutoStart = useAppStore((s) => s.reader.isSpeechAutoStart);
   const handleSetting = useAppStore((s) => s.handleSetting);
   const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handlePluginSettingTab = useAppStore((s) => s.handlePluginSettingTab);
   const handleSpeechStartText = useAppStore((s) => s.handleSpeechStartText);
   const handleSpeechAutoStart = useAppStore((s) => s.handleSpeechAutoStart);
   const { t } = useTranslation();
@@ -1320,6 +1321,7 @@ const TextToSpeech = () => {
               textAlign: "center",
             }}
             onClick={() => {
+              handlePluginSettingTab("voice");
               handleSetting(true);
               handleSettingMode("plugins");
             }}

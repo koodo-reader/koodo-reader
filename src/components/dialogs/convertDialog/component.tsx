@@ -27,6 +27,7 @@ const ConvertDialog = () => {
   const handleSetting = useAppStore((s) => s.handleSetting);
   const handleConvertDialog = useAppStore((s) => s.handleConvertDialog);
   const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handlePluginSettingTab = useAppStore((s) => s.handlePluginSettingTab);
   const { t } = useTranslation();
   const [isConvertPDF, setIsConvertPDF] = useState(
     ConfigService.getAllListConfig("convertPDFBooks").includes(
@@ -120,6 +121,14 @@ const ConvertDialog = () => {
               className="lang-setting-dropdown"
               value={getDefaultOcrEngine(currentBook)}
               onChange={(event) => {
+                if (event.target.value === "add-new") {
+                  handleConvertDialog(false);
+                  handlePluginSettingTab("ocr");
+                  handleSetting(true);
+                  handleSettingMode("plugins");
+                  forceUpdate();
+                  return;
+                }
                 if (
                   event.target.value === "official-ai-ocr" &&
                   !isAuthed
@@ -171,6 +180,13 @@ const ConvertDialog = () => {
                   {t(item.label) + (item.isPro ? " (Pro)" : "")}
                 </option>
               ))}
+              <option
+                value="add-new"
+                key="add-new"
+                className="lang-setting-option"
+              >
+                {t("Add new plugin")}
+              </option>
             </select>
           )}
 

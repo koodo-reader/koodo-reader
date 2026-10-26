@@ -60,6 +60,7 @@ const initialManager = {
   message: "Addition successful",
   refreshBookKey: "",
   settingMode: "general",
+  pluginSettingTab: "",
   settingDrive: "",
   selectedBooks: [] as string[],
 };
@@ -262,6 +263,7 @@ export type AppActionName =
   | "handleParagraphMode"
   | "handlePdfCropDialog"
   | "handlePercentage"
+  | "handlePluginSettingTab"
   | "handlePlugins"
   | "handlePopupOptionDialog"
   | "handlePopupOptionUpdate"
@@ -345,6 +347,8 @@ export const useAppStore = create<AppState>()((set, get) => {
       setManager({ isDetailDialog }),
     handleSetting: (isSettingOpen: boolean) => setManager({ isSettingOpen }),
     handleSettingMode: (settingMode: string) => setManager({ settingMode }),
+    handlePluginSettingTab: (pluginSettingTab: string) =>
+      setManager({ pluginSettingTab }),
     handleShowPopupNote: (isShowPopupNote: boolean) =>
       setManager({ isShowPopupNote }),
     handleSettingDrive: (settingDrive: string) => setManager({ settingDrive }),

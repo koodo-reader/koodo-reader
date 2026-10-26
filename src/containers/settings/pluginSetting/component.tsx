@@ -54,18 +54,46 @@ const installedTypeOrder: Record<string, number> = {
 const SettingDialog = () => {
   const plugins = useAppStore((s) => s.manager.plugins);
   const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
+  const pluginSettingTab = useAppStore((s) => s.manager.pluginSettingTab);
+  const handlePluginSettingTab = useAppStore((s) => s.handlePluginSettingTab);
   const { t } = useTranslation();
   const translationRef = useRef<HTMLDivElement | null>(null);
   const dictionaryRef = useRef<HTMLDivElement | null>(null);
   const ocrRef = useRef<HTMLDivElement | null>(null);
   const voiceRef = useRef<HTMLDivElement | null>(null);
 
+  const getInitialPluginTab = (tab: string) => {
+    if (
+      (tab === "translation" ||
+        tab === "dictionary" ||
+        tab === "voice" ||
+        tab === "ocr") &&
+      !(tab === "voice" && !isElectron)
+    ) {
+      return tab;
+    }
+    return "translation";
+  };
+
   const [state, setState] = useState<SettingInfoState>({
     isAddNew: false,
     availablePlugins: [],
     expandedPluginKey: null,
-    activePluginTab: "translation",
+    activePluginTab: getInitialPluginTab(pluginSettingTab),
   });
+
+  useEffect(() => {
+    if (pluginSettingTab) {
+      const nextTab = getInitialPluginTab(pluginSettingTab);
+      setState((prev) =>
+        nextTab !== prev.activePluginTab
+          ? { ...prev, activePluginTab: nextTab }
+          : prev
+      );
+      handlePluginSettingTab("");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pluginSettingTab]);
 
   const mergeState = (patch: Partial<SettingInfoState>) => {
     setState((prev) => ({ ...prev, ...patch }));
