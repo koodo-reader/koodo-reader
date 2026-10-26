@@ -714,7 +714,7 @@ const Reader = () => {
               >
                 <span
                   className="icon-trans reader-setting-icon"
-                  style={{ fontSize: 23 }}
+                  style={{ fontSize: 20 }}
                 ></span>
               </div>
               <div
@@ -726,7 +726,7 @@ const Reader = () => {
               >
                 <span
                   className="icon-pencil-ruler reader-setting-icon"
-                  style={{ fontSize: 21 }}
+                  style={{ fontSize: 18 }}
                 ></span>
               </div>
             </>
@@ -828,9 +828,9 @@ const Reader = () => {
           {ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
             <div
               className="reader-setting-icon-container"
-              aria-label={t("Chat Assistant")}
+              aria-label={t("Reading Assistant")}
               data-tooltip-id="my-tooltip"
-              data-tooltip-content={t("Chat Assistant")}
+              data-tooltip-content={t("Reading Assistant")}
               onClick={async () => {
                 handleMenuMode("assistant");
                 handleOriginalText(await htmlBook.rendition.chapterText());
