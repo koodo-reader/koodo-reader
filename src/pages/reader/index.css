@@ -14,6 +14,13 @@
   z-index: 4;
   -webkit-app-region: drag;
 }
+.top-panel,
+.operation-panel-container,
+.navigation-panel-container,
+.setting-panel-container,
+.book-operation-panel {
+  -webkit-app-region: no-drag;
+}
 .reader-quick-buttons,
 .reader-quick-buttons * {
   -webkit-app-region: no-drag;
