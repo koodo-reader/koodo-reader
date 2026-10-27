@@ -1,7 +1,4 @@
-import type {
-  BuiltinPluginDefinition,
-  BuiltinPluginMarketItem,
-} from "./types";
+import type { BuiltinPluginDefinition, BuiltinPluginMarketItem } from "./types";
 
 const builtinPluginCatalog: BuiltinPluginDefinition[] = [
   {
@@ -6331,6 +6328,79 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     websiteUrl: "https://github.com/coqui-ai/TTS",
   },
   {
+    key: "openai-compatible-ocr-plugin",
+    type: "ocr",
+    displayName: "OpenAI Compatible OCR (SiliconFlow)",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "auto",
+    defaultConfig: {
+      apiKey: "[Your API Key]",
+      baseUrl: "https://api.siliconflow.cn/v1",
+      model: "Qwen/Qwen2.5-VL-72B-Instruct",
+    },
+    langList: {
+      auto: "Automatic",
+    },
+    voiceList: [],
+    name: {
+      en: "OpenAI Compatible OCR (SiliconFlow)",
+      zhCN: "OpenAI 兼容 OCR（硅基流动）",
+    },
+    feature: {
+      en: "OpenAI compatible chat completions OCR API",
+      zhCN: "OpenAI 兼容 Chat Completions OCR 接口",
+    },
+    configuration: {
+      en: "Fill in API Key, base URL and model",
+      zhCN: "填写 API Key、base URL 和 model",
+    },
+    websiteName: "SiliconFlow Chat Completions API",
+    websiteUrl:
+      "https://api-docs.siliconflow.cn/docs/api/chat-completions-post",
+  },
+  {
+    key: "ocrspace-plugin",
+    type: "ocr",
+    displayName: "OCR.space",
+    icon: "ocr",
+    version: "1.0.0",
+    autoValue: "eng",
+    defaultConfig: {
+      apiKey: "helloworld",
+      language: "auto",
+      ocrEngine: "2",
+    },
+    langList: {
+      eng: "English",
+      chs: "Chinese (Simplified)",
+      cht: "Chinese (Traditional)",
+      jpn: "Japanese",
+      kor: "Korean",
+      fre: "French",
+      ger: "German",
+      spa: "Spanish",
+      ita: "Italian",
+      por: "Portuguese",
+      rus: "Russian",
+    },
+    voiceList: [],
+    name: {
+      en: "OCR.space",
+      zhCN: "OCR.space",
+    },
+    feature: {
+      en: "OCR.space free OCR API",
+      zhCN: "OCR.space 免费 OCR 接口",
+    },
+    configuration: {
+      en: "Fill in API Key (helloworld for testing), language and OCR engine",
+      zhCN: "填写 API Key（测试可用 helloworld）、language 和 OCR engine",
+    },
+    websiteName: "OCR.space Free OCR API",
+    websiteUrl: "https://ocr.space/ocrapi",
+  },
+  {
     key: "baidu-ocr-general-plugin",
     type: "ocr",
     displayName: "Baidu OCR (Standard)",
@@ -6700,8 +6770,7 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     version: "1.0.0",
     autoValue: "auto",
     defaultConfig: {
-      endpoint:
-        "[Your Endpoint, e.g. https://xxx.cognitiveservices.azure.com]",
+      endpoint: "[Your Endpoint, e.g. https://xxx.cognitiveservices.azure.com]",
       apiKey: "[Your API Key]",
       modelId: "prebuilt-read",
     },
@@ -6733,8 +6802,7 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     version: "1.0.0",
     autoValue: "unk",
     defaultConfig: {
-      endpoint:
-        "[Your Endpoint, e.g. https://xxx.cognitiveservices.azure.com]",
+      endpoint: "[Your Endpoint, e.g. https://xxx.cognitiveservices.azure.com]",
       apiKey: "[Your API Key]",
       language: "unk",
     },
@@ -6757,108 +6825,6 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     websiteName: "Azure AI Vision - OCR",
     websiteUrl:
       "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/concept-ocr",
-  },
-  {
-    key: "openai-compatible-ocr-plugin",
-    type: "ocr",
-    displayName: "OpenAI Compatible OCR (SiliconFlow)",
-    icon: "ocr",
-    version: "1.0.0",
-    autoValue: "auto",
-    defaultConfig: {
-      apiKey: "[Your API Key]",
-      baseUrl: "https://api.siliconflow.cn/v1",
-      model: "Qwen/Qwen2.5-VL-72B-Instruct",
-    },
-    langList: {
-      auto: "Automatic",
-    },
-    voiceList: [],
-    name: {
-      en: "OpenAI Compatible OCR (SiliconFlow)",
-      zhCN: "OpenAI 兼容 OCR（硅基流动）",
-    },
-    feature: {
-      en: "OpenAI compatible chat completions OCR API",
-      zhCN: "OpenAI 兼容 Chat Completions OCR 接口",
-    },
-    configuration: {
-      en: "Fill in API Key, base URL and model",
-      zhCN: "填写 API Key、base URL 和 model",
-    },
-    websiteName: "SiliconFlow Chat Completions API",
-    websiteUrl: "https://api-docs.siliconflow.cn/docs/api/chat-completions-post",
-  },
-  {
-    key: "ocrspace-plugin",
-    type: "ocr",
-    displayName: "OCR.space",
-    icon: "ocr",
-    version: "1.0.0",
-    autoValue: "eng",
-    defaultConfig: {
-      apiKey: "helloworld",
-      language: "eng",
-      ocrEngine: "2",
-    },
-    langList: {
-      eng: "English",
-      chs: "Chinese (Simplified)",
-      cht: "Chinese (Traditional)",
-      jpn: "Japanese",
-      kor: "Korean",
-      fre: "French",
-      ger: "German",
-      spa: "Spanish",
-      ita: "Italian",
-      por: "Portuguese",
-      rus: "Russian",
-    },
-    voiceList: [],
-    name: {
-      en: "OCR.space",
-      zhCN: "OCR.space",
-    },
-    feature: {
-      en: "OCR.space free OCR API",
-      zhCN: "OCR.space 免费 OCR 接口",
-    },
-    configuration: {
-      en: "Fill in API Key (helloworld for testing), language and OCR engine",
-      zhCN: "填写 API Key（测试可用 helloworld）、language 和 OCR engine",
-    },
-    websiteName: "OCR.space Free OCR API",
-    websiteUrl: "https://ocr.space/ocrapi",
-  },
-  {
-    key: "puter-ocr-plugin",
-    type: "ocr",
-    displayName: "Puter OCR",
-    icon: "ocr",
-    version: "1.0.0",
-    autoValue: "auto",
-    defaultConfig: {
-      provider: "aws-textract",
-    },
-    langList: {
-      auto: "Automatic",
-    },
-    voiceList: [],
-    name: {
-      en: "Puter OCR",
-      zhCN: "Puter OCR",
-    },
-    feature: {
-      en: "Puter.js free OCR with user-pays model",
-      zhCN: "Puter.js 免费 OCR（用户付费模式）",
-    },
-    configuration: {
-      en: "No API key required; provider can be aws-textract or mistral",
-      zhCN: "无需 API Key，provider 可选 aws-textract 或 mistral",
-    },
-    websiteName: "Puter.js Free OCR API",
-    websiteUrl:
-      "https://developer.puter.com/tutorials/free-unlimited-ocr-api/",
   },
 ];
 
@@ -6910,9 +6876,7 @@ export const getBuiltinPluginLocalizedName = (
 ): string | undefined => {
   const definition = definitionsByKey.get(key);
   if (!definition) return undefined;
-  return language.startsWith("zh")
-    ? definition.name.zhCN
-    : definition.name.en;
+  return language.startsWith("zh") ? definition.name.zhCN : definition.name.en;
 };
 
 export const isBuiltinPluginKey = (key: string) => definitionsByKey.has(key);

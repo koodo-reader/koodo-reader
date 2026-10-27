@@ -63,7 +63,6 @@ import { recognize as azureDocumentIntelligence } from "./renderer/ocr/azureDocu
 import { recognize as azureComputerVisionOcr } from "./renderer/ocr/azureComputerVisionOcr";
 import { recognize as openaiCompatibleOcr } from "./renderer/ocr/openaiCompatibleOcr";
 import { recognize as ocrSpace } from "./renderer/ocr/ocrSpace";
-import { recognize as puterOcr } from "./renderer/ocr/puterOcr";
 
 const translations: Partial<Record<string, TranslatePlugin>> = {
   "pot-translate-plugin": potTranslate,
@@ -132,7 +131,6 @@ const ocrPlugins: Partial<Record<string, OCRPlugin>> = {
   "azure-computer-vision-ocr-plugin": azureComputerVisionOcr,
   "openai-compatible-ocr-plugin": openaiCompatibleOcr,
   "ocrspace-plugin": ocrSpace,
-  "puter-ocr-plugin": puterOcr,
 };
 
 export const getBuiltinTranslation = (key: string) =>
