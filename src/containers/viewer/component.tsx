@@ -327,6 +327,8 @@ const Viewer = (props: ViewerProps) => {
       propsRef.current.currentBook.description.indexOf("scanned") > -1;
     const rawOcrEngine = getDefaultOcrEngine(propsRef.current.currentBook);
     let ocrEngine = rawOcrEngine;
+    // 缓存 key 需要区分不同 OCR 插件，而渲染引擎统一用 "plugin-ocr"，两者分开维护
+    let ocrCacheEngine = rawOcrEngine;
     let ocrLang = getDefaultOcrLang(rawOcrEngine, propsRef.current.currentBook);
     let externalWorker: {
       recognize: (input: string) => Promise<unknown>;
@@ -363,6 +365,7 @@ const Viewer = (props: ViewerProps) => {
         ocrEngine = "plugin-ocr";
       } else {
         ocrEngine = isScannedBook ? "paddle" : "system-ocr";
+        ocrCacheEngine = ocrEngine;
         ocrLang = ocrEngine === "paddle" ? "standard_v5_mobile" : "auto";
         externalWorker = {
           recognize:
@@ -505,14 +508,17 @@ const Viewer = (props: ViewerProps) => {
         filePath: BookUtil.getBookPath(propsRef.current.currentBook),
         bookKey: propsRef.current.currentBook.key,
         getOcrCache: (bookKey: string, chapterDocIndex: string) =>
-          getOcrCache(bookKey, chapterDocIndex, { ocrEngine, ocrLang }),
+          getOcrCache(bookKey, chapterDocIndex, {
+            ocrEngine: ocrCacheEngine,
+            ocrLang,
+          }),
         saveOcrCache: (
           bookKey: string,
           chapterDocIndex: string,
           cache: { src?: string; text?: string }
         ) =>
           saveOcrCache(bookKey, chapterDocIndex, cache, {
-            ocrEngine,
+            ocrEngine: ocrCacheEngine,
             ocrLang,
           }),
       },
