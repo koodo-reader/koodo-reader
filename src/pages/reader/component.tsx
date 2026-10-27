@@ -33,7 +33,10 @@ import SupportDialog from "../../components/dialogs/supportDialog";
 import WindowControls from "../../components/windowControls";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
 import { isPaginatedBook, isReadingRawPDF, throttle } from "../../utils/common";
+import { getOuterDoc } from "../../utils/reader/docUtil";
 import { useAppStore } from "../../store/useAppStore";
+
+const QUICK_BUTTON_EDGE_DISTANCE = 60;
 
 export interface ReaderState {
   isOpenRightPanel: boolean;
@@ -434,9 +437,14 @@ const Reader = () => {
     }
     hideQuickButtonsTimerRef.current = setTimeout(() => {
       hideQuickButtonsTimerRef.current = null;
-      updateState({ isNearEdge: false });
+      if (stateRef.current.isNearEdge) {
+        updateState({ isNearEdge: false });
+      }
     }, 200);
   };
+  const isWithinEdgeZone = (pageY: number) =>
+    pageY <= QUICK_BUTTON_EDGE_DISTANCE ||
+    window.innerHeight - pageY <= QUICK_BUTTON_EDGE_DISTANCE;
   const handleLocation = () => {
     let position = propsRef.current.htmlBook.rendition.getPosition();
 
@@ -524,11 +532,16 @@ const Reader = () => {
         ConfigService.setReaderConfig("isFinishWebReading", "yes");
       }
     });
-    const handleMouseMove = () => {
+    const handleMouseMove = (e: MouseEvent) => {
       isMouseMoving = true;
       setTimeout(() => {
         isMouseMoving = false;
       }, 100);
+      if (isWithinEdgeZone(e.clientY)) {
+        showQuickButtons();
+      } else {
+        hideQuickButtons();
+      }
     };
     const throttledMouseMove = throttle(handleMouseMove, 100);
     window.addEventListener("mousemove", throttledMouseMove);
@@ -573,6 +586,46 @@ const Reader = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!htmlBook) return;
+    const attachedDocs = new WeakSet<Document>();
+    const getPageClientY = (doc: Document, clientY: number) => {
+      let y = clientY;
+      let win: Window | null = doc.defaultView;
+      while (win && win.frameElement) {
+        y += win.frameElement.getBoundingClientRect().top;
+        win = win.parent;
+      }
+      return y;
+    };
+    const createEdgeMoveHandler = (doc: Document) =>
+      throttle((e: MouseEvent) => {
+        if (isWithinEdgeZone(getPageClientY(doc, e.clientY))) {
+          showQuickButtons();
+        } else {
+          hideQuickButtons();
+        }
+      }, 100);
+    const attachToDoc = (doc: Document | null) => {
+      if (!doc || attachedDocs.has(doc)) return;
+      attachedDocs.add(doc);
+      doc.addEventListener("mousemove", createEdgeMoveHandler(doc));
+    };
+    const collectDocs = () => {
+      const outerDoc = getOuterDoc();
+      attachToDoc(outerDoc);
+      if (!outerDoc) return;
+      outerDoc.querySelectorAll("iframe").forEach((iframe) => {
+        attachToDoc((iframe as HTMLIFrameElement).contentDocument);
+      });
+    };
+    collectDocs();
+    const attachTimer = setInterval(collectDocs, 800);
+    return () => {
+      clearInterval(attachTimer);
+    };
+  }, [htmlBook]);
 
   useEffect(() => {
     if (!didMountRef.current) {
