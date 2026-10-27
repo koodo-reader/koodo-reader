@@ -106,6 +106,8 @@ yarn rebuild
 ## 开发规范
 
 - **不要主动提交代码**：修改完代码后，只展示改动内容和说明，由用户自行决定是否提交。除非用户明确要求提交，否则不要执行 `git commit`、`git push` 等操作。
+- **写新代码前先查现有实现**：动手前先在当前文件和代码库中搜索同类逻辑（事件监听、工具函数、ref 模式等），优先复用而不是新增。例如已有节流的 window `mousemove` 监听时，不要为同一事件再挂第二个监听器，而是把新逻辑合并进现有 handler。
+- **高频事件必须节流**：`mousemove` / `scroll` / `resize` 等事件统一使用 `src/utils/common.ts` 的 `throttle`（leading + trailing，鼠标停下后最后位置仍会处理）；handler 内避免每次触发都重置定时器或 setState，重复的状态更新应先用 ref 判断值是否变化。
 - 用户可见文本必须使用 `react-i18next` 的 `useTranslation()` + `t("key")`，不得硬编码
 - TypeScript 避免 `any`；组件局部 Props / State 定义在 `component.tsx`，跨文件共享类型放在同目录 `types.ts`
 - 状态统一使用 `useAppStore` 字段级 selector；禁止新增 Redux / connect 相关代码
