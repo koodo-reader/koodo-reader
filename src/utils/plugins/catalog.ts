@@ -6368,10 +6368,10 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     autoValue: "eng",
     defaultConfig: {
       apiKey: "helloworld",
-      language: "auto",
       ocrEngine: "2",
     },
     langList: {
+      auto: "Automatic",
       eng: "English",
       chs: "Chinese (Simplified)",
       cht: "Chinese (Traditional)",
@@ -6394,8 +6394,8 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
       zhCN: "OCR.space 免费 OCR 接口",
     },
     configuration: {
-      en: "Fill in API Key (helloworld for testing), language and OCR engine",
-      zhCN: "填写 API Key（测试可用 helloworld）、language 和 OCR engine",
+      en: "Fill in API Key (helloworld for testing) and OCR engine",
+      zhCN: "填写 API Key（测试可用 helloworld）和 OCR engine",
     },
     websiteName: "OCR.space Free OCR API",
     websiteUrl: "https://ocr.space/ocrapi",
@@ -6804,7 +6804,6 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     defaultConfig: {
       endpoint: "[Your Endpoint, e.g. https://xxx.cognitiveservices.azure.com]",
       apiKey: "[Your API Key]",
-      language: "unk",
     },
     langList: {
       unk: "Automatic",
@@ -6819,8 +6818,8 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
       zhCN: "Azure AI Vision 图像 OCR 接口",
     },
     configuration: {
-      en: "Fill in endpoint and API key; language defaults to unk (auto)",
-      zhCN: "填写 endpoint 和 API key，language 默认 unk（自动）",
+      en: "Fill in endpoint and API key",
+      zhCN: "填写 endpoint 和 API key",
     },
     websiteName: "Azure AI Vision - OCR",
     websiteUrl:

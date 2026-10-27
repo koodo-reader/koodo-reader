@@ -11,7 +11,7 @@ interface OcrSpaceParsedResult {
 
 export const recognize: OCRPlugin = async (imageBase64, axios, config) => {
   const apiKey = config.apiKey || "helloworld";
-  const language = config.language || "eng";
+  const language = config.language || "auto";
   const ocrEngine = config.ocrEngine || "2";
 
   try {
