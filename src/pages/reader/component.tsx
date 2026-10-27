@@ -873,7 +873,10 @@ const Reader = () => {
             data-tooltip-id="my-tooltip"
             data-tooltip-content={t("Annotation")}
             onClick={() => {
-              if (isAnnotationOpen) return;
+              if (isAnnotationOpen) {
+                handleAnnotationDialog(false);
+                return;
+              }
               dialogAnchorIconRef.current = null;
               closeSettingDialogs();
               handleAnnotationDialog(true);
