@@ -859,27 +859,31 @@ const Reader = () => {
             ></span>
           </div>
 
-          {currentBook &&
-            isReadingRawPDF(currentBook) &&
-            currentBook.description.indexOf("scanned") > -1 && (
-              <div
-                className="reader-setting-icon-container"
-                aria-label={t("Annotation")}
-                data-tooltip-id="my-tooltip"
-                data-tooltip-content={t("Annotation")}
-                onClick={() => {
-                  if (isAnnotationOpen) return;
-                  dialogAnchorIconRef.current = null;
-                  closeSettingDialogs();
-                  handleAnnotationDialog(true);
-                }}
-              >
-                <span
-                  className={`icon-pen-line reader-setting-icon`}
-                  style={{ fontSize: 20 }}
-                ></span>
-              </div>
-            )}
+          <div
+            className="reader-setting-icon-container"
+            style={{
+              display:
+                currentBook &&
+                isReadingRawPDF(currentBook) &&
+                currentBook.description?.indexOf("scanned") > -1
+                  ? undefined
+                  : "none",
+            }}
+            aria-label={t("Annotation")}
+            data-tooltip-id="my-tooltip"
+            data-tooltip-content={t("Annotation")}
+            onClick={() => {
+              if (isAnnotationOpen) return;
+              dialogAnchorIconRef.current = null;
+              closeSettingDialogs();
+              handleAnnotationDialog(true);
+            }}
+          >
+            <span
+              className={`icon-pen-line reader-setting-icon`}
+              style={{ fontSize: 20 }}
+            ></span>
+          </div>
           {ConfigService.getReaderConfig("isDisableAI") !== "yes" && (
             <div
               className="reader-setting-icon-container"
