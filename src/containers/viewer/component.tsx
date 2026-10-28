@@ -396,6 +396,14 @@ const Viewer = (props: ViewerProps) => {
         };
       }
     }
+    console.log(
+      "ocrEngine12332434",
+      ocrEngine,
+      "ocrLang",
+      ocrLang,
+      "serverRegion",
+      serverRegion
+    );
     let rendition = BookHelper.getRendition(
       result,
       {
@@ -897,8 +905,7 @@ const Viewer = (props: ViewerProps) => {
   });
 
   let isReadingAid =
-    !isReadingRawPDF(currentBook) &&
-    (isParagraphMode || isSpeedReading);
+    !isReadingRawPDF(currentBook) && (isParagraphMode || isSpeedReading);
   return (
     <>
       {htmlBook && !isReadingAid ? (
@@ -973,9 +980,7 @@ const Viewer = (props: ViewerProps) => {
       {isHideBackground ||
       textOrientation === "vertical" ||
       isShowPageBorder ||
-      ((isParagraphMode ||
-        isReadingRuler ||
-        isSpeedReading) &&
+      ((isParagraphMode || isReadingRuler || isSpeedReading) &&
         !isReadingRawPDF(currentBook)) ||
       isMergeWord ? null : currentBook.key ? (
         <Background />

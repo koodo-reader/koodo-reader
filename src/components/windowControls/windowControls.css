@@ -73,6 +73,17 @@
   border-left: 0;
 }
 
+.reader-window-control-console::before {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+
 .reader-window-control-close-icon {
   width: 10px;
   height: 10px;

@@ -16,7 +16,8 @@ const RECOG_TIMEOUT_MS = 300000;
 const withTimeout = <T>(promise: Promise<T>, ms: number, label: string) =>
   new Promise<T>((resolve, reject) => {
     const timer = setTimeout(
-      () => reject(new Error(`${label} timed out after ${Math.round(ms / 1000)}s`)),
+      () =>
+        reject(new Error(`${label} timed out after ${Math.round(ms / 1000)}s`)),
       ms
     );
     promise.then(
@@ -160,6 +161,7 @@ export const getBuiltinEngineOcrWorker = (
       );
       return (result && result.data && result.data.text) || "";
     } else if (engine === "paddle") {
+      console.log("paddle recognize", ocrLang, serverRegion);
       const localOCR = await getPaddleWorker(ocrLang, serverRegion);
       // kookit 侧保证 externalWorker 的调用是串行的（preProcessNextChapters 逐章等待）
       const result: any = await withTimeout(
@@ -167,6 +169,7 @@ export const getBuiltinEngineOcrWorker = (
         RECOG_TIMEOUT_MS,
         "paddle recognize"
       );
+      console.log("paddle recognize result", result);
       return ((result && result.parragraphs) || [])
         .map((p: any) => p.text)
         .join("\n");
