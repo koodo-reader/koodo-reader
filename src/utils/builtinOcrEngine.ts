@@ -161,6 +161,7 @@ export const getBuiltinEngineOcrWorker = (
       return (result && result.data && result.data.text) || "";
     } else if (engine === "paddle") {
       const localOCR = await getPaddleWorker(ocrLang, serverRegion);
+      // kookit 侧保证 externalWorker 的调用是串行的（preProcessNextChapters 逐章等待）
       const result: any = await withTimeout(
         localOCR.ocr(imageURL),
         RECOG_TIMEOUT_MS,
