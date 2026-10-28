@@ -364,15 +364,9 @@ const Viewer = (props: ViewerProps) => {
         if (ocrLang) {
           pluginConfig.language = ocrLang;
         }
-        let ocrQueue: Promise<unknown> = Promise.resolve();
         externalWorker = {
-          recognize: (imageBase64: string) => {
-            const task = ocrQueue.then(() =>
-              builtinOcr(imageBase64, axios, pluginConfig)
-            );
-            ocrQueue = task.catch(() => undefined);
-            return task;
-          },
+          recognize: (imageBase64: string) =>
+            builtinOcr(imageBase64, axios, pluginConfig),
         };
         ocrEngine = "plugin-ocr";
       } else {
@@ -396,6 +390,16 @@ const Viewer = (props: ViewerProps) => {
         };
       }
     }
+    // kookit 侧在 OCR 缓存命中间跳时无法保证 externalWorker 串行调用，
+    // 而引擎（onnx worker / tesseract worker / 系统进程）均非并发安全，
+    // 统一在宿主侧排队，确保任意时刻只有一个识别任务在执行
+    let ocrQueue: Promise<unknown> = Promise.resolve();
+    const rawOcrRecognize = externalWorker.recognize;
+    externalWorker.recognize = (imageBase64: string) => {
+      const task = ocrQueue.then(() => rawOcrRecognize(imageBase64));
+      ocrQueue = task.catch(() => undefined);
+      return task;
+    };
     console.log(
       "ocrEngine12332434",
       ocrEngine,

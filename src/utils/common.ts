@@ -633,10 +633,7 @@ export const getPageWidth = (
 
     return limit;
   };
-  if (
-    isFitPage &&
-    (readerMode === "scroll" || readerMode === "single")
-  ) {
+  if (isFitPage && (readerMode === "scroll" || readerMode === "single")) {
     // 固定左右侧边栏时，页面只在剩余可用区域内铺满，避免被侧边栏遮挡
     const panelWidth = 300;
     let pageWidth =
@@ -2441,7 +2438,7 @@ export const isFixedLayoutBook = (book: Book) => {
 export const getOcrCache = (
   bookKey: string,
   chapterDocIndex: string,
-  ocrConfig?: { ocrEngine?: string; ocrLang?: string }
+  ocrConfig: { ocrEngine?: string; ocrLang?: string }
 ) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
     return null;
@@ -2458,6 +2455,7 @@ export const getOcrCache = (
       console.error("Failed to load ocr cache:", error);
     }
   }
+  console.log("OCR cache loaded:", chapterDocIndex, cache);
   return cache;
 };
 
@@ -2475,7 +2473,7 @@ export const saveOcrCache = (
   bookKey: string,
   chapterDocIndex: string,
   cache: { src?: string; text?: string },
-  ocrConfig?: { ocrEngine?: string; ocrLang?: string }
+  ocrConfig: { ocrEngine: string; ocrLang?: string }
 ) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
     return;
