@@ -58,27 +58,10 @@ const WindowControls = (props: WindowControlsProps) => {
     window.electronAPI.invoke("reader-window-close", "ping");
   };
 
-  const handleToggleDevTools = () => {
-    window.electronAPI.invoke("reader-window-toggle-devtools", "ping");
-  };
-
   if (isFullScreen) return null;
   const { t } = props;
-  const isDevWindow = !!(window.electronAPI && import.meta.env.DEV);
   return (
     <div className="reader-window-controls">
-      {isDevWindow && (
-        <button
-          type="button"
-          className="reader-window-control"
-          aria-label={t("Open Console")}
-          data-tooltip-id="my-tooltip"
-          data-tooltip-content={t("Open Console")}
-          onClick={handleToggleDevTools}
-        >
-          <span className="reader-window-control-icon reader-window-control-console" />
-        </button>
-      )}
       <button
         type="button"
         className="reader-window-control"

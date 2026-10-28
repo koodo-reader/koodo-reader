@@ -56,7 +56,6 @@ const INVOKE_CHANNELS = new Set([
   "reader-window-toggle-maximize",
   "reader-window-get-state",
   "reader-window-close",
-  "reader-window-toggle-devtools",
   "open-console",
   "reload-reader",
   "reload-main",

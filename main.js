@@ -1862,12 +1862,6 @@ const createMainWin = () => {
     win.close();
     return true;
   });
-  ipcMain.handle("reader-window-toggle-devtools", (event) => {
-    const win = getReaderWindowFromEvent(event);
-    if (!win) return false;
-    win.webContents.toggleDevTools();
-    return true;
-  });
   ipcMain.handle("open-console", (event, arg) => {
     mainWin.webContents.openDevTools();
     event.returnvalue = true;
