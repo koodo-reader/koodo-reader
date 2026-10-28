@@ -621,17 +621,20 @@ export const getPageWidth = (
   isSettingLocked: boolean,
   isFitPage: boolean = false
 ) => {
-  // 页间距与 kookit 渲染引擎的 getSectionGap 保持一致（未设置时默认 60，只能取偶数）
-  const pageGapValue = (() => {
+  // 页间距与 kookit 渲染引擎的 getSectionGap 保持一致：
+  // 未设置时取 min(60, 宽度/12)，只能取偶数
+  const getPageGapValue = (width: number) => {
     const saved = parseInt(ConfigService.getReaderConfig("pageGap") || "");
-    const value = isNaN(saved) ? 60 : saved;
-    return value % 2 === 0 ? value : value - 1;
-  })();
+    let value = isNaN(saved) ? Math.min(60, Math.floor(width / 12)) : saved;
+    value = value % 2 === 0 ? value : value - 1;
+    return Math.max(value, 0);
+  };
   const findValidMultiple = (limit: number) => {
     let multiple = limit - (limit % 2);
 
-    while (multiple >= pageGapValue) {
-      if (((multiple - pageGapValue) / 2) % 2 === 0) {
+    while (multiple >= 0) {
+      const gap = getPageGapValue(multiple);
+      if (multiple - gap >= 4 && ((multiple - gap) / 2) % 2 === 0) {
         return multiple;
       }
       multiple -= 2;
