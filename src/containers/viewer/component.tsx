@@ -54,7 +54,7 @@ import { parseWithSystemOCR } from "../../utils/request/common";
 import { isElectron } from "react-device-detect";
 import axios from "axios";
 import { getBuiltinOcr } from "../../utils/plugins/rendererRegistry";
-import { getBuiltinEngineOcrWorker } from "../../utils/builtinOcrEngine";
+import { getBuiltinEngineOcrWorker } from "../../utils/reader/builtinOcrUtil";
 import { resolveStoredPlugin } from "../../utils/plugins/records";
 import type { PluginConfig } from "../../utils/plugins/types";
 import { useAppStore } from "../../store/useAppStore";
