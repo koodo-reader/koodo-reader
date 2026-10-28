@@ -433,7 +433,11 @@ func handleOPDSDownload(w http.ResponseWriter, r *http.Request, key string) {
 	}
 
 	format := strings.ToLower(b.Format)
-	bookPath := filepath.Join(uploadDir, "book", b.Key+"."+format)
+	bookPath, err := resolveSafePath("book", b.Key+"."+format)
+	if err != nil {
+		http.Error(w, "Book file not found", http.StatusNotFound)
+		return
+	}
 	if _, err := os.Stat(bookPath); os.IsNotExist(err) {
 		http.Error(w, "Book file not found", http.StatusNotFound)
 		return
