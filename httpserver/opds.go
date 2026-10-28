@@ -164,24 +164,8 @@ var imageExts = []string{".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"}
 // findCoverFile finds the cover image for a given book key.
 // It first checks the cover field (e.g. "1767196800000.jpg"), then falls back
 // to scanning the cover directory for any image with the matching stem.
-func findCoverFile(key, coverField string) (string, string) {
+func findCoverFile(key string) (string, string) {
 	coverDir := filepath.Join(uploadDir, "cover")
-
-	// Try the explicit cover field first
-	if coverField != "" {
-		candidate := filepath.Join(coverDir, coverField)
-		if _, err := os.Stat(candidate); err == nil {
-			ext := strings.ToLower(filepath.Ext(coverField))
-			return candidate, ext
-		}
-		// Maybe cover field is just the key, try composing
-		for _, ext := range imageExts {
-			candidate = filepath.Join(coverDir, key+ext)
-			if _, err := os.Stat(candidate); err == nil {
-				return candidate, ext
-			}
-		}
-	}
 
 	// Scan for key.* in cover directory
 	for _, ext := range imageExts {
@@ -415,7 +399,7 @@ func handleOPDSCover(w http.ResponseWriter, r *http.Request, key string) {
 		return
 	}
 
-	coverPath, ext := findCoverFile(b.Key, b.Cover)
+	coverPath, ext := findCoverFile(b.Key)
 	if coverPath == "" {
 		http.Error(w, "Cover not found", http.StatusNotFound)
 		return
@@ -535,7 +519,7 @@ func buildEntry(b opdsBook, base string) atomEntry {
 	}
 
 	// Cover image links
-	coverPath, ext := findCoverFile(b.Key, b.Cover)
+	coverPath, ext := findCoverFile(b.Key)
 	if coverPath != "" {
 		mime := coverMime(ext)
 		entry.Links = append(entry.Links,
