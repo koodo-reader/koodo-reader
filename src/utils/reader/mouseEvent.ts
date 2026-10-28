@@ -192,6 +192,12 @@ const NAV_TAB_SHORTCUTS: Array<{
 ];
 let lock = false; //prevent from clicking too fasts
 
+// 仿真翻页动画收敛后（kookit 派发 flipend 事件）立即解除锁，
+// 不再等待满 1000ms 的 throttleTime，滚轮/键盘可继续快速翻页
+window.addEventListener("page-flipend", () => {
+  lock = false;
+});
+
 const isRevertDirectionReading = (rendition: any) => {
   return (
     rendition?.revertDirection === "yes" &&
