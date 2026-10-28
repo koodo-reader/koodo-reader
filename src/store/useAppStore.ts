@@ -122,7 +122,7 @@ const initialReader = {
   isDockedRight: ConfigService.getReaderConfig("isDockedRight") === "yes",
   isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
   isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
-  isHideBackground: ConfigService.getReaderConfig("isHideBackground") === "yes",
+  isHideBackground: ConfigService.getReaderConfig("isHideBackground") !== "no",
   isParagraphMode: ConfigService.getReaderConfig("isParagraphMode") === "yes",
   isReadingRuler: ConfigService.getReaderConfig("isReadingRuler") === "yes",
   isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",

@@ -41,7 +41,7 @@ const SettingSwitch = (props: SettingSwitchProps) => {
     isRevertDirection:
       ConfigService.getReaderConfig("revertDirection") === "yes",
     isHideBackground:
-      ConfigService.getReaderConfig("isHideBackground") === "yes",
+      ConfigService.getReaderConfig("isHideBackground") !== "no",
     isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
     isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
     isShowPageBorder:
