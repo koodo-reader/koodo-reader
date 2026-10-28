@@ -422,7 +422,10 @@ const applyProxyToSession = async () => {
   const isEnabled =
     config && config.type !== "none" && config.enabled !== false && config.host;
   if (!isEnabled) {
-    await defaultSession.setProxy({ mode: "direct" });
+    // 未启用应用内代理时，跟随操作系统代理（与浏览器行为一致）。
+    // 此前强制 direct 会绕过系统代理（如 Clash/v2rayN 等），导致 Electron 端
+    // 直连 OCR 的 wasm/模型等境外 CDN 不可达（网页端走系统代理所以正常）。
+    await defaultSession.setProxy({ mode: "system" });
     https.globalAgent = new https.Agent();
     http.globalAgent = new http.Agent();
     return;

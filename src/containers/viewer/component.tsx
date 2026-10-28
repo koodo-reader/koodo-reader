@@ -54,6 +54,7 @@ import { parseWithSystemOCR } from "../../utils/request/common";
 import { isElectron } from "react-device-detect";
 import axios from "axios";
 import { getBuiltinOcr } from "../../utils/plugins/rendererRegistry";
+import { getBuiltinEngineOcrWorker } from "../../utils/builtinOcrEngine";
 import { resolveStoredPlugin } from "../../utils/plugins/records";
 import type { PluginConfig } from "../../utils/plugins/types";
 import { useAppStore } from "../../store/useAppStore";
@@ -330,15 +331,26 @@ const Viewer = (props: ViewerProps) => {
     // 缓存 key 需要区分不同 OCR 插件，而渲染引擎统一用 "plugin-ocr"，两者分开维护
     let ocrCacheEngine = rawOcrEngine;
     let ocrLang = getDefaultOcrLang(rawOcrEngine, propsRef.current.currentBook);
+    const serverRegion =
+      getServerRegion() === "china" && propsRef.current.isAuthed
+        ? "china"
+        : "global";
     let externalWorker: {
       recognize: (input: string) => Promise<unknown>;
     } = {
       recognize:
         rawOcrEngine === "system-ocr"
           ? parseWithSystemOCR
-          : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
-            ? getOcrResultV2
-            : getOcrResult,
+          : rawOcrEngine === "tesseract" || rawOcrEngine === "paddle"
+            ? getBuiltinEngineOcrWorker(
+                rawOcrEngine,
+                ocrLang,
+                serverRegion,
+                isElectron
+              ).recognize
+            : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
+              ? getOcrResultV2
+              : getOcrResult,
     };
 
     const builtinOcr = getBuiltinOcr(rawOcrEngine);
@@ -371,9 +383,16 @@ const Viewer = (props: ViewerProps) => {
           recognize:
             ocrEngine === "system-ocr"
               ? parseWithSystemOCR
-              : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
-                ? getOcrResultV2
-                : getOcrResult,
+              : ocrEngine === "tesseract" || ocrEngine === "paddle"
+                ? getBuiltinEngineOcrWorker(
+                    ocrEngine,
+                    ocrLang,
+                    serverRegion,
+                    isElectron
+                  ).recognize
+                : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
+                  ? getOcrResultV2
+                  : getOcrResult,
         };
       }
     }
@@ -443,10 +462,7 @@ const Viewer = (props: ViewerProps) => {
         ocrLang,
         externalWorker,
         ocrEngine,
-        serverRegion:
-          getServerRegion() === "china" && propsRef.current.isAuthed
-            ? "china"
-            : "global",
+        serverRegion,
         paraSpacingValue:
           ConfigService.getReaderConfig("paraSpacingValue") || "1.5",
         titleSizeValue:
