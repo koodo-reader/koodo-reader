@@ -280,6 +280,9 @@ let options = {
 const Database = require("better-sqlite3");
 const isMacOS = os.platform() === "darwin";
 const getReaderWindowChromeOptions = (isMergeWord) => {
+  if (isDev) {
+    return { frame: true };
+  }
   if (isMergeWord === "yes") {
     return { frame: false };
   }
