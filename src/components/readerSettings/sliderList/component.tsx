@@ -24,6 +24,7 @@ const SliderList = (props: SliderListProps) => {
     paraSpacing: ConfigService.getReaderConfig("paraSpacing") || "0",
     brightness: ConfigService.getReaderConfig("brightness") || "1",
     margin: ConfigService.getReaderConfig("margin") || "0",
+    pageGap: ConfigService.getReaderConfig("pageGap") || "60",
     readingRulerLineHeight:
       ConfigService.getReaderConfig("readingRulerLineHeight") || "3",
     readingRulerBackgroundOpacity:
@@ -53,7 +54,7 @@ const SliderList = (props: SliderListProps) => {
 
   const getClampedValue = (rawValue: string) => {
     const { minValue, maxValue } = props.item;
-    const parsedValue = parseFloat(rawValue);
+    let parsedValue = parseFloat(rawValue);
     const min = parseFloat(minValue);
     const max = parseFloat(maxValue);
 
@@ -61,7 +62,13 @@ const SliderList = (props: SliderListProps) => {
       return state[props.item.mode];
     }
 
-    return Math.min(Math.max(parsedValue, min), max).toString();
+    parsedValue = Math.min(Math.max(parsedValue, min), max);
+    // 页间距只能取偶数
+    if (props.item.mode === "pageGap") {
+      const rounded = Math.ceil(parsedValue);
+      parsedValue = rounded % 2 === 0 ? rounded : rounded - 1;
+    }
+    return parsedValue.toString();
   };
 
   const applyValue = (mode: string, nextValue: string) => {

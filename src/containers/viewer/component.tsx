@@ -461,6 +461,7 @@ const Viewer = (props: ViewerProps) => {
           ConfigService.getReaderConfig("readingRulerBackgroundOpacity") ||
             "0.6"
         ),
+        pageGap: ConfigService.getReaderConfig("pageGap"),
         isEnableKoReaderSync:
           ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes",
         password: getPdfPassword(propsRef.current.currentBook),

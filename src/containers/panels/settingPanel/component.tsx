@@ -37,6 +37,7 @@ const SettingPanel = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const backgroundColor = useAppStore((s) => s.reader.backgroundColor);
   const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const handleSettingLock = useAppStore((s) => s.handleSettingLock);
   const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
@@ -114,7 +115,13 @@ const SettingPanel = () => {
   const renderSliders = (group: string) => {
     const isPDF = isReadingRawPDF(currentBook);
     return sliderConfigs
-      .filter((item) => item.group === group && (!isPDF || item.isPDF))
+      .filter(
+        (item) =>
+          item.group === group &&
+          (!isPDF || item.isPDF) &&
+          // 页间距只在双页模式下有意义
+          (item.mode !== "pageGap" || readerMode === "double")
+      )
       .map((item) => <SliderList key={item.mode} {...{ item }} />);
   };
 

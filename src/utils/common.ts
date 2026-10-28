@@ -621,14 +621,20 @@ export const getPageWidth = (
   isSettingLocked: boolean,
   isFitPage: boolean = false
 ) => {
+  // 页间距与 kookit 渲染引擎的 getSectionGap 保持一致（未设置时默认 60，只能取偶数）
+  const pageGapValue = (() => {
+    const saved = parseInt(ConfigService.getReaderConfig("pageGap") || "");
+    const value = isNaN(saved) ? 60 : saved;
+    return value % 2 === 0 ? value : value - 1;
+  })();
   const findValidMultiple = (limit: number) => {
-    let multiple = limit - (limit % 12);
+    let multiple = limit - (limit % 2);
 
-    while (multiple >= 0) {
-      if (((multiple - multiple / 12) / 2) % 2 === 0) {
+    while (multiple >= pageGapValue) {
+      if (((multiple - pageGapValue) / 2) % 2 === 0) {
         return multiple;
       }
-      multiple -= 12;
+      multiple -= 2;
     }
 
     return limit;
@@ -758,6 +764,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         isScannedPDF:
           selectedBook.description.indexOf("scanned") > -1 ? "yes" : "no",
         isKeepPDFBackground: "no",
+        pageGap: ConfigService.getReaderConfig("pageGap"),
       },
       Kookit
     );

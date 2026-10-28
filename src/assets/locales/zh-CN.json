@@ -416,6 +416,7 @@
   "Rights": "版权所有",
   "Added on": "添加于",
   "Margin": "页边距",
+  "Page gap": "页间距",
   "Do you want to open this link in browser": "是否使用浏览器打开此链接",
   "The Koodo Reader Docker version does not support the data source feature by default. You need to modify the configuration parameters during deployment to manually enable it. Also due to browser's security restrictions, the Docker service must be accessed via HTTPS protocol when you're visiting Koodo Reader via HTTPS protocol.": "Koodo Reader Docker 版默认不支持数据源功能，您需要在部署时修改配置参数手动开启。由于浏览器的安全限制，当您通过 HTTPS 协议访问 Koodo Reader 时， Docker 服务也必须通过 HTTPS 协议访问。",
   "Please wait": "请稍侯",
