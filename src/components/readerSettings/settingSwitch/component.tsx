@@ -34,20 +34,17 @@ const SettingSwitch = (props: SettingSwitchProps) => {
     isKeepPDFBackground:
       ConfigService.getReaderConfig("isKeepPDFBackground") === "yes",
     isAllowScript: ConfigService.getReaderConfig("isAllowScript") === "yes",
-    isShowTotalPage:
-      ConfigService.getReaderConfig("isShowTotalPage") === "yes",
-    isStartFromEven:
-      ConfigService.getReaderConfig("isStartFromEven") === "yes",
+    isShowTotalPage: ConfigService.getReaderConfig("isShowTotalPage") === "yes",
+    isStartFromEven: ConfigService.getReaderConfig("isStartFromEven") === "yes",
     isRevertDirection:
       ConfigService.getReaderConfig("revertDirection") === "yes",
     isHideBackground:
-      ConfigService.getReaderConfig("isHideBackground") !== "no",
+      ConfigService.getReaderConfig("isHideBackground") === "yes",
     isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
     isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
     isShowPageBorder:
       ConfigService.getReaderConfig("isShowPageBorder") === "yes",
-    isCustomBookCSS:
-      ConfigService.getReaderConfig("isCustomBookCSS") === "yes",
+    isCustomBookCSS: ConfigService.getReaderConfig("isCustomBookCSS") === "yes",
     customBookCSS: ConfigService.getReaderConfig("customBookCSS") || "",
     isSeperateStyle: ConfigService.getAllListConfig(
       "seperateStyleBooks"
@@ -125,9 +122,7 @@ const SettingSwitch = (props: SettingSwitchProps) => {
             <div style={{ margin: "10px 20px" }}>
               <textarea
                 className="token-dialog-token-box"
-                placeholder={
-                  "/* " + t("Enter custom CSS here") + " */"
-                }
+                placeholder={"/* " + t("Enter custom CSS here") + " */"}
                 value={state.customBookCSS}
                 onChange={(e) => {
                   const val = e.target.value;

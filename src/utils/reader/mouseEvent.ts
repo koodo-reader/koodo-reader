@@ -19,7 +19,8 @@ import {
 } from "./shortcutUtil";
 declare var window: any;
 
-let throttleTime =
+// 每次翻页时实时读取，避免修改动画设置后锁延迟不生效
+const getThrottleTime = () =>
   (ConfigService.getReaderConfig("animation") || "none") !== "none"
     ? 1000
     : 100;
@@ -415,7 +416,7 @@ export const bindHtmlEvent = (
       lock = true;
       await arrowKeys(rendition, event, readerMode, book);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -485,7 +486,7 @@ export const bindHtmlEvent = (
         }
       }
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -497,7 +498,7 @@ export const bindHtmlEvent = (
       lock = true;
       await arrowKeys(rendition, event, readerMode, book);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -512,7 +513,7 @@ export const bindHtmlEvent = (
       lock = true;
       await gesture(rendition, event.type);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     });
   }
 
@@ -526,7 +527,7 @@ export const bindHtmlEvent = (
         await rendition.record();
       }
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
