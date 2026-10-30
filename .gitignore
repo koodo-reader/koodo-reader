@@ -42,4 +42,5 @@ kookit-extra.js
 kookit-extra.mjs
 kookit-extra-browser.js
 kookit-extra-browser.mjs
+src/assets/lib/kookit.min.js
 *.exe
