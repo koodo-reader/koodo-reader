@@ -41,6 +41,7 @@ export interface SettingInfoState {
   showLoginOptions: boolean;
   isSendingCode: boolean;
   countdown: number;
+  serverRegion: string;
 }
 
 declare var window: any;
@@ -74,6 +75,7 @@ const AccountSetting = () => {
     isSendingCode: false,
     countdown: 0,
     showLoginOptions: false,
+    serverRegion: getServerRegion(),
   });
 
   const lastBindClickTimeRef = useRef<number>(0);
@@ -83,6 +85,10 @@ const AccountSetting = () => {
   const setPartialState = (partial: Partial<SettingInfoState>) => {
     setState((prevState) => ({ ...prevState, ...partial }));
   };
+
+  useEffect(() => {
+    setPartialState({ serverRegion: getServerRegion() });
+  }, [isAuthed]);
 
   const handleRest = (_bool: boolean) => {
     toast.success(t("Change successful"));
@@ -774,12 +780,13 @@ const AccountSetting = () => {
             <select
               name=""
               className="lang-setting-dropdown"
-              value={getServerRegion()}
+              value={state.serverRegion}
               onChange={(event) => {
                 if (!event.target.value) {
                   return;
                 }
                 ConfigService.setItem("serverRegion", event.target.value);
+                setPartialState({ serverRegion: event.target.value });
                 resetReaderRequest();
                 resetUserRequest();
                 resetThirdpartyRequest();
