@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./manager.css";
 import { Trans } from "react-i18next";
@@ -25,12 +25,17 @@ const Redirect = () => {
   const [isError, setIsError] = useState(false);
   const [token, setToken] = useState("");
 
+  if (
+    (!document.location.hash ||
+      document.location.hash === "#" ||
+      document.location.hash === "#/") &&
+    document.location.href.indexOf("code") === -1
+  ) {
+    return <Navigate to="/manager/home" replace />;
+  }
+
   useEffect(() => {
     let url = document.location.href;
-    const hash = document.location.hash;
-    if ((!hash || hash === "#" || hash === "#/") && url.indexOf("code") === -1) {
-      navigate("/manager/home");
-    }
     if (url.indexOf("error") > -1) {
       setIsError(true);
     }

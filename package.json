@@ -127,6 +127,7 @@
     "files": [
       "build/**/*",
       "node_modules/**/*",
+      "!node_modules/liteofd/dist/assets/fonts/**",
       "package.json",
       "src/assets/lib/kookit-extra.min.mjs",
       "src/utils/plugins/main/**/*.js",

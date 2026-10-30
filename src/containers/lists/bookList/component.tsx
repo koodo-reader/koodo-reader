@@ -554,9 +554,11 @@ const BookList = () => {
     });
   };
 
+  if (!books) {
+    return null;
+  }
   if (
     (state.favoriteBooks === 0 && mode === "favorite") ||
-    !books ||
     !books[0]
   ) {
     return <Navigate to="/manager/empty" replace />;
