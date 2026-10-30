@@ -20,7 +20,6 @@
     "@aws-sdk/client-s3": "3.564.0",
     "@mozilla/readability": "^0.6.0",
     "@web-ppt/core": "0.4.5",
-    "@zip.js/zip.js": "2.8.26",
     "axios": "0.31.1",
     "basic-ftp": "5.3.1",
     "better-sqlite3": "^13.0.3",
