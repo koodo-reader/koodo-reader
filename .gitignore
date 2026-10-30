@@ -29,7 +29,7 @@ dist/
 .env.test.local
 .env.production.local
 #.env
-
+yarn.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

@@ -79,6 +79,9 @@ export default defineConfig(({ command }) => ({
       "rangy/lib/rangy-core.js",
       "rangy/lib/rangy-textrange",
       "underscore",
+      "@zip.js/zip.js",
+      "liteofd",
+      "@web-ppt/core",
     ],
     esbuildOptions: {
       target: "chrome130",
