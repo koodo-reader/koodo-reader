@@ -143,7 +143,7 @@ const ImageViewer = (props: ImageViewerProps) => {
     event?.preventDefault?.();
     const image = imageRef.current;
     if (image) {
-      image.src = "";
+      image.removeAttribute("src");
       image.style.removeProperty("margin-top");
       image.style.removeProperty("transform");
       image.style.removeProperty("width");
@@ -411,7 +411,6 @@ const ImageViewer = (props: ImageViewerProps) => {
       <div className="image-content">
         <img
           ref={imageRef}
-          src=""
           alt={imageName}
           className="image"
           style={{ width: "60vw" }}
