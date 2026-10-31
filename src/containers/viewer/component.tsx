@@ -87,6 +87,9 @@ export interface ViewerState {
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
+// 章节渲染复用同一 iframe document，"rendered" 每触发一次都会走到这里，
+// 用 WeakSet 保证同一 doc 的 click/pointerup/contextmenu 只绑定一次
+const gestureBoundDocs = new WeakSet<Document>();
 
 const Viewer = (props: ViewerProps) => {
   const currentBook = useAppStore((s) => s.book.currentBook);
@@ -758,7 +761,8 @@ const Viewer = (props: ViewerProps) => {
     let docs = getIframeDoc(propsRef.current.currentBook);
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
-      if (!doc) continue;
+      if (!doc || gestureBoundDocs.has(doc)) continue;
+      gestureBoundDocs.add(doc);
       doc.addEventListener("click", () => {
         propsRef.current.handleLeaveReader("left");
         propsRef.current.handleLeaveReader("right");

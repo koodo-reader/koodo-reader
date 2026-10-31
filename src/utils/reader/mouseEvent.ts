@@ -399,6 +399,9 @@ export const scrollChapter = async (
   }
 };
 let lastScaleTime = 0;
+// kookit 渲染章节时复用同一个 iframe document，"rendered" 每触发一次就会
+// 走到这里重绑一遍，用 WeakSet 保证同一 doc 只绑定一次
+const boundDocs = new WeakSet<Document>();
 export const bindHtmlEvent = (
   rendition: any,
   doc: any,
@@ -407,6 +410,8 @@ export const bindHtmlEvent = (
   handleScale: (scale: string) => void,
   renderBookFunc: () => void
 ) => {
+  if (boundDocs.has(doc)) return;
+  boundDocs.add(doc);
   const key = book.key;
   const format = book.format;
   doc.addEventListener(

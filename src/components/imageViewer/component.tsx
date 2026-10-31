@@ -253,14 +253,36 @@ const ImageViewer = (props: ImageViewerProps) => {
     [showAt]
   );
 
+  const showImageRef = useLatest(showImage);
+  const handleKeyDownRef = useLatest(handleKeyDown);
+  // kookit 复用同一 iframe document，"rendered" 每触发一次都会重新绑定
+  // doc 事件，先移除再添加同一稳定引用，保证不会重复挂载
+  const showImageHandler = useCallback(
+    (event: any) => showImageRef.current(event),
+    []
+  );
+  const handleKeyDownHandler = useCallback(
+    (event: Event) => handleKeyDownRef.current(event),
+    []
+  );
+
   const bindDocEvents = useCallback(
     (bind: boolean) => {
       const method = bind ? "addEventListener" : "removeEventListener";
       getIframeDoc(currentBook).forEach((doc) => {
         if (!doc) return;
-        doc[method]("click", showImage);
-        doc[method]("keydown", handleKeyDown, true);
-        doc.defaultView?.[method]("keydown", handleKeyDown, true);
+        if (bind) {
+          doc.removeEventListener("click", showImageHandler);
+          doc.removeEventListener("keydown", handleKeyDownHandler, true);
+          doc.defaultView?.removeEventListener(
+            "keydown",
+            handleKeyDownHandler,
+            true
+          );
+        }
+        doc[method]("click", showImageHandler);
+        doc[method]("keydown", handleKeyDownHandler, true);
+        doc.defaultView?.[method]("keydown", handleKeyDownHandler, true);
       });
     },
     [handleKeyDown, showImage]
