@@ -5,6 +5,26 @@
 .viewer {
   height: 100%;
 }
+.reader-window-drag-region {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  z-index: 4;
+  -webkit-app-region: drag;
+}
+.top-panel,
+.operation-panel-container,
+.navigation-panel-container,
+.setting-panel-container,
+.book-operation-panel {
+  -webkit-app-region: no-drag;
+}
+.reader-quick-buttons,
+.reader-quick-buttons * {
+  -webkit-app-region: no-drag;
+}
 .view-area {
   height: 100%;
   touch-action: none;
@@ -92,10 +112,10 @@
   cursor: pointer;
 }
 .top-panel {
-  width: 40%;
+  width: 150px;
   height: 40px;
   position: absolute;
-  left: calc(50vw - 20%);
+  left: calc(50vw - 75px);
   top: 0px;
   background-color: rgba(75, 75, 75, 0.3);
   border-bottom-left-radius: 20px;
@@ -108,10 +128,10 @@
   cursor: pointer;
 }
 .bottom-panel {
-  width: 40%;
+  width: 150px;
   height: 40px;
   position: absolute;
-  left: calc(50vw - 20%);
+  left: calc(50vw - 75px);
   bottom: 0px;
   background-color: rgba(75, 75, 75, 0.3);
   border-top-left-radius: 20px;
@@ -215,22 +235,15 @@
 }
 .reader-setting-icon {
   margin: 8px;
-  opacity: 0.7;
+  opacity: 0.9;
   width: 50px;
   padding: 15px;
-}
-.scale-container {
-  min-width: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
 }
 .text-to-speech-icon {
   font-size: 22px;
   margin-right: 10px;
 }
-.reader-setting-icon-container,
-.reader-zoom-in-icon-container {
+.reader-setting-icon-container {
   width: 50px;
   height: 50px;
   font-size: 20px;
@@ -244,10 +257,43 @@
   transition: 0, 2s;
   float: right;
 }
-.reader-setting-icon-container:hover,
-.reader-zoom-in-icon-container:hover {
+.reader-setting-icon-container:hover {
   border-radius: 50%;
 }
-.reader-zoom-in-icon-container {
-  font-size: 23px;
+.reader-setting-dialog-anchor {
+  position: absolute;
+  top: 50px;
+  z-index: 5;
+  left: clamp(
+    8px,
+    calc(
+      var(--reader-dialog-anchor-x, 50%) - var(--reader-dialog-width, 280px) / 2
+    ),
+    calc(100% - var(--reader-dialog-width, 280px) - 8px)
+  );
+  transition: left 0.2s ease;
+  animation: reader-setting-dialog-appear 0.12s ease-out;
+}
+.reader-setting-dialog-anchor .sort-dialog-container {
+  position: static;
+  animation: none;
+  box-sizing: border-box;
+  max-width: calc(100vw - 16px);
+}
+@keyframes reader-setting-dialog-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.header-book-name {
+  transition: opacity 0.3s ease;
+}
+.viewer.quick-buttons-shown .header-book-name {
+  opacity: 0;
 }

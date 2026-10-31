@@ -60,8 +60,43 @@ const {
   promptBiometricAuth,
 } = require("./src/utils/main/biometric-util");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
+const ttsCacheUtil = require("./src/utils/plugins/main/voice/ttsCache");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
+// 数据目录（即渲染进程的 getStorageLocation，见 "storage-location"）
+const dataPath = path.join(dirPath, "data");
+// 递归计算目录大小（字节），不存在或出错时返回 0
+const getDirSize = (targetPath) => {
+  if (!fs.existsSync(targetPath)) {
+    return 0;
+  }
+  try {
+    const stat = fs.statSync(targetPath);
+    if (stat.isFile()) {
+      return stat.size;
+    }
+    const entries = fs.readdirSync(targetPath, { withFileTypes: true });
+    return entries.reduce((total, entry) => {
+      const entryPath = path.join(targetPath, entry.name);
+      if (entry.isDirectory()) {
+        return total + getDirSize(entryPath);
+      }
+      return total + (fs.statSync(entryPath).size || 0);
+    }, 0);
+  } catch (error) {
+    console.error("Error calculating directory size:", error);
+    return 0;
+  }
+};
+// 听书缓存目录
+const getTTSCacheDirPath = () => path.join(dirPath, "tts");
+// 临时缓存目录：漫画解包、OCR 结果、整页翻译缓存与书籍导入临时文件
+const getTempCacheDirPaths = () => [
+  path.join(dirPath, "comic"),
+  path.join(dirPath, "ocr"),
+  path.join(dirPath, "trans"),
+  path.join(dataPath, "temp"),
+];
 const customVoicePluginCache = new Map();
 const resolveCustomVoicePlugin = ({ script, scriptSHA256, pluginKey } = {}) => {
   if (
@@ -243,6 +278,35 @@ let options = {
   },
 };
 const Database = require("better-sqlite3");
+const isMacOS = os.platform() === "darwin";
+const getReaderWindowChromeOptions = (isMergeWord) => {
+  if (isDev) {
+    return { frame: true };
+  }
+  if (isMergeWord === "yes") {
+    return { frame: false };
+  }
+  if (isMacOS) {
+    return {
+      frame: true,
+      titleBarStyle: "hidden",
+      trafficLightPosition: { x: 14, y: 16 },
+    };
+  }
+  return { frame: false };
+};
+const bindReaderWindowState = (win) => {
+  const sendState = () => {
+    if (!win || win.isDestroyed()) return;
+    win.webContents.send("reader-window-state", {
+      isMaximized: win.isMaximized(),
+      isFullScreen: win.isFullScreen(),
+    });
+  };
+  ["maximize", "unmaximize", "enter-full-screen", "leave-full-screen"].forEach(
+    (eventName) => win.on(eventName, sendState)
+  );
+};
 if (os.platform() === "linux") {
   options = Object.assign({}, options, {
     icon: path.join(__dirname, "./build/assets/icon.png"),
@@ -361,7 +425,10 @@ const applyProxyToSession = async () => {
   const isEnabled =
     config && config.type !== "none" && config.enabled !== false && config.host;
   if (!isEnabled) {
-    await defaultSession.setProxy({ mode: "direct" });
+    // 未启用应用内代理时，跟随操作系统代理（与浏览器行为一致）。
+    // 此前强制 direct 会绕过系统代理（如 Clash/v2rayN 等），导致 Electron 端
+    // 直连 OCR 的 wasm/模型等境外 CDN 不可达（网页端走系统代理所以正常）。
+    await defaultSession.setProxy({ mode: "system" });
     https.globalAgent = new https.Agent();
     http.globalAgent = new http.Agent();
     return;
@@ -498,7 +565,7 @@ const createMainWin = () => {
   }
 
   const urlLocation = isDev
-    ? "http://localhost:3000"
+    ? "http://127.0.0.1:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
   // Handle deep link on cold start: wait for renderer to mount its IPC listeners
@@ -870,7 +937,10 @@ const createMainWin = () => {
       readerWindowList.push(readerWindow);
     }
     if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
-      readerWindow = new BrowserWindow(options);
+      readerWindow = new BrowserWindow({
+        ...options,
+        ...getReaderWindowChromeOptions(isMergeWord),
+      });
       readerWindow.webContents.on(
         "console-message",
         (_event, level, message) => {
@@ -899,7 +969,7 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: isWindowVisible ? parseInt(store.get("windowX")) : undefined,
         y: isWindowVisible ? parseInt(store.get("windowY")) : undefined,
-        frame: isMergeWord === "yes" ? false : true,
+        ...getReaderWindowChromeOptions(isMergeWord),
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
       });
@@ -914,6 +984,7 @@ const createMainWin = () => {
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
     }
+    bindReaderWindowState(readerWindow);
     if (store.get("isAlwaysOnTop") === "yes") {
       readerWindow.setAlwaysOnTop(true);
     }
@@ -1103,19 +1174,86 @@ const createMainWin = () => {
   });
 
   ipcMain.handle("clear-tts", async (event, config) => {
-    if (!fs.existsSync(path.join(dirPath, "tts"))) {
-      return "pong";
+    if (!fs.existsSync(getTTSCacheDirPath())) {
+      await fsExtra.mkdir(getTTSCacheDirPath());
     } else {
-      const fsExtra = require("fs-extra");
-      try {
-        await fsExtra.remove(path.join(dirPath, "tts"));
-        await fsExtra.mkdir(path.join(dirPath, "tts"));
-        return "pong";
-      } catch (err) {
-        console.error(err);
-        return "pong";
+      await fsExtra.remove(getTTSCacheDirPath());
+      await fsExtra.mkdir(getTTSCacheDirPath());
+    }
+    ttsCacheUtil.resetTTSAudioIndex(dirPath);
+  });
+  // 查询缓存大小（字节）：type 为 "tts" 或 "temp"
+  ipcMain.handle("get-cache-size", async (event, config) => {
+    const cacheType = config && config.type;
+    if (cacheType === "tts") {
+      return getDirSize(getTTSCacheDirPath());
+    } else if (cacheType === "temp") {
+      return getTempCacheDirPaths().reduce(
+        (total, cacheDir) => total + getDirSize(cacheDir),
+        0
+      );
+    }
+    throw new Error("Invalid cache size request");
+  });
+  // 清理临时缓存：漫画解包、OCR 结果、整页翻译缓存与书籍导入临时文件
+  ipcMain.handle("clear-temp-cache", async (event, config) => {
+    for (const cacheDir of getTempCacheDirPaths()) {
+      if (fs.existsSync(cacheDir)) {
+        await fsExtra.remove(cacheDir);
       }
     }
+  });
+  // 官方 AI 语音本地缓存查询：命中返回 file:// 地址，未命中返回空字符串
+  ipcMain.handle("get-cached-tts", async (event, config) => {
+    const { text, speed, voiceIdentifier } = config || {};
+    if (
+      typeof text !== "string" ||
+      !text ||
+      typeof speed !== "number" ||
+      !Number.isFinite(speed) ||
+      typeof voiceIdentifier !== "string" ||
+      !voiceIdentifier
+    ) {
+      throw new Error("Invalid TTS cache request");
+    }
+    const key = ttsCacheUtil.getTTSAudioKey({
+      text,
+      speed,
+      voiceIdentifier,
+    });
+    const audioPath = ttsCacheUtil.findCachedTTSAudio(dirPath, key);
+    if (audioPath && fs.existsSync(audioPath)) {
+      return {
+        key,
+        audioPath: pathToFileURL(audioPath).toString(),
+      };
+    }
+    if (audioPath) {
+      ttsCacheUtil.resetTTSAudioIndex(dirPath);
+    }
+    return { key, audioPath: "" };
+  });
+  // 官方 AI 语音音频落盘：key 为内容哈希，跨会话复用
+  ipcMain.handle("save-tts-audio", async (event, config) => {
+    const { key, base64 } = config || {};
+    const rawBase64 =
+      typeof base64 === "string" ? base64 : base64 && base64.audio_base64;
+    if (
+      !ttsCacheUtil.isTTSAudioKey(key) ||
+      typeof rawBase64 !== "string" ||
+      !rawBase64
+    ) {
+      throw new Error("Invalid TTS audio cache request");
+    }
+    const base64Data = rawBase64.includes("base64,")
+      ? rawBase64.split("base64,")[1]
+      : rawBase64;
+    const audioPath = ttsCacheUtil.saveTTSAudio(
+      dirPath,
+      key,
+      Buffer.from(base64Data, "base64")
+    );
+    return pathToFileURL(audioPath).toString();
   });
   ipcMain.handle("select-path", async (event) => {
     var path = await dialog.showOpenDialog({
@@ -1277,18 +1415,30 @@ const createMainWin = () => {
             "mobi",
             "azw3",
             "azw",
+            "kdz",
             "htm",
             "html",
             "xml",
             "xhtml",
             "mhtml",
             "docx",
+            "doc",
+            "rtf",
             "md",
             "fb2",
+            "chm",
             "cbz",
             "cbt",
             "cbr",
             "cb7",
+            "pptx",
+            "ppt",
+            "xps",
+            "oxps",
+            "djvu",
+            "djv",
+            "ofd",
+            "caj",
           ],
         },
       ],
@@ -1678,6 +1828,40 @@ const createMainWin = () => {
       event.returnvalue = false;
     }
   });
+  const getReaderWindowFromEvent = (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (!win || win.isDestroyed() || win === mainWin) return null;
+    return win;
+  };
+  ipcMain.handle("reader-window-minimize", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    if (!win) return false;
+    win.minimize();
+    return true;
+  });
+  ipcMain.handle("reader-window-toggle-maximize", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    if (!win || win.isFullScreen()) return null;
+    if (win.isMaximized()) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
+    return win.isMaximized();
+  });
+  ipcMain.handle("reader-window-get-state", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    return {
+      isMaximized: !!win && win.isMaximized(),
+      isFullScreen: !!win && win.isFullScreen(),
+    };
+  });
+  ipcMain.handle("reader-window-close", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    if (!win) return false;
+    win.close();
+    return true;
+  });
   ipcMain.handle("open-console", (event, arg) => {
     mainWin.webContents.openDevTools();
     event.returnvalue = true;
@@ -1742,7 +1926,16 @@ const createMainWin = () => {
       mainWin.webContents.send("chat-message", msg);
     }
   });
-  ipcMain.handle("clear-all-data", (event, config) => {
+  ipcMain.handle("clear-all-data", async (event, config) => {
+    try {
+      if (fs.existsSync(path.join(dirPath, "tts"))) {
+        await fsExtra.remove(path.join(dirPath, "tts"));
+        await fsExtra.mkdir(path.join(dirPath, "tts"));
+      }
+      ttsCacheUtil.resetTTSAudioIndex(dirPath);
+    } catch (error) {
+      console.error(error);
+    }
     store.clear();
   });
   ipcMain.handle("new-tab", (event, config) => {
@@ -1860,7 +2053,9 @@ const createMainWin = () => {
     if (readerWindow && !readerWindow.isDestroyed()) {
       readerWindowReadyToClose = true;
       readerWindow.close();
-      if (store.get("isMergeWord") === "yes") {
+      const currentIsMergeWord = store.get("isMergeWord") === "yes";
+      const nextIsMergeWord = currentIsMergeWord ? "no" : "yes";
+      if (currentIsMergeWord) {
         delete options.backgroundColor;
       }
       const scaleRatio = store.get("windowDisplayScale") || 1;
@@ -1869,19 +2064,17 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
-        frame: store.get("isMergeWord") !== "yes" ? false : true,
-        hasShadow: store.get("isMergeWord") !== "yes" ? false : true,
-        transparent: store.get("isMergeWord") !== "yes" ? true : false,
+        ...getReaderWindowChromeOptions(nextIsMergeWord),
+        hasShadow: nextIsMergeWord === "yes" ? false : true,
+        transparent: nextIsMergeWord === "yes" ? true : false,
       });
 
-      store.set(
-        "isMergeWord",
-        store.get("isMergeWord") !== "yes" ? "yes" : "no"
-      );
+      store.set("isMergeWord", nextIsMergeWord);
       if (readerWindow) {
         readerWindowList.push(readerWindow);
       }
       readerWindow = new BrowserWindow(options);
+      bindReaderWindowState(readerWindow);
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);
       }

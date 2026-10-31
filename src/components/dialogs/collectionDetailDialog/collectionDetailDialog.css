@@ -1,0 +1,80 @@
+.collection-detail-dialog-container {
+  width: 700px;
+  height: 430px;
+  position: absolute;
+  left: calc(50vw - 350px);
+  top: calc(50vh - 215px);
+  z-index: 9;
+  animation: popup 0.1s ease-in-out 0s 1;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 10px;
+  box-sizing: border-box;
+}
+.collection-detail-dialog-close-container {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  transition: 0.1s;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  z-index: 5;
+}
+.collection-detail-dialog-close-container:hover {
+  border-radius: 50%;
+  background-color: var(--hover-bg);
+}
+.collection-detail-dialog-close {
+  margin-right: 10px;
+  margin-top: 10px;
+  float: right;
+  font-size: 18px;
+  cursor: pointer;
+}
+.collection-detail-dialog-body {
+  flex: 1;
+  margin-top: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+.collection-detail-book-wrapper {
+  position: relative;
+}
+.collection-detail-book-wrapper .book-list-item {
+  float: none;
+}
+.collection-detail-book-wrapper .book-selected-icon {
+  display: none;
+}
+.collection-detail-book-remove {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-size: 10px;
+  display: none;
+  z-index: 3;
+  cursor: pointer;
+}
+.collection-detail-book-wrapper:hover .collection-detail-book-remove {
+  display: block;
+}
+.collection-detail-dialog-empty {
+  width: 100%;
+  text-align: center;
+  margin-top: 70px;
+  opacity: 0.6;
+}
+.collection-detail-dialog-empty-icon {
+  font-size: 40px;
+}

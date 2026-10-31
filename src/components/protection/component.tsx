@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./protection.css";
 import {
   getBiometricErrorMessage,
@@ -12,53 +12,21 @@ import i18n from "../../i18n";
 import { Trans } from "react-i18next";
 import TokenService from "../../utils/storage/tokenService";
 
-interface ProtectionOverlayState {
-  isVisible: boolean;
-  method: string;
-  pinValue: string;
-  pinError: boolean;
-  biometricError: string;
-  isAuthenticating: boolean;
-}
-
 // Track whether the startup auth check has already been performed in this session
 let _hasCheckedOnStartup = false;
 
-class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
-  private pinResolve: ((pin: string) => void) | null = null;
+const ProtectionOverlay = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [method, setMethod] = useState("");
+  const [pinValue, setPinValue] = useState("");
+  const [pinError, setPinError] = useState(false);
+  const [biometricError, setBiometricError] = useState("");
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      isVisible: false,
-      method: "",
-      pinValue: "",
-      pinError: false,
-      biometricError: "",
-      isAuthenticating: false,
-    };
-  }
-
-  async componentDidMount() {
-    if (_hasCheckedOnStartup) return;
-    _hasCheckedOnStartup = true;
-    const method = (await TokenService.getToken("protection_method")) || "";
-    if (method) {
-      this.setState({ isVisible: true, method }, () => {
-        if (method === "password") {
-          this.startPasswordAuth();
-        } else if (method === "biometric") {
-          this.startBiometricAuth();
-        }
-      });
-    }
-  }
-
-  startPasswordAuth = async () => {
-    const { method } = this.state;
+  const startPasswordAuth = async (authMethod: string) => {
     let success = false;
     while (!success) {
-      if (method === "password") {
+      if (authMethod === "password") {
         const input = await vexPasswordInputAsync(
           i18n.t("Enter password to unlock the app"),
           "",
@@ -76,69 +44,70 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
         success = true;
       }
     }
-    this.setState({ isVisible: false });
+    setIsVisible(false);
   };
 
-  startBiometricAuth = async () => {
-    if (this.state.isAuthenticating) return;
+  const startBiometricAuth = async () => {
+    if (isAuthenticating) return;
 
-    this.setState({
-      isAuthenticating: true,
-      biometricError: "",
-    });
+    setIsAuthenticating(true);
+    setBiometricError("");
     const result = await promptBiometricAuth(
       i18n.t("Authenticate to unlock the app")
     );
     if (result.success) {
-      this.setState({ isVisible: false, isAuthenticating: false });
+      setIsVisible(false);
+      setIsAuthenticating(false);
       return;
     }
 
-    this.setState({
-      isAuthenticating: false,
-      biometricError: getBiometricErrorMessage(result.code, i18n.t.bind(i18n)),
-    });
+    setIsAuthenticating(false);
+    setBiometricError(
+      getBiometricErrorMessage(result.code, i18n.t.bind(i18n))
+    );
   };
 
-  waitForPin = (): Promise<string> => {
-    return new Promise((resolve) => {
-      this.pinResolve = resolve;
-    });
-  };
-
-  handlePinDigit = (digit: string) => {
-    const { pinValue } = this.state;
-    if (pinValue.length >= 6) return;
-    const next = pinValue + digit;
-    this.setState({ pinValue: next, pinError: false }, async () => {
-      if (next.length === 6) {
-        const ok = await verifyPin(next);
-        if (ok) {
-          this.setState({ isVisible: false });
-        } else {
-          this.setState({ pinValue: "", pinError: true });
+  useEffect(() => {
+    if (_hasCheckedOnStartup) return;
+    _hasCheckedOnStartup = true;
+    (async () => {
+      const authMethod =
+        (await TokenService.getToken("protection_method")) || "";
+      if (authMethod) {
+        setIsVisible(true);
+        setMethod(authMethod);
+        if (authMethod === "password") {
+          startPasswordAuth(authMethod);
+        } else if (authMethod === "biometric") {
+          startBiometricAuth();
         }
       }
-    });
+    })();
+  }, []);
+
+  const handlePinDigit = (digit: string) => {
+    if (pinValue.length >= 6) return;
+    const next = pinValue + digit;
+    setPinValue(next);
+    setPinError(false);
+    if (next.length === 6) {
+      verifyPin(next).then((ok) => {
+        if (ok) {
+          setIsVisible(false);
+        } else {
+          setPinValue("");
+          setPinError(true);
+        }
+      });
+    }
   };
 
-  handlePinDelete = () => {
-    this.setState((s) => ({
-      pinValue: s.pinValue.slice(0, -1),
-      pinError: false,
-    }));
+  const handlePinDelete = () => {
+    setPinValue((prev) => prev.slice(0, -1));
+    setPinError(false);
   };
 
-  render() {
-    const {
-      isVisible,
-      method,
-      pinValue,
-      pinError,
-      biometricError,
-      isAuthenticating,
-    } = this.state;
-    if (!isVisible) return null;
+  if (!isVisible) return null;
 
     if (method === "pin") {
       const digits: (number | "del" | null)[] = [
@@ -184,7 +153,7 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
                     <button
                       key={idx}
                       className="pin-key pin-key-empty"
-                      onClick={this.handlePinDelete}
+                      onClick={handlePinDelete}
                     >
                       <span
                         className="icon-close"
@@ -197,7 +166,7 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
                   <button
                     key={idx}
                     className="pin-key"
-                    onClick={() => this.handlePinDigit(String(d))}
+                    onClick={() => handlePinDigit(String(d))}
                   >
                     {d}
                   </button>
@@ -221,7 +190,7 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
             )}
             <button
               className="biometric-auth-button"
-              onClick={this.startBiometricAuth}
+              onClick={startBiometricAuth}
               disabled={isAuthenticating}
             >
               {isAuthenticating ? (
@@ -235,8 +204,7 @@ class ProtectionOverlay extends React.Component<{}, ProtectionOverlayState> {
       );
     }
 
-    return <div className="protection-overlay" />;
-  }
-}
+  return <div className="protection-overlay" />;
+};
 
 export default ProtectionOverlay;

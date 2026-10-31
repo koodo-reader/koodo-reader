@@ -1,4 +1,5 @@
-import React from "react";
+import { useTranslation } from "react-i18next";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import { isElectron } from "react-device-detect";
 import toast from "react-hot-toast";
@@ -13,52 +14,38 @@ import {
   resetShortcutConfig,
   saveShortcutConfig,
 } from "../../../utils/reader/shortcutUtil";
-import { ShortcutSettingProps, ShortcutSettingState } from "./interface";
 import "./shortcutSetting.css";
 
-class ShortcutSetting extends React.Component<
-  ShortcutSettingProps,
-  ShortcutSettingState
-> {
-  config: ShortcutConfig;
+const ShortcutSetting = () => {
+  const { t } = useTranslation();
+  const configRef = useRef<ShortcutConfig>(getShortcutConfig());
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [recording, setRecording] = useState<{
+    action: ShortcutAction;
+    index: number;
+  } | null>(null);
 
-  constructor(props: ShortcutSettingProps) {
-    super(props);
-    this.config = getShortcutConfig();
-    this.state = {
-      recording: null,
-    };
-  }
-
-  componentDidMount() {
-    window.addEventListener("keydown", this.handleRecordKeyDown, true);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("keydown", this.handleRecordKeyDown, true);
-  }
-
-  persistConfig = () => {
-    saveShortcutConfig(this.config);
-    this.forceUpdate();
+  const persistConfig = () => {
+    saveShortcutConfig(configRef.current);
+    forceUpdate();
   };
 
-  handleRecordKeyDown = (event: KeyboardEvent) => {
-    const { recording } = this.state;
+  const handleRecordKeyDown = (event: KeyboardEvent) => {
     if (!recording) return;
 
     event.preventDefault();
     event.stopPropagation();
 
+    const config = configRef.current;
     if (event.keyCode === 27) {
       const action = recording.action as ShortcutAction;
-      if (this.config[action][recording.index]?.keyCode === 0) {
-        this.config[action] = this.config[action].filter(
+      if (config[action][recording.index]?.keyCode === 0) {
+        config[action] = config[action].filter(
           (_, i) => i !== recording.index
         );
-        this.persistConfig();
+        persistConfig();
       }
-      this.setState({ recording: null });
+      setRecording(null);
       return;
     }
 
@@ -67,64 +54,66 @@ class ShortcutSetting extends React.Component<
 
     const action = recording.action as ShortcutAction;
     const conflict = findShortcutConflict(
-      this.config,
+      config,
       action,
       binding,
       recording.index
     );
     if (conflict) {
-      toast.error(this.props.t("Shortcut conflict"));
+      toast.error(t("Shortcut conflict"));
       return;
     }
 
-    this.config[action][recording.index] = binding;
-    this.persistConfig();
-    this.setState({ recording: null });
-    toast.success(this.props.t("Change successful"));
+    config[action][recording.index] = binding;
+    persistConfig();
+    setRecording(null);
+    toast.success(t("Change successful"));
   };
 
-  startRecording = (action: ShortcutAction, index: number) => {
-    this.setState({ recording: { action, index } });
+  useEffect(() => {
+    window.addEventListener("keydown", handleRecordKeyDown, true);
+    return () => {
+      window.removeEventListener("keydown", handleRecordKeyDown, true);
+    };
+  }, [recording]);
+
+  const startRecording = (action: ShortcutAction, index: number) => {
+    setRecording({ action, index });
   };
 
-  addBinding = (action: ShortcutAction) => {
-    const bindings = this.config[action];
-    this.config[action] = [...bindings, { keyCode: 0 }];
-    this.startRecording(action, bindings.length);
+  const addBinding = (action: ShortcutAction) => {
+    const bindings = configRef.current[action];
+    configRef.current[action] = [...bindings, { keyCode: 0 }];
+    startRecording(action, bindings.length);
   };
 
-  removeBinding = (action: ShortcutAction, index: number) => {
-    if (this.config[action].length <= 1) {
-      toast.error(this.props.t("At least one shortcut required"));
-      return;
+  const removeBinding = (action: ShortcutAction, index: number) => {
+    configRef.current[action] = configRef.current[action].filter(
+      (_, i) => i !== index
+    );
+    if (recording?.action === action && recording.index === index) {
+      setRecording(null);
     }
-    this.config[action] = this.config[action].filter((_, i) => i !== index);
-    if (
-      this.state.recording?.action === action &&
-      this.state.recording.index === index
-    ) {
-      this.setState({ recording: null });
-    }
-    this.persistConfig();
-    toast.success(this.props.t("Change successful"));
+    persistConfig();
+    toast.success(t("Change successful"));
   };
 
-  handleReset = () => {
-    this.config = resetShortcutConfig();
-    this.setState({ recording: null });
-    toast.success(this.props.t("Reset successful"));
+  const handleReset = () => {
+    configRef.current = resetShortcutConfig();
+    setRecording(null);
+    forceUpdate();
+    toast.success(t("Reset successful"));
   };
 
-  renderChips = (action: ShortcutAction) => {
-    const { recording } = this.state;
-    return this.config[action].map((binding, index) => {
+  const renderChips = (action: ShortcutAction) => {
+    return configRef.current[action].map((binding, index) => {
       const isRecording =
         recording?.action === action && recording.index === index;
       return (
         <span
           key={`${action}-${index}`}
           className={"shortcut-chip" + (isRecording ? " recording" : "")}
-          onClick={() => this.startRecording(action, index)}
+          onClick={() => startRecording(action, index)}
         >
           {isRecording ? (
             <Trans>Press shortcut keys...</Trans>
@@ -137,7 +126,7 @@ class ShortcutSetting extends React.Component<
             className="shortcut-chip-remove icon-close"
             onClick={(e) => {
               e.stopPropagation();
-              this.removeBinding(action, index);
+              removeBinding(action, index);
             }}
           ></span>
         </span>
@@ -145,51 +134,49 @@ class ShortcutSetting extends React.Component<
     });
   };
 
-  render() {
-    return (
-      <>
-        {shortcutList.map((item) => {
-          if (item.isElectron && !isElectron) {
-            return null;
-          }
-          return (
-            <div className="shortcut-setting-row" key={item.action}>
-              <div className="shortcut-setting-header setting-dialog-new-title">
-                <span style={{ width: "calc(100% - 80px)" }}>
-                  <Trans>{item.title}</Trans>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      opacity: "0.75",
-                      margin: "4px 0",
-                      marginLeft: "10px",
-                    }}
-                  >
-                    <Trans>{item.desc}</Trans>
-                  </span>
-                </span>
+  return (
+    <>
+      {shortcutList.map((item) => {
+        if (item.isElectron && !isElectron) {
+          return null;
+        }
+        return (
+          <div className="shortcut-setting-row" key={item.action}>
+            <div className="shortcut-setting-header setting-dialog-new-title">
+              <span style={{ width: "calc(100% - 80px)" }}>
+                <Trans>{item.title}</Trans>
                 <span
-                  className="shortcut-add-button change-location-button"
-                  onClick={() => this.addBinding(item.action)}
+                  style={{
+                    fontSize: "12px",
+                    opacity: "0.75",
+                    margin: "4px 0",
+                    marginLeft: "10px",
+                  }}
                 >
-                  <Trans>Customize</Trans>
+                  <Trans>{item.desc}</Trans>
                 </span>
-              </div>
-              <div className="shortcut-chip-list">
-                {this.renderChips(item.action)}
-              </div>
+              </span>
+              <span
+                className="shortcut-add-button change-location-button"
+                onClick={() => addBinding(item.action)}
+              >
+                <Trans>Customize</Trans>
+              </span>
             </div>
-          );
-        })}
-        <div className="setting-dialog-new-title">
-          <Trans>Reset shortcuts to default</Trans>
-          <span className="change-location-button" onClick={this.handleReset}>
-            <Trans>Reset</Trans>
-          </span>
-        </div>
-      </>
-    );
-  }
-}
+            <div className="shortcut-chip-list">
+              {renderChips(item.action)}
+            </div>
+          </div>
+        );
+      })}
+      <div className="setting-dialog-new-title">
+        <Trans>Reset shortcuts to default</Trans>
+        <span className="change-location-button" onClick={handleReset}>
+          <Trans>Reset</Trans>
+        </span>
+      </div>
+    </>
+  );
+};
 
 export default ShortcutSetting;

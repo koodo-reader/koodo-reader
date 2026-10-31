@@ -54,8 +54,7 @@
   --card-border: 1px solid rgba(235, 235, 235, 0.1);
 }
 
-body,
-.active-annotation-dialog-tab {
+body {
   -webkit-tap-highlight-color: transparent;
   background: var(--app-bg);
   color: var(--text-color);
@@ -82,7 +81,12 @@ a {
 
 .add-dialog-shelf-list-box,
 .add-dialog-new-shelf-box,
+.add-collection-dialog-list-box,
+.add-collection-dialog-new-box,
+.collection-dialog-input,
 .add-dialog-cancel,
+.add-collection-dialog-cancel,
+.collection-dialog-cancel,
 .delete-dialog-cancel,
 .edit-dialog-book-name-box,
 .edit-dialog-book-author-box,
@@ -135,6 +139,8 @@ a {
 
 .delete-digest-button,
 .add-dialog-confirm,
+.add-collection-dialog-confirm,
+.collection-dialog-confirm,
 .backup-page-backup-selector,
 .delete-dialog-confirm,
 .book-item-config,
@@ -224,6 +230,8 @@ a {
 
 .action-dialog-container,
 .add-dialog-container,
+.collection-dialog-container,
+.collection-detail-dialog-container,
 .select-more-actions,
 .backup-page-container,
 .delete-dialog-container,
@@ -262,6 +270,18 @@ a {
 
 .plugin-tab-item-active {
   background: var(--tab-active-bg);
+}
+
+.setting-panel-tabs {
+  border: 1.5px solid var(--filled-bg);
+}
+
+.setting-panel-tabs-indicator {
+  background-color: var(--filled-bg);
+}
+
+.setting-panel-tab.active {
+  color: var(--on-filled);
 }
 
 .book-item-image,
@@ -438,6 +458,9 @@ a {
 
 [data-theme="dark"] .add-dialog-shelf-list-box,
 [data-theme="dark"] .add-dialog-new-shelf-box,
+[data-theme="dark"] .add-collection-dialog-list-box,
+[data-theme="dark"] .add-collection-dialog-new-box,
+[data-theme="dark"] .collection-dialog-input,
 [data-theme="dark"] .edit-dialog-book-name-box,
 [data-theme="dark"] .edit-dialog-book-author-box,
 [data-theme="dark"] .edit-dialog-input,

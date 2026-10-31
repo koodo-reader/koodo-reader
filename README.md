@@ -43,8 +43,14 @@
   - DRM-free Mobipocket (**.mobi**) and Kindle (**.azw3**, **.azw**)
   - Plain-text (**.txt**)
   - FictionBook (**.fb2**)
+  - Compiled HTML Help (**.chm**)
   - Comic book archive (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
-  - Rich text (**.md**, **.docx**)
+  - PowerPoint presentation (**.pptx**, **.ppt**)
+  - XML Paper Specification (**.xps**, **.oxps**)
+  - DjVu document (**.djvu**, **.djv**)
+  - Open Fixed-layout Document (**.ofd**)
+  - CAJ document (**.caj**, converted to PDF on import)
+  - Rich text (**.md**, **.docx**, **.doc**, **.rtf**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform support: **Windows**, **macOS**, **Linux**, **Android**, **iOS** and **Web**
 - Sync and backup your data with **OneDrive**, **Google Drive**, **Dropbox**, **iCloud**, **MEGA**, **pCloud**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB**, or **Object Storage**

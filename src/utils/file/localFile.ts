@@ -53,7 +53,7 @@ export class LocalFileManager {
     try {
       // Permission can still be "granted" even if the directory
       // was moved/renamed/deleted. Touch the handle to verify it's usable.
-      const iter = (handle.entries() as any);
+      const iter = handle.entries() as any;
       if (iter && typeof iter.next === "function") {
         await iter.next();
       } else {
@@ -409,7 +409,7 @@ export class LocalFileManager {
       }
       let isExist = await this.fileExists(filename, folderPath);
       if (!isExist) {
-        console.info(`File ${filename} does not exist in ${folderPath}`);
+        console.error(`File ${filename} does not exist in ${folderPath}`);
         return null;
       }
 
@@ -482,7 +482,7 @@ export class LocalFileManager {
       }
       let isExist = await this.fileExists(filename, folderPath);
       if (!isExist) {
-        console.info(`File ${filename} does not exist in ${folderPath}`);
+        console.error(`File ${filename} does not exist in ${folderPath}`);
         return false;
       }
 

@@ -7,6 +7,8 @@
 
 # testing
 /coverage
+/test-results
+/playwright-report
 
 # production
 #/build
@@ -18,6 +20,7 @@ dist/
 /.claude
 /.superpowers
 /.playwright-mcp
+/.commandcode
 
 # misc
 .DS_Store
@@ -26,16 +29,15 @@ dist/
 .env.test.local
 .env.production.local
 #.env
-
+yarn.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 config.js*
 rewrite.sh
 bfg.jar
-kookit.js
-kookit.mjs
 kookit-extra.js
 kookit-extra.mjs
 kookit-extra-browser.js
 kookit-extra-browser.mjs
+*.exe

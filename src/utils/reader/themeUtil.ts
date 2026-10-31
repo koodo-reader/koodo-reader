@@ -2,6 +2,8 @@
 const BG_SOLID_SELECTORS = [
   ".delete-digest-button",
   ".add-dialog-confirm",
+  ".add-collection-dialog-confirm",
+  ".collection-dialog-confirm",
   ".backup-page-backup-selector",
   ".delete-dialog-confirm",
   ".book-item-config",
@@ -52,7 +54,6 @@ const BG_HOVER_SELECTORS = [
   ".side-menu-hover-container",
   ".setting-dialog-location-title",
   ".header-search-text:hover",
-  ".reader-setting-icon-container:hover",
   ".setting-icon-container:hover",
   ".animation-mask",
   ".animation-mask-local",

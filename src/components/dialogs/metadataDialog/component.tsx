@@ -1,55 +1,65 @@
-import React from "react";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 import "./metadataDialog.css";
 import { Trans } from "react-i18next";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
 import {
   MetadataDialogProps,
-  MetadataDialogState,
   MetadataResult,
   BookResultItem,
-} from "./interface";
+} from "./types";
+import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import copy from "copy-text-to-clipboard";
 import { getBookMetadata } from "../../../utils/request/reader";
+import { formatDateToDay } from "../../../utils/common";
 
-class MetadataDialog extends React.Component<
-  MetadataDialogProps,
-  MetadataDialogState
-> {
-  constructor(props: MetadataDialogProps) {
-    super(props);
-    this.state = {
-      searchName: props.currentBookName || "",
-      searchAuthor: props.currentBookAuthor || "",
-      results: [],
-      selectedId: null,
-      isLoading: false,
-      error: "",
-    };
-  }
+const MetadataDialog = (
+  props: Pick<
+    MetadataDialogProps,
+    | "currentBookName"
+    | "currentBookAuthor"
+    | "handleMetadataDialog"
+    | "handleApplyMetadata"
+  >
+) => {
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const { t } = useTranslation();
+  const [state, setState] = useState<Record<string, any>>({
+    searchName: props.currentBookName || "",
+    searchAuthor: props.currentBookAuthor || "",
+    results: [],
+    selectedId: null,
+    isLoading: false,
+    error: "",
+  });
+  const updateState = (patch: Record<string, any>) =>
+    setState((prev) => ({ ...prev, ...patch }));
 
-  componentDidMount() {
-    if (this.state.searchName || this.state.searchAuthor) {
-      this.handleSearch();
+  useEffect(() => {
+    if (state.searchName || state.searchAuthor) {
+      handleSearch();
     }
-  }
+  }, []);
 
-  handleSearch = async () => {
-    const { searchName, searchAuthor } = this.state;
+  const handleSearch = async () => {
+    const { searchName, searchAuthor } = state;
     if (!searchName.trim()) {
-      toast(this.props.t("Please enter book name"));
+      toast(t("Please enter book name"));
       return;
     }
 
-    if (!this.props.isAuthed) {
-      toast(this.props.t("Please upgrade to Pro to use this feature"));
-      this.props.handleSetting(true);
-      this.props.handleSettingMode("account");
+    if (!isAuthed) {
+      toast(t("Please upgrade to Pro to use this feature"));
+      handleSetting(true);
+      handleSettingMode("account");
       return;
     }
 
-    this.setState({
+    updateState({
       isLoading: true,
       error: "",
       results: [],
@@ -61,38 +71,38 @@ class MetadataDialog extends React.Component<
       if (res && res.code === 200 && res.data) {
         const data = res.data as BookResultItem[];
 
-        this.setState({ results: data, isLoading: false });
+        updateState({ results: data, isLoading: false });
       } else if (res && res.code === 200 && !res.data) {
-        this.setState({
+        updateState({
           isLoading: false,
-          error: this.props.t("No metadata found"),
+          error: t("No metadata found"),
         });
       } else {
-        this.setState({
+        updateState({
           isLoading: false,
-          error: this.props.t("Failed to fetch metadata"),
+          error: t("Failed to fetch metadata"),
         });
       }
     } catch {
-      this.setState({
+      updateState({
         isLoading: false,
-        error: this.props.t("Failed to fetch metadata"),
+        error: t("Failed to fetch metadata"),
       });
     }
   };
 
-  handleSelect = (id: string) => {
-    this.setState((prev) => ({
+  const handleSelect = (id: string) => {
+    setState((prev) => ({
       selectedId: prev.selectedId === id ? null : id,
     }));
   };
 
-  getItemId = (item: BookResultItem): string => {
+  const getItemId = (item: BookResultItem): string => {
     return item.key;
   };
 
-  handleApply = () => {
-    const { results, selectedId } = this.state;
+  const handleApply = () => {
+    const { results, selectedId } = state;
     const item = results.find((r) => r.key === selectedId);
     if (!item) return;
     const metadata: MetadataResult = {
@@ -101,18 +111,21 @@ class MetadataDialog extends React.Component<
       publisher: item.publisher || "",
       description: item.description || "",
       cover: item.cover || "",
+      ...(item.pub_date ? { published: item.pub_date } : {}),
+      ...(item.language ? { language: item.language } : {}),
+      ...(item.categories ? { subject: item.categories } : {}),
+      ...(item.isbn ? { isbn: item.isbn } : {}),
     };
-    this.props.handleApplyMetadata(metadata);
-    this.props.handleMetadataDialog(false);
+    props.handleApplyMetadata(metadata);
+    props.handleMetadataDialog(false);
   };
 
-  handleCancel = () => {
-    this.props.handleMetadataDialog(false);
+  const handleCancel = () => {
+    props.handleMetadataDialog(false);
   };
 
-  render() {
-    const { searchName, searchAuthor, results, selectedId, isLoading, error } =
-      this.state;
+  const { searchName, searchAuthor, results, selectedId, isLoading, error } =
+      state;
     return (
       <div className="metadata-dialog-container edit-dialog-container">
         <div className="metadata-dialog-title">
@@ -126,9 +139,9 @@ class MetadataDialog extends React.Component<
             <input
               className="metadata-dialog-search-input"
               value={searchName}
-              placeholder={this.props.t("Book name")}
-              onChange={(e) => this.setState({ searchName: e.target.value })}
-              onKeyDown={(e) => e.key === "Enter" && this.handleSearch()}
+              placeholder={t("Book name")}
+              onChange={(e) => updateState({ searchName: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               style={{ width: "155px" }}
             />
           </div>
@@ -136,15 +149,15 @@ class MetadataDialog extends React.Component<
             <input
               className="metadata-dialog-search-input"
               value={searchAuthor}
-              placeholder={this.props.t("Author")}
-              onChange={(e) => this.setState({ searchAuthor: e.target.value })}
-              onKeyDown={(e) => e.key === "Enter" && this.handleSearch()}
+              placeholder={t("Author")}
+              onChange={(e) => updateState({ searchAuthor: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               style={{ width: "100px" }}
             />
           </div>
           <button
             className="metadata-dialog-search-btn add-dialog-confirm"
-            onClick={this.handleSearch}
+            onClick={handleSearch}
           >
             <Trans>Search</Trans>
           </button>
@@ -167,7 +180,7 @@ class MetadataDialog extends React.Component<
           )}
           {!isLoading &&
             results.map((item) => {
-              const id = this.getItemId(item);
+              const id = getItemId(item);
               const isSelected = selectedId === id;
               const thumb = item.cover || "";
               const title = item.name;
@@ -188,7 +201,7 @@ class MetadataDialog extends React.Component<
                 <div
                   key={id}
                   className="metadata-book-item"
-                  onClick={() => this.handleSelect(id)}
+                  onClick={() => handleSelect(id)}
                 >
                   <div className="metadata-book-item-header">
                     {thumb ? (
@@ -242,7 +255,7 @@ class MetadataDialog extends React.Component<
                             onClick={(e) => {
                               e.stopPropagation();
                               copy(item.isbn || "");
-                              toast(this.props.t("Copying successful"));
+                              toast(t("Copying successful"));
                             }}
                           >
                             <span className="icon-copy"></span>
@@ -255,7 +268,7 @@ class MetadataDialog extends React.Component<
                             <Trans>Publish date</Trans>:
                           </span>
                           <span className="metadata-book-detail-value">
-                            {item.pub_date}
+                            {formatDateToDay(item.pub_date)}
                           </span>
                         </div>
                       )}
@@ -304,7 +317,7 @@ class MetadataDialog extends React.Component<
                           className="metadata-dialog-apply-btn add-dialog-confirm"
                           onClick={(e) => {
                             e.stopPropagation();
-                            this.handleApply();
+                            handleApply();
                           }}
                         >
                           <Trans>Apply</Trans>
@@ -318,13 +331,12 @@ class MetadataDialog extends React.Component<
         </div>
 
         <div className="metadata-dialog-footer">
-          <div className="add-dialog-cancel" onClick={this.handleCancel}>
+          <div className="add-dialog-cancel" onClick={handleCancel}>
             <Trans>Cancel</Trans>
           </div>
         </div>
       </div>
-    );
-  }
-}
+  );
+};
 
 export default MetadataDialog;

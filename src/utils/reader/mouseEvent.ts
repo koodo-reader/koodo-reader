@@ -1,12 +1,12 @@
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
+import Book from "../../models/Book";
 import { getIframeDoc, getIframeWin } from "./docUtil";
 import {
   handleExitFullScreen,
   handleFullScreen,
   isReadingAidMode,
   sleep,
-  throttle,
 } from "../common";
 import Hammer from "hammerjs";
 import TTSUtil from "./ttsUtil";
@@ -19,13 +19,14 @@ import {
 } from "./shortcutUtil";
 declare var window: any;
 
-let throttleTime =
+// 每次翻页时实时读取，避免修改动画设置后锁延迟不生效
+const getThrottleTime = () =>
   (ConfigService.getReaderConfig("animation") || "none") !== "none"
     ? 1000
     : 100;
 
-export const getSelection = (format: string, bookKey?: string) => {
-  let docs = getIframeDoc(format, bookKey);
+export const getSelection = (book: Book) => {
+  let docs = getIframeDoc(book);
   let text = "";
   for (let i = 0; i < docs.length; i++) {
     let doc = docs[i];
@@ -51,11 +52,8 @@ export const getSelection = (format: string, bookKey?: string) => {
   return text;
 };
 
-export const getSelectionSentence = (
-  format: string,
-  bookKey?: string
-): string => {
-  let docs = getIframeDoc(format, bookKey);
+export const getSelectionSentence = (book: Book): string => {
+  let docs = getIframeDoc(book);
   for (let i = 0; i < docs.length; i++) {
     let doc = docs[i];
     if (!doc) continue;
@@ -101,7 +99,7 @@ const clickEvent = () =>
 
 export const searchInTheBook = (
   keyword: string,
-  format: string,
+  book: Book,
   isSearch: boolean
 ) => {
   let leftPanel = document.querySelector(".left-panel");
@@ -117,7 +115,7 @@ export const searchInTheBook = (
   let searchIcon = document.querySelector(".header-search-icon");
   searchIcon?.dispatchEvent(clickEvent());
   if (isSearch) {
-    searchBox.value = getSelection(format) || keyword;
+    searchBox.value = getSelection(book) || keyword;
   }
   const keyEvent: any = new KeyboardEvent("keydown", {
     bubbles: true,
@@ -165,10 +163,6 @@ export const toggleReadingPanel = (
   );
 };
 
-export const openTableOfContents = () => {
-  openReadingPanel("left");
-};
-
 const READING_PANEL_SHORTCUTS: Array<{
   shortcut: ShortcutAction;
   position: "left" | "right" | "top" | "bottom";
@@ -199,12 +193,24 @@ const NAV_TAB_SHORTCUTS: Array<{
 ];
 let lock = false; //prevent from clicking too fasts
 
+// 仿真翻页动画收敛后（kookit 派发 flipend 事件）立即解除锁，
+// 不再等待满 1000ms 的 throttleTime，滚轮/键盘可继续快速翻页
+window.addEventListener("page-flipend", () => {
+  lock = false;
+});
+
+const isRevertDirectionReading = (rendition: any) => {
+  return (
+    rendition?.revertDirection === "yes" &&
+    !(rendition?.isVertical && rendition.isVertical())
+  );
+};
+
 const arrowKeys = async (
   rendition: any,
   event: any,
   readerMode: string,
-  format: string,
-  bookKey: string
+  book: Book
 ) => {
   if (
     event.target.tagName.toLowerCase() === "textarea" ||
@@ -212,19 +218,34 @@ const arrowKeys = async (
   ) {
     return;
   }
-  if (readerMode === "scroll" && isReadingAidMode(format, bookKey)) {
+  const isReadingAid = isReadingAidMode(book.format, book.key);
+  const revertDirection =
+    isRevertDirectionReading(rendition) &&
+    (readerMode !== "scroll" || isReadingAid);
+  if (revertDirection && (event.keyCode === 37 || event.keyCode === 39)) {
+    // RTL 下左右方向键整体镜像：← 下一页，→ 上一页
+    event.preventDefault();
+    if (event.keyCode === 37) {
+      await rendition.next();
+    } else {
+      await rendition.prev();
+    }
+    handleShortcut(event, book, rendition);
+    return;
+  }
+  if (readerMode === "scroll" && isReadingAid) {
     // 段落模式下拦截滚动模式的原生滚动按键，改为逐段导航
     const shortcutConfig = getShortcutConfig();
     if (matchShortcut(event, shortcutConfig.prevPage)) {
       event.preventDefault();
       await rendition.prev();
-      handleShortcut(event, format, bookKey, rendition);
+      handleShortcut(event, book, rendition);
       return;
     }
     if (matchShortcut(event, shortcutConfig.nextPage)) {
       event.preventDefault();
       await rendition.next();
-      handleShortcut(event, format, bookKey, rendition);
+      handleShortcut(event, book, rendition);
       return;
     }
   }
@@ -235,24 +256,26 @@ const arrowKeys = async (
     event.preventDefault();
     await rendition.next();
   }
-  handleShortcut(event, format, bookKey, rendition);
+  handleShortcut(event, book, rendition);
 };
 
-const mouseChrome = async (rendition: any, deltaY: number) => {
-  if (deltaY < 0) {
+const mouseChrome = async (
+  rendition: any,
+  delta: number,
+  revertDirection: boolean = false
+) => {
+  // RTL 下滚轮/触控板方向整体镜像：向上/向左为下一页
+  const goNext = revertDirection ? delta < 0 : delta > 0;
+  const goPrev = revertDirection ? delta > 0 : delta < 0;
+  if (goPrev) {
     await rendition.prev();
   }
-  if (deltaY > 0) {
+  if (goNext) {
     await rendition.next();
   }
 };
 
-const handleShortcut = (
-  event: any,
-  format: string,
-  bookKey: string,
-  rendition?: any
-) => {
+const handleShortcut = (event: any, book: Book, rendition?: any) => {
   const shortcuts = getShortcutConfig();
   if (matchShortcut(event, shortcuts.bossKey)) {
     if (isElectron) {
@@ -298,7 +321,7 @@ const handleShortcut = (
   }
   if (matchShortcut(event, shortcuts.searchInBook)) {
     event.preventDefault();
-    searchInTheBook("", "", false);
+    searchInTheBook("", book, false);
   }
   for (const { shortcut, position } of READING_PANEL_SHORTCUTS) {
     if (matchShortcut(event, shortcuts[shortcut])) {
@@ -329,7 +352,7 @@ const handleShortcut = (
   }
   for (const { shortcut, optionName } of SELECTION_SHORTCUT_OPTIONS) {
     if (matchShortcut(event, shortcuts[shortcut])) {
-      if (getSelection(format, bookKey)) {
+      if (getSelection(book)) {
         event.preventDefault();
         triggerPopupOptionClick(optionName);
       }
@@ -339,11 +362,16 @@ const handleShortcut = (
 };
 
 const gesture = async (rendition: any, type: string) => {
-  if (type === "panleft" || type === "panup") {
+  const revertDirection = isRevertDirectionReading(rendition);
+  if (type === "panup") {
     await rendition.next();
-  }
-  if (type === "panright" || type === "pandown") {
+  } else if (type === "pandown") {
     await rendition.prev();
+  } else if (type === "panleft") {
+    // RTL 下水平手势整体镜像：左滑上一页，右滑下一页
+    await (revertDirection ? rendition.prev() : rendition.next());
+  } else if (type === "panright") {
+    await (revertDirection ? rendition.next() : rendition.prev());
   }
 };
 
@@ -371,23 +399,29 @@ export const scrollChapter = async (
   }
 };
 let lastScaleTime = 0;
+// kookit 渲染章节时复用同一个 iframe document，"rendered" 每触发一次就会
+// 走到这里重绑一遍，用 WeakSet 保证同一 doc 只绑定一次
+const boundDocs = new WeakSet<Document>();
 export const bindHtmlEvent = (
   rendition: any,
   doc: any,
-  key: string = "",
+  book: Book,
   readerMode: string = "",
-  format: string = "",
   handleScale: (scale: string) => void,
   renderBookFunc: () => void
 ) => {
+  if (boundDocs.has(doc)) return;
+  boundDocs.add(doc);
+  const key = book.key;
+  const format = book.format;
   doc.addEventListener(
     "keydown",
     async (event) => {
       if (lock) return;
       lock = true;
-      await arrowKeys(rendition, event, readerMode, format, key);
+      await arrowKeys(rendition, event, readerMode, book);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -427,7 +461,12 @@ export const bindHtmlEvent = (
       lock = true;
       if (readerMode === "scroll") {
         if (Math.abs(event.deltaX) === 0 && isReadingAidMode(format, key)) {
-          await mouseChrome(rendition, event.deltaY);
+          // 段落/阅读尺/速读模式内部实际按单页渲染，同样遵循 RTL
+          await mouseChrome(
+            rendition,
+            event.deltaY,
+            isRevertDirectionReading(rendition)
+          );
         } else {
           await sleep(200);
           await rendition.record();
@@ -440,12 +479,19 @@ export const bindHtmlEvent = (
           }
         }
       } else {
+        const revertDirection = isRevertDirectionReading(rendition);
         if (Math.abs(event.deltaX) === 0) {
-          await mouseChrome(rendition, event.deltaY);
+          await mouseChrome(rendition, event.deltaY, revertDirection);
+        } else if (
+          revertDirection &&
+          Math.abs(event.deltaY) < Math.abs(event.deltaX)
+        ) {
+          // RTL 下触控板水平滚动：向左滚动（deltaX<0）为下一页
+          await mouseChrome(rendition, event.deltaX, true);
         }
       }
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -455,9 +501,9 @@ export const bindHtmlEvent = (
     async (event) => {
       if (lock) return;
       lock = true;
-      await arrowKeys(rendition, event, readerMode, format, key);
+      await arrowKeys(rendition, event, readerMode, book);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -472,7 +518,7 @@ export const bindHtmlEvent = (
       lock = true;
       await gesture(rendition, event.type);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     });
   }
 
@@ -486,16 +532,15 @@ export const bindHtmlEvent = (
         await rendition.record();
       }
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
 };
 export const htmlMouseEvent = (
   rendition: any,
-  key: string,
+  book: Book,
   readerMode: string,
-  format: string,
   handleScale: (scale: string) => void,
   renderBookFunc: () => void
 ) => {
@@ -503,16 +548,15 @@ export const htmlMouseEvent = (
     let iframe = getIframeWin();
     if (!iframe) return;
     iframe?.focus();
-    let docs = getIframeDoc(format, key);
+    let docs = getIframeDoc(book);
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
       bindHtmlEvent(
         rendition,
         doc,
-        key,
+        book,
         readerMode,
-        format,
         handleScale,
         renderBookFunc
       );

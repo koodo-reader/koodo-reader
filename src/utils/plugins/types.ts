@@ -1,6 +1,6 @@
 import type { AxiosInstance } from "axios";
 
-export type BuiltinPluginType = "translation" | "dictionary" | "voice";
+export type BuiltinPluginType = "translation" | "dictionary" | "voice" | "ocr";
 export type RendererPluginType = "translation" | "dictionary";
 export type PluginConfigValue =
   | string
@@ -185,6 +185,12 @@ export type DictionaryPlugin = (
   to: string,
   axios: AxiosInstance,
   t: TranslateText,
+  config: PluginConfig
+) => Promise<string>;
+
+export type OCRPlugin = (
+  imageBase64: string,
+  axios: AxiosInstance,
   config: PluginConfig
 ) => Promise<string>;
 

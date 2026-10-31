@@ -1,53 +1,45 @@
-import React from "react";
-import { SpeechDialogProps, SpeechDialogState } from "./interface";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useAppStore } from "../../../store/useAppStore";
 import "./speechDialog.css";
 import TextToSpeech from "../../textToSpeech";
 
-class SpeechDialog extends React.Component<
-  SpeechDialogProps,
-  SpeechDialogState
-> {
-  constructor(props: SpeechDialogProps) {
-    super(props);
-    this.state = {
-      isShowExportAll: false,
-    };
-  }
-  componentDidMount(): void {
-    this.props.handleFetchPlugins();
-  }
-  render() {
-    return (
-      <>
-        <div
-          className="sort-dialog-container"
-          onMouseEnter={() => {
-            this.props.handleSpeechDialog(true);
+const SpeechDialog = () => {
+  const { t } = useTranslation();
+  const plugins = useAppStore((s) => s.manager.plugins);
+  const handleSpeechDialog = useAppStore((s) => s.handleSpeechDialog);
+  const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
+  useEffect(() => {
+    handleFetchPlugins();
+  }, []);
+
+  return (
+    <div
+      className="sort-dialog-container speech-dialog-container"
+      onMouseEnter={() => {
+        handleSpeechDialog(true);
+      }}
+      onMouseLeave={() => {
+        handleSpeechDialog(false);
+      }}
+      style={{
+        width: "280px",
+        overflowY: "auto",
+        maxHeight: "calc(100vh - 80px)",
+      }}
+    >
+      <div className="speech-dialog-header">
+        <span className="speech-dialog-title">{t("Text to speech")}</span>
+        <span
+          className="icon-close speech-dialog-close"
+          onClick={() => {
+            handleSpeechDialog(false);
           }}
-          style={{
-            left: "auto",
-            top: "auto",
-            bottom: "60px",
-            width: "300px",
-            height: "340px",
-            overflowY: "scroll",
-            right: this.props.isSettingLocked || this.props.isDockedRight ? 370 : 65,
-          }}
-        >
-          <div className="speech-dialog-header">
-            <span className="speech-dialog-title"></span>
-            <span
-              className="icon-close speech-dialog-close"
-              onClick={() => {
-                this.props.handleSpeechDialog(false);
-              }}
-            ></span>
-          </div>
-          {this.props.plugins && <TextToSpeech />}
-        </div>
-      </>
-    );
-  }
-}
+        ></span>
+      </div>
+      {plugins && <TextToSpeech />}
+    </div>
+  );
+};
 
 export default SpeechDialog;

@@ -1,6 +1,7 @@
-import React from "react";
+import { useLatest } from "../../../utils/hooks/useLatest";
+import { useTranslation } from "react-i18next";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import "./popupTrans.css";
-import { PopupTransProps, PopupTransState } from "./interface";
 import {
   ConfigService,
   KookitConfig,
@@ -18,92 +19,80 @@ import {
   executeCustomTranslation,
   isCustomRendererPlugin,
 } from "../../../utils/plugins/customPlugin";
-class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
-  private textAccumulator: string = "";
-  private updateInterval: ReturnType<typeof setInterval> | null = null;
+import { useAppStore } from "../../../store/useAppStore";
 
-  constructor(props: PopupTransProps) {
-    super(props);
-    this.state = {
-      translatedText: "",
-      originalText: "",
-      transService: ConfigService.getReaderConfig("transService") || "",
-      transTarget: ConfigService.getReaderConfig("transTarget"),
-      transSource: ConfigService.getReaderConfig("transSource"),
-      isAddNew: false,
-      isFinishOutput: false,
-      isAiWaiting: false,
-    };
-  }
+export interface PopupTransProps {
+  isDockedRight: boolean;
+}
 
-  private startUpdateInterval() {
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
+export interface PopupTransState {
+  translatedText: string;
+  transService: string;
+  isAddNew: boolean;
+  isFinishOutput: boolean;
+  isAiWaiting: boolean;
+  originalText: string;
+}
+
+const PopupTrans = (props: PopupTransProps) => {
+  const originalText = useAppStore((s) => s.reader.originalText);
+  const plugins = useAppStore((s) => s.manager.plugins);
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const handleOpenMenu = useAppStore((s) => s.handleOpenMenu);
+  const handleMenuMode = useAppStore((s) => s.handleMenuMode);
+  const handleSetting = useAppStore((s) => s.handleSetting);
+  const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handlePluginSettingTab = useAppStore((s) => s.handlePluginSettingTab);
+  const { t } = useTranslation();
+  const [state, setState] = useState<PopupTransState>({
+    translatedText: "",
+    originalText: "",
+    transService: ConfigService.getReaderConfig("transService") || "",
+    isAddNew: false,
+    isFinishOutput: false,
+    isAiWaiting: false,
+  });
+  const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
+
+  const textAccumulator = useRef<string>("");
+  const updateInterval = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startUpdateInterval = () => {
+    if (updateInterval.current) {
+      clearInterval(updateInterval.current);
     }
-    this.updateInterval = setInterval(() => {
-      if (this.textAccumulator) {
-        this.setState({ translatedText: this.textAccumulator });
+    updateInterval.current = setInterval(() => {
+      if (textAccumulator.current) {
+        setState((prev) => ({
+          ...prev,
+          translatedText: textAccumulator.current,
+        }));
       }
     }, 150);
-  }
+  };
 
-  private stopUpdateInterval() {
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
-      this.updateInterval = null;
+  const stopUpdateInterval = () => {
+    if (updateInterval.current) {
+      clearInterval(updateInterval.current);
+      updateInterval.current = null;
     }
-    if (this.textAccumulator) {
-      this.setState({ translatedText: this.textAccumulator });
+    if (textAccumulator.current) {
+      setState((prev) => ({
+        ...prev,
+        translatedText: textAccumulator.current,
+      }));
     }
-  }
-  async componentDidMount() {
-    let originalText = this.props.originalText.replace(/(\r\n|\n|\r)/gm, "");
-    this.setState({ originalText: originalText });
-    if (!this.state.transService) {
-      let pluginList = this.props.plugins.filter(
-        (item) =>
-          item.type === "translation" && !item.key.startsWith("official-ai-")
-      );
-      if (pluginList.length > 0) {
-        this.setState({
-          transService: pluginList[0].key,
-        });
-        ConfigService.setReaderConfig("transService", pluginList[0].key);
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      } else if (this.props.isAuthed) {
-        this.setState({
-          transService: "official-ai-trans-plugin",
-          isAddNew: false,
-        });
-        ConfigService.setReaderConfig(
-          "transService",
-          "official-ai-trans-plugin"
-        );
-      } else {
-        this.setState({
-          isAddNew: true,
-        });
-      }
-    }
+  };
 
-    this.handleTrans(originalText);
-  }
-  UNSAFE_componentWillReceiveProps(nextProps: PopupTransProps) {
-    if (nextProps.originalText !== this.props.originalText) {
-      let originalText = nextProps.originalText.replace(/(\r\n|\n|\r)/gm, "");
-      this.setState({ originalText: originalText, translatedText: "" });
-      this.handleTrans(originalText);
-    }
-  }
-
-  handleTrans = async (text: string) => {
+  const handleTrans = async (text: string) => {
     if (
       ConfigService.getReaderConfig("transService") &&
       ConfigService.getReaderConfig("transService") !==
         "official-ai-trans-plugin" &&
       ConfigService.getReaderConfig("transService") !== "custom-ai-trans-plugin"
     ) {
-      let plugin = this.props.plugins.find(
+      let plugin = plugins.find(
         (item) => item.key === ConfigService.getReaderConfig("transService")
       );
       if (!plugin) {
@@ -127,21 +116,22 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         .then((res: string) => {
           if (res.startsWith("https://")) {
             openExternalUrl(res, true, "trans");
-            let docs = getIframeDoc(this.props.currentBook.format);
+            let docs = getIframeDoc(currentBook);
             for (let i = 0; i < docs.length; i++) {
               let doc = docs[i];
               if (!doc) continue;
               doc.getSelection()?.empty();
             }
           } else {
-            this.setState({
+            setState((prev) => ({
+              ...prev,
               translatedText: res,
-            });
+            }));
           }
         })
         .catch((err) => {
           toast.error(
-            this.props.t("Translation failed") +
+            t("Translation failed") +
               ": " +
               (err instanceof Error ? err.message : String(err))
           );
@@ -150,11 +140,12 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
     } else if (
       ConfigService.getReaderConfig("transService") === "custom-ai-trans-plugin"
     ) {
-      this.setState({
+      setState((prev) => ({
+        ...prev,
         transService: "custom-ai-trans-plugin",
         isAddNew: false,
-      });
-      let plugin = this.props.plugins.find(
+      }));
+      let plugin = plugins.find(
         (item) => item.key === "custom-ai-trans-plugin"
       );
       if (!plugin) {
@@ -176,9 +167,9 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       systemPrompt = systemPrompt.replace("{to}", targetLang);
       systemPrompt = systemPrompt.replace("{text}", text);
       let config: any = plugin.config || {};
-      this.textAccumulator = "";
-      this.setState({ isAiWaiting: true });
-      this.startUpdateInterval();
+      textAccumulator.current = "";
+      setState((prev) => ({ ...prev, isAiWaiting: true }));
+      startUpdateInterval();
       await chatStream(
         config.endpoint,
         config.providerId,
@@ -191,25 +182,30 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
             return;
           }
           if (result && result.text) {
-            if (!this.textAccumulator) {
-              this.setState({ isAiWaiting: false });
+            if (!textAccumulator.current) {
+              setState((prev) => ({ ...prev, isAiWaiting: false }));
             }
-            this.textAccumulator += result.text;
+            textAccumulator.current += result.text;
           }
         }
       );
-      this.stopUpdateInterval();
-      this.textAccumulator = "";
-      this.setState({ isFinishOutput: true, isAiWaiting: false });
+      stopUpdateInterval();
+      textAccumulator.current = "";
+      setState((prev) => ({
+        ...prev,
+        isFinishOutput: true,
+        isAiWaiting: false,
+      }));
     } else if (
-      this.props.isAuthed &&
+      isAuthed &&
       ConfigService.getReaderConfig("isDisableAI") !== "yes"
     ) {
-      this.setState({
+      setState((prev) => ({
+        ...prev,
         transService: "official-ai-trans-plugin",
         isAddNew: false,
-      });
-      let plugin = this.props.plugins.find(
+      }));
+      let plugin = plugins.find(
         (item) => item.key === "official-ai-trans-plugin"
       );
       if (!plugin) {
@@ -221,8 +217,8 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
       if (targetLang === "Traditional Chinese") {
         targetLang = "繁体中文";
       }
-      this.textAccumulator = "";
-      this.startUpdateInterval();
+      textAccumulator.current = "";
+      startUpdateInterval();
       await getTransStream(
         text,
         ConfigService.getReaderConfig("transSource") || "Automatic",
@@ -233,283 +229,320 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
             return;
           }
           if (result && result.text) {
-            this.textAccumulator += result.text;
+            textAccumulator.current += result.text;
           }
         }
       );
-      this.stopUpdateInterval();
-      this.textAccumulator = "";
-      this.setState({ isFinishOutput: true });
+      stopUpdateInterval();
+      textAccumulator.current = "";
+      setState((prev) => ({ ...prev, isFinishOutput: true }));
     }
   };
-  handleChangeService(target: string) {
-    if (target === "official-ai-trans-plugin" && !this.props.isAuthed) {
-      toast(this.props.t("Please upgrade to Pro to use this feature"));
-      this.props.handleSetting(true);
-      this.props.handleSettingMode("account");
+
+  // 让回调始终调用最新一次渲染的 handleTrans
+  const handleTransRef = useLatest(handleTrans);
+
+  // componentDidMount: 初始化翻译服务并发起首次翻译
+  useEffect(() => {
+    const nextOriginalText = originalText.replace(/(\r\n|\n|\r)/gm, "");
+    setState((prev) => ({ ...prev, originalText: nextOriginalText }));
+    (async () => {
+      if (!state.transService) {
+        let pluginList = plugins.filter(
+          (item) =>
+            item.type === "translation" && !item.key.startsWith("official-ai-")
+        );
+        if (pluginList.length > 0) {
+          setState((prev) => ({ ...prev, transService: pluginList[0].key }));
+          ConfigService.setReaderConfig("transService", pluginList[0].key);
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        } else if (isAuthed) {
+          setState((prev) => ({
+            ...prev,
+            transService: "official-ai-trans-plugin",
+            isAddNew: false,
+          }));
+          ConfigService.setReaderConfig(
+            "transService",
+            "official-ai-trans-plugin"
+          );
+        } else {
+          setState((prev) => ({ ...prev, isAddNew: true }));
+        }
+      }
+
+      handleTransRef.current(nextOriginalText);
+    })();
+    return () => {
+      if (updateInterval.current) {
+        clearInterval(updateInterval.current);
+        updateInterval.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // UNSAFE_componentWillReceiveProps: originalText 变化时重新翻译
+  const prevOriginalTextRef = useRef(originalText);
+  useEffect(() => {
+    const prevOriginalText = prevOriginalTextRef.current;
+    prevOriginalTextRef.current = originalText;
+    if (originalText !== prevOriginalText) {
+      let nextOriginalText = originalText.replace(/(\r\n|\n|\r)/gm, "");
+      setState((prev) => ({
+        ...prev,
+        originalText: nextOriginalText,
+        translatedText: "",
+      }));
+      handleTransRef.current(nextOriginalText);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originalText]);
+
+  const handleChangeService = (target: string) => {
+    if (target === "official-ai-trans-plugin" && !isAuthed) {
+      toast(t("Please upgrade to Pro to use this feature"));
+      handleSetting(true);
+      handleSettingMode("account");
       return;
     }
-    this.setState({ transService: target }, () => {
-      ConfigService.setReaderConfig("transService", target);
-      let plugin = this.props.plugins.find(
-        (item) => item.key === this.state.transService
-      );
-      if (!plugin) {
-        return;
-      }
-      let autoValue = plugin.autoValue;
-      this.setState(
-        {
-          transSource: autoValue,
-          transTarget: getDefaultTransTarget(plugin.langList),
-        },
-        () => {
-          ConfigService.setReaderConfig(
-            "transTarget",
-            getDefaultTransTarget(plugin?.langList)
-          );
-          ConfigService.setReaderConfig("transSource", autoValue);
-          this.handleTrans(
-            this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-          );
-        }
-      );
-    });
-  }
-  render() {
-    const renderNoteEditor = () => {
-      return (
-        <div className="trans-container">
-          <div className="trans-service-selector-container">
-            <div
-              className="trans-service-selector-inactive"
-              onClick={() => {
-                this.props.handleOpenMenu(false);
-                this.props.handleMenuMode("");
-                this.props.handleSetting(true);
-                this.props.handleSettingMode("plugins");
-              }}
-            >
-              <span className="icon-add trans-add-icon"></span>
-              <Trans>Add</Trans>
-            </div>
-            {this.props.plugins
-              .filter((item) => item.type === "translation")
-              .map((item) => {
-                return (
-                  <div
-                    className={
-                      this.state.transService === item.key
-                        ? "trans-service-selector"
-                        : "trans-service-selector-inactive"
-                    }
-                    onClick={() => {
-                      this.setState({ isAddNew: false });
-                      this.handleChangeService(item.key);
-                    }}
-                  >
-                    <span className={`icon-${item.icon} trans-icon`}></span>
-                    {this.props.t(item.displayName)}
-                    {item.key === "official-ai-trans-plugin" && (
-                      <span style={{ fontSize: "13px", color: "#f16464" }}>
-                        {" "}
-                        (Pro)
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
+    setState((prev) => ({ ...prev, transService: target }));
+    ConfigService.setReaderConfig("transService", target);
+    let plugin = plugins.find((item) => item.key === target);
+    if (!plugin) {
+      return;
+    }
+    let autoValue = plugin.autoValue;
+    ConfigService.setReaderConfig(
+      "transTarget",
+      getDefaultTransTarget(plugin?.langList)
+    );
+    ConfigService.setReaderConfig("transSource", autoValue);
+    handleTrans(originalText.replace(/(\r\n|\n|\r)/gm, ""));
+  };
+
+  const renderNoteEditor = () => {
+    return (
+      <div className="trans-container">
+        <div className="trans-service-selector-container">
+          <div
+            className="trans-service-selector-inactive"
+            onClick={() => {
+              handleOpenMenu(false);
+              handleMenuMode("");
+              handlePluginSettingTab("translation");
+              handleSetting(true);
+              handleSettingMode("plugins");
+            }}
+          >
+            <span className="icon-add trans-add-icon"></span>
+            <Trans>Add</Trans>
           </div>
-          {this.state.isAddNew && (
-            <div
+          {plugins
+            .filter((item) => item.type === "translation")
+            .map((item) => {
+              return (
+                <div
+                  className={
+                    state.transService === item.key
+                      ? "trans-service-selector"
+                      : "trans-service-selector-inactive"
+                  }
+                  onClick={() => {
+                    setState((prev) => ({ ...prev, isAddNew: false }));
+                    handleChangeService(item.key);
+                  }}
+                >
+                  <span className={`icon-${item.icon} trans-icon`}></span>
+                  {t(item.displayName)}
+                  {item.key === "official-ai-trans-plugin" && (
+                    <span style={{ fontSize: "13px", color: "#f16464" }}>
+                      {" "}
+                      (Pro)
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+        </div>
+        {state.isAddNew && (
+          <div
+            style={{
+              marginTop: "50px",
+              textAlign: "center",
+              fontSize: "17px",
+              color: "#f16464",
+            }}
+          >
+            <span
               style={{
-                marginTop: "50px",
+                textDecoration: "underline",
+                cursor: "pointer",
                 textAlign: "center",
-                fontSize: "17px",
-                color: "#f16464",
+              }}
+              onClick={() => {
+                handleOpenMenu(false);
+                handleMenuMode("");
+                handlePluginSettingTab("translation");
+                handleSetting(true);
+                handleSettingMode("plugins");
               }}
             >
-              <span
-                style={{
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                  textAlign: "center",
-                }}
-                onClick={() => {
-                  this.props.handleOpenMenu(false);
-                  this.props.handleMenuMode("");
-                  this.props.handleSetting(true);
-                  this.props.handleSettingMode("plugins");
-                }}
-              >
-                <Trans>Add new plugin</Trans>
-              </span>
-            </div>
-          )}
-          {!this.state.isAddNew && (
-            <>
+              <Trans>Add new plugin</Trans>
+            </span>
+          </div>
+        )}
+        {!state.isAddNew && (
+          <>
+            <div
+              className="trans-box"
+              style={
+                props.isDockedRight
+                  ? { flexDirection: "column", height: "calc(100% - 80px)" }
+                  : undefined
+              }
+            >
               <div
-                className="trans-box"
+                className="original-text-box"
                 style={
-                  this.props.isDockedRight
-                    ? { flexDirection: "column", height: "calc(100% - 80px)" }
+                  props.isDockedRight
+                    ? {
+                        flex: 1,
+                        minHeight: 0,
+                        borderRight: "1px solid rgba(0,0,0,0.05)",
+                        borderBottom: "1px solid rgba(0,0,0,0.05)",
+                        borderBottomLeftRadius: 0,
+                        borderTopRightRadius: "7px",
+                      }
                     : undefined
                 }
               >
-                <div
-                  className="original-text-box"
-                  style={
-                    this.props.isDockedRight
-                      ? {
-                          flex: 1,
-                          minHeight: 0,
-                          borderRight: "1px solid rgba(0,0,0,0.05)",
-                          borderBottom: "1px solid rgba(0,0,0,0.05)",
-                          borderBottomLeftRadius: 0,
-                          borderTopRightRadius: "7px",
-                        }
-                      : undefined
-                  }
-                >
-                  <div className="original-lang-box">
-                    <select
-                      className="original-lang-selector"
-                      style={{ maxWidth: "120px", margin: 0 }}
-                      value={ConfigService.getReaderConfig("transSource")}
-                      onChange={(
-                        event: React.ChangeEvent<HTMLSelectElement>
-                      ) => {
-                        let targetLang = event.target.value;
-                        ConfigService.setReaderConfig(
-                          "transSource",
-                          targetLang
+                <div className="original-lang-box">
+                  <select
+                    className="original-lang-selector"
+                    style={{ maxWidth: "120px", margin: 0 }}
+                    value={ConfigService.getReaderConfig("transSource")}
+                    onChange={(
+                      event: React.ChangeEvent<HTMLSelectElement>
+                    ) => {
+                      let targetLang = event.target.value;
+                      ConfigService.setReaderConfig("transSource", targetLang);
+                      handleTrans(
+                        originalText.replace(/(\r\n|\n|\r)/gm, "")
+                      );
+                      forceUpdate();
+                    }}
+                  >
+                    {plugins.find(
+                      (item) => item.key === state.transService
+                    )?.langList &&
+                      Object.keys(
+                        plugins.find(
+                          (item) => item.key === state.transService
+                        )?.langList as any
+                      ).map((item, index) => {
+                        return (
+                          <option
+                            value={item}
+                            key={index}
+                            className="add-dialog-shelf-list-option"
+                          >
+                            {t(
+                              Object.values(
+                                plugins.find(
+                                  (item) => item.key === state.transService
+                                )?.langList as any[]
+                              )[index]
+                            )}
+                          </option>
                         );
-                        this.handleTrans(
-                          this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-                        );
-                        this.forceUpdate();
-                      }}
-                    >
-                      {this.props.plugins.find(
-                        (item) => item.key === this.state.transService
-                      )?.langList &&
-                        Object.keys(
-                          this.props.plugins.find(
-                            (item) => item.key === this.state.transService
-                          )?.langList as any
-                        ).map((item, index) => {
-                          return (
-                            <option
-                              value={item}
-                              key={index}
-                              className="add-dialog-shelf-list-option"
-                            >
-                              {this.props.t(
-                                Object.values(
-                                  this.props.plugins.find(
-                                    (item) =>
-                                      item.key === this.state.transService
-                                  )?.langList as any[]
-                                )[index]
-                              )}
-                            </option>
-                          );
-                        })}
-                    </select>
-                  </div>
-                  <div className="original-text">{this.state.originalText}</div>
+                      })}
+                  </select>
                 </div>
-                <div
-                  className="trans-text-box"
-                  style={
-                    this.props.isDockedRight
-                      ? { flex: 1, minHeight: 0 }
-                      : undefined
-                  }
-                >
-                  <div className="trans-lang-box">
-                    <select
-                      className="trans-lang-selector"
-                      style={{ maxWidth: "120px", margin: 0 }}
-                      value={
-                        ConfigService.getReaderConfig("transTarget") ||
-                        getDefaultTransTarget(
-                          this.props.plugins.find(
-                            (item) => item.key === this.state.transService
-                          )?.langList
-                        )
-                      }
-                      onChange={(
-                        event: React.ChangeEvent<HTMLSelectElement>
-                      ) => {
-                        let targetLang = event.target.value;
-                        ConfigService.setReaderConfig(
-                          "transTarget",
-                          targetLang
+                <div className="original-text">{state.originalText}</div>
+              </div>
+              <div
+                className="trans-text-box"
+                style={
+                  props.isDockedRight ? { flex: 1, minHeight: 0 } : undefined
+                }
+              >
+                <div className="trans-lang-box">
+                  <select
+                    className="trans-lang-selector"
+                    style={{ maxWidth: "120px", margin: 0 }}
+                    value={
+                      ConfigService.getReaderConfig("transTarget") ||
+                      getDefaultTransTarget(
+                        plugins.find(
+                          (item) => item.key === state.transService
+                        )?.langList
+                      )
+                    }
+                    onChange={(
+                      event: React.ChangeEvent<HTMLSelectElement>
+                    ) => {
+                      let targetLang = event.target.value;
+                      ConfigService.setReaderConfig("transTarget", targetLang);
+                      handleTrans(
+                        originalText.replace(/(\r\n|\n|\r)/gm, "")
+                      );
+                      forceUpdate();
+                    }}
+                  >
+                    {plugins.find(
+                      (item) => item.key === state.transService
+                    )?.langList &&
+                      Object.keys(
+                        plugins.find(
+                          (item) => item.key === state.transService
+                        )?.langList as any
+                      ).map((item, index) => {
+                        return (
+                          <option
+                            value={item}
+                            key={index}
+                            className="add-dialog-shelf-list-option"
+                          >
+                            {t(
+                              Object.values(
+                                plugins.find(
+                                  (item) => item.key === state.transService
+                                )?.langList as any[]
+                              )[index]
+                            )}
+                          </option>
                         );
-                        this.handleTrans(
-                          this.props.originalText.replace(/(\r\n|\n|\r)/gm, "")
-                        );
-                        this.forceUpdate();
-                      }}
-                    >
-                      {this.props.plugins.find(
-                        (item) => item.key === this.state.transService
-                      )?.langList &&
-                        Object.keys(
-                          this.props.plugins.find(
-                            (item) => item.key === this.state.transService
-                          )?.langList as any
-                        ).map((item, index) => {
-                          return (
-                            <option
-                              value={item}
-                              key={index}
-                              className="add-dialog-shelf-list-option"
-                            >
-                              {this.props.t(
-                                Object.values(
-                                  this.props.plugins.find(
-                                    (item) =>
-                                      item.key === this.state.transService
-                                  )?.langList as any[]
-                                )[index]
-                              )}
-                            </option>
-                          );
-                        })}
-                    </select>
-                  </div>
-                  <div className="trans-text">
-                    {this.state.isAiWaiting && !this.state.translatedText ? (
-                      <div className="dict-ai-answer-waiting">
-                        <span className="icon-loading popup-assistant-loading"></span>
-                        <span>
-                          {this.props.t("Thinking, please wait...")}
-                        </span>
-                      </div>
-                    ) : (
-                      this.state.translatedText
+                      })}
+                  </select>
+                </div>
+                <div className="trans-text">
+                  {state.isAiWaiting && !state.translatedText ? (
+                    <div className="dict-ai-answer-waiting">
+                      <span className="icon-loading popup-assistant-loading"></span>
+                      <span>{t("Thinking, please wait...")}</span>
+                    </div>
+                  ) : (
+                    state.translatedText
+                  )}
+                  {state.transService.includes("ai-trans") &&
+                    state.isFinishOutput && (
+                      <p
+                        className="dict-learn-more"
+                        style={{ color: "#f16464" }}
+                      >
+                        {t("Generated with AI")}
+                      </p>
                     )}
-                    {this.state.transService.includes("ai-trans") &&
-                      this.state.isFinishOutput && (
-                        <p
-                          className="dict-learn-more"
-                          style={{ color: "#f16464" }}
-                        >
-                          {this.props.t("Generated with AI")}
-                        </p>
-                      )}
-                  </div>
                 </div>
               </div>
-            </>
-          )}
-        </div>
-      );
-    };
+            </div>
+          </>
+        )}
+      </div>
+    );
+  };
 
-    return renderNoteEditor();
-  }
-}
+  return renderNoteEditor();
+};
 export default PopupTrans;

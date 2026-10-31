@@ -1,0 +1,109 @@
+.reader-window-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 50px;
+  flex-shrink: 0;
+  -webkit-app-region: no-drag;
+}
+
+.reader-window-control {
+  width: 34px;
+  height: 30px;
+  margin-left: 2px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background-color: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: background-color 0.12s ease, opacity 0.12s ease, color 0.12s ease;
+  -webkit-app-region: no-drag;
+}
+
+.reader-window-control:hover {
+  opacity: 1;
+  background-color: rgba(127, 127, 127, 0.18);
+}
+
+.reader-window-control-close:hover {
+  color: #fff;
+  background-color: #e81123;
+}
+
+.reader-window-control-icon {
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.reader-window-control-minimize {
+  width: 11px;
+  height: 1px;
+  background-color: currentColor;
+}
+
+.reader-window-control-maximize {
+  width: 10px;
+  height: 10px;
+  border: 1px solid currentColor;
+}
+
+.reader-window-control-restore {
+  width: 8px;
+  height: 8px;
+  margin: 2px 0 0 2px;
+  border: 1px solid currentColor;
+}
+
+.reader-window-control-restore::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 2px;
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  border: 1px solid currentColor;
+  border-bottom: 0;
+  border-left: 0;
+}
+
+.reader-window-control-console::before {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.reader-window-control-close-icon {
+  width: 10px;
+  height: 10px;
+}
+
+.reader-window-control-close-icon::before,
+.reader-window-control-close-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 1px;
+  background-color: currentColor;
+}
+
+.reader-window-control-close-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.reader-window-control-close-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}

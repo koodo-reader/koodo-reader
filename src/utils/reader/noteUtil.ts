@@ -45,7 +45,7 @@ export async function createHighlight(params: DigestParams): Promise<void> {
   }
 
   let percentage = bookLocation.percentage ? bookLocation.percentage : "0";
-  let docs = getIframeDoc(currentBook.format, currentBook.key);
+  let docs = getIframeDoc(currentBook);
   let text = "";
   for (let i = 0; i < docs.length; i++) {
     let doc = docs[i];
