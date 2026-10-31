@@ -2465,7 +2465,6 @@ export const getOcrCache = (
       console.error("Failed to load ocr cache:", error);
     }
   }
-  console.log("OCR cache loaded:", chapterDocIndex, cache);
   return cache;
 };
 

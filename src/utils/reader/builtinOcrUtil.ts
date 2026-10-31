@@ -161,7 +161,6 @@ export const getBuiltinEngineOcrWorker = (
       );
       return (result && result.data && result.data.text) || "";
     } else if (engine === "paddle") {
-      console.log("paddle recognize", ocrLang, serverRegion);
       const localOCR = await getPaddleWorker(ocrLang, serverRegion);
       // kookit 侧保证 externalWorker 的调用是串行的（preProcessNextChapters 逐章等待）
       const result: any = await withTimeout(
@@ -169,7 +168,6 @@ export const getBuiltinEngineOcrWorker = (
         RECOG_TIMEOUT_MS,
         "paddle recognize"
       );
-      console.log("paddle recognize result", result);
       return ((result && result.parragraphs) || [])
         .map((p: any) => p.text)
         .join("\n");

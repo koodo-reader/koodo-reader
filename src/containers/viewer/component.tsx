@@ -403,14 +403,6 @@ const Viewer = (props: ViewerProps) => {
       ocrQueue = task.catch(() => undefined);
       return task;
     };
-    console.log(
-      "ocrEngine12332434",
-      ocrEngine,
-      "ocrLang",
-      ocrLang,
-      "serverRegion",
-      serverRegion
-    );
     let rendition = BookHelper.getRendition(
       result,
       {
