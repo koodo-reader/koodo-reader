@@ -159,21 +159,18 @@ func queryBook(db *sql.DB, key string) (*opdsBook, error) {
 
 // ── Cover file detection ──────────────────────────────────────────────────────
 
-// findCoverFile scans the cover directory and returns the first file whose
-// name starts with the given book key (mirrors the client-side lookup).
+var imageExts = []string{".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"}
+
+// findCoverFile finds the cover image for a given book key by checking
+// candidate files named key.<ext> for each known image extension.
 func findCoverFile(key string) (string, string) {
 	coverDir := filepath.Join(uploadDir, "cover")
 
-	entries, err := os.ReadDir(coverDir)
-	if err != nil {
-		return "", ""
-	}
-	for _, entry := range entries {
-		name := entry.Name()
-		if entry.IsDir() || !strings.HasPrefix(name, key) {
-			continue
+	for _, ext := range imageExts {
+		candidate := filepath.Join(coverDir, key+ext)
+		if _, err := os.Stat(candidate); err == nil {
+			return candidate, ext
 		}
-		return filepath.Join(coverDir, name), strings.ToLower(filepath.Ext(name))
 	}
 	return "", ""
 }
