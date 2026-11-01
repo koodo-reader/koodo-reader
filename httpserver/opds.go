@@ -164,10 +164,11 @@ var imageExts = []string{".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp"}
 // findCoverFile finds the cover image for a given book key by checking
 // candidate files named key.<ext> for each known image extension.
 func findCoverFile(key string) (string, string) {
-	coverDir := filepath.Join(uploadDir, "cover")
-
 	for _, ext := range imageExts {
-		candidate := filepath.Join(coverDir, key+ext)
+		candidate, err := resolveSafePath("cover", key+ext)
+		if err != nil {
+			continue
+		}
 		if _, err := os.Stat(candidate); err == nil {
 			return candidate, ext
 		}
