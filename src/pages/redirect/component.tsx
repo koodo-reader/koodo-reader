@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./manager.css";
 import { Trans } from "react-i18next";
-import { getParamsFromUrl } from "../../utils/file/common";
+import { getLoginParamsFromUrl } from "../../utils/file/common";
 import copy from "copy-text-to-clipboard";
 import LazyLottie from "../../components/lazyLottie";
 import emptyDark from "../../assets/images/empty-dark.svg";
@@ -17,7 +17,7 @@ import { useAppStore } from "../../store/useAppStore";
 
 declare var window: any;
 
-const Redirect = () => {
+const AuthFlow = () => {
   const handleLoadingDialog = useAppStore((s) => s.handleLoadingDialog);
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -25,26 +25,16 @@ const Redirect = () => {
   const [isError, setIsError] = useState(false);
   const [token, setToken] = useState("");
 
-  if (
-    (!document.location.hash ||
-      document.location.hash === "#" ||
-      document.location.hash === "#/") &&
-    document.location.href.indexOf("code") === -1
-  ) {
-    return <Navigate to="/manager/home" replace />;
-  }
-
   useEffect(() => {
-    let url = document.location.href;
-    if (url.indexOf("error") > -1) {
-      setIsError(true);
-    }
-    if (url.indexOf("import") > -1) {
+    let params: any = getLoginParamsFromUrl();
+    if (document.location.href.indexOf("import") > -1) {
       window.Kookit = Kookit;
       window.BookHelper = BookHelper;
     }
-    if (url.indexOf("code") > -1) {
-      let params: any = getParamsFromUrl();
+    if (params.error) {
+      setIsError(true);
+    }
+    if (params.code) {
       removeSearchParams();
       if (params.locationid) {
         params.code = params.code + "$" + params.locationid;
@@ -77,11 +67,11 @@ const Redirect = () => {
         }
       }
     }
-    if (url.indexOf("access_token") > -1) {
-      let params: any = getParamsFromUrl();
+    if (params.access_token) {
       setToken(params.access_token);
       setIsAuthed(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFinish = () => {
@@ -180,6 +170,20 @@ const Redirect = () => {
       />
     </div>
   );
+};
+
+const Redirect = () => {
+  const params: any = getLoginParamsFromUrl();
+  const hash = document.location.hash;
+  if (
+    !params.error &&
+    !params.code &&
+    !params.access_token &&
+    (!hash || hash === "#" || hash === "#/")
+  ) {
+    return <Navigate to="/manager/home" replace />;
+  }
+  return <AuthFlow />;
 };
 
 export default Redirect;
