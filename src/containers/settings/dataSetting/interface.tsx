@@ -7,6 +7,8 @@ export interface SettingInfoProps extends RouteComponentProps<any> {
 export interface SettingInfoState {
   storageLocation: string;
   snapshotList: { file: string; time: number }[];
+  ttsCacheSize: string;
+  tempCacheSize: string;
   exportNotesFormat: string;
   exportHighlightsFormat: string;
   exportWordsFormat: string;

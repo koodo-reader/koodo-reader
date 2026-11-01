@@ -16,6 +16,8 @@ import {
   handleCloudSyncFunc,
   handleFetchUserInfo,
   handleReadingBook,
+  handleCollectionDetailDialog,
+  handleCurrentCollectionKey,
 } from "../../store/actions";
 import { stateType } from "../../store";
 import Header from "./component";
@@ -55,6 +57,8 @@ const actionCreator = {
   handleCloudSyncFunc,
   handleFetchUserInfo,
   handleReadingBook,
+  handleCollectionDetailDialog,
+  handleCurrentCollectionKey,
 };
 export default connect(
   mapStateToProps,

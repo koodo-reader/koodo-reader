@@ -6,6 +6,7 @@ import { removeCloudConfig } from "../../../utils/file/common";
 import { isElectron } from "react-device-detect";
 import _ from "underscore";
 import { syncSettingList } from "../../../constants/settingList";
+import SwitchRow from "../../../components/readerSettings/switchRow";
 
 import toast from "react-hot-toast";
 import {
@@ -519,95 +520,74 @@ class SyncSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
           key={item.propName}
         >
-          <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "calc(100% - 100px)" }}>
-              <Trans>{item.title}</Trans>
-            </span>
+          <SwitchRow
+            variant="setting"
+            title={<Trans>{item.title}</Trans>}
+            isEnabled={this.state[item.propName]}
+            onClick={async () => {
+              switch (item.propName) {
+                case "isEnableKoodoSync":
+                  this.handleSetting(item.propName);
+                  let encryptToken = await TokenService.getToken(
+                    this.props.defaultSyncOption + "_token"
+                  );
+                  await updateUserConfig({
+                    is_enable_koodo_sync:
+                      ConfigService.getReaderConfig("isEnableKoodoSync"),
+                    default_sync_option: this.props.defaultSyncOption,
+                    default_sync_token: encryptToken || "",
+                  });
+                  let userInfo = await this.props.handleFetchUserInfo();
+                  if (
+                    ConfigService.getReaderConfig("isEnableKoodoSync") === "yes"
+                  ) {
+                    this.props.cloudSyncFunc(userInfo);
+                  }
 
-            <span
-              className="single-control-switch"
-              onClick={async () => {
-                switch (item.propName) {
-                  case "isEnableKoodoSync":
-                    this.handleSetting(item.propName);
-                    let encryptToken = await TokenService.getToken(
-                      this.props.defaultSyncOption + "_token"
+                  break;
+                case "autoOffline":
+                  this.handleSetting(item.propName);
+                  if (!this.state.autoOffline) {
+                    if (this.props.defaultSyncOption === "adrive") {
+                      toast.error(
+                        this.props.t(
+                          "Due to Aliyun Drive's stringent concurrency restrictions, we have bypassed the synchronization of books and covers. Please manually download the books by clicking on them"
+                        ),
+                        { id: "autoOffline" }
+                      );
+                      return;
+                    }
+                    let downloadTasks = await SyncHelper.syncBook(
+                      ConfigService,
+                      BookUtil
                     );
-                    await updateUserConfig({
-                      is_enable_koodo_sync:
-                        ConfigService.getReaderConfig("isEnableKoodoSync"),
-                      default_sync_option: this.props.defaultSyncOption,
-                      default_sync_token: encryptToken || "",
+                    let timer = await showTaskProgress((_: boolean) => {});
+                    if (!timer) {
+                      return;
+                    }
+                    await SyncHelper.runTasksWithLimit(
+                      downloadTasks,
+                      99,
+                      ConfigService.getItem("defaultSyncOption")
+                    );
+                    clearInterval(timer);
+
+                    toast.success(this.props.t("Download completed"), {
+                      id: "autoOffline",
                     });
-                    let userInfo = await this.props.handleFetchUserInfo();
-                    if (
-                      ConfigService.getReaderConfig("isEnableKoodoSync") ===
-                      "yes"
-                    ) {
-                      this.props.cloudSyncFunc(userInfo);
-                    }
 
-                    break;
-                  case "autoOffline":
-                    this.handleSetting(item.propName);
-                    if (!this.state.autoOffline) {
-                      if (this.props.defaultSyncOption === "adrive") {
-                        toast.error(
-                          this.props.t(
-                            "Due to Aliyun Drive's stringent concurrency restrictions, we have bypassed the synchronization of books and covers. Please manually download the books by clicking on them"
-                          ),
-                          { id: "autoOffline" }
-                        );
-                        return;
-                      }
-                      let downloadTasks = await SyncHelper.syncBook(
-                        ConfigService,
-                        BookUtil
-                      );
-                      let timer = await showTaskProgress((_: boolean) => {});
-                      if (!timer) {
-                        return;
-                      }
-                      await SyncHelper.runTasksWithLimit(
-                        downloadTasks,
-                        99,
-                        ConfigService.getItem("defaultSyncOption")
-                      );
-                      clearInterval(timer);
+                    setTimeout(() => {
+                      toast.dismiss("syncing");
+                    }, 3000);
+                  }
 
-                      toast.success(this.props.t("Download completed"), {
-                        id: "autoOffline",
-                      });
-
-                      setTimeout(() => {
-                        toast.dismiss("syncing");
-                      }, 3000);
-                    }
-
-                    break;
-                  default:
-                    this.handleSetting(item.propName);
-                    break;
-                }
-              }}
-              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state[item.propName]
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+                  break;
+                default:
+                  this.handleSetting(item.propName);
+                  break;
+              }
+            }}
+          />
           <p className="setting-option-subtitle">
             <Trans>{item.desc}</Trans>
           </p>

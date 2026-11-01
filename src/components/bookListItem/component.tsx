@@ -30,9 +30,14 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
     cover,
     isCoverExist,
     isBookOffline,
+    isDropTarget,
     handleJump,
     handleSelectIconClick,
     handleBookDragStart,
+    handleBookDropDragOver,
+    handleBookDropDragEnter,
+    handleBookDropDragLeave,
+    handleBookBookDrop,
     getPercentage,
     isFavoriteBook,
     isTopBook,
@@ -52,7 +57,7 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
         ? e.clientY
         : e.clientY - 200,
       CONTEXT_MENU_WIDTH,
-      estimateMenuHeight(9)
+      estimateMenuHeight(10)
     );
     setLeft(pos.left);
     setTop(pos.top);
@@ -62,16 +67,26 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
 
   const percentage = getPercentage();
   const actionProps = { left, top };
+  const dropHandlers = {
+    onDragOver: handleBookDropDragOver,
+    onDragEnter: handleBookDropDragEnter,
+    onDragLeave: handleBookDropDragLeave,
+    onDrop: handleBookBookDrop,
+  };
 
   return (
     <>
       <div
-        className="book-list-item-container"
+        className={
+          "book-list-item-container" +
+          (isDropTarget ? " book-drop-target" : "")
+        }
         draggable
         onDragStart={handleBookDragStart}
         onContextMenu={(event) => {
           handleMoreAction(event);
         }}
+        {...dropHandlers}
       >
         {!isCoverExist ||
         (props.book.format === "PDF" &&

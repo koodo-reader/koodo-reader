@@ -224,10 +224,30 @@ func bookMime(format string) string {
 		return "application/x-cbz"
 	case "cbr":
 		return "application/x-cbr"
+	case "docx":
+		return "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+	case "doc":
+		return "application/msword"
+	case "ppt":
+		return "application/vnd.ms-powerpoint"
+	case "pptx":
+		return "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+	case "xps":
+		return "application/vnd.ms-xpsdocument"
+	case "oxps":
+		return "application/oxps"
+	case "djvu", "djv":
+		return "image/vnd.djvu"
+	case "ofd":
+		return "application/ofd"
 	case "txt":
 		return "text/plain"
 	case "fb2":
 		return "application/x-fictionbook+xml"
+	case "chm":
+		return "application/vnd.ms-htmlhelp"
+	case "rtf":
+		return "application/rtf"
 	default:
 		return "application/octet-stream"
 	}

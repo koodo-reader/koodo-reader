@@ -3,6 +3,7 @@ import BookModel from "../../../models/Book";
 export interface DropdownListProps {
   t: (title: string) => string;
   isAuthed: boolean;
+  group?: string;
   currentBook: BookModel;
   renderBookFunc: () => void;
   handleHideBackground: (isHideBackground: boolean) => void;
@@ -19,8 +20,6 @@ export interface DropdownListState {
   currentCodeHighlighterValue: string;
   chineseConversionValue: string;
   currentAnimationValue: string;
-  fullTranslationModeValue: string;
-  fullTranslationTargetValue: string;
   currentTextOrientationValue: string;
   currentSelectActionValue: string;
   currentTxtParserValue: string;

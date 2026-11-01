@@ -19,6 +19,9 @@ export interface BookCardProps extends RouteComponentProps<any> {
   handleSelectedBooks: (selectedBooks: string[]) => void;
   handleDeleteDialog: (isShow: boolean) => void;
   handleRefreshBookCover: (key: string) => void;
+  handleFetchBooks: () => void;
+  handleCollectionDialogBooks: (books: string[]) => void;
+  handleAddCollectionDialog: (isOpen: boolean) => void;
 }
 export interface BookCardState {
   isFavorite: boolean;

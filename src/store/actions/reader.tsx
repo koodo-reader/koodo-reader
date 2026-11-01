@@ -29,8 +29,17 @@ export function handleHighlight(highlight: HighlightValue) {
 export function handleConvertDialog(isConvertOpen: boolean) {
   return { type: "HANDLE_CONVERT_DIALOG", payload: isConvertOpen };
 }
+export function handleScalePageDialog(isScaleOpen: boolean) {
+  return { type: "HANDLE_SCALE_PAGE_DIALOG", payload: isScaleOpen };
+}
 export function handlePdfCropDialog(isPdfCropOpen: boolean) {
   return { type: "HANDLE_PDF_CROP_DIALOG", payload: isPdfCropOpen };
+}
+export function handleStudyLangDialog(isStudyLangOpen: boolean) {
+  return { type: "HANDLE_STUDY_LANG_DIALOG", payload: isStudyLangOpen };
+}
+export function handleAssistReadDialog(isAssistReadOpen: boolean) {
+  return { type: "HANDLE_ASSIST_READ_DIALOG", payload: isAssistReadOpen };
 }
 export function handleSpeechDialog(isSpeechOpen: boolean) {
   return { type: "HANDLE_SPEECH_DIALOG", payload: isSpeechOpen };
@@ -71,6 +80,9 @@ export function handleReaderMode(readerMode: string) {
 export function handleScale(scale: string) {
   return { type: "HANDLE_SCALE", payload: scale };
 }
+export function handleFitPage(isFitPage: boolean) {
+  return { type: "HANDLE_FIT_PAGE", payload: isFitPage };
+}
 export function handleMargin(margin: string) {
   return { type: "HANDLE_MARGIN", payload: margin };
 }
@@ -109,6 +121,9 @@ export function handleReadingRuler(isReadingRuler: boolean) {
 }
 export function handleSpeedReading(isSpeedReading: boolean) {
   return { type: "HANDLE_SPEED_READING", payload: isSpeedReading };
+}
+export function handleAutoReading(isAutoReading: boolean) {
+  return { type: "HANDLE_AUTO_READING", payload: isAutoReading };
 }
 export function handleMergeWord(isMergeWord: boolean) {
   return { type: "HANDLE_MERGE_WORD", payload: isMergeWord };

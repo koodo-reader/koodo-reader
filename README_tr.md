@@ -43,7 +43,12 @@
   - Düz metin (**.txt**)
   - FictionBook (**.fb2**)
   - Çizgi roman arşivi (**.cbr**, **.cbz**, **.cbt**, **.cb7**)
-  - Zengin metin (**.md**, **.docx**)
+  - PowerPoint sunumu (**.pptx**, **.ppt**)
+  - XPS belgesi (**.xps**, **.oxps**)
+  - DjVu belgesi (**.djvu**, **.djv**)
+  - OFD belgesi (**.ofd**)
+  - CAJ belgesi (**.caj**, içe aktarılırken PDF'e dönüştürülür)
+  - Zengin metin (**.md**, **.docx**, **.doc**, **.rtf**)
   - HyperText (**.html**, **.xml**, **.xhtml**, **.mhtml**, **.htm**)
 - Platform desteği: **Windows**, **macOS**, **Linux**, **Android**, **iOS** ve **Web**
 - Verilerinizi **OneDrive**, **Google Drive**, **Dropbox**, **iCloud**, **MEGA**, **pCloud**, **Yandex Disk**, **Box**, **FTP**, **SFTP**, **WebDAV**, **SMB** veya **Nesne Depolama** ile eşitleyin ve yedekleyin

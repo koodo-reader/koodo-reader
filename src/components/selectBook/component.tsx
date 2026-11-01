@@ -6,12 +6,14 @@ import { BookListProps, BookListState } from "./interface";
 import { withRouter } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
+  exportBookPackage,
   exportBooks,
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
 } from "../../utils/file/export";
 import BookUtil from "../../utils/file/bookUtil";
+import { filterNonCollectionKeys } from "../../utils/reader/bookDrag";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
 import { preCacheAllBooks } from "../../utils/common";
@@ -128,6 +130,22 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
             <span
               className="book-manage-title"
               onClick={() => {
+                let bookKeys = filterNonCollectionKeys(
+                  this.props.selectedBooks
+                );
+                if (bookKeys.length === 0) {
+                  toast(this.props.t("Nothing to add"));
+                  return;
+                }
+                this.props.handleCollectionDialogBooks(bookKeys);
+                this.props.handleAddCollectionDialog(true);
+              }}
+            >
+              <Trans>Add to collection</Trans>
+            </span>
+            <span
+              className="book-manage-title"
+              onClick={() => {
                 this.props.handleDeleteDialog(true);
               }}
             >
@@ -158,6 +176,32 @@ class SelectBook extends React.Component<BookListProps, BookListState> {
                   event?.stopPropagation();
                 }}
               >
+                <span
+                  className="book-manage-title select-book-action"
+                  onClick={async () => {
+                    let books = await DatabaseService.getRecordsByKeys(
+                      this.props.selectedBooks,
+                      "books"
+                    );
+                    if (books.length > 0) {
+                      const result = await exportBookPackage(books);
+                      if (result === "success") {
+                        toast.success(this.props.t("Export successful"), {
+                          id: "exporting",
+                        });
+                      } else if (result === "failed") {
+                        toast.dismiss("exporting");
+                        toast.error(this.props.t("Failed to export"), {
+                          id: "exporting",
+                        });
+                      }
+                    } else {
+                      toast(this.props.t("Nothing to export"));
+                    }
+                  }}
+                >
+                  <Trans>Export book package</Trans>
+                </span>
                 <span
                   className="book-manage-title select-book-action"
                   onClick={async () => {

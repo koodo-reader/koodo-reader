@@ -7,6 +7,7 @@ import {
   ConfigService,
   KookitConfig,
   KOReaderUtil,
+  CollectionUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import UpdateInfo from "../../components/dialogs/updateDialog";
 import { generateSnapshot } from "../../utils/file/backup";
@@ -47,6 +48,8 @@ import { getTempToken, updateUserConfig } from "../../utils/request/user";
 import i18n from "../../i18n";
 import { getNotification } from "../../utils/request/common";
 import TokenService from "../../utils/storage/tokenService";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 
 class Header extends React.Component<HeaderProps, HeaderState> {
@@ -317,6 +320,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     ) {
       let lastReadBookKey = ConfigService.getAllListConfig("recentBooks")[0];
       if (lastReadBookKey) {
+        let collectionKey = collectionUtil.isCollection(lastReadBookKey)
+          ? lastReadBookKey
+          : collectionUtil.getActiveCollectionByBook(lastReadBookKey)?.key;
+        if (collectionKey) {
+          let collection = collectionUtil.getCollection(collectionKey);
+          if (collection) {
+            this.props.handleReadingBook(
+              collectionUtil.getCollectionAsBook(collection)
+            );
+            this.props.handleCurrentCollectionKey(collectionKey);
+            this.props.handleCollectionDetailDialog(true);
+            return;
+          }
+        }
         let fullBook = await DatabaseService.getRecord(
           lastReadBookKey,
           "books"

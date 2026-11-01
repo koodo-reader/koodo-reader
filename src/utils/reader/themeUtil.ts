@@ -2,6 +2,8 @@
 const BG_SOLID_SELECTORS = [
   ".delete-digest-button",
   ".add-dialog-confirm",
+  ".add-collection-dialog-confirm",
+  ".collection-dialog-confirm",
   ".backup-page-backup-selector",
   ".delete-dialog-confirm",
   ".book-item-config",

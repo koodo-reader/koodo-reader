@@ -9,6 +9,7 @@ const mapStateToProps = (state: stateType) => {
     renderBookFunc: state.book.renderBookFunc,
     scale: state.reader.scale,
     margin: state.reader.margin,
+    htmlBook: state.reader.htmlBook,
   };
 };
 const actionCreator = {

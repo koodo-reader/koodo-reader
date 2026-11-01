@@ -127,7 +127,7 @@ class PopupTrans extends React.Component<PopupTransProps, PopupTransState> {
         .then((res: string) => {
           if (res.startsWith("https://")) {
             openExternalUrl(res, true, "trans");
-            let docs = getIframeDoc(this.props.currentBook.format);
+            let docs = getIframeDoc(this.props.currentBook);
             for (let i = 0; i < docs.length; i++) {
               let doc = docs[i];
               if (!doc) continue;

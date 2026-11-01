@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import BookUtil from "../../../utils/file/bookUtil";
 import CoverUtil from "../../../utils/file/coverUtil";
 import {
+  exportBookPackage,
   exportDictionaryHistory,
   exportHighlights,
   exportNotes,
@@ -20,6 +21,7 @@ import {
   getPdfPassword,
   getStorageLocation,
   getTextRules,
+  isFixedLayoutBook,
 } from "../../../utils/common";
 import { BookHelper } from "../../../assets/lib/kookit.min";
 import {
@@ -93,7 +95,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
       this.props.handleActionDialog(false);
     };
 
-    const noteOffset = isWords ? 3 : isNotes ? 1 : 2;
+    const noteOffset = isWords ? 4 : isNotes ? 2 : 3;
     const itemHeight = 33;
     // 主菜单渲染时会被 clampMenuPosition 校正到视口内（靠近底部时会整体上移），
     // 格式子菜单必须以主菜单“实际渲染后的 top”为基准水平对齐，而不是用未校正的 top，
@@ -102,7 +104,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
       this.props.left + (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
       this.props.top + 103,
       CONTEXT_MENU_WIDTH,
-      estimateMenuHeight(isElectron ? 9 : 8)
+      estimateMenuHeight(isElectron ? 11 : 10)
     );
 
     return (
@@ -177,7 +179,7 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
                       (this.props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
                     this.props.top + 103,
                     CONTEXT_MENU_WIDTH,
-                    estimateMenuHeight(isElectron ? 9 : 8)
+                    estimateMenuHeight(isElectron ? 11 : 10)
                   );
                   return { position: "fixed", left: pos.left, top: pos.top };
                 })()
@@ -185,6 +187,31 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
           }
         >
           <div className="action-dialog-actions-container">
+            <div
+              className="action-dialog-edit"
+              style={{ paddingLeft: "0px" }}
+              onClick={async () => {
+                this.props.handleMoreAction(false);
+                this.props.handleActionDialog(false);
+                const result = await exportBookPackage([
+                  this.props.currentBook,
+                ]);
+                if (result === "success") {
+                  toast.success(this.props.t("Export successful"), {
+                    id: "exporting",
+                  });
+                } else if (result === "failed") {
+                  toast.dismiss("exporting");
+                  toast.error(this.props.t("Failed to export"), {
+                    id: "exporting",
+                  });
+                }
+              }}
+            >
+              <p className="action-name">
+                <Trans>Export book package</Trans>
+              </p>
+            </div>
             <div
               className="action-dialog-edit"
               style={{ paddingLeft: "0px" }}
@@ -301,7 +328,10 @@ class MoreAction extends React.Component<MoreActionProps, MoreActionState> {
               className="action-dialog-edit"
               style={{ paddingLeft: "0px" }}
               onClick={() => {
-                if (this.props.currentBook.format === "PDF") {
+                if (
+                  this.props.currentBook.format === "PDF" ||
+                  isFixedLayoutBook(this.props.currentBook)
+                ) {
                   toast(this.props.t("Not supported yet"));
                   return;
                 }

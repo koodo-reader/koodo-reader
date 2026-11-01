@@ -325,7 +325,7 @@ class PopupBox extends React.Component<PopupBoxProps, PopupBoxStates> {
     this.props.handleOpenMenu(false);
     this.props.handleNoteKey("");
     this.props.handleMenuMode("");
-    let docs = getIframeDoc(this.props.currentBook.format);
+    let docs = getIframeDoc(this.props.currentBook);
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;

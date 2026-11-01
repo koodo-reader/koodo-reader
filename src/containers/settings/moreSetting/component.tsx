@@ -17,6 +17,7 @@ import { vexPasswordInputAsync, vexSelectAsync } from "../../../utils/common";
 import i18n from "../../../i18n";
 import { isElectron } from "react-device-detect";
 import TokenService from "../../../utils/storage/tokenService";
+import SwitchRow from "../../../components/readerSettings/switchRow";
 
 class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
   constructor(props: MoreSettingProps) {
@@ -460,31 +461,12 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
     return (
       <>
         {this.renderPinKeypad()}
-        <div className="setting-dialog-new-title" key="protection-toggle">
-          <span style={{ width: "calc(100% - 100px)" }}>
-            <Trans>Enable software protection</Trans>
-          </span>
-          <span
-            className="single-control-switch"
-            onClick={this.handleToggleProtection}
-            style={isEnabled ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                isEnabled
-                  ? {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            />
-          </span>
-        </div>
+        <SwitchRow
+          variant="setting"
+          title={<Trans>Enable software protection</Trans>}
+          isEnabled={isEnabled}
+          onClick={this.handleToggleProtection}
+        />
         <p className="setting-option-subtitle">
           <Trans>
             When enabled, the app will require authentication on every launch
@@ -523,31 +505,12 @@ class MoreSetting extends React.Component<MoreSettingProps, MoreSettingState> {
         )}
         {isElectron && (
           <>
-            <div className="setting-dialog-new-title" key="proxy-toggle">
-              <span style={{ width: "calc(100% - 100px)" }}>
-                <Trans>Network proxy</Trans>
-              </span>
-              <span
-                className="single-control-switch"
-                onClick={this.handleToggleProxy}
-                style={proxyEnabled ? {} : { opacity: 0.6 }}
-              >
-                <span
-                  className="single-control-button"
-                  style={
-                    proxyEnabled
-                      ? {
-                          transform: "translateX(20px)",
-                          transition: "transform 0.5s ease",
-                        }
-                      : {
-                          transform: "translateX(0px)",
-                          transition: "transform 0.5s ease",
-                        }
-                  }
-                />
-              </span>
-            </div>
+            <SwitchRow
+              variant="setting"
+              title={<Trans>Network proxy</Trans>}
+              isEnabled={proxyEnabled}
+              onClick={this.handleToggleProxy}
+            />
             <p className="setting-option-subtitle">
               <Trans>Route all network requests through a proxy</Trans>
             </p>

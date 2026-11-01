@@ -12,6 +12,7 @@ import {
 import toast from "react-hot-toast";
 import copy from "copy-text-to-clipboard";
 import { getBookMetadata } from "../../../utils/request/reader";
+import { formatDateToDay } from "../../../utils/common";
 
 class MetadataDialog extends React.Component<
   MetadataDialogProps,
@@ -101,6 +102,10 @@ class MetadataDialog extends React.Component<
       publisher: item.publisher || "",
       description: item.description || "",
       cover: item.cover || "",
+      ...(item.pub_date ? { published: item.pub_date } : {}),
+      ...(item.language ? { language: item.language } : {}),
+      ...(item.categories ? { subject: item.categories } : {}),
+      ...(item.isbn ? { isbn: item.isbn } : {}),
     };
     this.props.handleApplyMetadata(metadata);
     this.props.handleMetadataDialog(false);
@@ -255,7 +260,7 @@ class MetadataDialog extends React.Component<
                             <Trans>Publish date</Trans>:
                           </span>
                           <span className="metadata-book-detail-value">
-                            {item.pub_date}
+                            {formatDateToDay(item.pub_date)}
                           </span>
                         </div>
                       )}

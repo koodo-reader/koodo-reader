@@ -1,0 +1,28 @@
+.collection-cover-wrapper {
+  position: relative;
+}
+.collection-count-badge {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  min-width: 14px;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 10px;
+  line-height: 14px;
+  text-align: center;
+  pointer-events: none;
+}
+.collection-title-icon {
+  margin-right: 4px;
+  font-size: 12px;
+  opacity: 0.75;
+}
+.collection-drop-target,
+.book-drop-target {
+  outline: 2px solid #118cd9;
+  outline-offset: -2px;
+  border-radius: 2px;
+}

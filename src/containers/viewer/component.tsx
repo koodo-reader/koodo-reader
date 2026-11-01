@@ -1,4 +1,5 @@
 import React from "react";
+import { flushSync } from "react-dom";
 import { ViewerProps, ViewerState } from "./interface";
 import { withRouter } from "react-router-dom";
 import BookUtil from "../../utils/file/bookUtil";
@@ -33,13 +34,18 @@ import {
   getTextRules,
   getZipBuffer,
   getZipEntries,
+  isFixedLayoutComic,
+  isPaginatedBook,
   isReadingAidMode,
   isReadingRawPDF,
   saveOcrCache,
   throttle,
 } from "../../utils/common";
 import _ from "underscore";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  CollectionUtil,
+} from "../../assets/lib/kookit-extra-browser.min";
 import * as Kookit from "../../assets/lib/kookit.min";
 import PopupRefer from "../../components/popups/popupRefer";
 import DatabaseService from "../../utils/storage/databaseService";
@@ -47,6 +53,12 @@ import { getOcrResult, getOcrResultV2 } from "../../utils/request/reader";
 import { BookHelper } from "../../assets/lib/kookit.min";
 import { parseWithSystemOCR } from "../../utils/request/common";
 import { isElectron } from "react-device-detect";
+import axios from "axios";
+import { getBuiltinOcr } from "../../utils/plugins/rendererRegistry";
+import { resolveStoredPlugin } from "../../utils/plugins/records";
+import type { PluginConfig } from "../../utils/plugins/types";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 
@@ -99,7 +111,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.scale,
         parseInt(this.props.margin),
         this.props.isNavLocked,
-        this.props.isSettingLocked || this.props.isDockedRight
+        this.props.isSettingLocked || this.props.isDockedRight,
+        this.props.isFitPage
       )
     );
     // 刷新页面后，若 popupBox 处于固定右侧状态，自动恢复显示 popupAssist
@@ -109,15 +122,18 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
     this.props.handleRenderBookFunc(this.handleRenderBook);
     this.resizeHandler = throttle(() => {
-      this.setState(
-        getPageWidth(
-          this.props.readerMode,
-          this.props.scale,
-          parseInt(this.props.margin),
-          this.props.isNavLocked,
-          this.props.isSettingLocked || this.props.isDockedRight
-        )
-      );
+      flushSync(() => {
+        this.setState(
+          getPageWidth(
+            this.props.readerMode,
+            this.props.scale,
+            parseInt(this.props.margin),
+            this.props.isNavLocked,
+            this.props.isSettingLocked || this.props.isDockedRight,
+            this.props.isFitPage
+          )
+        );
+      });
       if (lock) {
         this._pendingRerender = true;
       } else {
@@ -139,6 +155,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       nextProps.readerMode !== this.props.readerMode ||
       nextProps.isNavLocked !== this.props.isNavLocked ||
       nextProps.isSettingLocked !== this.props.isSettingLocked ||
+      nextProps.isFitPage !== this.props.isFitPage ||
       nextProps.isDockedRight !== this.props.isDockedRight
     ) {
       this.setState(
@@ -147,7 +164,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           nextProps.scale,
           parseInt(nextProps.margin),
           nextProps.isNavLocked,
-          nextProps.isSettingLocked || nextProps.isDockedRight
+          nextProps.isSettingLocked || nextProps.isDockedRight,
+          nextProps.isFitPage
         )
       );
     }
@@ -241,10 +259,16 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
     this.props.handleHtmlBook(null);
     if (this.state.rendition) {
+      // 停止旧渲染实例的自动滚动定时器，避免重渲染后旧循环继续占用滚动容器
+      this.state.rendition.autoScroll?.(0, "no");
+      this.state.rendition.autoScrollPDF?.("no");
       this.state.rendition.removeContent();
     }
     let result;
     let isCacheExsit = await BookUtil.isBookExist("cache-" + key, "zip", path);
+    if (isFixedLayoutComic(this.props.currentBook)) {
+      isCacheExsit = false;
+    }
     if (
       isElectron &&
       (this.props.currentBook.format === "CBZ" ||
@@ -280,10 +304,64 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
       this.props.currentBook.description.indexOf("scanned") > -1
         ? "scannedOcrLang"
         : "textOcrLang";
+    const isScannedBook =
+      this.props.currentBook.description.indexOf("scanned") > -1;
+    const rawOcrEngine = getDefaultOcrEngine(this.props.currentBook);
+    let ocrEngine = rawOcrEngine;
+    let ocrLang = getDefaultOcrLang(rawOcrEngine, this.props.currentBook);
+    let externalWorker: {
+      recognize: (input: string) => Promise<unknown>;
+    } = {
+      recognize:
+        rawOcrEngine === "system-ocr"
+          ? parseWithSystemOCR
+          : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
+            ? getOcrResultV2
+            : getOcrResult,
+    };
+
+    const builtinOcr = getBuiltinOcr(rawOcrEngine);
+    if (builtinOcr) {
+      const record = await DatabaseService.getRecord(rawOcrEngine, "plugins");
+      const plugin = record ? await resolveStoredPlugin(record) : undefined;
+      if (plugin) {
+        const pluginConfig = {
+          ...(plugin.config as PluginConfig),
+        } as PluginConfig;
+        if (ocrLang) {
+          pluginConfig.language = ocrLang;
+        }
+        let ocrQueue: Promise<unknown> = Promise.resolve();
+        externalWorker = {
+          recognize: (imageBase64: string) => {
+            const task = ocrQueue.then(() =>
+              builtinOcr(imageBase64, axios, pluginConfig)
+            );
+            ocrQueue = task.catch(() => undefined);
+            return task;
+          },
+        };
+        ocrEngine = "plugin-ocr";
+      } else {
+        ocrEngine = isScannedBook ? "paddle" : "system-ocr";
+        ocrLang = ocrEngine === "paddle" ? "standard_v5_mobile" : "auto";
+        externalWorker = {
+          recognize:
+            ocrEngine === "system-ocr"
+              ? parseWithSystemOCR
+              : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
+                ? getOcrResultV2
+                : getOcrResult,
+        };
+      }
+    }
     let rendition = BookHelper.getRendition(
       result,
       {
         format: isCacheExsit ? "CACHE" : format,
+        isFixedLayout: isFixedLayoutComic(this.props.currentBook)
+          ? "yes"
+          : "no",
         readerMode: this.props.readerMode,
         charset: this.props.currentBook.charset,
         animation: ConfigService.getReaderConfig("animation") || "none",
@@ -291,6 +369,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
         textRules: getTextRules(this.props.currentBook.key),
         codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
+        revertDirection:
+          ConfigService.getReaderConfig("revertDirection") || "no",
         parserRegex: getParserRegex(
           this.props.currentBook.format,
           this.props.currentBook.key
@@ -338,19 +418,9 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         ).includes(this.props.currentBook.key)
           ? "yes"
           : "no",
-        ocrLang: getDefaultOcrLang(
-          getDefaultOcrEngine(this.props.currentBook),
-          this.props.currentBook
-        ),
-        externalWorker: {
-          recognize:
-            getDefaultOcrEngine(this.props.currentBook) === "system-ocr"
-              ? parseWithSystemOCR
-              : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
-                ? getOcrResultV2
-                : getOcrResult,
-        },
-        ocrEngine: getDefaultOcrEngine(this.props.currentBook),
+        ocrLang,
+        externalWorker,
+        ocrEngine,
         serverRegion:
           getServerRegion() === "china" && this.props.isAuthed
             ? "china"
@@ -396,8 +466,8 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
           ConfigService.getReaderConfig("annotationEraserWidth") ||
             ERASER_WIDTH_DEFAULT + ""
         ),
-        quickErase: ConfigService.getReaderConfig("annotationQuickErase") ||
-          "no",
+        quickErase:
+          ConfigService.getReaderConfig("annotationQuickErase") || "no",
         textSize: parseFloat(
           ConfigService.getReaderConfig("annotationTextSize") || "24"
         ),
@@ -435,19 +505,36 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     }
 
     await this.handleRest(rendition);
+    if (
+      ConfigService.getReaderConfig("isAutoReading") === "yes" &&
+      this.props.readerMode === "scroll"
+    ) {
+      // 自动阅读开启：每次重渲染后以保存的速率重新启动自动滚动
+      const rate = parseFloat(
+        ConfigService.getReaderConfig("autoScrollRate") || "0.5"
+      );
+      rendition.autoScroll?.(rate, "yes");
+      rendition.autoScrollPDF?.("yes");
+    }
     this.props.handleReadingState(true);
 
-    ConfigService.setListConfig(this.props.currentBook.key, "recentBooks");
+    ConfigService.setListConfig(
+      collectionUtil.getRecentBookKey(this.props.currentBook.key),
+      "recentBooks"
+    );
     document.title = name + " - Koodo Reader";
   };
 
   handleRest = async (rendition: any) => {
     htmlMouseEvent(
       rendition,
-      this.props.currentBook.key,
+      this.props.currentBook,
       this.props.readerMode,
-      this.props.currentBook.format,
-      this.props.handleScale,
+      (scale: string) => {
+        flushSync(() => {
+          this.props.handleScale(scale);
+        });
+      },
       this.props.renderBookFunc
     );
     let chapters = rendition.getChapter();
@@ -604,10 +691,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
     );
   };
   handleBindGesture = () => {
-    let docs = getIframeDoc(
-      this.props.currentBook.format,
-      this.props.currentBook.key
-    );
+    let docs = getIframeDoc(this.props.currentBook);
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
       if (!doc) continue;
@@ -618,7 +702,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.props.handleLeaveReader("bottom");
       });
       doc.addEventListener("pointerup", (event) => {
-        if (isReadingRawPDF(this.props.currentBook)) {
+        if (isPaginatedBook(this.props.currentBook)) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
           let id = targetIframe?.getAttribute("id") || "";
@@ -643,7 +727,7 @@ class Viewer extends React.Component<ViewerProps, ViewerState> {
         this.setState({ rect });
       });
       doc.addEventListener("contextmenu", (event) => {
-        if (isReadingRawPDF(this.props.currentBook)) {
+        if (isPaginatedBook(this.props.currentBook)) {
           let ownerDoc = (event.target as HTMLElement).ownerDocument;
           let targetIframe = ownerDoc?.defaultView?.frameElement;
           let id = targetIframe?.getAttribute("id") || "";

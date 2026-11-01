@@ -13,6 +13,7 @@ const mapStateToProps = (state: stateType) => {
     isConvertOpen: state.reader.isConvertOpen,
     isAuthed: state.manager.isAuthed,
     currentBook: state.book.currentBook,
+    plugins: state.manager.plugins || [],
     isSettingLocked: state.reader.isSettingLocked,
     isDockedRight: state.reader.isDockedRight,
   };

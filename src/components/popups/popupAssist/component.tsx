@@ -91,21 +91,22 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
     }
     this.updateInterval = setInterval(() => {
       if (this.answerTextAccumulator) {
-        this.setState({ answer: this.answerTextAccumulator });
-        if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
-          this.scrollToBottom();
-        }
+        this.setState({ answer: this.answerTextAccumulator }, () => {
+          this.scrollToBottomIfNeeded();
+        });
       }
     }, 150);
   }
 
-  stopUpdateInterval(finalAnswer?: string) {
+  stopUpdateInterval(finalAnswer?: string, callback?: () => void) {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
     }
     if (finalAnswer !== undefined) {
-      this.setState({ answer: finalAnswer });
+      this.setState({ answer: finalAnswer }, callback);
+    } else {
+      callback?.();
     }
   }
   loadChatHistory() {
@@ -232,6 +233,11 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
       this.chatBoxRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
     }
   };
+  scrollToBottomIfNeeded = () => {
+    if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
+      this.scrollToBottom();
+    }
+  };
   async handleAnswer() {
     let originalText =
       this.state.mode === "ask"
@@ -319,28 +325,31 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
         const finalAnswer = this.answerTextAccumulator;
         this.answerTextAccumulator = "";
         if (this.state.mode === "ask") {
-          this.setState({
-            askHistory: [
-              ...this.state.askHistory,
-              { role: "assistant", content: finalAnswer },
-            ],
-            answer: "",
-            question: "",
-            isWaiting: false,
-          });
+          this.setState(
+            {
+              askHistory: [
+                ...this.state.askHistory,
+                { role: "assistant", content: finalAnswer },
+              ],
+              answer: "",
+              question: "",
+              isWaiting: false,
+            },
+            this.scrollToBottomIfNeeded
+          );
         } else {
-          this.setState({
-            chatHistory: [
-              ...this.state.chatHistory,
-              { role: "assistant", content: finalAnswer },
-            ],
-            answer: "",
-            question: "",
-            isWaiting: false,
-          });
-        }
-        if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
-          this.scrollToBottom();
+          this.setState(
+            {
+              chatHistory: [
+                ...this.state.chatHistory,
+                { role: "assistant", content: finalAnswer },
+              ],
+              answer: "",
+              question: "",
+              isWaiting: false,
+            },
+            this.scrollToBottomIfNeeded
+          );
         }
       } else if (
         ConfigService.getReaderConfig("aiService") &&
@@ -372,40 +381,47 @@ class PopupAssist extends React.Component<PopupAssistProps, PopupAssistState> {
             }
           }
         );
-        this.stopUpdateInterval(this.answerTextAccumulator);
+        const isAnswerDone = !!(res.data && res.done);
+        this.stopUpdateInterval(
+          this.answerTextAccumulator,
+          isAnswerDone ? undefined : this.scrollToBottomIfNeeded
+        );
         const finalAnswer = this.answerTextAccumulator;
         this.answerTextAccumulator = "";
-        if (res.data && res.done) {
+        if (isAnswerDone) {
           if (this.state.mode === "ask") {
-            this.setState({
-              askHistory: [
-                ...this.state.askHistory,
-                {
-                  role: "assistant",
-                  content: finalAnswer,
-                },
-              ],
-              answer: "",
-              question: "",
-              isWaiting: false,
-            });
+            this.setState(
+              {
+                askHistory: [
+                  ...this.state.askHistory,
+                  {
+                    role: "assistant",
+                    content: finalAnswer,
+                  },
+                ],
+                answer: "",
+                question: "",
+                isWaiting: false,
+              },
+              this.scrollToBottomIfNeeded
+            );
           } else {
-            this.setState({
-              chatHistory: [
-                ...this.state.chatHistory,
-                {
-                  role: "assistant",
-                  content: finalAnswer,
-                },
-              ],
-              answer: "",
-              question: "",
-              isWaiting: false,
-            });
+            this.setState(
+              {
+                chatHistory: [
+                  ...this.state.chatHistory,
+                  {
+                    role: "assistant",
+                    content: finalAnswer,
+                  },
+                ],
+                answer: "",
+                question: "",
+                isWaiting: false,
+              },
+              this.scrollToBottomIfNeeded
+            );
           }
-        }
-        if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
-          this.scrollToBottom();
         }
       }
     } catch (error) {

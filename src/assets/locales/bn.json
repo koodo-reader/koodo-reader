@@ -1372,5 +1372,7 @@
   "Failed to recognize title": "শিরোনাম শনাক্ত করা যায়নি",
   "Show total page number (Experimental)": "মোট পৃষ্ঠা সংখ্যা দেখান (পরীক্ষামূলক)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "Koodo Reader-এর এই সংস্করণটি অনেক পুরনো। অনুগ্রহ করে সেটিং - সম্পর্কে - আপডেটের জন্য পরীক্ষা করুন এই অপশনে গিয়ে Koodo Reader-কে সর্বশেষ সংস্করণে আপডেট করে আবার চেষ্টা করুন।",
-  "Background opacity": "পটভূমির অস্বচ্ছতা"
+  "Background opacity": "পটভূমির অস্বচ্ছতা",
+  "Enable auto reading": "স্বয়ংক্রিয় পড়া সক্ষম করুন",
+  "Auto scrolling speed": "স্বয়ংক্রিয় স্ক্রোলিং গতি"
 }

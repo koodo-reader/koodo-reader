@@ -10,7 +10,10 @@ import CoverUtil from "../../../utils/file/coverUtil";
 import { isElectron } from "react-device-detect";
 import MetadataDialog from "../metadataDialog";
 import { MetadataResult } from "../metadataDialog/interface";
-import { trimSpecialCharacters } from "../../../utils/common";
+import {
+  formatDateToDay,
+  trimSpecialCharacters,
+} from "../../../utils/common";
 import { analyzeBookTitle } from "../../../utils/request/reader";
 declare var window: any;
 
@@ -18,6 +21,14 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
   private nameRef = React.createRef<HTMLInputElement>();
   private authorRef = React.createRef<HTMLInputElement>();
   private publisherRef = React.createRef<HTMLInputElement>();
+  private publishedRef = React.createRef<HTMLInputElement>();
+  private modifiedRef = React.createRef<HTMLInputElement>();
+  private identifierRef = React.createRef<HTMLInputElement>();
+  private languageRef = React.createRef<HTMLInputElement>();
+  private subjectRef = React.createRef<HTMLInputElement>();
+  private rightsRef = React.createRef<HTMLInputElement>();
+  private isbnRef = React.createRef<HTMLInputElement>();
+  private layoutRef = React.createRef<HTMLInputElement>();
   private descriptionRef = React.createRef<HTMLTextAreaElement>();
   private coverInputRef = React.createRef<HTMLInputElement>();
 
@@ -48,6 +59,35 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     if (this.publisherRef.current) {
       this.publisherRef.current.value = this.props.currentBook.publisher || "";
     }
+    if (this.publishedRef.current) {
+      this.publishedRef.current.value = formatDateToDay(
+        this.props.currentBook.published
+      );
+    }
+    if (this.modifiedRef.current) {
+      this.modifiedRef.current.value = formatDateToDay(
+        this.props.currentBook.modified
+      );
+    }
+    if (this.identifierRef.current) {
+      this.identifierRef.current.value =
+        this.props.currentBook.identifier || "";
+    }
+    if (this.languageRef.current) {
+      this.languageRef.current.value = this.props.currentBook.language || "";
+    }
+    if (this.subjectRef.current) {
+      this.subjectRef.current.value = this.props.currentBook.subject || "";
+    }
+    if (this.rightsRef.current) {
+      this.rightsRef.current.value = this.props.currentBook.rights || "";
+    }
+    if (this.isbnRef.current) {
+      this.isbnRef.current.value = this.props.currentBook.isbn || "";
+    }
+    if (this.layoutRef.current) {
+      this.layoutRef.current.value = this.props.currentBook.layout || "";
+    }
     if (this.descriptionRef.current) {
       this.descriptionRef.current.value =
         this.props.currentBook.description || "";
@@ -60,6 +100,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
   }
 
   handleApplyMetadata = (metadata: MetadataResult) => {
+    const published = metadata.published || metadata.publishedDate;
     if (metadata.name !== undefined && this.nameRef.current) {
       this.nameRef.current.value = metadata.name;
     }
@@ -69,6 +110,30 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     if (metadata.publisher !== undefined && this.publisherRef.current) {
       this.publisherRef.current.value = metadata.publisher;
     }
+    if (published !== undefined && this.publishedRef.current) {
+      this.publishedRef.current.value = formatDateToDay(published);
+    }
+    if (metadata.modified !== undefined && this.modifiedRef.current) {
+      this.modifiedRef.current.value = formatDateToDay(metadata.modified);
+    }
+    if (metadata.identifier !== undefined && this.identifierRef.current) {
+      this.identifierRef.current.value = metadata.identifier;
+    }
+    if (metadata.language !== undefined && this.languageRef.current) {
+      this.languageRef.current.value = metadata.language;
+    }
+    if (metadata.subject !== undefined && this.subjectRef.current) {
+      this.subjectRef.current.value = metadata.subject;
+    }
+    if (metadata.rights !== undefined && this.rightsRef.current) {
+      this.rightsRef.current.value = metadata.rights;
+    }
+    if (metadata.isbn !== undefined && this.isbnRef.current) {
+      this.isbnRef.current.value = metadata.isbn;
+    }
+    if (metadata.layout !== undefined && this.layoutRef.current) {
+      this.layoutRef.current.value = metadata.layout;
+    }
     if (metadata.description !== undefined && this.descriptionRef.current) {
       this.descriptionRef.current.value = metadata.description;
     }
@@ -77,7 +142,7 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
       pendingAuthor: metadata.author || "",
       pendingPublisher: metadata.publisher || "",
       pendingDescription: metadata.description || "",
-      pendingPublishedDate: metadata.publishedDate || "",
+      pendingPublishedDate: metadata.published || metadata.publishedDate || "",
       pendingCover: metadata.cover || "",
       coverPreview: metadata.cover
         ? metadata.cover.replace(/^http:/, "https:")
@@ -144,11 +209,27 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
     const name = this.nameRef.current?.value || "";
     const author = this.authorRef.current?.value || "";
     const publisher = this.publisherRef.current?.value || "";
+    const published = this.publishedRef.current?.value || "";
+    const modified = this.modifiedRef.current?.value || "";
+    const identifier = this.identifierRef.current?.value || "";
+    const language = this.languageRef.current?.value || "";
+    const subject = this.subjectRef.current?.value || "";
+    const rights = this.rightsRef.current?.value || "";
+    const isbn = this.isbnRef.current?.value || "";
+    const layout = this.layoutRef.current?.value || "";
     const description = this.descriptionRef.current?.value || "";
 
     this.props.currentBook.name = name;
     this.props.currentBook.author = author;
     this.props.currentBook.publisher = publisher;
+    this.props.currentBook.published = published;
+    this.props.currentBook.modified = modified;
+    this.props.currentBook.identifier = identifier;
+    this.props.currentBook.language = language;
+    this.props.currentBook.subject = subject;
+    this.props.currentBook.rights = rights;
+    this.props.currentBook.isbn = isbn;
+    this.props.currentBook.layout = layout;
     this.props.currentBook.description = description;
     if (this.state.bookPath) {
       this.props.currentBook.path = this.state.bookPath;
@@ -305,6 +386,70 @@ class EditDialog extends React.Component<EditDialogProps, EditDialogState> {
               <Trans>Publisher</Trans>
             </span>
             <input className="edit-dialog-input" ref={this.publisherRef} />
+          </div>
+
+          {/* Published date */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Published date</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.publishedRef} />
+          </div>
+
+          {/* Modified date */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Modified date</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.modifiedRef} />
+          </div>
+
+          {/* Identifier */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Identifier</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.identifierRef} />
+          </div>
+
+          {/* Language */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Language</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.languageRef} />
+          </div>
+
+          {/* Subject */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Subject</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.subjectRef} />
+          </div>
+
+          {/* Rights */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Rights</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.rightsRef} />
+          </div>
+
+          {/* ISBN */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>ISBN</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.isbnRef} />
+          </div>
+
+          {/* Layout */}
+          <div className="edit-dialog-field">
+            <span className="edit-dialog-label">
+              <Trans>Layout</Trans>
+            </span>
+            <input className="edit-dialog-input" ref={this.layoutRef} />
           </div>
 
           {/* Description */}

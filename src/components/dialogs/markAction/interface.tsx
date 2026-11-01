@@ -5,6 +5,7 @@ export interface MarkActionProps {
   top: number;
   isShowMark: boolean;
   isExceed: boolean;
+  menuItemIndex?: number;
   handleMarkAction: (isShow: boolean) => void;
   currentBook: BookModel;
   handleActionDialog: (isShow: boolean) => void;

@@ -70,6 +70,7 @@
   "Unlock": "解鎖",
   "Lock": "鎖定",
   "Reading option": "閲讀設定",
+  "Layout": "排版",
   "Progress": "進程",
   "Exit": "退出",
   "Language": "語言",
@@ -346,6 +347,7 @@
   "Export all highlights": "導出全部高亮",
   "Export all": "全部導出",
   "Export books": "導出書籍",
+  "Export book package": "導出書籍包",
   "Export notes": "導出筆記",
   "Export highlights": "導出高亮",
   "Nothing to export": "沒有什麼可導出的",
@@ -652,6 +654,9 @@
   "Export books with original name": "以原始名稱匯出書籍",
   "Failed to import": "導入失敗",
   "Clear successful": "清除成功",
+  "Clear failed": "清除失敗",
+  "Clear TTS cache": "清理聽書快取",
+  "Cached listen-book audio is stored locally and reused across sessions. Clearing it only frees up disk space": "聽書音訊會快取到本機，並在不同工作階段間重複使用。清理快取僅釋放磁碟空間，不會影響任何資料",
   "Reset main window's position": "重設主視窗位置",
   "Copy quotes": "複製引文",
   "7-days free trial only applies to users who registered with recommended email providers. Recommended email providers are as follows": "7 天免費試用僅適用於使用推薦電郵供應商註冊的用戶。推薦的電郵供應商如下",
@@ -1372,5 +1377,7 @@
   "Failed to recognize title": "書名辨識失敗",
   "Show total page number (Experimental)": "顯示總頁數（實驗性功能）",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "此版本的 Koodo Reader 過舊。請前往設定 - 關於 - 檢查更新，將 Koodo Reader 更新至最新版本後再試。",
-  "Background opacity": "背景不透明度"
+  "Background opacity": "背景不透明度",
+  "Enable auto reading": "自動閱讀",
+  "Auto scrolling speed": "自動閱讀速度"
 }

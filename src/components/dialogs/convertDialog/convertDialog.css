@@ -3,3 +3,12 @@
   display: inline-block;
   transform: rotate(-90deg) scale(0.7);
 }
+.convert-dialog-container .scale-page-preset-row {
+  align-items: center;
+}
+.convert-dialog-row-title {
+  max-width: calc(100% - 110px);
+}
+.convert-dialog-container .setting-option-subtitle {
+  margin: 2px 0 10px;
+}

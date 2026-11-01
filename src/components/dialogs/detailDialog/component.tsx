@@ -7,6 +7,10 @@ import DOMPurify from "dompurify";
 import EmptyCover from "../../emptyCover";
 import CoverUtil from "../../../utils/file/coverUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { formatDateToDay, formatTimestamp } from "../../../utils/common";
+import copy from "copy-text-to-clipboard";
+import toast from "react-hot-toast";
+import i18n from "../../../i18n";
 class DetailDialog extends React.Component<
   DetailDialogProps,
   DetailDialogState
@@ -63,6 +67,50 @@ class DetailDialog extends React.Component<
         );
       });
     };
+    const fileSize = this.props.currentBook.size
+      ? this.props.currentBook.size / 1024 / 1024 > 1
+        ? parseFloat(this.props.currentBook.size / 1024 / 1024 + "").toFixed(
+            2
+          ) + "Mb"
+        : parseInt(this.props.currentBook.size / 1024 + "") + "Kb"
+      : "0Kb";
+    const infoFields: { label: string; value: string }[] = [
+      {
+        label: "Publisher",
+        value: this.props.currentBook.publisher || "-",
+      },
+      {
+        label: "Published date",
+        value: formatDateToDay(this.props.currentBook.published) || "-",
+      },
+      {
+        label: "Modified date",
+        value: formatDateToDay(this.props.currentBook.modified) || "-",
+      },
+      {
+        label: "Language",
+        value: this.props.currentBook.language || "-",
+      },
+      {
+        label: "Rights",
+        value: this.props.currentBook.rights || "-",
+      },
+      { label: "File size", value: fileSize },
+      {
+        label: "Added on",
+        value: formatTimestamp(parseInt(this.props.currentBook.key)),
+      },
+      {
+        label: "Format",
+        value: this.props.currentBook.format || "-",
+      },
+    ];
+    const metadataFields: { label: string; value: string }[] = [
+      { label: "Identifier", value: this.props.currentBook.identifier },
+      { label: "Subject", value: this.props.currentBook.subject },
+      { label: "ISBN", value: this.props.currentBook.isbn },
+      { label: "Layout", value: this.props.currentBook.layout },
+    ].filter((item) => item.value);
     return (
       <div className="download-desk-container">
         <div
@@ -102,68 +150,51 @@ class DetailDialog extends React.Component<
           </p>
 
           <div className="detail-sub-info">
-            <p className="detail-dialog-book-publisher">
-              <p className="detail-sub-title">
-                <Trans>Publisher</Trans>
-              </p>
-              <p className="detail-sub-content-container">
-                <p className="detail-sub-content">
-                  {this.props.currentBook.publisher}
+            {infoFields.map((item) => (
+              <div className="detail-sub-info-item" key={item.label}>
+                <p className="detail-sub-title">
+                  <Trans>{item.label}</Trans>
                 </p>
-              </p>
-            </p>
-            <p
-              className="detail-dialog-book-divider"
-              style={{ backgroundColor: this.state.textColor }}
-            ></p>
-            <p className="detail-dialog-book-size">
-              <p className="detail-sub-title">
-                <Trans>File size</Trans>
-              </p>
-              <p className="detail-sub-content-container">
-                <p className="detail-sub-content">
-                  {this.props.currentBook.size
-                    ? this.props.currentBook.size / 1024 / 1024 > 1
-                      ? parseFloat(
-                          this.props.currentBook.size / 1024 / 1024 + ""
-                        ).toFixed(2) + "Mb"
-                      : parseInt(this.props.currentBook.size / 1024 + "") + "Kb"
-                    : // eslint-disable-next-line
-                      "0" + "Kb"}
+                <p className="detail-sub-content-container">
+                  <p className="detail-sub-content">{item.value}</p>
                 </p>
-              </p>
-            </p>
-            <p
-              className="detail-dialog-book-divider"
-              style={{ backgroundColor: this.state.textColor }}
-            ></p>
-            <p className="detail-dialog-book-added">
-              <p className="detail-sub-title">
-                <Trans>Added on</Trans>
-              </p>
-              <p className="detail-sub-content-container">
-                <p className="detail-sub-content">
-                  {new Date(parseInt(this.props.currentBook.key))
-                    .toLocaleString()
-                    .replace(/:\d{1,2}$/, " ")}
-                </p>
-              </p>
-            </p>
-            <p
-              className="detail-dialog-book-divider"
-              style={{ backgroundColor: this.state.textColor }}
-            ></p>
-            <p className="detail-dialog-book-added">
-              <p className="detail-sub-title">
-                <Trans>Format</Trans>
-              </p>
-              <p className="detail-sub-content-container">
-                <p className="detail-sub-content">
-                  {this.props.currentBook.format}
-                </p>
-              </p>
-            </p>
+              </div>
+            ))}
           </div>
+          {metadataFields.length > 0 && (
+            <div className="detail-metadata-section">
+              <p className="detail-dialog-book-desc">
+                <Trans>Metadata</Trans>:
+              </p>
+              <div className="detail-metadata-grid">
+                {metadataFields.map((item) => (
+                  <div className="detail-metadata-item" key={item.label}>
+                    <div className="detail-metadata-label">
+                      <Trans>{item.label}</Trans>
+                    </div>
+                    <div className="detail-metadata-value-row">
+                      <div className="detail-metadata-value" title={item.value}>
+                        {item.value}
+                      </div>
+                      {(item.label === "Identifier" ||
+                        item.label === "ISBN") && (
+                        <button
+                          className="detail-metadata-copy-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copy(item.value);
+                            toast(i18n.t("Copying successful"));
+                          }}
+                        >
+                          <span className="icon-copy"></span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {this.state.shelfLocation.length > 0 && (
             <div>
               <p className="detail-dialog-book-desc">

@@ -9,7 +9,10 @@ export interface ReaderProps {
   isSettingLocked: boolean;
   isDockedRight: boolean;
   isConvertOpen: boolean;
+  isScaleOpen: boolean;
   isPdfCropOpen: boolean;
+  isStudyLangOpen: boolean;
+  isAssistReadOpen: boolean;
   isSpeechOpen: boolean;
   isAnnotationOpen: boolean;
   isOpenPopupOptionDialog: boolean;
@@ -18,10 +21,15 @@ export interface ReaderProps {
   isSettingOpen: boolean;
   readerMode: string;
   scale: string;
+  isFitPage: boolean;
+  handleFitPage: (isFitPage: boolean) => void;
   handleFetchNotes: () => void;
   handleReaderMode: (readerMode: string) => void;
   handleConvertDialog: (isConvertOpen: boolean) => void;
+  handleScalePageDialog: (isScaleOpen: boolean) => void;
   handlePdfCropDialog: (isPdfCropOpen: boolean) => void;
+  handleStudyLangDialog: (isStudyLangOpen: boolean) => void;
+  handleAssistReadDialog: (isAssistReadOpen: boolean) => void;
   handleSpeechDialog: (isSpeechOpen: boolean) => void;
   handleAnnotationDialog: (isAnnotationOpen: boolean) => void;
   handleMenuMode: (menuMode: string) => void;
@@ -46,8 +54,6 @@ export interface ReaderState {
   isTouch: boolean;
   isPreventTrigger: boolean;
   hoverPanel: string;
-  scale: string;
-  isShowScale: boolean;
   isNearEdge: boolean;
   totalDuration: number;
   currentDuration: number;

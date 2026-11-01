@@ -3,7 +3,9 @@ import { Trans } from "react-i18next";
 import { AddDialogProps, AddDialogState } from "./interface";
 import "./addDialog.css";
 import toast from "react-hot-toast";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
+import { ConfigService, CollectionUtil } from "../../../assets/lib/kookit-extra-browser.min";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 class AddDialog extends Component<AddDialogProps, AddDialogState> {
   constructor(props: AddDialogProps) {
@@ -13,6 +15,21 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
 
   handleCancel = () => {
     this.props.handleAddDialog(false);
+  };
+  deleteKeyFromShelf = (key: string) => {
+    ConfigService.deleteFromMapConfig(this.props.shelfTitle, key, "shelfList");
+    if (collectionUtil.isCollection(key)) {
+      let collection = collectionUtil.getCollection(key);
+      if (collection) {
+        collection.books.forEach((bookKey) => {
+          ConfigService.deleteFromMapConfig(
+            this.props.shelfTitle,
+            bookKey,
+            "shelfList"
+          );
+        });
+      }
+    }
   };
   handleComfirm = () => {
     const inputElement: HTMLInputElement = document.querySelector(
@@ -44,11 +61,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
     if (this.props.isSelectBook) {
       this.props.selectedBooks.forEach((item) => {
         if (this.state.actionType === "move") {
-          ConfigService.deleteFromMapConfig(
-            this.props.shelfTitle,
-            item,
-            "shelfList"
-          );
+          this.deleteKeyFromShelf(item);
         }
         ConfigService.setMapConfig(shelfTitle, item, "shelfList");
       });
@@ -58,11 +71,7 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
       }
     } else {
       if (this.state.actionType === "move") {
-        ConfigService.deleteFromMapConfig(
-          this.props.shelfTitle,
-          this.props.currentBook.key,
-          "shelfList"
-        );
+        this.deleteKeyFromShelf(this.props.currentBook.key);
       }
 
       ConfigService.setMapConfig(
@@ -112,54 +121,53 @@ class AddDialog extends Component<AddDialogProps, AddDialogState> {
       });
     };
     return (
-      <div
-        className="add-dialog-container"
-        style={{ height: this.props.mode === "shelf" ? "240px" : "189px" }}
-      >
+      <div className="add-dialog-container">
         <div className="add-dialog-title">
           <Trans>Add to shelf</Trans>
         </div>
-        {this.props.mode === "shelf" && (
-          <div className="add-dialog-shelf-list-container">
-            <div className="add-dialog-shelf-list-text">
-              <Trans>Action</Trans>
+        <div className="add-dialog-body">
+          {this.props.mode === "shelf" && (
+            <div className="add-dialog-field">
+              <span className="add-dialog-label">
+                <Trans>Action</Trans>
+              </span>
+              <select
+                className="add-dialog-shelf-list-box"
+                onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                  this.setState({ actionType: event.target.value });
+                }}
+              >
+                <option value="copy" className="add-dialog-shelf-list-option">
+                  {this.props.t("Copy to")}
+                </option>
+                <option value="move" className="add-dialog-shelf-list-option">
+                  {this.props.t("Move to")}
+                </option>
+              </select>
             </div>
+          )}
+          <div className="add-dialog-field">
+            <span className="add-dialog-label">
+              <Trans>Select</Trans>
+            </span>
             <select
               className="add-dialog-shelf-list-box"
               onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-                this.setState({ actionType: event.target.value });
+                this.handleChange(event.target.value);
               }}
             >
-              <option value="copy" className="add-dialog-shelf-list-option">
-                {this.props.t("Copy to")}
-              </option>
-              <option value="move" className="add-dialog-shelf-list-option">
-                {this.props.t("Move to")}
-              </option>
+              {renderShelfList()}
             </select>
           </div>
-        )}
-        <div className="add-dialog-shelf-list-container">
-          <div className="add-dialog-shelf-list-text">
-            <Trans>Select</Trans>
+          <div className="add-dialog-field">
+            <span className="add-dialog-label">
+              <Trans>New</Trans>
+            </span>
+            <input
+              className="add-dialog-new-shelf-box"
+              disabled={!this.state.isNew}
+            />
           </div>
-          <select
-            className="add-dialog-shelf-list-box"
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-              this.handleChange(event.target.value);
-            }}
-          >
-            {renderShelfList()}
-          </select>
-        </div>
-        <div className="add-dialog-shelf-list-container">
-          <div className="add-dialog-new-shelf-text">
-            <Trans>New</Trans>
-          </div>
-          <input
-            className="add-dialog-new-shelf-box"
-            disabled={!this.state.isNew}
-          />
         </div>
         <div className="add-dialog-button-container">
           <div

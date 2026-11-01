@@ -16,7 +16,7 @@ export interface ImportLocalProps extends RouteComponentProps<any> {
   handleAutoImportDialog: (isOpen: boolean) => void;
   handleImportBookFunc: (importBookFunc: (file: any) => Promise<void>) => void;
   handleReadingBook: (book: BookModel) => void;
-  t: (title: string) => string;
+  t: (title: string, options?: any) => string;
 }
 export interface ImportLocalState {
   isOpenFile: boolean;

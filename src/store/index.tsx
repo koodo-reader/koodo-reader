@@ -7,11 +7,13 @@ import { reader } from "./reducers/reader";
 import { viewArea } from "./reducers/viewArea";
 import { sidebar } from "./reducers/sidebar";
 import { backupPage } from "./reducers/backupPage";
+import { collection } from "./reducers/collection";
 import BookModel from "../models/Book";
 import NoteModel from "../models/Note";
 import BookmarkModel from "../models/Bookmark";
 import HtmlBookModel from "../models/HtmlBook";
 import PluginModel from "../models/Plugin";
+import CollectionModel from "../models/Collection";
 import { HighlightValue } from "../utils/common";
 const rootReducer = combineReducers({
   book,
@@ -21,6 +23,7 @@ const rootReducer = combineReducers({
   viewArea,
   sidebar,
   backupPage,
+  collection,
 });
 const store = createStore(
   rootReducer,
@@ -98,6 +101,7 @@ export type stateType = {
     chapters: any[];
     readerMode: string;
     scale: string;
+    isFitPage: boolean;
     margin: string;
     backgroundColor: string;
     section: any;
@@ -107,7 +111,10 @@ export type stateType = {
     isSettingLocked: boolean;
     isDockedRight: boolean;
     isConvertOpen: boolean;
+    isScaleOpen: boolean;
     isPdfCropOpen: boolean;
+    isStudyLangOpen: boolean;
+    isAssistReadOpen: boolean;
     isSpeechOpen: boolean;
     isAnnotationOpen: boolean;
     isHideFooter: boolean;
@@ -116,6 +123,7 @@ export type stateType = {
     isParagraphMode: boolean;
     isReadingRuler: boolean;
     isSpeedReading: boolean;
+    isAutoReading: boolean;
     isMergeWord: boolean;
     isShowPageBorder: boolean;
     textOrientation: string;
@@ -140,5 +148,13 @@ export type stateType = {
     isOpenMenu: boolean;
     isChangeDirection: boolean;
     isShowBookmark: boolean;
+  };
+  collection: {
+    isOpenCollectionDialog: boolean;
+    collectionDialogBooks: string[];
+    collectionDialogKey: string;
+    isOpenCollectionDetailDialog: boolean;
+    isOpenAddCollectionDialog: boolean;
+    currentCollectionKey: string;
   };
 };

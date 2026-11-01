@@ -6,6 +6,9 @@ import {
   handleSelectedBooks,
   handleSelectBook,
   handleRefreshBookCover,
+  handleFetchBooks,
+  handleCollectionDialogBooks,
+  handleAddCollectionDialog,
 } from "../../store/actions";
 import BookCoverItem from "./component";
 import { stateType } from "../../store";
@@ -29,6 +32,9 @@ const actionCreator = {
   handleSelectBook,
   handleSelectedBooks,
   handleRefreshBookCover,
+  handleFetchBooks,
+  handleCollectionDialogBooks,
+  handleAddCollectionDialog,
 };
 export default connect(
   mapStateToProps,

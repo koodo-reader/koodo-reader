@@ -10,6 +10,7 @@ const mapStateToProps = (state: stateType) => {
     isDockedRight: state.reader.isDockedRight,
     backgroundColor: state.reader.backgroundColor,
     scale: state.reader.scale,
+    isFitPage: state.reader.isFitPage,
     margin: state.reader.margin,
     readerBackgroundImage: state.reader.readerBackgroundImage,
   };

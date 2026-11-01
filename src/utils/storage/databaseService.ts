@@ -139,8 +139,27 @@ class DatabaseService {
       });
     } else {
       let records = await this.getAllRecords(dbName);
-      records.push(record);
-      await this.saveAllRecords(records, dbName);
+      // Replace by key instead of appending: the old push() left TWO rows for
+      // the same key whenever the sync pulled a row this device already had
+      // (e.g. a renamed book), so the stale copy stayed visible next to the
+      // new one. The Electron path goes through INSERT OR REPLACE in sqlite
+      // and never had this problem - match it.
+      const existingIndex = records.findIndex(
+        (row: any) => row?.key === record.key
+      );
+      if (existingIndex > -1) {
+        records[existingIndex] = record;
+      } else {
+        records.push(record);
+      }
+      // isRecord=false: write the table WITHOUT re-stamping every row.
+      // saveAllRecords with isRecord=true marks EACH row save@Date.now(), so a
+      // single-row write re-stamped the whole library's records - a sync does
+      // many of them and then uploads the churned map, which is how a cloud
+      // `delete` record for a row got overwritten by a fresh `save` and the
+      // deleted book came back on every device. This method stamps its own
+      // single record below.
+      await this.saveAllRecords(records, dbName, false);
     }
     if (isRecord) {
       ConfigService.setSyncRecord(
@@ -170,7 +189,10 @@ class DatabaseService {
       if (records.length === 0) {
         await this.deleteAllRecords(dbName);
       } else {
-        await this.saveAllRecords(records, dbName);
+        // isRecord=false: only the deleted key gets a record (stamped below);
+        // re-stamping the remaining rows here would churn every other book's
+        // record time on each delete (see saveRecord for the full story).
+        await this.saveAllRecords(records, dbName, false);
       }
     }
     if (isRecord) {
@@ -198,7 +220,9 @@ class DatabaseService {
         }
         return b;
       });
-      await this.saveAllRecords(records, dbName);
+      // isRecord=false: only the updated key gets a record (stamped below) -
+      // see saveRecord for why re-stamping every row here is dangerous.
+      await this.saveAllRecords(records, dbName, false);
     }
     if (isRecord) {
       ConfigService.setSyncRecord(
@@ -350,7 +374,12 @@ class DatabaseService {
         }
       }
     } else {
-      await this.saveAllRecords(records, dbName);
+      // isRecord=false: the loop after this branch already stamps each updated
+      // record as `update`. Letting saveAllRecords keep its default true would
+      // ALSO mark every row passed in as save@Date.now(), so one update of a
+      // few rows re-stamped them all as saves and churned the sync map (same
+      // bug class as saveRecord/deleteRecord/updateRecord - see saveRecord).
+      await this.saveAllRecords(records, dbName, false);
     }
     for (let record of records) {
       if (isRecord) {
@@ -392,9 +421,15 @@ class DatabaseService {
       let records = await this.getAllRecords(dbName);
       records = records.filter((b) => b.bookKey !== bookKey);
       if (records.length === 0) {
-        await this.deleteAllRecords(dbName);
+        // every row belonged to this bookKey and is already delete-stamped above
+        await this.deleteAllRecords(dbName, false);
       } else {
-        await this.saveAllRecords(records, dbName);
+        // isRecord=false: this method already stamped `delete` for every record
+        // of bookKey above. saveAllRecords with its default true re-stamps EVERY
+        // REMAINING row save@Date.now(), so deleting one book's notes/bookmarks
+        // churned the whole table's records and could overwrite a cloud `delete`
+        // record with a fresh `save` - the same defect as saveRecord above.
+        await this.saveAllRecords(records, dbName, false);
       }
     }
   }

@@ -21,6 +21,9 @@ export interface ManagerProps extends RouteComponentProps<any> {
   isOpenLocalFileDialog: boolean;
   isOpenOPDSDialog: boolean;
   isOpenAutoImportDialog: boolean;
+  isOpenCollectionDialog: boolean;
+  isOpenCollectionDetailDialog: boolean;
+  isOpenAddCollectionDialog: boolean;
   importBookFunc: (file: any) => Promise<void>;
   handleFetchBooks: () => void;
   handleFetchPlugins: () => void;
@@ -46,6 +49,9 @@ export interface ManagerProps extends RouteComponentProps<any> {
   handleMode: (mode: string) => void;
   handleShowPopupNote: (isShowPopupNote: boolean) => void;
   handleSortShelfDialog: (isOpenSortShelfDialog: boolean) => void;
+  handleCollectionDialog: (isOpen: boolean) => void;
+  handleCollectionDetailDialog: (isOpen: boolean) => void;
+  handleAddCollectionDialog: (isOpen: boolean) => void;
   cloudSyncFunc: () => Promise<void>;
   t: (title: string) => string;
 }

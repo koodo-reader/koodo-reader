@@ -45,7 +45,7 @@ class PopupNote extends React.Component<PopupNoteProps, PopupNoteState> {
         color,
       });
     } else {
-      let docs = getIframeDoc(this.props.currentBook.format);
+      let docs = getIframeDoc(this.props.currentBook);
       let text = "";
       for (let i = 0; i < docs.length; i++) {
         let doc = docs[i];

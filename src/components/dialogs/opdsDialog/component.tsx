@@ -49,11 +49,17 @@ const DOWNLOAD_TYPES: Record<string, string> = {
   "message/rfc822": "mhtml",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
     "docx",
+  "application/msword": "doc",
+  "application/rtf": "rtf",
+  "text/rtf": "rtf",
   "text/markdown": "md",
   "text/x-markdown": "md",
   "application/fb2+zip": "fb2",
   "application/fb2": "fb2",
   "application/x-fb2": "fb2",
+  "application/vnd.ms-htmlhelp": "chm",
+  "application/x-chm": "chm",
+  "application/vnd.ms-htmlhelpfile": "chm",
   "application/x-cbz": "cbz",
   "application/vnd.comicbook+zip": "cbz",
   "application/x-cbt": "cbt",
@@ -62,6 +68,16 @@ const DOWNLOAD_TYPES: Record<string, string> = {
   "application/vnd.comicbook-rar": "cbr",
   "application/x-cb7": "cb7",
   "application/vnd.comicbook+7z": "cb7",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+    "pptx",
+  "application/vnd.ms-powerpoint": "ppt",
+  "application/oxps": "oxps",
+  "application/vnd.ms-xpsdocument": "xps",
+  "image/vnd.djvu": "djvu",
+  "application/ofd": "ofd",
+  "application/x-ofd": "ofd",
+  "application/x-caj": "caj",
+  "application/caj": "caj",
 };
 
 const ACQUISITION_RELS = [

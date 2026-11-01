@@ -1,4 +1,8 @@
-import type { DictionaryPlugin, TranslatePlugin } from "./types";
+import type {
+  DictionaryPlugin,
+  OCRPlugin,
+  TranslatePlugin,
+} from "./types";
 import { translate as potTranslate } from "./renderer/translation/potTranslate";
 import { translate as libreTranslate } from "./renderer/translation/libreTranslate";
 import { translate as ollamaTranslate } from "./renderer/translation/ollamaTranslate";
@@ -44,6 +48,22 @@ import { getDictText as zdicEmbedDictText } from "./renderer/dictionary/zdicEmbe
 import { getDictText as cedictEmbedDictText } from "./renderer/dictionary/cedictEmbedDict";
 import { getDictText as weblioEmbedDictText } from "./renderer/dictionary/weblioEmbedDict";
 import { getDictText as openrussianEmbedDictText } from "./renderer/dictionary/openrussianEmbedDict";
+import { recognize as baiduOcrGeneral } from "./renderer/ocr/baiduOcrGeneral";
+import { recognize as baiduOcrAccurate } from "./renderer/ocr/baiduOcrAccurate";
+import { recognize as tencentOcrGeneral } from "./renderer/ocr/tencentOcrGeneral";
+import { recognize as tencentOcrAccurate } from "./renderer/ocr/tencentOcrAccurate";
+import { recognize as aliyunOcrAllText } from "./renderer/ocr/aliyunOcrAllText";
+import { recognize as aliyunOcrGeneral } from "./renderer/ocr/aliyunOcrGeneral";
+import { recognize as aliyunOcrAdvanced } from "./renderer/ocr/aliyunOcrAdvanced";
+import { recognize as aliyunQwenOcr } from "./renderer/ocr/aliyunQwenOcr";
+import { recognize as amazonTextract } from "./renderer/ocr/amazonTextract";
+import { recognize as googleCloudVision } from "./renderer/ocr/googleCloudVision";
+import { recognize as googleDocumentAi } from "./renderer/ocr/googleDocumentAi";
+import { recognize as azureDocumentIntelligence } from "./renderer/ocr/azureDocumentIntelligence";
+import { recognize as azureComputerVisionOcr } from "./renderer/ocr/azureComputerVisionOcr";
+import { recognize as openaiCompatibleOcr } from "./renderer/ocr/openaiCompatibleOcr";
+import { recognize as ocrSpace } from "./renderer/ocr/ocrSpace";
+import { recognize as puterOcr } from "./renderer/ocr/puterOcr";
 
 const translations: Partial<Record<string, TranslatePlugin>> = {
   "pot-translate-plugin": potTranslate,
@@ -96,6 +116,25 @@ const dictionaries: Partial<Record<string, DictionaryPlugin>> = {
   "openrussian-embed-dict-plugin": openrussianEmbedDictText,
 };
 
+const ocrPlugins: Partial<Record<string, OCRPlugin>> = {
+  "baidu-ocr-general-plugin": baiduOcrGeneral,
+  "baidu-ocr-accurate-plugin": baiduOcrAccurate,
+  "tencent-ocr-general-plugin": tencentOcrGeneral,
+  "tencent-ocr-accurate-plugin": tencentOcrAccurate,
+  "aliyun-ocr-alltext-plugin": aliyunOcrAllText,
+  "aliyun-ocr-general-plugin": aliyunOcrGeneral,
+  "aliyun-ocr-advanced-plugin": aliyunOcrAdvanced,
+  "aliyun-qwen-ocr-plugin": aliyunQwenOcr,
+  "amazon-textract-plugin": amazonTextract,
+  "google-cloud-vision-plugin": googleCloudVision,
+  "google-document-ai-plugin": googleDocumentAi,
+  "azure-document-intelligence-plugin": azureDocumentIntelligence,
+  "azure-computer-vision-ocr-plugin": azureComputerVisionOcr,
+  "openai-compatible-ocr-plugin": openaiCompatibleOcr,
+  "ocrspace-plugin": ocrSpace,
+  "puter-ocr-plugin": puterOcr,
+};
+
 export const getBuiltinTranslation = (key: string) =>
   Object.prototype.hasOwnProperty.call(translations, key)
     ? translations[key]
@@ -104,4 +143,9 @@ export const getBuiltinTranslation = (key: string) =>
 export const getBuiltinDictionary = (key: string) =>
   Object.prototype.hasOwnProperty.call(dictionaries, key)
     ? dictionaries[key]
+    : undefined;
+
+export const getBuiltinOcr = (key: string): OCRPlugin | undefined =>
+  Object.prototype.hasOwnProperty.call(ocrPlugins, key)
+    ? ocrPlugins[key]
     : undefined;

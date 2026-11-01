@@ -21,6 +21,9 @@ import DetailDialog from "../../components/dialogs/detailDialog";
 import { Tooltip } from "react-tooltip";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import SortShelfDialog from "../../components/dialogs/sortShelfDialog";
+import CollectionDialog from "../../components/dialogs/collectionDialog";
+import CollectionDetailDialog from "../../components/dialogs/collectionDetailDialog";
+import AddCollectionDialog from "../../components/dialogs/addCollectionDialog";
 import PopupNote from "../../components/popups/popupNote";
 import toast from "react-hot-toast";
 import { supportedFormats } from "../../utils/common";
@@ -256,6 +259,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
             this.props.handleShowPopupNote(false);
             this.props.handleSortShelfDialog(false);
             this.props.handleSetting(false);
+            this.props.handleCollectionDialog(false);
+            this.props.handleCollectionDetailDialog(false);
+            this.props.handleAddCollectionDialog(false);
             this.handleDrag(false);
           }}
           style={
@@ -272,6 +278,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
             this.props.isDetailDialog ||
             this.props.isShowPopupNote ||
             this.props.isOpenAddDialog ||
+            this.props.isOpenCollectionDialog ||
+            this.props.isOpenCollectionDetailDialog ||
+            this.props.isOpenAddCollectionDialog ||
             this.props.isShowLoading ||
             this.state.isDrag
               ? {}
@@ -312,6 +321,9 @@ class Manager extends React.Component<ManagerProps, ManagerState> {
         {this.props.isOpenSortShelfDialog && <SortShelfDialog />}
         {this.props.isSettingOpen && <SettingDialog />}
         {this.props.isDetailDialog && <DetailDialog />}
+        {this.props.isOpenCollectionDialog && <CollectionDialog />}
+        {this.props.isOpenCollectionDetailDialog && <CollectionDetailDialog />}
+        {this.props.isOpenAddCollectionDialog && <AddCollectionDialog />}
         {(!books || books.length === 0) && this.state.totalBooks ? null : (
           <Switch>
             {routes.map((ele) => (

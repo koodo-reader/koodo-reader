@@ -265,7 +265,7 @@ export const getShortcutConfig = (): ShortcutConfig => {
     const parsed = JSON.parse(stored) as Partial<ShortcutConfig>;
     const merged = cloneConfig(DEFAULT_SHORTCUT_CONFIG);
     SHORTCUT_ACTIONS.forEach((action) => {
-      if (Array.isArray(parsed[action]) && parsed[action]!.length > 0) {
+      if (Array.isArray(parsed[action])) {
         merged[action] = parsed[action]!.map((b) => ({ ...b }));
       }
     });

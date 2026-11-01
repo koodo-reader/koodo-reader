@@ -1,112 +1,102 @@
 .add-dialog-container {
-  width: 309px;
-  height: 189px;
+  width: 350px;
+  height: 250px;
   opacity: 1;
   position: absolute;
-  left: calc(50vw - 155px);
-  top: calc(50vh - 95px);
+  left: calc(50vw - 175px);
+  top: calc(50vh - 125px);
   z-index: 10;
   animation: popup 0.1s ease-in-out 0s 1;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 .add-dialog-title {
-  width: 120px;
+  width: 100%;
   height: 20px;
   font-size: 18px;
-  opacity: 1;
-  width: 100%;
-  text-align: center;
   font-weight: 500;
+  text-align: center;
   margin-top: 15px;
+  flex-shrink: 0;
 }
-.add-dialog-shelf-list-container {
+.add-dialog-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px;
+  min-height: 0;
+}
+.add-dialog-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
   width: 100%;
-  font-size: 15px;
-  line-height: 14px;
-  opacity: 1;
-  margin-top: 15px;
-  height: 30px;
 }
-.add-dialog-shelf-list-text {
-  width: 50px;
-  float: left;
-  margin-left: 25px;
-  margin-top: 7px;
+.add-dialog-label {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  line-height: 1.4;
 }
 .add-dialog-shelf-list-box {
-  float: left;
-  width: 210px;
-  height: 31px;
-  opacity: 1;
+  width: 100%;
+  height: 32px;
   box-sizing: border-box;
-  font-size: 15px;
-  line-height: 31px;
+  padding-left: 8px;
+  font-size: 14px;
   border-radius: 5px;
+  border: 2px solid rgba(75, 75, 75, 1);
+  outline: none;
+  background: transparent;
 }
 .add-dialog-shelf-list-option {
-  width: 169px;
-  height: 31px;
-  opacity: 1;
-  box-sizing: border-box;
-  margin-left: 16px;
-  font-size: 15px;
-  line-height: 31px;
+  font-size: 14px;
   cursor: pointer;
-  text-align: left;
-}
-.add-dialog-new-shelf-text {
-  width: 50px;
-  float: left;
-  margin-left: 25px;
-  margin-top: 7px;
 }
 .add-dialog-new-shelf-box {
-  float: left;
-  width: 210px;
-  height: 31px;
-  opacity: 1;
+  width: 100%;
+  height: 32px;
   box-sizing: border-box;
-  padding-left: 5px;
-  font-size: 15px;
-  line-height: 31px;
+  padding-left: 8px;
+  font-size: 14px;
   border-radius: 5px;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 2px solid rgba(75, 75, 75, 1);
+  outline: none;
+  background: transparent;
 }
 .add-dialog-button-container {
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
+  align-items: center;
   position: absolute;
   right: 25px;
   bottom: 15px;
 }
 .add-dialog-cancel {
   min-width: 60px;
-  height: 26px;
-  opacity: 1;
-  /* position: absolute;
-  left: 147px;
-  top: 144px; */
+  height: 30px;
+  box-sizing: border-box;
   border-radius: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
   font-size: 13px;
   margin-right: 10px;
-  line-height: 26px;
-  opacity: 1;
+  line-height: 30px;
   text-align: center;
   cursor: pointer;
 }
 .add-dialog-confirm {
   min-width: 64px;
   height: 30px;
-  opacity: 1;
-
-  font-size: 13px;
+  box-sizing: border-box;
   border-radius: 5px;
   padding-left: 10px;
   padding-right: 10px;
+  font-size: 13px;
   line-height: 30px;
-  opacity: 1;
   text-align: center;
   cursor: pointer;
 }

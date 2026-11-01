@@ -35,6 +35,7 @@ import {
   ocrTesseractLangList,
 } from "../constants/dropdownList";
 import TokenService from "./storage/tokenService";
+import { getBuiltinPluginDefinition } from "./plugins/catalog";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -43,18 +44,30 @@ export const supportedFormats = [
   ".mobi",
   ".azw3",
   ".azw",
+  ".kdz",
   ".htm",
   ".html",
   ".xml",
   ".xhtml",
   ".mhtml",
   ".docx",
+  ".doc",
+  ".rtf",
   ".md",
   ".fb2",
+  ".chm",
   ".cbz",
   ".cbt",
   ".cbr",
   ".cb7",
+  ".pptx",
+  ".ppt",
+  ".xps",
+  ".oxps",
+  ".djvu",
+  ".djv",
+  ".ofd",
+  ".caj",
 ];
 export interface HighlightValue {
   styleType: string;
@@ -615,11 +628,9 @@ export const getPageWidth = (
   scale: string,
   margin: number,
   isNavLocked: boolean,
-  isSettingLocked: boolean
+  isSettingLocked: boolean,
+  isFitPage: boolean = false
 ) => {
-  if (Math.abs(parseFloat(scale)) > 1.4) {
-    scale = "1.3";
-  }
   const findValidMultiple = (limit: number) => {
     let multiple = limit - (limit % 12);
 
@@ -633,8 +644,26 @@ export const getPageWidth = (
     return limit;
   };
   if (
-    document.body.clientWidth * Math.abs(parseFloat(scale)) -
-      document.body.clientWidth * 0.4 >
+    isFitPage &&
+    (readerMode === "scroll" || readerMode === "single")
+  ) {
+    // 固定左右侧边栏时，页面只在剩余可用区域内铺满，避免被侧边栏遮挡
+    const panelWidth = 300;
+    let pageWidth =
+      document.body.clientWidth -
+      106 -
+      (isNavLocked ? panelWidth : 0) -
+      (isSettingLocked ? panelWidth : 0);
+    let pageOffset = 50 + (isNavLocked ? panelWidth : 0) + "px";
+    return {
+      pageOffset,
+      pageWidth: pageWidth + "px",
+    };
+  }
+
+  //缩放过高时按窗口宽度封顶
+  if (
+    document.body.clientWidth * 0.6 * Math.abs(parseFloat(scale)) >
     document.body.clientWidth
   ) {
     let pageWidth = document.body.clientWidth - 106;
@@ -648,9 +677,10 @@ export const getPageWidth = (
   let pageOffset = "";
   let pageWidth = 0;
   if (readerMode === "scroll" || readerMode === "single") {
+    //页面宽度以 scale=1 的默认宽度（视口宽度 * 0.6）为基准等比例缩放，
+    //使预设百分比与实际显示宽度成正比，避免低百分比时出现过窄页面
     let preWidth =
-      document.body.clientWidth * Math.abs(parseFloat(scale)) -
-      document.body.clientWidth * 0.4 -
+      document.body.clientWidth * 0.6 * Math.abs(parseFloat(scale)) -
       (isNavLocked ? 300 : 0) -
       (isSettingLocked ? 300 : 0);
     let width = findValidMultiple(preWidth);
@@ -702,7 +732,7 @@ export function removeSearchParams() {
 export const preCacheAllBooks = async (bookList: Book[]) => {
   for (let index = 0; index < bookList.length; index++) {
     const selectedBook = bookList[index];
-    if (selectedBook.format === "PDF") {
+    if (selectedBook.format === "PDF" || isFixedLayoutBook(selectedBook)) {
       continue;
     }
     if (
@@ -835,6 +865,23 @@ export const generateSyncRecord = async () => {
       }
     }
   }
+  let collectionItems: string[] = Object.keys(
+    ConfigService.getAllObjectConfig("bookCollection")
+  );
+  for (let index = 0; index < collectionItems.length; index++) {
+    ConfigService.setSyncRecord(
+      {
+        type: "config",
+        catergory: "objectConfig",
+        name: "bookCollection",
+        key: collectionItems[index],
+      },
+      {
+        operation: "update",
+        time: Date.now(),
+      }
+    );
+  }
 };
 export const handleContextMenu = (id: string, isInput: boolean = false) => {
   if (!isElectron) return;
@@ -945,6 +992,12 @@ export const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp);
   // return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   return date.toLocaleDateString();
+};
+export const formatDateToDay = (value?: string): string => {
+  if (!value) return "";
+  const match = String(value).match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+  if (!match) return String(value);
+  return `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}`;
 };
 export const checkMissingBook = async () => {
   if (!isElectron) return;
@@ -1983,6 +2036,25 @@ export const getDefaultOcrEngine = (currentBook: any) => {
   }
 };
 export const getOcrLangList = (engine: string) => {
+  const pluginDefinition = getBuiltinPluginDefinition(engine);
+  if (pluginDefinition?.type === "ocr") {
+    if (!pluginDefinition.defaultConfig.language) {
+      return [];
+    }
+    const langList = pluginDefinition.langList;
+    if (Array.isArray(langList)) {
+      return langList.map((item) => ({
+        label: item.nativeLang || item.lang,
+        value: item.code,
+        lang: item.code,
+      }));
+    }
+    return Object.entries(langList).map(([value, label]) => ({
+      label: String(label),
+      value,
+      lang: value,
+    }));
+  }
   let list: any[];
   if (engine === "tesseract") {
     list = ocrTesseractLangList;
@@ -2013,6 +2085,22 @@ export const getOcrLangList = (engine: string) => {
   return list;
 };
 export const getDefaultOcrLang = (engine: string, currentBook: any) => {
+  const pluginDefinition = getBuiltinPluginDefinition(engine);
+  if (pluginDefinition?.type === "ocr") {
+    const pluginLangList = getOcrLangList(engine);
+    if (pluginLangList.length === 0) {
+      return "";
+    }
+    const lang = ConfigService.getReaderConfig(
+      currentBook.description.indexOf("scanned") > -1
+        ? "scannedOcrLang"
+        : "textOcrLang"
+    );
+    if (lang && pluginLangList.some((item) => item.value === lang)) {
+      return lang;
+    }
+    return "";
+  }
   const lang = ConfigService.getReaderConfig(
     currentBook.description.indexOf("scanned") > -1
       ? "scannedOcrLang"
@@ -2286,10 +2374,68 @@ export const getOcrCachePath = (
   }
   return electron.path.join(ocrDir, bookKey + "_" + chapterDocIndex + ".json");
 };
+export const clearOcrCache = (bookKey: string) => {
+  if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
+    return;
+  }
+  try {
+    const electron = window.electronAPI;
+    const dirPath = electron.sendSync("user-data", "ping");
+    const ocrDir = electron.path.join(dirPath, "ocr");
+    if (!electron.fs.existsSync(ocrDir)) {
+      return;
+    }
+    const files = electron.fs.readdirSync(ocrDir);
+    files.forEach((fileName: string) => {
+      if (fileName.startsWith(bookKey + "_")) {
+        electron.fs.unlinkSync(electron.path.join(ocrDir, fileName));
+      }
+    });
+  } catch (error) {
+    console.error("Failed to clear ocr cache:", error);
+  }
+};
 export const isReadingRawPDF = (book: Book) => {
   return (
     book.format === "PDF" &&
     !ConfigService.getAllListConfig("convertPDFBooks").includes(book.key)
+  );
+};
+export const isFixedLayoutComic = (book: Book) => {
+  return (
+    (book.format === "EPUB" ||
+      book.format === "MOBI" ||
+      book.format === "AZW3" ||
+      book.format === "AZW") &&
+    book.layout === "pre-paginated"
+  );
+};
+// PDF（原始版式）、漫画（CB 系列）、PPTX/PPT、XPS、OXPS、DjVu、OFD 共用多 iframe 分页结构
+export const isPaginatedBook = (book: Book) => {
+  return (
+    isReadingRawPDF(book) ||
+    book.format.startsWith("CB") ||
+    book.format === "PPTX" ||
+    book.format === "PPT" ||
+    book.format === "XPS" ||
+    book.format === "OXPS" ||
+    book.format === "DJVU" ||
+    book.format === "DJV" ||
+    book.format === "OFD" ||
+    isFixedLayoutComic(book)
+  );
+};
+// PPTX/PPT/XPS/OXPS/DjVu/OFD 复用漫画结构渲染，暂不支持笔记和高亮
+export const isFixedLayoutBook = (book: Book) => {
+  return (
+    book.format === "PPTX" ||
+    book.format === "PPT" ||
+    book.format === "XPS" ||
+    book.format === "OXPS" ||
+    book.format === "DJVU" ||
+    book.format === "DJV" ||
+    book.format === "OFD" ||
+    isFixedLayoutComic(book)
   );
 };
 export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {
@@ -2311,12 +2457,25 @@ export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {
   return cache;
 };
 
+export const isRateLimitedResult = (text: string): boolean => {
+  if (!text) {
+    return false;
+  }
+  return (
+    text.includes("You have reached the daily limit") ||
+    text.includes("您已达到今日使用上限")
+  );
+};
+
 export const saveOcrCache = (
   bookKey: string,
   chapterDocIndex: string,
-  cache: { src: string }
+  cache: { src?: string; text?: string }
 ) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
+    return;
+  }
+  if (isRateLimitedResult((cache && (cache.text || cache.src)) || "")) {
     return;
   }
   try {
@@ -2328,5 +2487,49 @@ export const saveOcrCache = (
     );
   } catch (error) {
     console.error("Failed to save ocr cache:", error);
+  }
+};
+export const getCoverTheme = (format: string) => {
+  switch (format) {
+    case "PDF":
+      return "rgba(55, 170, 81, 0.7)";
+    case "TXT":
+      return "rgba(251, 191, 16,1)";
+    case "EPUB":
+      return "rgba(33, 165, 241,1)";
+    case "MOBI":
+      return "rgba(255, 108, 110,1)";
+    case "AZW3":
+    case "AZW":
+      return " #ff9900";
+    case "MD":
+      return "#5e7fff";
+    case "FB2":
+      return "#0063b1";
+    case "CHM":
+      return "#8e6fce";
+    case "DOCX":
+    case "DOC":
+      return " #118CD9";
+    case "RTF":
+      return "#0F766E";
+    case "CBT":
+    case "CBZ":
+    case "CB7":
+    case "CBR":
+      return "#00b6c2";
+    case "PPTX":
+    case "PPT":
+      return "#C43E1C";
+    case "XPS":
+    case "OXPS":
+      return "#744DA9";
+    case "DJVU":
+    case "DJV":
+      return "#003366";
+    case "OFD":
+      return "#C2185B";
+    default:
+      return "#118CD9";
   }
 };

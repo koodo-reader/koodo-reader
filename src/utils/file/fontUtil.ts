@@ -251,7 +251,7 @@ class FontUtil {
     const response = await fetch(url, {
       headers: {
         "Cache-Control": "no-transform",
-        "Accept-Encoding": "identity",
+        Range: "bytes=0-",
       },
     });
     if (!response.ok) return false;
@@ -283,7 +283,7 @@ class FontUtil {
         chunks.push(value);
         received += value.length;
         if (contentLength > 0 && onProgress) {
-          onProgress(received / contentLength);
+          onProgress(Math.min(received / contentLength, 1));
         }
       }
     }

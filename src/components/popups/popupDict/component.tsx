@@ -247,7 +247,7 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
 
       if (dictText.startsWith("https://")) {
         openExternalUrl(dictText, true, "dict");
-        let docs = getIframeDoc(this.props.currentBook.format);
+        let docs = getIframeDoc(this.props.currentBook);
         for (let i = 0; i < docs.length; i++) {
           let doc = docs[i];
           if (!doc) continue;
@@ -260,9 +260,8 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
             dictText: dictText,
           },
           () => {
-            const audioPlayers = document.querySelectorAll(
-              "audio.audio-player"
-            );
+            const audioPlayers =
+              document.querySelectorAll("audio.audio-player");
             audioPlayers.forEach((item) => {
               (item as HTMLAudioElement).load();
             });
@@ -473,7 +472,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                 })}
             </select>
           </div>
-          <div className="dict-word">
+          <div
+            className="dict-word"
+            style={{
+              maxWidth: this.props.isDockedRight ? "150px" : "250px",
+            }}
+          >
             {ConfigService.getReaderConfig("isLemmatizeWord") === "yes"
               ? this.state.prototype
               : this.state.word}
@@ -546,12 +550,12 @@ class PopupDict extends React.Component<PopupDictProps, PopupDictState> {
                   {!this.state.isAiWaiting &&
                     !this.state.isAiStreaming &&
                     this.state.aiAnswer && (
-                    <div className="popup-assist-disclaimer">
-                      {this.props.t(
-                        "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
-                      )}
-                    </div>
-                  )}
+                      <div className="popup-assist-disclaimer">
+                        {this.props.t(
+                          "AI-generated content is for reference only. Please verify carefully as it does not constitute professional advice."
+                        )}
+                      </div>
+                    )}
                 </div>
               )}
             </div>

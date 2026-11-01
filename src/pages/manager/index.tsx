@@ -24,6 +24,9 @@ import {
   handleSortShelfDialog,
   handleShelf,
   handleMode,
+  handleCollectionDialog,
+  handleCollectionDetailDialog,
+  handleAddCollectionDialog,
 } from "../../store/actions";
 import { withTranslation } from "react-i18next";
 
@@ -55,6 +58,9 @@ const mapStateToProps = (state: stateType) => {
     isOpenAutoImportDialog: state.backupPage.isOpenAutoImportDialog,
     isOpenSortShelfDialog: state.backupPage.isOpenSortShelfDialog,
     isOpenLocalFileDialog: state.backupPage.isOpenLocalFileDialog,
+    isOpenCollectionDialog: state.collection.isOpenCollectionDialog,
+    isOpenCollectionDetailDialog: state.collection.isOpenCollectionDetailDialog,
+    isOpenAddCollectionDialog: state.collection.isOpenAddCollectionDialog,
   };
 };
 const actionCreator = {
@@ -82,6 +88,9 @@ const actionCreator = {
   handleShowPopupNote,
   handleShelf,
   handleMode,
+  handleCollectionDialog,
+  handleCollectionDetailDialog,
+  handleAddCollectionDialog,
 };
 export default connect(
   mapStateToProps,
