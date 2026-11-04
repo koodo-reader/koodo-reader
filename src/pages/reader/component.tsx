@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
 import { Toaster } from "react-hot-toast";
-import ProgressPanel from "../../containers/panels/progressPanel";
+import ReaderBottomToolbar from "../../components/readerBottomToolbar";
 import {
   ConfigService,
   ReadingTimeUtil,
@@ -43,7 +43,6 @@ const QUICK_BUTTON_EDGE_DISTANCE = 60;
 
 export interface ReaderState {
   isOpenRightPanel: boolean;
-  isOpenBottomPanel: boolean;
   isOpenLeftPanel: boolean;
   isTouch: boolean;
   isPreventTrigger: boolean;
@@ -54,35 +53,29 @@ export interface ReaderState {
 }
 
 declare var window: any;
-let lock = false; //prevent from clicking too fasts
-let throttleTime = 200;
 let isMouseMoving = false;
-const PANEL_POSITIONS = ["left", "right", "bottom"] as const;
+const PANEL_POSITIONS = ["left", "right"] as const;
 type PanelPosition = (typeof PANEL_POSITIONS)[number];
 const PANEL_ENTER_DELAY = 500;
 const PANEL_LEAVE_DELAY = 500;
 const enterTimers: Record<string, NodeJS.Timeout | null> = {
   left: null,
   right: null,
-  bottom: null,
 };
 const leaveTimers: Record<string, NodeJS.Timeout | null> = {
   left: null,
   right: null,
-  bottom: null,
 };
 const isEdgeHovering: Record<string, boolean> = {
   left: false,
   right: false,
-  bottom: false,
 };
 const PANEL_OPEN_STATE: Record<
   PanelPosition,
-  "isOpenLeftPanel" | "isOpenRightPanel" | "isOpenBottomPanel"
+  "isOpenLeftPanel" | "isOpenRightPanel"
 > = {
   left: "isOpenLeftPanel",
   right: "isOpenRightPanel",
-  bottom: "isOpenBottomPanel",
 };
 const Reader = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
@@ -157,7 +150,6 @@ const Reader = () => {
   };
   const propsRef = useLatest(currentProps);
   const [state, setState] = useState<ReaderState>({
-    isOpenBottomPanel: false,
     hoverPanel: "",
     isOpenLeftPanel: isNavLocked,
     isOpenRightPanel: isSettingLocked,
@@ -286,11 +278,6 @@ const Reader = () => {
           isOpenLeftPanel: true,
         });
         break;
-      case "bottom":
-        updateState({
-          isOpenBottomPanel: true,
-        });
-        break;
       default:
         break;
     }
@@ -316,9 +303,6 @@ const Reader = () => {
           updateState({ isOpenLeftPanel: false });
           break;
         }
-      case "bottom":
-        updateState({ isOpenBottomPanel: false });
-        break;
       default:
         break;
     }
@@ -440,15 +424,6 @@ const Reader = () => {
   const isWithinEdgeZone = (pageY: number) =>
     pageY <= QUICK_BUTTON_EDGE_DISTANCE ||
     window.innerHeight - pageY <= QUICK_BUTTON_EDGE_DISTANCE;
-  const handleLocation = () => {
-    let position = propsRef.current.htmlBook.rendition.getPosition();
-
-    ConfigService.setObjectConfig(
-      propsRef.current.currentBook.key,
-      position,
-      "recordLocation"
-    );
-  };
 
   useEffect(() => {
     const run = async () => {
@@ -641,10 +616,7 @@ const Reader = () => {
   const renditionProps = {
     handleLeaveReader: handleLeaveReader,
     handleEnterReader: handleEnterReader,
-    isShow:
-      state.isOpenLeftPanel ||
-      state.isOpenBottomPanel ||
-      state.isOpenRightPanel,
+    isShow: state.isOpenLeftPanel || state.isOpenRightPanel,
   };
   return (
     <div
@@ -668,72 +640,11 @@ const Reader = () => {
         handleEnterReader={handleEnterReader}
       />
 
-      <div
-        className="previous-chapter-single-container reader-quick-buttons"
-        onMouseEnter={showQuickButtons}
-        onMouseLeave={hideQuickButtons}
-        onClick={async () => {
-          if (lock) return;
-          lock = true;
-          // RTL direction handling
-          if (
-            ConfigService.getReaderConfig("revertDirection") === "yes" &&
-            ConfigService.getReaderConfig("textOrientation") !== "vertical"
-          ) {
-            await htmlBook.rendition.next();
-          } else {
-            await htmlBook.rendition.prev();
-          }
-          handleLocation();
-          setTimeout(() => (lock = false), throttleTime);
-        }}
-        style={{
-          left: isNavLocked ? 315 : 15,
-          opacity: state.isNearEdge ? undefined : 0,
-          transition: "opacity 0.3s ease",
-        }}
-      >
-        <span className="icon-dropdown previous-chapter-single"></span>
-      </div>
-      <div
-        className="reader-quick-buttons"
-        onMouseEnter={showQuickButtons}
-        onMouseLeave={hideQuickButtons}
-        style={{
-          position: "absolute",
-          bottom: 10,
-          right: isSettingLocked || isDockedRight ? 315 : 15,
-          display: "flex",
-          flexDirection: "column-reverse",
-          alignItems: "center",
-          gap: "8px",
-          zIndex: 10,
-          opacity: state.isNearEdge ? 1 : 0,
-          transition: "opacity 0.3s ease",
-        }}
-      >
-        <div
-          className="next-chapter-single-container"
-          onClick={async () => {
-            if (lock) return;
-            lock = true;
-            // RTL direction handling
-            if (
-              ConfigService.getReaderConfig("revertDirection") === "yes" &&
-              ConfigService.getReaderConfig("textOrientation") !== "vertical"
-            ) {
-              await htmlBook.rendition.prev();
-            } else {
-              await htmlBook.rendition.next();
-            }
-            handleLocation();
-            setTimeout(() => (lock = false), throttleTime);
-          }}
-          style={{ position: "static" }}
-        >
-          <span className="icon-dropdown next-chapter-single"></span>
-        </div>
-      </div>
+      <ReaderBottomToolbar
+        isNearEdge={state.isNearEdge}
+        showQuickButtons={showQuickButtons}
+        hideQuickButtons={hideQuickButtons}
+      />
 
       {isSettingOpen && (
         <>
@@ -782,28 +693,6 @@ const Reader = () => {
       >
         <span className="icon-grid panel-icon"></span>
       </div>
-      <div
-        className="bottom-panel"
-        onMouseEnter={() => handleEdgeMouseEnter("bottom")}
-        onMouseLeave={() => handleEdgeMouseLeave("bottom")}
-        onClick={() => {
-          handleEnterReader("bottom");
-        }}
-        style={
-          state.hoverPanel === "bottom"
-            ? {
-                opacity: 0.5,
-                marginLeft:
-                  isNavLocked && !isSettingLocked && !isDockedRight ? 150 : 0,
-              }
-            : {
-                marginLeft:
-                  isNavLocked && !isSettingLocked && !isDockedRight ? 150 : 0,
-              }
-        }
-      >
-        <span className="icon-grid panel-icon"></span>
-      </div>
 
       <div
         className="setting-panel-container"
@@ -844,37 +733,6 @@ const Reader = () => {
             totalDuration: state.totalDuration,
           } as any)}
         />
-      </div>
-      <div
-        className="progress-panel-container"
-        onMouseEnter={() => {
-          cancelLeaveReader("bottom");
-        }}
-        onMouseLeave={() => {
-          scheduleLeaveReader("bottom");
-        }}
-        style={
-          state.isOpenBottomPanel
-            ? {
-                marginLeft:
-                  isNavLocked && !isSettingLocked
-                    ? 150
-                    : !isNavLocked && (isSettingLocked || isDockedRight)
-                      ? -150
-                      : 0,
-              }
-            : {
-                transform: "translateY(110px)",
-                marginLeft:
-                  isNavLocked && !isSettingLocked
-                    ? 150
-                    : !isNavLocked && (isSettingLocked || isDockedRight)
-                      ? -150
-                      : 0,
-              }
-        }
-      >
-        <ProgressPanel />
       </div>
 
       {currentBook.key && <Viewer {...(renditionProps as any)} />}

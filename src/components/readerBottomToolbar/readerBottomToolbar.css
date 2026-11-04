@@ -1,0 +1,204 @@
+.reader-bottom-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.reader-bottom-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.reader-bottom-toolbar-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.reader-bottom-toolbar-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reader-bottom-toolbar .previous-chapter-single-container {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  position: static;
+  bottom: auto;
+  left: auto;
+  font-size: 30px;
+  transform: rotate(90deg);
+  cursor: pointer;
+  opacity: 0.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.reader-bottom-toolbar .next-chapter-single-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transform: rotate(-90deg);
+  cursor: pointer;
+  opacity: 0.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.reader-bottom-toolbar .next-chapter-single-container:hover {
+  opacity: 0.7;
+}
+
+.reader-bottom-toolbar .previous-chapter-single-container:hover {
+  opacity: 0.7;
+}
+
+.reader-bottom-toolbar .previous-chapter-single {
+  height: 20px;
+  font-size: 20px;
+}
+
+.reader-bottom-toolbar .next-chapter-single {
+  font-size: 20px;
+  height: 20px;
+}
+
+.reader-bottom-toolbar .previous-chapter {
+  width: 25px !important;
+  height: 25px !important;
+  border-radius: 50%;
+  opacity: 1;
+  font-size: 15px;
+  transform: rotate(90deg);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.reader-bottom-toolbar .next-chapter {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  opacity: 1;
+  font-size: 15px;
+  transform: rotate(-90deg);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.reader-bottom-toolbar .previous-chapter-icon {
+  line-height: 27px !important;
+  margin-left: 5px !important;
+}
+
+.reader-bottom-toolbar .next-chapter-icon {
+  line-height: 27px !important;
+  margin-left: 5px !important;
+}
+
+.reader-bottom-toolbar input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  max-width: 220px;
+  min-width: 80px;
+  flex: 1;
+  margin: 0;
+  background: transparent;
+}
+
+.reader-bottom-toolbar input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(112, 112, 112, 1);
+  border-radius: 50%;
+  opacity: 1;
+  position: relative;
+  bottom: 9px;
+  cursor: pointer;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 1);
+}
+
+.reader-bottom-toolbar input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0px;
+  border-bottom: 2px solid rgba(112, 112, 112, 1);
+  opacity: 1;
+  cursor: pointer;
+  background: transparent;
+}
+
+.reader-bottom-toolbar input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 0px;
+  border-bottom: 2px solid rgba(112, 112, 112, 1);
+  opacity: 1;
+  cursor: pointer;
+  background: transparent;
+}
+
+.reader-bottom-toolbar input[type="range"]::-ms-track {
+  width: 100%;
+  height: 0px;
+  border-bottom: 2px solid rgba(112, 112, 112, 1);
+  opacity: 1;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+.reader-bottom-toolbar input[type="range"]:focus {
+  outline: none;
+}
+
+.reader-bottom-toolbar input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(112, 112, 112, 1);
+  border-radius: 50%;
+  opacity: 1;
+  position: relative;
+  bottom: 9px;
+  cursor: pointer;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 1);
+}
+
+.reader-bottom-toolbar input[type="range"]::-ms-thumb {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(112, 112, 112, 1);
+  border-radius: 50%;
+  opacity: 1;
+  position: relative;
+  bottom: 9px;
+  cursor: pointer;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 1);
+}
+
+.reader-bottom-toolbar #jumpPage,
+.reader-bottom-toolbar #jumpChapter {
+  width: 30px;
+  border: none;
+  height: 20px;
+  border-radius: 5px;
+  padding-left: 10px;
+  margin-right: 5px;
+  margin-left: 5px;
+  outline: none;
+}

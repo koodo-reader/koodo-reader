@@ -493,7 +493,6 @@ const ReaderTopToolbar = (props: ReaderTopToolbarProps) => {
             onClick={() => {
               props.handleEnterReader("left");
               props.handleEnterReader("right");
-              props.handleEnterReader("bottom");
             }}
           >
             <span

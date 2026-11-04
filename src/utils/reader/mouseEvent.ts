@@ -145,17 +145,13 @@ const SELECTION_SHORTCUT_OPTIONS: Array<{
 
 export const READING_PANEL_TOGGLE_EVENT = "koodo-reading-panel-toggle";
 
-export const openReadingPanel = (
-  position: "left" | "right" | "bottom"
-) => {
+export const openReadingPanel = (position: "left" | "right") => {
   const panel = document.querySelector(`.${position}-panel`);
   if (!panel) return;
   panel.dispatchEvent(clickEvent());
 };
 
-export const toggleReadingPanel = (
-  position: "left" | "right" | "bottom"
-) => {
+export const toggleReadingPanel = (position: "left" | "right") => {
   window.dispatchEvent(
     new CustomEvent(READING_PANEL_TOGGLE_EVENT, {
       detail: { position },
@@ -165,11 +161,10 @@ export const toggleReadingPanel = (
 
 const READING_PANEL_SHORTCUTS: Array<{
   shortcut: ShortcutAction;
-  position: "left" | "right" | "bottom";
+  position: "left" | "right";
 }> = [
   { shortcut: "openLeftPanel", position: "left" },
   { shortcut: "openRightPanel", position: "right" },
-  { shortcut: "openBottomPanel", position: "bottom" },
 ];
 
 export const NAV_TAB_TOGGLE_EVENT = "koodo-nav-tab-toggle";
