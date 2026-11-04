@@ -288,7 +288,11 @@ const AssistReadDialog = () => {
           ))}
 
         <SwitchRow
-          title={<Trans>Fast reading mode (make the first half of the word bold)</Trans>}
+          title={
+            <Trans>
+              Fast reading mode (make the first half of the word bold)
+            </Trans>
+          }
           isEnabled={state.isBionic}
           onClick={handleBionicToggle}
         />

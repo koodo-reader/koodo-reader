@@ -35,6 +35,7 @@ interface ElectronAPI {
   on(channel: string, listener: (payload: any) => void): () => void;
   once(channel: string, listener: (payload: any) => void): () => void;
   removeListener(channel: string, listener: (payload: any) => void): void;
+  getPathForFile(file: File): string;
   fs: ElectronFileAPI;
   path: {
     join(...parts: string[]): string;

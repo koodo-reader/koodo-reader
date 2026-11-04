@@ -84,6 +84,8 @@ const COMIC_IMAGE_EXTS = [
   ".jfif",
   ".jpe",
   ".heic",
+  ".heif",
+  ".avif",
 ];
 const getComicImageExt = (name: string) => {
   const ext = name.split(".").pop()?.toLowerCase() || "png";
@@ -1207,6 +1209,11 @@ const ImportLocal = (props: ImportLocalProps) => {
         onDrop={async (acceptedFiles) => {
           props.handleDrag(false);
           for (let item of acceptedFiles) {
+            if (isElectron && window.electronAPI.getPathForFile) {
+              // Electron 32+ removed File.path and react-dropzone only fills
+              // in a relative name, so resolve the real disk path via webUtils
+              item.path = window.electronAPI.getPathForFile(item);
+            }
             await getMd5WithBrowser(item);
           }
           if (
