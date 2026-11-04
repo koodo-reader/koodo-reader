@@ -130,6 +130,7 @@ const StudyLangDialog = () => {
         currentBook.key,
         "fullTranslationBooks"
       );
+      ConfigService.setReaderConfig("fullTranslationMode", "no");
     } else {
       if (!isAuthed) {
         mergeState({ fullTranslationModeValue: "no" });
@@ -156,7 +157,6 @@ const StudyLangDialog = () => {
         toast(t("Please upgrade to Pro to use this feature"));
         handleSetting(true);
         handleSettingMode("account");
-        ConfigService.setReaderConfig("fullTranslationMode", "no");
         return;
       }
       if (ConfigService.getReaderConfig("isBionic") === "yes") {
