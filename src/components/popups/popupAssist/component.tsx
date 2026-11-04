@@ -139,8 +139,9 @@ const PopupAssist = (props: PopupAssistProps) => {
       clearInterval(updateInterval.current);
     }
     updateInterval.current = setInterval(() => {
-      if (answerTextAccumulator.current) {
-        setState((prev) => ({ ...prev, answer: answerTextAccumulator.current }));
+      const text = answerTextAccumulator.current;
+      if (text) {
+        setState((prev) => ({ ...prev, answer: text }));
         runAfterUpdate(scrollToBottomIfNeeded);
       }
     }, 150);

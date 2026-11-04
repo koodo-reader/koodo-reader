@@ -642,7 +642,7 @@ const SettingDialog = () => {
                     fontSize: "13px",
                     lineHeight: 1.8,
                     padding: "15px",
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "var(--hover-bg)",
                   }}
                 >
                   {item.feature && (
