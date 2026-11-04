@@ -96,6 +96,15 @@ const ConvertDialog = () => {
         maxHeight: "calc(100vh - 80px)",
       }}
     >
+      <div className="convert-dialog-header">
+        <span className="convert-dialog-title">{t("Convert PDF to Text")}</span>
+        <span
+          className="icon-close convert-dialog-close"
+          onClick={() => {
+            handleConvertDialog(false);
+          }}
+        ></span>
+      </div>
       <ul className="sort-by-category">
         <SwitchRow
           title={<Trans>Convert PDF to Text</Trans>}
