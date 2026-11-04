@@ -214,7 +214,7 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
                     )}
                   </span>
                 )}
-                <span className="icon-folder collection-title-icon"></span>
+                <span className="icon-stack collection-title-icon"></span>
                 {collection.name}
               </div>
             </div>
@@ -313,7 +313,7 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
           </div>
 
           <p className="book-cover-item-title">
-            <span className="icon-folder collection-title-icon"></span>
+            <span className="icon-stack collection-title-icon"></span>
             {collection.name}
           </p>
           <p className="book-cover-item-author">
@@ -382,7 +382,7 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
         ) : null}
 
         <p className="book-item-title">
-          <span className="icon-folder collection-title-icon"></span>
+          <span className="icon-stack collection-title-icon"></span>
           {collection.name}
         </p>
         <div className="reading-progress-icon">

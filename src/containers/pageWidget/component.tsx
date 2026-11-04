@@ -245,10 +245,7 @@ const PageWidget = () => {
     if (!pageInfo) {
       return;
     }
-    if (
-      isReadingRawPDF(currentBook) ||
-      isFixedLayoutComic(currentBook)
-    ) {
+    if (isReadingRawPDF(currentBook) || isFixedLayoutComic(currentBook)) {
       setState((prev) => ({
         ...prev,
         prevPage: pageInfo.currentPage,
@@ -297,7 +294,9 @@ const PageWidget = () => {
       const rendition = nextHtmlBook.rendition;
       (async () => {
         await methodsRef.current.handlePageNum(rendition);
+        console.log("PageWidget: rendition registered");
         rendition.on("page-changed", async () => {
+          console.log("page-changed event triggered");
           await methodsRef.current.handlePageNum(rendition);
           await methodsRef.current.handleBatchTranslation(rendition);
           if (ignoreNextPageChange.current) {
@@ -306,57 +305,54 @@ const PageWidget = () => {
             handleJumpPosition(null);
           }
         });
-        rendition.on(
-          "annotation-changed",
-          async (chapterDocIndex: number) => {
-            let annotationData = rendition.getAnnotationData(chapterDocIndex);
-            let notes = await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
+        rendition.on("annotation-changed", async (chapterDocIndex: number) => {
+          let annotationData = rendition.getAnnotationData(chapterDocIndex);
+          let notes = await ConfigUtil.getNotesByBookKeyAndTypeWithSort(
+            currentBook.key,
+            "annotation"
+          );
+          let note = notes.find(
+            (note: Note) => note.chapterIndex === chapterDocIndex
+          );
+          if (note) {
+            note = await DatabaseService.getRecord(note.key, "notes");
+            let newNote = {
+              ...note,
+              range: JSON.stringify(annotationData),
+            };
+            await DatabaseService.updateRecord(newNote, "notes");
+          } else {
+            let bookLocation: {
+              text: string;
+              count: string;
+              chapterTitle: string;
+              chapterDocIndex: string;
+              chapterHref: string;
+              percentage: string;
+              cfi: string;
+              page: string;
+              xpath: string;
+            } = ConfigService.getObjectConfig(
               currentBook.key,
-              "annotation"
+              "recordLocation",
+              {}
             );
-            let note = notes.find(
-              (note: Note) => note.chapterIndex === chapterDocIndex
+            let newNote = new Note(
+              currentBook.key,
+              bookLocation.chapterTitle,
+              chapterDocIndex,
+              "",
+              JSON.stringify(bookLocation),
+              JSON.stringify(annotationData),
+              "annotation",
+              bookLocation.percentage,
+              "annotation",
+              []
             );
-            if (note) {
-              note = await DatabaseService.getRecord(note.key, "notes");
-              let newNote = {
-                ...note,
-                range: JSON.stringify(annotationData),
-              };
-              await DatabaseService.updateRecord(newNote, "notes");
-            } else {
-              let bookLocation: {
-                text: string;
-                count: string;
-                chapterTitle: string;
-                chapterDocIndex: string;
-                chapterHref: string;
-                percentage: string;
-                cfi: string;
-                page: string;
-                xpath: string;
-              } = ConfigService.getObjectConfig(
-                currentBook.key,
-                "recordLocation",
-                {}
-              );
-              let newNote = new Note(
-                currentBook.key,
-                bookLocation.chapterTitle,
-                chapterDocIndex,
-                "",
-                JSON.stringify(bookLocation),
-                JSON.stringify(annotationData),
-                "annotation",
-                bookLocation.percentage,
-                "annotation",
-                []
-              );
-              await DatabaseService.saveRecord(newNote, "notes");
-            }
-            handleFetchNotes();
+            await DatabaseService.saveRecord(newNote, "notes");
           }
-        );
+          handleFetchNotes();
+        });
         rendition.on("rendered", async () => {
           await methodsRef.current.handlePageNum(rendition);
           await methodsRef.current.handleBatchTranslation(rendition);
@@ -411,8 +407,7 @@ const PageWidget = () => {
           width:
             !isNavLocked && !isSettingLocked && !isDockedRight
               ? "100%"
-              : isNavLocked &&
-                  (isSettingLocked || isDockedRight)
+              : isNavLocked && (isSettingLocked || isDockedRight)
                 ? "calc(100% - 600px)"
                 : "calc(100% - 300px)",
           left: !isNavLocked ? "0" : "300px",
@@ -441,23 +436,21 @@ const PageWidget = () => {
               {currentChapter}
             </p>
           )}
-          {!isHideHeader &&
-            currentChapter + "" &&
-            !state.isSingle && (
-              <p
-                className="header-book-name"
-                style={
-                  state.isSingle
-                    ? {
-                        right: `calc(50vw - 
+          {!isHideHeader && currentChapter + "" && !state.isSingle && (
+            <p
+              className="header-book-name"
+              style={
+                state.isSingle
+                  ? {
+                      right: `calc(50vw - 
                       270px)`,
-                      }
-                    : {}
-                }
-              >
-                {currentBook.name}
-              </p>
-            )}
+                    }
+                  : {}
+              }
+            >
+              {currentBook.name}
+            </p>
+          )}
           {!isHideHeader && (
             <>
               <span className="footer-time">
@@ -501,9 +494,7 @@ const PageWidget = () => {
             </p>
           )}
         </div>
-        <>
-          {isShowBookmark ? <div className="bookmark"></div> : null}
-        </>
+        <>{isShowBookmark ? <div className="bookmark"></div> : null}</>
         {isShowPageBorder && (
           <>
             <div className="page-border"></div>

@@ -54,11 +54,7 @@ const OperationPanel = (props: OperationPanelProps) => {
       chapterHref: string;
       percentage: string;
       cfi: string;
-    } = ConfigService.getObjectConfig(
-      currentBook.key,
-      "recordLocation",
-      {}
-    );
+    } = ConfigService.getObjectConfig(currentBook.key, "recordLocation", {});
     let bookmarks = await DatabaseService.getRecordsByBookKey(
       currentBook.key,
       "bookmarks"
@@ -73,6 +69,7 @@ const OperationPanel = (props: OperationPanelProps) => {
   useEffect(() => {
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     const onPageChanged = async () => {
+      console.log("onPageChanged event triggered");
       speedRef.current = Date.now() - timeStampRef.current;
       timeStampRef.current = Date.now();
       let pageProgress = await htmlBook.rendition.getProgress();

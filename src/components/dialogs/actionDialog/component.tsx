@@ -39,9 +39,7 @@ export interface ActionDialogState {
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 
-const ActionDialog = (
-  props: Pick<ActionDialogProps, "left" | "top">
-) => {
+const ActionDialog = (props: Pick<ActionDialogProps, "left" | "top">) => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const mode = useAppStore((s) => s.sidebar.mode);
   const handleEditDialog = useAppStore((s) => s.handleEditDialog);
@@ -167,7 +165,8 @@ const ActionDialog = (
       }
     }
     if (
-      Object.keys(ConfigService.getAllListConfig("favoriteBooks")).length === 0 &&
+      Object.keys(ConfigService.getAllListConfig("favoriteBooks")).length ===
+        0 &&
       mode === "favorite"
     ) {
       navigate("/manager/empty");
@@ -189,9 +188,8 @@ const ActionDialog = (
     : null;
   const isFavorite = collection
     ? collectionUtil.isCollectionFavorite(collection)
-    : ConfigService.getAllListConfig("favoriteBooks").indexOf(
-        currentBook.key
-      ) > -1;
+    : ConfigService.getAllListConfig("favoriteBooks").indexOf(currentBook.key) >
+      -1;
   const moreActionProps = {
     left: props.left,
     top: props.top,
@@ -297,8 +295,8 @@ const ActionDialog = (
               }}
             >
               <span
-                className="icon-folder view-icon"
-                style={{ fontSize: "14px" }}
+                className="icon-stack view-icon"
+                style={{ fontSize: "18px" }}
               ></span>
               <p className="action-name">
                 <Trans>Add to collection</Trans>
@@ -376,10 +374,7 @@ const ActionDialog = (
               updateState({
                 isShowMark: true,
                 isShowExport: false,
-                isExceed: shouldSubmenuOpenLeft(
-                  props.left,
-                  CONTEXT_MENU_WIDTH
-                ),
+                isExceed: shouldSubmenuOpenLeft(props.left, CONTEXT_MENU_WIDTH),
               });
               const e = event || window.event;
               let x = e.clientX;

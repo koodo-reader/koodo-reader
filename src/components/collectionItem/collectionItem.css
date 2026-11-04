@@ -17,7 +17,9 @@
 }
 .collection-title-icon {
   margin-right: 4px;
-  font-size: 12px;
+  position: relative;
+  top: 2px;
+  font-size: 16px;
   opacity: 0.75;
 }
 .collection-drop-target,
