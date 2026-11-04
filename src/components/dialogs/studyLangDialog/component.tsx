@@ -143,6 +143,7 @@ const StudyLangDialog = () => {
         currentBook.key,
         "fullTranslationBooks"
       );
+      ConfigService.setReaderConfig("fullTranslationMode", value);
     }
     toast.success(t("Setup successful"));
     renderBookFunc();
