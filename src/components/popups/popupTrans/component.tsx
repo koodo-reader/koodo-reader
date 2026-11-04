@@ -63,10 +63,11 @@ const PopupTrans = (props: PopupTransProps) => {
       clearInterval(updateInterval.current);
     }
     updateInterval.current = setInterval(() => {
-      if (textAccumulator.current) {
+      const text = textAccumulator.current;
+      if (text) {
         setState((prev) => ({
           ...prev,
-          translatedText: textAccumulator.current,
+          translatedText: text,
         }));
       }
     }, 150);
@@ -77,10 +78,11 @@ const PopupTrans = (props: PopupTransProps) => {
       clearInterval(updateInterval.current);
       updateInterval.current = null;
     }
-    if (textAccumulator.current) {
+    const finalText = textAccumulator.current;
+    if (finalText) {
       setState((prev) => ({
         ...prev,
-        translatedText: textAccumulator.current,
+        translatedText: finalText,
       }));
     }
   };
