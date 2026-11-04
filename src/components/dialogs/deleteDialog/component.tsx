@@ -14,6 +14,7 @@ import {
   CollectionUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
+import { removeCollectionToTrash } from "../../../utils/common";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 
@@ -186,6 +187,10 @@ const DeleteDialog = (props: DeleteDialogProps) => {
 
   const deleteSelectedBook = () => {
     selectedBooks.forEach((item) => {
+      if (collectionUtil.isCollection(item)) {
+        removeCollectionToTrash(item);
+        return;
+      }
       ConfigService.setListConfig(item, "deletedBooks");
       ConfigService.deleteListConfig(item, "favoriteBooks");
     });
@@ -200,11 +205,14 @@ const DeleteDialog = (props: DeleteDialogProps) => {
   };
 
   const deleteCurrentBook = () => {
+    if (collectionUtil.isCollection(currentBook.key)) {
+      removeCollectionToTrash(currentBook.key);
+      handleFetchBooks();
+      return;
+    }
     ConfigService.setListConfig(currentBook.key, "deletedBooks");
     ConfigService.deleteListConfig(currentBook.key, "favoriteBooks");
-    if (!collectionUtil.isCollection(currentBook.key)) {
-      collectionUtil.removeBooksFromAllCollections([currentBook.key]);
-    }
+    collectionUtil.removeBooksFromAllCollections([currentBook.key]);
     handleFetchBooks();
   };
 
@@ -287,18 +295,21 @@ const DeleteDialog = (props: DeleteDialogProps) => {
             their notes, bookmarks and digests
           </Trans>
         </div>
+      ) : isCollection ? (
+        <div className="delete-dialog-other-option" style={{ top: "100px" }}>
+          {isDisableTrashBin
+            ? t(
+                "This action will remove this collection, and permanently delete the books inside, together with their notes, bookmarks and digests"
+              )
+            : t(
+                "This action will remove this collection, and the books inside will be moved to the recycle bin"
+              )}
+        </div>
       ) : isDisableTrashBin ? (
         <div className="delete-dialog-other-option" style={{ top: "100px" }}>
           <Trans>
             This action will permanently delete the selected books, together
             with their notes, bookmarks and digests
-          </Trans>
-        </div>
-      ) : isCollection ? (
-        <div className="delete-dialog-other-option" style={{ top: "100px" }}>
-          <Trans>
-            This action will move this collection to the recycle bin, the books
-            inside will be kept in your library
           </Trans>
         </div>
       ) : (

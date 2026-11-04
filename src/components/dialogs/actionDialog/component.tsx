@@ -352,7 +352,11 @@ const ActionDialog = (
           >
             <span className="icon-trash-line view-icon"></span>
             <p className="action-name">
-              <Trans>Delete</Trans>
+              {isCollection ? (
+                <Trans>Delete collection</Trans>
+              ) : (
+                <Trans>Delete</Trans>
+              )}
             </p>
           </div>
           <div

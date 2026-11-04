@@ -6,6 +6,7 @@ import {
   ConfigService,
   KookitConfig,
   SyncUtil,
+  CollectionUtil,
 } from "../assets/lib/kookit-extra-browser.min";
 import Book from "../models/Book";
 import BookUtil from "./file/bookUtil";
@@ -2501,6 +2502,22 @@ export const saveOcrCache = (
     console.error("Failed to save ocr cache:", error);
   }
 };
+export const removeCollectionToTrash = (collectionKey: string) => {
+  const collectionUtil = new CollectionUtil(ConfigService);
+  const collection = collectionUtil.getCollection(collectionKey);
+  if (collection) {
+    collection.books.forEach((bookKey) => {
+      if (collectionUtil.isCollection(bookKey)) {
+        removeCollectionToTrash(bookKey);
+        return;
+      }
+      ConfigService.setListConfig(bookKey, "deletedBooks");
+      ConfigService.deleteListConfig(bookKey, "favoriteBooks");
+    });
+  }
+  collectionUtil.dissolveCollection(collectionKey);
+};
+
 export const getCoverTheme = (format: string) => {
   switch (format) {
     case "PDF":
