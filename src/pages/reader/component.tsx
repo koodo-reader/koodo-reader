@@ -874,7 +874,8 @@ const Reader = () => {
               whiteSpace: "nowrap",
               pointerEvents: "none",
               opacity: 0.9,
-              marginTop: 10,
+              marginTop: 12,
+              marginLeft: 12,
             }}
           >
             <Trans
