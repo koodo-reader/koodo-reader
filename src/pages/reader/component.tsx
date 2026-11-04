@@ -45,6 +45,10 @@ import { getOuterDoc } from "../../utils/reader/docUtil";
 import { useAppStore } from "../../store/useAppStore";
 
 const QUICK_BUTTON_EDGE_DISTANCE = 60;
+const DRAG_REGION_STYLE = { WebkitAppRegion: "drag" } as React.CSSProperties;
+const NO_DRAG_REGION_STYLE = {
+  WebkitAppRegion: "no-drag",
+} as React.CSSProperties;
 
 export interface ReaderState {
   isOpenRightPanel: boolean;
@@ -800,24 +804,24 @@ const Reader = () => {
 
       {htmlBook && (
         <div
-          className="reader-quick-buttons"
           style={{
+            ...DRAG_REGION_STYLE,
             position: "absolute",
             top: 0,
             left: isMacOS && !isMergeWord && isSeparateElectronWindow ? 80 : 15,
             zIndex: 14,
+            height: 28,
             display: "flex",
             alignItems: "flex-start",
             opacity: state.isNearEdge ? 1 : 0,
             visibility: state.isNearEdge ? "visible" : "hidden",
             transition: "opacity 0.3s ease, visibility 0.3s ease",
             color: ConfigService.getReaderConfig("textColor") || "",
-            pointerEvents: "none",
           }}
         >
           <div
             className="reader-setting-icon-container"
-            style={{ pointerEvents: "auto" }}
+            style={state.isNearEdge ? NO_DRAG_REGION_STYLE : undefined}
             aria-label={t("Exit")}
             data-tooltip-id="my-tooltip"
             data-tooltip-content={t("Exit")}
@@ -832,7 +836,7 @@ const Reader = () => {
           </div>
           <div
             className="reader-setting-icon-container reader-toolbar-bookmark"
-            style={{ pointerEvents: "auto" }}
+            style={state.isNearEdge ? NO_DRAG_REGION_STYLE : undefined}
             aria-label={t("Bookmark")}
             data-tooltip-id="my-tooltip"
             data-tooltip-content={t("Bookmark")}
@@ -842,12 +846,12 @@ const Reader = () => {
           >
             <span
               className="icon-bookmark-line reader-setting-icon"
-              style={{ fontSize: 18 }}
+              style={{ fontSize: 19 }}
             ></span>
           </div>
           <div
             className="reader-setting-icon-container"
-            style={{ pointerEvents: "auto" }}
+            style={state.isNearEdge ? NO_DRAG_REGION_STYLE : undefined}
             aria-label={t(
               state.isFullscreen ? "Exit full screen" : "Full screen"
             )}
@@ -861,18 +865,18 @@ const Reader = () => {
           >
             <span
               className="icon-fullscreen-line reader-setting-icon"
-              style={{ fontSize: 18 }}
+              style={{ fontSize: 17 }}
             ></span>
           </div>
           <span
             style={{
+              ...DRAG_REGION_STYLE,
               height: 28,
               display: "flex",
               alignItems: "center",
               fontSize: 13,
               lineHeight: "28px",
               whiteSpace: "nowrap",
-              pointerEvents: "none",
               opacity: 0.9,
               marginTop: 12,
               marginLeft: 12,
