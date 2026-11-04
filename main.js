@@ -287,11 +287,7 @@ const getReaderWindowChromeOptions = (isMergeWord) => {
     return { frame: false };
   }
   if (isMacOS) {
-    return {
-      frame: true,
-      titleBarStyle: "hidden",
-      trafficLightPosition: { x: 14, y: 16 },
-    };
+    return { frame: false, titleBarStyle: "customButtonsOnHover" };
   }
   return { frame: false };
 };
