@@ -67,12 +67,14 @@ const OperationPanel = (props: OperationPanelProps) => {
   };
 
   useEffect(() => {
+    if (!htmlBook) return;
+    const rendition = htmlBook.rendition;
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     const onPageChanged = async () => {
       console.log("onPageChanged event triggered");
       speedRef.current = Date.now() - timeStampRef.current;
       timeStampRef.current = Date.now();
-      let pageProgress = await htmlBook.rendition.getProgress();
+      let pageProgress = await rendition.getProgress();
       setState((prev) => ({
         ...prev,
         timeLeft:
@@ -82,12 +84,12 @@ const OperationPanel = (props: OperationPanelProps) => {
       }));
       handleDisplayBookmark();
     };
-    htmlBook.rendition.on("page-changed", onPageChanged);
+    rendition.on("page-changed", onPageChanged);
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      htmlBook.rendition.off?.("page-changed", onPageChanged);
+      rendition.off?.("page-changed", onPageChanged);
     };
-  }, []);
+  }, [htmlBook]);
 
   const handleScreen = () => {
     const entering = ConfigService.getReaderConfig("isFullscreen") !== "yes";
