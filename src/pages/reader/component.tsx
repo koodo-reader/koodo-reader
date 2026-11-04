@@ -804,8 +804,7 @@ const Reader = () => {
           style={{
             position: "absolute",
             top: 0,
-            left:
-              isMacOS && !isMergeWord && isSeparateElectronWindow ? 80 : 15,
+            left: isMacOS && !isMergeWord && isSeparateElectronWindow ? 80 : 15,
             zIndex: 14,
             display: "flex",
             alignItems: "flex-start",
@@ -828,7 +827,7 @@ const Reader = () => {
           >
             <span
               className="icon-exit reader-setting-icon"
-              style={{ fontSize: 20 }}
+              style={{ fontSize: 18 }}
             ></span>
           </div>
           <div
@@ -843,7 +842,7 @@ const Reader = () => {
           >
             <span
               className="icon-bookmark-line reader-setting-icon"
-              style={{ fontSize: 20 }}
+              style={{ fontSize: 18 }}
             ></span>
           </div>
           <div
@@ -862,7 +861,7 @@ const Reader = () => {
           >
             <span
               className="icon-fullscreen-line reader-setting-icon"
-              style={{ fontSize: 20 }}
+              style={{ fontSize: 18 }}
             ></span>
           </div>
           <span
@@ -875,6 +874,7 @@ const Reader = () => {
               whiteSpace: "nowrap",
               pointerEvents: "none",
               opacity: 0.9,
+              marginTop: 10,
             }}
           >
             <Trans
