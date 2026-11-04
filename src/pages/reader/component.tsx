@@ -737,20 +737,12 @@ const Reader = () => {
         style={{
           position: "absolute",
           top: "0px",
-          ...(isSeparateElectronWindow && isMacOS
-            ? {
-                left: isNavLocked ? 315 : isMergeWord ? 15 : 82,
-                right: "auto",
-              }
-            : {
-                right: isSettingLocked || isDockedRight ? 300 : 15,
-              }),
+          right: isSettingLocked || isDockedRight ? 300 : 15,
           zIndex: 14,
           width: "max-content",
           display: "flex",
           flexDirection: "column",
-          alignItems:
-            isSeparateElectronWindow && isMacOS ? "flex-start" : "flex-end",
+          alignItems: "flex-end",
           justifyContent: "flex-end",
           opacity: state.isNearEdge ? 1 : 0,
           transition: "opacity 0.3s ease",
