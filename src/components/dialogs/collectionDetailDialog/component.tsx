@@ -53,7 +53,7 @@ const CollectionDetailDialog = () => {
   const handleRemoveBook = (event: React.MouseEvent, book: BookModel) => {
     event.stopPropagation();
     collectionUtil.removeBooksFromCollection(currentCollectionKey, [book.key]);
-    toast.success(t("Modification successful"));
+    toast.success(t("Removal successful"));
     loadBooks();
     handleFetchBooks();
   };

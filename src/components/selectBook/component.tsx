@@ -13,7 +13,10 @@ import {
 } from "../../utils/file/export";
 import BookUtil from "../../utils/file/bookUtil";
 import { filterNonCollectionKeys } from "../../utils/reader/bookDrag";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  CollectionUtil,
+} from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
 import { preCacheAllBooks } from "../../utils/common";
 import { useAppStore } from "../../store/useAppStore";
@@ -23,6 +26,8 @@ export interface BookListState {
 
   exportSubmenu: string;
 }
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 const SelectBook = () => {
   const books = useAppStore((s) => s.manager.books);
@@ -95,6 +100,10 @@ const SelectBook = () => {
     });
     return itemArr;
   };
+
+  const hasCollectionSelected = selectedBooks.some((key) =>
+    collectionUtil.isCollection(key)
+  );
 
   return (
     <div
@@ -170,6 +179,7 @@ const SelectBook = () => {
           >
             <Trans>Delete</Trans>
           </span>
+          {!hasCollectionSelected && (
           <div className="select-more-actions-container">
             <span
               className="book-manage-title"
@@ -569,6 +579,7 @@ const SelectBook = () => {
               </span>
             </div>
           </div>
+          )}
 
           <span
             className="book-manage-title"
