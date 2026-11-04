@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import "./deleteIcon.css";
-import DeletePopup from "../dialogs/deletePopup";
+import DeleteDialog from "../dialogs/deleteDialog";
 import toast from "react-hot-toast";
 import DatabaseService from "../../utils/storage/databaseService";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
@@ -90,16 +90,16 @@ const DeleteIcon = (props: DeleteIconProps) => {
       props.handleChangeTag(props.index);
     }
   };
-  const deletePopupProps = {
+  const deleteDialogProps = {
     name: props.tagName,
     title: "Delete this tag",
     description: "This action will clear and remove this tag",
-    handleDeletePopup: handleDeletePopup,
-    handleDeleteOpearion: handleDelete,
+    handleClose: () => handleDeletePopup(false),
+    handleConfirm: handleDelete,
   };
   return (
     <>
-      {isOpenDelete && <DeletePopup {...(deletePopupProps as any)} />}
+      {isOpenDelete && <DeleteDialog {...deleteDialogProps} />}
       <div
         className="delete-digest-button"
         onClick={() => {

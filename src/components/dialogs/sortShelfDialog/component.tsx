@@ -6,7 +6,7 @@ import { useAppStore } from "../../../store/useAppStore";
 import { ReactSortable } from "react-sortablejs";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
-import DeletePopup from "../deletePopup";
+import DeleteDialog from "../deleteDialog";
 
 const SortShelfDialog = () => {
   const handleSortShelfDialog = useAppStore((s) => s.handleSortShelfDialog);
@@ -95,13 +95,12 @@ const SortShelfDialog = () => {
     setIsOpenDelete(isOpen);
   };
 
-  const deletePopupProps = {
-    mode: "shelf",
+  const deleteDialogProps = {
     name: currentDeleteShelf,
     title: "Delete this shelf",
     description: "This action will clear and remove this shelf",
-    handleDeletePopup: handleDeletePopup,
-    handleDeleteOpearion: handleDeleteShelf,
+    handleClose: () => handleDeletePopup(false),
+    handleConfirm: handleDeleteShelf,
   };
   return (
     <div
@@ -112,7 +111,7 @@ const SortShelfDialog = () => {
         event.stopPropagation();
       }}
     >
-      {isOpenDelete && <DeletePopup {...(deletePopupProps as any)} />}
+      {isOpenDelete && <DeleteDialog {...deleteDialogProps} />}
       <div className="backup-dialog-title">
         <Trans>Manage shelf</Trans>
       </div>

@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./deleteDialog.css";
+import "../addDialog/addDialog.css";
 import { Trans } from "react-i18next";
 import { useAppStore } from "../../../store/useAppStore";
 import BookUtil from "../../../utils/file/bookUtil";
@@ -16,7 +17,15 @@ import { isElectron } from "react-device-detect";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 
-const DeleteDialog = () => {
+export interface DeleteDialogProps {
+  title?: string;
+  name?: string;
+  description?: string;
+  handleClose?: () => void;
+  handleConfirm?: () => void;
+}
+
+const DeleteDialog = (props: DeleteDialogProps) => {
   const isSearch = useAppStore((s) => s.manager.isSearch);
   const currentBook = useAppStore((s) => s.book.currentBook);
   const mode = useAppStore((s) => s.sidebar.mode);
@@ -38,6 +47,37 @@ const DeleteDialog = () => {
   const [isDisableTrashBin, setIsDisableTrashBin] = useState(
     ConfigService.getReaderConfig("isDisableTrashBin") === "yes"
   );
+
+  const isGeneric = Boolean(props.handleClose && props.handleConfirm);
+  if (isGeneric) {
+    const handleGenericCancel = () => props.handleClose?.();
+    const handleGenericConfirm = () => {
+      props.handleClose?.();
+      props.handleConfirm?.();
+      toast.success(t("Deletion successful"));
+    };
+    return (
+      <div className="delete-dialog-container">
+        <div className="delete-dialog-title">
+          <Trans>{props.title}</Trans>
+        </div>
+        <div className="delete-dialog-book">
+          <div className="delete-dialog-book-title">{props.name}</div>
+        </div>
+        <div className="delete-dialog-other-option">
+          <Trans>{props.description}</Trans>
+        </div>
+        <div className="add-dialog-button-container">
+          <div className="add-dialog-cancel" onClick={handleGenericCancel}>
+            <Trans>Cancel</Trans>
+          </div>
+          <div className="add-dialog-confirm" onClick={handleGenericConfirm}>
+            <Trans>Delete</Trans>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleCancel = () => {
     handleDeleteDialog(false);

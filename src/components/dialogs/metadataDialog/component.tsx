@@ -93,6 +93,7 @@ const MetadataDialog = (
 
   const handleSelect = (id: string) => {
     setState((prev) => ({
+      ...prev,
       selectedId: prev.selectedId === id ? null : id,
     }));
   };
