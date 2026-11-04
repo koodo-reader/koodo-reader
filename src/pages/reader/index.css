@@ -291,9 +291,11 @@
   }
 }
 
-.header-book-name {
+.header-container,
+.footer-container {
   transition: opacity 0.3s ease;
 }
-.viewer.quick-buttons-shown .header-book-name {
+.viewer.quick-buttons-shown .header-container,
+.viewer.quick-buttons-shown .footer-container {
   opacity: 0;
 }
