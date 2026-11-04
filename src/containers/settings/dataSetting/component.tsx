@@ -47,6 +47,7 @@ export interface SettingInfoState {
   snapshotList: { file: string; time: number }[];
   ttsCacheSize: string;
   tempCacheSize: string;
+  allDataSize: string;
   exportNotesFormat: string;
   exportHighlightsFormat: string;
   exportWordsFormat: string;
@@ -73,6 +74,7 @@ const DataSetting = () => {
     snapshotList: [],
     ttsCacheSize: "",
     tempCacheSize: "",
+    allDataSize: "",
     exportNotesFormat: "",
     exportHighlightsFormat: "",
     exportWordsFormat: "",
@@ -150,9 +152,14 @@ const DataSetting = () => {
       const tempSize = await window.electronAPI.invoke("get-cache-size", {
         type: "temp",
       });
+      const allSize = await window.electronAPI.invoke("get-cache-size", {
+        type: "all",
+        storagePath: getStorageLocation(),
+      });
       setState({
         ttsCacheSize: getCacheSizeLabel(ttsSize),
         tempCacheSize: getCacheSizeLabel(tempSize),
+        allDataSize: getCacheSizeLabel(allSize),
       });
     } catch (error) {
       console.error("Error loading cache sizes:", error);
@@ -978,33 +985,47 @@ const DataSetting = () => {
                 }
               </Trans>
             </p>
-            <div className="setting-dialog-new-title">
-              <Trans>Clear all data</Trans>
-              <span
-                className="change-location-button"
-                onClick={async () => {
-                  let answer = await vexPromptAsync(
-                    t("Please type 'CLEAR' to confirm"),
-                    "",
-                    ""
-                  );
-                  window.vex.closeAll(); // 关闭对话框
-                  if (answer === "CLEAR") {
-                    await clearAllData();
-                    toast.success(t("Clear successful"));
-                    setTimeout(() => {
-                      reloadManager();
-                    }, 300);
-                  } else if (answer) {
-                    toast.error(t("Please type 'CLEAR' to confirm"));
-                  }
-                }}
-              >
-                <Trans>Clear</Trans>
-              </span>
-            </div>
           </>
         )}
+        <div className="setting-dialog-new-title">
+          <Trans>Clear all data</Trans>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <span
+              id="all-data-size"
+              style={{ marginRight: "10px", opacity: 0.6, fontSize: 13 }}
+            >
+              {stateRef.current.allDataSize}
+            </span>
+            <span
+              className="change-location-button"
+              onClick={async () => {
+                let answer = await vexPromptAsync(
+                  t("Please type 'CLEAR' to confirm"),
+                  "",
+                  ""
+                );
+                window.vex.closeAll(); // 关闭对话框
+                if (answer === "CLEAR") {
+                  await clearAllData();
+                  toast.success(t("Clear successful"));
+                  setTimeout(() => {
+                    reloadManager();
+                  }, 300);
+                } else if (answer) {
+                  toast.error(t("Please type 'CLEAR' to confirm"));
+                }
+              }}
+            >
+              <Trans>Clear</Trans>
+            </span>
+          </div>
+        </div>
       </>
     );
   };

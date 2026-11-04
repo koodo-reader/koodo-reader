@@ -1178,7 +1178,7 @@ const createMainWin = () => {
     }
     ttsCacheUtil.resetTTSAudioIndex(dirPath);
   });
-  // 查询缓存大小（字节）：type 为 "tts" 或 "temp"
+  // 查询缓存大小（字节）：type 为 "tts"、"temp" 或 "all"
   ipcMain.handle("get-cache-size", async (event, config) => {
     const cacheType = config && config.type;
     if (cacheType === "tts") {
@@ -1188,6 +1188,12 @@ const createMainWin = () => {
         (total, cacheDir) => total + getDirSize(cacheDir),
         0
       );
+    } else if (cacheType === "all") {
+      const storagePath =
+        config && typeof config.storagePath === "string"
+          ? config.storagePath
+          : dataPath;
+      return getDirSize(storagePath) + getDirSize(getTTSCacheDirPath());
     }
     throw new Error("Invalid cache size request");
   });
