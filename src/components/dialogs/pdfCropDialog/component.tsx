@@ -130,9 +130,16 @@ const PdfCropSlider = (props: PdfCropSliderProps) => {
         />
         <span style={{ marginLeft: "10px" }}>{displayValue}</span>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "8px",
+        }}
+      >
         <span className="ultra-small-size">{props.item.minLabel}</span>
-        <div className="font-size-selector">
+        <div className="font-size-selector" style={{ width: "180px" }}>
           <input
             className="input-progress"
             value={displayValue}
@@ -149,7 +156,11 @@ const PdfCropSlider = (props: PdfCropSliderProps) => {
             onMouseUp={() => {
               props.onCommit();
             }}
-            style={{ position: "absolute", bottom: "11px" }}
+            style={{
+              position: "absolute",
+              bottom: "11px",
+              width: "100%",
+            }}
           />
         </div>
         <span className="ultra-large-size" style={{ fontSize: "16px" }}>
