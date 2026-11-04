@@ -25,6 +25,7 @@ import AssistReadDialog from "../../components/dialogs/assistReadDialog";
 import { isElectron } from "react-device-detect";
 import SettingDialog from "../../components/dialogs/settingDialog";
 import SpeechDialog from "../../components/dialogs/speechDialog";
+import KeepMounted from "../../components/keepMounted";
 import AnnotationDialog from "../../components/dialogs/annotationDialog";
 import PopupOptionDialog from "../../components/dialogs/popupOptionDialog";
 import {
@@ -1305,24 +1306,28 @@ const Reader = () => {
       </div>
 
       {currentBook.key && <Viewer {...(renditionProps as any)} />}
-      {((readerMode === "scroll" || readerMode === "single") && isScaleOpen) ||
-      isConvertOpen ||
-      isPdfCropOpen ||
-      isStudyLangOpen ||
-      isAssistReadOpen ||
-      isSpeechOpen ? (
-        <div className="reader-setting-dialog-anchor">
-          {(readerMode === "scroll" || readerMode === "single") &&
-            isScaleOpen && <ScalePageDialog />}
-          {isConvertOpen && <ConvertDialog />}
-          {isPdfCropOpen && <PdfCropDialog />}
-          {isStudyLangOpen && <StudyLangDialog />}
-          {isAssistReadOpen && <AssistReadDialog />}
-          <div style={{ display: isSpeechOpen ? "block" : "none" }}>
-            <SpeechDialog />
-          </div>
-        </div>
-      ) : null}
+      <div className="reader-setting-dialog-anchor">
+        {(readerMode === "scroll" || readerMode === "single") && (
+          <KeepMounted open={isScaleOpen}>
+            <ScalePageDialog />
+          </KeepMounted>
+        )}
+        <KeepMounted open={isConvertOpen}>
+          <ConvertDialog />
+        </KeepMounted>
+        <KeepMounted open={isPdfCropOpen}>
+          <PdfCropDialog />
+        </KeepMounted>
+        <KeepMounted open={isStudyLangOpen}>
+          <StudyLangDialog />
+        </KeepMounted>
+        <KeepMounted open={isAssistReadOpen}>
+          <AssistReadDialog />
+        </KeepMounted>
+        <KeepMounted open={isSpeechOpen}>
+          <SpeechDialog />
+        </KeepMounted>
+      </div>
       {isAnnotationOpen && <AnnotationDialog />}
       <SupportDialog />
       {isOpenPopupOptionDialog && (
