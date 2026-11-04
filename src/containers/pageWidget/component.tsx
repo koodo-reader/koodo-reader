@@ -392,6 +392,14 @@ const PageWidget = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jumpPosition]);
 
+  // 从右往左翻页时双页版面镜像，footer 页码位置同步交换
+  const isRevertDirection =
+    ConfigService.getReaderConfig("revertDirection") === "yes" &&
+    textOrientation !== "vertical";
+  const isSwappedPage = isRevertDirection && !state.isSingle;
+  const leftPage = isSwappedPage ? state.nextPage : state.prevPage;
+  const rightPage = isSwappedPage ? state.prevPage : state.nextPage;
+
   return (
     <>
       <div
@@ -462,7 +470,7 @@ const PageWidget = () => {
           )}
         </div>
         <div className="footer-container">
-          {!isHideFooter && state.prevPage > 0 && (
+          {!isHideFooter && leftPage > 0 && (
             <p
               className="background-page-left"
               style={
@@ -474,20 +482,20 @@ const PageWidget = () => {
                   : {}
               }
             >
-              <Trans i18nKey="Book page" count={state.prevPage}>
+              <Trans i18nKey="Book page" count={leftPage}>
                 Page
                 {{
-                  count: state.prevPage,
+                  count: leftPage,
                 }}
               </Trans>
             </p>
           )}
-          {!isHideFooter && state.nextPage > 0 && !state.isSingle && (
+          {!isHideFooter && rightPage > 0 && !state.isSingle && (
             <p className="background-page-right">
-              <Trans i18nKey="Book page" count={state.nextPage}>
+              <Trans i18nKey="Book page" count={rightPage}>
                 Page
                 {{
-                  count: state.nextPage,
+                  count: rightPage,
                 }}
               </Trans>
             </p>
