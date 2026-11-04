@@ -14,11 +14,8 @@
   z-index: 4;
   -webkit-app-region: drag;
 }
-.top-panel,
-.operation-panel-container,
 .navigation-panel-container,
-.setting-panel-container,
-.book-operation-panel {
+.setting-panel-container {
   -webkit-app-region: no-drag;
 }
 .reader-quick-buttons,
@@ -45,17 +42,6 @@
 @keyframes fade-left {
   0% {
     transform: translateX(-200px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0px);
-    opacity: 1;
-  }
-}
-
-@keyframes fade-down {
-  0% {
-    transform: translateY(-60px);
     opacity: 0;
   }
   100% {
@@ -111,22 +97,6 @@
   align-items: center;
   cursor: pointer;
 }
-.top-panel {
-  width: 150px;
-  height: 40px;
-  position: absolute;
-  left: calc(50vw - 75px);
-  top: 0px;
-  background-color: rgba(75, 75, 75, 0.3);
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  z-index: 10;
-  opacity: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
 .bottom-panel {
   width: 150px;
   height: 40px;
@@ -142,16 +112,6 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
-}
-.operation-panel-container {
-  width: 450px;
-  height: 60px;
-  position: absolute;
-  top: 0px;
-  left: calc(50vw - 225px);
-  z-index: 15;
-
-  transition: transform 0.5s ease;
 }
 .progress-panel-container {
   width: 450px;

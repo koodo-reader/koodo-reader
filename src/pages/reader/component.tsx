@@ -1,10 +1,9 @@
 import { useLatest } from "../../utils/hooks/useLatest";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import SettingPanel from "../../containers/panels/settingPanel";
 import NavigationPanel from "../../containers/panels/navigationPanel";
-import OperationPanel from "../../containers/panels/operationPanel";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import ProgressPanel from "../../containers/panels/progressPanel";
 import {
   ConfigService,
@@ -14,7 +13,10 @@ import Viewer from "../../containers/viewer";
 import { Tooltip } from "react-tooltip";
 import "./index.css";
 import Book from "../../models/Book";
+import Bookmark from "../../models/Bookmark";
+import BookLocation from "../../models/BookLocation";
 import DatabaseService from "../../utils/storage/databaseService";
+import TTSUtil from "../../utils/reader/ttsUtil";
 import ConvertDialog from "../../components/dialogs/convertDialog";
 import ScalePageDialog from "../../components/dialogs/scalePageDialog";
 import PdfCropDialog from "../../components/dialogs/pdfCropDialog";
@@ -32,7 +34,13 @@ import {
 import SupportDialog from "../../components/dialogs/supportDialog";
 import WindowControls from "../../components/windowControls";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
-import { isPaginatedBook, isReadingRawPDF, throttle } from "../../utils/common";
+import {
+  handleExitFullScreen,
+  handleFullScreen,
+  isPaginatedBook,
+  isReadingRawPDF,
+  throttle,
+} from "../../utils/common";
 import { getOuterDoc } from "../../utils/reader/docUtil";
 import { useAppStore } from "../../store/useAppStore";
 
@@ -40,7 +48,6 @@ const QUICK_BUTTON_EDGE_DISTANCE = 60;
 
 export interface ReaderState {
   isOpenRightPanel: boolean;
-  isOpenTopPanel: boolean;
   isOpenBottomPanel: boolean;
   isOpenLeftPanel: boolean;
   isTouch: boolean;
@@ -49,44 +56,39 @@ export interface ReaderState {
   isNearEdge: boolean;
   totalDuration: number;
   currentDuration: number;
+  timeLeft: number;
+  isFullscreen: boolean;
 }
 
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
 let throttleTime = 200;
 let isMouseMoving = false;
-const PANEL_POSITIONS = ["left", "right", "top", "bottom"] as const;
+const PANEL_POSITIONS = ["left", "right", "bottom"] as const;
 type PanelPosition = (typeof PANEL_POSITIONS)[number];
 const PANEL_ENTER_DELAY = 500;
 const PANEL_LEAVE_DELAY = 500;
 const enterTimers: Record<string, NodeJS.Timeout | null> = {
   left: null,
   right: null,
-  top: null,
   bottom: null,
 };
 const leaveTimers: Record<string, NodeJS.Timeout | null> = {
   left: null,
   right: null,
-  top: null,
   bottom: null,
 };
 const isEdgeHovering: Record<string, boolean> = {
   left: false,
   right: false,
-  top: false,
   bottom: false,
 };
 const PANEL_OPEN_STATE: Record<
   PanelPosition,
-  | "isOpenLeftPanel"
-  | "isOpenRightPanel"
-  | "isOpenTopPanel"
-  | "isOpenBottomPanel"
+  "isOpenLeftPanel" | "isOpenRightPanel" | "isOpenBottomPanel"
 > = {
   left: "isOpenLeftPanel",
   right: "isOpenRightPanel",
-  top: "isOpenTopPanel",
   bottom: "isOpenBottomPanel",
 };
 const Reader = () => {
@@ -124,6 +126,11 @@ const Reader = () => {
   const handleAnnotationDialog = useAppStore((s) => s.handleAnnotationDialog);
   const handleFetchUserInfo = useAppStore((s) => s.handleFetchUserInfo);
   const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
+  const handleReadingState = useAppStore((s) => s.handleReadingState);
+  const handleFetchBookmarks = useAppStore((s) => s.handleFetchBookmarks);
+  const handleShowBookmark = useAppStore((s) => s.handleShowBookmark);
+  const handleSearch = useAppStore((s) => s.handleSearch);
+  const handleHtmlBook = useAppStore((s) => s.handleHtmlBook);
   const { t } = useTranslation();
   const currentProps = {
     t,
@@ -162,13 +169,14 @@ const Reader = () => {
   };
   const propsRef = useLatest(currentProps);
   const [state, setState] = useState<ReaderState>({
-    isOpenTopPanel: false,
     isOpenBottomPanel: false,
     hoverPanel: "",
     isOpenLeftPanel: isNavLocked,
     isOpenRightPanel: isSettingLocked,
     totalDuration: 0,
     currentDuration: 0,
+    timeLeft: 0,
+    isFullscreen: ConfigService.getReaderConfig("isFullscreen") === "yes",
     isTouch: ConfigService.getReaderConfig("isTouch") === "yes",
     isPreventTrigger:
       ConfigService.getReaderConfig("isPreventTrigger") === "yes",
@@ -182,6 +190,8 @@ const Reader = () => {
   const autoShowTimerRef = useRef<NodeJS.Timeout | null>(null);
   const hideQuickButtonsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const dialogAnchorIconRef = useRef<HTMLElement | null>(null);
+  const timeStampRef = useRef(Date.now());
+  const speedRef = useRef(30000);
   const didMountRef = useRef(false);
   useEffect(() => {
     const rendition = htmlBook?.rendition;
@@ -292,11 +302,6 @@ const Reader = () => {
           isOpenLeftPanel: true,
         });
         break;
-      case "top":
-        updateState({
-          isOpenTopPanel: true,
-        });
-        break;
       case "bottom":
         updateState({
           isOpenBottomPanel: true,
@@ -327,9 +332,6 @@ const Reader = () => {
           updateState({ isOpenLeftPanel: false });
           break;
         }
-      case "top":
-        updateState({ isOpenTopPanel: false });
-        break;
       case "bottom":
         updateState({ isOpenBottomPanel: false });
         break;
@@ -348,6 +350,140 @@ const Reader = () => {
       handleEnterReader(position);
     }
   };
+  const handleFullscreenChange = () => {
+    const isNowFullscreen = !!document.fullscreenElement;
+    if (!isNowFullscreen) {
+      ConfigService.setReaderConfig("isFullscreen", "no");
+    }
+    updateState({ isFullscreen: isNowFullscreen });
+  };
+  const handleDisplayBookmark = async () => {
+    const book = propsRef.current.currentBook;
+    if (!book?.key) return;
+    handleShowBookmark(false);
+    let bookLocation: {
+      text: string;
+      count: string;
+      chapterTitle: string;
+      chapterDocIndex: string;
+      chapterHref: string;
+      percentage: string;
+      cfi: string;
+    } = ConfigService.getObjectConfig(book.key, "recordLocation", {});
+    let bookmarks = await DatabaseService.getRecordsByBookKey(
+      book.key,
+      "bookmarks"
+    );
+    bookmarks.forEach((item) => {
+      if (item.cfi === JSON.stringify(bookLocation)) {
+        handleShowBookmark(true);
+      }
+    });
+  };
+  const handleScreen = () => {
+    const entering = ConfigService.getReaderConfig("isFullscreen") !== "yes";
+    entering ? handleFullScreen() : handleExitFullScreen();
+    ConfigService.setReaderConfig("isFullscreen", entering ? "yes" : "no");
+    updateState({ isFullscreen: entering });
+  };
+  const handleExit = async () => {
+    ConfigService.setReaderConfig("isFullscreen", "no");
+    handleReadingState(false);
+    handleSearch(false);
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    TTSUtil.pauseAudio();
+    handleExitFullScreen();
+    if (propsRef.current.htmlBook) {
+      handleHtmlBook(null);
+    }
+    if (isElectron) {
+      if (ConfigService.getReaderConfig("isOpenInMain") === "yes") {
+        window.electronAPI.invoke("exit-tab", "ping");
+      } else {
+        window.electronAPI.invoke("exit-reader", "ping");
+      }
+    } else {
+      ConfigService.setReaderConfig("isFinishWebReading", "yes");
+      window.close();
+    }
+  };
+  const handleAddBookmark = async () => {
+    const book = propsRef.current.currentBook;
+    const htmlBook = propsRef.current.htmlBook;
+    if (!book?.key || !htmlBook) return;
+    let bookKey = book.key;
+    let bookLocation: BookLocation = ConfigService.getObjectConfig(
+      bookKey,
+      "recordLocation",
+      {}
+    );
+    let text = bookLocation.text;
+    let chapter = bookLocation.chapterTitle;
+    let percentage = bookLocation.percentage;
+    let isDuplicate = false;
+    let bookmarks = await DatabaseService.getRecordsByBookKey(
+      bookKey,
+      "bookmarks"
+    );
+    for (let i = 0; i < bookmarks.length; i++) {
+      if (
+        bookmarks[i].percentage === bookLocation.percentage &&
+        bookmarks[i].page === bookLocation.page
+      ) {
+        isDuplicate = true;
+        break;
+      }
+    }
+    if (isDuplicate) {
+      toast.error(t("Bookmark already exists"));
+      return;
+    }
+
+    let cfi = JSON.stringify(bookLocation);
+    if (!text) {
+      text = (await htmlBook.rendition.visibleText()).join(" ");
+    }
+    text = text
+      .replace(/\s\s/g, "")
+      .replace(/\r/g, "")
+      .replace(/\n/g, "")
+      .replace(/\t/g, "")
+      .replace(/\f/g, "");
+
+    let bookmark = new Bookmark(
+      bookKey,
+      cfi,
+      text.substr(0, 200),
+      percentage,
+      chapter
+    );
+    await DatabaseService.saveRecord(bookmark, "bookmarks");
+    handleFetchBookmarks();
+    handleShowBookmark(true);
+  };
+  useEffect(() => {
+    if (!htmlBook) return;
+    const rendition = htmlBook.rendition;
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    const onPageChanged = async () => {
+      speedRef.current = Date.now() - timeStampRef.current;
+      timeStampRef.current = Date.now();
+      let pageProgress = await rendition.getProgress();
+      updateState({
+        timeLeft:
+          ((pageProgress.totalPage - pageProgress.currentPage) *
+            speedRef.current) /
+          1000,
+      });
+      handleDisplayBookmark();
+    };
+    rendition.on("page-changed", onPageChanged);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      rendition.off?.("page-changed", onPageChanged);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [htmlBook]);
   const closeSettingDialogs = () => {
     propsRef.current.handleScalePageDialog(false);
     propsRef.current.handleConvertDialog(false);
@@ -650,7 +786,6 @@ const Reader = () => {
     handleEnterReader: handleEnterReader,
     isShow:
       state.isOpenLeftPanel ||
-      state.isOpenTopPanel ||
       state.isOpenBottomPanel ||
       state.isOpenRightPanel,
   };
@@ -661,6 +796,112 @@ const Reader = () => {
       <Tooltip id="my-tooltip" style={{ zIndex: 25 }} />
       {isSeparateElectronWindow && (
         <div className="reader-window-drag-region" />
+      )}
+
+      {htmlBook && (
+        <div
+          className="reader-quick-buttons"
+          style={{
+            position: "absolute",
+            top: 0,
+            left:
+              isMacOS && !isMergeWord && isSeparateElectronWindow ? 80 : 15,
+            zIndex: 14,
+            display: "flex",
+            alignItems: "flex-start",
+            opacity: state.isNearEdge ? 1 : 0,
+            visibility: state.isNearEdge ? "visible" : "hidden",
+            transition: "opacity 0.3s ease, visibility 0.3s ease",
+            color: ConfigService.getReaderConfig("textColor") || "",
+            pointerEvents: "none",
+          }}
+        >
+          <div
+            className="reader-setting-icon-container"
+            style={{ pointerEvents: "auto" }}
+            aria-label={t("Exit")}
+            data-tooltip-id="my-tooltip"
+            data-tooltip-content={t("Exit")}
+            onClick={() => {
+              handleExit();
+            }}
+          >
+            <span
+              className="icon-exit reader-setting-icon"
+              style={{ fontSize: 20 }}
+            ></span>
+          </div>
+          <div
+            className="reader-setting-icon-container reader-toolbar-bookmark"
+            style={{ pointerEvents: "auto" }}
+            aria-label={t("Bookmark")}
+            data-tooltip-id="my-tooltip"
+            data-tooltip-content={t("Bookmark")}
+            onClick={() => {
+              handleAddBookmark();
+            }}
+          >
+            <span
+              className="icon-bookmark-line reader-setting-icon"
+              style={{ fontSize: 20 }}
+            ></span>
+          </div>
+          <div
+            className="reader-setting-icon-container"
+            style={{ pointerEvents: "auto" }}
+            aria-label={t(
+              state.isFullscreen ? "Exit full screen" : "Full screen"
+            )}
+            data-tooltip-id="my-tooltip"
+            data-tooltip-content={t(
+              state.isFullscreen ? "Exit full screen" : "Full screen"
+            )}
+            onClick={() => {
+              handleScreen();
+            }}
+          >
+            <span
+              className="icon-fullscreen-line reader-setting-icon"
+              style={{ fontSize: 20 }}
+            ></span>
+          </div>
+          <span
+            style={{
+              height: 28,
+              display: "flex",
+              alignItems: "center",
+              fontSize: 13,
+              lineHeight: "28px",
+              whiteSpace: "nowrap",
+              pointerEvents: "none",
+              opacity: 0.9,
+            }}
+          >
+            <Trans
+              i18nKey="Current reading time"
+              count={Math.floor(
+                Math.abs(Math.floor(state.currentDuration / 60))
+              )}
+            >
+              Current reading time:
+              {{
+                count: Math.abs(Math.floor(state.currentDuration / 60)),
+              }}
+              min
+            </Trans>
+            &nbsp;&nbsp;
+            <Trans
+              i18nKey="Remaining reading time"
+              count={Math.ceil(state.timeLeft / 60)}
+            >
+              Remaining reading time:
+              {{
+                count: `${Math.ceil(state.timeLeft / 60)}`,
+              }}
+              min
+            </Trans>
+          </span>
+        </div>
       )}
 
       <div
@@ -906,7 +1147,6 @@ const Reader = () => {
               handleEnterReader("left");
               handleEnterReader("right");
               handleEnterReader("bottom");
-              handleEnterReader("top");
             }}
           >
             <span
@@ -960,28 +1200,6 @@ const Reader = () => {
         }
         onClick={() => {
           handleEnterReader("right");
-        }}
-      >
-        <span className="icon-grid panel-icon"></span>
-      </div>
-      <div
-        className="top-panel"
-        onMouseEnter={() => handleEdgeMouseEnter("top")}
-        style={
-          state.hoverPanel === "top"
-            ? {
-                opacity: 0.5,
-                marginLeft:
-                  isNavLocked && !isSettingLocked && !isDockedRight ? 150 : 0,
-              }
-            : {
-                marginLeft:
-                  isNavLocked && !isSettingLocked && !isDockedRight ? 150 : 0,
-              }
-        }
-        onMouseLeave={() => handleEdgeMouseLeave("top")}
-        onClick={() => {
-          handleEnterReader("top");
         }}
       >
         <span className="icon-grid panel-icon"></span>
@@ -1079,43 +1297,6 @@ const Reader = () => {
         }
       >
         <ProgressPanel />
-      </div>
-      <div
-        className="operation-panel-container"
-        onMouseEnter={() => {
-          cancelLeaveReader("top");
-        }}
-        onMouseLeave={() => {
-          scheduleLeaveReader("top");
-        }}
-        style={
-          state.isOpenTopPanel
-            ? {
-                marginLeft:
-                  isNavLocked && !isSettingLocked
-                    ? 150
-                    : !isNavLocked && (isSettingLocked || isDockedRight)
-                      ? -150
-                      : 0,
-              }
-            : {
-                transform: "translateY(-110px)",
-                marginLeft:
-                  isNavLocked && !isSettingLocked
-                    ? 150
-                    : !isNavLocked && (isSettingLocked || isDockedRight)
-                      ? -150
-                      : 0,
-              }
-        }
-      >
-        {htmlBook && (
-          <OperationPanel
-            {...({
-              currentDuration: state.currentDuration,
-            } as any)}
-          />
-        )}
       </div>
 
       {currentBook.key && <Viewer {...(renditionProps as any)} />}

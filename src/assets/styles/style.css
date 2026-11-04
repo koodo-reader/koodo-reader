@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?wyy9rw');
-  src:  url('fonts/icomoon.eot?wyy9rw#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?wyy9rw') format('truetype'),
-    url('fonts/icomoon.woff?wyy9rw') format('woff'),
-    url('fonts/icomoon.svg?wyy9rw#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?t04zjk');
+  src:  url('fonts/icomoon.eot?t04zjk#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?t04zjk') format('truetype'),
+    url('fonts/icomoon.woff?t04zjk') format('woff'),
+    url('fonts/icomoon.svg?t04zjk#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-bookmark-line:before {
+  content: "\e977";
+}
+.icon-fullscreen-line:before {
+  content: "\e978";
+}
+.icon-exit:before {
+  content: "\e979";
+}
 .icon-stack:before {
   content: "\e976";
 }
@@ -346,7 +355,7 @@
 .icon-webdav:before {
   content: "\e916";
 }
-.icon-exit:before {
+.icon-exit1:before {
   content: "\e919";
 }
 .icon-fullscreen:before {

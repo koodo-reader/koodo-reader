@@ -18,7 +18,6 @@ export type ShortcutAction =
   | "openToc"
   | "openLeftPanel"
   | "openRightPanel"
-  | "openTopPanel"
   | "openBottomPanel"
   | "createBookmark"
   | "openBookmarkList"
@@ -46,7 +45,6 @@ export const SHORTCUT_ACTIONS: ShortcutAction[] = [
   "openToc",
   "openLeftPanel",
   "openRightPanel",
-  "openTopPanel",
   "openBottomPanel",
   "createBookmark",
   "openBookmarkList",
@@ -177,7 +175,6 @@ export const DEFAULT_SHORTCUT_CONFIG: ShortcutConfig = {
   searchInBook: [{ keyCode: 70, ctrl: true }],
   openLeftPanel: [{ keyCode: 117 }],
   openRightPanel: [{ keyCode: 118 }],
-  openTopPanel: [{ keyCode: 119 }],
   openBottomPanel: [{ keyCode: 120 }],
   createBookmark: [{ keyCode: 66, ctrl: true, shift: true }],
   openBookmarkList: [{ keyCode: 66, ctrl: true, alt: true }],

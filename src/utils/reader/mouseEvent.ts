@@ -146,7 +146,7 @@ const SELECTION_SHORTCUT_OPTIONS: Array<{
 export const READING_PANEL_TOGGLE_EVENT = "koodo-reading-panel-toggle";
 
 export const openReadingPanel = (
-  position: "left" | "right" | "top" | "bottom"
+  position: "left" | "right" | "bottom"
 ) => {
   const panel = document.querySelector(`.${position}-panel`);
   if (!panel) return;
@@ -154,7 +154,7 @@ export const openReadingPanel = (
 };
 
 export const toggleReadingPanel = (
-  position: "left" | "right" | "top" | "bottom"
+  position: "left" | "right" | "bottom"
 ) => {
   window.dispatchEvent(
     new CustomEvent(READING_PANEL_TOGGLE_EVENT, {
@@ -165,11 +165,10 @@ export const toggleReadingPanel = (
 
 const READING_PANEL_SHORTCUTS: Array<{
   shortcut: ShortcutAction;
-  position: "left" | "right" | "top" | "bottom";
+  position: "left" | "right" | "bottom";
 }> = [
   { shortcut: "openLeftPanel", position: "left" },
   { shortcut: "openRightPanel", position: "right" },
-  { shortcut: "openTopPanel", position: "top" },
   { shortcut: "openBottomPanel", position: "bottom" },
 ];
 
@@ -339,7 +338,7 @@ const handleShortcut = (event: any, book: Book, rendition?: any) => {
   }
   if (matchShortcut(event, shortcuts.createBookmark)) {
     event.preventDefault();
-    const bookmarkBtn = document.querySelector(".add-bookmark-button");
+    const bookmarkBtn = document.querySelector(".reader-toolbar-bookmark");
     bookmarkBtn?.dispatchEvent(clickEvent());
   }
   if (rendition && matchShortcut(event, shortcuts.prevChapter)) {
