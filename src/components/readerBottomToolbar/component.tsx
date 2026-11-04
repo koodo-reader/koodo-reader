@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Trans } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import _ from "underscore";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { isPaginatedBook, scrollContents } from "../../utils/common";
@@ -24,6 +24,7 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
   const percentage = useAppStore((s) => s.progressPanel.percentage);
   const handleFetchPercentage = useAppStore((s) => s.handleFetchPercentage);
   const handleCurrentChapter = useAppStore((s) => s.handleCurrentChapter);
+  const { t } = useTranslation();
   const [state, setState] = useState<Record<string, any>>({
     currentPage: 0,
     totalPage: 0,
@@ -210,6 +211,9 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
         </div>
         <div
           className="previous-chapter"
+          aria-label={t("Previous chapter")}
+          data-tooltip-id="my-tooltip"
+          data-tooltip-content={t("Previous chapter")}
           onClick={() => {
             prevChapter();
           }}
@@ -318,6 +322,9 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
         </span>
         <div
           className="next-chapter"
+          aria-label={t("Next chapter")}
+          data-tooltip-id="my-tooltip"
+          data-tooltip-content={t("Next chapter")}
           onClick={() => {
             nextChapter();
           }}
