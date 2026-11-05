@@ -480,6 +480,7 @@ const Reader = () => {
 
   useEffect(() => {
     if (ConfigService.getReaderConfig("isMergeWord") === "yes") {
+      document.documentElement.style.backgroundColor = "transparent";
       document
         .querySelector("body")
         ?.setAttribute("style", "background-color: rgba(0,0,0,0)");

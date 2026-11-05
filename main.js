@@ -559,12 +559,17 @@ const createMainWin = () => {
     delete options.x;
     delete options.y;
   }
-  mainWin = new BrowserWindow(options);
+  mainWin = new BrowserWindow({ ...options, show: false });
+  mainWin.once("ready-to-show", () => {
+    if (mainWin && !mainWin.isDestroyed()) {
+      if (store.get("isAutoMaximizeWin") === "yes") {
+        mainWin.maximize();
+      }
+      mainWin.show();
+    }
+  });
   if (store.get("isAlwaysOnTop") === "yes") {
     mainWin.setAlwaysOnTop(true);
-  }
-  if (store.get("isAutoMaximizeWin") === "yes") {
-    mainWin.maximize();
   }
 
   if (!isDev) {
