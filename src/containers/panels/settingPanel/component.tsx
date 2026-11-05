@@ -17,7 +17,7 @@ import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
 import { useAppStore } from "../../../store/useAppStore";
 
-const SETTING_PANEL_TAB_KEY = "setting-panel-tab";
+const SETTING_PANEL_TAB_KEY = "settingPanelTab";
 
 const PanelDropdownList = DropdownList as unknown as React.ComponentType<{
   group?: string;
@@ -69,13 +69,13 @@ const SettingPanel = () => {
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
     const availableTabs = getAvailableTabs().map((item) => item.key);
-    const savedTab = localStorage.getItem(SETTING_PANEL_TAB_KEY);
+    const savedTab = ConfigService.getReaderConfig(SETTING_PANEL_TAB_KEY);
     return savedTab && availableTabs.includes(savedTab) ? savedTab : "theme";
   });
 
   const handleTabChange = (nextTab: string) => {
     setActiveTab(nextTab);
-    localStorage.setItem(SETTING_PANEL_TAB_KEY, nextTab);
+    ConfigService.setReaderConfig(SETTING_PANEL_TAB_KEY, nextTab);
   };
 
   const handleLock = () => {
@@ -100,11 +100,9 @@ const SettingPanel = () => {
         "seperateStyleConfig"
       );
     } else {
-      const readerConfig = JSON.parse(
-        localStorage.getItem("readerConfig") || "{}"
-      );
+      const readerConfig = ConfigService.getAllObjectConfig("readerConfig");
       KookitConfig.StyleKeys.forEach((key) => delete readerConfig[key]);
-      localStorage.setItem("readerConfig", JSON.stringify(readerConfig));
+      ConfigService.setAllObjectConfig(readerConfig, "readerConfig");
     }
 
     toast.success(t("Clear successful"));
