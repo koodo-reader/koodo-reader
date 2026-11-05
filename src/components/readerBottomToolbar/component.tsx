@@ -240,6 +240,12 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
       <div className="reader-bottom-toolbar-left">
         <input
           className="input-progress"
+          style={{
+            position: "absolute",
+            left: "25%",
+            width: "calc(50% - 180px)",
+            transform: "translateX(-50%)",
+          }}
           value={state.currentPercentage}
           type="range"
           max="100"
@@ -260,7 +266,14 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
         />
       </div>
       <div className="reader-bottom-toolbar-right">
-        <span className="reader-bottom-toolbar-info">
+        <span
+          className="reader-bottom-toolbar-info"
+          style={{
+            position: "absolute",
+            left: "75%",
+            transform: "translateX(-50%)",
+          }}
+        >
           <span>
             <Trans>Progress</Trans>: {state.currentPercentage}%
           </span>
