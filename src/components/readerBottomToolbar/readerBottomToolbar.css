@@ -149,7 +149,6 @@
 .reader-bottom-toolbar input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
-  max-width: 360px;
   min-width: 80px;
   flex: 1;
   margin: 0;
