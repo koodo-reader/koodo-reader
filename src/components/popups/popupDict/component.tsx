@@ -309,7 +309,7 @@ const PopupDict = (props: PopupDictProps) => {
   };
 
   const handleLookUp = async (text: string) => {
-    let originalText = text.replace(/(\r\n|\n|\r)/gm, "").replace(/-/gm, "");
+    let originalText = text.replace(/(\r\n|\n|\r)/gm, "");
     updateState({ word: originalText });
     updateState({ prototype: originalText });
     if (ConfigService.getReaderConfig("isLemmatizeWord") === "yes") {
