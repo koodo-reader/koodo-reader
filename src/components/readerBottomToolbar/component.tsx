@@ -200,7 +200,7 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
         color: ConfigService.getReaderConfig("textColor") || "",
       }}
     >
-      <div className="reader-bottom-toolbar-left">
+      <div className="reader-bottom-toolbar-side reader-bottom-toolbar-side-left">
         <div
           className="previous-chapter"
           onClick={() => {
@@ -236,6 +236,8 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
           <span className="icon-dropdown previous-chapter-icon"></span>
           <span className="icon-dropdown previous-chapter-icon"></span>
         </div>
+      </div>
+      <div className="reader-bottom-toolbar-left">
         <input
           className="input-progress"
           value={state.currentPercentage}
@@ -336,6 +338,8 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
             <span>/ {htmlBook.flattenChapters.length}</span>
           </span>
         </span>
+      </div>
+      <div className="reader-bottom-toolbar-side reader-bottom-toolbar-side-right">
         <div
           className="next-chapter next-chapter-double"
           aria-label={t("Next chapter")}
