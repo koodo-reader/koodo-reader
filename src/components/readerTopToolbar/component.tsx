@@ -227,7 +227,7 @@ const ReaderTopToolbar = (props: ReaderTopToolbarProps) => {
               props.isSeparateElectronWindow
                 ? 80
                 : 15,
-            zIndex: 14,
+            zIndex: 9,
             height: 28,
             display: "flex",
             alignItems: "flex-start",

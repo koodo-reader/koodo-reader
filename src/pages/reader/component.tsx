@@ -40,6 +40,7 @@ import { getOuterDoc } from "../../utils/reader/docUtil";
 import { useAppStore } from "../../store/useAppStore";
 
 const QUICK_BUTTON_EDGE_DISTANCE = 60;
+const POPUP_BOX_MENU_MODES = ["note", "trans", "dict", "assistant"];
 
 export interface ReaderState {
   isOpenRightPanel: boolean;
@@ -95,6 +96,8 @@ const Reader = () => {
   const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
   const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
   const isSettingOpen = useAppStore((s) => s.manager.isSettingOpen);
+  const isOpenMenu = useAppStore((s) => s.viewArea.isOpenMenu);
+  const menuMode = useAppStore((s) => s.viewArea.menuMode);
   const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
   const handleReadingBook = useAppStore((s) => s.handleReadingBook);
   const handleFetchPercentage = useAppStore((s) => s.handleFetchPercentage);
@@ -614,6 +617,10 @@ const Reader = () => {
   const isMacOS =
     isElectron && window.electronAPI?.runtime?.platform === "darwin";
   const isMergeWord = ConfigService.getReaderConfig("isMergeWord") === "yes";
+  const isUndockedPopupBoxOpen =
+    !isDockedRight &&
+    isOpenMenu &&
+    POPUP_BOX_MENU_MODES.includes(menuMode);
   const renditionProps = {
     handleLeaveReader: handleLeaveReader,
     handleEnterReader: handleEnterReader,
@@ -629,7 +636,7 @@ const Reader = () => {
       )}
 
       <ReaderTopToolbar
-        isNearEdge={state.isNearEdge}
+        isNearEdge={state.isNearEdge && !isUndockedPopupBoxOpen}
         currentDuration={state.currentDuration}
         isMacOS={isMacOS}
         isMergeWord={isMergeWord}
@@ -642,7 +649,7 @@ const Reader = () => {
       />
 
       <ReaderBottomToolbar
-        isNearEdge={state.isNearEdge}
+        isNearEdge={state.isNearEdge && !isUndockedPopupBoxOpen}
         showQuickButtons={showQuickButtons}
         hideQuickButtons={hideQuickButtons}
       />

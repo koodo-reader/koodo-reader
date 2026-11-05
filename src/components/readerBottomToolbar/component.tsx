@@ -188,7 +188,7 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
         bottom: 0,
         left: isNavLocked ? 315 : 15,
         right: isSettingLocked || isDockedRight ? 315 : 15,
-        zIndex: 14,
+        zIndex: 9,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
