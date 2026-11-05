@@ -167,3 +167,9 @@
   margin-left: 5px;
   outline: none;
 }
+
+@media screen and (max-width: 1000px) {
+  .reader-bottom-toolbar-info {
+    display: none;
+  }
+}

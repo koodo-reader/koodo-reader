@@ -284,51 +284,46 @@ const ReaderTopToolbar = (props: ReaderTopToolbarProps) => {
               style={{ fontSize: 17 }}
             ></span>
           </div>
+          <span
+            className="reader-top-toolbar-time"
+            style={{
+              ...DRAG_REGION_STYLE,
+              height: 28,
+              display: "flex",
+              alignItems: "center",
+              fontSize: 13,
+              lineHeight: "28px",
+              whiteSpace: "nowrap",
+              opacity: 0.9,
+              marginTop: 12,
+              marginLeft: 12,
+            }}
+          >
+            <Trans
+              i18nKey="Current reading time"
+              count={Math.floor(
+                Math.abs(Math.floor(props.currentDuration / 60))
+              )}
+            >
+              Current reading time:
+              {{
+                count: Math.abs(Math.floor(props.currentDuration / 60)),
+              }}
+              min
+            </Trans>
+            &nbsp;&nbsp;
+            <Trans
+              i18nKey="Remaining reading time"
+              count={Math.ceil(timeLeft / 60)}
+            >
+              Remaining reading time:
+              {{
+                count: `${Math.ceil(timeLeft / 60)}`,
+              }}
+              min
+            </Trans>
+          </span>
         </div>
-      )}
-      {htmlBook && (
-        <span
-          style={{
-            ...DRAG_REGION_STYLE,
-            position: "absolute",
-            top: 12,
-            left: "25vw",
-            transform: "translateX(-50%)",
-            zIndex: 14,
-            height: 28,
-            display: "flex",
-            alignItems: "center",
-            fontSize: 13,
-            lineHeight: "28px",
-            whiteSpace: "nowrap",
-            opacity: props.isNearEdge ? 0.9 : 0,
-            visibility: props.isNearEdge ? "visible" : "hidden",
-            transition: "opacity 0.3s ease, visibility 0.3s ease",
-            color: ConfigService.getReaderConfig("textColor") || "",
-          }}
-        >
-          <Trans
-            i18nKey="Current reading time"
-            count={Math.floor(Math.abs(Math.floor(props.currentDuration / 60)))}
-          >
-            Current reading time:
-            {{
-              count: Math.abs(Math.floor(props.currentDuration / 60)),
-            }}
-            min
-          </Trans>
-          &nbsp;&nbsp;
-          <Trans
-            i18nKey="Remaining reading time"
-            count={Math.ceil(timeLeft / 60)}
-          >
-            Remaining reading time:
-            {{
-              count: `${Math.ceil(timeLeft / 60)}`,
-            }}
-            min
-          </Trans>
-        </span>
       )}
 
       <div
