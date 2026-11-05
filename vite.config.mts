@@ -27,7 +27,7 @@ export default defineConfig(({ command }) => ({
   server: {
     port: 3000,
     host: "127.0.0.1",
-    strictPort: true,
+    strictPort: false,
     warmup: {
       clientFiles: [
         "./src/index.tsx",
