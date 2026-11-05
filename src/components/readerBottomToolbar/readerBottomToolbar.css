@@ -98,6 +98,21 @@
   flex-shrink: 0;
 }
 
+.reader-bottom-toolbar .next-chapter.next-chapter-double {
+  transform: none;
+}
+
+.reader-bottom-toolbar .next-chapter-double .next-chapter-icon {
+  transform: rotate(-90deg);
+}
+
+.reader-bottom-toolbar
+  .next-chapter-double
+  .next-chapter-icon
+  + .next-chapter-icon {
+  margin-left: -7px;
+}
+
 .reader-bottom-toolbar .previous-chapter-icon {
   line-height: 27px !important;
   margin-left: 5px !important;
@@ -105,7 +120,6 @@
 
 .reader-bottom-toolbar .next-chapter-icon {
   line-height: 27px !important;
-  margin-left: 5px !important;
 }
 
 .reader-bottom-toolbar input[type="range"] {

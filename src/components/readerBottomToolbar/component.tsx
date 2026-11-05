@@ -321,23 +321,38 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
           </span>
         </span>
         <div
-          className="next-chapter"
+          className="next-chapter next-chapter-double"
           aria-label={t("Next chapter")}
           data-tooltip-id="my-tooltip"
           data-tooltip-content={t("Next chapter")}
           onClick={() => {
             nextChapter();
           }}
+          style={{
+            width: 30,
+            height: 30,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
+          <span className="icon-dropdown next-chapter-icon"></span>
           <span className="icon-dropdown next-chapter-icon"></span>
         </div>
         <div
-          className="next-chapter-single-container"
+          className="next-chapter"
           onClick={() => {
             handleNextPage();
           }}
+          style={{
+            width: 40,
+            height: 40,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          <span className="icon-dropdown next-chapter-single"></span>
+          <span className="icon-dropdown next-chapter-icon"></span>
         </div>
       </div>
     </div>
