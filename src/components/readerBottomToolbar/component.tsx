@@ -200,7 +200,7 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
         color: ConfigService.getReaderConfig("textColor") || "",
       }}
     >
-      <div className="reader-bottom-toolbar-side reader-bottom-toolbar-side-left">
+      <div className="reader-bottom-toolbar-left">
         <div
           className="previous-chapter"
           onClick={() => {
@@ -236,16 +236,8 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
           <span className="icon-dropdown previous-chapter-icon"></span>
           <span className="icon-dropdown previous-chapter-icon"></span>
         </div>
-      </div>
-      <div className="reader-bottom-toolbar-left">
         <input
           className="input-progress"
-          style={{
-            position: "absolute",
-            left: "25%",
-            width: "calc(50% - 180px)",
-            transform: "translateX(-50%)",
-          }}
           value={state.currentPercentage}
           type="range"
           max="100"
@@ -266,14 +258,7 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
         />
       </div>
       <div className="reader-bottom-toolbar-right">
-        <span
-          className="reader-bottom-toolbar-info"
-          style={{
-            position: "absolute",
-            left: "75%",
-            transform: "translateX(-50%)",
-          }}
-        >
+        <span className="reader-bottom-toolbar-info">
           <span>
             <Trans>Progress</Trans>: {state.currentPercentage}%
           </span>
@@ -351,8 +336,6 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
             <span>/ {htmlBook.flattenChapters.length}</span>
           </span>
         </span>
-      </div>
-      <div className="reader-bottom-toolbar-side reader-bottom-toolbar-side-right">
         <div
           className="next-chapter next-chapter-double"
           aria-label={t("Next chapter")}
