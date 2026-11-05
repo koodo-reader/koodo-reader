@@ -202,22 +202,38 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
     >
       <div className="reader-bottom-toolbar-left">
         <div
-          className="previous-chapter-single-container"
+          className="previous-chapter"
           onClick={() => {
             handlePrevPage();
           }}
+          style={{
+            width: 40,
+            height: 40,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          <span className="icon-dropdown previous-chapter-single"></span>
+          <span className="icon-dropdown previous-chapter-icon"></span>
         </div>
         <div
-          className="previous-chapter"
+          className="previous-chapter previous-chapter-double"
           aria-label={t("Previous chapter")}
           data-tooltip-id="my-tooltip"
           data-tooltip-content={t("Previous chapter")}
           onClick={() => {
             prevChapter();
           }}
+          style={{
+            width: 30,
+            height: 30,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 12,
+          }}
         >
+          <span className="icon-dropdown previous-chapter-icon"></span>
           <span className="icon-dropdown previous-chapter-icon"></span>
         </div>
         <input
@@ -334,6 +350,7 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            fontSize: 12,
           }}
         >
           <span className="icon-dropdown next-chapter-icon"></span>
