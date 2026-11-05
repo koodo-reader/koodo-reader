@@ -182,3 +182,9 @@
 .viewer.quick-buttons-shown .footer-container {
   opacity: 0;
 }
+
+@media screen and (max-width: 1000px) {
+  .reader-top-toolbar-time {
+    display: none !important;
+  }
+}
