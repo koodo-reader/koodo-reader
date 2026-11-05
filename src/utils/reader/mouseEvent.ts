@@ -19,10 +19,13 @@ import {
 } from "./shortcutUtil";
 declare var window: any;
 
+// 翻页滑动动画固定时长（毫秒），需与 kookit 的 PAGE_TURN_DURATION 保持一致
+const PAGE_TURN_DURATION = 200;
+
 // 每次翻页时实时读取，避免修改动画设置后锁延迟不生效
 const getThrottleTime = () =>
   (ConfigService.getReaderConfig("animation") || "none") !== "none"
-    ? 1000
+    ? PAGE_TURN_DURATION
     : 100;
 
 export const getSelection = (book: Book) => {
@@ -188,7 +191,7 @@ const NAV_TAB_SHORTCUTS: Array<{
 let lock = false; //prevent from clicking too fasts
 
 // 仿真翻页动画收敛后（kookit 派发 flipend 事件）立即解除锁，
-// 不再等待满 1000ms 的 throttleTime，滚轮/键盘可继续快速翻页
+// 不再等待满 PAGE_TURN_DURATION 的 throttleTime，滚轮/键盘可继续快速翻页
 window.addEventListener("page-flipend", () => {
   lock = false;
 });
