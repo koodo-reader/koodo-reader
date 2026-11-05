@@ -292,16 +292,18 @@ const getReaderWindowChromeOptions = (isMergeWord) => {
   return { frame: false };
 };
 const bindReaderWindowState = (win) => {
-  const sendState = () => {
+  const sendState = (isFullScreen) => {
     if (!win || win.isDestroyed()) return;
     win.webContents.send("reader-window-state", {
       isMaximized: win.isMaximized(),
-      isFullScreen: win.isFullScreen(),
+      isFullScreen:
+        typeof isFullScreen === "boolean" ? isFullScreen : win.isFullScreen(),
     });
   };
-  ["maximize", "unmaximize", "enter-full-screen", "leave-full-screen"].forEach(
-    (eventName) => win.on(eventName, sendState)
-  );
+  win.on("maximize", () => sendState());
+  win.on("unmaximize", () => sendState());
+  win.on("enter-full-screen", () => sendState(true));
+  win.on("leave-full-screen", () => sendState(false));
 };
 if (os.platform() === "linux") {
   options = Object.assign({}, options, {
