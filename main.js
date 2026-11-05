@@ -256,13 +256,36 @@ log.initialize();
 store.set("appVersion", packageJson.version);
 store.set("appPlatform", os.platform() + " " + os.release());
 const mainWinDisplayScale = store.get("mainWinDisplayScale") || 1;
+const getNativeThemeSource = (appSkin) => {
+  if (appSkin === "night") {
+    return "dark";
+  }
+  if (appSkin === "light") {
+    return "light";
+  }
+  return "system";
+};
+const getNativeDarkColorStatus = () => {
+  if (
+    typeof electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI !==
+    "undefined"
+  ) {
+    return electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI;
+  }
+  return electronNativeTheme.shouldUseDarkColors;
+};
+const getAppBackgroundColor = () => {
+  const appSkin = store.get("appSkin");
+  const isDark =
+    appSkin === "night" || (appSkin !== "light" && getNativeDarkColorStatus());
+  return isDark ? "rgba(47, 52, 55, 1)" : "#fff";
+};
 let options = {
   width: parseInt(store.get("mainWinWidth") || 1050) / mainWinDisplayScale,
   height: parseInt(store.get("mainWinHeight") || 660) / mainWinDisplayScale,
   x: parseInt(store.get("mainWinX")),
   y: parseInt(store.get("mainWinY")),
-  backgroundColor:
-    store.get("appSkin") === "night" ? "rgba(47, 52, 55, 1)" : "#fff",
+  backgroundColor: getAppBackgroundColor(),
   minWidth: 300,
   minHeight: 100,
   webPreferences: {
@@ -387,30 +410,16 @@ const removePickerUtil = (config) => {
     pickerUtilCache[config.service] = null;
   }
 };
-const getNativeThemeSource = (appSkin) => {
-  if (appSkin === "night") {
-    return "dark";
-  }
-  if (appSkin === "light") {
-    return "light";
-  }
-  return "system";
-};
-const getNativeDarkColorStatus = () => {
-  if (
-    typeof electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI !==
-    "undefined"
-  ) {
-    return electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI;
-  }
-  return electronNativeTheme.shouldUseDarkColors;
-};
 const applyNativeThemeSource = (appSkin) => {
   if (process.type !== "browser") {
     return false;
   }
   electronNativeTheme.themeSource = getNativeThemeSource(appSkin);
   store.set("appSkin", appSkin || "system");
+  options.backgroundColor = getAppBackgroundColor();
+  if (mainWin && !mainWin.isDestroyed()) {
+    mainWin.setBackgroundColor(options.backgroundColor);
+  }
   return getNativeDarkColorStatus();
 };
 applyNativeThemeSource(store.get("appSkin"));
@@ -916,9 +925,6 @@ const createMainWin = () => {
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isAutoFullscreen, isAutoMaximize, isPreventSleep } =
       config;
-    if (isMergeWord) {
-      delete options.backgroundColor;
-    }
     store.set({
       url,
       isMergeWord: isMergeWord || "no",
@@ -938,6 +944,7 @@ const createMainWin = () => {
       readerWindow = new BrowserWindow({
         ...options,
         ...getReaderWindowChromeOptions(isMergeWord),
+        backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
       });
       readerWindow.webContents.on(
         "console-message",
@@ -970,6 +977,7 @@ const createMainWin = () => {
         ...getReaderWindowChromeOptions(isMergeWord),
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
+        backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
       });
       readerWindow.webContents.on(
         "console-message",
@@ -2059,9 +2067,6 @@ const createMainWin = () => {
       readerWindow.close();
       const currentIsMergeWord = store.get("isMergeWord") === "yes";
       const nextIsMergeWord = currentIsMergeWord ? "no" : "yes";
-      if (currentIsMergeWord) {
-        delete options.backgroundColor;
-      }
       const scaleRatio = store.get("windowDisplayScale") || 1;
       Object.assign(options, {
         width: parseInt(store.get("windowWidth") || 1050) / scaleRatio,
@@ -2071,6 +2076,8 @@ const createMainWin = () => {
         ...getReaderWindowChromeOptions(nextIsMergeWord),
         hasShadow: nextIsMergeWord === "yes" ? false : true,
         transparent: nextIsMergeWord === "yes" ? true : false,
+        backgroundColor:
+          nextIsMergeWord === "yes" ? undefined : getAppBackgroundColor(),
       });
 
       store.set("isMergeWord", nextIsMergeWord);
@@ -2274,6 +2281,7 @@ const applyCorsToRendererRequests = () => {
 app.on("ready", async () => {
   applyCorsToRendererRequests();
   await applyProxyToSession();
+  applyNativeThemeSource(store.get("appSkin"));
   createMainWin();
 });
 app.on("before-quit", () => {
