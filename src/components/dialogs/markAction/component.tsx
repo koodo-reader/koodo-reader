@@ -21,6 +21,8 @@ export interface MarkActionProps {
   isExceed: boolean;
   menuItemIndex?: number;
   handleMarkAction: (isShow: boolean) => void;
+  handleMenuEnter: () => void;
+  handleMenuLeave: () => void;
 }
 
 const collectionUtil = new CollectionUtil(ConfigService);
@@ -38,6 +40,8 @@ const MarkAction = (
     | "isExceed"
     | "menuItemIndex"
     | "handleMarkAction"
+    | "handleMenuEnter"
+    | "handleMenuLeave"
   >
 ) => {
   const currentBook = useAppStore((s) => s.book.currentBook);
@@ -109,9 +113,10 @@ const MarkAction = (
       className="action-dialog-container"
       onMouseLeave={() => {
         props.handleMarkAction(false);
-        handleActionDialog(false);
+        props.handleMenuLeave();
       }}
       onMouseEnter={(event) => {
+        props.handleMenuEnter();
         props.handleMarkAction(true);
         handleActionDialog(true);
         event?.stopPropagation();

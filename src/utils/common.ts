@@ -2101,7 +2101,7 @@ export const getDefaultOcrLang = (engine: string, currentBook: any) => {
 };
 export const CONTEXT_MENU_WIDTH = 200;
 export const CONTEXT_MENU_ITEM_HEIGHT = 33;
-export const CONTEXT_MENU_PADDING = 10;
+export const CONTEXT_MENU_PADDING = 5;
 export const CONTEXT_MENU_MARGIN = 8;
 export const SUBMENU_GAP = 195; // 子菜单相对主菜单的水平偏移（约等于主菜单宽度）
 
@@ -2135,6 +2135,28 @@ export function clampMenuPosition(
     Math.min(top, vw.height - menuHeight - CONTEXT_MENU_MARGIN)
   );
   return { left: clampedLeft, top: clampedTop };
+}
+
+// 定位子菜单：默认与触发项顶部对齐并向下展开；下方空间不足时向上展开，
+// 让子菜单底部与触发项底部对齐，避免两者之间留下空隙，
+// 否则鼠标从触发项移入子菜单时会先离开菜单区域导致菜单被关闭。
+export function getSubmenuPosition(
+  left: number,
+  triggerTop: number,
+  triggerHeight: number,
+  menuWidth: number,
+  menuHeight: number,
+  viewport?: Viewport
+): { left: number; top: number } {
+  const vh = (viewport || {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  }).height;
+  const top =
+    triggerTop + menuHeight + CONTEXT_MENU_MARGIN > vh
+      ? triggerTop + triggerHeight - menuHeight
+      : triggerTop;
+  return clampMenuPosition(left, top, menuWidth, menuHeight, viewport);
 }
 
 // 子菜单(宽 subWidth)从 anchorLeft 处向右(先叠 SUBMENU_GAP)展开是否会超右缘。
