@@ -2333,6 +2333,7 @@ console.info = function (...args) {
   originalConsoleInfo(...args); // 保留原信息日志
   log.info(args.map(serializeArg).join(" ")); // 写入信息日志文件
 };
+
 // Handle MacOS deep linking
 app.on("open-url", (event, url) => {
   event.preventDefault();
