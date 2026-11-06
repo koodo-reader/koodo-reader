@@ -294,9 +294,7 @@ const PageWidget = () => {
       const rendition = nextHtmlBook.rendition;
       (async () => {
         await methodsRef.current.handlePageNum(rendition);
-        console.log("PageWidget: rendition registered");
         rendition.on("page-changed", async () => {
-          console.log("page-changed event triggered");
           await methodsRef.current.handlePageNum(rendition);
           await methodsRef.current.handleBatchTranslation(rendition);
           if (ignoreNextPageChange.current) {
