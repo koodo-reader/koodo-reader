@@ -69,6 +69,7 @@ const initialBook = {
   isOpenEditDialog: false,
   isDetailDialog: false,
   isOpenDeleteDialog: false,
+  isOpenDissolveDialog: false,
   isOpenAddDialog: false,
   isOpenActionDialog: false,
   isReading: false,
@@ -215,6 +216,7 @@ export type AppActionName =
   | "handleDeleteDialog"
   | "handleDeletedBooks"
   | "handleDetailDialog"
+  | "handleDissolveDialog"
   | "handleDockedRight"
   | "handleEditDialog"
   | "handleFetchAuthed"
@@ -875,6 +877,8 @@ export const useAppStore = create<AppState>()((set, get) => {
     handleEditDialog: (mode: boolean) => setBook({ isOpenEditDialog: mode }),
     handleDeleteDialog: (mode: boolean) =>
       setBook({ isOpenDeleteDialog: mode }),
+    handleDissolveDialog: (mode: boolean) =>
+      setBook({ isOpenDissolveDialog: mode }),
     handleAddDialog: (mode: boolean) => setBook({ isOpenAddDialog: mode }),
     handleRenderBookFunc: (renderBookFunc: () => void) =>
       setBook({ renderBookFunc }),

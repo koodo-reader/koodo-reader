@@ -7,7 +7,6 @@ import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import MoreAction from "../moreAction";
 import MarkAction from "../markAction";
-import DeleteDialog from "../deleteDialog";
 import {
   ConfigService,
   CollectionUtil,
@@ -49,6 +48,7 @@ const ActionDialog = (props: Pick<ActionDialogProps, "left" | "top">) => {
   const handleEditDialog = useAppStore((s) => s.handleEditDialog);
   const handleAddDialog = useAppStore((s) => s.handleAddDialog);
   const handleDeleteDialog = useAppStore((s) => s.handleDeleteDialog);
+  const handleDissolveDialog = useAppStore((s) => s.handleDissolveDialog);
   const handleReadingBook = useAppStore((s) => s.handleReadingBook);
   const handleActionDialog = useAppStore((s) => s.handleActionDialog);
   const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
@@ -75,7 +75,6 @@ const ActionDialog = (props: Pick<ActionDialogProps, "left" | "top">) => {
     isShowMark: false,
     isExceed: shouldSubmenuOpenLeft(props.left, CONTEXT_MENU_WIDTH),
   }));
-  const [isOpenDissolvePopup, setIsOpenDissolvePopup] = useState(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const cancelClose = () => {
@@ -136,15 +135,9 @@ const ActionDialog = (props: Pick<ActionDialogProps, "left" | "top">) => {
   };
   const handleDissolveCollection = () => {
     if (!collectionUtil.getCollection(currentBook.key)) return;
-    setIsOpenDissolvePopup(true);
-  };
-  const handleDissolvePopup = (isOpen: boolean) => {
-    setIsOpenDissolvePopup(isOpen);
-    if (!isOpen) handleActionDialog(false);
-  };
-  const handleDissolveConfirm = () => {
-    collectionUtil.dissolveCollection(currentBook.key);
-    handleFetchBooks();
+    handleReadingBook(currentBook);
+    handleDissolveDialog(true);
+    handleActionDialog(false);
   };
   const handleRestoreBook = () => {
     ConfigService.deleteListConfig(currentBook.key, "deletedBooks");
@@ -230,14 +223,6 @@ const ActionDialog = (props: Pick<ActionDialogProps, "left" | "top">) => {
     handleMenuLeave: scheduleClose,
     menuItemIndex: isCollection ? 6 : 7,
   };
-  const dissolveDialogProps = {
-    name: currentBook.name,
-    title: "Dissolve collection",
-    description:
-      "The collection will be removed and all books will be kept in your library.",
-    handleClose: () => handleDissolvePopup(false),
-    handleConfirm: handleDissolveConfirm,
-  };
   if (mode === "trash") {
     return (
       <div
@@ -274,7 +259,7 @@ const ActionDialog = (props: Pick<ActionDialogProps, "left" | "top">) => {
       <div
         className="action-dialog-container"
         onMouseLeave={() => {
-          if (!isOpenDissolvePopup) scheduleClose();
+          scheduleClose();
         }}
         onMouseEnter={() => {
           cancelClose();
@@ -513,7 +498,6 @@ const ActionDialog = (props: Pick<ActionDialogProps, "left" | "top">) => {
       </div>
       <MarkAction {...(markActionProps as any)} />
       <MoreAction {...(moreActionProps as any)} />
-      {isOpenDissolvePopup && <DeleteDialog {...dissolveDialogProps} />}
     </>
   );
 };

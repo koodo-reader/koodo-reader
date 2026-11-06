@@ -22,6 +22,8 @@ export interface DeleteDialogProps {
   title?: string;
   name?: string;
   description?: string;
+  confirmText?: string;
+  successText?: string;
   handleClose?: () => void;
   handleConfirm?: () => void;
 }
@@ -55,7 +57,7 @@ const DeleteDialog = (props: DeleteDialogProps) => {
     const handleGenericConfirm = () => {
       props.handleClose?.();
       props.handleConfirm?.();
-      toast.success(t("Deletion successful"));
+      toast.success(t(props.successText || "Deletion successful"));
     };
     return (
       <div className="delete-dialog-container">
@@ -73,7 +75,11 @@ const DeleteDialog = (props: DeleteDialogProps) => {
             <Trans>Cancel</Trans>
           </div>
           <div className="add-dialog-confirm" onClick={handleGenericConfirm}>
-            <Trans>Delete</Trans>
+            {props.confirmText ? (
+              <Trans>{props.confirmText}</Trans>
+            ) : (
+              <Trans>Delete</Trans>
+            )}
           </div>
         </div>
       </div>
