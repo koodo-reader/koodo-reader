@@ -36,7 +36,7 @@ import { isPaginatedBook, throttle } from "../../utils/common";
 import { getOuterDoc } from "../../utils/reader/docUtil";
 import { useAppStore } from "../../store/useAppStore";
 
-const QUICK_BUTTON_EDGE_DISTANCE = 60;
+const QUICK_BUTTON_EDGE_DISTANCE = 40;
 const POPUP_BOX_MENU_MODES = ["note", "trans", "dict", "assistant"];
 
 export interface ReaderState {
