@@ -503,19 +503,33 @@ const Reader = () => {
         ConfigService.setReaderConfig("isFinishWebReading", "yes");
       }
     });
-    const handleMouseMove = (e: MouseEvent) => {
-      isMouseMoving = true;
-      setTimeout(() => {
-        isMouseMoving = false;
-      }, 100);
-      if (isWithinEdgeZone(e.clientY)) {
+    let latestPointerY: number | null = null;
+    const updateQuickButtons = () => {
+      if (latestPointerY === null) return;
+      if (isWithinEdgeZone(latestPointerY)) {
         showQuickButtons();
       } else {
         hideQuickButtons();
       }
     };
-    const throttledMouseMove = throttle(handleMouseMove, 100);
-    window.addEventListener("mousemove", throttledMouseMove);
+    const throttledMouseMove = throttle(updateQuickButtons, 100);
+    const handleMouseMove = (e: MouseEvent) => {
+      isMouseMoving = true;
+      setTimeout(() => {
+        isMouseMoving = false;
+      }, 100);
+      latestPointerY = e.clientY;
+      throttledMouseMove();
+    };
+    const handleWindowMouseLeave = () => {
+      latestPointerY = null;
+      hideQuickButtons();
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    document.documentElement.addEventListener(
+      "mouseleave",
+      handleWindowMouseLeave
+    );
     window.addEventListener(
       READING_PANEL_TOGGLE_EVENT,
       handleReadingPanelToggle
@@ -529,6 +543,11 @@ const Reader = () => {
       updateState({ isNearEdge: false });
     }, 1500);
     return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      document.documentElement.removeEventListener(
+        "mouseleave",
+        handleWindowMouseLeave
+      );
       window.removeEventListener(
         READING_PANEL_TOGGLE_EVENT,
         handleReadingPanelToggle
@@ -570,18 +589,29 @@ const Reader = () => {
       }
       return y;
     };
-    const createEdgeMoveHandler = (doc: Document) =>
-      throttle((e: MouseEvent) => {
-        if (isWithinEdgeZone(getPageClientY(doc, e.clientY))) {
+    const attachEdgeHandlers = (doc: Document) => {
+      let latestPointerY: number | null = null;
+      const updateQuickButtons = throttle(() => {
+        if (latestPointerY === null) return;
+        if (isWithinEdgeZone(getPageClientY(doc, latestPointerY))) {
           showQuickButtons();
         } else {
           hideQuickButtons();
         }
       }, 100);
+      doc.addEventListener("mousemove", (e: MouseEvent) => {
+        latestPointerY = e.clientY;
+        updateQuickButtons();
+      });
+      doc.documentElement.addEventListener("mouseleave", () => {
+        latestPointerY = null;
+        hideQuickButtons();
+      });
+    };
     const attachToDoc = (doc: Document | null) => {
       if (!doc || attachedDocs.has(doc)) return;
       attachedDocs.add(doc);
-      doc.addEventListener("mousemove", createEdgeMoveHandler(doc));
+      attachEdgeHandlers(doc);
     };
     const collectDocs = () => {
       const outerDoc = getOuterDoc();
