@@ -180,6 +180,7 @@ const throttle = (func, wait = RESIZE_THROTTLE_MS) => {
     }
   };
 };
+
 const getFingerprint = async () => {
   // First, try to get cached fingerprint
   let deviceUuid = store.get("fingerPrint");
