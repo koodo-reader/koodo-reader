@@ -231,7 +231,7 @@ const ReaderTopToolbar = (props: ReaderTopToolbarProps) => {
             color: ConfigService.getReaderConfig("textColor") || "",
           }}
         >
-          <WindowControls t={t} />
+          <WindowControls t={t} isMacOS={props.isMacOS} />
         </div>
       )}
       {htmlBook && (
@@ -520,7 +520,9 @@ const ReaderTopToolbar = (props: ReaderTopToolbarProps) => {
               style={{ fontSize: 16 }}
             ></span>
           </div>
-          {showCustomWindowControls && <WindowControls t={t} />}
+          {showCustomWindowControls && (
+            <WindowControls t={t} isMacOS={props.isMacOS} />
+          )}
         </div>
       </div>
     </>
