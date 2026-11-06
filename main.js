@@ -301,16 +301,9 @@ let options = {
   },
 };
 const Database = require("better-sqlite3");
-const isMacOS = os.platform() === "darwin";
-const getReaderWindowChromeOptions = (isMergeWord) => {
+const getReaderWindowChromeOptions = () => {
   if (isDev) {
     return { frame: true };
-  }
-  if (isMergeWord === "yes") {
-    return { frame: false };
-  }
-  if (isMacOS) {
-    return { frame: false, titleBarStyle: "customButtonsOnHover" };
   }
   return { frame: false };
 };
@@ -948,7 +941,7 @@ const createMainWin = () => {
     if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
       readerWindow = new BrowserWindow({
         ...options,
-        ...getReaderWindowChromeOptions(isMergeWord),
+        ...getReaderWindowChromeOptions(),
         backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
       });
       readerWindow.webContents.on(
@@ -979,7 +972,7 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: isWindowVisible ? parseInt(store.get("windowX")) : undefined,
         y: isWindowVisible ? parseInt(store.get("windowY")) : undefined,
-        ...getReaderWindowChromeOptions(isMergeWord),
+        ...getReaderWindowChromeOptions(),
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
         backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
@@ -2078,7 +2071,7 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
-        ...getReaderWindowChromeOptions(nextIsMergeWord),
+        ...getReaderWindowChromeOptions(),
         hasShadow: nextIsMergeWord === "yes" ? false : true,
         transparent: nextIsMergeWord === "yes" ? true : false,
         backgroundColor:
