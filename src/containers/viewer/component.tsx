@@ -54,6 +54,7 @@ import { parseWithSystemOCR } from "../../utils/request/common";
 import { isElectron } from "react-device-detect";
 import axios from "axios";
 import { getBuiltinOcr } from "../../utils/plugins/rendererRegistry";
+import { getBuiltinEngineOcrWorker } from "../../utils/reader/builtinOcrUtil";
 import { resolveStoredPlugin } from "../../utils/plugins/records";
 import type { PluginConfig } from "../../utils/plugins/types";
 import { useAppStore } from "../../store/useAppStore";
@@ -86,6 +87,9 @@ export interface ViewerState {
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 let lock = false; //prevent from clicking too fasts
+// 章节渲染复用同一 iframe document，"rendered" 每触发一次都会走到这里，
+// 用 WeakSet 保证同一 doc 的 click/pointerup/contextmenu 只绑定一次
+const gestureBoundDocs = new WeakSet<Document>();
 
 const Viewer = (props: ViewerProps) => {
   const currentBook = useAppStore((s) => s.book.currentBook);
@@ -327,16 +331,29 @@ const Viewer = (props: ViewerProps) => {
       propsRef.current.currentBook.description.indexOf("scanned") > -1;
     const rawOcrEngine = getDefaultOcrEngine(propsRef.current.currentBook);
     let ocrEngine = rawOcrEngine;
+    // 缓存 key 需要区分不同 OCR 插件，而渲染引擎统一用 "plugin-ocr"，两者分开维护
+    let ocrCacheEngine = rawOcrEngine;
     let ocrLang = getDefaultOcrLang(rawOcrEngine, propsRef.current.currentBook);
+    const serverRegion =
+      getServerRegion() === "china" && propsRef.current.isAuthed
+        ? "china"
+        : "global";
     let externalWorker: {
       recognize: (input: string) => Promise<unknown>;
     } = {
       recognize:
         rawOcrEngine === "system-ocr"
           ? parseWithSystemOCR
-          : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
-            ? getOcrResultV2
-            : getOcrResult,
+          : rawOcrEngine === "tesseract" || rawOcrEngine === "paddle"
+            ? getBuiltinEngineOcrWorker(
+                rawOcrEngine,
+                ocrLang,
+                serverRegion,
+                isElectron
+              ).recognize
+            : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
+              ? getOcrResultV2
+              : getOcrResult,
     };
 
     const builtinOcr = getBuiltinOcr(rawOcrEngine);
@@ -350,30 +367,42 @@ const Viewer = (props: ViewerProps) => {
         if (ocrLang) {
           pluginConfig.language = ocrLang;
         }
-        let ocrQueue: Promise<unknown> = Promise.resolve();
         externalWorker = {
-          recognize: (imageBase64: string) => {
-            const task = ocrQueue.then(() =>
-              builtinOcr(imageBase64, axios, pluginConfig)
-            );
-            ocrQueue = task.catch(() => undefined);
-            return task;
-          },
+          recognize: (imageBase64: string) =>
+            builtinOcr(imageBase64, axios, pluginConfig),
         };
         ocrEngine = "plugin-ocr";
       } else {
         ocrEngine = isScannedBook ? "paddle" : "system-ocr";
+        ocrCacheEngine = ocrEngine;
         ocrLang = ocrEngine === "paddle" ? "standard_v5_mobile" : "auto";
         externalWorker = {
           recognize:
             ocrEngine === "system-ocr"
               ? parseWithSystemOCR
-              : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
-                ? getOcrResultV2
-                : getOcrResult,
+              : ocrEngine === "tesseract" || ocrEngine === "paddle"
+                ? getBuiltinEngineOcrWorker(
+                    ocrEngine,
+                    ocrLang,
+                    serverRegion,
+                    isElectron
+                  ).recognize
+                : ConfigService.getReaderConfig(ocrLangKey) === "accurate"
+                  ? getOcrResultV2
+                  : getOcrResult,
         };
       }
     }
+    // kookit 侧在 OCR 缓存命中间跳时无法保证 externalWorker 串行调用，
+    // 而引擎（onnx worker / tesseract worker / 系统进程）均非并发安全，
+    // 统一在宿主侧排队，确保任意时刻只有一个识别任务在执行
+    let ocrQueue: Promise<unknown> = Promise.resolve();
+    const rawOcrRecognize = externalWorker.recognize;
+    externalWorker.recognize = (imageBase64: string) => {
+      const task = ocrQueue.then(() => rawOcrRecognize(imageBase64));
+      ocrQueue = task.catch(() => undefined);
+      return task;
+    };
     let rendition = BookHelper.getRendition(
       result,
       {
@@ -427,6 +456,7 @@ const Viewer = (props: ViewerProps) => {
           ConfigService.getReaderConfig("readingRulerBackgroundOpacity") ||
             "0.6"
         ),
+        pageGap: ConfigService.getReaderConfig("pageGap"),
         isEnableKoReaderSync:
           ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes",
         password: getPdfPassword(propsRef.current.currentBook),
@@ -440,10 +470,7 @@ const Viewer = (props: ViewerProps) => {
         ocrLang,
         externalWorker,
         ocrEngine,
-        serverRegion:
-          getServerRegion() === "china" && propsRef.current.isAuthed
-            ? "china"
-            : "global",
+        serverRegion,
         paraSpacingValue:
           ConfigService.getReaderConfig("paraSpacingValue") || "1.5",
         titleSizeValue:
@@ -504,8 +531,20 @@ const Viewer = (props: ViewerProps) => {
         getZipEntries: getZipEntries,
         filePath: BookUtil.getBookPath(propsRef.current.currentBook),
         bookKey: propsRef.current.currentBook.key,
-        getOcrCache: getOcrCache,
-        saveOcrCache: saveOcrCache,
+        getOcrCache: (bookKey: string, chapterDocIndex: string) =>
+          getOcrCache(bookKey, chapterDocIndex, {
+            ocrEngine: ocrCacheEngine,
+            ocrLang,
+          }),
+        saveOcrCache: (
+          bookKey: string,
+          chapterDocIndex: string,
+          cache: { src?: string; text?: string }
+        ) =>
+          saveOcrCache(bookKey, chapterDocIndex, cache, {
+            ocrEngine: ocrCacheEngine,
+            ocrLang,
+          }),
       },
       Kookit
     );
@@ -714,7 +753,8 @@ const Viewer = (props: ViewerProps) => {
     let docs = getIframeDoc(propsRef.current.currentBook);
     for (let i = 0; i < docs.length; i++) {
       let doc = docs[i];
-      if (!doc) continue;
+      if (!doc || gestureBoundDocs.has(doc)) continue;
+      gestureBoundDocs.add(doc);
       doc.addEventListener("click", () => {
         propsRef.current.handleLeaveReader("left");
         propsRef.current.handleLeaveReader("right");
@@ -754,7 +794,11 @@ const Viewer = (props: ViewerProps) => {
           let chapterDocIndex = id ? parseInt(id.split("-").reverse()[0]) : 0;
           updateState({ chapterDocIndex });
         }
-        if (document.location.href.indexOf("localhost") === -1) {
+        if (
+          document.location.href.indexOf("localhost") === -1 &&
+          document.location.href.indexOf("file://") === -1 &&
+          document.location.href.indexOf("127.0.0.1") === -1
+        ) {
           event.preventDefault();
         }
 
@@ -866,8 +910,7 @@ const Viewer = (props: ViewerProps) => {
   });
 
   let isReadingAid =
-    !isReadingRawPDF(currentBook) &&
-    (isParagraphMode || isSpeedReading);
+    !isReadingRawPDF(currentBook) && (isParagraphMode || isSpeedReading);
   return (
     <>
       {htmlBook && !isReadingAid ? (
@@ -942,9 +985,7 @@ const Viewer = (props: ViewerProps) => {
       {isHideBackground ||
       textOrientation === "vertical" ||
       isShowPageBorder ||
-      ((isParagraphMode ||
-        isReadingRuler ||
-        isSpeedReading) &&
+      ((isParagraphMode || isReadingRuler || isSpeedReading) &&
         !isReadingRawPDF(currentBook)) ||
       isMergeWord ? null : currentBook.key ? (
         <Background />

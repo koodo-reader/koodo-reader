@@ -2,18 +2,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
   margin-bottom: 0px;
   padding-top: 5px;
 }
 .speech-dialog-title {
   font-size: 15px;
   font-weight: 600;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
 }
 .speech-dialog-close {
   font-size: 18px;
+  line-height: 1;
   cursor: pointer;
   opacity: 0.6;
   transition: opacity 0.15s;
+  margin-left: auto;
 }
 .speech-dialog-close:hover {
   opacity: 1;

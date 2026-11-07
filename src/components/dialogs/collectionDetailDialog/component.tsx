@@ -15,7 +15,9 @@ import { useAppStore } from "../../../store/useAppStore";
 const collectionUtil = new CollectionUtil(ConfigService);
 
 const CollectionDetailDialog = () => {
-  const currentCollectionKey = useAppStore((s) => s.collection.currentCollectionKey);
+  const currentCollectionKey = useAppStore(
+    (s) => s.collection.currentCollectionKey
+  );
   const handleCollectionDetailDialog = useAppStore(
     (s) => s.handleCollectionDetailDialog
   );
@@ -50,10 +52,8 @@ const CollectionDetailDialog = () => {
 
   const handleRemoveBook = (event: React.MouseEvent, book: BookModel) => {
     event.stopPropagation();
-    collectionUtil.removeBooksFromCollection(currentCollectionKey, [
-      book.key,
-    ]);
-    toast.success(t("Modification successful"));
+    collectionUtil.removeBooksFromCollection(currentCollectionKey, [book.key]);
+    toast.success(t("Removal successful"));
     loadBooks();
     handleFetchBooks();
   };
@@ -75,7 +75,6 @@ const CollectionDetailDialog = () => {
       <div className="collection-detail-dialog-body">
         {books.length === 0 ? (
           <div className="collection-detail-dialog-empty">
-            <span className="icon-folder collection-detail-dialog-empty-icon"></span>
             <p>
               <Trans>Empty</Trans>
             </p>

@@ -17,7 +17,7 @@ import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
 import { useAppStore } from "../../../store/useAppStore";
 
-const SETTING_PANEL_TAB_KEY = "setting-panel-tab";
+const SETTING_PANEL_TAB_KEY = "settingPanelTab";
 
 const PanelDropdownList = DropdownList as unknown as React.ComponentType<{
   group?: string;
@@ -37,6 +37,7 @@ const SettingPanel = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const backgroundColor = useAppStore((s) => s.reader.backgroundColor);
   const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const handleSettingLock = useAppStore((s) => s.handleSettingLock);
   const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
@@ -68,13 +69,13 @@ const SettingPanel = () => {
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [activeTab, setActiveTab] = useState(() => {
     const availableTabs = getAvailableTabs().map((item) => item.key);
-    const savedTab = localStorage.getItem(SETTING_PANEL_TAB_KEY);
+    const savedTab = ConfigService.getReaderConfig(SETTING_PANEL_TAB_KEY);
     return savedTab && availableTabs.includes(savedTab) ? savedTab : "theme";
   });
 
   const handleTabChange = (nextTab: string) => {
     setActiveTab(nextTab);
-    localStorage.setItem(SETTING_PANEL_TAB_KEY, nextTab);
+    ConfigService.setReaderConfig(SETTING_PANEL_TAB_KEY, nextTab);
   };
 
   const handleLock = () => {
@@ -99,11 +100,9 @@ const SettingPanel = () => {
         "seperateStyleConfig"
       );
     } else {
-      const readerConfig = JSON.parse(
-        localStorage.getItem("readerConfig") || "{}"
-      );
+      const readerConfig = ConfigService.getAllObjectConfig("readerConfig");
       KookitConfig.StyleKeys.forEach((key) => delete readerConfig[key]);
-      localStorage.setItem("readerConfig", JSON.stringify(readerConfig));
+      ConfigService.setAllObjectConfig(readerConfig, "readerConfig");
     }
 
     toast.success(t("Clear successful"));
@@ -114,7 +113,13 @@ const SettingPanel = () => {
   const renderSliders = (group: string) => {
     const isPDF = isReadingRawPDF(currentBook);
     return sliderConfigs
-      .filter((item) => item.group === group && (!isPDF || item.isPDF))
+      .filter(
+        (item) =>
+          item.group === group &&
+          (!isPDF || item.isPDF) &&
+          // 页间距只在双页模式下有意义
+          (item.mode !== "pageGap" || readerMode === "double")
+      )
       .map((item) => <SliderList key={item.mode} {...{ item }} />);
   };
 

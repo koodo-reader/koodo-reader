@@ -54,8 +54,7 @@
   --card-border: 1px solid rgba(235, 235, 235, 0.1);
 }
 
-body,
-.active-annotation-dialog-tab {
+body {
   -webkit-tap-highlight-color: transparent;
   background: var(--app-bg);
   color: var(--text-color);
@@ -108,7 +107,6 @@ a {
 .token-dialog-url-box,
 .token-dialog-username-box,
 .account-login-option,
-.font-featured-download-btn,
 .token-dialog-password-box,
 .general-setting-dropdown,
 .delete-dialog-uncheck-icon,
@@ -165,6 +163,18 @@ a {
 .font-featured-progress-bar {
   background-color: var(--control-bg);
   color: var(--on-control);
+}
+
+.font-featured-download-btn,
+.dict-cloud-download-btn {
+  border: var(--option-border);
+  background: transparent;
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .font-featured-download-btn,
+[data-theme="dark"] .dict-cloud-download-btn {
+  border: 1.5px solid rgba(235, 235, 235, 0.3);
 }
 
 .active-tag {

@@ -555,12 +555,6 @@ export const readerSettingList = [
     isPDF: false,
   },
   {
-    title: "Fast reading mode (make the first half of the word bold)",
-    propName: "isBionic",
-    group: "font",
-    isPDF: false,
-  },
-  {
     title: "Text indentation",
     propName: "isIndent",
     group: "layout",

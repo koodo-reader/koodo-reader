@@ -180,6 +180,7 @@ const throttle = (func, wait = RESIZE_THROTTLE_MS) => {
     }
   };
 };
+
 const getFingerprint = async () => {
   // First, try to get cached fingerprint
   let deviceUuid = store.get("fingerPrint");
@@ -256,13 +257,36 @@ log.initialize();
 store.set("appVersion", packageJson.version);
 store.set("appPlatform", os.platform() + " " + os.release());
 const mainWinDisplayScale = store.get("mainWinDisplayScale") || 1;
+const getNativeThemeSource = (appSkin) => {
+  if (appSkin === "night") {
+    return "dark";
+  }
+  if (appSkin === "light") {
+    return "light";
+  }
+  return "system";
+};
+const getNativeDarkColorStatus = () => {
+  if (
+    typeof electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI !==
+    "undefined"
+  ) {
+    return electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI;
+  }
+  return electronNativeTheme.shouldUseDarkColors;
+};
+const getAppBackgroundColor = () => {
+  const appSkin = store.get("appSkin");
+  const isDark =
+    appSkin === "night" || (appSkin !== "light" && getNativeDarkColorStatus());
+  return isDark ? "rgba(47, 52, 55, 1)" : "#fff";
+};
 let options = {
   width: parseInt(store.get("mainWinWidth") || 1050) / mainWinDisplayScale,
   height: parseInt(store.get("mainWinHeight") || 660) / mainWinDisplayScale,
   x: parseInt(store.get("mainWinX")),
   y: parseInt(store.get("mainWinY")),
-  backgroundColor:
-    store.get("appSkin") === "night" ? "rgba(47, 52, 55, 1)" : "#fff",
+  backgroundColor: getAppBackgroundColor(),
   minWidth: 300,
   minHeight: 100,
   webPreferences: {
@@ -278,31 +302,25 @@ let options = {
   },
 };
 const Database = require("better-sqlite3");
-const isMacOS = os.platform() === "darwin";
-const getReaderWindowChromeOptions = (isMergeWord) => {
-  if (isMergeWord === "yes") {
-    return { frame: false };
-  }
-  if (isMacOS) {
-    return {
-      frame: true,
-      titleBarStyle: "hidden",
-      trafficLightPosition: { x: 14, y: 16 },
-    };
+const getReaderWindowChromeOptions = () => {
+  if (isDev) {
+    return { frame: true };
   }
   return { frame: false };
 };
 const bindReaderWindowState = (win) => {
-  const sendState = () => {
+  const sendState = (isFullScreen) => {
     if (!win || win.isDestroyed()) return;
     win.webContents.send("reader-window-state", {
       isMaximized: win.isMaximized(),
-      isFullScreen: win.isFullScreen(),
+      isFullScreen:
+        typeof isFullScreen === "boolean" ? isFullScreen : win.isFullScreen(),
     });
   };
-  ["maximize", "unmaximize", "enter-full-screen", "leave-full-screen"].forEach(
-    (eventName) => win.on(eventName, sendState)
-  );
+  win.on("maximize", () => sendState());
+  win.on("unmaximize", () => sendState());
+  win.on("enter-full-screen", () => sendState(true));
+  win.on("leave-full-screen", () => sendState(false));
 };
 if (os.platform() === "linux") {
   options = Object.assign({}, options, {
@@ -386,30 +404,16 @@ const removePickerUtil = (config) => {
     pickerUtilCache[config.service] = null;
   }
 };
-const getNativeThemeSource = (appSkin) => {
-  if (appSkin === "night") {
-    return "dark";
-  }
-  if (appSkin === "light") {
-    return "light";
-  }
-  return "system";
-};
-const getNativeDarkColorStatus = () => {
-  if (
-    typeof electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI !==
-    "undefined"
-  ) {
-    return electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI;
-  }
-  return electronNativeTheme.shouldUseDarkColors;
-};
 const applyNativeThemeSource = (appSkin) => {
   if (process.type !== "browser") {
     return false;
   }
   electronNativeTheme.themeSource = getNativeThemeSource(appSkin);
   store.set("appSkin", appSkin || "system");
+  options.backgroundColor = getAppBackgroundColor();
+  if (mainWin && !mainWin.isDestroyed()) {
+    mainWin.setBackgroundColor(options.backgroundColor);
+  }
   return getNativeDarkColorStatus();
 };
 applyNativeThemeSource(store.get("appSkin"));
@@ -422,7 +426,10 @@ const applyProxyToSession = async () => {
   const isEnabled =
     config && config.type !== "none" && config.enabled !== false && config.host;
   if (!isEnabled) {
-    await defaultSession.setProxy({ mode: "direct" });
+    // 未启用应用内代理时，跟随操作系统代理（与浏览器行为一致）。
+    // 此前强制 direct 会绕过系统代理（如 Clash/v2rayN 等），导致 Electron 端
+    // 直连 OCR 的 wasm/模型等境外 CDN 不可达（网页端走系统代理所以正常）。
+    await defaultSession.setProxy({ mode: "system" });
     https.globalAgent = new https.Agent();
     http.globalAgent = new http.Agent();
     return;
@@ -546,12 +553,17 @@ const createMainWin = () => {
     delete options.x;
     delete options.y;
   }
-  mainWin = new BrowserWindow(options);
+  mainWin = new BrowserWindow({ ...options, show: false });
+  mainWin.once("ready-to-show", () => {
+    if (mainWin && !mainWin.isDestroyed()) {
+      if (store.get("isAutoMaximizeWin") === "yes") {
+        mainWin.maximize();
+      }
+      mainWin.show();
+    }
+  });
   if (store.get("isAlwaysOnTop") === "yes") {
     mainWin.setAlwaysOnTop(true);
-  }
-  if (store.get("isAutoMaximizeWin") === "yes") {
-    mainWin.maximize();
   }
 
   if (!isDev) {
@@ -912,9 +924,6 @@ const createMainWin = () => {
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isAutoFullscreen, isAutoMaximize, isPreventSleep } =
       config;
-    if (isMergeWord) {
-      delete options.backgroundColor;
-    }
     store.set({
       url,
       isMergeWord: isMergeWord || "no",
@@ -933,7 +942,8 @@ const createMainWin = () => {
     if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
       readerWindow = new BrowserWindow({
         ...options,
-        ...getReaderWindowChromeOptions(isMergeWord),
+        ...getReaderWindowChromeOptions(),
+        backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
       });
       readerWindow.webContents.on(
         "console-message",
@@ -963,9 +973,10 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: isWindowVisible ? parseInt(store.get("windowX")) : undefined,
         y: isWindowVisible ? parseInt(store.get("windowY")) : undefined,
-        ...getReaderWindowChromeOptions(isMergeWord),
+        ...getReaderWindowChromeOptions(),
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
+        backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
       });
       readerWindow.webContents.on(
         "console-message",
@@ -1176,7 +1187,7 @@ const createMainWin = () => {
     }
     ttsCacheUtil.resetTTSAudioIndex(dirPath);
   });
-  // 查询缓存大小（字节）：type 为 "tts" 或 "temp"
+  // 查询缓存大小（字节）：type 为 "tts"、"temp" 或 "all"
   ipcMain.handle("get-cache-size", async (event, config) => {
     const cacheType = config && config.type;
     if (cacheType === "tts") {
@@ -1186,6 +1197,12 @@ const createMainWin = () => {
         (total, cacheDir) => total + getDirSize(cacheDir),
         0
       );
+    } else if (cacheType === "all") {
+      const storagePath =
+        config && typeof config.storagePath === "string"
+          ? config.storagePath
+          : dataPath;
+      return getDirSize(storagePath) + getDirSize(getTTSCacheDirPath());
     }
     throw new Error("Invalid cache size request");
   });
@@ -2049,18 +2066,17 @@ const createMainWin = () => {
       readerWindow.close();
       const currentIsMergeWord = store.get("isMergeWord") === "yes";
       const nextIsMergeWord = currentIsMergeWord ? "no" : "yes";
-      if (currentIsMergeWord) {
-        delete options.backgroundColor;
-      }
       const scaleRatio = store.get("windowDisplayScale") || 1;
       Object.assign(options, {
         width: parseInt(store.get("windowWidth") || 1050) / scaleRatio,
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
-        ...getReaderWindowChromeOptions(nextIsMergeWord),
+        ...getReaderWindowChromeOptions(),
         hasShadow: nextIsMergeWord === "yes" ? false : true,
         transparent: nextIsMergeWord === "yes" ? true : false,
+        backgroundColor:
+          nextIsMergeWord === "yes" ? undefined : getAppBackgroundColor(),
       });
 
       store.set("isMergeWord", nextIsMergeWord);
@@ -2264,6 +2280,7 @@ const applyCorsToRendererRequests = () => {
 app.on("ready", async () => {
   applyCorsToRendererRequests();
   await applyProxyToSession();
+  applyNativeThemeSource(store.get("appSkin"));
   createMainWin();
 });
 app.on("before-quit", () => {
@@ -2310,6 +2327,7 @@ console.info = function (...args) {
   originalConsoleInfo(...args); // 保留原信息日志
   log.info(args.map(serializeArg).join(" ")); // 写入信息日志文件
 };
+
 // Handle MacOS deep linking
 app.on("open-url", (event, url) => {
   event.preventDefault();

@@ -16,6 +16,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
 import {
   getBuiltinPluginDefinition,
+  getBuiltinPluginLocalizedName,
   getBuiltinPluginMarket,
 } from "../../../utils/plugins/catalog";
 import { createBuiltinPluginRecord } from "../../../utils/plugins/records";
@@ -54,22 +55,81 @@ const installedTypeOrder: Record<string, number> = {
 const SettingDialog = () => {
   const plugins = useAppStore((s) => s.manager.plugins);
   const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
-  const { t } = useTranslation();
+  const pluginSettingTab = useAppStore((s) => s.manager.pluginSettingTab);
+  const handlePluginSettingTab = useAppStore((s) => s.handlePluginSettingTab);
+  const { t, i18n } = useTranslation();
   const translationRef = useRef<HTMLDivElement | null>(null);
   const dictionaryRef = useRef<HTMLDivElement | null>(null);
   const ocrRef = useRef<HTMLDivElement | null>(null);
   const voiceRef = useRef<HTMLDivElement | null>(null);
 
+  const getInitialPluginTab = (tab: string) => {
+    if (
+      (tab === "translation" ||
+        tab === "dictionary" ||
+        tab === "voice" ||
+        tab === "ocr") &&
+      !(tab === "voice" && !isElectron)
+    ) {
+      return tab;
+    }
+    return "translation";
+  };
+
   const [state, setState] = useState<SettingInfoState>({
     isAddNew: false,
     availablePlugins: [],
     expandedPluginKey: null,
-    activePluginTab: "translation",
+    activePluginTab: getInitialPluginTab(pluginSettingTab),
   });
 
   const mergeState = (patch: Partial<SettingInfoState>) => {
     setState((prev) => ({ ...prev, ...patch }));
   };
+
+  const getPluginSectionRefMap = (): Record<
+    string,
+    React.RefObject<HTMLDivElement | null>
+  > => ({
+    translation: translationRef,
+    dictionary: dictionaryRef,
+    ocr: ocrRef,
+    voice: voiceRef,
+  });
+
+  const scrollToPluginSection = (type: string, retries = 20) => {
+    const ref = getPluginSectionRefMap()[type]?.current;
+    const scrollContainer = document.querySelector(
+      ".setting-dialog-info"
+    ) as HTMLElement | null;
+    if (!ref || !scrollContainer) {
+      if (retries > 0) {
+        window.setTimeout(() => {
+          scrollToPluginSection(type, retries - 1);
+        }, 100);
+      }
+      return;
+    }
+    const containerRect = scrollContainer.getBoundingClientRect();
+    const refRect = ref.getBoundingClientRect();
+    const tabBarHeight = 40;
+    scrollContainer.scrollTop +=
+      refRect.top - containerRect.top - tabBarHeight;
+  };
+
+  useEffect(() => {
+    if (pluginSettingTab) {
+      const nextTab = getInitialPluginTab(pluginSettingTab);
+      setState((prev) =>
+        nextTab !== prev.activePluginTab
+          ? { ...prev, activePluginTab: nextTab }
+          : prev
+      );
+      handlePluginSettingTab("");
+      scrollToPluginSection(nextTab);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pluginSettingTab]);
 
   const handleGetPluginList = () => {
     const installedPluginKeys = plugins.map((item) => item.key);
@@ -381,7 +441,8 @@ const SettingDialog = () => {
                     } setting-plugin-icon`}
                   ></span>
                   <span className="setting-plugin-name">
-                    {t(item.displayName)}
+                    {getBuiltinPluginLocalizedName(item.key, i18n.language) ??
+                      t(item.displayName)}
                   </span>
                 </span>
 
@@ -426,35 +487,13 @@ const SettingDialog = () => {
               voice: t("Voice"),
               ocr: t("OCR"),
             };
-            const refMap: Record<
-              string,
-              React.RefObject<HTMLDivElement | null>
-            > = {
-              translation: translationRef,
-              dictionary: dictionaryRef,
-              ocr: ocrRef,
-              voice: voiceRef,
-            };
             return (
               <div
                 key={type}
                 className={`plugin-tab-item${state.activePluginTab === type ? " plugin-tab-item-active" : ""}`}
                 onClick={() => {
                   mergeState({ activePluginTab: type });
-                  const ref = refMap[type].current;
-                  if (ref) {
-                    const scrollContainer = document.querySelector(
-                      ".setting-dialog-info"
-                    ) as HTMLElement;
-                    if (scrollContainer) {
-                      const containerRect =
-                        scrollContainer.getBoundingClientRect();
-                      const refRect = ref.getBoundingClientRect();
-                      const tabBarHeight = 40;
-                      scrollContainer.scrollTop +=
-                        refRect.top - containerRect.top - tabBarHeight;
-                    }
-                  }
+                  scrollToPluginSection(type);
                 }}
               >
                 {labelMap[type]}
@@ -603,7 +642,7 @@ const SettingDialog = () => {
                     fontSize: "13px",
                     lineHeight: 1.8,
                     padding: "15px",
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "var(--hover-bg)",
                   }}
                 >
                   {item.feature && (

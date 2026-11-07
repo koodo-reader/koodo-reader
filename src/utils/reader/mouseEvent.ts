@@ -19,9 +19,13 @@ import {
 } from "./shortcutUtil";
 declare var window: any;
 
-let throttleTime =
+// 翻页滑动动画固定时长（毫秒），需与 kookit 的 PAGE_TURN_DURATION 保持一致
+const PAGE_TURN_DURATION = 200;
+
+// 每次翻页时实时读取，避免修改动画设置后锁延迟不生效
+const getThrottleTime = () =>
   (ConfigService.getReaderConfig("animation") || "none") !== "none"
-    ? 1000
+    ? PAGE_TURN_DURATION
     : 100;
 
 export const getSelection = (book: Book) => {
@@ -144,17 +148,13 @@ const SELECTION_SHORTCUT_OPTIONS: Array<{
 
 export const READING_PANEL_TOGGLE_EVENT = "koodo-reading-panel-toggle";
 
-export const openReadingPanel = (
-  position: "left" | "right" | "top" | "bottom"
-) => {
+export const openReadingPanel = (position: "left" | "right") => {
   const panel = document.querySelector(`.${position}-panel`);
   if (!panel) return;
   panel.dispatchEvent(clickEvent());
 };
 
-export const toggleReadingPanel = (
-  position: "left" | "right" | "top" | "bottom"
-) => {
+export const toggleReadingPanel = (position: "left" | "right") => {
   window.dispatchEvent(
     new CustomEvent(READING_PANEL_TOGGLE_EVENT, {
       detail: { position },
@@ -164,12 +164,10 @@ export const toggleReadingPanel = (
 
 const READING_PANEL_SHORTCUTS: Array<{
   shortcut: ShortcutAction;
-  position: "left" | "right" | "top" | "bottom";
+  position: "left" | "right";
 }> = [
   { shortcut: "openLeftPanel", position: "left" },
   { shortcut: "openRightPanel", position: "right" },
-  { shortcut: "openTopPanel", position: "top" },
-  { shortcut: "openBottomPanel", position: "bottom" },
 ];
 
 export const NAV_TAB_TOGGLE_EVENT = "koodo-nav-tab-toggle";
@@ -191,6 +189,12 @@ const NAV_TAB_SHORTCUTS: Array<{
   { shortcut: "openToc", tab: "contents" },
 ];
 let lock = false; //prevent from clicking too fasts
+
+// 仿真翻页动画收敛后（kookit 派发 flipend 事件）立即解除锁，
+// 不再等待满 PAGE_TURN_DURATION 的 throttleTime，滚轮/键盘可继续快速翻页
+window.addEventListener("page-flipend", () => {
+  lock = false;
+});
 
 const isRevertDirectionReading = (rendition: any) => {
   return (
@@ -332,7 +336,7 @@ const handleShortcut = (event: any, book: Book, rendition?: any) => {
   }
   if (matchShortcut(event, shortcuts.createBookmark)) {
     event.preventDefault();
-    const bookmarkBtn = document.querySelector(".add-bookmark-button");
+    const bookmarkBtn = document.querySelector(".reader-toolbar-bookmark");
     bookmarkBtn?.dispatchEvent(clickEvent());
   }
   if (rendition && matchShortcut(event, shortcuts.prevChapter)) {
@@ -392,6 +396,9 @@ export const scrollChapter = async (
   }
 };
 let lastScaleTime = 0;
+// kookit 渲染章节时复用同一个 iframe document，"rendered" 每触发一次就会
+// 走到这里重绑一遍，用 WeakSet 保证同一 doc 只绑定一次
+const boundDocs = new WeakSet<Document>();
 export const bindHtmlEvent = (
   rendition: any,
   doc: any,
@@ -400,6 +407,8 @@ export const bindHtmlEvent = (
   handleScale: (scale: string) => void,
   renderBookFunc: () => void
 ) => {
+  if (boundDocs.has(doc)) return;
+  boundDocs.add(doc);
   const key = book.key;
   const format = book.format;
   doc.addEventListener(
@@ -409,7 +418,7 @@ export const bindHtmlEvent = (
       lock = true;
       await arrowKeys(rendition, event, readerMode, book);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -479,7 +488,7 @@ export const bindHtmlEvent = (
         }
       }
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -491,7 +500,7 @@ export const bindHtmlEvent = (
       lock = true;
       await arrowKeys(rendition, event, readerMode, book);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -506,7 +515,7 @@ export const bindHtmlEvent = (
       lock = true;
       await gesture(rendition, event.type);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     });
   }
 
@@ -520,7 +529,7 @@ export const bindHtmlEvent = (
         await rendition.record();
       }
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), throttleTime);
+      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );

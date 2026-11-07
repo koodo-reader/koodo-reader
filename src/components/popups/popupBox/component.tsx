@@ -184,10 +184,7 @@ const PopupBox = (props: PopupBoxProps) => {
   const handleResizeEnd = (_e: MouseEvent) => {
     if (!isResizing.current) return;
     isResizing.current = false;
-    saveSizeToConfig(
-      stateRef.current.popupWidth,
-      stateRef.current.popupHeight
-    );
+    saveSizeToConfig(stateRef.current.popupWidth, stateRef.current.popupHeight);
   };
 
   const handleDragStart = (e: React.MouseEvent) => {
@@ -386,6 +383,10 @@ const PopupBox = (props: PopupBoxProps) => {
   };
   const isAtBottom = popupBottom === 0;
 
+  const innerStyle: React.CSSProperties = isDockedRight
+    ? { position: "absolute", top: 20, left: 0, right: 0, bottom: 0 }
+    : { position: "relative", width: "100%", height: "100%" };
+
   const containerStyle: React.CSSProperties = isDockedRight
     ? {
         position: "fixed",
@@ -396,7 +397,7 @@ const PopupBox = (props: PopupBoxProps) => {
         width: SETTING_PANEL_WIDTH,
         height: "100%",
         transform: "none",
-        borderRadius: "10px 0 0 10px",
+        borderRadius: 0,
         marginLeft: 0,
         transition: "none",
       }
@@ -429,64 +430,66 @@ const PopupBox = (props: PopupBoxProps) => {
       }}
     >
       <div className={`popup-box-container`} style={containerStyle}>
-        {menuMode === "note" ? (
-          <PopupNote {...(PopupProps as any)} />
-        ) : menuMode === "trans" ? (
-          <PopupTrans {...(PopupProps as any)} />
-        ) : menuMode === "dict" ? (
-          <PopupDict {...(PopupProps as any)} />
-        ) : menuMode === "assistant" ? (
-          <PopupAssist {...(PopupProps as any)} />
-        ) : null}
-        <span
-          className="icon-close popup-close"
-          onClick={() => {
-            handleClose();
-          }}
-          style={{
-            ...(isDockedRight
-              ? { display: "none" }
-              : { top: "-30px", left: "calc(50% - 10px)" }),
-          }}
-        ></span>
-        <span
-          className={`icon-sidebar popup-pin-handle ${isDockedRight ? "" : "popup-close"}`}
-          onClick={handleToggleDock}
-          title={t(isDockedRight ? "Unpin" : "Pin to right")}
-          style={
-            isDockedRight
-              ? {
-                  right: "40px",
-                }
-              : {
-                  top: "-30px",
-                  right: "40px",
-                }
-          }
-        ></span>
-        <span
-          className={`icon-menu popup-drag-handle ${isDockedRight ? "" : "popup-close"}`}
-          onMouseDown={handleDragStart}
-          title={t("Move")}
-          style={
-            isDockedRight
-              ? {
-                  right: "10px",
-                }
-              : {
-                  top: "-30px",
-                  right: "10px",
-                }
-          }
-        ></span>
+        <div className="popup-box-inner" style={innerStyle}>
+          {menuMode === "note" ? (
+            <PopupNote {...(PopupProps as any)} />
+          ) : menuMode === "trans" ? (
+            <PopupTrans {...(PopupProps as any)} />
+          ) : menuMode === "dict" ? (
+            <PopupDict {...(PopupProps as any)} />
+          ) : menuMode === "assistant" ? (
+            <PopupAssist {...(PopupProps as any)} />
+          ) : null}
+          <span
+            className="icon-close popup-close"
+            onClick={() => {
+              handleClose();
+            }}
+            style={{
+              ...(isDockedRight
+                ? { display: "none" }
+                : { top: "-30px", left: "calc(50% - 10px)" }),
+            }}
+          ></span>
+          <span
+            className={`icon-sidebar popup-pin-handle ${isDockedRight ? "" : "popup-close"}`}
+            onClick={handleToggleDock}
+            title={t(isDockedRight ? "Unpin" : "Pin to right")}
+            style={
+              isDockedRight
+                ? {
+                    right: "40px",
+                  }
+                : {
+                    top: "-30px",
+                    right: "40px",
+                  }
+            }
+          ></span>
+          <span
+            className={`icon-menu popup-drag-handle ${isDockedRight ? "" : "popup-close"}`}
+            onMouseDown={handleDragStart}
+            title={t("Move")}
+            style={
+              isDockedRight
+                ? {
+                    right: "10px",
+                  }
+                : {
+                    top: "-30px",
+                    right: "10px",
+                  }
+            }
+          ></span>
 
-        {!isDockedRight && (
-          <div
-            className="popup-resize-handle"
-            onMouseDown={handleResizeStart}
-            title={t("Resize")}
-          />
-        )}
+          {!isDockedRight && (
+            <div
+              className="popup-resize-handle"
+              onMouseDown={handleResizeStart}
+              title={t("Resize")}
+            />
+          )}
+        </div>
       </div>
       {!isDockedRight && (
         <div

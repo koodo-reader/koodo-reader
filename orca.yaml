@@ -1,0 +1,5 @@
+# orca.yaml（仓库根目录）
+worktree:
+  sharedDirectories:
+    - node_modules
+    # 也可以加其他大目录，比如 .cache、.turbo 等

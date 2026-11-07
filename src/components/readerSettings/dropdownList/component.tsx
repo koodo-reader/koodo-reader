@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-﻿import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { dropdownList } from "../../../constants/dropdownList";
 import "./dropdownList.css";
 import { Trans } from "react-i18next";
@@ -178,134 +178,133 @@ const DropdownList = (props: DropdownListProps) => {
         break;
     }
     renderBookFunc();
-  }
+  };
   const isTxt = currentBook?.format?.toUpperCase() === "TXT";
-    const isPDF = isReadingRawPDF(currentBook);
-    const renderParagraphCharacter = () => {
-      return dropdownList
-        .filter((item) => {
-          if (props.group && item.group !== props.group) {
-            return false;
-          }
-          if (item.value === "fullTranslationMode") {
-            return false;
-          }
-          if (isPDF) {
-            return item.isPDF;
-          }
-          return true;
-        })
-        .map((item) => (
-          <Fragment key={item.value}>
-            <li className="paragraph-character-container">
-              <p className="general-setting-title">
-                <Trans>{item.title}</Trans>
-              </p>
-              <select
-                name=""
-                className="general-setting-dropdown"
-                value={
-                  item.value === "lineHeight"
-                    ? state.currentLineHeightValue
-                    : item.value === "textAlign"
-                      ? state.currentTextAlignValue
-                      : item.value === "convertChinese"
-                        ? state.chineseConversionValue
-                        : item.value === "animation"
-                          ? state.currentAnimationValue
-                          : item.value === "bookLayout"
-                            ? state.currentBookLayoutValue
-                            : item.value === "codeHighlight"
-                              ? state.currentCodeHighlighterValue
-                              : item.value === "textOrientation"
-                                ? state.currentTextOrientationValue
-                                : item.value === "fontFamily"
-                                  ? state.currentFontFamilyValue
-                                  : item.value === "selectAction"
-                                    ? state.currentSelectActionValue
-                                    : state.currentSubFontFamilyValue
-                }
-                onChange={(event) => {
-                  handleView(event, item.value);
-                }}
-              >
-                {(item.value === "fontFamily" || item.value === "subFontFamily"
-                  ? state.fontOptions
-                  : item.option
-                ).map(
-                  (
-                    subItem: {
-                      label: string;
-                      value: string;
-                    },
-                    index: number
-                  ) => (
-                    <option
-                      value={subItem.value}
-                      key={index}
-                      className="general-setting-option"
-                    >
-                      {item.value === "codeHighlight"
-                        ? subItem.value === ""
-                          ? t("Disable")
-                          : subItem.label
-                        : item.value === "fontFamily" ||
-                            item.value === "subFontFamily"
-                          ? subItem.value === "Built-in font"
-                            ? t(subItem.label)
-                            : subItem.label
-                          : t(subItem.label)}
-                    </option>
-                  )
-                )}
-              </select>
-            </li>
-          </Fragment>
-        ));
-    };
-    return (
-      <ul className="paragraph-character-setting">
-        {renderParagraphCharacter()}
-        {isTxt && props.group === "more" && (
+  const isPDF = isReadingRawPDF(currentBook);
+  const renderParagraphCharacter = () => {
+    return dropdownList
+      .filter((item) => {
+        if (props.group && item.group !== props.group) {
+          return false;
+        }
+        if (item.value === "fullTranslationMode") {
+          return false;
+        }
+        if (isPDF) {
+          return item.isPDF;
+        }
+        return true;
+      })
+      .map((item) => (
+        <Fragment key={item.value}>
           <li className="paragraph-character-container">
             <p className="general-setting-title">
-              <Trans>TXT parser</Trans>
+              <Trans>{item.title}</Trans>
             </p>
             <select
               name=""
               className="general-setting-dropdown"
-              value={state.currentTxtParserValue}
+              value={
+                item.value === "lineHeight"
+                  ? state.currentLineHeightValue
+                  : item.value === "textAlign"
+                    ? state.currentTextAlignValue
+                    : item.value === "convertChinese"
+                      ? state.chineseConversionValue
+                      : item.value === "animation"
+                        ? state.currentAnimationValue
+                        : item.value === "bookLayout"
+                          ? state.currentBookLayoutValue
+                          : item.value === "codeHighlight"
+                            ? state.currentCodeHighlighterValue
+                            : item.value === "textOrientation"
+                              ? state.currentTextOrientationValue
+                              : item.value === "fontFamily"
+                                ? state.currentFontFamilyValue
+                                : item.value === "selectAction"
+                                  ? state.currentSelectActionValue
+                                  : state.currentSubFontFamilyValue
+              }
               onChange={(event) => {
-                if (event.target.value === "add-parser") {
-                  handleSetting(true);
-                  handleSettingMode("chapter");
-                  return;
-                }
-                handleView(event, "txtParser");
+                handleView(event, item.value);
               }}
             >
-              {state.txtParserOptions.map((option, index) => (
-                <option
-                  value={option.value}
-                  key={index}
-                  className="general-setting-option"
-                >
-                  {t(option.label)}
-                </option>
-              ))}
-              <option
-                value="add-parser"
-                key="add"
-                className="general-setting-option"
-              >
-                {t("Add new parser")}
-              </option>
+              {(item.value === "fontFamily" || item.value === "subFontFamily"
+                ? state.fontOptions
+                : item.option
+              ).map(
+                (
+                  subItem: {
+                    label: string;
+                    value: string;
+                  },
+                  index: number
+                ) => (
+                  <option
+                    value={subItem.value}
+                    key={index}
+                    className="general-setting-option"
+                  >
+                    {item.value === "codeHighlight"
+                      ? subItem.value === ""
+                        ? t("Disable")
+                        : subItem.label
+                      : item.value === "fontFamily" ||
+                          item.value === "subFontFamily"
+                        ? subItem.value === "Built-in font"
+                          ? t(subItem.label)
+                          : subItem.label
+                        : t(subItem.label)}
+                  </option>
+                )
+              )}
             </select>
           </li>
-        )}
-      </ul>
+        </Fragment>
+      ));
+  };
+  return (
+    <ul className="paragraph-character-setting">
+      {renderParagraphCharacter()}
+      {isTxt && props.group === "more" && (
+        <li className="paragraph-character-container">
+          <p className="general-setting-title">
+            <Trans>TXT parser</Trans>
+          </p>
+          <select
+            name=""
+            className="general-setting-dropdown"
+            value={state.currentTxtParserValue}
+            onChange={(event) => {
+              if (event.target.value === "add-parser") {
+                handleSetting(true);
+                handleSettingMode("chapter");
+                return;
+              }
+              handleView(event, "txtParser");
+            }}
+          >
+            {state.txtParserOptions.map((option, index) => (
+              <option
+                value={option.value}
+                key={index}
+                className="general-setting-option"
+              >
+                {t(option.label)}
+              </option>
+            ))}
+            <option
+              value="add-parser"
+              key="add"
+              className="general-setting-option"
+            >
+              {t("Add new parser")}
+            </option>
+          </select>
+        </li>
+      )}
+    </ul>
   );
 };
 
 export default DropdownList;
-

@@ -6,6 +6,7 @@ import {
   ConfigService,
   KookitConfig,
   SyncUtil,
+  CollectionUtil,
 } from "../assets/lib/kookit-extra-browser.min";
 import Book from "../models/Book";
 import BookUtil from "./file/bookUtil";
@@ -621,22 +622,28 @@ export const getPageWidth = (
   isSettingLocked: boolean,
   isFitPage: boolean = false
 ) => {
+  // 页间距与 kookit 渲染引擎的 getSectionGap 保持一致：
+  // 未设置时取 min(60, 宽度/12)，只能取偶数
+  const getPageGapValue = (width: number) => {
+    const saved = parseInt(ConfigService.getReaderConfig("pageGap") || "");
+    let value = isNaN(saved) ? Math.min(60, Math.floor(width / 12)) : saved;
+    value = value % 2 === 0 ? value : value - 1;
+    return Math.max(value, 0);
+  };
   const findValidMultiple = (limit: number) => {
-    let multiple = limit - (limit % 12);
+    let multiple = limit - (limit % 2);
 
     while (multiple >= 0) {
-      if (((multiple - multiple / 12) / 2) % 2 === 0) {
+      const gap = getPageGapValue(multiple);
+      if (multiple - gap >= 4 && ((multiple - gap) / 2) % 2 === 0) {
         return multiple;
       }
-      multiple -= 12;
+      multiple -= 2;
     }
 
     return limit;
   };
-  if (
-    isFitPage &&
-    (readerMode === "scroll" || readerMode === "single")
-  ) {
+  if (isFitPage && (readerMode === "scroll" || readerMode === "single")) {
     // 固定左右侧边栏时，页面只在剩余可用区域内铺满，避免被侧边栏遮挡
     const panelWidth = 300;
     let pageWidth =
@@ -761,6 +768,7 @@ export const preCacheAllBooks = async (bookList: Book[]) => {
         isScannedPDF:
           selectedBook.description.indexOf("scanned") > -1 ? "yes" : "no",
         isKeepPDFBackground: "no",
+        pageGap: ConfigService.getReaderConfig("pageGap"),
       },
       Kookit
     );
@@ -2002,16 +2010,22 @@ export const getDefaultOcrEngine = (currentBook: any) => {
 export const getOcrLangList = (engine: string) => {
   const pluginDefinition = getBuiltinPluginDefinition(engine);
   if (pluginDefinition?.type === "ocr") {
-    if (!pluginDefinition.defaultConfig.language) {
-      return [];
-    }
     const langList = pluginDefinition.langList;
     if (Array.isArray(langList)) {
+      if (langList.length <= 1) {
+        return [];
+      }
       return langList.map((item) => ({
         label: item.nativeLang || item.lang,
         value: item.code,
         lang: item.code,
       }));
+    }
+    if (
+      Object.keys(langList).length <= 1 &&
+      !pluginDefinition.defaultConfig.language
+    ) {
+      return [];
     }
     return Object.entries(langList).map(([value, label]) => ({
       label: String(label),
@@ -2087,7 +2101,7 @@ export const getDefaultOcrLang = (engine: string, currentBook: any) => {
 };
 export const CONTEXT_MENU_WIDTH = 200;
 export const CONTEXT_MENU_ITEM_HEIGHT = 33;
-export const CONTEXT_MENU_PADDING = 10;
+export const CONTEXT_MENU_PADDING = 5;
 export const CONTEXT_MENU_MARGIN = 8;
 export const SUBMENU_GAP = 195; // 子菜单相对主菜单的水平偏移（约等于主菜单宽度）
 
@@ -2121,6 +2135,28 @@ export function clampMenuPosition(
     Math.min(top, vw.height - menuHeight - CONTEXT_MENU_MARGIN)
   );
   return { left: clampedLeft, top: clampedTop };
+}
+
+// 定位子菜单：默认与触发项顶部对齐并向下展开；下方空间不足时向上展开，
+// 让子菜单底部与触发项底部对齐，避免两者之间留下空隙，
+// 否则鼠标从触发项移入子菜单时会先离开菜单区域导致菜单被关闭。
+export function getSubmenuPosition(
+  left: number,
+  triggerTop: number,
+  triggerHeight: number,
+  menuWidth: number,
+  menuHeight: number,
+  viewport?: Viewport
+): { left: number; top: number } {
+  const vh = (viewport || {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  }).height;
+  const top =
+    triggerTop + menuHeight + CONTEXT_MENU_MARGIN > vh
+      ? triggerTop + triggerHeight - menuHeight
+      : triggerTop;
+  return clampMenuPosition(left, top, menuWidth, menuHeight, viewport);
 }
 
 // 子菜单(宽 subWidth)从 anchorLeft 处向右(先叠 SUBMENU_GAP)展开是否会超右缘。
@@ -2328,9 +2364,34 @@ export const getOfficialDictLang = () => {
     return "eng";
   }
 };
+// OCR 配置指纹：把引擎/语言等 OCR 配置做到缓存 key 里，
+// 切换 OCR 引擎或语言后旧缓存自动失效，不再命中旧结果
+const sanitizeOcrConfigValue = (value: unknown): string => {
+  const str = String(value ?? "").trim();
+  return str ? str.replace(/[^A-Za-z0-9_-]/g, "-") : "default";
+};
+
+export const getOcrConfigKey = (ocrConfig?: {
+  ocrEngine?: string;
+  ocrLang?: string;
+}): string => {
+  if (ocrConfig && (ocrConfig.ocrEngine || ocrConfig.ocrLang)) {
+    return (
+      sanitizeOcrConfigValue(ocrConfig.ocrEngine) +
+      "_" +
+      sanitizeOcrConfigValue(ocrConfig.ocrLang)
+    );
+  }
+  // 兜底：阅读器按当前 OCR 配置推导指纹
+  return ["scannedOcrEngine", "scannedOcrLang", "textOcrEngine", "textOcrLang"]
+    .map((key) => sanitizeOcrConfigValue(ConfigService.getReaderConfig(key)))
+    .join("_");
+};
+
 export const getOcrCachePath = (
   bookKey: string,
-  chapterDocIndex: string
+  chapterDocIndex: string,
+  ocrConfig?: { ocrEngine?: string; ocrLang?: string }
 ): string => {
   const electron = window.electronAPI;
   const dirPath = electron.sendSync("user-data", "ping");
@@ -2338,7 +2399,10 @@ export const getOcrCachePath = (
   if (!electron.fs.existsSync(ocrDir)) {
     electron.fs.mkdirSync(ocrDir, { recursive: true });
   }
-  return electron.path.join(ocrDir, bookKey + "_" + chapterDocIndex + ".json");
+  return electron.path.join(
+    ocrDir,
+    bookKey + "_" + chapterDocIndex + "_" + getOcrConfigKey(ocrConfig) + ".json"
+  );
 };
 export const clearOcrCache = (bookKey: string) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
@@ -2404,14 +2468,18 @@ export const isFixedLayoutBook = (book: Book) => {
     isFixedLayoutComic(book)
   );
 };
-export const getOcrCache = (bookKey: string, chapterDocIndex: string) => {
+export const getOcrCache = (
+  bookKey: string,
+  chapterDocIndex: string,
+  ocrConfig: { ocrEngine?: string; ocrLang?: string }
+) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
     return null;
   }
   let cache = null;
   if (isElectron && window.electronAPI && window.electronAPI.fs) {
     try {
-      const cachePath = getOcrCachePath(bookKey, chapterDocIndex);
+      const cachePath = getOcrCachePath(bookKey, chapterDocIndex, ocrConfig);
       const fs = window.electronAPI.fs;
       if (fs.existsSync(cachePath)) {
         cache = JSON.parse(fs.readFileSync(cachePath, "utf-8")) || {};
@@ -2436,7 +2504,8 @@ export const isRateLimitedResult = (text: string): boolean => {
 export const saveOcrCache = (
   bookKey: string,
   chapterDocIndex: string,
-  cache: { src?: string; text?: string }
+  cache: { src?: string; text?: string },
+  ocrConfig: { ocrEngine: string; ocrLang?: string }
 ) => {
   if (!isElectron || !window.electronAPI || !window.electronAPI.fs) {
     return;
@@ -2445,7 +2514,7 @@ export const saveOcrCache = (
     return;
   }
   try {
-    const cachePath = getOcrCachePath(bookKey, chapterDocIndex);
+    const cachePath = getOcrCachePath(bookKey, chapterDocIndex, ocrConfig);
     window.electronAPI.fs.writeFileSync(
       cachePath,
       JSON.stringify(cache),
@@ -2455,6 +2524,22 @@ export const saveOcrCache = (
     console.error("Failed to save ocr cache:", error);
   }
 };
+export const removeCollectionToTrash = (collectionKey: string) => {
+  const collectionUtil = new CollectionUtil(ConfigService);
+  const collection = collectionUtil.getCollection(collectionKey);
+  if (collection) {
+    collection.books.forEach((bookKey) => {
+      if (collectionUtil.isCollection(bookKey)) {
+        removeCollectionToTrash(bookKey);
+        return;
+      }
+      ConfigService.setListConfig(bookKey, "deletedBooks");
+      ConfigService.deleteListConfig(bookKey, "favoriteBooks");
+    });
+  }
+  collectionUtil.dissolveCollection(collectionKey);
+};
+
 export const getCoverTheme = (format: string) => {
   switch (format) {
     case "PDF":

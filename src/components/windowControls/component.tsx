@@ -3,6 +3,7 @@ import "./windowControls.css";
 
 export interface WindowControlsProps {
   t: (key: string) => string;
+  isMacOS?: boolean;
 }
 
 export interface ReaderWindowState {
@@ -59,45 +60,55 @@ const WindowControls = (props: WindowControlsProps) => {
   };
 
   if (isFullScreen) return null;
-  const { t } = props;
+  const { t, isMacOS } = props;
+  const minimizeButton = (
+    <button
+      type="button"
+      className="reader-window-control"
+      aria-label={t("Minimize")}
+      data-tooltip-id="my-tooltip"
+      data-tooltip-content={t("Minimize")}
+      onClick={handleMinimize}
+    >
+      <span className="reader-window-control-icon reader-window-control-minimize" />
+    </button>
+  );
+  const maximizeButton = (
+    <button
+      type="button"
+      className="reader-window-control"
+      aria-label={t(isMaximized ? "Restore" : "Maximize")}
+      data-tooltip-id="my-tooltip"
+      data-tooltip-content={t(isMaximized ? "Restore" : "Maximize")}
+      onClick={handleToggleMaximize}
+    >
+      <span
+        className={`reader-window-control-icon ${
+          isMaximized
+            ? "reader-window-control-restore"
+            : "reader-window-control-maximize"
+        }`}
+      />
+    </button>
+  );
+  const closeButton = (
+    <button
+      type="button"
+      className="reader-window-control reader-window-control-close"
+      aria-label={t("Close")}
+      data-tooltip-id="my-tooltip"
+      data-tooltip-content={t("Close")}
+      onClick={handleClose}
+    >
+      <span className="reader-window-control-icon reader-window-control-close-icon" />
+    </button>
+  );
   return (
     <div className="reader-window-controls">
-      <button
-        type="button"
-        className="reader-window-control"
-        aria-label={t("Minimize")}
-        data-tooltip-id="my-tooltip"
-        data-tooltip-content={t("Minimize")}
-        onClick={handleMinimize}
-      >
-        <span className="reader-window-control-icon reader-window-control-minimize" />
-      </button>
-      <button
-        type="button"
-        className="reader-window-control"
-        aria-label={t(isMaximized ? "Restore" : "Maximize")}
-        data-tooltip-id="my-tooltip"
-        data-tooltip-content={t(isMaximized ? "Restore" : "Maximize")}
-        onClick={handleToggleMaximize}
-      >
-        <span
-          className={`reader-window-control-icon ${
-            isMaximized
-              ? "reader-window-control-restore"
-              : "reader-window-control-maximize"
-          }`}
-        />
-      </button>
-      <button
-        type="button"
-        className="reader-window-control reader-window-control-close"
-        aria-label={t("Close")}
-        data-tooltip-id="my-tooltip"
-        data-tooltip-content={t("Close")}
-        onClick={handleClose}
-      >
-        <span className="reader-window-control-icon reader-window-control-close-icon" />
-      </button>
+      {isMacOS && closeButton}
+      {minimizeButton}
+      {maximizeButton}
+      {!isMacOS && closeButton}
     </div>
   );
 };

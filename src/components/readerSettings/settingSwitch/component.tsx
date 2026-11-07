@@ -29,16 +29,13 @@ const SettingSwitch = (props: SettingSwitchProps) => {
     isShadow: ConfigService.getReaderConfig("isShadow") === "yes",
     isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
     isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
-    isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
     isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
     isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
     isKeepPDFBackground:
       ConfigService.getReaderConfig("isKeepPDFBackground") === "yes",
     isAllowScript: ConfigService.getReaderConfig("isAllowScript") === "yes",
-    isShowTotalPage:
-      ConfigService.getReaderConfig("isShowTotalPage") === "yes",
-    isStartFromEven:
-      ConfigService.getReaderConfig("isStartFromEven") === "yes",
+    isShowTotalPage: ConfigService.getReaderConfig("isShowTotalPage") === "yes",
+    isStartFromEven: ConfigService.getReaderConfig("isStartFromEven") === "yes",
     isRevertDirection:
       ConfigService.getReaderConfig("revertDirection") === "yes",
     isHideBackground:
@@ -47,8 +44,7 @@ const SettingSwitch = (props: SettingSwitchProps) => {
     isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
     isShowPageBorder:
       ConfigService.getReaderConfig("isShowPageBorder") === "yes",
-    isCustomBookCSS:
-      ConfigService.getReaderConfig("isCustomBookCSS") === "yes",
+    isCustomBookCSS: ConfigService.getReaderConfig("isCustomBookCSS") === "yes",
     customBookCSS: ConfigService.getReaderConfig("customBookCSS") || "",
     isSeperateStyle: ConfigService.getAllListConfig(
       "seperateStyleBooks"
@@ -126,9 +122,7 @@ const SettingSwitch = (props: SettingSwitchProps) => {
             <div style={{ margin: "10px 20px" }}>
               <textarea
                 className="token-dialog-token-box"
-                placeholder={
-                  "/* " + t("Enter custom CSS here") + " */"
-                }
+                placeholder={"/* " + t("Enter custom CSS here") + " */"}
                 value={state.customBookCSS}
                 onChange={(e) => {
                   const val = e.target.value;
@@ -202,22 +196,7 @@ const SettingSwitch = (props: SettingSwitchProps) => {
                 isShowPageBorder: handleShowBorder,
               };
 
-              if (propName === "isBionic") {
-                if (
-                  !state.isBionic &&
-                  ConfigService.getAllListConfig(
-                    "wordDefinitionBooks"
-                  ).includes(currentBook.key)
-                ) {
-                  toast.error(
-                    t(
-                      "Word definitions and fast reading mode cannot be enabled at the same time"
-                    )
-                  );
-                  return;
-                }
-                _handleChange(propName);
-              } else if (propName === "isShowPageBorder") {
+              if (propName === "isShowPageBorder") {
                 handleShowBorder(!state.isShowPageBorder);
                 handleChange("isShowPageBorder");
               } else if (propName === "isAllowScript") {

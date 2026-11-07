@@ -58,6 +58,7 @@ const TextToSpeech = () => {
   const isSpeechAutoStart = useAppStore((s) => s.reader.isSpeechAutoStart);
   const handleSetting = useAppStore((s) => s.handleSetting);
   const handleSettingMode = useAppStore((s) => s.handleSettingMode);
+  const handlePluginSettingTab = useAppStore((s) => s.handlePluginSettingTab);
   const handleSpeechStartText = useAppStore((s) => s.handleSpeechStartText);
   const handleSpeechAutoStart = useAppStore((s) => s.handleSpeechAutoStart);
   const { t } = useTranslation();
@@ -1226,7 +1227,6 @@ const TextToSpeech = () => {
               let [voiceName, plugin] = selectedValue.split("#");
               const previousEngine =
                 ConfigService.getReaderConfig("voiceEngine");
-              ConfigService.setReaderConfig("voiceName", voiceName);
               let voice = voicesRef.current.find(
                 (item) => item.name === voiceName && item.plugin === plugin
               );
@@ -1245,6 +1245,7 @@ const TextToSpeech = () => {
                 handleSettingMode("account");
                 return;
               }
+              ConfigService.setReaderConfig("voiceName", voiceName);
               ConfigService.setReaderConfig("voiceEngine", newEngine);
               if (
                 voice.plugin === "official-ai-voice-plugin" &&
@@ -1320,6 +1321,7 @@ const TextToSpeech = () => {
               textAlign: "center",
             }}
             onClick={() => {
+              handlePluginSettingTab("voice");
               handleSetting(true);
               handleSettingMode("plugins");
             }}

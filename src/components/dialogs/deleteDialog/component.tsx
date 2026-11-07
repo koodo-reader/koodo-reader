@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "./deleteDialog.css";
+import "../addDialog/addDialog.css";
 import { Trans } from "react-i18next";
 import { useAppStore } from "../../../store/useAppStore";
 import BookUtil from "../../../utils/file/bookUtil";
@@ -13,10 +14,21 @@ import {
   CollectionUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { isElectron } from "react-device-detect";
+import { removeCollectionToTrash } from "../../../utils/common";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 
-const DeleteDialog = () => {
+export interface DeleteDialogProps {
+  title?: string;
+  name?: string;
+  description?: string;
+  confirmText?: string;
+  successText?: string;
+  handleClose?: () => void;
+  handleConfirm?: () => void;
+}
+
+const DeleteDialog = (props: DeleteDialogProps) => {
   const isSearch = useAppStore((s) => s.manager.isSearch);
   const currentBook = useAppStore((s) => s.book.currentBook);
   const mode = useAppStore((s) => s.sidebar.mode);
@@ -38,6 +50,41 @@ const DeleteDialog = () => {
   const [isDisableTrashBin, setIsDisableTrashBin] = useState(
     ConfigService.getReaderConfig("isDisableTrashBin") === "yes"
   );
+
+  const isGeneric = Boolean(props.handleClose && props.handleConfirm);
+  if (isGeneric) {
+    const handleGenericCancel = () => props.handleClose?.();
+    const handleGenericConfirm = () => {
+      props.handleClose?.();
+      props.handleConfirm?.();
+      toast.success(t(props.successText || "Deletion successful"));
+    };
+    return (
+      <div className="delete-dialog-container">
+        <div className="delete-dialog-title">
+          <Trans>{props.title}</Trans>
+        </div>
+        <div className="delete-dialog-book">
+          <div className="delete-dialog-book-title">{props.name}</div>
+        </div>
+        <div className="delete-dialog-other-option">
+          <Trans>{props.description}</Trans>
+        </div>
+        <div className="add-dialog-button-container">
+          <div className="add-dialog-cancel" onClick={handleGenericCancel}>
+            <Trans>Cancel</Trans>
+          </div>
+          <div className="add-dialog-confirm" onClick={handleGenericConfirm}>
+            {props.confirmText ? (
+              <Trans>{props.confirmText}</Trans>
+            ) : (
+              <Trans>Delete</Trans>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleCancel = () => {
     handleDeleteDialog(false);
@@ -146,6 +193,10 @@ const DeleteDialog = () => {
 
   const deleteSelectedBook = () => {
     selectedBooks.forEach((item) => {
+      if (collectionUtil.isCollection(item)) {
+        removeCollectionToTrash(item);
+        return;
+      }
       ConfigService.setListConfig(item, "deletedBooks");
       ConfigService.deleteListConfig(item, "favoriteBooks");
     });
@@ -160,11 +211,14 @@ const DeleteDialog = () => {
   };
 
   const deleteCurrentBook = () => {
+    if (collectionUtil.isCollection(currentBook.key)) {
+      removeCollectionToTrash(currentBook.key);
+      handleFetchBooks();
+      return;
+    }
     ConfigService.setListConfig(currentBook.key, "deletedBooks");
     ConfigService.deleteListConfig(currentBook.key, "favoriteBooks");
-    if (!collectionUtil.isCollection(currentBook.key)) {
-      collectionUtil.removeBooksFromAllCollections([currentBook.key]);
-    }
+    collectionUtil.removeBooksFromAllCollections([currentBook.key]);
     handleFetchBooks();
   };
 
@@ -247,18 +301,21 @@ const DeleteDialog = () => {
             their notes, bookmarks and digests
           </Trans>
         </div>
+      ) : isCollection ? (
+        <div className="delete-dialog-other-option" style={{ top: "100px" }}>
+          {isDisableTrashBin
+            ? t(
+                "This action will remove this collection, and permanently delete the books inside, together with their notes, bookmarks and digests"
+              )
+            : t(
+                "This action will remove this collection, and the books inside will be moved to the recycle bin"
+              )}
+        </div>
       ) : isDisableTrashBin ? (
         <div className="delete-dialog-other-option" style={{ top: "100px" }}>
           <Trans>
             This action will permanently delete the selected books, together
             with their notes, bookmarks and digests
-          </Trans>
-        </div>
-      ) : isCollection ? (
-        <div className="delete-dialog-other-option" style={{ top: "100px" }}>
-          <Trans>
-            This action will move this collection to the recycle bin, the books
-            inside will be kept in your library
           </Trans>
         </div>
       ) : (

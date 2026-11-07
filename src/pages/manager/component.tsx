@@ -20,7 +20,10 @@ import LoadingDialog from "../../components/dialogs/loadingDialog";
 import { Toaster } from "react-hot-toast";
 import DetailDialog from "../../components/dialogs/detailDialog";
 import { Tooltip } from "react-tooltip";
-import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import {
+  ConfigService,
+  CollectionUtil,
+} from "../../assets/lib/kookit-extra-browser.min";
 import SortShelfDialog from "../../components/dialogs/sortShelfDialog";
 import CollectionDialog from "../../components/dialogs/collectionDialog";
 import CollectionDetailDialog from "../../components/dialogs/collectionDetailDialog";
@@ -35,6 +38,8 @@ import {
 import Footer from "../../components/footer";
 import ProtectionOverlay from "../../components/protection";
 import { useAppStore } from "../../store/useAppStore";
+
+const collectionUtil = new CollectionUtil(ConfigService);
 
 export interface ManagerState {
   totalBooks: number;
@@ -59,6 +64,10 @@ const Manager = () => {
   const isShowNew = useAppStore((s) => s.manager.isShowNew);
   const isShowSupport = useAppStore((s) => s.manager.isShowSupport);
   const isOpenDeleteDialog = useAppStore((s) => s.book.isOpenDeleteDialog);
+  const isOpenDissolveDialog = useAppStore(
+    (s) => s.book.isOpenDissolveDialog
+  );
+  const currentBook = useAppStore((s) => s.book.currentBook);
   const isOpenEditDialog = useAppStore((s) => s.book.isOpenEditDialog);
   const isOpenLocalFileDialog = useAppStore(
     (s) => s.backupPage.isOpenLocalFileDialog
@@ -92,6 +101,7 @@ const Manager = () => {
   const handleMode = useAppStore((s) => s.handleMode);
   const handleEditDialog = useAppStore((s) => s.handleEditDialog);
   const handleDeleteDialog = useAppStore((s) => s.handleDeleteDialog);
+  const handleDissolveDialog = useAppStore((s) => s.handleDissolveDialog);
   const handleAddDialog = useAppStore((s) => s.handleAddDialog);
   const handleDetailDialog = useAppStore((s) => s.handleDetailDialog);
   const handleLoadingDialog = useAppStore((s) => s.handleLoadingDialog);
@@ -122,6 +132,12 @@ const Manager = () => {
 
   const handleDrag = (isDrag: boolean) => {
     setState((prev) => ({ ...prev, isDrag }));
+  };
+
+  const handleDissolveConfirm = () => {
+    if (!currentBook?.key) return;
+    collectionUtil.dissolveCollection(currentBook.key);
+    handleFetchBooks();
   };
 
   const handleDocumentDragStart = (e: DragEvent) => {
@@ -300,6 +316,7 @@ const Manager = () => {
         onClick={() => {
           handleEditDialog(false);
           handleDeleteDialog(false);
+          handleDissolveDialog(false);
           handleAddDialog(false);
           handleDetailDialog(false);
           handleLoadingDialog(false);
@@ -328,6 +345,7 @@ const Manager = () => {
           isShowNew ||
           isShowSupport ||
           isOpenDeleteDialog ||
+          isOpenDissolveDialog ||
           isOpenEditDialog ||
           isOpenLocalFileDialog ||
           isDetailDialog ||
@@ -366,6 +384,17 @@ const Manager = () => {
       />
       <Header {...({ handleDrag: handleDrag } as any)} />
       {isOpenDeleteDialog && <DeleteDialog />}
+      {isOpenDissolveDialog && (
+        <DeleteDialog
+          name={currentBook.name}
+          title="Dissolve collection"
+          description="The collection will be removed and all books will be kept in your library."
+          confirmText="Dissolve"
+          successText="Dissolve successful"
+          handleClose={() => handleDissolveDialog(false)}
+          handleConfirm={handleDissolveConfirm}
+        />
+      )}
       {isOpenEditDialog && <EditDialog />}
       {isOpenAddDialog && <AddDialog />}
       {isShowLoading && <LoadingDialog />}

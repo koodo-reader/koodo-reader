@@ -55,14 +55,7 @@ const isValidBookKey = (key: string) =>
   key !== "." &&
   key !== "..";
 
-const VALID_COVER_EXTS = new Set([
-  "jpg",
-  "jpeg",
-  "png",
-  "webp",
-  "gif",
-  "bmp",
-]);
+const VALID_COVER_EXTS = new Set(["jpg", "jpeg", "png", "webp", "gif", "bmp"]);
 
 const mergeRecords = (localRecords: any[], backupRecords: any[]): any[] => {
   const recordMap = new Map(localRecords.map((r) => [r.key, r]));
@@ -364,12 +357,6 @@ export const restoreFromfilePath = async (filePath: string) => {
   } finally {
     ipcRenderer.removeListener("restore-progress", progressListener);
   }
-  console.info(
-    "restoreFromfilePath result:",
-    result,
-    !result || result.ok !== true,
-    result && result.isNewBackup === false
-  );
 
   if (!result || result.ok !== true) {
     if (result && result.isNewBackup === false) {
@@ -507,9 +494,7 @@ export const unzipOldBook = async (zipEntries: any): Promise<boolean> => {
       resolved === resolvedBase ||
       resolved.startsWith(resolvedBase + separator);
     if (!inside) {
-      throw new Error(
-        "Restore destination path is outside the book directory"
-      );
+      throw new Error("Restore destination path is outside the book directory");
     }
     return resolved;
   };

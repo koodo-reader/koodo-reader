@@ -60,6 +60,7 @@ const initialManager = {
   message: "Addition successful",
   refreshBookKey: "",
   settingMode: "general",
+  pluginSettingTab: "",
   settingDrive: "",
   selectedBooks: [] as string[],
 };
@@ -68,15 +69,14 @@ const initialBook = {
   isOpenEditDialog: false,
   isDetailDialog: false,
   isOpenDeleteDialog: false,
+  isOpenDissolveDialog: false,
   isOpenAddDialog: false,
   isOpenActionDialog: false,
   isReading: false,
   currentBook: {} as BookModel,
   renderBookFunc: (() => {}) as () => void,
   importBookFunc: (() => {}) as unknown as (file: any) => Promise<void>,
-  cloudSyncFunc: (() => {}) as unknown as (
-    userInfo?: any
-  ) => Promise<void>,
+  cloudSyncFunc: (() => {}) as unknown as (userInfo?: any) => Promise<void>,
 };
 
 const initialReader = {
@@ -216,6 +216,7 @@ export type AppActionName =
   | "handleDeleteDialog"
   | "handleDeletedBooks"
   | "handleDetailDialog"
+  | "handleDissolveDialog"
   | "handleDockedRight"
   | "handleEditDialog"
   | "handleFetchAuthed"
@@ -262,6 +263,7 @@ export type AppActionName =
   | "handleParagraphMode"
   | "handlePdfCropDialog"
   | "handlePercentage"
+  | "handlePluginSettingTab"
   | "handlePlugins"
   | "handlePopupOptionDialog"
   | "handlePopupOptionUpdate"
@@ -345,6 +347,8 @@ export const useAppStore = create<AppState>()((set, get) => {
       setManager({ isDetailDialog }),
     handleSetting: (isSettingOpen: boolean) => setManager({ isSettingOpen }),
     handleSettingMode: (settingMode: string) => setManager({ settingMode }),
+    handlePluginSettingTab: (pluginSettingTab: string) =>
+      setManager({ pluginSettingTab }),
     handleShowPopupNote: (isShowPopupNote: boolean) =>
       setManager({ isShowPopupNote }),
     handleSettingDrive: (settingDrive: string) => setManager({ settingDrive }),
@@ -355,8 +359,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     handleLoadingDialog: (isShowLoading: boolean) =>
       setManager({ isShowLoading }),
     handleNewDialog: (isShowNew: boolean) => setManager({ isShowNew }),
-    handleSelectBook: (isSelectBook: boolean) =>
-      setManager({ isSelectBook }),
+    handleSelectBook: (isSelectBook: boolean) => setManager({ isSelectBook }),
     handleSelectedBooks: (selectedBooks: string[]) =>
       setManager({ selectedBooks }),
     handleNewWarning: (isNewWarning: boolean) => setManager({ isNewWarning }),
@@ -372,8 +375,7 @@ export const useAppStore = create<AppState>()((set, get) => {
       setManager({ searchResults }),
     handleFetchBooks: async () => {
       let bookSortCodeStr =
-        ConfigService.getReaderConfig("bookSortCode") ||
-        '{"sort":1,"order":2}';
+        ConfigService.getReaderConfig("bookSortCode") || '{"sort":1,"order":2}';
       let bookSortCode = JSON.parse(bookSortCodeStr);
       let sortField = "key";
       switch (bookSortCode.sort) {
@@ -482,9 +484,9 @@ export const useAppStore = create<AppState>()((set, get) => {
           return { key };
         });
       } else if (sortField === "name") {
-        let bookKeys = (
-          await BookUtil.getBookKeysWithSort("name", "ASC")
-        ).map((item: any) => item.key);
+        let bookKeys = (await BookUtil.getBookKeysWithSort("name", "ASC")).map(
+          (item: any) => item.key
+        );
         let nameMap = await BookUtil.getBookNamesMapByKeys(bookKeys);
         let nameItems = bookKeys.map((key: string) => {
           return { key, name: nameMap[key] || "" };
@@ -502,9 +504,9 @@ export const useAppStore = create<AppState>()((set, get) => {
           return { key: item.key };
         });
       } else if (sortField === "key") {
-        let bookKeys = (
-          await BookUtil.getBookKeysWithSort("key", "ASC")
-        ).map((item: any) => item.key);
+        let bookKeys = (await BookUtil.getBookKeysWithSort("key", "ASC")).map(
+          (item: any) => item.key
+        );
         let allKeys = [...bookKeys, ...collectionKeys];
         allKeys.sort((a, b) => {
           return Number(a) - Number(b);
@@ -760,8 +762,7 @@ export const useAppStore = create<AppState>()((set, get) => {
             );
             pluginList.push(sumPlugin);
           }
-          const isAuthed =
-            (await TokenService.getToken("is_authed")) === "yes";
+          const isAuthed = (await TokenService.getToken("is_authed")) === "yes";
           if (ConfigService.getReaderConfig("isDisableAI") !== "yes") {
             let sortedVoiceList = [
               ...KookitConfig.OfficialVoiceList.map((item) => {
@@ -876,6 +877,8 @@ export const useAppStore = create<AppState>()((set, get) => {
     handleEditDialog: (mode: boolean) => setBook({ isOpenEditDialog: mode }),
     handleDeleteDialog: (mode: boolean) =>
       setBook({ isOpenDeleteDialog: mode }),
+    handleDissolveDialog: (mode: boolean) =>
+      setBook({ isOpenDissolveDialog: mode }),
     handleAddDialog: (mode: boolean) => setBook({ isOpenAddDialog: mode }),
     handleRenderBookFunc: (renderBookFunc: () => void) =>
       setBook({ renderBookFunc }),
@@ -898,8 +901,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     handleHighlight: (highlight: HighlightValue) => setReader({ highlight }),
     handleConvertDialog: (isConvertOpen: boolean) =>
       setReader({ isConvertOpen }),
-    handleScalePageDialog: (isScaleOpen: boolean) =>
-      setReader({ isScaleOpen }),
+    handleScalePageDialog: (isScaleOpen: boolean) => setReader({ isScaleOpen }),
     handlePdfCropDialog: (isPdfCropOpen: boolean) =>
       setReader({ isPdfCropOpen }),
     handleStudyLangDialog: (isStudyLangOpen: boolean) =>
@@ -952,8 +954,7 @@ export const useAppStore = create<AppState>()((set, get) => {
       setReader({ textOrientation }),
     handleFetchNotes: async () => {
       let noteSortCodeStr =
-        ConfigService.getReaderConfig("noteSortCode") ||
-        '{"sort":1,"order":2}';
+        ConfigService.getReaderConfig("noteSortCode") || '{"sort":1,"order":2}';
       let noteSortCode = JSON.parse(noteSortCodeStr);
       let sortField = noteSortCode.sort === 1 ? "key" : "percentage";
       let sortOrder = noteSortCode.order === 1 ? "ASC" : "DESC";
@@ -992,8 +993,7 @@ export const useAppStore = create<AppState>()((set, get) => {
     },
 
     // progressPanel
-    handlePercentage: (percentage: number) =>
-      setProgressPanel({ percentage }),
+    handlePercentage: (percentage: number) => setProgressPanel({ percentage }),
     handleFetchPercentage: (book: BookModel) => {
       let percentage =
         ConfigService.getObjectConfig(book.key, "recordLocation", {})

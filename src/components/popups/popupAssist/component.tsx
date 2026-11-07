@@ -139,8 +139,9 @@ const PopupAssist = (props: PopupAssistProps) => {
       clearInterval(updateInterval.current);
     }
     updateInterval.current = setInterval(() => {
-      if (answerTextAccumulator.current) {
-        setState((prev) => ({ ...prev, answer: answerTextAccumulator.current }));
+      const text = answerTextAccumulator.current;
+      if (text) {
+        setState((prev) => ({ ...prev, answer: text }));
         runAfterUpdate(scrollToBottomIfNeeded);
       }
     }, 150);
@@ -317,7 +318,6 @@ const PopupAssist = (props: PopupAssistProps) => {
       stateRef.current.mode === "ask"
         ? originalText
             .replace(/(\r\n|\n|\r)/gm, "")
-            .replace(/-/gm, "")
             // Remove common garbage characters
             .replace(
               /[^\x20-\x7E\u00A0-\u00FF\u0100-\u017F\u4E00-\u9FFF\u3000-\u303F]/g,

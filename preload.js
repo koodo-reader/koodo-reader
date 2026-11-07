@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer, webUtils } = require("electron");
 
 const INVOKE_CHANNELS = new Set([
   "cancel-download-app",
@@ -275,6 +275,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   on: (channel, listener) => listen(channel, listener),
   once: (channel, listener) => listen(channel, listener, true),
   removeListener,
+  // Electron 32+ 移除了 File.path，拖拽导入需经此取回真实磁盘路径
+  getPathForFile: (file) => webUtils.getPathForFile(file),
   fs: file,
   path: pathApi,
   os: {

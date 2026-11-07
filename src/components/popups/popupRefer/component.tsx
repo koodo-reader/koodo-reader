@@ -164,11 +164,13 @@ const PopupRefer = (props: PopupReferProps) => {
   const handleLinkRef = useLatest(handleLink);
 
   useEffect(() => {
+    const boundDocs = new WeakSet<Document>();
     const onRendered = () => {
       let docs = getIframeDoc(currentBook);
       for (let i = 0; i < docs.length; i++) {
         let doc = docs[i];
-        if (!doc) continue;
+        if (!doc || boundDocs.has(doc)) continue;
+        boundDocs.add(doc);
         doc.addEventListener("click", (event: any) =>
           handleLinkRef.current(event)
         );

@@ -26,9 +26,11 @@ import {
 } from "../../../utils/common";
 import { BookHelper } from "../../../assets/lib/kookit.min";
 import {
-  clampMenuPosition,
+  CONTEXT_MENU_ITEM_HEIGHT,
+  CONTEXT_MENU_PADDING,
   CONTEXT_MENU_WIDTH,
   estimateMenuHeight,
+  getSubmenuPosition,
   SUBMENU_GAP,
 } from "../../../utils/common";
 
@@ -43,8 +45,11 @@ export interface MoreActionProps {
   isShowExport: boolean;
   isShowDetail: boolean;
   isExceed: boolean;
+  menuItemIndex?: number;
 
   handleMoreAction: (isShow: boolean) => void;
+  handleMenuEnter: () => void;
+  handleMenuLeave: () => void;
   handleFetchBookmarks: () => void;
   handleFetchNotes: () => void;
 }
@@ -55,16 +60,47 @@ export interface MoreActionState {
 
 declare var window: any;
 
+const DEFAULT_MENU_INDEX = 9;
+const EXPORT_MENU_ITEM_INDEX = {
+  notes: 3,
+  highlights: 4,
+  words: 5,
+};
+
 const MoreAction = (
   props: Pick<
     MoreActionProps,
-    "left" | "top" | "isShowExport" | "isExceed" | "handleMoreAction"
+    | "left"
+    | "top"
+    | "isShowExport"
+    | "isExceed"
+    | "menuItemIndex"
+    | "handleMoreAction"
+    | "handleMenuEnter"
+    | "handleMenuLeave"
   >
 ) => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const handleActionDialog = useAppStore((s) => s.handleActionDialog);
   const { t } = useTranslation();
   const [state, setState] = useState<MoreActionState>({ exportSubmenu: "" });
+
+  const moreMenuItemCount = isElectron ? 10 : 9;
+  const moreMenuHeight = estimateMenuHeight(moreMenuItemCount);
+  const moreMenuLeft = props.left + (props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP);
+  // “更多操作”在主菜单中的实际行位置，子菜单必须以这一行为锚点，
+  // 而不是沿用写死的偏移，否则靠近底部时子菜单会被推到触发行上方。
+  const moreMenuTriggerTop =
+    props.top +
+    CONTEXT_MENU_PADDING +
+    (props.menuItemIndex ?? DEFAULT_MENU_INDEX) * CONTEXT_MENU_ITEM_HEIGHT;
+  const moreMenuPos = getSubmenuPosition(
+    moreMenuLeft,
+    moreMenuTriggerTop,
+    CONTEXT_MENU_ITEM_HEIGHT,
+    CONTEXT_MENU_WIDTH,
+    moreMenuHeight
+  );
 
   const renderFormatSubmenu = (type: "notes" | "highlights" | "words") => {
     const isVisible = state.exportSubmenu === type;
@@ -124,16 +160,21 @@ const MoreAction = (
       handleActionDialog(false);
     };
 
-    const noteOffset = isWords ? 4 : isNotes ? 2 : 3;
-    const itemHeight = 33;
-    // 主菜单渲染时会被 clampMenuPosition 校正到视口内（靠近底部时会整体上移），
-    // 格式子菜单必须以主菜单“实际渲染后的 top”为基准水平对齐，而不是用未校正的 top，
-    // 否则主菜单上移后子菜单仍贴在底部边缘，无法点击。
-    const mainMenuPos = clampMenuPosition(
-      props.left + (props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
-      props.top + 103,
-      CONTEXT_MENU_WIDTH,
-      estimateMenuHeight(isElectron ? 11 : 10)
+    const formatSubmenuHeight = estimateMenuHeight(isWords ? 2 : 6);
+    // 格式子菜单以“导出笔记/导出高亮/导出查词历史”所在行的实际渲染位置为锚点，
+    // 主菜单向上翻转时也要保持一致的对齐。
+    const formatTriggerTop =
+      moreMenuPos.top +
+      CONTEXT_MENU_PADDING +
+      EXPORT_MENU_ITEM_INDEX[type] * CONTEXT_MENU_ITEM_HEIGHT;
+    const formatSubmenuPos = getSubmenuPosition(
+      props.left +
+        (props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP) +
+        SUBMENU_GAP,
+      formatTriggerTop,
+      CONTEXT_MENU_ITEM_HEIGHT,
+      120,
+      formatSubmenuHeight
     );
 
     return (
@@ -141,31 +182,22 @@ const MoreAction = (
         className="action-dialog-container export-format-submenu-action"
         style={
           isVisible
-            ? (() => {
-                const pos = clampMenuPosition(
-                  props.left +
-                    (props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP) +
-                    195,
-                  mainMenuPos.top + noteOffset * itemHeight,
-                  120,
-                  estimateMenuHeight(isWords ? 2 : 6)
-                );
-                return {
-                  position: "fixed",
-                  left: pos.left,
-                  top: pos.top,
-                  zIndex: 10,
-                };
-              })()
+            ? {
+                position: "fixed",
+                left: formatSubmenuPos.left,
+                top: formatSubmenuPos.top,
+                zIndex: 10,
+              }
             : { display: "none" }
         }
         onMouseEnter={() => {
+          props.handleMenuEnter();
           setState((prev) => ({ ...prev, exportSubmenu: type }));
         }}
         onMouseLeave={() => {
           setState((prev) => ({ ...prev, exportSubmenu: "" }));
           props.handleMoreAction(false);
-          handleActionDialog(false);
+          props.handleMenuLeave();
         }}
       >
         <div className="action-dialog-actions-container">
@@ -191,25 +223,22 @@ const MoreAction = (
         onMouseLeave={() => {
           if (!state.exportSubmenu) {
             props.handleMoreAction(false);
-            handleActionDialog(false);
+            props.handleMenuLeave();
           }
         }}
         onMouseEnter={(event) => {
+          props.handleMenuEnter();
           props.handleMoreAction(true);
           handleActionDialog(true);
           event?.stopPropagation();
         }}
         style={
           props.isShowExport
-            ? (() => {
-                const pos = clampMenuPosition(
-                  props.left + (props.isExceed ? -SUBMENU_GAP : SUBMENU_GAP),
-                  props.top + 103,
-                  CONTEXT_MENU_WIDTH,
-                  estimateMenuHeight(isElectron ? 11 : 10)
-                );
-                return { position: "fixed", left: pos.left, top: pos.top };
-              })()
+            ? {
+                position: "fixed",
+                left: moreMenuPos.left,
+                top: moreMenuPos.top,
+              }
             : { display: "none" }
         }
       >

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./actionDialog.css";
 import { Trans } from "react-i18next";
 import { useAppStore } from "../../../store/useAppStore";
@@ -14,7 +14,6 @@ import {
 import {
   CONTEXT_MENU_WIDTH,
   shouldSubmenuOpenLeft,
-  vexComfirmAsync,
 } from "../../../utils/common";
 
 import BookModel from "../../../models/Book";
@@ -39,14 +38,17 @@ export interface ActionDialogState {
 const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 
-const ActionDialog = (
-  props: Pick<ActionDialogProps, "left" | "top">
-) => {
+// 主菜单与子菜单是两个独立的 DOM 节点，鼠标移入子菜单时主菜单会先收到
+// mouseleave。延迟关闭可以给子菜单的 mouseenter 留出取消关闭的时机。
+const MENU_CLOSE_DELAY = 150;
+
+const ActionDialog = (props: Pick<ActionDialogProps, "left" | "top">) => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const mode = useAppStore((s) => s.sidebar.mode);
   const handleEditDialog = useAppStore((s) => s.handleEditDialog);
   const handleAddDialog = useAppStore((s) => s.handleAddDialog);
   const handleDeleteDialog = useAppStore((s) => s.handleDeleteDialog);
+  const handleDissolveDialog = useAppStore((s) => s.handleDissolveDialog);
   const handleReadingBook = useAppStore((s) => s.handleReadingBook);
   const handleActionDialog = useAppStore((s) => s.handleActionDialog);
   const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
@@ -66,13 +68,29 @@ const ActionDialog = (
   const handleAddCollectionDialog = useAppStore(
     (s) => s.handleAddCollectionDialog
   );
-  const { t } = useTranslation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [state, setState] = useState<ActionDialogState>(() => ({
     isShowExport: false,
     isShowMark: false,
     isExceed: shouldSubmenuOpenLeft(props.left, CONTEXT_MENU_WIDTH),
   }));
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelClose = () => {
+    if (closeTimerRef.current !== null) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  };
+  const scheduleClose = () => {
+    cancelClose();
+    closeTimerRef.current = setTimeout(() => {
+      closeTimerRef.current = null;
+      handleActionDialog(false);
+    }, MENU_CLOSE_DELAY);
+  };
+  useEffect(() => cancelClose, []);
 
   const updateState = (patch: Partial<ActionDialogState>) => {
     setState((prev) => ({ ...prev, ...patch }));
@@ -115,20 +133,11 @@ const ActionDialog = (
     handleReadingBook(currentBook);
     handleActionDialog(false);
   };
-  const handleDissolveCollection = async () => {
-    let key = currentBook.key;
-    let collection = collectionUtil.getCollection(key);
-    if (!collection) return;
-    let result = await vexComfirmAsync(
-      `<h3>${t("Dissolve collection")}</h3><p>${t(
-        "The collection will be removed and all books will be kept in your library."
-      )}</p>`
-    );
-    if (!result) return;
-    collectionUtil.dissolveCollection(key);
-    toast.success(t("Deletion successful"));
+  const handleDissolveCollection = () => {
+    if (!collectionUtil.getCollection(currentBook.key)) return;
+    handleReadingBook(currentBook);
+    handleDissolveDialog(true);
     handleActionDialog(false);
-    handleFetchBooks();
   };
   const handleRestoreBook = () => {
     ConfigService.deleteListConfig(currentBook.key, "deletedBooks");
@@ -169,7 +178,8 @@ const ActionDialog = (
       }
     }
     if (
-      Object.keys(ConfigService.getAllListConfig("favoriteBooks")).length === 0 &&
+      Object.keys(ConfigService.getAllListConfig("favoriteBooks")).length ===
+        0 &&
       mode === "favorite"
     ) {
       navigate("/manager/empty");
@@ -191,15 +201,17 @@ const ActionDialog = (
     : null;
   const isFavorite = collection
     ? collectionUtil.isCollectionFavorite(collection)
-    : ConfigService.getAllListConfig("favoriteBooks").indexOf(
-        currentBook.key
-      ) > -1;
+    : ConfigService.getAllListConfig("favoriteBooks").indexOf(currentBook.key) >
+      -1;
   const moreActionProps = {
     left: props.left,
     top: props.top,
     isShowExport: state.isShowExport,
     isExceed: state.isExceed,
+    menuItemIndex: 9,
     handleMoreAction: handleMoreAction,
+    handleMenuEnter: cancelClose,
+    handleMenuLeave: scheduleClose,
   };
   const markActionProps = {
     left: props.left,
@@ -207,6 +219,8 @@ const ActionDialog = (
     isShowMark: state.isShowMark,
     isExceed: state.isExceed,
     handleMarkAction: handleMarkAction,
+    handleMenuEnter: cancelClose,
+    handleMenuLeave: scheduleClose,
     menuItemIndex: isCollection ? 6 : 7,
   };
   if (mode === "trash") {
@@ -245,9 +259,10 @@ const ActionDialog = (
       <div
         className="action-dialog-container"
         onMouseLeave={() => {
-          handleActionDialog(false);
+          scheduleClose();
         }}
         onMouseEnter={() => {
+          cancelClose();
           handleActionDialog(true);
         }}
         style={{ left: props.left, top: props.top }}
@@ -291,8 +306,8 @@ const ActionDialog = (
               }}
             >
               <span
-                className="icon-folder view-icon"
-                style={{ fontSize: "14px" }}
+                className="icon-stack view-icon"
+                style={{ fontSize: "18px" }}
               ></span>
               <p className="action-name">
                 <Trans>Add to collection</Trans>
@@ -346,7 +361,11 @@ const ActionDialog = (
           >
             <span className="icon-trash-line view-icon"></span>
             <p className="action-name">
-              <Trans>Delete</Trans>
+              {isCollection ? (
+                <Trans>Delete collection</Trans>
+              ) : (
+                <Trans>Delete</Trans>
+              )}
             </p>
           </div>
           <div
@@ -366,10 +385,7 @@ const ActionDialog = (
               updateState({
                 isShowMark: true,
                 isShowExport: false,
-                isExceed: shouldSubmenuOpenLeft(
-                  props.left,
-                  CONTEXT_MENU_WIDTH
-                ),
+                isExceed: shouldSubmenuOpenLeft(props.left, CONTEXT_MENU_WIDTH),
               });
               const e = event || window.event;
               let x = e.clientX;

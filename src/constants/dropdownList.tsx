@@ -292,6 +292,17 @@ export const sliderConfigs = [
     isPDF: true,
   },
   {
+    maxValue: 120,
+    minValue: 0,
+    mode: "pageGap",
+    minLabel: "0",
+    maxLabel: "120",
+    step: 2,
+    title: "Page gap",
+    group: "layout",
+    isPDF: true,
+  },
+  {
     maxValue: 20,
     minValue: 0,
     mode: "letterSpacing",
