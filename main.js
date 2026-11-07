@@ -60,8 +60,43 @@ const {
   promptBiometricAuth,
 } = require("./src/utils/main/biometric-util");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
+const ttsCacheUtil = require("./src/utils/plugins/main/voice/ttsCache");
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
+// 数据目录（即渲染进程的 getStorageLocation，见 "storage-location"）
+const dataPath = path.join(dirPath, "data");
+// 递归计算目录大小（字节），不存在或出错时返回 0
+const getDirSize = (targetPath) => {
+  if (!fs.existsSync(targetPath)) {
+    return 0;
+  }
+  try {
+    const stat = fs.statSync(targetPath);
+    if (stat.isFile()) {
+      return stat.size;
+    }
+    const entries = fs.readdirSync(targetPath, { withFileTypes: true });
+    return entries.reduce((total, entry) => {
+      const entryPath = path.join(targetPath, entry.name);
+      if (entry.isDirectory()) {
+        return total + getDirSize(entryPath);
+      }
+      return total + (fs.statSync(entryPath).size || 0);
+    }, 0);
+  } catch (error) {
+    console.error("Error calculating directory size:", error);
+    return 0;
+  }
+};
+// 听书缓存目录
+const getTTSCacheDirPath = () => path.join(dirPath, "tts");
+// 临时缓存目录：漫画解包、OCR 结果、整页翻译缓存与书籍导入临时文件
+const getTempCacheDirPaths = () => [
+  path.join(dirPath, "comic"),
+  path.join(dirPath, "ocr"),
+  path.join(dirPath, "trans"),
+  path.join(dataPath, "temp"),
+];
 const customVoicePluginCache = new Map();
 const resolveCustomVoicePlugin = ({ script, scriptSHA256, pluginKey } = {}) => {
   if (
@@ -145,6 +180,7 @@ const throttle = (func, wait = RESIZE_THROTTLE_MS) => {
     }
   };
 };
+
 const getFingerprint = async () => {
   // First, try to get cached fingerprint
   let deviceUuid = store.get("fingerPrint");
@@ -221,13 +257,36 @@ log.initialize();
 store.set("appVersion", packageJson.version);
 store.set("appPlatform", os.platform() + " " + os.release());
 const mainWinDisplayScale = store.get("mainWinDisplayScale") || 1;
+const getNativeThemeSource = (appSkin) => {
+  if (appSkin === "night") {
+    return "dark";
+  }
+  if (appSkin === "light") {
+    return "light";
+  }
+  return "system";
+};
+const getNativeDarkColorStatus = () => {
+  if (
+    typeof electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI !==
+    "undefined"
+  ) {
+    return electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI;
+  }
+  return electronNativeTheme.shouldUseDarkColors;
+};
+const getAppBackgroundColor = () => {
+  const appSkin = store.get("appSkin");
+  const isDark =
+    appSkin === "night" || (appSkin !== "light" && getNativeDarkColorStatus());
+  return isDark ? "rgba(47, 52, 55, 1)" : "#fff";
+};
 let options = {
   width: parseInt(store.get("mainWinWidth") || 1050) / mainWinDisplayScale,
   height: parseInt(store.get("mainWinHeight") || 660) / mainWinDisplayScale,
   x: parseInt(store.get("mainWinX")),
   y: parseInt(store.get("mainWinY")),
-  backgroundColor:
-    store.get("appSkin") === "night" ? "rgba(47, 52, 55, 1)" : "#fff",
+  backgroundColor: getAppBackgroundColor(),
   minWidth: 300,
   minHeight: 100,
   webPreferences: {
@@ -243,6 +302,26 @@ let options = {
   },
 };
 const Database = require("better-sqlite3");
+const getReaderWindowChromeOptions = () => {
+  if (isDev) {
+    return { frame: true };
+  }
+  return { frame: false };
+};
+const bindReaderWindowState = (win) => {
+  const sendState = (isFullScreen) => {
+    if (!win || win.isDestroyed()) return;
+    win.webContents.send("reader-window-state", {
+      isMaximized: win.isMaximized(),
+      isFullScreen:
+        typeof isFullScreen === "boolean" ? isFullScreen : win.isFullScreen(),
+    });
+  };
+  win.on("maximize", () => sendState());
+  win.on("unmaximize", () => sendState());
+  win.on("enter-full-screen", () => sendState(true));
+  win.on("leave-full-screen", () => sendState(false));
+};
 if (os.platform() === "linux") {
   options = Object.assign({}, options, {
     icon: path.join(__dirname, "./build/assets/icon.png"),
@@ -325,30 +404,16 @@ const removePickerUtil = (config) => {
     pickerUtilCache[config.service] = null;
   }
 };
-const getNativeThemeSource = (appSkin) => {
-  if (appSkin === "night") {
-    return "dark";
-  }
-  if (appSkin === "light") {
-    return "light";
-  }
-  return "system";
-};
-const getNativeDarkColorStatus = () => {
-  if (
-    typeof electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI !==
-    "undefined"
-  ) {
-    return electronNativeTheme.shouldUseDarkColorsForSystemIntegratedUI;
-  }
-  return electronNativeTheme.shouldUseDarkColors;
-};
 const applyNativeThemeSource = (appSkin) => {
   if (process.type !== "browser") {
     return false;
   }
   electronNativeTheme.themeSource = getNativeThemeSource(appSkin);
   store.set("appSkin", appSkin || "system");
+  options.backgroundColor = getAppBackgroundColor();
+  if (mainWin && !mainWin.isDestroyed()) {
+    mainWin.setBackgroundColor(options.backgroundColor);
+  }
   return getNativeDarkColorStatus();
 };
 applyNativeThemeSource(store.get("appSkin"));
@@ -361,7 +426,10 @@ const applyProxyToSession = async () => {
   const isEnabled =
     config && config.type !== "none" && config.enabled !== false && config.host;
   if (!isEnabled) {
-    await defaultSession.setProxy({ mode: "direct" });
+    // 未启用应用内代理时，跟随操作系统代理（与浏览器行为一致）。
+    // 此前强制 direct 会绕过系统代理（如 Clash/v2rayN 等），导致 Electron 端
+    // 直连 OCR 的 wasm/模型等境外 CDN 不可达（网页端走系统代理所以正常）。
+    await defaultSession.setProxy({ mode: "system" });
     https.globalAgent = new https.Agent();
     http.globalAgent = new http.Agent();
     return;
@@ -485,12 +553,17 @@ const createMainWin = () => {
     delete options.x;
     delete options.y;
   }
-  mainWin = new BrowserWindow(options);
+  mainWin = new BrowserWindow({ ...options, show: false });
+  mainWin.once("ready-to-show", () => {
+    if (mainWin && !mainWin.isDestroyed()) {
+      if (store.get("isAutoMaximizeWin") === "yes") {
+        mainWin.maximize();
+      }
+      mainWin.show();
+    }
+  });
   if (store.get("isAlwaysOnTop") === "yes") {
     mainWin.setAlwaysOnTop(true);
-  }
-  if (store.get("isAutoMaximizeWin") === "yes") {
-    mainWin.maximize();
   }
 
   if (!isDev) {
@@ -498,7 +571,7 @@ const createMainWin = () => {
   }
 
   const urlLocation = isDev
-    ? "http://localhost:3000"
+    ? "http://127.0.0.1:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
   // Handle deep link on cold start: wait for renderer to mount its IPC listeners
@@ -851,9 +924,6 @@ const createMainWin = () => {
   ipcMain.handle("open-book", (event, config) => {
     let { url, isMergeWord, isAutoFullscreen, isAutoMaximize, isPreventSleep } =
       config;
-    if (isMergeWord) {
-      delete options.backgroundColor;
-    }
     store.set({
       url,
       isMergeWord: isMergeWord || "no",
@@ -870,7 +940,11 @@ const createMainWin = () => {
       readerWindowList.push(readerWindow);
     }
     if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
-      readerWindow = new BrowserWindow(options);
+      readerWindow = new BrowserWindow({
+        ...options,
+        ...getReaderWindowChromeOptions(),
+        backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
+      });
       readerWindow.webContents.on(
         "console-message",
         (_event, level, message) => {
@@ -899,9 +973,10 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: isWindowVisible ? parseInt(store.get("windowX")) : undefined,
         y: isWindowVisible ? parseInt(store.get("windowY")) : undefined,
-        frame: isMergeWord === "yes" ? false : true,
+        ...getReaderWindowChromeOptions(),
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
+        backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
       });
       readerWindow.webContents.on(
         "console-message",
@@ -914,6 +989,7 @@ const createMainWin = () => {
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
     }
+    bindReaderWindowState(readerWindow);
     if (store.get("isAlwaysOnTop") === "yes") {
       readerWindow.setAlwaysOnTop(true);
     }
@@ -1103,19 +1179,92 @@ const createMainWin = () => {
   });
 
   ipcMain.handle("clear-tts", async (event, config) => {
-    if (!fs.existsSync(path.join(dirPath, "tts"))) {
-      return "pong";
+    if (!fs.existsSync(getTTSCacheDirPath())) {
+      await fsExtra.mkdir(getTTSCacheDirPath());
     } else {
-      const fsExtra = require("fs-extra");
-      try {
-        await fsExtra.remove(path.join(dirPath, "tts"));
-        await fsExtra.mkdir(path.join(dirPath, "tts"));
-        return "pong";
-      } catch (err) {
-        console.error(err);
-        return "pong";
+      await fsExtra.remove(getTTSCacheDirPath());
+      await fsExtra.mkdir(getTTSCacheDirPath());
+    }
+    ttsCacheUtil.resetTTSAudioIndex(dirPath);
+  });
+  // 查询缓存大小（字节）：type 为 "tts"、"temp" 或 "all"
+  ipcMain.handle("get-cache-size", async (event, config) => {
+    const cacheType = config && config.type;
+    if (cacheType === "tts") {
+      return getDirSize(getTTSCacheDirPath());
+    } else if (cacheType === "temp") {
+      return getTempCacheDirPaths().reduce(
+        (total, cacheDir) => total + getDirSize(cacheDir),
+        0
+      );
+    } else if (cacheType === "all") {
+      const storagePath =
+        config && typeof config.storagePath === "string"
+          ? config.storagePath
+          : dataPath;
+      return getDirSize(storagePath) + getDirSize(getTTSCacheDirPath());
+    }
+    throw new Error("Invalid cache size request");
+  });
+  // 清理临时缓存：漫画解包、OCR 结果、整页翻译缓存与书籍导入临时文件
+  ipcMain.handle("clear-temp-cache", async (event, config) => {
+    for (const cacheDir of getTempCacheDirPaths()) {
+      if (fs.existsSync(cacheDir)) {
+        await fsExtra.remove(cacheDir);
       }
     }
+  });
+  // 官方 AI 语音本地缓存查询：命中返回 file:// 地址，未命中返回空字符串
+  ipcMain.handle("get-cached-tts", async (event, config) => {
+    const { text, speed, voiceIdentifier } = config || {};
+    if (
+      typeof text !== "string" ||
+      !text ||
+      typeof speed !== "number" ||
+      !Number.isFinite(speed) ||
+      typeof voiceIdentifier !== "string" ||
+      !voiceIdentifier
+    ) {
+      throw new Error("Invalid TTS cache request");
+    }
+    const key = ttsCacheUtil.getTTSAudioKey({
+      text,
+      speed,
+      voiceIdentifier,
+    });
+    const audioPath = ttsCacheUtil.findCachedTTSAudio(dirPath, key);
+    if (audioPath && fs.existsSync(audioPath)) {
+      return {
+        key,
+        audioPath: pathToFileURL(audioPath).toString(),
+      };
+    }
+    if (audioPath) {
+      ttsCacheUtil.resetTTSAudioIndex(dirPath);
+    }
+    return { key, audioPath: "" };
+  });
+  // 官方 AI 语音音频落盘：key 为内容哈希，跨会话复用
+  ipcMain.handle("save-tts-audio", async (event, config) => {
+    const { key, base64 } = config || {};
+    const rawBase64 =
+      typeof base64 === "string" ? base64 : base64 && base64.audio_base64;
+    if (
+      !ttsCacheUtil.isTTSAudioKey(key) ||
+      typeof rawBase64 !== "string" ||
+      !rawBase64
+    ) {
+      throw new Error("Invalid TTS audio cache request");
+    }
+    const base64Data = rawBase64.includes("base64,")
+      ? rawBase64.split("base64,")[1]
+      : rawBase64;
+    const audioPath = ttsCacheUtil.saveTTSAudio(
+      dirPath,
+      key,
+      Buffer.from(base64Data, "base64")
+    );
+    return pathToFileURL(audioPath).toString();
   });
   ipcMain.handle("select-path", async (event) => {
     var path = await dialog.showOpenDialog({
@@ -1277,18 +1426,30 @@ const createMainWin = () => {
             "mobi",
             "azw3",
             "azw",
+            "kdz",
             "htm",
             "html",
             "xml",
             "xhtml",
             "mhtml",
             "docx",
+            "doc",
+            "rtf",
             "md",
             "fb2",
+            "chm",
             "cbz",
             "cbt",
             "cbr",
             "cb7",
+            "pptx",
+            "ppt",
+            "xps",
+            "oxps",
+            "djvu",
+            "djv",
+            "ofd",
+            "caj",
           ],
         },
       ],
@@ -1678,6 +1839,40 @@ const createMainWin = () => {
       event.returnvalue = false;
     }
   });
+  const getReaderWindowFromEvent = (event) => {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (!win || win.isDestroyed() || win === mainWin) return null;
+    return win;
+  };
+  ipcMain.handle("reader-window-minimize", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    if (!win) return false;
+    win.minimize();
+    return true;
+  });
+  ipcMain.handle("reader-window-toggle-maximize", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    if (!win || win.isFullScreen()) return null;
+    if (win.isMaximized()) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
+    return win.isMaximized();
+  });
+  ipcMain.handle("reader-window-get-state", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    return {
+      isMaximized: !!win && win.isMaximized(),
+      isFullScreen: !!win && win.isFullScreen(),
+    };
+  });
+  ipcMain.handle("reader-window-close", (event) => {
+    const win = getReaderWindowFromEvent(event);
+    if (!win) return false;
+    win.close();
+    return true;
+  });
   ipcMain.handle("open-console", (event, arg) => {
     mainWin.webContents.openDevTools();
     event.returnvalue = true;
@@ -1742,7 +1937,16 @@ const createMainWin = () => {
       mainWin.webContents.send("chat-message", msg);
     }
   });
-  ipcMain.handle("clear-all-data", (event, config) => {
+  ipcMain.handle("clear-all-data", async (event, config) => {
+    try {
+      if (fs.existsSync(path.join(dirPath, "tts"))) {
+        await fsExtra.remove(path.join(dirPath, "tts"));
+        await fsExtra.mkdir(path.join(dirPath, "tts"));
+      }
+      ttsCacheUtil.resetTTSAudioIndex(dirPath);
+    } catch (error) {
+      console.error(error);
+    }
     store.clear();
   });
   ipcMain.handle("new-tab", (event, config) => {
@@ -1860,28 +2064,27 @@ const createMainWin = () => {
     if (readerWindow && !readerWindow.isDestroyed()) {
       readerWindowReadyToClose = true;
       readerWindow.close();
-      if (store.get("isMergeWord") === "yes") {
-        delete options.backgroundColor;
-      }
+      const currentIsMergeWord = store.get("isMergeWord") === "yes";
+      const nextIsMergeWord = currentIsMergeWord ? "no" : "yes";
       const scaleRatio = store.get("windowDisplayScale") || 1;
       Object.assign(options, {
         width: parseInt(store.get("windowWidth") || 1050) / scaleRatio,
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
-        frame: store.get("isMergeWord") !== "yes" ? false : true,
-        hasShadow: store.get("isMergeWord") !== "yes" ? false : true,
-        transparent: store.get("isMergeWord") !== "yes" ? true : false,
+        ...getReaderWindowChromeOptions(),
+        hasShadow: nextIsMergeWord === "yes" ? false : true,
+        transparent: nextIsMergeWord === "yes" ? true : false,
+        backgroundColor:
+          nextIsMergeWord === "yes" ? undefined : getAppBackgroundColor(),
       });
 
-      store.set(
-        "isMergeWord",
-        store.get("isMergeWord") !== "yes" ? "yes" : "no"
-      );
+      store.set("isMergeWord", nextIsMergeWord);
       if (readerWindow) {
         readerWindowList.push(readerWindow);
       }
       readerWindow = new BrowserWindow(options);
+      bindReaderWindowState(readerWindow);
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);
       }
@@ -2077,6 +2280,7 @@ const applyCorsToRendererRequests = () => {
 app.on("ready", async () => {
   applyCorsToRendererRequests();
   await applyProxyToSession();
+  applyNativeThemeSource(store.get("appSkin"));
   createMainWin();
 });
 app.on("before-quit", () => {
@@ -2123,6 +2327,7 @@ console.info = function (...args) {
   originalConsoleInfo(...args); // 保留原信息日志
   log.info(args.map(serializeArg).join(" ")); // 写入信息日志文件
 };
+
 // Handle MacOS deep linking
 app.on("open-url", (event, url) => {
   event.preventDefault();

@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "noImplicitAny": false,
     // "noUnusedLocals": true,
     // "noUnusedParameters": true,
@@ -24,8 +24,5 @@
     "src/assets/lib/kookit-extra.min.mjs",
     "scripts/i18n-script.js"
   ],
-  "exclude": ["utils", "src/utils/plugins/main"],
-  "paths": {
-    "*": ["./node_modules/@types", "./types"]
-  }
+  "exclude": ["utils", "src/utils/plugins/main"]
 }

@@ -291,21 +291,6 @@ export const backupToConfigJson = async () => {
     "utf-8"
   );
 };
-export const backupToSyncJson = async () => {
-  let syncStr = JSON.stringify(await ConfigUtil.dumpConfig("sync"));
-  const fs = window.electronAPI.fs;
-  const path = window.electronAPI.path;
-  const dataPath = getStorageLocation() || "";
-  if (!fs.existsSync(path.join(dataPath, "config"))) {
-    fs.mkdirSync(path.join(dataPath, "config"), { recursive: true });
-  }
-  fs.writeFileSync(
-    path.join(dataPath, "config", "sync.json"),
-    syncStr,
-    "utf-8"
-  );
-};
-
 export const zipBook = (zip: any) => {
   return new Promise<boolean>(async (resolve) => {
     let books = await DatabaseService.getAllRecords("books");

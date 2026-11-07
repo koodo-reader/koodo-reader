@@ -1,12 +1,17 @@
-import React from "react";
+import { useLatest } from "../../../utils/hooks/useLatest";
+import { useTranslation } from "react-i18next";
+import React, { useEffect, useRef, useState } from "react";
 import "./booklist.css";
 import BookCardItem from "../../../components/bookCardItem";
 import BookListItem from "../../../components/bookListItem";
 import BookCoverItem from "../../../components/bookCoverItem";
+import CollectionItem from "../../../components/collectionItem";
 import BookModel from "../../../models/Book";
-import { BookListProps, BookListState } from "./interface";
-import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { Redirect, withRouter } from "react-router-dom";
+import {
+  ConfigService,
+  CollectionUtil,
+} from "../../../assets/lib/kookit-extra-browser.min";
+import { Navigate } from "react-router-dom";
 import ViewMode from "../../../components/viewMode";
 import SelectBook from "../../../components/selectBook";
 import { Trans } from "react-i18next";
@@ -14,6 +19,19 @@ import Book from "../../../models/Book";
 import { isElectron } from "react-device-detect";
 import DatabaseService from "../../../utils/storage/databaseService";
 import { throttle } from "../../../utils/common";
+import { useAppStore } from "../../../store/useAppStore";
+
+export interface BookListState {
+  favoriteBooks: number;
+  isHideShelfBook: boolean;
+  displayedBooksCount: number;
+  isLoadingMore: boolean;
+  fullBooksData: BookModel[];
+  cardScale: number;
+  readingStatusFilter: string;
+}
+
+const collectionUtil = new CollectionUtil(ConfigService);
 declare var window: any;
 let currentBookMode = "home";
 function getBookCountPerPage() {
@@ -30,218 +48,37 @@ function getBookCountPerPage() {
   return columns * rows;
 }
 
-class BookList extends React.Component<BookListProps, BookListState> {
-  private scrollContainer: React.RefObject<HTMLUListElement>;
-  private visibilityChangeHandler: ((event: Event) => void) | null = null;
-  private resizeHandler: (() => void) | null = null;
-  private readingFinishedHandler: ((config: any) => void) | null = null;
+const BookList = () => {
+  const books = useAppStore((s) => s.manager.books);
+  const mode = useAppStore((s) => s.sidebar.mode);
+  const selectedBooks = useAppStore((s) => s.manager.selectedBooks);
+  const shelfTitle = useAppStore((s) => s.sidebar.shelfTitle);
+  const isCollapsed = useAppStore((s) => s.sidebar.isCollapsed);
+  const searchResults = useAppStore((s) => s.manager.searchResults);
+  const isSearch = useAppStore((s) => s.manager.isSearch);
+  const isSelectBook = useAppStore((s) => s.manager.isSelectBook);
+  const viewMode = useAppStore((s) => s.manager.viewMode);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const handleLoadMore = useAppStore((s) => s.handleLoadMore);
+  const { t } = useTranslation();
+  const scrollContainer = useRef<HTMLUListElement | null>(null);
+  const [state, setState] = useState<BookListState>(() => ({
+    favoriteBooks: Object.keys(ConfigService.getAllListConfig("favoriteBooks"))
+      .length,
+    isHideShelfBook: ConfigService.getReaderConfig("isHideShelfBook") === "yes",
+    displayedBooksCount: 24,
+    isLoadingMore: false,
+    fullBooksData: [],
+    // Migrated comment
+    cardScale: parseFloat(ConfigService.getReaderConfig("cardScale") || "1"),
+    readingStatusFilter: "",
+  }));
 
-  constructor(props: BookListProps) {
-    super(props);
-    this.scrollContainer = React.createRef();
-    this.state = {
-      favoriteBooks: Object.keys(
-        ConfigService.getAllListConfig("favoriteBooks")
-      ).length,
-      isHideShelfBook:
-        ConfigService.getReaderConfig("isHideShelfBook") === "yes",
-      displayedBooksCount: 24,
-      isLoadingMore: false,
-      fullBooksData: [], // 存储从数据库加载的完整书籍数据
-      cardScale: parseFloat(ConfigService.getReaderConfig("cardScale") || "1"),
-      readingStatusFilter: "",
-    };
-  }
-  UNSAFE_componentWillMount() {
-    this.props.handleFetchBooks();
-  }
+  // Migrated comment
+  // Migrated comment
+  const stateRef = useLatest(state);
 
-  async componentDidMount() {
-    if (!this.props.books || !this.props.books[0]) {
-      return <Redirect to="manager/empty" />;
-    }
-    this.setState({
-      displayedBooksCount: getBookCountPerPage(),
-    });
-
-    // 保存 resize 监听器引用（节流，避免拖拽窗口时频繁触发）
-    this.resizeHandler = throttle(() => {
-      //recount the book count per page when the window is resized
-      this.props.handleFetchBooks();
-    });
-    window.addEventListener("resize", this.resizeHandler);
-
-    // 设置滚动监听器
-    this.setupScrollListener();
-
-    // 保存 visibilitychange 监听器引用
-    this.visibilityChangeHandler = async (event) => {
-      if (document.visibilityState === "visible" && !isElectron) {
-        await this.handleFinishReading();
-      }
-    };
-    document.addEventListener("visibilitychange", this.visibilityChangeHandler);
-
-    if (isElectron) {
-      const ipcRenderer = window.electronAPI;
-      this.readingFinishedHandler = async (config: any) => {
-        this.handleFinishReading();
-      };
-      ipcRenderer.on("reading-finished", this.readingFinishedHandler);
-    }
-
-    // 初始加载完整的书籍数据
-    await this.loadFullBooksData();
-  }
-
-  componentWillUnmount() {
-    // 清理滚动监听器
-    this.cleanupScrollListener();
-
-    // 清理 resize 监听器
-    if (this.resizeHandler) {
-      window.removeEventListener("resize", this.resizeHandler);
-      this.resizeHandler = null;
-    }
-
-    // 清理 visibilitychange 监听器
-    if (this.visibilityChangeHandler) {
-      document.removeEventListener(
-        "visibilitychange",
-        this.visibilityChangeHandler
-      );
-      this.visibilityChangeHandler = null;
-    }
-
-    // 清理 IPC 监听器（只移除自身，避免误删 Header 等其他组件的监听器）
-    if (isElectron && this.readingFinishedHandler) {
-      const ipcRenderer = window.electronAPI;
-      ipcRenderer.removeListener(
-        "reading-finished",
-        this.readingFinishedHandler
-      );
-      this.readingFinishedHandler = null;
-    }
-  }
-
-  componentDidUpdate(prevProps: BookListProps, prevState: BookListState) {
-    // 当书籍列表更新时，重置显示数量
-    if (
-      prevProps.books !== this.props.books ||
-      prevProps.searchResults !== this.props.searchResults ||
-      prevProps.isSearch !== this.props.isSearch ||
-      prevProps.mode !== this.props.mode ||
-      prevProps.shelfTitle !== this.props.shelfTitle
-    ) {
-      this.setState({
-        displayedBooksCount: getBookCountPerPage(),
-        isLoadingMore: false,
-      });
-      this.props.handleLoadMore(false);
-      // 滚动到顶部
-      if (this.scrollContainer.current) {
-        this.scrollContainer.current.scrollTop = 0;
-      }
-      // 重新加载完整的书籍数据
-      this.loadFullBooksData();
-    }
-    // 阅读状态筛选变化时，重新加载完整书籍数据
-    if (prevState.readingStatusFilter !== this.state.readingStatusFilter) {
-      this.loadFullBooksData();
-    }
-  }
-
-  // 从数据库加载完整的书籍数据
-  loadFullBooksData = async () => {
-    const { books } = this.handleBooks();
-    const displayedBooks = books.slice(0, this.state.displayedBooksCount);
-
-    const fullBooksData: Book[] = [];
-    for (let i = 0; i < displayedBooks.length; i++) {
-      const book = await DatabaseService.getRecord(
-        displayedBooks[i].key,
-        "books"
-      );
-      if (book) {
-        fullBooksData.push(book);
-      }
-    }
-
-    this.setState({ fullBooksData });
-  };
-  handleFinishReading = async () => {
-    if (!this.scrollContainer.current) return;
-    if (
-      this.scrollContainer.current &&
-      this.scrollContainer.current.scrollTop > 100
-    ) {
-      //ignore if the scroll is not at top
-    } else {
-      this.props.handleFetchBooks();
-    }
-  };
-
-  setupScrollListener = () => {
-    const scrollContainer = this.scrollContainer.current;
-    if (scrollContainer) {
-      scrollContainer.addEventListener("scroll", this.handleScroll);
-    }
-  };
-
-  cleanupScrollListener = () => {
-    const scrollContainer = this.scrollContainer.current;
-    if (scrollContainer) {
-      scrollContainer.removeEventListener("scroll", this.handleScroll);
-    }
-  };
-
-  handleScroll = () => {
-    const scrollContainer = this.scrollContainer.current;
-    if (!scrollContainer || this.state.isLoadingMore) return;
-
-    const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
-    // 当滚动到底部附近时触发加载更多
-    if (scrollTop + clientHeight >= scrollHeight - 300) {
-      this.loadMoreBooks();
-    }
-  };
-
-  loadMoreBooks = () => {
-    const { books } = this.handleBooks();
-    const { displayedBooksCount } = this.state;
-
-    if (displayedBooksCount >= books.length) {
-      return; // 已经显示所有图书
-    }
-
-    this.setState({ isLoadingMore: true });
-    this.props.handleLoadMore(true);
-    // 异步加载更多书籍数据
-    setTimeout(async () => {
-      const newDisplayedBooksCount = Math.min(
-        displayedBooksCount + getBookCountPerPage(),
-        books.length
-      );
-
-      // 加载新增的书籍数据
-      const newBooks = books.slice(displayedBooksCount, newDisplayedBooksCount);
-      const newFullBooksData: Book[] = [];
-      for (let i = 0; i < newBooks.length; i++) {
-        const book = await DatabaseService.getRecord(newBooks[i].key, "books");
-        if (book) {
-          newFullBooksData.push(book);
-        }
-      }
-
-      this.setState({
-        displayedBooksCount: newDisplayedBooksCount,
-        isLoadingMore: false,
-        fullBooksData: [...this.state.fullBooksData, ...newFullBooksData],
-      });
-    }, 100);
-  };
-
-  handleKeyFilter = (items: any[], arr: string[]) => {
+  const handleKeyFilter = (items: any[], arr: string[]) => {
     let itemArr: any[] = [];
     arr.forEach((item) => {
       items.forEach((subItem: any) => {
@@ -253,7 +90,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
     return itemArr;
   };
 
-  handleShelf(items: any, shelfTitle: string) {
+  const handleShelf = (items: any, shelfTitle: string) => {
     if (!shelfTitle) return items;
     let currentShelfTitle = shelfTitle;
     let currentShelfList = ConfigService.getMapConfig(
@@ -264,32 +101,86 @@ class BookList extends React.Component<BookListProps, BookListState> {
       return currentShelfList.indexOf(item.key) > -1;
     });
     return shelfItems;
-  }
+  };
 
   //get the searched books according to the index
-  handleIndexFilter = (items: any, arr: number[]) => {
+  const handleIndexFilter = (items: any, arr: number[]) => {
     let itemArr: any[] = [];
     arr.forEach((item) => {
       items[item] && itemArr.push(items[item]);
     });
     return itemArr;
   };
-  handleFilterShelfBook = (items: BookModel[]) => {
+
+  const isCollectionInShelf = (
+    collectionKey: string,
+    memberKeys: string[]
+  ): boolean => {
+    if (
+      ConfigService.getFromAllMapConfig(collectionKey, "shelfList").length > 0
+    ) {
+      return true;
+    }
+    return memberKeys.some((bookKey) => {
+      return ConfigService.getFromAllMapConfig(bookKey, "shelfList").length > 0;
+    });
+  };
+
+  const handleFilterShelfBook = (items: BookModel[]) => {
     return items.filter((item) => {
+      if (collectionUtil.isCollection(item.key)) {
+        let collection = collectionUtil.getCollection(item.key);
+        if (!collection) return false;
+        return !isCollectionInShelf(collection.key, collection.books);
+      }
       return (
         ConfigService.getFromAllMapConfig(item.key, "shelfList").length === 0
       );
     });
   };
-  handleCardScaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const scale = parseFloat(e.target.value);
-    this.setState({ cardScale: scale });
-    ConfigService.setReaderConfig("cardScale", String(scale));
+
+  const resolveCollectionItems = (items: any[]): any[] => {
+    if (!items) return [];
+    let result: any[] = [];
+    let seen = new Set<string>();
+    items.forEach((item) => {
+      let key = item.key;
+      if (!key) return;
+      if (collectionUtil.isCollection(key)) {
+        if (collectionUtil.isCollectionDeleted(key)) return;
+        if (!seen.has(key)) {
+          seen.add(key);
+          result.push(item);
+        }
+        return;
+      }
+      let collection = collectionUtil.getActiveCollectionByBook(key);
+      if (collection) {
+        if (!seen.has(collection.key)) {
+          seen.add(collection.key);
+          result.push({ ...item, key: collection.key });
+        }
+        return;
+      }
+      if (!seen.has(key)) {
+        seen.add(key);
+        result.push(item);
+      }
+    });
+    return result;
   };
 
-  filterBooksByReadingStatus = (books: Book[], status: string): Book[] => {
+  const filterBooksByReadingStatus = (
+    books: Book[],
+    status: string
+  ): Book[] => {
     if (!status) return books;
     return books.filter((book) => {
+      if (collectionUtil.isCollection(book.key)) {
+        let collection = collectionUtil.getCollection(book.key);
+        if (!collection) return false;
+        return collectionUtil.getCollectionReadingStatus(collection) === status;
+      }
       const record = ConfigService.getObjectConfig(
         book.key,
         "recordLocation",
@@ -308,38 +199,343 @@ class BookList extends React.Component<BookListProps, BookListState> {
     });
   };
 
-  renderBookList = (books: Book[], bookMode: string) => {
-    if (books.length === 0 && !this.props.isSearch) {
-      return <Redirect to="/manager/empty" />;
+  const handleBooks = () => {
+    let bookMode = isSearch
+      ? "search"
+      : shelfTitle
+        ? "shelf"
+        : mode === "favorite"
+          ? "favorite"
+          : stateRef.current.isHideShelfBook
+            ? "hide"
+            : "home";
+    let filteredBooks =
+      bookMode === "search"
+        ? searchResults
+        : bookMode === "shelf"
+          ? handleShelf(books, shelfTitle)
+          : bookMode === "favorite"
+            ? handleKeyFilter(
+                books,
+                ConfigService.getAllListConfig("favoriteBooks")
+              )
+            : books;
+    filteredBooks = resolveCollectionItems(filteredBooks);
+    if (bookMode === "hide") {
+      filteredBooks = handleFilterShelfBook(filteredBooks);
+    }
+    if (stateRef.current.readingStatusFilter) {
+      filteredBooks = filterBooksByReadingStatus(
+        filteredBooks,
+        stateRef.current.readingStatusFilter
+      );
+    }
+    const topBookKeys: string[] = ConfigService.getAllListConfig("topBooks");
+    if (topBookKeys.length > 0) {
+      const topSet = new Set(topBookKeys);
+      const topBooks = [...topBookKeys]
+        .map((key) => filteredBooks.find((b) => b.key === key))
+        .filter(Boolean) as Book[];
+      const restBooks = filteredBooks.filter((b) => !topSet.has(b.key));
+      filteredBooks = [...topBooks, ...restBooks];
+    }
+    return {
+      books: filteredBooks,
+      bookMode,
+    };
+  };
+
+  // Migrated comment
+  const loadFullBooksData = async (
+    displayedBooksCount = stateRef.current.displayedBooksCount
+  ) => {
+    const { books } = handleBooks();
+    const displayedBooks = books.slice(0, displayedBooksCount);
+
+    const fullBooksData: Book[] = [];
+    for (let i = 0; i < displayedBooks.length; i++) {
+      const key = displayedBooks[i].key;
+      if (collectionUtil.isCollection(key)) {
+        const collection = collectionUtil.getCollection(key);
+        if (collection) {
+          fullBooksData.push(collectionUtil.getCollectionAsBook(collection));
+        }
+        continue;
+      }
+      const book = await DatabaseService.getRecord(key, "books");
+      if (book) {
+        fullBooksData.push(book);
+      }
+    }
+
+    setState((prevState) => ({ ...prevState, fullBooksData }));
+  };
+
+  const handleFinishReading = async () => {
+    if (!scrollContainer.current) return;
+    if (scrollContainer.current && scrollContainer.current.scrollTop > 100) {
+      //ignore if the scroll is not at top
+    } else {
+      handleFetchBooks();
+    }
+  };
+
+  const loadMoreBooks = () => {
+    const { books } = handleBooks();
+    const { displayedBooksCount } = stateRef.current;
+
+    if (displayedBooksCount >= books.length) {
+      return;
+      // Migrated comment
+    }
+
+    setState((prevState) => ({ ...prevState, isLoadingMore: true }));
+    handleLoadMore(true);
+    // Migrated comment
+    setTimeout(async () => {
+      const newDisplayedBooksCount = Math.min(
+        displayedBooksCount + getBookCountPerPage(),
+        books.length
+      );
+
+      // Migrated comment
+      const newBooks = books.slice(displayedBooksCount, newDisplayedBooksCount);
+      const newFullBooksData: Book[] = [];
+      for (let i = 0; i < newBooks.length; i++) {
+        const key = newBooks[i].key;
+        if (collectionUtil.isCollection(key)) {
+          const collection = collectionUtil.getCollection(key);
+          if (collection) {
+            newFullBooksData.push(
+              collectionUtil.getCollectionAsBook(collection)
+            );
+          }
+          continue;
+        }
+        const book = await DatabaseService.getRecord(key, "books");
+        if (book) {
+          newFullBooksData.push(book);
+        }
+      }
+
+      setState((prevState) => ({
+        ...prevState,
+        displayedBooksCount: newDisplayedBooksCount,
+        isLoadingMore: false,
+        fullBooksData: [...stateRef.current.fullBooksData, ...newFullBooksData],
+      }));
+    }, 100);
+  };
+
+  const handleScroll = () => {
+    const scrollContainerCurrent = scrollContainer.current;
+    if (!scrollContainerCurrent || stateRef.current.isLoadingMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerCurrent;
+    // Migrated comment
+    if (scrollTop + clientHeight >= scrollHeight - 300) {
+      loadMoreBooks();
+    }
+  };
+
+  // Migrated comment
+  const handleFinishReadingRef = useLatest(handleFinishReading);
+  const handleScrollRef = useLatest(handleScroll);
+
+  // Migrated comment
+  useEffect(() => {
+    handleFetchBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Migrated comment
+  useEffect(() => {
+    const displayedBooksCount = getBookCountPerPage();
+    setState((prevState) => ({
+      ...prevState,
+      displayedBooksCount,
+    }));
+
+    // Migrated comment
+    const resizeHandler = throttle(() => {
+      //recount the book count per page when the window is resized
+      handleFetchBooks();
+    });
+    window.addEventListener("resize", resizeHandler);
+
+    // Migrated comment
+    const scrollContainerCurrent = scrollContainer.current;
+    const scrollHandler = () => {
+      handleScrollRef.current();
+    };
+    if (scrollContainerCurrent) {
+      scrollContainerCurrent.addEventListener("scroll", scrollHandler);
+    }
+
+    // Migrated comment
+    const visibilityChangeHandler = async () => {
+      if (document.visibilityState === "visible" && !isElectron) {
+        await handleFinishReadingRef.current();
+      }
+    };
+    document.addEventListener("visibilitychange", visibilityChangeHandler);
+
+    const ipcRenderer = isElectron ? window.electronAPI : null;
+    let readingFinishedHandler: ((config: any) => void) | null = null;
+    if (isElectron) {
+      readingFinishedHandler = async () => {
+        handleFinishReadingRef.current();
+      };
+      ipcRenderer.on("reading-finished", readingFinishedHandler);
+    }
+
+    // Migrated comment
+    loadFullBooksData(displayedBooksCount);
+
+    return () => {
+      // Migrated comment
+      if (scrollContainerCurrent) {
+        scrollContainerCurrent.removeEventListener("scroll", scrollHandler);
+      }
+
+      // Migrated comment
+      window.removeEventListener("resize", resizeHandler);
+
+      // Migrated comment
+      document.removeEventListener("visibilitychange", visibilityChangeHandler);
+
+      // Migrated comment
+      if (isElectron && readingFinishedHandler) {
+        ipcRenderer.removeListener("reading-finished", readingFinishedHandler);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Migrated comment
+  const prevPropsRef = useRef({
+    books,
+    searchResults,
+    isSearch,
+    mode,
+    shelfTitle,
+  });
+  useEffect(() => {
+    const prevProps = prevPropsRef.current;
+    prevPropsRef.current = {
+      books,
+      searchResults,
+      isSearch,
+      mode,
+      shelfTitle,
+    };
+    if (
+      prevProps.books !== books ||
+      prevProps.searchResults !== searchResults ||
+      prevProps.isSearch !== isSearch ||
+      prevProps.mode !== mode ||
+      prevProps.shelfTitle !== shelfTitle
+    ) {
+      const nextDisplayedBooksCount = getBookCountPerPage();
+      setState((prevState) => ({
+        ...prevState,
+        displayedBooksCount: nextDisplayedBooksCount,
+        isLoadingMore: false,
+      }));
+      handleLoadMore(false);
+      // Migrated comment
+      if (scrollContainer.current) {
+        scrollContainer.current.scrollTop = 0;
+      }
+      // Migrated comment
+      loadFullBooksData(nextDisplayedBooksCount);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [books, searchResults, isSearch, mode, shelfTitle]);
+
+  // Migrated comment
+  const prevReadingStatusFilterRef = useRef(state.readingStatusFilter);
+  useEffect(() => {
+    const prevReadingStatusFilter = prevReadingStatusFilterRef.current;
+    prevReadingStatusFilterRef.current = state.readingStatusFilter;
+    if (prevReadingStatusFilter !== state.readingStatusFilter) {
+      loadFullBooksData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.readingStatusFilter]);
+
+  const handleCardScaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const scale = parseFloat(e.target.value);
+    setState((prevState) => ({ ...prevState, cardScale: scale }));
+    ConfigService.setReaderConfig("cardScale", String(scale));
+  };
+
+  const renderBookList = (books: Book[], bookMode: string) => {
+    if (books.length === 0 && !isSearch) {
+      return <Navigate to="/manager/empty" replace />;
     }
     if (bookMode !== currentBookMode) {
       currentBookMode = bookMode;
     }
 
-    // 使用状态中已加载的完整书籍数据，并按当前过滤后的 books 顺序/范围进行裁剪
+    // Migrated comment
+    // Migrated comment
     const filteredKeys = new Set(books.map((b) => b.key));
-    const displayedBooks = this.props.isSearch
+    const displayedBooks = isSearch
       ? books
-      : this.state.fullBooksData.filter((b) => filteredKeys.has(b.key));
+      : state.fullBooksData.filter((b) => filteredKeys.has(b.key));
 
     return displayedBooks.map((item: BookModel, index: number) => {
-      return this.props.viewMode === "list" ? (
+      if (collectionUtil.isCollection(item.key)) {
+        const collection = collectionUtil.getCollection(item.key);
+        if (!collection) return null;
+        const collectionProps = {
+          collection,
+          isSelected: selectedBooks.indexOf(item.key) > -1,
+          allBooks: displayedBooks,
+          bookIndex: index,
+        };
+        return viewMode === "list" ? (
+          <CollectionItem
+            key={item.key}
+            {...({ ...collectionProps, viewMode: "list" } as any)}
+          />
+        ) : viewMode === "card" ? (
+          <CollectionItem
+            key={item.key}
+            {...({
+              ...collectionProps,
+              viewMode: "card",
+              cardScale: state.cardScale,
+            } as any)}
+          />
+        ) : (
+          <CollectionItem
+            key={item.key}
+            {...({ ...collectionProps, viewMode: "cover" } as any)}
+          />
+        );
+      }
+      if (!item.format || item.format === "COLLECTION") {
+        return null;
+      }
+      return viewMode === "list" ? (
         <BookListItem
           key={index}
           {...({
             book: item,
-            isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            isSelected: selectedBooks.indexOf(item.key) > -1,
             allBooks: displayedBooks,
             bookIndex: index,
           } as any)}
         />
-      ) : this.props.viewMode === "card" ? (
+      ) : viewMode === "card" ? (
         <BookCardItem
           key={index}
           {...({
             book: item,
-            cardScale: this.state.cardScale,
-            isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            cardScale: state.cardScale,
+            isSelected: selectedBooks.indexOf(item.key) > -1,
             allBooks: displayedBooks,
             bookIndex: index,
           } as any)}
@@ -349,7 +545,7 @@ class BookList extends React.Component<BookListProps, BookListState> {
           key={index}
           {...({
             book: item,
-            isSelected: this.props.selectedBooks.indexOf(item.key) > -1,
+            isSelected: selectedBooks.indexOf(item.key) > -1,
             allBooks: displayedBooks,
             bookIndex: index,
           } as any)}
@@ -357,144 +553,95 @@ class BookList extends React.Component<BookListProps, BookListState> {
       );
     });
   };
-  handleBooks = () => {
-    let bookMode = this.props.isSearch
-      ? "search"
-      : this.props.shelfTitle
-        ? "shelf"
-        : this.props.mode === "favorite"
-          ? "favorite"
-          : this.state.isHideShelfBook
-            ? "hide"
-            : "home";
-    let books =
-      bookMode === "search"
-        ? this.props.searchResults
-        : bookMode === "shelf"
-          ? this.handleShelf(this.props.books, this.props.shelfTitle)
-          : bookMode === "favorite"
-            ? this.handleKeyFilter(
-                this.props.books,
-                ConfigService.getAllListConfig("favoriteBooks")
-              )
-            : bookMode === "hide"
-              ? this.handleFilterShelfBook(this.props.books)
-              : this.props.books;
-    if (this.state.readingStatusFilter) {
-      books = this.filterBooksByReadingStatus(
-        books,
-        this.state.readingStatusFilter
-      );
-    }
-    const topBookKeys: string[] = ConfigService.getAllListConfig("topBooks");
-    if (topBookKeys.length > 0) {
-      const topSet = new Set(topBookKeys);
-      const topBooks = [...topBookKeys]
-        .map((key) => books.find((b) => b.key === key))
-        .filter(Boolean) as Book[];
-      const restBooks = books.filter((b) => !topSet.has(b.key));
-      books = [...topBooks, ...restBooks];
-    }
-    return {
-      books,
-      bookMode,
-    };
-  };
 
-  render() {
-    if (
-      (this.state.favoriteBooks === 0 && this.props.mode === "favorite") ||
-      !this.props.books ||
-      !this.props.books[0]
-    ) {
-      return <Redirect to="/manager/empty" />;
-    }
-    const { books, bookMode } = this.handleBooks();
-    return (
-      <>
-        <div
-          className="book-list-header"
-          style={
-            this.props.isCollapsed
-              ? { width: "calc(100% - 70px)", left: "70px" }
-              : {}
-          }
-        >
-          <SelectBook />
-
-          <div
-            style={this.props.isSelectBook ? { display: "none" } : {}}
-            className="book-list-header-right"
-          >
-            {this.props.viewMode === "card" && (
-              <input
-                type="range"
-                min="0.6"
-                max="2"
-                step="0.05"
-                value={this.state.cardScale}
-                onChange={this.handleCardScaleChange}
-                className="book-card-scale-slider"
-                title="Adjust cover size"
-              />
-            )}
-            <div className="book-list-total-page">
-              <Trans i18nKey="Total books" count={books.length}>
-                {"Total " + books.length + " books"}
-              </Trans>
-            </div>
-            <select
-              className="lang-setting-dropdown"
-              value={this.state.readingStatusFilter}
-              onChange={(e) => {
-                this.setState({ readingStatusFilter: e.target.value });
-              }}
-              style={{
-                marginRight: "10px",
-                width: "70px",
-                borderWidth: "0px",
-                backgroundColor: "transparent",
-              }}
-            >
-              <option value="" className="lang-setting-option">
-                {this.props.t("All")}
-              </option>
-              <option value="unread" className="lang-setting-option">
-                {this.props.t("Unread")}
-              </option>
-              <option value="reading" className="lang-setting-option">
-                {this.props.t("CurrentlyReading")}
-              </option>
-              <option value="finished" className="lang-setting-option">
-                {this.props.t("Finished")}
-              </option>
-            </select>
-            <ViewMode />
-          </div>
-        </div>
-        <div
-          className="book-list-container-parent"
-          style={
-            this.props.isCollapsed
-              ? { width: "calc(100vw - 70px)", left: "70px" }
-              : {}
-          }
-        >
-          <div className="book-list-container">
-            <ul
-              className="book-list-item-box"
-              ref={this.scrollContainer}
-              style={
-                { "--card-scale": this.state.cardScale } as React.CSSProperties
-              }
-            >
-              {this.renderBookList(books, bookMode)}
-            </ul>
-          </div>
-        </div>
-      </>
-    );
+  if (!books) {
+    return null;
   }
-}
+  if (
+    (state.favoriteBooks === 0 && mode === "favorite") ||
+    !books[0]
+  ) {
+    return <Navigate to="/manager/empty" replace />;
+  }
+  const { books: displayedBookList, bookMode } = handleBooks();
+  return (
+    <>
+      <div
+        className="book-list-header"
+        style={isCollapsed ? { width: "calc(100% - 70px)", left: "70px" } : {}}
+      >
+        <SelectBook />
 
-export default withRouter(BookList as any);
+        <div
+          style={isSelectBook ? { display: "none" } : {}}
+          className="book-list-header-right"
+        >
+          {viewMode === "card" && (
+            <input
+              type="range"
+              min="0.6"
+              max="2"
+              step="0.05"
+              value={state.cardScale}
+              onChange={handleCardScaleChange}
+              className="book-card-scale-slider"
+              title="Adjust cover size"
+            />
+          )}
+          <div className="book-list-total-page">
+            <Trans i18nKey="Total books" count={displayedBookList.length}>
+              {"Total " + displayedBookList.length + " books"}
+            </Trans>
+          </div>
+          <select
+            className="lang-setting-dropdown"
+            value={state.readingStatusFilter}
+            onChange={(e) => {
+              const value = e.target.value;
+              setState((prevState) => ({
+                ...prevState,
+                readingStatusFilter: value,
+              }));
+            }}
+            style={{
+              marginRight: "10px",
+              width: "70px",
+              borderWidth: "0px",
+              backgroundColor: "transparent",
+            }}
+          >
+            <option value="" className="lang-setting-option">
+              {t("All")}
+            </option>
+            <option value="unread" className="lang-setting-option">
+              {t("Unread")}
+            </option>
+            <option value="reading" className="lang-setting-option">
+              {t("CurrentlyReading")}
+            </option>
+            <option value="finished" className="lang-setting-option">
+              {t("Finished")}
+            </option>
+          </select>
+          <ViewMode />
+        </div>
+      </div>
+      <div
+        className="book-list-container-parent"
+        style={isCollapsed ? { width: "calc(100vw - 70px)", left: "70px" } : {}}
+      >
+        <div className="book-list-container">
+          <ul
+            className="book-list-item-box"
+            ref={scrollContainer}
+            style={{ "--card-scale": state.cardScale } as React.CSSProperties}
+          >
+            {renderBookList(displayedBookList, bookMode)}
+          </ul>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default BookList;

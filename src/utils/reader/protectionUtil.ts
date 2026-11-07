@@ -16,10 +16,6 @@ export interface BiometricAuthResult {
   provider?: string;
 }
 
-export async function getProtectionMethod(): Promise<string> {
-  return (await TokenService.getToken("protection_method")) || "";
-}
-
 export async function verifyPassword(input: string): Promise<boolean> {
   const stored = await TokenService.getToken("protection_password");
   if (!stored) return false;

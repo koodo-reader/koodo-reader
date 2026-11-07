@@ -1,17 +1,3 @@
-export const FontCategory = {
-  1: "sans-serif",
-  2: "monospace",
-  3: "serif",
-  4: "handwriting",
-  5: "display",
-};
-export const reverseFontCategory = {
-  "sans-serif": 1,
-  monospace: 2,
-  serif: 3,
-  handwriting: 4,
-  display: 5,
-};
 export const ChineseFonts = [
   {
     id: "LXGWWenKai-Light",

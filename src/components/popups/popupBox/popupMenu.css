@@ -11,6 +11,9 @@
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
+.popup-box-inner {
+  display: flow-root;
+}
 .popup-resize-handle {
   position: absolute;
   top: 0;

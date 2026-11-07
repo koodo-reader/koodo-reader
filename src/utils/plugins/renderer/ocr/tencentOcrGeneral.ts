@@ -1,0 +1,5 @@
+import type { OCRPlugin } from "../../types";
+import { recognizeWithTencent } from "./tencentOcrCommon";
+
+export const recognize: OCRPlugin = async (imageBase64, axios, config) =>
+  recognizeWithTencent("GeneralBasicOCR", imageBase64, axios, config);
