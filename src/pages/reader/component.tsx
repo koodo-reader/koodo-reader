@@ -521,7 +521,17 @@ const Reader = () => {
       latestPointerY = e.clientY;
       throttledMouseMove();
     };
-    const handleWindowMouseLeave = () => {
+    const handleWindowMouseLeave = (e: MouseEvent) => {
+      // Entering an Electron draggable region (e.g. the toolbar) also fires
+      // mouseleave even though the pointer is still inside the window.
+      if (
+        e.clientX > 1 &&
+        e.clientY > 1 &&
+        e.clientX < window.innerWidth - 1 &&
+        e.clientY < window.innerHeight - 1
+      ) {
+        return;
+      }
       latestPointerY = null;
       hideQuickButtons();
     };
@@ -604,8 +614,9 @@ const Reader = () => {
         updateQuickButtons();
       });
       doc.documentElement.addEventListener("mouseleave", () => {
+        // Leaving the iframe is not the same as leaving the window; the outer
+        // document's mousemove handler updates the button visibility.
         latestPointerY = null;
-        hideQuickButtons();
       });
     };
     const attachToDoc = (doc: Document | null) => {
