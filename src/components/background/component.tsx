@@ -12,6 +12,7 @@ const Background = () => {
   const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
   const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
   const backgroundColor = useAppStore((s) => s.reader.backgroundColor);
+  const isHideBackground = useAppStore((s) => s.reader.isHideBackground);
   const scale = useAppStore((s) => s.reader.scale);
   const isFitPage = useAppStore((s) => s.reader.isFitPage);
   const margin = useAppStore((s) => s.reader.margin);
@@ -115,106 +116,103 @@ const Background = () => {
 
   return (
     <>
-      <div
-        className="background-box2"
-        style={
-          isSingle
-            ? {
-                left: pageSize.pageOffset,
-                marginLeft: -50,
-                width: `calc(${pageSize.pageWidth} + 98px)`,
-                boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
-              }
-            : {
-                left: isNavLocked ? 305 : 5,
-                right: isSettingLocked || isDockedRight ? 305 : 5,
-              }
-        }
-      ></div>
+      {readerBackgroundUrl && (
+        <div
+          className="reader-background-image"
+          style={{ backgroundImage: `url("${readerBackgroundUrl}")` }}
+        ></div>
+      )}
 
-      <div
-        className="background-box3"
-        style={
-          isSingle
-            ? {
-                marginLeft: -50,
-                left: pageSize.pageOffset,
-                width: `calc(${pageSize.pageWidth} + 100px)`,
-              }
-            : {
-                left: isNavLocked ? 307 : 7,
-                right: isSettingLocked || isDockedRight ? 307 : 7,
-              }
-        }
-      >
-        {(() => {
-          const isDarkMode =
-            (!backgroundColor &&
-              (ConfigService.getReaderConfig("appSkin") === "night" ||
-                (ConfigService.getReaderConfig("appSkin") === "system" &&
-                  ConfigService.getReaderConfig("isOSNight") === "yes"))) ||
-            backgroundColor === "rgba(44,47,49,1)";
+      {!isHideBackground && (
+        <>
+          <div
+            className="background-box2"
+            style={
+              isSingle
+                ? {
+                    left: pageSize.pageOffset,
+                    marginLeft: -50,
+                    width: `calc(${pageSize.pageWidth} + 98px)`,
+                    boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
+                  }
+                : {
+                    left: isNavLocked ? 305 : 5,
+                    right: isSettingLocked || isDockedRight ? 305 : 5,
+                  }
+            }
+          ></div>
 
-          const shadowOpacity = isDarkMode ? 0.5 : undefined;
+          <div
+            className="background-box3"
+            style={
+              isSingle
+                ? {
+                    marginLeft: -50,
+                    left: pageSize.pageOffset,
+                    width: `calc(${pageSize.pageWidth} + 100px)`,
+                  }
+                : {
+                    left: isNavLocked ? 307 : 7,
+                    right: isSettingLocked || isDockedRight ? 307 : 7,
+                  }
+            }
+          >
+            {(() => {
+              const isDarkMode =
+                (!backgroundColor &&
+                  (ConfigService.getReaderConfig("appSkin") === "night" ||
+                    (ConfigService.getReaderConfig("appSkin") === "system" &&
+                      ConfigService.getReaderConfig("isOSNight") === "yes"))) ||
+                backgroundColor === "rgba(44,47,49,1)";
 
-          return (
-            <>
-              <div
-                className="spine-shadow-left"
-                style={{
-                  ...(isSingle && { display: "none" }),
-                  ...(shadowOpacity && { opacity: shadowOpacity }),
-                }}
-              ></div>
-              <div
-                className="book-spine"
-                style={isSingle ? { display: "none" } : {}}
-              ></div>
-              <div
-                className="spine-shadow-right"
-                style={{
-                  ...(isSingle && {
-                    position: "relative",
-                    right: 0,
-                  }),
-                  ...(shadowOpacity && { opacity: shadowOpacity }),
-                }}
-              ></div>
-            </>
-          );
-        })()}
-      </div>
+              const shadowOpacity = isDarkMode ? 0.5 : undefined;
 
-      <div
-        className="background-box1"
-        style={
-          isSingle
-            ? {
-                marginLeft: -50,
-                left: pageSize.pageOffset,
-                width: `calc(${pageSize.pageWidth} + 102px)`,
-                boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
-                ...(readerBackgroundUrl
-                  ? {
-                      backgroundImage: `url("${readerBackgroundUrl}")`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }
-                  : {}),
-              }
-            : {
-                left: isNavLocked ? 309 : 9,
-                right: isSettingLocked || isDockedRight ? 309 : 9,
-                ...(readerBackgroundUrl
-                  ? {
-                      backgroundImage: `url("${readerBackgroundUrl}")`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }
-                  : {}),
-              }
-        }
-      ></div>
+              return (
+                <>
+                  <div
+                    className="spine-shadow-left"
+                    style={{
+                      ...(isSingle && { display: "none" }),
+                      ...(shadowOpacity && { opacity: shadowOpacity }),
+                    }}
+                  ></div>
+                  <div
+                    className="book-spine"
+                    style={isSingle ? { display: "none" } : {}}
+                  ></div>
+                  <div
+                    className="spine-shadow-right"
+                    style={{
+                      ...(isSingle && {
+                        position: "relative",
+                        right: 0,
+                      }),
+                      ...(shadowOpacity && { opacity: shadowOpacity }),
+                    }}
+                  ></div>
+                </>
+              );
+            })()}
+          </div>
+
+          <div
+            className="background-box1"
+            style={
+              isSingle
+                ? {
+                    marginLeft: -50,
+                    left: pageSize.pageOffset,
+                    width: `calc(${pageSize.pageWidth} + 102px)`,
+                    boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
+                  }
+                : {
+                    left: isNavLocked ? 309 : 9,
+                    right: isSettingLocked || isDockedRight ? 309 : 9,
+                  }
+            }
+          ></div>
+        </>
+      )}
     </>
   );
 };

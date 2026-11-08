@@ -105,6 +105,9 @@ const Viewer = (props: ViewerProps) => {
   const isFitPage = useAppStore((s) => s.reader.isFitPage);
   const margin = useAppStore((s) => s.reader.margin);
   const isHideBackground = useAppStore((s) => s.reader.isHideBackground);
+  const readerBackgroundImage = useAppStore(
+    (s) => s.reader.readerBackgroundImage
+  );
   const isParagraphMode = useAppStore((s) => s.reader.isParagraphMode);
   const isReadingRuler = useAppStore((s) => s.reader.isReadingRuler);
   const isSpeedReading = useAppStore((s) => s.reader.isSpeedReading);
@@ -982,7 +985,7 @@ const Viewer = (props: ViewerProps) => {
         }
       ></div>
       <PageWidget />
-      {isHideBackground ||
+      {(isHideBackground && !readerBackgroundImage) ||
       textOrientation === "vertical" ||
       isShowPageBorder ||
       ((isParagraphMode || isReadingRuler || isSpeedReading) &&
