@@ -1844,6 +1844,50 @@ const createMainWin = () => {
     if (!win || win.isDestroyed() || win === mainWin) return null;
     return win;
   };
+  // 无边框窗口收不到 DOM mouseleave，用轮询系统光标位置兜底
+  const mouseLeaveWatchers = new Map();
+  const stopMouseLeaveWatcher = (webContents) => {
+    const timer = mouseLeaveWatchers.get(webContents.id);
+    if (timer) {
+      clearInterval(timer);
+      mouseLeaveWatchers.delete(webContents.id);
+    }
+  };
+  const startMouseLeaveWatcher = (webContents) => {
+    stopMouseLeaveWatcher(webContents);
+    const timer = setInterval(() => {
+      if (webContents.isDestroyed()) {
+        stopMouseLeaveWatcher(webContents);
+        return;
+      }
+      const win =
+        BrowserWindow.fromWebContents(webContents) ||
+        (mainView && mainView.webContents === webContents ? mainWin : null);
+      if (!win || win.isDestroyed()) {
+        stopMouseLeaveWatcher(webContents);
+        return;
+      }
+      const cursor = screen.getCursorScreenPoint();
+      const bounds = win.getContentBounds();
+      const isInside =
+        cursor.x >= bounds.x &&
+        cursor.x < bounds.x + bounds.width &&
+        cursor.y >= bounds.y &&
+        cursor.y < bounds.y + bounds.height;
+      if (!isInside) {
+        stopMouseLeaveWatcher(webContents);
+        webContents.send("reader-mouse-leave");
+      }
+    }, 100);
+    mouseLeaveWatchers.set(webContents.id, timer);
+  };
+  ipcMain.on("reader-mouse-watch", (event, isWatching) => {
+    if (isWatching) {
+      startMouseLeaveWatcher(event.sender);
+    } else {
+      stopMouseLeaveWatcher(event.sender);
+    }
+  });
   ipcMain.handle("reader-window-minimize", (event) => {
     const win = getReaderWindowFromEvent(event);
     if (!win) return false;

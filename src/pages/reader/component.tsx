@@ -521,6 +521,10 @@ const Reader = () => {
       latestPointerY = e.clientY;
       throttledMouseMove();
     };
+    const handlePointerLeftWindow = () => {
+      latestPointerY = null;
+      hideQuickButtons();
+    };
     const handleWindowMouseLeave = (e: MouseEvent) => {
       // Entering an Electron draggable region (e.g. the toolbar) also fires
       // mouseleave even though the pointer is still inside the window.
@@ -532,14 +536,17 @@ const Reader = () => {
       ) {
         return;
       }
-      latestPointerY = null;
-      hideQuickButtons();
+      handlePointerLeftWindow();
     };
     window.addEventListener("mousemove", handleMouseMove);
     document.documentElement.addEventListener(
       "mouseleave",
       handleWindowMouseLeave
     );
+    // 无边框 Electron 窗口不会派发 DOM mouseleave，由主进程轮询兜底
+    const removeMouseLeaveListener = isElectron
+      ? window.electronAPI?.on?.("reader-mouse-leave", handlePointerLeftWindow)
+      : undefined;
     window.addEventListener(
       READING_PANEL_TOGGLE_EVENT,
       handleReadingPanelToggle
@@ -558,6 +565,7 @@ const Reader = () => {
         "mouseleave",
         handleWindowMouseLeave
       );
+      removeMouseLeaveListener?.();
       window.removeEventListener(
         READING_PANEL_TOGGLE_EVENT,
         handleReadingPanelToggle
@@ -586,6 +594,14 @@ const Reader = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!isElectron) return;
+    window.electronAPI?.send?.("reader-mouse-watch", state.isNearEdge);
+    return () => {
+      window.electronAPI?.send?.("reader-mouse-watch", false);
+    };
+  }, [state.isNearEdge]);
 
   useEffect(() => {
     if (!htmlBook) return;

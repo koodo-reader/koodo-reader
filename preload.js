@@ -86,7 +86,11 @@ const INVOKE_CHANNELS = new Set([
   "list-zip-file",
   "unzip-file",
 ]);
-const SEND_CHANNELS = new Set(["reader-close-ready", "tab-close-ready"]);
+const SEND_CHANNELS = new Set([
+  "reader-close-ready",
+  "tab-close-ready",
+  "reader-mouse-watch",
+]);
 const SEND_SYNC_CHANNELS = new Set([
   "storage-location",
   "url-window-status",
@@ -103,6 +107,7 @@ const EVENT_CHANNELS = new Set([
   "before-reader-close",
   "before-tab-close",
   "reader-window-state",
+  "reader-mouse-leave",
   "reading-finished",
   "chat-message",
   "import-url-from-link",

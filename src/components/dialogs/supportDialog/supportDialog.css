@@ -36,7 +36,7 @@
   position: relative;
   padding: 6px 0 6px 16px;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.25;
   color: var(--text-color, #333);
 }
 .support-dialog-benefit-list li::before {
