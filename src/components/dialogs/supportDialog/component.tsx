@@ -383,11 +383,7 @@ const SupportDialog = () => {
                         }}
                         style={{ fontWeight: "bold" }}
                       >
-                        {getServerRegion() === "global" ? (
-                          <Trans>Upgrade</Trans>
-                        ) : (
-                          <Trans>Purchase the code</Trans>
-                        )}
+                        <Trans>Upgrade to Pro</Trans>
                       </div>
                     </div>
                     <p
