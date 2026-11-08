@@ -1,6 +1,6 @@
-import React from "react";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 import "./dictSetting.css";
-import { SettingInfoProps, SettingInfoState } from "./interface";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import DictUtil, {
@@ -9,33 +9,40 @@ import DictUtil, {
 } from "../../../utils/file/dictUtil";
 import { getFileNameWithoutExtension } from "../../../utils/common";
 import { KookitConfig } from "../../../assets/lib/kookit-extra-browser.min";
+import { useAppStore } from "../../../store/useAppStore";
 
-class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
-  constructor(props: SettingInfoProps) {
-    super(props);
-    this.state = {
-      dicts: [],
-      isLoading: true,
-      downloadingId: "",
-      downloadProgress: 0,
-    };
-  }
+export interface SettingInfoState {
+  dicts: DictMeta[];
+  isLoading: boolean;
+  downloadingId: string;
+  downloadProgress: number;
+}
 
-  componentDidMount() {
-    this.loadDicts();
-  }
+const DictSetting = () => {
+  const isAuthed = useAppStore((s) => s.manager.isAuthed);
+  const handleFetchPlugins = useAppStore((s) => s.handleFetchPlugins);
+  const { t } = useTranslation();
+  const [dicts, setDicts] = useState<DictMeta[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [downloadingId, setDownloadingId] = useState("");
+  const [downloadProgress, setDownloadProgress] = useState(0);
 
-  loadDicts = () => {
+  const loadDicts = () => {
     const ids = DictUtil.getDictIds();
-    const dicts: DictMeta[] = [];
+    const nextDicts: DictMeta[] = [];
     for (const id of ids) {
       const meta = DictUtil.getDictMeta(id);
-      if (meta) dicts.push(meta);
+      if (meta) nextDicts.push(meta);
     }
-    this.setState({ dicts, isLoading: false });
+    setDicts(nextDicts);
+    setIsLoading(false);
   };
 
-  handleImportClick = async () => {
+  useEffect(() => {
+    loadDicts();
+  }, []);
+
+  const handleImportClick = async () => {
     const ipcRenderer = window.electronAPI;
     const path = window.electronAPI.path;
 
@@ -59,71 +66,65 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       DictUtil.addDictId(id);
 
       const newDict: DictMeta = { id, ...meta };
-      this.setState((prev) => ({
-        dicts: [...prev.dicts, newDict],
-      }));
-      this.props.handleFetchPlugins();
-      toast.success(this.props.t("Import successful"));
+      setDicts((prev) => [...prev, newDict]);
+      handleFetchPlugins();
+      toast.success(t("Import successful"));
     } catch (err) {
       console.error(err);
-      toast.error(this.props.t("Import failed"));
+      toast.error(t("Import failed"));
     }
   };
 
-  handleDelete = async (dict: DictMeta) => {
+  const handleDelete = async (dict: DictMeta) => {
     try {
       await DictUtil.deleteDict(dict.id);
       DictUtil.deleteDictMeta(dict.id);
       DictUtil.removeDictId(dict.id);
-      this.setState((prev) => ({
-        dicts: prev.dicts.filter((d) => d.id !== dict.id),
-      }));
-      this.props.handleFetchPlugins();
-      toast.success(this.props.t("Deletion successful"));
+      setDicts((prev) => prev.filter((d) => d.id !== dict.id));
+      handleFetchPlugins();
+      toast.success(t("Deletion successful"));
     } catch (err) {
       console.error(err);
-      toast.error(this.props.t("Deletion failed"));
+      toast.error(t("Deletion failed"));
     }
   };
 
-  isCloudDictInstalled = (dictId: string) => {
+  const isCloudDictInstalled = (dictId: string) => {
     return DictUtil.getDictIds().includes(dictId);
   };
 
-  handleDownloadCloudDict = async (dict: CloudDictItem) => {
-    if (this.isCloudDictInstalled(dict.id)) {
-      toast.success(this.props.t("Dictionary already downloaded"));
+  const handleDownloadCloudDict = async (dict: CloudDictItem) => {
+    if (isCloudDictInstalled(dict.id)) {
+      toast.success(t("Dictionary already downloaded"));
       return;
     }
-    if (this.state.downloadingId) return;
+    if (downloadingId) return;
 
-    this.setState({ downloadingId: dict.id, downloadProgress: 0 });
+    setDownloadingId(dict.id); setDownloadProgress(0);
     try {
       const success = await DictUtil.downloadCloudDict(
         dict,
-        this.props.isAuthed,
+        isAuthed,
         (progress) => {
-          this.setState({ downloadProgress: progress });
+          setDownloadProgress(progress);
         }
       );
       if (success) {
-        this.loadDicts();
-        this.props.handleFetchPlugins();
-        toast.success(this.props.t("Download successful"));
+        loadDicts();
+        handleFetchPlugins();
+        toast.success(t("Download successful"));
       } else {
-        toast.error(this.props.t("Download failed"));
+        toast.error(t("Download failed"));
       }
     } catch (err) {
       console.error(err);
-      toast.error(this.props.t("Download failed"));
+      toast.error(t("Download failed"));
     } finally {
-      this.setState({ downloadingId: "", downloadProgress: 0 });
+      setDownloadingId(""); setDownloadProgress(0);
     }
   };
 
-  renderCloudDictSection = () => {
-    const { downloadingId, downloadProgress } = this.state;
-
+  const renderCloudDictSection = () => {
     return (
       <div className="dict-cloud-section">
         <div className="dict-cloud-section-title">
@@ -131,7 +132,7 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         </div>
         <div className="dict-cloud-list">
           {KookitConfig.CloudDictList.map((dict) => {
-            const installed = this.isCloudDictInstalled(dict.id);
+            const installed = isCloudDictInstalled(dict.id);
             const isDownloading = downloadingId === dict.id;
             return (
               <div key={dict.id} className="dict-cloud-item">
@@ -162,7 +163,7 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     <button
                       className="dict-cloud-download-btn"
                       disabled={!!downloadingId && !isDownloading}
-                      onClick={() => this.handleDownloadCloudDict(dict)}
+                      onClick={() => handleDownloadCloudDict(dict)}
                     >
                       {isDownloading ? (
                         <Trans>Downloading</Trans>
@@ -190,9 +191,7 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     );
   };
 
-  render() {
-    const { dicts, isLoading } = this.state;
-    return (
+  return (
       <>
         <div className="dict-setting-list">
           {isLoading ? (
@@ -231,7 +230,7 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 </span>
                 <span
                   className="change-location-button"
-                  onClick={() => this.handleDelete(dict)}
+                  onClick={() => handleDelete(dict)}
                 >
                   <Trans>Delete</Trans>
                 </span>
@@ -240,12 +239,12 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           )}
         </div>
 
-        {this.renderCloudDictSection()}
+        {renderCloudDictSection()}
 
         {/* Import button */}
         <div
           className="setting-dialog-new-plugin"
-          onClick={this.handleImportClick}
+          onClick={handleImportClick}
         >
           <span style={{ fontWeight: "bold" }}>
             <Trans>Import dictionary</Trans>
@@ -253,8 +252,7 @@ class DictSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           </span>
         </div>
       </>
-    );
-  }
-}
+  );
+};
 
 export default DictSetting;

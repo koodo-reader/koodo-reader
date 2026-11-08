@@ -1,5 +1,6 @@
-import React from "react";
-import { SettingInfoProps, SettingInfoState } from "./interface";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 import {
   clearAllData,
@@ -22,6 +23,7 @@ import {
   KOReaderUtil,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import { changeLibrary, changePath } from "../../../utils/file/common";
+import SwitchRow from "../../../components/readerSettings/switchRow";
 import { getSnapshots } from "../../../utils/file/backup";
 import { restoreFromSnapshot } from "../../../utils/file/restore";
 import {
@@ -38,67 +40,162 @@ import {
   wordSyncSettingList,
 } from "../../../constants/settingList";
 import TokenService from "../../../utils/storage/tokenService";
+import { useAppStore } from "../../../store/useAppStore";
+
+export interface SettingInfoState {
+  storageLocation: string;
+  snapshotList: { file: string; time: number }[];
+  ttsCacheSize: string;
+  tempCacheSize: string;
+  allDataSize: string;
+  exportNotesFormat: string;
+  exportHighlightsFormat: string;
+  exportWordsFormat: string;
+  isEnableDiscordRPC: boolean;
+  isEnableKoReaderSync: boolean;
+  isEnableNotionSync: boolean;
+  isEnableYuqueSync: boolean;
+  isEnableReadwiseSync: boolean;
+  isEnableMarkdownSync: boolean;
+  isEnableEudicSync: boolean;
+  isEnableAnkiSync: boolean;
+
+  isEnableSiYuanSync: boolean;
+  [key: string]: any;
+}
+
 declare var window: any;
-class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
-  constructor(props: SettingInfoProps) {
-    super(props);
-    this.state = {
-      storageLocation: getStorageLocation() || "",
-      snapshotList: [],
-      exportNotesFormat: "",
-      exportHighlightsFormat: "",
-      exportWordsFormat: "",
-      isEnableDiscordRPC:
-        ConfigService.getReaderConfig("isEnableDiscordRPC") === "yes",
-      isEnableKoReaderSync:
-        ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes",
-      isEnableNotionSync:
-        ConfigService.getReaderConfig("isEnableNotionSync") === "yes",
-      isEnableYuqueSync:
-        ConfigService.getReaderConfig("isEnableYuqueSync") === "yes",
-      isEnableReadwiseSync:
-        ConfigService.getReaderConfig("isEnableReadwiseSync") === "yes",
-      isEnableMarkdownSync:
-        ConfigService.getReaderConfig("isEnableMarkdownSync") === "yes",
-      isEnableEudicSync:
-        ConfigService.getReaderConfig("isEnableEudicSync") === "yes",
-      isEnableAnkiSync:
-        ConfigService.getReaderConfig("isEnableAnkiSync") === "yes",
-      isEnableImaSync:
-        ConfigService.getReaderConfig("isEnableImaSync") === "yes",
-      isEnableSiYuanSync:
-        ConfigService.getReaderConfig("isEnableSiYuanSync") === "yes",
-    };
-  }
-  async componentDidMount() {
-    if (!isElectron) {
-      const status = await LocalFileManager.getPermissionStatus();
-      this.setState({
-        storageLocation: status.directoryName || "",
-        snapshotList: [],
-      });
-    }
-    if (isElectron) {
-      this.setState({
-        snapshotList: getSnapshots(),
-      });
-    }
-  }
-  handleSetting = (stateName: string) => {
-    this.setState({ [stateName]: !this.state[stateName] } as any);
-    ConfigService.setReaderConfig(
-      stateName,
-      this.state[stateName] ? "no" : "yes"
-    );
-    toast.success(this.props.t("Change successful"));
+const DataSetting = () => {
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [state, setStateObj] = useState<SettingInfoState>(() => ({
+    storageLocation: getStorageLocation() || "",
+    snapshotList: [],
+    ttsCacheSize: "",
+    tempCacheSize: "",
+    allDataSize: "",
+    exportNotesFormat: "",
+    exportHighlightsFormat: "",
+    exportWordsFormat: "",
+    isEnableDiscordRPC:
+      ConfigService.getReaderConfig("isEnableDiscordRPC") === "yes",
+    isEnableKoReaderSync:
+      ConfigService.getReaderConfig("isEnableKoReaderSync") === "yes",
+    isEnableNotionSync:
+      ConfigService.getReaderConfig("isEnableNotionSync") === "yes",
+    isEnableYuqueSync:
+      ConfigService.getReaderConfig("isEnableYuqueSync") === "yes",
+    isEnableReadwiseSync:
+      ConfigService.getReaderConfig("isEnableReadwiseSync") === "yes",
+    isEnableMarkdownSync:
+      ConfigService.getReaderConfig("isEnableMarkdownSync") === "yes",
+    isEnableEudicSync:
+      ConfigService.getReaderConfig("isEnableEudicSync") === "yes",
+    isEnableAnkiSync:
+      ConfigService.getReaderConfig("isEnableAnkiSync") === "yes",
+    isEnableSiYuanSync:
+      ConfigService.getReaderConfig("isEnableSiYuanSync") === "yes",
+  }));
+  const stateRef = useRef<SettingInfoState>(state);
+  const setState = (
+    patch:
+      | Partial<SettingInfoState>
+      | ((prev: SettingInfoState) => Partial<SettingInfoState>)
+  ) => {
+    const prev = stateRef.current;
+    const partial =
+      typeof patch === "function"
+        ? (patch as (prev: SettingInfoState) => Partial<SettingInfoState>)(prev)
+        : patch;
+    const next = { ...prev, ...partial };
+    stateRef.current = next;
+    setStateObj(next);
   };
 
-  handleKOReaderSyncSetting = async () => {
-    const currentlyEnabled = this.state.isEnableKoReaderSync;
+  useEffect(() => {
+    const init = async () => {
+      if (!isElectron) {
+        const status = await LocalFileManager.getPermissionStatus();
+        setState({
+          storageLocation: status.directoryName || "",
+          snapshotList: [],
+        });
+      }
+      if (isElectron) {
+        setState({
+          snapshotList: getSnapshots(),
+        });
+        loadCacheSizes();
+      }
+    };
+    init();
+  }, []);
+  const getCacheSizeLabel = (bytes: number): string => {
+    if (!bytes || bytes <= 0) {
+      return "0 MB";
+    }
+    const megaBytes = bytes / 1024 / 1024;
+    if (megaBytes >= 1024) {
+      return (megaBytes / 1024).toFixed(2) + " GB";
+    }
+    return megaBytes.toFixed(1) + " MB";
+  };
+  const loadCacheSizes = async () => {
+    if (!isElectron || !window.electronAPI) {
+      return;
+    }
+    try {
+      const ttsSize = await window.electronAPI.invoke("get-cache-size", {
+        type: "tts",
+      });
+      const tempSize = await window.electronAPI.invoke("get-cache-size", {
+        type: "temp",
+      });
+      const allSize = await window.electronAPI.invoke("get-cache-size", {
+        type: "all",
+        storagePath: getStorageLocation(),
+      });
+      setState({
+        ttsCacheSize: getCacheSizeLabel(ttsSize),
+        tempCacheSize: getCacheSizeLabel(tempSize),
+        allDataSize: getCacheSizeLabel(allSize),
+      });
+    } catch (error) {
+      console.error("Error loading cache sizes:", error);
+    }
+  };
+  const handleClearTTSCache = async () => {
+    try {
+      await window.electronAPI.invoke("clear-tts", {});
+      toast.success(t("Clear successful"));
+    } catch (error) {
+      toast.error(t("Clear failed"));
+    }
+    loadCacheSizes();
+  };
+  const handleClearTempCache = async () => {
+    try {
+      await window.electronAPI.invoke("clear-temp-cache", {});
+      toast.success(t("Clear successful"));
+    } catch (error) {
+      toast.error(t("Clear failed"));
+    }
+    loadCacheSizes();
+  };
+  const handleSetting = (stateName: string) => {
+    const currentValue = stateRef.current[stateName];
+    setState({ [stateName]: !currentValue } as any);
+    ConfigService.setReaderConfig(stateName, currentValue ? "no" : "yes");
+    toast.success(t("Change successful"));
+  };
+
+  const handleKOReaderSyncSetting = async () => {
+    const currentlyEnabled = stateRef.current.isEnableKoReaderSync;
     if (currentlyEnabled) {
-      this.setState({ isEnableKoReaderSync: false });
+      setState({ isEnableKoReaderSync: false });
       ConfigService.setReaderConfig("isEnableKoReaderSync", "no");
-      toast.success(this.props.t("Change successful"));
+      toast.success(t("Change successful"));
       return;
     }
 
@@ -115,9 +212,9 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         {}
       ) || {};
     const labels = {
-      serverUrl: this.props.t("Server address"),
-      username: this.props.t("Username"),
-      password: this.props.t("Password"),
+      serverUrl: t("Server address"),
+      username: t("Username"),
+      password: t("Password"),
     };
     const result = await vexOpenAsync(
       {
@@ -128,15 +225,15 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         },
         username: {
           value: savedConfig.username || "",
-          placeholder: this.props.t("Enter username"),
+          placeholder: t("Enter username"),
           type: "text",
         },
         password: {
           value: "",
           placeholder:
             savedConfig.passwordHash && savedConfig.username
-              ? this.props.t("Leave blank to keep the current password")
-              : this.props.t("Enter password"),
+              ? t("Leave blank to keep the current password")
+              : t("Enter password"),
           type: "password",
         },
       },
@@ -150,16 +247,16 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
 
     if (!result.serverUrl || !result.username) {
-      toast.error(this.props.t("Please fill in all fields"));
+      toast.error(t("Please fill in all fields"));
       return;
     }
     if (!result.password && !savedConfig.passwordHash) {
-      toast.error(this.props.t("Please fill in all fields"));
+      toast.error(t("Please fill in all fields"));
       return;
     }
 
     try {
-      toast.loading(this.props.t("Validating server info..."), {
+      toast.loading(t("Validating server info..."), {
         id: "ko-reader-sync",
       });
       const koReaderUtil = new KOReaderUtil(
@@ -182,16 +279,14 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         verifiedConfig,
         "thirdpartyToken"
       );
-      this.setState({ isEnableKoReaderSync: true });
+      setState({ isEnableKoReaderSync: true });
       ConfigService.setReaderConfig("isEnableKoReaderSync", "yes");
-      toast.success(this.props.t("Validation successful"), {
+      toast.success(t("Validation successful"), {
         id: "ko-reader-sync",
       });
     } catch (error) {
       toast.error(
-        error instanceof Error
-          ? error.message
-          : this.props.t("Validation failed"),
+        error instanceof Error ? error.message : t("Validation failed"),
         {
           id: "ko-reader-sync",
         }
@@ -199,16 +294,16 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
   };
 
-  handleDataSetting = async (item: any) => {
+  const handleDataSetting = async (item: any) => {
     if (item.propName === "isEnableKoReaderSync") {
-      await this.handleKOReaderSyncSetting();
+      await handleKOReaderSyncSetting();
       return;
     }
-    this.handleSetting(item.propName);
+    handleSetting(item.propName);
   };
 
-  handleNoteSyncSetting = async (item: any) => {
-    const currentlyEnabled = this.state[item.propName];
+  const handleNoteSyncSetting = async (item: any) => {
+    const currentlyEnabled = stateRef.current[item.propName];
 
     if (!currentlyEnabled && item.requiresAuth) {
       if (!isElectron) {
@@ -227,9 +322,9 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           { folder: folder },
           "thirdpartyToken"
         );
-        this.setState({ [item.propName]: true } as any);
+        setState({ [item.propName]: true } as any);
         ConfigService.setReaderConfig(item.propName, "yes");
-        toast.success(this.props.t("Change successful"));
+        toast.success(t("Change successful"));
         return;
       }
 
@@ -252,8 +347,8 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         placeholder: string;
       }>) {
         defaultValues[field.key] =
-          savedValues[field.key] ?? "[" + this.props.t(field.placeholder) + "]";
-        labelsMap[field.key] = this.props.t(field.label);
+          savedValues[field.key] ?? "[" + t(field.placeholder) + "]";
+        labelsMap[field.key] = t(field.label);
       }
 
       const result = await vexOpenAsync(
@@ -273,7 +368,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         (v) => v && String(v).trim().length > 0
       );
       if (!allFilled) {
-        toast.error(this.props.t("Please fill in all fields"));
+        toast.error(t("Please fill in all fields"));
         return;
       }
 
@@ -285,56 +380,37 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       );
 
       // Enable the setting
-      this.setState({ [item.propName]: true } as any);
+      setState({ [item.propName]: true } as any);
       ConfigService.setReaderConfig(item.propName, "yes");
-      toast.success(this.props.t("Change successful"));
+      toast.success(t("Change successful"));
     } else {
       // Disabling: just toggle off
-      this.setState({ [item.propName]: false } as any);
+      setState({ [item.propName]: false } as any);
       ConfigService.setReaderConfig(item.propName, "no");
-      toast.success(this.props.t("Change successful"));
+      toast.success(t("Change successful"));
     }
   };
 
-  renderNoteSyncOptions = () => {
+  const renderNoteSyncOptions = () => {
     return noteSyncSettingList.map((item) => {
       return (
         <div
           style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
           key={item.propName}
         >
-          <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "calc(100% - 100px)" }}>
-              <Trans>{item.title}</Trans>
-            </span>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleNoteSyncSetting(item);
-              }}
-              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state[item.propName]
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+          <SwitchRow
+            variant="setting"
+            title={<Trans>{item.title}</Trans>}
+            isEnabled={stateRef.current[item.propName]}
+            onClick={() => {
+              handleNoteSyncSetting(item);
+            }}
+          />
           <p className="setting-option-subtitle">
             <Trans>{item.desc}</Trans>
           </p>
           {item.propName === "isEnableMarkdownSync" &&
-            this.state[item.propName] &&
+            stateRef.current[item.propName] &&
             isElectron &&
             (() => {
               let folder = "";
@@ -358,37 +434,18 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     });
   };
 
-  renderWordSyncOptions = () => {
+  const renderWordSyncOptions = () => {
     return wordSyncSettingList.map((item) => {
       return (
         <div key={item.propName}>
-          <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "calc(100% - 100px)" }}>
-              <Trans>{item.title}</Trans>
-            </span>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleNoteSyncSetting(item);
-              }}
-              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state[item.propName]
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+          <SwitchRow
+            variant="setting"
+            title={<Trans>{item.title}</Trans>}
+            isEnabled={stateRef.current[item.propName]}
+            onClick={() => {
+              handleNoteSyncSetting(item);
+            }}
+          />
           <p className="setting-option-subtitle">
             <Trans>{item.desc}</Trans>
           </p>
@@ -397,40 +454,21 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     });
   };
 
-  renderSwitchOption = (optionList: any[]) => {
+  const renderSwitchOption = (optionList: any[]) => {
     return optionList.map((item) => {
       return (
         <div
           style={item.isElectron ? (isElectron ? {} : { display: "none" }) : {}}
           key={item.propName}
         >
-          <div className="setting-dialog-new-title" key={item.title}>
-            <span style={{ width: "calc(100% - 100px)" }}>
-              <Trans>{item.title}</Trans>
-            </span>
-            <span
-              className="single-control-switch"
-              onClick={() => {
-                this.handleDataSetting(item);
-              }}
-              style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-            >
-              <span
-                className="single-control-button"
-                style={
-                  this.state[item.propName]
-                    ? {
-                        transform: "translateX(20px)",
-                        transition: "transform 0.5s ease",
-                      }
-                    : {
-                        transform: "translateX(0px)",
-                        transition: "transform 0.5s ease",
-                      }
-                }
-              ></span>
-            </span>
-          </div>
+          <SwitchRow
+            variant="setting"
+            title={<Trans>{item.title}</Trans>}
+            isEnabled={stateRef.current[item.propName]}
+            onClick={() => {
+              handleDataSetting(item);
+            }}
+          />
           <p className="setting-option-subtitle">
             <Trans>{item.desc}</Trans>
           </p>
@@ -439,7 +477,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     });
   };
 
-  handleChangeLocation = async () => {
+  const handleChangeLocation = async () => {
     const ipcRenderer = window.electronAPI;
     const newPath = await ipcRenderer.invoke("select-path");
     if (!newPath) {
@@ -447,20 +485,20 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     let isSuccess = await changePath(newPath);
     if (!isSuccess) {
-      toast.error(this.props.t("Change failed"));
+      toast.error(t("Change failed"));
       return;
     }
     ConfigService.setItem("storageLocation", newPath);
-    this.setState({ storageLocation: newPath });
+    setState({ storageLocation: newPath });
     let targetDrive = ConfigService.getItem("defaultSyncOption");
     await ipcRenderer.invoke("cloud-close", {
       service: targetDrive,
     });
 
-    toast.success(this.props.t("Change successful"));
-    this.props.handleFetchBooks();
+    toast.success(t("Change successful"));
+    handleFetchBooks();
   };
-  handleSwitchLibrary = async () => {
+  const handleSwitchLibrary = async () => {
     if (isElectron) {
       const ipcRenderer = window.electronAPI;
       const newPath = await ipcRenderer.invoke("select-path");
@@ -469,11 +507,11 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       }
       let isSuccess = await changeLibrary(newPath);
       if (!isSuccess) {
-        toast.error(this.props.t("Switch failed"));
+        toast.error(t("Switch failed"));
         return;
       }
       ConfigService.setItem("storageLocation", newPath);
-      this.setState({ storageLocation: newPath });
+      setState({ storageLocation: newPath });
       try {
         let fs = window.electronAPI.fs;
         let text = fs.readFileSync(
@@ -491,11 +529,11 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       await ipcRenderer.invoke("cloud-close", {
         service: targetDrive,
       });
-      toast.success(this.props.t("Switch successful"));
-      this.props.handleFetchBooks();
+      toast.success(t("Switch successful"));
+      handleFetchBooks();
       await generateSyncRecord();
       setTimeout(() => {
-        this.props.history.push("/manager/home");
+        navigate("/manager/home");
       }, 2000);
     } else {
       try {
@@ -504,18 +542,16 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
         if (directoryHandle) {
           // 成功获取权限
           ConfigService.setItem("isUseLocal", "yes");
-          this.setState({
+          setState({
             storageLocation: directoryHandle.name,
           });
-          toast.success(
-            this.props.t("Local folder access granted successfully")
-          );
-          this.props.handleFetchBooks();
+          toast.success(t("Local folder access granted successfully"));
+          handleFetchBooks();
           setTimeout(() => {
-            this.props.history.push("/manager/home");
+            navigate("/manager/home");
           }, 2000);
         } else {
-          toast.success(this.props.t("Failed to get folder access permission"));
+          toast.success(t("Failed to get folder access permission"));
         }
       } catch (error) {
         toast.error(
@@ -523,17 +559,17 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             (error instanceof Error ? error.message : String(error))
         );
         console.error("Error selecting folder:", error);
-        toast.success(this.props.t("Error occurred while selecting folder"));
+        toast.success(t("Error occurred while selecting folder"));
       }
     }
   };
-  handleRestoreSnapshot = async (event: any) => {
+  const handleRestoreSnapshot = async (event: any) => {
     let targetFile = event.target.value;
     if (!targetFile) {
       return;
     }
     let confirm = await vexComfirmAsync(
-      this.props.t(
+      t(
         "Restoring from a snapshot will overwrite your current data. Are you sure you want to continue?"
       )
     );
@@ -542,17 +578,17 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
     }
     let result = await restoreFromSnapshot(targetFile);
     if (result) {
-      toast.success(this.props.t("Restore successful"), {
+      toast.success(t("Restore successful"), {
         id: "restore-snapshot",
       });
-      this.props.handleFetchBooks();
+      handleFetchBooks();
       setTimeout(() => {
-        this.props.history.push("/manager/home");
+        navigate("/manager/home");
       }, 2000);
     }
     event.target.value = "";
   };
-  handleImportNotesData = async () => {
+  const handleImportNotesData = async () => {
     const result = await importNotesData();
     if (result === "cancel" || result === "failed") {
       return;
@@ -562,19 +598,19 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
       skipped: number;
     };
     toast.success(
-      this.props.t(
-        "Imported {{imported}} records, skipped {{skipped}} existing records",
-        { imported, skipped }
-      )
+      t("Imported {{imported}} records, skipped {{skipped}} existing records", {
+        imported,
+        skipped,
+      })
     );
-    this.props.handleFetchBooks();
+    handleFetchBooks();
   };
-  render() {
+  const render = () => {
     return (
       <>
-        {this.renderSwitchOption(dataSettingList)}
-        {this.renderNoteSyncOptions()}
-        {this.renderWordSyncOptions()}
+        {renderSwitchOption(dataSettingList)}
+        {renderNoteSyncOptions()}
+        {renderWordSyncOptions()}
         {isElectron && (
           <>
             <div className="setting-dialog-new-title">
@@ -586,7 +622,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                   onClick={() => {
                     const ipcRenderer = window.electronAPI;
                     ipcRenderer.invoke("open-explorer-folder", {
-                      path: this.state.storageLocation,
+                      path: stateRef.current.storageLocation,
                       isFolder: true,
                     });
                   }}
@@ -597,7 +633,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 <span
                   className="change-location-button"
                   onClick={() => {
-                    this.handleChangeLocation();
+                    handleChangeLocation();
                   }}
                 >
                   <Trans>Select</Trans>
@@ -612,11 +648,11 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               </Trans>
             </p>
             <div className="setting-dialog-location-title">
-              {this.state.storageLocation}
+              {stateRef.current.storageLocation}
             </div>
           </>
         )}
-        {this.state.storageLocation && (
+        {stateRef.current.storageLocation && (
           <>
             <div className="setting-dialog-new-title">
               <Trans>Switch Library</Trans>
@@ -627,7 +663,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                     onClick={() => {
                       const ipcRenderer = window.electronAPI;
                       ipcRenderer.invoke("open-explorer-folder", {
-                        path: this.state.storageLocation,
+                        path: stateRef.current.storageLocation,
                         isFolder: true,
                       });
                     }}
@@ -639,7 +675,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 <span
                   className="change-location-button"
                   onClick={() => {
-                    this.handleSwitchLibrary();
+                    handleSwitchLibrary();
                   }}
                 >
                   <Trans>Select</Trans>
@@ -654,7 +690,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               </Trans>
             </p>
             <div className="setting-dialog-location-title">
-              {this.state.storageLocation}
+              {stateRef.current.storageLocation}
             </div>
           </>
         )}
@@ -665,12 +701,12 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               <select
                 name=""
                 className="lang-setting-dropdown"
-                onChange={this.handleRestoreSnapshot}
+                onChange={handleRestoreSnapshot}
               >
                 <option value={""} className="lang-setting-option">
-                  {this.props.t("Please select")}
+                  {t("Please select")}
                 </option>
-                {this.state.snapshotList
+                {stateRef.current.snapshotList
                   .map((item) => {
                     return {
                       label: new Date(item.time).toLocaleString(),
@@ -706,13 +742,13 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               if (books.length > 0) {
                 const result = await exportBooks(books);
                 if (result === "success") {
-                  toast.success(this.props.t("Export successful"), { id: "exporting" });
+                  toast.success(t("Export successful"), { id: "exporting" });
                 } else if (result === "failed") {
                   toast.dismiss("exporting");
-                  toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                  toast.error(t("Failed to export"), { id: "exporting" });
                 }
               } else {
-                toast(this.props.t("Nothing to export"));
+                toast(t("Nothing to export"));
               }
             }}
           >
@@ -723,7 +759,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <Trans>Export all notes</Trans>
           <select
             className="lang-setting-dropdown"
-            value={this.state.exportNotesFormat}
+            value={stateRef.current.exportNotesFormat}
             onChange={async (event) => {
               const fmt = event.target.value as
                 | "csv"
@@ -734,7 +770,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 | "json"
                 | "";
               if (!fmt) return;
-              this.setState({ exportNotesFormat: "" });
+              setState({ exportNotesFormat: "" });
               let books = await DatabaseService.getAllRecords("books");
               let notes = await DatabaseService.getAllRecords("notes");
               notes = notes.filter(
@@ -746,17 +782,17 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
               if (notes.length > 0) {
                 const result = await exportNotes(notes, books, fmt);
                 if (result === "success") {
-                  toast.success(this.props.t("Export successful"), { id: "exporting" });
+                  toast.success(t("Export successful"), { id: "exporting" });
                 } else if (result === "failed") {
-                  toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                  toast.error(t("Failed to export"), { id: "exporting" });
                 }
               } else {
-                toast(this.props.t("Nothing to export"));
+                toast(t("Nothing to export"));
               }
             }}
           >
             <option value="" className="lang-setting-option">
-              {this.props.t("Select format")}
+              {t("Select format")}
             </option>
             <option value="csv" className="lang-setting-option">
               CSV
@@ -782,7 +818,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <Trans>Export all highlights</Trans>
           <select
             className="lang-setting-dropdown"
-            value={this.state.exportHighlightsFormat}
+            value={stateRef.current.exportHighlightsFormat}
             onChange={async (event) => {
               const fmt = event.target.value as
                 | "csv"
@@ -793,24 +829,24 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
                 | "json"
                 | "";
               if (!fmt) return;
-              this.setState({ exportHighlightsFormat: "" });
+              setState({ exportHighlightsFormat: "" });
               let books = await DatabaseService.getAllRecords("books");
               let notes = await DatabaseService.getAllRecords("notes");
               notes = notes.filter((note: any) => note.notes === "");
               if (notes.length > 0) {
                 const result = await exportHighlights(notes, books, fmt);
                 if (result === "success") {
-                  toast.success(this.props.t("Export successful"), { id: "exporting" });
+                  toast.success(t("Export successful"), { id: "exporting" });
                 } else if (result === "failed") {
-                  toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                  toast.error(t("Failed to export"), { id: "exporting" });
                 }
               } else {
-                toast(this.props.t("Nothing to export"));
+                toast(t("Nothing to export"));
               }
             }}
           >
             <option value="" className="lang-setting-option">
-              {this.props.t("Select format")}
+              {t("Select format")}
             </option>
             <option value="csv" className="lang-setting-option">
               CSV
@@ -836,27 +872,31 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <Trans>Export all dictionary history</Trans>
           <select
             className="lang-setting-dropdown"
-            value={this.state.exportWordsFormat}
+            value={stateRef.current.exportWordsFormat}
             onChange={async (event) => {
               const fmt = event.target.value as "csv" | "json" | "";
               if (!fmt) return;
-              this.setState({ exportWordsFormat: "" });
+              setState({ exportWordsFormat: "" });
               let dictHistory = await DatabaseService.getAllRecords("words");
               let books = await DatabaseService.getAllRecords("books");
               if (dictHistory.length > 0) {
-                const result = await exportDictionaryHistory(dictHistory, books, fmt);
+                const result = await exportDictionaryHistory(
+                  dictHistory,
+                  books,
+                  fmt
+                );
                 if (result === "success") {
-                  toast.success(this.props.t("Export successful"), { id: "exporting" });
+                  toast.success(t("Export successful"), { id: "exporting" });
                 } else if (result === "failed") {
-                  toast.error(this.props.t("Failed to export"), { id: "exporting" });
+                  toast.error(t("Failed to export"), { id: "exporting" });
                 }
               } else {
-                toast(this.props.t("Nothing to export"));
+                toast(t("Nothing to export"));
               }
             }}
           >
             <option value="" className="lang-setting-option">
-              {this.props.t("Select format")}
+              {t("Select format")}
             </option>
             <option value="csv" className="lang-setting-option">
               CSV
@@ -870,7 +910,7 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
           <Trans>Import notes, highlights and dictionary history</Trans>
           <span
             className="change-location-button"
-            onClick={this.handleImportNotesData}
+            onClick={handleImportNotesData}
           >
             <Trans>Select</Trans>
           </span>
@@ -882,34 +922,115 @@ class DataSetting extends React.Component<SettingInfoProps, SettingInfoState> {
             }
           </Trans>
         </p>
+
+        {isElectron && (
+          <>
+            <div className="setting-dialog-new-title">
+              <Trans>Clear TTS cache</Trans>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
+                <span
+                  id="tts-cache-size"
+                  style={{ marginRight: "10px", opacity: 0.6, fontSize: 13 }}
+                >
+                  {stateRef.current.ttsCacheSize}
+                </span>
+                <span
+                  className="change-location-button"
+                  onClick={handleClearTTSCache}
+                >
+                  <Trans>Clear</Trans>
+                </span>
+              </div>
+            </div>
+            <p className="setting-option-subtitle">
+              <Trans>
+                {
+                  "Cached listen-book audio is stored locally and reused across sessions. Clearing it only frees up disk space"
+                }
+              </Trans>
+            </p>
+            <div className="setting-dialog-new-title">
+              <Trans>Clear temp cache</Trans>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
+                <span
+                  id="temp-cache-size"
+                  style={{ marginRight: "10px", opacity: 0.6, fontSize: 13 }}
+                >
+                  {stateRef.current.tempCacheSize}
+                </span>
+                <span
+                  className="change-location-button"
+                  onClick={handleClearTempCache}
+                >
+                  <Trans>Clear</Trans>
+                </span>
+              </div>
+            </div>
+            <p className="setting-option-subtitle">
+              <Trans>
+                {
+                  "Cached comic extraction files, OCR results and full-text translations are stored locally and reused across sessions. Clearing them only frees up disk space"
+                }
+              </Trans>
+            </p>
+          </>
+        )}
         <div className="setting-dialog-new-title">
           <Trans>Clear all data</Trans>
-          <span
-            className="change-location-button"
-            onClick={async () => {
-              let answer = await vexPromptAsync(
-                this.props.t("Please type 'CLEAR' to confirm"),
-                "",
-                ""
-              );
-              window.vex.closeAll(); // 关闭对话框
-              if (answer === "CLEAR") {
-                await clearAllData();
-                toast.success(this.props.t("Clear successful"));
-                setTimeout(() => {
-                  reloadManager();
-                }, 300);
-              } else if (answer) {
-                toast.error(this.props.t("Please type 'CLEAR' to confirm"));
-              }
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
             }}
           >
-            <Trans>Clear</Trans>
-          </span>
+            <span
+              id="all-data-size"
+              style={{ marginRight: "10px", opacity: 0.6, fontSize: 13 }}
+            >
+              {stateRef.current.allDataSize}
+            </span>
+            <span
+              className="change-location-button"
+              onClick={async () => {
+                let answer = await vexPromptAsync(
+                  t("Please type 'CLEAR' to confirm"),
+                  "",
+                  ""
+                );
+                window.vex.closeAll(); // 关闭对话框
+                if (answer === "CLEAR") {
+                  await clearAllData();
+                  toast.success(t("Clear successful"));
+                  setTimeout(() => {
+                    reloadManager();
+                  }, 300);
+                } else if (answer) {
+                  toast.error(t("Please type 'CLEAR' to confirm"));
+                }
+              }}
+            >
+              <Trans>Clear</Trans>
+            </span>
+          </div>
         </div>
       </>
     );
-  }
-}
+  };
+
+  return render();
+};
 
 export default DataSetting;

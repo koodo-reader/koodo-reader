@@ -1,0 +1,27 @@
+.scale-page-dialog-container {
+  padding: 14px 16px 18px;
+  box-sizing: border-box;
+}
+.scale-page-dialog-container .font-size-setting {
+  width: 100%;
+  margin: 0;
+}
+.scale-page-dialog-container .font-size-title {
+  padding-bottom: 14px;
+}
+.scale-page-preset-row {
+  margin: 14px 0 4px;
+  width: 100%;
+  min-height: 30px;
+}
+.scale-page-fit-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}

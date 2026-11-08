@@ -1,667 +1,234 @@
-import React from "react";
-import { SettingSwitchProps, SettingSwitchState } from "./interface";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
-import { wordFrequencyList } from "../../../constants/dropdownList";
 import toast from "react-hot-toast";
-import { detectLocalLanguage, isReadingRawPDF } from "../../../utils/common";
+import { isReadingRawPDF } from "../../../utils/common";
 import BookUtil from "../../../utils/file/bookUtil";
-import SliderList from "../sliderList";
+import SwitchRow from "../switchRow";
+import { useAppStore } from "../../../store/useAppStore";
 
-const readingRulerSliderConfigs = [
-  {
-    maxValue: 20,
-    minValue: 0,
-    mode: "readingRulerLineHeight",
-    minLabel: "0",
-    maxLabel: "20",
-    step: 1,
-    title: "Reading ruler height",
-    isPDF: false,
-    defaultValue: 3,
-  },
-  {
-    maxValue: 1,
-    minValue: 0,
-    mode: "readingRulerBackgroundOpacity",
-    minLabel: "0",
-    maxLabel: "1",
-    step: 0.05,
-    title: "Background opacity",
-    isPDF: false,
-    defaultValue: 0.6,
-  },
-];
+export interface SettingSwitchProps {
+  group?: string;
+}
 
-const speedReadingSliderConfigs = [
-  {
-    maxValue: 900,
-    minValue: 100,
-    mode: "speedReadingSpeed",
-    minLabel: "100",
-    maxLabel: "900",
-    step: 50,
-    title: "Reading speed (WPM)",
-    isPDF: false,
-    defaultValue: 300,
-  },
-];
-class SettingSwitch extends React.Component<
-  SettingSwitchProps,
-  SettingSwitchState
-> {
-  constructor(props: SettingSwitchProps) {
-    super(props);
-    this.state = {
-      isBold: ConfigService.getReaderConfig("isBold") === "yes",
-      isIndent: ConfigService.getReaderConfig("isIndent") === "yes",
-      isUnderline: ConfigService.getReaderConfig("isUnderline") === "yes",
-      isShadow: ConfigService.getReaderConfig("isShadow") === "yes",
-      isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
-      isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
-      isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
-      isParagraphMode:
-        ConfigService.getReaderConfig("isParagraphMode") === "yes",
-      isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
-      isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
-      isKeepPDFBackground:
-        ConfigService.getReaderConfig("isKeepPDFBackground") === "yes",
-      isAllowScript: ConfigService.getReaderConfig("isAllowScript") === "yes",
-      isShowTotalPage:
-        ConfigService.getReaderConfig("isShowTotalPage") === "yes",
-      isStartFromEven:
-        ConfigService.getReaderConfig("isStartFromEven") === "yes",
-      isHideBackground:
-        ConfigService.getReaderConfig("isHideBackground") === "yes",
-      isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
-      isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
-      isShowPageBorder:
-        ConfigService.getReaderConfig("isShowPageBorder") === "yes",
-      isCustomBookCSS:
-        ConfigService.getReaderConfig("isCustomBookCSS") === "yes",
-      customBookCSS: ConfigService.getReaderConfig("customBookCSS") || "",
-      isReadingRuler: ConfigService.getReaderConfig("isReadingRuler") === "yes",
-      readingRulerLineHeight:
-        ConfigService.getReaderConfig("readingRulerLineHeight") || "3",
-      readingRulerBackgroundOpacity:
-        ConfigService.getReaderConfig("readingRulerBackgroundOpacity") || "0.6",
-      isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
-      speedReadingSpeed:
-        ConfigService.getReaderConfig("speedReadingSpeed") || "300",
-      isMergeWord: ConfigService.getReaderConfig("isMergeWord") === "yes",
-      isWordDefinition: ConfigService.getAllListConfig(
-        "wordDefinitionBooks"
-      ).includes(props.currentBook?.key),
+const SettingSwitch = (props: SettingSwitchProps) => {
+  const currentBook = useAppStore((s) => s.book.currentBook);
+  const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
+  const handleHideFooter = useAppStore((s) => s.handleHideFooter);
+  const handleHideHeader = useAppStore((s) => s.handleHideHeader);
+  const handleHideBackground = useAppStore((s) => s.handleHideBackground);
+  const handleShowBorder = useAppStore((s) => s.handleShowBorder);
+  const handleBackgroundColor = useAppStore((s) => s.handleBackgroundColor);
+  const { t } = useTranslation();
+  const [state, setState] = useState<Record<string, any>>({
+    isBold: ConfigService.getReaderConfig("isBold") === "yes",
+    isIndent: ConfigService.getReaderConfig("isIndent") === "yes",
+    isUnderline: ConfigService.getReaderConfig("isUnderline") === "yes",
+    isShadow: ConfigService.getReaderConfig("isShadow") === "yes",
+    isItalic: ConfigService.getReaderConfig("isItalic") === "yes",
+    isInvert: ConfigService.getReaderConfig("isInvert") === "yes",
+    isHyphenation: ConfigService.getReaderConfig("isHyphenation") === "yes",
+    isOrphanWidow: ConfigService.getReaderConfig("isOrphanWidow") === "yes",
+    isKeepPDFBackground:
+      ConfigService.getReaderConfig("isKeepPDFBackground") === "yes",
+    isAllowScript: ConfigService.getReaderConfig("isAllowScript") === "yes",
+    isShowTotalPage: ConfigService.getReaderConfig("isShowTotalPage") === "yes",
+    isStartFromEven: ConfigService.getReaderConfig("isStartFromEven") === "yes",
+    isRevertDirection:
+      ConfigService.getReaderConfig("revertDirection") === "yes",
+    isHideBackground:
+      ConfigService.getReaderConfig("isHideBackground") === "yes",
+    isHideFooter: ConfigService.getReaderConfig("isHideFooter") === "yes",
+    isHideHeader: ConfigService.getReaderConfig("isHideHeader") === "yes",
+    isShowPageBorder:
+      ConfigService.getReaderConfig("isShowPageBorder") === "yes",
+    isCustomBookCSS: ConfigService.getReaderConfig("isCustomBookCSS") === "yes",
+    customBookCSS: ConfigService.getReaderConfig("customBookCSS") || "",
+    isSeperateStyle: ConfigService.getAllListConfig(
+      "seperateStyleBooks"
+    ).includes(currentBook?.key),
+  });
+
+  useEffect(() => {
+    setState((prev) => ({
+      ...prev,
       isSeperateStyle: ConfigService.getAllListConfig(
         "seperateStyleBooks"
-      ).includes(props.currentBook?.key),
-      wordDefinitionLang: "",
-      currentChineseLevel:
-        ConfigService.getReaderConfig("currentChineseLevel") || "HSK3",
-      currentJapaneseLevel:
-        ConfigService.getReaderConfig("currentJapaneseLevel") || "N3",
-      currentEnglishLevel:
-        ConfigService.getReaderConfig("currentEnglishLevel") || "四级",
-    };
-  }
-  async UNSAFE_componentWillReceiveProps(nextProps: SettingSwitchProps) {
-    if (nextProps.currentBook?.key !== this.props.currentBook?.key) {
-      this.setState({
-        isWordDefinition: ConfigService.getAllListConfig(
-          "wordDefinitionBooks"
-        ).includes(nextProps.currentBook?.key),
-        isSeperateStyle: ConfigService.getAllListConfig(
-          "seperateStyleBooks"
-        ).includes(nextProps.currentBook?.key),
-      });
-    }
-    if (
-      nextProps.htmlBook !== this.props.htmlBook &&
-      nextProps.htmlBook &&
-      !this.props.htmlBook
-    ) {
-      nextProps.htmlBook.rendition.on("rendered", async () => {
-        let text = await nextProps.htmlBook?.rendition.audioText();
-        if (text && text.length > 0) {
-          const lang = detectLocalLanguage(text.slice(0, 500).join(" "));
-          this.setState({ wordDefinitionLang: lang });
-        }
-      });
-    }
-  }
+      ).includes(currentBook?.key),
+    }));
+  }, [currentBook?.key]);
 
-  _handleChange = (stateName: string) => {
-    this.setState({ [stateName]: !this.state[stateName] } as any, () => {
-      ConfigService.setReaderConfig(
-        stateName,
-        this.state[stateName] ? "yes" : "no"
-      );
-      toast(this.props.t("Change successful"));
-      setTimeout(async () => {
-        await this.props.renderBookFunc();
-      }, 500);
-    });
+  const _handleChange = (stateName: string) => {
+    const next = !state[stateName];
+    setState((prev) => ({ ...prev, [stateName]: next }));
+    ConfigService.setReaderConfig(stateName, next ? "yes" : "no");
+    toast(t("Change successful"));
+    setTimeout(async () => {
+      await renderBookFunc();
+    }, 500);
   };
 
-  handleChange = (stateName: string) => {
-    this.setState({ [stateName]: !this.state[stateName] } as any);
-    ConfigService.setReaderConfig(
-      stateName,
-      this.state[stateName] ? "no" : "yes"
-    );
-
-    toast(this.props.t("Change successful"));
+  const handleChange = (stateName: string) => {
+    const next = !state[stateName];
+    setState((prev) => ({ ...prev, [stateName]: next }));
+    ConfigService.setReaderConfig(stateName, next ? "yes" : "no");
+    toast(t("Change successful"));
   };
 
-  exclusiveModeNames = [
-    "isParagraphMode",
-    "isReadingRuler",
-    "isSpeedReading",
-  ] as const;
+  const isMoreGroup = !props.group || props.group === "more";
 
-  handleExclusiveOff = (
-    enabledName: (typeof this.exclusiveModeNames)[number]
-  ) => {
-    const exclusiveHandlers: Record<
-      (typeof this.exclusiveModeNames)[number],
-      (value: boolean) => void
-    > = {
-      isParagraphMode: this.props.handleParagraphMode,
-      isReadingRuler: this.props.handleReadingRuler,
-      isSpeedReading: this.props.handleSpeedReading,
-    };
-    const offNames = this.exclusiveModeNames.filter(
-      (name) => name !== enabledName && this.state[name]
-    );
-    if (offNames.length === 0) return;
-    offNames.forEach((name) => {
-      ConfigService.setReaderConfig(name, "no");
-      exclusiveHandlers[name](false);
-    });
-    this.setState((prevState) => {
-      const nextState = { ...prevState };
-      offNames.forEach((name) => {
-        nextState[name] = false;
-      });
-      return nextState;
-    });
-  };
-  render() {
-    return (
-      <>
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <span
-            style={{
-              textDecoration: "underline",
-              cursor: "pointer",
-              textAlign: "center",
-            }}
-          >
-            <Trans>
-              The audiobook feature has been moved to the bottom right of the
-              book page
-            </Trans>
-          </span>
-        </div>
-        <div className="single-control-switch-container" key="isCustomBookCSS">
-          <span className="single-control-switch-title">
-            <Trans>Custom book style (CSS)</Trans>
-          </span>
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              const next = !this.state.isCustomBookCSS;
-              this.setState({ isCustomBookCSS: next }, () => {
-                ConfigService.setReaderConfig(
-                  "isCustomBookCSS",
-                  next ? "yes" : "no"
-                );
-                if (!this.state.customBookCSS) {
-                  return;
-                }
-                toast(this.props.t("Change successful"));
-                setTimeout(async () => {
-                  await this.props.renderBookFunc();
-                }, 500);
-              });
-            }}
-            style={this.state.isCustomBookCSS ? {} : { opacity: 0.6 }}
-          >
+  return (
+    <>
+      {isMoreGroup && (
+        <>
+          <div style={{ margin: "20px", textAlign: "center" }}>
             <span
-              className="single-control-button"
-              style={
-                !this.state.isCustomBookCSS
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        {this.state.isCustomBookCSS && (
-          <div style={{ margin: "10px 20px" }}>
-            <textarea
-              className="token-dialog-token-box"
-              placeholder={
-                "/* " + this.props.t("Enter custom CSS here") + " */"
-              }
-              value={this.state.customBookCSS}
-              onChange={(e) => {
-                const val = e.target.value;
-                this.setState({ customBookCSS: val });
+              style={{
+                textDecoration: "underline",
+                cursor: "pointer",
+                textAlign: "center",
               }}
-              onBlur={() => {
-                ConfigService.setReaderConfig(
-                  "customBookCSS",
-                  this.state.customBookCSS
-                );
-                toast(this.props.t("Change successful"));
-                setTimeout(async () => {
-                  await this.props.renderBookFunc();
-                }, 500);
-              }}
-            />
+            >
+              <Trans>
+                {
+                  "Full text translation, word definitions, auto reading, paragraph mode, reading ruler and speed reading have been moved to the top right corner of the book page"
+                }
+              </Trans>
+            </span>
           </div>
-        )}
-        <div className="single-control-switch-container" key="isSeperateStyle">
-          <span className="single-control-switch-title">
-            <Trans>Enable seperate style for this book</Trans>
-          </span>
-          <span
-            className="single-control-switch"
+          <SwitchRow
+            variant="panel"
+            title={<Trans>Custom book style (CSS)</Trans>}
+            isEnabled={state.isCustomBookCSS}
+            onClick={() => {
+              const next = !state.isCustomBookCSS;
+              setState((prev) => ({ ...prev, isCustomBookCSS: next }));
+              ConfigService.setReaderConfig(
+                "isCustomBookCSS",
+                next ? "yes" : "no"
+              );
+              if (!state.customBookCSS) {
+                return;
+              }
+              toast(t("Change successful"));
+              setTimeout(async () => {
+                await renderBookFunc();
+              }, 500);
+            }}
+          />
+          {state.isCustomBookCSS && (
+            <div style={{ margin: "10px 20px" }}>
+              <textarea
+                className="token-dialog-token-box"
+                placeholder={"/* " + t("Enter custom CSS here") + " */"}
+                value={state.customBookCSS}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setState((prev) => ({ ...prev, customBookCSS: val }));
+                }}
+                onBlur={() => {
+                  ConfigService.setReaderConfig(
+                    "customBookCSS",
+                    state.customBookCSS
+                  );
+                  toast(t("Change successful"));
+                  setTimeout(async () => {
+                    await renderBookFunc();
+                  }, 500);
+                }}
+              />
+            </div>
+          )}
+          <SwitchRow
+            variant="panel"
+            title={<Trans>Enable seperate style for this book</Trans>}
+            isEnabled={state.isSeperateStyle}
             onClick={async () => {
-              const next = !this.state.isSeperateStyle;
+              const next = !state.isSeperateStyle;
               if (next) {
                 ConfigService.setListConfig(
-                  this.props.currentBook.key,
+                  currentBook.key,
                   "seperateStyleBooks"
                 );
-                this.setState({
-                  isSeperateStyle: true,
-                });
+                setState((prev) => ({ ...prev, isSeperateStyle: true }));
               } else {
                 ConfigService.deleteListConfig(
-                  this.props.currentBook.key,
+                  currentBook.key,
                   "seperateStyleBooks"
                 );
-                this.setState({
-                  isSeperateStyle: false,
-                });
+                setState((prev) => ({ ...prev, isSeperateStyle: false }));
               }
-              toast(this.props.t("Change successful"));
-              this.props.handleBackgroundColor(
+              toast(t("Change successful"));
+              handleBackgroundColor(
                 ConfigService.getReaderConfig("backgroundColor") || ""
               );
-              this.props.renderBookFunc();
+              renderBookFunc();
             }}
-            style={this.state.isSeperateStyle ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                !this.state.isSeperateStyle
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        <div className="single-control-switch-container" key="isWordDefinition">
-          <span className="single-control-switch-title">
-            <Trans>Enable word definitions</Trans>
-            <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
-          </span>
-          <span
-            className="single-control-switch"
+          />
+        </>
+      )}
+      {readerSettingList
+        .filter((item) => {
+          if (props.group && item.group !== props.group) {
+            return false;
+          }
+          if (isReadingRawPDF(currentBook)) {
+            return item.isPDF;
+          }
+          return true;
+        })
+        .map((item) => (
+          <SwitchRow
+            key={item.title}
+            variant="panel"
+            title={<Trans>{item.title}</Trans>}
+            isEnabled={state[item.propName]}
             onClick={async () => {
-              const next = !this.state.isWordDefinition;
-              if (next) {
-                if (!this.props.isAuthed) {
-                  toast(
-                    this.props.t("Please upgrade to Pro to use this feature")
-                  );
-                  this.props.handleSetting(true);
-                  this.props.handleSettingMode("account");
-                  ConfigService.setReaderConfig("fullTranslationMode", "no");
-                  return;
-                }
-                if (this.state.isBionic) {
-                  toast.error(
-                    this.props.t(
-                      "Word definitions and fast reading mode cannot be enabled at the same time"
-                    )
-                  );
-                  return;
-                }
-                let lang = "";
-                if (this.props.htmlBook?.rendition) {
-                  try {
-                    const text =
-                      await this.props.htmlBook.rendition.audioText();
-                    if (text && text.length > 0) {
-                      lang = detectLocalLanguage(text.slice(0, 500).join(" "));
-                    }
-                  } catch (e) {
-                    console.error(e);
-                  }
-                }
-                if (lang === "ko") {
-                  toast.error(
-                    this.props.t(
-                      "Unsupported language for word definition, currently only Chinese, Japanese and English are supported"
-                    )
-                  );
-                  return;
-                }
-                ConfigService.setListConfig(
-                  this.props.currentBook.key,
-                  "wordDefinitionBooks"
-                );
+              const propName = item.propName;
+              const renderProps: Partial<
+                Record<string, (val: boolean) => void>
+              > = {
+                isHideFooter: handleHideFooter,
+                isHideHeader: handleHideHeader,
+                isHideBackground: handleHideBackground,
+                isShowPageBorder: handleShowBorder,
+              };
 
-                this.setState({
-                  isWordDefinition: true,
-                  wordDefinitionLang: lang,
-                });
+              if (propName === "isShowPageBorder") {
+                handleShowBorder(!state.isShowPageBorder);
+                handleChange("isShowPageBorder");
+              } else if (propName === "isAllowScript") {
+                handleChange(propName);
+                setTimeout(() => {
+                  BookUtil.reloadBooks(currentBook);
+                }, 500);
+              } else if (propName === "isRevertDirection") {
+                const next = !state.isRevertDirection;
+                setState((prev) => ({
+                  ...prev,
+                  isRevertDirection: next,
+                }));
+                ConfigService.setReaderConfig(
+                  "revertDirection",
+                  next ? "yes" : "no"
+                );
+                toast(t("Change successful"));
+                setTimeout(async () => {
+                  await renderBookFunc();
+                }, 500);
+              } else if (propName in renderProps) {
+                renderProps[propName]!(!state[propName]);
+                handleChange(propName);
               } else {
-                ConfigService.deleteListConfig(
-                  this.props.currentBook.key,
-                  "wordDefinitionBooks"
-                );
-                this.setState({
-                  isWordDefinition: false,
-                  wordDefinitionLang: "",
-                });
+                _handleChange(propName);
               }
-              toast(this.props.t("Change successful"));
-              setTimeout(async () => {
-                this.props.renderBookFunc();
-              }, 500);
             }}
-            style={this.state.isWordDefinition ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                !this.state.isWordDefinition
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        <p
-          className="setting-option-subtitle"
-          style={{ marginLeft: "20px", marginRight: "20px" }}
-        >
-          <Trans>
-            {"Add definition next to the English, Chinese, Japanese words"}
-          </Trans>
-        </p>
-        {this.state.isWordDefinition &&
-          (this.state.wordDefinitionLang === "zh" ||
-            this.state.wordDefinitionLang === "ja" ||
-            this.state.wordDefinitionLang === "en") &&
-          (() => {
-            const langKey =
-              this.state.wordDefinitionLang === "zh"
-                ? "currentChineseLevel"
-                : this.state.wordDefinitionLang === "ja"
-                  ? "currentJapaneseLevel"
-                  : "currentEnglishLevel";
-            const levelItem = wordFrequencyList.find(
-              (item) => item.value === langKey
-            );
-            if (!levelItem) return null;
-            const stateKey = langKey as
-              | "currentChineseLevel"
-              | "currentJapaneseLevel"
-              | "currentEnglishLevel";
-            return (
-              <li
-                className="paragraph-character-container"
-                key={langKey}
-                style={{ margin: "0 20px" }}
-              >
-                <p className="general-setting-title">
-                  <Trans>{levelItem.title}</Trans>
-                </p>
-                <select
-                  className="general-setting-dropdown"
-                  value={this.state[stateKey]}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    this.setState({ [stateKey]: val } as any);
-                    ConfigService.setReaderConfig(langKey, val);
-                    toast(this.props.t("Change successful"));
-
-                    this.props.renderBookFunc();
-                  }}
-                >
-                  {levelItem.option.map((opt, idx) => (
-                    <option
-                      key={idx}
-                      value={opt.value}
-                      className="general-setting-option"
-                    >
-                      {this.props.t(opt.label)}
-                    </option>
-                  ))}
-                </select>
-              </li>
-            );
-          })()}
-        <div className="single-control-switch-container" key="isReadingRuler">
-          <span className="single-control-switch-title">
-            <Trans>Enable reading ruler</Trans>
-          </span>
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              const next = !this.state.isReadingRuler;
-              if (next) {
-                this.handleExclusiveOff("isReadingRuler");
-              }
-              this.setState({ isReadingRuler: next });
-              ConfigService.setReaderConfig(
-                "isReadingRuler",
-                next ? "yes" : "no"
-              );
-              this.props.handleReadingRuler(next);
-              if (next) {
-                if (!ConfigService.getReaderConfig("readingRulerLineHeight")) {
-                  ConfigService.setReaderConfig("readingRulerLineHeight", "3");
-                }
-                if (
-                  !ConfigService.getReaderConfig(
-                    "readingRulerBackgroundOpacity"
-                  )
-                ) {
-                  ConfigService.setReaderConfig(
-                    "readingRulerBackgroundOpacity",
-                    "0.6"
-                  );
-                }
-              }
-              toast(this.props.t("Change successful"));
-              setTimeout(async () => {
-                await this.props.renderBookFunc();
-              }, 500);
-            }}
-            style={this.state.isReadingRuler ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                !this.state.isReadingRuler
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        {this.state.isReadingRuler &&
-          readingRulerSliderConfigs.map((item) => (
-            <SliderList key={item.mode} {...{ item }} />
-          ))}
-        <div className="single-control-switch-container" key="isSpeedReading">
-          <span className="single-control-switch-title">
-            <Trans>Enable speed reading</Trans>
-          </span>
-          <span
-            className="single-control-switch"
-            onClick={() => {
-              const next = !this.state.isSpeedReading;
-              if (next) {
-                this.handleExclusiveOff("isSpeedReading");
-              }
-              this.setState({ isSpeedReading: next });
-              ConfigService.setReaderConfig(
-                "isSpeedReading",
-                next ? "yes" : "no"
-              );
-              this.props.handleSpeedReading(next);
-              if (next) {
-                if (!ConfigService.getReaderConfig("speedReadingSpeed")) {
-                  ConfigService.setReaderConfig("speedReadingSpeed", "300");
-                }
-              }
-              toast(this.props.t("Change successful"));
-              setTimeout(async () => {
-                await this.props.renderBookFunc();
-              }, 500);
-            }}
-            style={this.state.isSpeedReading ? {} : { opacity: 0.6 }}
-          >
-            <span
-              className="single-control-button"
-              style={
-                !this.state.isSpeedReading
-                  ? {
-                      transform: "translateX(0px)",
-                      transition: "transform 0.5s ease",
-                    }
-                  : {
-                      transform: "translateX(20px)",
-                      transition: "transform 0.5s ease",
-                    }
-              }
-            ></span>
-          </span>
-        </div>
-        {this.state.isSpeedReading &&
-          speedReadingSliderConfigs.map((item) => (
-            <SliderList key={item.mode} {...{ item }} />
-          ))}
-        {readerSettingList
-          .filter((item) => {
-            if (isReadingRawPDF(this.props.currentBook)) {
-              return item.isPDF;
-            }
-            return true;
-          })
-          .map((item) => (
-            <div className="single-control-switch-container" key={item.title}>
-              <span className="single-control-switch-title">
-                <Trans>{item.title}</Trans>
-              </span>
-
-              <span
-                className="single-control-switch"
-                onClick={async () => {
-                  const propName = item.propName as keyof SettingSwitchState;
-                  const renderProps: Partial<
-                    Record<keyof SettingSwitchState, (val: boolean) => void>
-                  > = {
-                    isHideFooter: this.props.handleHideFooter,
-                    isHideHeader: this.props.handleHideHeader,
-                    isHideBackground: this.props.handleHideBackground,
-                    isShowPageBorder: this.props.handleShowBorder,
-                  };
-
-                  if (propName === "isBionic") {
-                    if (!this.state.isBionic && this.state.isWordDefinition) {
-                      toast.error(
-                        this.props.t(
-                          "Word definitions and fast reading mode cannot be enabled at the same time"
-                        )
-                      );
-                      return;
-                    }
-                    this._handleChange(propName);
-                  } else if (propName === "isShowPageBorder") {
-                    this.props.handleShowBorder(!this.state.isShowPageBorder);
-                    this.handleChange("isShowPageBorder");
-                  } else if (propName === "isAllowScript") {
-                    this.handleChange(propName);
-                    setTimeout(() => {
-                      BookUtil.reloadBooks(this.props.currentBook);
-                    }, 500);
-                  } else if (propName === "isParagraphMode") {
-                    const next = !this.state.isParagraphMode;
-                    if (next) {
-                      this.handleExclusiveOff("isParagraphMode");
-                    }
-                    this.props.handleParagraphMode(next);
-                    this.handleChange(propName);
-                    setTimeout(async () => {
-                      await this.props.renderBookFunc();
-                    }, 500);
-                  } else if (propName === "isMergeWord") {
-                    this.props.handleMergeWord(!this.state.isMergeWord);
-                    this._handleChange(propName);
-                  } else if (propName in renderProps) {
-                    renderProps[propName]!(!this.state[propName]);
-                    this.handleChange(propName);
-                  } else {
-                    this._handleChange(propName);
-                  }
-                }}
-                style={this.state[item.propName] ? {} : { opacity: 0.6 }}
-              >
-                <span
-                  className="single-control-button"
-                  style={
-                    !this.state[item.propName]
-                      ? {
-                          transform: "translateX(0px)",
-                          transition: "transform 0.5s ease",
-                        }
-                      : {
-                          transform: "translateX(20px)",
-                          transition: "transform 0.5s ease",
-                        }
-                  }
-                ></span>
-              </span>
-            </div>
-          ))}
-      </>
-    );
-  }
-}
+          />
+        ))}
+    </>
+  );
+};
 
 export default SettingSwitch;

@@ -81,20 +81,10 @@ const isKoodoLibrary = (folderPath: string) => {
   const files = fs.readdirSync(folderPath);
   return files.includes("config");
 };
-export function getParamsFromUrl() {
-  var hashParams: any = {};
-  var e,
-    r = /([^&;=]+)=?([^&;]*)/g,
-    q = window.location.search.substring(1).split("#")[0];
-  while ((e = r.exec(q))) {
-    hashParams[e[1]] = decodeURIComponent(e[2]);
-  }
-  return hashParams;
-}
 export function getLoginParamsFromUrl() {
   const url = document.location.href;
   const params = {};
-  const queryString = url.split("?")[1];
+  const queryString = url.split("?")[1] || "";
   const regex = /([^&;=]+)=?([^&;]*)/g;
   let match;
 

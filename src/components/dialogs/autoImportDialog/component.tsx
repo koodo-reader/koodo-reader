@@ -1,179 +1,160 @@
-import React from "react";
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
 import "./autoImportDialog.css";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { AutoImportDialogProps, AutoImportDialogState } from "./interface";
+import { useAppStore } from "../../../store/useAppStore";
 import {
   AUTO_IMPORT_FOLDERS_KEY,
   scanFolderForNewBooks,
 } from "../../../utils/common";
 declare var window: any;
 
-class AutoImportDialog extends React.Component<
-  AutoImportDialogProps,
-  AutoImportDialogState
-> {
-  constructor(props: AutoImportDialogProps) {
-    super(props);
-    this.state = {
-      folders: this.loadFolders(),
-      isLoading: false,
-    };
+const loadFolders = (): string[] => {
+  try {
+    return ConfigService.getAllListConfig(AUTO_IMPORT_FOLDERS_KEY) || [];
+  } catch {
+    return [];
   }
+};
 
-  loadFolders(): string[] {
-    try {
-      return ConfigService.getAllListConfig(AUTO_IMPORT_FOLDERS_KEY) || [];
-    } catch {
-      return [];
-    }
-  }
+const saveFolders = (folders: string[]) => {
+  ConfigService.setAllListConfig(folders, AUTO_IMPORT_FOLDERS_KEY);
+};
 
-  saveFolders(folders: string[]) {
-    ConfigService.setAllListConfig(folders, AUTO_IMPORT_FOLDERS_KEY);
-  }
+const AutoImportDialog = () => {
+  const importBookFunc = useAppStore((s) => s.book.importBookFunc);
+  const handleAutoImportDialog = useAppStore((s) => s.handleAutoImportDialog);
+  const handleFetchBooks = useAppStore((s) => s.handleFetchBooks);
+  const { t } = useTranslation();
+  const [folders, setFolders] = useState<string[]>(loadFolders);
+  const [isLoading, setIsLoading] = useState(false);
 
-  handleClose = () => {
-    this.props.handleAutoImportDialog(false);
+  const handleClose = () => {
+    handleAutoImportDialog(false);
   };
 
-  scanAndImportFolder = async (folderPath: string) => {
-    return scanFolderForNewBooks(folderPath, this.props.importBookFunc);
+  const scanAndImportFolder = async (folderPath: string) => {
+    return scanFolderForNewBooks(folderPath, importBookFunc);
   };
 
-  handleAddFolder = async () => {
+  const handleAddFolder = async () => {
     const ipcRenderer = window.electronAPI;
     const newPath = await ipcRenderer.invoke("select-path");
     if (!newPath) return;
-    if (this.state.folders.includes(newPath)) {
-      toast.error(this.props.t("Folder already added"));
+    if (folders.includes(newPath)) {
+      toast.error(t("Folder already added"));
       return;
     }
-    this.setState({ isLoading: true });
-    const imported = await this.scanAndImportFolder(newPath);
-    this.setState(
-      {
-        folders: [...this.state.folders, newPath],
-        isLoading: false,
-      },
-      () => {
-        this.saveFolders(this.state.folders);
-        if (imported > 0) {
-          toast.success(this.props.t("Auto import complete") + ": " + imported);
-          this.props.handleFetchBooks();
-        } else {
-          toast.success(this.props.t("No new books found"));
-        }
-      }
-    );
+    setIsLoading(true);
+    const imported = await scanAndImportFolder(newPath);
+    const nextFolders = [...folders, newPath];
+    setFolders(nextFolders);
+    setIsLoading(false);
+    saveFolders(nextFolders);
+    if (imported > 0) {
+      toast.success(t("Auto import complete") + ": " + imported);
+      handleFetchBooks();
+    } else {
+      toast.success(t("No new books found"));
+    }
   };
 
-  handleScanAllFolders = async () => {
-    if (this.state.folders.length === 0) {
-      toast.error(this.props.t("No auto import folder added yet"));
+  const handleScanAllFolders = async () => {
+    if (folders.length === 0) {
+      toast.error(t("No auto import folder added yet"));
       return;
     }
-    this.setState({ isLoading: true });
+    setIsLoading(true);
     let imported = 0;
-    for (const folder of this.state.folders) {
-      imported += await this.scanAndImportFolder(folder);
+    for (const folder of folders) {
+      imported += await scanAndImportFolder(folder);
     }
-    this.setState({ isLoading: false }, () => {
-      if (imported > 0) {
-        toast.success(this.props.t("Auto import complete") + ": " + imported);
-        this.props.handleFetchBooks();
-      } else {
-        toast.success(this.props.t("No new books found"));
-      }
-    });
+    setIsLoading(false);
+    if (imported > 0) {
+      toast.success(t("Auto import complete") + ": " + imported);
+      handleFetchBooks();
+    } else {
+      toast.success(t("No new books found"));
+    }
   };
 
-  handleRemoveFolder = (folderPath: string) => {
-    this.setState(
-      {
-        folders: this.state.folders.filter((item) => item !== folderPath),
-      },
-      () => {
-        this.saveFolders(this.state.folders);
-        toast.success(this.props.t("Folder removed"));
-      }
-    );
+  const handleRemoveFolder = (folderPath: string) => {
+    const nextFolders = folders.filter((item) => item !== folderPath);
+    setFolders(nextFolders);
+    saveFolders(nextFolders);
+    toast.success(t("Folder removed"));
   };
 
-  render() {
-    return (
-      <div
-        className="backup-page-container auto-import-container"
-        style={{ height: "450px", top: "calc(50% - 225px)" }}
-      >
-        <div className="backup-dialog-title">
-          {this.props.t("Auto import folder")}
-        </div>
+  return (
+    <div
+      className="backup-page-container auto-import-container"
+      style={{ height: "450px", top: "calc(50% - 225px)" }}
+    >
+      <div className="backup-dialog-title">
+        {t("Auto import folder")}
+      </div>
 
-        <div className="import-dialog-option">
-          {this.state.isLoading ? (
-            <div className="loading-animation" style={{ height: "100%" }}>
-              <div className="loader"></div>
-            </div>
-          ) : this.state.folders.length === 0 ? (
-            <div className="auto-import-empty">
-              <div>{this.props.t("No auto import folder added yet")}</div>
-              <div style={{ marginTop: "8px" }}>
-                {this.props.t(
-                  "Auto scan and import books when starting the app or when clicking Scan"
-                )}
-              </div>
-            </div>
-          ) : (
-            this.state.folders.map((folder, index) => (
-              <div key={index} className="cloud-drive-item auto-import-item">
-                <span className="cloud-drive-label" title={folder}>
-                  <span className="icon-folder auto-import-folder-icon"></span>
-                  {folder}
-                </span>
-                <span
-                  className="icon-trash import-dialog-folder-button"
-                  style={{ fontSize: "13px", marginRight: "8px" }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    this.handleRemoveFolder(folder);
-                  }}
-                ></span>
-              </div>
-            ))
-          )}
-        </div>
-
-        <div className="cloud-drive-item auto-import-scan-button">
-          <div
-            className="cloud-drive-label"
-            style={{ textAlign: "left", marginLeft: "10px" }}
-            onClick={this.handleScanAllFolders}
-          >
-            <Trans>Scan for new books</Trans>
+      <div className="import-dialog-option">
+        {isLoading ? (
+          <div className="loading-animation" style={{ height: "100%" }}>
+            <div className="loader"></div>
           </div>
-        </div>
-
-        <div className="cloud-drive-item auto-import-add-button">
-          <div
-            className="cloud-drive-label"
-            style={{ textAlign: "right" }}
-            onClick={this.handleAddFolder}
-          >
-            <Trans>Add local folder</Trans>
+        ) : folders.length === 0 ? (
+          <div className="auto-import-empty">
+            <div>{t("No auto import folder added yet")}</div>
+            <div style={{ marginTop: "8px" }}>
+              {t(
+                "Auto scan and import books when starting the app or when clicking Scan"
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          folders.map((folder, index) => (
+            <div key={index} className="cloud-drive-item auto-import-item">
+              <span className="cloud-drive-label" title={folder}>
+                <span className="icon-folder auto-import-folder-icon"></span>
+                {folder}
+              </span>
+              <span
+                className="icon-trash import-dialog-folder-button"
+                style={{ fontSize: "13px", marginRight: "8px" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveFolder(folder);
+                }}
+              ></span>
+            </div>
+          ))
+        )}
+      </div>
 
+      <div className="cloud-drive-item auto-import-scan-button">
         <div
-          className="backup-page-close-icon"
-          onClick={() => this.handleClose()}
+          className="cloud-drive-label"
+          style={{ textAlign: "left", marginLeft: "10px" }}
+          onClick={handleScanAllFolders}
         >
-          <span className="icon-close backup-close-icon"></span>
+          <Trans>Scan for new books</Trans>
         </div>
       </div>
-    );
-  }
-}
+
+      <div className="cloud-drive-item auto-import-add-button">
+        <div
+          className="cloud-drive-label"
+          style={{ textAlign: "right" }}
+          onClick={handleAddFolder}
+        >
+          <Trans>Add local folder</Trans>
+        </div>
+      </div>
+
+      <div className="backup-page-close-icon" onClick={() => handleClose()}>
+        <span className="icon-close backup-close-icon"></span>
+      </div>
+    </div>
+  );
+};
 
 export default AutoImportDialog;

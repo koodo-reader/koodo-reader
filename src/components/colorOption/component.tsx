@@ -1,106 +1,110 @@
-import React from "react";
 import "./colorOption.css";
-import { ColorProps } from "./interface";
 import {
   ConfigService,
   HighlightUtil,
   KookitConfig,
 } from "../../assets/lib/kookit-extra-browser.min";
+import { useAppStore } from "../../store/useAppStore";
 
-class ColorOption extends React.Component<ColorProps> {
-  highlightUtil: any;
-  constructor(props: ColorProps) {
-    super(props);
-    this.highlightUtil = new HighlightUtil(ConfigService);
-  }
-  handleStyleType = (styleType: string) => {
+import Note from "../../models/Note";
+
+export interface ColorProps {
+  noteItem?: Note;
+  isEdit: boolean;
+  handleDigest: () => void;
+}
+
+const highlightUtil: any = new HighlightUtil(ConfigService);
+
+const ColorOption = (props: ColorProps) => {
+  const highlight = useAppStore((s) => s.reader.highlight);
+  const handleHighlight = useAppStore((s) => s.handleHighlight);
+  const handleStyleType = (styleType: string) => {
     const color = KookitConfig.HighlightPresetColors[styleType][0];
     const value = { styleType, color };
-    this.props.handleHighlight(value);
-    this.highlightUtil.saveNoteHighlightValue(value);
+    handleHighlight(value);
+    highlightUtil.saveNoteHighlightValue(value);
   };
 
-  handlePresetColor = (index: number) => {
-    const styleType = this.props.highlight.styleType;
+  const handlePresetColor = (index: number) => {
+    const styleType = highlight.styleType;
     const color = KookitConfig.HighlightPresetColors[styleType][index];
     const value = { styleType, color };
-    this.props.handleHighlight(value);
-    this.highlightUtil.saveNoteHighlightValue(value);
-    if (!this.props.isEdit) {
+    handleHighlight(value);
+    highlightUtil.saveNoteHighlightValue(value);
+    if (!props.isEdit) {
       setTimeout(() => {
-        this.props.handleDigest();
+        props.handleDigest();
       }, 100);
     }
   };
 
-  render() {
-    const { styleType, color } = this.props.highlight;
-    const presetColors = KookitConfig.HighlightPresetColors[styleType];
+  const { styleType, color } = highlight;
+  const presetColors = KookitConfig.HighlightPresetColors[styleType];
 
-    return (
-      <div
-        className={
-          this.props.isEdit
-            ? "color-option-container color-option-container-edit"
-            : "color-option-container"
-        }
-      >
-        <ul className="note-highlight-style-tabs">
-          {KookitConfig.HighlightStyleTypes.map((item) => {
-            const previewColor =
-              item.value === styleType
-                ? color
-                : KookitConfig.HighlightPresetColors[item.value][0];
-            return (
-              <li
-                key={item.value}
-                className={
-                  styleType === item.value
-                    ? "note-highlight-style-tab active-note-highlight-tab"
-                    : "note-highlight-style-tab"
-                }
-                onClick={() => this.handleStyleType(item.value)}
-                style={
-                  styleType === item.value
-                    ? { borderColor: "currentColor" }
-                    : {}
-                }
-              >
-                <span
-                  className="note-highlight-style-preview"
-                  style={{
-                    ...this.highlightUtil.buildHighlightPreviewStyle(
-                      item.value,
-                      previewColor
-                    ),
-                    ...(item.value === "background"
-                      ? { borderRadius: "50%" }
-                      : {}),
-                  }}
-                >
-                  Aa
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-        <ul className="note-highlight-color-container">
-          {presetColors.map((presetColor, index) => (
+  return (
+    <div
+      className={
+        props.isEdit
+          ? "color-option-container color-option-container-edit"
+          : "color-option-container"
+      }
+    >
+      <ul className="note-highlight-style-tabs">
+        {KookitConfig.HighlightStyleTypes.map((item) => {
+          const previewColor =
+            item.value === styleType
+              ? color
+              : KookitConfig.HighlightPresetColors[item.value][0];
+          return (
             <li
-              key={presetColor}
+              key={item.value}
               className={
-                presetColors.indexOf(color) === index
-                  ? "note-highlight-color-item active-note-highlight-color"
-                  : "note-highlight-color-item"
+                styleType === item.value
+                  ? "note-highlight-style-tab active-note-highlight-tab"
+                  : "note-highlight-style-tab"
               }
-              style={{ backgroundColor: presetColor }}
-              onClick={() => this.handlePresetColor(index)}
-            />
-          ))}
-        </ul>
-      </div>
-    );
-  }
-}
+              onClick={() => handleStyleType(item.value)}
+              style={
+                styleType === item.value
+                  ? { borderColor: "currentColor" }
+                  : {}
+              }
+            >
+              <span
+                className="note-highlight-style-preview"
+                style={{
+                  ...highlightUtil.buildHighlightPreviewStyle(
+                    item.value,
+                    previewColor
+                  ),
+                  ...(item.value === "background"
+                    ? { borderRadius: "50%" }
+                    : {}),
+                }}
+              >
+                Aa
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+      <ul className="note-highlight-color-container">
+        {presetColors.map((presetColor, index) => (
+          <li
+            key={presetColor}
+            className={
+              presetColors.indexOf(color) === index
+                ? "note-highlight-color-item active-note-highlight-color"
+                : "note-highlight-color-item"
+            }
+            style={{ backgroundColor: presetColor }}
+            onClick={() => handlePresetColor(index)}
+          />
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 export default ColorOption;

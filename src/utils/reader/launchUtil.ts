@@ -41,7 +41,8 @@ export const initTheme = () => {
     //new user don't need to upgrade
     ConfigService.setItem("isUpgradedConfig", "yes");
     ConfigService.setItem("isUpgradedStorage", "yes");
-    if (isNight) {
+    if (!ConfigService.getReaderConfig("isHideBackground")) {
+      ConfigService.setReaderConfig("isHideBackground", "yes");
     }
   }
   syncNativeThemeSource(ConfigService.getReaderConfig("appSkin"));
@@ -85,10 +86,7 @@ export const applyCustomSystemFont = async () => {
         src: url("${url}");
       }
     `;
-    body.setAttribute(
-      "style",
-      `font-family:"${systemFont}"!important`
-    );
+    body.setAttribute("style", `font-family:"${systemFont}"!important`);
   } else {
     const styleEl = document.getElementById("custom-system-font-style");
     if (styleEl) styleEl.textContent = "";

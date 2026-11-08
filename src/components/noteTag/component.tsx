@@ -1,37 +1,26 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import "./noteTag.css";
-import { NoteTagProps, NoteTagState } from "./interface";
 import DeleteIcon from "../deleteIcon";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
+import { useAppStore } from "../../store/useAppStore";
 
-class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
-  constructor(props: NoteTagProps) {
-    super(props);
-    this.state = {
-      tagIndex: [],
-      isInput: false,
-      isEntered: false,
-      deleteIndex: -1,
-      isShowTags: false,
-    };
-  }
-  componentDidMount() {
-    if (this.props.isReading || this.props.isShowPopupNote) {
-      this.setState({ tagIndex: this.tagToIndex(this.props.tag) });
-    }
-  }
-  UNSAFE_componentWillReceiveProps(nextProps: NoteTagProps) {
-    if (
-      (this.props.isReading || this.props.isShowPopupNote) &&
-      nextProps.tag &&
-      nextProps.tag.length > 0 &&
-      this.props.tag !== nextProps.tag
-    ) {
-      this.setState({ tagIndex: this.tagToIndex(nextProps.tag) });
-    }
-  }
-  tagToIndex = (tag: string[]) => {
+export interface NoteTagProps {
+  isEdit: boolean;
+
+  isCard: boolean;
+  tag: string[];
+  handleTag: (tag: string[]) => void;
+}
+
+const NoteTag = (props: NoteTagProps) => {
+  const isReading = useAppStore((s) => s.book.isReading);
+  const isShowPopupNote = useAppStore((s) => s.manager.isShowPopupNote);
+  const [tagIndex, setTagIndex] = useState<number[]>([]);
+  const [isInput, setIsInput] = useState(false);
+  const [isEntered, setIsEntered] = useState(false);
+
+  const tagToIndex = (tag: string[]) => {
     let temp: number[] = [];
     if (!tag) return [];
     for (
@@ -45,166 +34,175 @@ class NoteTag extends React.Component<NoteTagProps, NoteTagState> {
     }
     return temp;
   };
-  indextoTag = (tagIndex: number[]) => {
+
+  const indextoTag = (indexList: number[]) => {
     let temp: any = [];
-    for (let i = 0; i < tagIndex.length; i++) {
-      temp.push(ConfigService.getAllListConfig("noteTags")[tagIndex[i]]);
+    for (let i = 0; i < indexList.length; i++) {
+      temp.push(ConfigService.getAllListConfig("noteTags")[indexList[i]]);
     }
     return temp;
   };
-  handleChangeTag = (index: number) => {
-    let temp: number[] = [...this.state.tagIndex];
-    if (this.state.tagIndex.indexOf(index) > -1) {
-      temp = [...this.state.tagIndex];
+
+  useEffect(() => {
+    if (isReading || isShowPopupNote) {
+      setTagIndex(tagToIndex(props.tag));
+    }
+  }, [props.tag, isReading, isShowPopupNote]);
+
+  useEffect(() => {
+    if (isInput) {
+      document.getElementById("newTag")?.focus();
+    }
+  }, [isInput]);
+
+  const handleChangeTag = (index: number) => {
+    let temp: number[] = [...tagIndex];
+    if (tagIndex.indexOf(index) > -1) {
+      temp = [...tagIndex];
       let indexResult = temp.indexOf(index);
       temp.splice(indexResult, 1);
-      this.setState({ tagIndex: temp });
-      this.props.handleTag(this.indextoTag(temp));
+      setTagIndex(temp);
+      props.handleTag(indextoTag(temp));
     } else {
       temp.push(index);
-      this.setState({ tagIndex: temp });
-      this.props.handleTag(this.indextoTag(temp));
+      setTagIndex(temp);
+      props.handleTag(indextoTag(temp));
     }
   };
-  handleAddTag = (event: any) => {
-    this.setState({ isInput: false });
+
+  const handleAddTag = (event: any) => {
+    setIsInput(false);
     if (!event.target.value) {
       return;
     }
     ConfigService.setListConfig(event.target.value, "noteTags");
-    this.setState({ tagIndex: this.tagToIndex(this.props.tag) }, () => {
-      // Force re-render to update container width
-      this.forceUpdate();
-    });
-    this.props.handleTag(this.indextoTag(this.tagToIndex(this.props.tag)));
-  };
-  handleInput = () => {
-    this.setState({ isInput: true }, () => {
-      document.getElementById("newTag")?.focus();
-    });
-  };
-  handleShowTags = (bool: boolean) => {
-    this.setState({ isShowTags: bool }, () => {
-      if (document.querySelector(".card-list-container")) {
-        (document.querySelector(".card-list-container") as any)?.setAttribute(
-          "style",
-          `height:calc(100% - ${
-            (document.querySelector(".card-list-container") as any)?.offsetTop
-          }px)`
-        );
-      }
-    });
+    setTagIndex(tagToIndex(props.tag));
+    props.handleTag(indextoTag(tagToIndex(props.tag)));
   };
 
-  calculateContainerWidth = () => {
-    const noteTags = this.props.isCard
-      ? this.props.tag
+  const handleInput = () => {
+    setIsInput(true);
+  };
+
+  const handleShowTags = (_bool: boolean) => {
+    if (document.querySelector(".card-list-container")) {
+      (document.querySelector(".card-list-container") as any)?.setAttribute(
+        "style",
+        `height:calc(100% - ${
+          (document.querySelector(".card-list-container") as any)?.offsetTop
+        }px)`
+      );
+    }
+  };
+
+  const calculateContainerWidth = () => {
+    const noteTags = props.isCard
+      ? props.tag
       : ConfigService.getAllListConfig("noteTags");
 
     if (!noteTags || noteTags.length === 0) {
       return { minWidth: "100%" };
     }
 
-    // Calculate approximate width based on tag count and average tag length
-    const baseWidth = 100; // minimum width
-    const tagWidth = 60; // approximate width per tag including margins
-    const addButtonWidth = this.props.isCard ? 0 : 30; // width for add button
+    const baseWidth = 100;
+    const tagWidth = 60;
+    const addButtonWidth = props.isCard ? 0 : 30;
     const calculatedWidth =
       baseWidth + noteTags.length * tagWidth + addButtonWidth;
 
     return {
       maxWidth: "100%",
-      width: `${Math.max(calculatedWidth, 300)}px`, // ensure minimum width
+      width: `${Math.max(calculatedWidth, 300)}px`,
     };
   };
-  render() {
-    const renderTag = () => {
-      let noteTags = this.props.isCard
-        ? this.props.tag
-        : ConfigService.getAllListConfig("noteTags");
-      return noteTags.map((item: any, index: number) => {
-        return (
-          <li
-            key={item}
-            className={
-              this.state.tagIndex.indexOf(index) > -1 && !this.props.isCard
-                ? "tag-list-item active-tag "
-                : "tag-list-item"
-            }
-          >
-            <div
-              className="center"
-              onClick={() => {
-                this.handleChangeTag(index);
-              }}
-            >
-              <Trans>{item}</Trans>
-            </div>
-            <div className="delete-tag-container">
-              {this.state.tagIndex.indexOf(index) > -1 &&
-              !this.props.isReading &&
-              !this.props.isShowPopupNote &&
-              !this.props.isCard ? (
-                <DeleteIcon
-                  {...({
-                    tagName: item,
-                    mode: "tags",
-                    index: index,
-                    handleChangeTag: this.handleChangeTag,
-                  } as any)}
-                />
-              ) : null}
-            </div>
-          </li>
-        );
-      });
-    };
-    return (
-      <div className="note-tag-container">
-        <ul className="tag-container" style={this.calculateContainerWidth()}>
-          <span
-            className="tag-title"
-            style={{ marginRight: "10px", marginLeft: "0px" }}
-          >
-            <Trans>Tags</Trans>
-          </span>
 
-          <li
-            className="tag-list-item-new"
+  const renderTag = () => {
+    let noteTags = props.isCard
+      ? props.tag
+      : ConfigService.getAllListConfig("noteTags");
+    return noteTags.map((item: any, index: number) => {
+      return (
+        <li
+          key={item}
+          className={
+            tagIndex.indexOf(index) > -1 && !props.isCard
+              ? "tag-list-item active-tag "
+              : "tag-list-item"
+          }
+        >
+          <div
+            className="center"
             onClick={() => {
-              this.handleInput();
+              handleChangeTag(index);
             }}
-            style={this.state.isInput ? { width: "80px" } : {}}
           >
-            <div className="center">
-              {this.state.isInput ? (
-                <input
-                  type="text"
-                  name="newTag"
-                  id="newTag"
-                  onBlur={(event) => {
-                    if (!this.state.isEntered) {
-                      this.handleAddTag(event);
-                    } else {
-                      this.setState({ isEntered: false });
-                    }
-                  }}
-                  onKeyDown={(event: any) => {
-                    if (event.key === "Enter") {
-                      this.setState({ isEntered: true });
-                      this.handleAddTag(event);
-                    }
-                  }}
-                />
-              ) : (
-                <span className="icon-add"></span>
-              )}
-            </div>
-          </li>
-          {renderTag()}
-        </ul>
-      </div>
-    );
-  }
-}
+            <Trans>{item}</Trans>
+          </div>
+          <div className="delete-tag-container">
+            {tagIndex.indexOf(index) > -1 &&
+            !isReading &&
+            !isShowPopupNote &&
+            !props.isCard ? (
+              <DeleteIcon
+                {...({
+                  tagName: item,
+                  mode: "tags",
+                  index: index,
+                  handleChangeTag: handleChangeTag,
+                } as any)}
+              />
+            ) : null}
+          </div>
+        </li>
+      );
+    });
+  };
+
+  return (
+    <div className="note-tag-container">
+      <ul className="tag-container" style={calculateContainerWidth()}>
+        <span
+          className="tag-title"
+          style={{ marginRight: "10px", marginLeft: "0px" }}
+        >
+          <Trans>Tags</Trans>
+        </span>
+
+        <li
+          className="tag-list-item-new"
+          onClick={() => {
+            handleInput();
+          }}
+          style={isInput ? { width: "80px" } : {}}
+        >
+          <div className="center">
+            {isInput ? (
+              <input
+                type="text"
+                name="newTag"
+                id="newTag"
+                onBlur={(event) => {
+                  if (!isEntered) {
+                    handleAddTag(event);
+                  } else {
+                    setIsEntered(false);
+                  }
+                }}
+                onKeyDown={(event: any) => {
+                  if (event.key === "Enter") {
+                    setIsEntered(true);
+                    handleAddTag(event);
+                  }
+                }}
+              />
+            ) : (
+              <span className="icon-add"></span>
+            )}
+          </div>
+        </li>
+        {renderTag()}
+      </ul>
+    </div>
+  );
+};
 export default NoteTag;

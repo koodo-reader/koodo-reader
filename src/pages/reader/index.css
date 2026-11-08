@@ -5,6 +5,23 @@
 .viewer {
   height: 100%;
 }
+.reader-window-drag-region {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  z-index: 4;
+  -webkit-app-region: drag;
+}
+.navigation-panel-container,
+.setting-panel-container {
+  -webkit-app-region: no-drag;
+}
+.reader-quick-buttons,
+.reader-quick-buttons * {
+  -webkit-app-region: no-drag;
+}
 .view-area {
   height: 100%;
   touch-action: none;
@@ -33,27 +50,6 @@
   }
 }
 
-@keyframes fade-down {
-  0% {
-    transform: translateY(-60px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0px);
-    opacity: 1;
-  }
-}
-
-@keyframes fade-up {
-  0% {
-    transform: translateY(60px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0px);
-    opacity: 1;
-  }
-}
 .panel-icon {
   color: white;
   font-size: 18px;
@@ -91,57 +87,6 @@
   align-items: center;
   cursor: pointer;
 }
-.top-panel {
-  width: 40%;
-  height: 40px;
-  position: absolute;
-  left: calc(50vw - 20%);
-  top: 0px;
-  background-color: rgba(75, 75, 75, 0.3);
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  z-index: 10;
-  opacity: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.bottom-panel {
-  width: 40%;
-  height: 40px;
-  position: absolute;
-  left: calc(50vw - 20%);
-  bottom: 0px;
-  background-color: rgba(75, 75, 75, 0.3);
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  z-index: 10;
-  opacity: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.operation-panel-container {
-  width: 450px;
-  height: 60px;
-  position: absolute;
-  top: 0px;
-  left: calc(50vw - 225px);
-  z-index: 15;
-
-  transition: transform 0.5s ease;
-}
-.progress-panel-container {
-  width: 450px;
-  height: 60px;
-  position: absolute;
-  top: calc(100vh - 60px);
-  left: calc(50vw - 225px);
-  z-index: 15;
-  transition: transform 0.5s ease;
-}
 .setting-panel-container {
   width: 299px;
   height: 100vh;
@@ -171,66 +116,17 @@
   z-index: 5;
   user-select: text;
 }
-.previous-chapter-single-container {
-  width: 40px !important;
-  height: 40px !important;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  font-size: 30px;
-  transform: rotate(90deg);
-  cursor: pointer;
-  opacity: 0.5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-}
-.next-chapter-single-container {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  transform: rotate(-90deg);
-  cursor: pointer;
-  opacity: 0.5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-}
-.next-chapter-single-container:hover {
-  opacity: 0.7;
-}
-.previous-chapter-single-container:hover {
-  opacity: 0.7;
-}
-.previous-chapter-single {
-  height: 20px;
-  font-size: 20px;
-}
-.next-chapter-single {
-  font-size: 20px;
-  height: 20px;
-}
 .reader-setting-icon {
   margin: 8px;
-  opacity: 0.7;
+  opacity: 0.9;
   width: 50px;
   padding: 15px;
-}
-.scale-container {
-  min-width: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
 }
 .text-to-speech-icon {
   font-size: 22px;
   margin-right: 10px;
 }
-.reader-setting-icon-container,
-.reader-zoom-in-icon-container {
+.reader-setting-icon-container {
   width: 50px;
   height: 50px;
   font-size: 20px;
@@ -244,10 +140,51 @@
   transition: 0, 2s;
   float: right;
 }
-.reader-setting-icon-container:hover,
-.reader-zoom-in-icon-container:hover {
+.reader-setting-icon-container:hover {
   border-radius: 50%;
 }
-.reader-zoom-in-icon-container {
-  font-size: 23px;
+.reader-setting-dialog-anchor {
+  position: absolute;
+  top: 50px;
+  z-index: 5;
+  left: clamp(
+    8px,
+    calc(
+      var(--reader-dialog-anchor-x, 50%) - var(--reader-dialog-width, 280px) / 2
+    ),
+    calc(100% - var(--reader-dialog-width, 280px) - 8px)
+  );
+  transition: left 0.2s ease;
+  animation: reader-setting-dialog-appear 0.12s ease-out;
+}
+.reader-setting-dialog-anchor .sort-dialog-container {
+  position: static;
+  animation: none;
+  box-sizing: border-box;
+  max-width: calc(100vw - 16px);
+}
+@keyframes reader-setting-dialog-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.header-container,
+.footer-container {
+  transition: opacity 0.3s ease;
+}
+.viewer.quick-buttons-shown .header-container,
+.viewer.quick-buttons-shown .footer-container {
+  opacity: 0;
+}
+
+@media screen and (max-width: 1000px) {
+  .reader-top-toolbar-time {
+    display: none !important;
+  }
 }

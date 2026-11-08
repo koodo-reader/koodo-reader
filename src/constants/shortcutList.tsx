@@ -67,16 +67,6 @@ export const shortcutList: ShortcutListItem[] = [
     desc: "Open or close the right reading panel",
   },
   {
-    action: "openTopPanel",
-    title: "Open top reading panel",
-    desc: "Open or close the top reading panel",
-  },
-  {
-    action: "openBottomPanel",
-    title: "Open bottom reading panel",
-    desc: "Open or close the bottom reading panel",
-  },
-  {
     action: "createBookmark",
     title: "Create bookmark",
     desc: "Add a bookmark at the current reading position",
