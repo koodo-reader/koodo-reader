@@ -116,6 +116,13 @@ const Background = () => {
 
   return (
     <>
+      {readerBackgroundUrl && (
+        <div
+          className="reader-background-image"
+          style={{ backgroundImage: `url("${readerBackgroundUrl}")` }}
+        ></div>
+      )}
+
       {!isHideBackground && (
         <>
           <div
@@ -187,39 +194,25 @@ const Background = () => {
               );
             })()}
           </div>
+
+          <div
+            className="background-box1"
+            style={
+              isSingle
+                ? {
+                    marginLeft: -50,
+                    left: pageSize.pageOffset,
+                    width: `calc(${pageSize.pageWidth} + 102px)`,
+                    boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
+                  }
+                : {
+                    left: isNavLocked ? 309 : 9,
+                    right: isSettingLocked || isDockedRight ? 309 : 9,
+                  }
+            }
+          ></div>
         </>
       )}
-
-      <div
-        className="background-box1"
-        style={
-          isSingle
-            ? {
-                marginLeft: -50,
-                left: pageSize.pageOffset,
-                width: `calc(${pageSize.pageWidth} + 102px)`,
-                boxShadow: "0 0 0px rgba(191, 191, 191, 1)",
-                ...(readerBackgroundUrl
-                  ? {
-                      backgroundImage: `url("${readerBackgroundUrl}")`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }
-                  : {}),
-              }
-            : {
-                left: isNavLocked ? 309 : 9,
-                right: isSettingLocked || isDockedRight ? 309 : 9,
-                ...(readerBackgroundUrl
-                  ? {
-                      backgroundImage: `url("${readerBackgroundUrl}")`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }
-                  : {}),
-              }
-        }
-      ></div>
     </>
   );
 };

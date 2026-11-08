@@ -6,6 +6,17 @@
   bottom: 5px;
   z-index: 0;
 }
+.reader-background-image {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+}
 .background-box2 {
   position: absolute;
   left: 7px;
