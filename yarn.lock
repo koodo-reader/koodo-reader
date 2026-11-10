@@ -5481,6 +5481,11 @@ lzma-native@^8.0.5:
     node-gyp-build "^4.2.1"
     readable-stream "^3.6.0"
 
+lzma1@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/lzma1/-/lzma1-0.8.0.tgz#fa0f4e336d229a61e4238434eae42eefa3fbe0ad"
+  integrity sha512-mIGEiFqw+0J5efsiQeuBHiPSZOpmZlq2CErFnUN03xSqlH64azJBkfY2rldmoXRESbHALbCI6nlh3AwOKMZ/+w==
+
 magic-string@^0.30.3:
   version "0.30.21"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.21.tgz#56763ec09a0fa8091df27879fd94d19078c00d91"

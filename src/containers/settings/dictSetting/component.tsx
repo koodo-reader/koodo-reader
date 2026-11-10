@@ -7,9 +7,17 @@ import DictUtil, {
   CloudDictItem,
   DictMeta,
 } from "../../../utils/file/dictUtil";
-import { getFileNameWithoutExtension } from "../../../utils/common";
 import { KookitConfig } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
+
+const DICT_KIND_LABEL: Record<string, string> = {
+  mdict: "MDict",
+  stardict: "StarDict",
+  dict: "DICT",
+  slob: "Slob",
+  bgl: "BGL",
+  unknown: "?",
+};
 
 export interface SettingInfoState {
   dicts: DictMeta[];
@@ -39,36 +47,26 @@ const DictSetting = () => {
   };
 
   useEffect(() => {
-    loadDicts();
+    const init = async () => {
+      await DictUtil.ensureMigrated();
+      loadDicts();
+    };
+    init();
   }, []);
 
   const handleImportClick = async () => {
-    const ipcRenderer = window.electronAPI;
-    const path = window.electronAPI.path;
-
-    const filePath: string | undefined = await ipcRenderer.invoke(
-      "select-file",
-      { filters: [{ name: "MDict", extensions: ["mdx"] }] }
-    );
-    if (!filePath) return;
-
-    const ext = path.extname(filePath).replace(/^\./, "").toLowerCase();
-
-    const id = Date.now().toString();
-    const meta: Omit<DictMeta, "id"> = {
-      name: getFileNameWithoutExtension(filePath),
-      extension: ext,
-    };
+    const filePaths = await DictUtil.pickFiles();
+    if (!filePaths.length) return;
 
     try {
-      DictUtil.saveDictFromPath(id, filePath);
-      DictUtil.saveDictMeta(id, meta);
-      DictUtil.addDictId(id);
-
-      const newDict: DictMeta = { id, ...meta };
-      setDicts((prev) => [...prev, newDict]);
+      const result = await DictUtil.importDictionaries(filePaths);
+      loadDicts();
       handleFetchPlugins();
-      toast.success(t("Import successful"));
+      if (result.ok) {
+        toast.success(t("Import successful"));
+      } else {
+        toast.error(t("Import failed"));
+      }
     } catch (err) {
       console.error(err);
       toast.error(t("Import failed"));
@@ -77,9 +75,11 @@ const DictSetting = () => {
 
   const handleDelete = async (dict: DictMeta) => {
     try {
-      await DictUtil.deleteDict(dict.id);
-      DictUtil.deleteDictMeta(dict.id);
-      DictUtil.removeDictId(dict.id);
+      const success = await DictUtil.removeDict(dict.id);
+      if (!success) {
+        toast.error(t("Deletion failed"));
+        return;
+      }
       setDicts((prev) => prev.filter((d) => d.id !== dict.id));
       handleFetchPlugins();
       toast.success(t("Deletion successful"));
@@ -225,8 +225,20 @@ const DictSetting = () => {
                       fontSize: "12px",
                     }}
                   >
-                    {dict.extension.toUpperCase()}
+                    {DICT_KIND_LABEL[dict.kind] || dict.kind}
                   </span>
+                  {dict.unsupported && (
+                    <span
+                      className="setting-dialog-new-title-tag"
+                      style={{
+                        marginLeft: "10px",
+                        color: "#c0392b",
+                        fontSize: "12px",
+                      }}
+                    >
+                      <Trans>Unsupported</Trans>
+                    </span>
+                  )}
                 </span>
                 <span
                   className="change-location-button"
@@ -248,7 +260,7 @@ const DictSetting = () => {
         >
           <span style={{ fontWeight: "bold" }}>
             <Trans>Import dictionary</Trans>
-            <span>{"(MDX)"}</span>
+            <span>{"(MDX / StarDict / DICT / Slob / BGL)"}</span>
           </span>
         </div>
       </>

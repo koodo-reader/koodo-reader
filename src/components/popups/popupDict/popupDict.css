@@ -54,6 +54,16 @@
   line-height: 20px;
 }
 
+.dict-text-box img,
+.dict-text-box svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.dict-text-box audio {
+  max-width: 100%;
+}
+
 .dict-button-container {
   position: absolute;
   bottom: 8px;

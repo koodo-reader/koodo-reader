@@ -1,9 +1,9 @@
 import { isElectron } from "react-device-detect";
 import { getStorageLocation } from "../common";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import { Buffer } from "buffer";
 import toast from "react-hot-toast";
 import i18n from "../../i18n";
+
 export interface CloudDictItem {
   id: string;
   name: string;
@@ -11,100 +11,201 @@ export interface CloudDictItem {
   source: string;
 }
 
-declare var window: any;
+export type DictKind =
+  | "mdict"
+  | "stardict"
+  | "dict"
+  | "slob"
+  | "bgl"
+  | "unknown";
 
-const DICT_FOLDER = "dict";
+export interface DictFiles {
+  [key: string]: string | string[];
+}
 
 export interface DictMeta {
   id: string;
   name: string;
-  extension: string;
+  kind: DictKind;
+  files: DictFiles;
+  addedAt: number;
+  unsupported?: boolean;
+  unsupportedReason?: string;
 }
 
+export interface DictImportError {
+  name: string;
+  message: string;
+}
+
+export interface DictImportResult {
+  ok: boolean;
+  imported: DictMeta[];
+  orphans: string[];
+  errors: DictImportError[];
+  message?: string;
+}
+
+interface MigrateResult {
+  migrated?: DictMeta[];
+  removedIds?: string[];
+}
+
+declare var window: any;
+
+const DICT_LAYOUT_VERSION = "2";
+
 class DictUtil {
-  /** Copy dict file directly from a local path (Electron only, avoids loading into memory) */
-  static saveDictFromPath(id: string, sourcePath: string): void {
-    const fs = window.electronAPI.fs;
-    const path = window.electronAPI.path;
-    const ext = sourcePath.split(".").pop()?.toLowerCase() || "mdx";
-    const dir = path.join(getStorageLocation() || "", DICT_FOLDER);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.copyFileSync(sourcePath, path.join(dir, `${id}.${ext}`));
+  private static getStoragePath(): string {
+    return getStorageLocation() || "";
   }
 
-  /** Save dict file (ArrayBuffer) by id */
-  static async saveDict(
-    id: string,
-    name: string,
-    arrayBuffer: ArrayBuffer
-  ): Promise<void> {
-    const ext = name.split(".").pop()?.toLowerCase() || "mdx";
-    const filename = `${id}.${ext}`;
+  private static async invoke<T>(channel: string, args: any): Promise<T> {
+    return await window.electronAPI.invoke(channel, {
+      storagePath: this.getStoragePath(),
+      ...args,
+    });
+  }
 
-    if (isElectron) {
-      const fs = window.electronAPI.fs;
-      const path = window.electronAPI.path;
-      const dir = path.join(getStorageLocation() || "", DICT_FOLDER);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
+  /**
+   * One-time upgrade from the old loose `<storage>/dict/<id>.<ext>` layout to
+   * the directory layout `<storage>/dict/<id>/<file>`.  Failures are ignored
+   * per item so a single broken dictionary never blocks the rest.
+   */
+  static async ensureMigrated(): Promise<void> {
+    if (!isElectron) return;
+    const layoutVersion = ConfigService.getItem("dictLayoutVersion");
+    if (layoutVersion === DICT_LAYOUT_VERSION) {
+      return;
+    }
+
+    const ids: string[] = this.getDictIds();
+    const dicts = ids.map((id) => ({
+      id,
+      name: this.getDictMeta(id)?.name || "",
+    }));
+
+    try {
+      const result = await this.invoke<MigrateResult>("dict-migrate", { dicts });
+      for (const dict of result?.migrated || []) {
+        if (!dict || !dict.id) continue;
+        ConfigService.setObjectConfig(dict.id, dict, "customDicts");
       }
-      fs.writeFileSync(path.join(dir, filename), Buffer.from(arrayBuffer));
-    }
-  }
-
-  /** Delete dict file by id */
-  static async deleteDict(id: string): Promise<void> {
-    if (isElectron) {
-      const fs = window.electronAPI.fs;
-      const path = window.electronAPI.path;
-      const dir = path.join(getStorageLocation() || "", DICT_FOLDER);
-      if (!fs.existsSync(dir)) return;
-      const files: string[] = fs.readdirSync(dir);
-      const file = files.find((f) => f.startsWith(id + "."));
-      if (file) {
-        const filePath = path.join(dir, file);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      for (const id of result?.removedIds || []) {
+        this.deleteDictMeta(id);
+        this.removeDictId(id);
       }
+      ConfigService.setItem("dictLayoutVersion", DICT_LAYOUT_VERSION);
+    } catch (error) {
+      console.error("Dictionary migration failed:", error);
     }
   }
 
-  /** Get file path for Electron only */
-  static getDictFilePath(id: string): string | null {
-    if (!isElectron) return null;
-    const fs = window.electronAPI.fs;
-    const path = window.electronAPI.path;
-    const dir = path.join(getStorageLocation() || "", DICT_FOLDER);
-    if (!fs.existsSync(dir)) return null;
-    const files: string[] = fs.readdirSync(dir);
-    const file = files.find((f) => f.startsWith(id + "."));
-    return file ? path.join(dir, file) : null;
+  /** Open the multi-file picker and return the selected dictionary files. */
+  static async pickFiles(): Promise<string[]> {
+    if (!isElectron) return [];
+    const result = await window.electronAPI.invoke("select-file", {
+      multiple: true,
+      filters: [
+        {
+          name: "Dictionaries",
+          extensions: [
+            "mdx",
+            "mdd",
+            "css",
+            "ifo",
+            "idx",
+            "dict",
+            "dz",
+            "syn",
+            "index",
+            "slob",
+            "bgl",
+          ],
+        },
+        { name: "All files", extensions: ["*"] },
+      ],
+    });
+    if (Array.isArray(result)) return result;
+    return result ? [result] : [];
   }
 
-  /** Look up a word in the local MDX dictionary */
+  /** Import files (already copied and grouped by the main process). */
+  static async importDictionaries(
+    filePaths: string[]
+  ): Promise<DictImportResult> {
+    if (!isElectron) {
+      return {
+        ok: false,
+        imported: [],
+        orphans: [],
+        errors: [],
+        message: "not-supported",
+      };
+    }
+    const result = await this.invoke<DictImportResult>("dict-import", {
+      filePaths,
+    });
+    if (!result || !Array.isArray(result.imported)) {
+      return {
+        ok: false,
+        imported: [],
+        orphans: [],
+        errors: [],
+        message: "invalid-response",
+      };
+    }
+    for (const dict of result.imported) {
+      this.persistDict(dict);
+    }
+    return result;
+  }
+
+  /** Remove a dictionary and all of its files. */
+  static async removeDict(id: string): Promise<boolean> {
+    if (!isElectron) return false;
+    const result = await this.invoke<{ ok: boolean }>("dict-remove", {
+      dictId: id,
+    });
+    if (result?.ok) {
+      this.deleteDictMeta(id);
+      this.removeDictId(id);
+    }
+    return !!result?.ok;
+  }
+
+  /** Look up a word in a local dictionary. */
   static async lookupWord(id: string, word: string): Promise<string> {
-    if (isElectron) {
-      try {
-        const filePath = this.getDictFilePath(id);
-        if (!filePath) return "";
-        const result = await window.electronAPI.invoke("dict-lookup", {
-          filePath,
-          word,
-        });
-        if (!result) {
+    if (!isElectron) return "";
+    try {
+      const result = await this.invoke<{
+        ok: boolean;
+        content?: string;
+        reason?: string;
+        message?: string;
+      }>("dict-lookup", { dictId: id, word });
+      if (!result || !result.ok) {
+        if (result?.reason === "not-found") {
           toast.error(i18n.t("Word not found in dictionary"));
-          return "";
+        } else if (result?.reason === "unsupported") {
+          toast.error(i18n.t("This dictionary format is not supported"));
+        } else if (result?.reason === "error") {
+          console.error("Dict lookup error:", result.message);
+          toast.error(i18n.t("Dictionary lookup failed"));
         }
-        return String(result);
-      } catch (e) {
-        console.error("Dict lookup error:", e);
         return "";
       }
-    } else {
-      // Browser: js-mdict requires file system access; not supported in web mode
+      return String(result.content || "");
+    } catch (error) {
+      console.error("Dict lookup error:", error);
       return "";
     }
+  }
+
+  private static persistDict(dict: DictMeta): void {
+    if (!dict || !dict.id) return;
+    ConfigService.setObjectConfig(dict.id, dict, "customDicts");
+    this.addDictId(dict.id);
   }
 
   /** Save dict metadata */
@@ -147,7 +248,7 @@ class DictUtil {
     return `${base}/dicts/${dictId}.mdx`;
   }
 
-  /** Download a cloud dict with progress, then save it as a local dict */
+  /** Download a cloud dict with progress, then import it locally. */
   static async downloadCloudDict(
     dict: CloudDictItem,
     isAuthed: boolean,
@@ -166,8 +267,7 @@ class DictUtil {
     const reader = response.body?.getReader();
     if (!reader) {
       const buffer = await response.arrayBuffer();
-      await this.saveDownloadedDict(dict, buffer);
-      return true;
+      return await this.saveDownloadedDict(dict, buffer);
     }
 
     const chunks: Uint8Array[] = [];
@@ -191,18 +291,31 @@ class DictUtil {
       offset += chunk.length;
     }
 
-    await this.saveDownloadedDict(dict, buffer.buffer);
-    return true;
+    return await this.saveDownloadedDict(dict, buffer.buffer);
   }
 
   private static async saveDownloadedDict(
     dict: CloudDictItem,
     arrayBuffer: ArrayBuffer
-  ): Promise<void> {
-    const name = this.getCloudDictDisplayName(dict);
-    await this.saveDict(dict.id, `${dict.id}.mdx`, arrayBuffer);
-    this.saveDictMeta(dict.id, { name, extension: "mdx" });
-    this.addDictId(dict.id);
+  ): Promise<boolean> {
+    if (!isElectron) return false;
+    try {
+      const result = await this.invoke<{ ok: boolean; dict?: DictMeta }>(
+        "dict-import-buffer",
+        {
+          id: dict.id,
+          name: this.getCloudDictDisplayName(dict),
+          extension: "mdx",
+          buffer: arrayBuffer,
+        }
+      );
+      if (!result?.ok || !result.dict) return false;
+      this.persistDict(result.dict);
+      return true;
+    } catch (error) {
+      console.error("Failed to save downloaded dictionary:", error);
+      return false;
+    }
   }
 }
 
