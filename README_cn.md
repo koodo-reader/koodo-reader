@@ -125,44 +125,50 @@ brew install --cask koodo-reader
 
 ## 截图
 
-<div align="center">
-  <b>图书列表</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>图书展示</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>列表模式</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>封面模式</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>阅读菜单</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>黑夜模式</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="800px"></kbd>
-  <br/>
-  <br/>
-</div>
+<table align="center" width="100%">
+  <tr>
+    <td align="center" width="50%">
+      <b>图书列表</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>图书展示</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="100%"></kbd>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>列表模式</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>封面模式</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="100%"></kbd>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>阅读菜单</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>黑夜模式</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="100%"></kbd>
+    </td>
+  </tr>
+</table>
 
 ## 运行源码
 

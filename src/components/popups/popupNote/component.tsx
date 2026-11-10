@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./popupNote.css";
 import { isReadingRawPDF } from "../../../utils/common";
 import Note from "../../../models/Note";
@@ -16,9 +16,15 @@ import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
 import { useAppStore } from "../../../store/useAppStore";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
+import Parser from "html-react-parser";
+import SwitchRow from "../../readerSettings/switchRow";
 
 export interface PopupNoteProps {
   isDockedRight: boolean;
+  markdownEnabled?: boolean;
+  onToggleMarkdown?: (enabled: boolean) => void;
 
   chapterDocIndex: number;
   chapter: string;
@@ -41,6 +47,7 @@ const PopupNote = (props: PopupNoteProps) => {
   const [tag, setTag] = useState<string[]>([]);
   const [text, setText] = useState("");
   const [note, setNote] = useState<Note | null>(null);
+  const [editorText, setEditorText] = useState("");
 
   useEffect(() => {
     let textArea: any = document.querySelector(".editor-box");
@@ -54,9 +61,7 @@ const PopupNote = (props: PopupNoteProps) => {
         setText(loadedNote.text);
         setTag(loadedNote.tag);
         setNote(loadedNote);
-        if (textArea) {
-          textArea.value = loadedNote.notes;
-        }
+        setEditorText(loadedNote.notes || "");
         let { styleType, color } = highlightUtil.getHighlightValue(
           loadedNote.color || "background-#FEF3CD"
         );
@@ -98,8 +103,7 @@ const PopupNote = (props: PopupNoteProps) => {
   };
 
   const createNote = async () => {
-    let notes = (document.querySelector(".editor-box") as HTMLInputElement)
-      .value;
+    let notes = editorText;
 
     if (noteKey) {
       let newNote = await DatabaseService.getRecord(noteKey, "notes");
@@ -215,6 +219,15 @@ const PopupNote = (props: PopupNoteProps) => {
     }
   };
 
+  const handleToggleMarkdown = () => {
+    props.onToggleMarkdown?.(!props.markdownEnabled);
+  };
+
+  const previewHtml = useMemo(() => {
+    if (!props.markdownEnabled || !editorText.trim()) return "";
+    return DOMPurify.sanitize(marked.parse(editorText) as string);
+  }, [editorText, props.markdownEnabled]);
+
   const colorOptionProps = {
     handleDigest: handleUpdateHighlight,
     isEdit: true,
@@ -224,10 +237,17 @@ const PopupNote = (props: PopupNoteProps) => {
   return (
     <div className="note-editor">
       <div className="note-original-text">{text}</div>
-      <div className="editor-box-parent">
+      <div
+        className={`editor-box-parent${
+          props.markdownEnabled ? " note-markdown-enabled" : ""
+        }${props.isDockedRight ? " note-markdown-docked" : ""}`}
+      >
         <textarea
           className="editor-box"
-          style={{ height: "calc(100% - 90px)" }}
+          value={editorText}
+          onChange={(event) => {
+            setEditorText(event.target.value);
+          }}
           onKeyDown={(event) => {
             if (
               event.key === "Enter" &&
@@ -239,8 +259,40 @@ const PopupNote = (props: PopupNoteProps) => {
             }
           }}
         />
+        {props.markdownEnabled && (
+          <div className="note-markdown-preview">
+            {previewHtml ? Parser(previewHtml) : null}
+          </div>
+        )}
       </div>
-      <ColorOption {...(colorOptionProps as any)} />
+      <div className="note-option-row">
+        <ColorOption {...(colorOptionProps as any)} />
+        <div
+          className={`note-markdown-toggle${
+            props.isDockedRight ? " note-markdown-toggle-docked" : ""
+          }`}
+          title={props.isDockedRight ? t("Markdown") : undefined}
+        >
+          <SwitchRow
+            variant="dialog"
+            title={t("Markdown")}
+            isEnabled={!!props.markdownEnabled}
+            onClick={handleToggleMarkdown}
+            style={{
+              margin: 0,
+              padding: 0,
+              gap: 8,
+              width: "auto",
+              flexShrink: 0,
+            }}
+            titleStyle={{
+              fontSize: 13,
+              lineHeight: "20px",
+              whiteSpace: "nowrap",
+            }}
+          />
+        </div>
+      </div>
       <div
         className="note-tags"
         style={{

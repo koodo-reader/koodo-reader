@@ -104,44 +104,50 @@ brew install --cask koodo-reader
 
 ## Tangkapan Layar
 
-<div align="center">
-  <b>Daftar buku</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>tampilan buku</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Mode daftar</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Mode sampul</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Opsi membaca</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Mode gelap dan warna tema</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="800px"></kbd>
-  <br/>
-  <br/>
-</div>
+<table align="center" width="100%">
+  <tr>
+    <td align="center" width="50%">
+      <b>Daftar buku</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>tampilan buku</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="100%"></kbd>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>Mode daftar</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>Mode sampul</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="100%"></kbd>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>Opsi membaca</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>Mode gelap dan warna tema</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="100%"></kbd>
+    </td>
+  </tr>
+</table>
 
 ## Pengembangan
 

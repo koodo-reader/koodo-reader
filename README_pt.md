@@ -103,44 +103,50 @@ brew install --cask koodo-reader
 
 ## Capturas de tela
 
-<div align="center">
-  <b>Lista de livros</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>exposição de livro</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Modo em lista</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Modo de capa</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Opções de leitura</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Modo escuro e cores do tema</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="800px"></kbd>
-  <br/>
-  <br/>
-</div>
+<table align="center" width="100%">
+  <tr>
+    <td align="center" width="50%">
+      <b>Lista de livros</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>exposição de livro</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="100%"></kbd>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>Modo em lista</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>Modo de capa</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="100%"></kbd>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>Opções de leitura</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>Modo escuro e cores do tema</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="100%"></kbd>
+    </td>
+  </tr>
+</table>
 
 ## Desenvolver
 

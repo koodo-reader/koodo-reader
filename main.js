@@ -61,6 +61,13 @@ const {
 } = require("./src/utils/main/biometric-util");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const ttsCacheUtil = require("./src/utils/plugins/main/voice/ttsCache");
+let dictReaderModule = null;
+const getDictReader = () => {
+  if (!dictReaderModule) {
+    dictReaderModule = require("./src/utils/main/dict-reader");
+  }
+  return dictReaderModule;
+};
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 // 数据目录（即渲染进程的 getStorageLocation，见 "storage-location"）
@@ -796,17 +803,76 @@ const createMainWin = () => {
   ipcMain.on("clipboard-read-text-sync", (event) => {
     event.returnValue = clipboard.readText();
   });
-  ipcMain.handle("dict-lookup", (event, args) => {
-    const filePath = args && args.filePath;
-    if (typeof (args && args.word) !== "string")
+  ipcMain.handle("dict-lookup", async (event, args) => {
+    const storagePath = args && args.storagePath;
+    const dictId = args && args.dictId;
+    const word = args && args.word;
+    if (typeof storagePath !== "string" || !storagePath.trim()) {
+      return { ok: false, reason: "invalid-storage" };
+    }
+    if (typeof dictId !== "string" || !dictId.trim()) {
+      return { ok: false, reason: "invalid-id" };
+    }
+    if (typeof word !== "string") {
       throw new TypeError("Invalid dictionary word");
-    const { MDX } = require("js-mdict");
-    const result = new MDX(filePath).lookup(args.word);
-    return result &&
-      result.definition !== undefined &&
-      result.definition !== null
-      ? String(result.definition)
-      : "";
+    }
+    return await getDictReader().lookupDictionary({
+      storagePath,
+      dictId,
+      word,
+    });
+  });
+  ipcMain.handle("dict-migrate", async (event, args) => {
+    const storagePath = args && args.storagePath;
+    if (typeof storagePath !== "string" || !storagePath.trim()) {
+      return { migrated: [], removedIds: [] };
+    }
+    const dicts = Array.isArray(args.dicts)
+      ? args.dicts
+          .filter((item) => item && typeof item.id === "string")
+          .slice(0, 500)
+          .map((item) => ({
+            id: item.id,
+            name: typeof item.name === "string" ? item.name : "",
+          }))
+      : [];
+    return await getDictReader().migrateDictionaries(storagePath, dicts);
+  });
+  ipcMain.handle("dict-import", async (event, args) => {
+    const storagePath = args && args.storagePath;
+    if (typeof storagePath !== "string" || !storagePath.trim()) {
+      return { ok: false, message: "Invalid storage path" };
+    }
+    const filePaths = Array.isArray(args.filePaths)
+      ? args.filePaths
+          .filter((item) => typeof item === "string" && item.trim())
+          .slice(0, 64)
+      : [];
+    if (!filePaths.length) {
+      return { ok: false, message: "No files selected" };
+    }
+    return await getDictReader().importDictionaryBundles(
+      storagePath,
+      filePaths
+    );
+  });
+  ipcMain.handle("dict-import-buffer", async (event, args) => {
+    const storagePath = args && args.storagePath;
+    if (typeof storagePath !== "string" || !storagePath.trim()) {
+      return { ok: false, message: "Invalid storage path" };
+    }
+    return await getDictReader().importDictionaryBuffer(storagePath, args);
+  });
+  ipcMain.handle("dict-remove", async (event, args) => {
+    const storagePath = args && args.storagePath;
+    const dictId = args && args.dictId;
+    if (typeof storagePath !== "string" || !storagePath.trim()) {
+      return { ok: false, message: "Invalid storage path" };
+    }
+    if (typeof dictId !== "string" || !dictId.trim()) {
+      return { ok: false, message: "Invalid dictionary id" };
+    }
+    return await getDictReader().removeDictionary(storagePath, dictId);
   });
   ipcMain.handle("partial-md5", (event, filePath) => {
     const validatedPath = filePath;
@@ -1273,12 +1339,15 @@ const createMainWin = () => {
     return path.filePaths[0];
   });
   ipcMain.handle("select-file", async (event, config) => {
-    const dialogOptions = { properties: ["openFile"] };
+    const multiple = !!(config && config.multiple);
+    const dialogOptions = {
+      properties: multiple ? ["openFile", "multiSelections"] : ["openFile"],
+    };
     if (config && config.filters) {
       dialogOptions.filters = config.filters;
     }
     var result = await dialog.showOpenDialog(dialogOptions);
-    return result.filePaths[0];
+    return multiple ? result.filePaths : result.filePaths[0];
   });
   ipcMain.handle("encrypt-data", async (event, config) => {
     let fingerprint = await getFingerprint();
