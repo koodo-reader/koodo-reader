@@ -167,6 +167,30 @@ describe("MDict encryption handling", () => {
   });
 });
 
+describe("Slob lzma2 decompression", () => {
+  it("decodes a raw lzma2 payload", async () => {
+    const payload = Buffer.from(
+      "4AbfADxdACWb7MhvEA/jcaN74U1eJSfPnOvb9qf23pG+a1wb4dgd0QNiqaCRPHX8++U9nnCe4KC7/tFprsomdJTUAAA=",
+      "base64"
+    );
+    const raw = await _internal.unlzma2(payload);
+    expect(raw.toString("utf8")).toBe(
+      "Koodo Reader Slob lzma2 regression payload. ".repeat(40)
+    );
+  });
+
+  it("decodes a payload larger than 512 KB in one pass", async () => {
+    const payload = Buffer.from(
+      "7DT/AONdACWb7MhvEA/jcaN74U1eJSfPnOvb9qf23pG+a1wb4dgd0QNiqaCRPHX8++U9nnCe4KC7/tFprsoqxbw91zlezH6TcOe1l+ErSXguU2SCfnDKpRiW8My9P4Gr+76N2mOImQmpiQ7RBGHN0kjyD/OlfNwmyLCLsmkYYOw5gCoEF8KykO27dUTQdElcxG2ykuegyM4HBO6f3qVCy4g/XACP0E6vJiiUcR89jyThcJ6nI1/sKMuF0ZWYin4qkfIndfcZwAaYTZj92K/VkA/EJVP49ZE2MQWlsO5vwXBNRwzRkOLhSBAAAA==",
+      "base64"
+    );
+    const raw = await _internal.unlzma2(payload);
+    const text = "Koodo Reader Slob lzma2 regression payload. ".repeat(20000);
+    expect(raw).toHaveLength(800000);
+    expect(raw.toString("utf8")).toBe(text.slice(0, 800000));
+  });
+});
+
 describe("StarDict import and lookup", () => {
   it("imports a bundle into its own directory and looks it up", async () => {
     const storage = await makeTempDir();

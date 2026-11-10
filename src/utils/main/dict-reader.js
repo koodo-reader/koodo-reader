@@ -1203,6 +1203,43 @@ function unzlibTolerant(bytes) {
   }
 }
 
+const SLOB_SUPPORTED_COMPRESSIONS = new Set(["", "zlib", "lzma2"]);
+
+// Slob 的 lzma2 是无容器的裸流，交给 lzma1 的 LZMA2 解码器处理（纯 JS、零依赖）。
+// 按需加载：没有 lzma2 词典的会话不会把它载入内存。
+const SLOB_LZMA2_DICT_SIZE = 64 * 1024 * 1024;
+let lzma2ModulePromise = null;
+
+function getLzma2Module() {
+  if (!lzma2ModulePromise) {
+    lzma2ModulePromise = import("lzma1").catch((error) => {
+      lzma2ModulePromise = null;
+      throw error;
+    });
+  }
+  return lzma2ModulePromise;
+}
+
+async function unlzma2(bytes) {
+  try {
+    const { decompressRawLzma2 } = await getLzma2Module();
+    // 裸 LZMA2 流不自带字典大小，需要外部指定；
+    // maxOutputLength 作为解压炸弹的兜底上限。
+    return Buffer.from(
+      decompressRawLzma2(bytes, {
+        dictSize: SLOB_LZMA2_DICT_SIZE,
+        maxOutputLength: SLOB_LZMA2_DICT_SIZE,
+      })
+    );
+  } catch (error) {
+    throw new Error(
+      `Slob lzma2 decode failed: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+  }
+}
+
 async function probeSlob(filePath) {
   const fh = await fsp.open(filePath, "r");
   try {
@@ -1276,7 +1313,7 @@ class SlobReader {
     const fileSize = cursor.u64();
     const refsOffset = cursor.pos;
 
-    if (compression !== "zlib") {
+    if (!SLOB_SUPPORTED_COMPRESSIONS.has(compression)) {
       throw new Error(`Unsupported Slob compression: ${compression}`);
     }
     if (fileSize !== this.fileSize) {
@@ -1408,7 +1445,14 @@ class SlobReader {
     const compressedLength = readU32BE(headSlice, 4 + binItemCount);
     const compressedStart = start + 4 + binItemCount + 4;
     const compressed = await readAt(this.fh, compressedStart, compressedLength);
-    const raw = unzlibTolerant(compressed);
+    let raw;
+    if (this.header.compression === "lzma2") {
+      raw = await unlzma2(compressed);
+    } else if (this.header.compression === "zlib") {
+      raw = unzlibTolerant(compressed);
+    } else {
+      raw = compressed;
+    }
     const result = { contentTypeIds, raw };
     this.binCache.set(binIndex, result);
     return result;
@@ -1944,7 +1988,7 @@ async function describeBundle(bundle, dir, nameOverride) {
     try {
       const probe = await probeSlob(path.join(dir, bundle.slob.name));
       if (probe.label) meta.name = nameOverride || probe.label;
-      if (probe.compression !== "zlib") {
+      if (!SLOB_SUPPORTED_COMPRESSIONS.has(probe.compression)) {
         meta.unsupported = true;
         meta.unsupportedReason = "slob-compression";
       }
@@ -2465,5 +2509,6 @@ module.exports = {
     groupBundlesByStem,
     buildLookupCandidates,
     describeBundle,
+    unlzma2,
   },
 };
