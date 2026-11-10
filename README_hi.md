@@ -103,43 +103,50 @@ brew install --cask koodo-reader
 
 ## स्क्रीनशॉट
 
-<div align="center">
-  <b>पुस्तक सूची</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>पुस्तक प्रदर्शन</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>सूची मोड</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>कवर मोड</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>पाठक मेनू</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>डार्क मोड</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="800px"></kbd>
-  <br/>
-</div>
+<table align="center" width="100%">
+  <tr>
+    <td align="center" width="50%">
+      <b>पुस्तक सूची</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>पुस्तक प्रदर्शन</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="100%"></kbd>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>सूची मोड</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>कवर मोड</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="100%"></kbd>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>पाठक मेनू</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>डार्क मोड</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="100%"></kbd>
+    </td>
+  </tr>
+</table>
 
 ## विकास
 
