@@ -21,6 +21,158 @@
   width: 100%;
   height: calc(100% - 15px);
 }
+.note-option-row {
+  position: absolute;
+  top: calc(100% - 110px);
+  width: calc(100% - 60px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.note-option-row .color-option-container-edit {
+  position: static;
+  top: auto;
+  width: auto;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.note-option-row .color-option-container-edit::-webkit-scrollbar {
+  display: none;
+}
+.note-option-row .color-option-container-edit > ul {
+  flex-shrink: 0;
+}
+.note-option-row .note-highlight-color-item {
+  flex-shrink: 0;
+}
+.note-markdown-toggle {
+  display: flex;
+  flex-shrink: 0;
+}
+.note-markdown-toggle-docked .scale-page-fit-switch-title {
+  display: none;
+}
+.editor-box-parent.note-markdown-enabled {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  box-sizing: border-box;
+  /* Reserve the same bottom space the normal textarea leaves for the
+     color options and tag row: height calc(100% - 90px) plus its 20px
+     padding, so the panes end at the same place and never overlap them. */
+  padding-bottom: 70px;
+}
+.editor-box-parent.note-markdown-enabled.note-markdown-docked {
+  flex-direction: column;
+}
+.editor-box-parent.note-markdown-enabled > .editor-box,
+.editor-box-parent.note-markdown-enabled > .note-markdown-preview {
+  flex: 1 1 0;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+}
+.note-markdown-preview {
+  overflow-y: auto;
+  background-color: rgba(16, 152, 112, 0.05);
+  border-radius: 7px;
+  padding: 10px;
+  font-size: 15px;
+  line-height: 1.6;
+  word-break: break-word;
+}
+.note-markdown-preview > :first-child {
+  margin-top: 0;
+}
+.note-markdown-preview > :last-child {
+  margin-bottom: 0;
+}
+.note-markdown-preview p {
+  margin: 0 0 10px;
+}
+.note-markdown-preview h1,
+.note-markdown-preview h2,
+.note-markdown-preview h3,
+.note-markdown-preview h4,
+.note-markdown-preview h5,
+.note-markdown-preview h6 {
+  margin: 14px 0 8px;
+  line-height: 1.3;
+}
+.note-markdown-preview h1 {
+  font-size: 1.6em;
+}
+.note-markdown-preview h2 {
+  font-size: 1.4em;
+}
+.note-markdown-preview h3 {
+  font-size: 1.2em;
+}
+.note-markdown-preview h4,
+.note-markdown-preview h5,
+.note-markdown-preview h6 {
+  font-size: 1.05em;
+}
+.note-markdown-preview ul,
+.note-markdown-preview ol {
+  margin: 0 0 10px;
+  padding-left: 22px;
+}
+.note-markdown-preview li {
+  margin: 2px 0;
+}
+.note-markdown-preview blockquote {
+  margin: 0 0 10px;
+  padding: 2px 10px;
+  border-left: 3px solid #109870;
+  opacity: 0.85;
+}
+.note-markdown-preview code {
+  background-color: rgba(127, 127, 127, 0.18);
+  border-radius: 4px;
+  padding: 1px 4px;
+  font-family: monospace;
+  font-size: 0.92em;
+}
+.note-markdown-preview pre {
+  margin: 0 0 10px;
+  padding: 10px;
+  border-radius: 7px;
+  background-color: rgba(127, 127, 127, 0.12);
+  overflow-x: auto;
+}
+.note-markdown-preview pre code {
+  background-color: transparent;
+  padding: 0;
+}
+.note-markdown-preview a {
+  color: #109870;
+}
+.note-markdown-preview img {
+  max-width: 100%;
+}
+.note-markdown-preview table {
+  width: 100%;
+  margin: 0 0 10px;
+  border-collapse: collapse;
+}
+.note-markdown-preview th,
+.note-markdown-preview td {
+  border: 1px solid rgba(127, 127, 127, 0.35);
+  padding: 4px 8px;
+}
+.note-markdown-preview th {
+  background-color: rgba(127, 127, 127, 0.1);
+}
+.note-markdown-preview hr {
+  border: none;
+  border-top: 1px solid rgba(127, 127, 127, 0.35);
+  margin: 12px 0;
+}
 .editor-box {
   border: none;
   outline: none;
@@ -28,6 +180,7 @@
   font-size: 15px;
   width: calc(100% - 20px);
   min-height: 120px;
+  height: calc(100% - 90px);
   line-height: 18px;
   overflow-y: scroll;
   background-color: rgba(16, 152, 112, 0.05);

@@ -34,6 +34,7 @@ export interface PopupBoxStates {
   isNearBottom: boolean;
   isNearRight: boolean;
   isDockedRight: boolean;
+  noteMarkdownEnabled: boolean;
 }
 
 const SNAP_THRESHOLD_PX = 50;
@@ -43,6 +44,8 @@ const SETTING_PANEL_WIDTH = 299;
 const POPUP_SIZE_KEY = "popupBoxSize";
 const POPUP_POS_KEY = "popupBoxPosition";
 const DEFAULT_WIDTH = 500;
+const MARKDOWN_EXTRA_WIDTH = 320;
+const MARKDOWN_EXTRA_HEIGHT = 120;
 const POPUP_MODES = ["note", "trans", "dict", "assistant"];
 
 function getDefaultHeight(menuMode: string) {
@@ -129,6 +132,7 @@ const PopupBox = (props: PopupBoxProps) => {
       isNearBottom: false,
       isNearRight: false,
       isDockedRight: storeIsDockedRight,
+      noteMarkdownEnabled: false,
     };
   });
   const [mode, setMode] = useState<string>(() =>
@@ -143,6 +147,7 @@ const PopupBox = (props: PopupBoxProps) => {
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0, left: 0, bottom: 0 });
   const wasDocked = useRef(false);
+  const markdownDelta = useRef({ width: 0, height: 0 });
 
   const updateState = (patch: Partial<PopupBoxStates>) => {
     stateRef.current = { ...stateRef.current, ...patch };
@@ -184,7 +189,12 @@ const PopupBox = (props: PopupBoxProps) => {
   const handleResizeEnd = (_e: MouseEvent) => {
     if (!isResizing.current) return;
     isResizing.current = false;
-    saveSizeToConfig(stateRef.current.popupWidth, stateRef.current.popupHeight);
+    // Persist the size without the temporary Markdown preview expansion, so
+    // reopening or unpinning does not add the preview space twice.
+    saveSizeToConfig(
+      Math.max(300, stateRef.current.popupWidth - markdownDelta.current.width),
+      Math.max(200, stateRef.current.popupHeight - markdownDelta.current.height)
+    );
   };
 
   const handleDragStart = (e: React.MouseEvent) => {
@@ -299,6 +309,43 @@ const PopupBox = (props: PopupBoxProps) => {
     }
   };
 
+  const handlePopupNoteMarkdownToggle = (enabled: boolean) => {
+    const { isDockedRight, popupWidth, popupHeight } = stateRef.current;
+    if (isDockedRight) {
+      updateState({ noteMarkdownEnabled: enabled });
+      return;
+    }
+    if (enabled) {
+      const maxWidth = Math.max(300, window.innerWidth - 40);
+      const maxHeight = Math.max(200, window.innerHeight - 40);
+      const targetWidth = Math.min(
+        maxWidth,
+        popupWidth + MARKDOWN_EXTRA_WIDTH
+      );
+      const targetHeight = Math.min(
+        maxHeight,
+        popupHeight + MARKDOWN_EXTRA_HEIGHT
+      );
+      markdownDelta.current = {
+        width: targetWidth - popupWidth,
+        height: targetHeight - popupHeight,
+      };
+      updateState({
+        noteMarkdownEnabled: true,
+        popupWidth: targetWidth,
+        popupHeight: targetHeight,
+      });
+    } else {
+      const { width, height } = markdownDelta.current;
+      markdownDelta.current = { width: 0, height: 0 };
+      updateState({
+        noteMarkdownEnabled: false,
+        popupWidth: Math.max(300, popupWidth - width),
+        popupHeight: Math.max(200, popupHeight - height),
+      });
+    }
+  };
+
   const handleToggleDock = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -313,10 +360,14 @@ const PopupBox = (props: PopupBoxProps) => {
         popupWidth: savedSize ? savedSize.width : DEFAULT_WIDTH,
         popupHeight: savedSize ? savedSize.height : getDefaultHeight(mode),
       });
+      if (stateRef.current.noteMarkdownEnabled) {
+        handlePopupNoteMarkdownToggle(true);
+      }
       syncDockedToRedux(false);
       renderBookFunc();
     } else {
       // 当前未固定 → 直接固定到右侧
+      markdownDelta.current = { width: 0, height: 0 };
       updateState({
         isDockedRight: true,
         isNearRight: false,
@@ -374,12 +425,15 @@ const PopupBox = (props: PopupBoxProps) => {
     isNearRight,
     isDockedRight,
     isShowUrl,
+    noteMarkdownEnabled,
   } = state;
   const menuMode = isDockedRight ? mode : storeMenuMode;
   const PopupProps = {
     chapterDocIndex: props.chapterDocIndex,
     chapter: props.chapter,
     isDockedRight,
+    markdownEnabled: noteMarkdownEnabled,
+    onToggleMarkdown: handlePopupNoteMarkdownToggle,
   };
   const isAtBottom = popupBottom === 0;
 
