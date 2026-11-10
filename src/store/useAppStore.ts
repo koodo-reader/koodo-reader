@@ -625,6 +625,7 @@ export const useAppStore = create<AppState>()((set, get) => {
             Boolean(plugin)
           );
 
+          await DictUtil.ensureMigrated();
           const localDictIds = DictUtil.getDictIds();
           for (const dictId of localDictIds) {
             const meta = DictUtil.getDictMeta(dictId);
