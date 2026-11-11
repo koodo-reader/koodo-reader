@@ -6,8 +6,10 @@ import {
   handleExitFullScreen,
   handleFullScreen,
   isReadingAidMode,
+  isUndockedPopupBoxOpen,
   sleep,
 } from "../common";
+import { useAppStore } from "../../store/useAppStore";
 import Hammer from "hammerjs";
 import TTSUtil from "./ttsUtil";
 import {
@@ -203,12 +205,29 @@ const isRevertDirectionReading = (rendition: any) => {
   );
 };
 
+// 弹窗未固定到右侧时，ESC 只关闭弹窗；返回 true 表示按键已处理，
+// 调用方必须直接 return，避免继续走到 exitReader 而退出阅读
+const handlePopupBoxEscape = (event: any, book: Book) => {
+  if (event.keyCode !== 27) return false;
+  const state = useAppStore.getState();
+  if (!isUndockedPopupBoxOpen(state.viewArea, state.reader)) return false;
+  event.preventDefault();
+  state.handleOpenMenu(false);
+  state.handleNoteKey("");
+  state.handleMenuMode("");
+  getIframeDoc(book).forEach((doc) => doc?.getSelection()?.empty());
+  return true;
+};
+
 const arrowKeys = async (
   rendition: any,
   event: any,
   readerMode: string,
   book: Book
 ) => {
+  // 必须放在 textarea/input 提前返回之前：焦点在笔记或 AI 输入框内时，
+  // ESC 同样需要关闭弹窗，且不能继续触发 exitReader 退出阅读
+  if (handlePopupBoxEscape(event, book)) return;
   if (
     event.target.tagName.toLowerCase() === "textarea" ||
     event.target.tagName.toLowerCase() === "input"
