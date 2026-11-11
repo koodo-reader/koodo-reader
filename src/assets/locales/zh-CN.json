@@ -744,6 +744,7 @@
   "Drop your books here": "拖拽图书到此处",
   "Reading progress": "按阅读进度",
   "This action will remove all the books in recycle bin,together with their notes, bookmarks and digests": "此操作会彻底删除回收站中的所有图书和它们的书签，笔记和高亮",
+  "This action will permanently delete this book, together with its notes, bookmarks and digests": "此操作会彻底删除这本书，以及它的书签、笔记和高亮",
   "The deleted books will show up here": "被删除的图书会出现在这里，清空回收站才会彻底删除",
   "Empty recycle bin": "回收站为空",
   "Skip": "跳过",

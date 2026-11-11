@@ -325,6 +325,7 @@
   "Drop your books here": "Drop your books here",
   "Reading progress": "Reading progress",
   "This action will remove all the books in recycle bin,together with their notes, bookmarks and digests": "This action will permanently remove all the books in the trash, together with their notes, bookmarks, and digests",
+  "This action will permanently delete this book, together with its notes, bookmarks and digests": "This action will permanently delete this book, together with its notes, bookmarks and digests",
   "The deleted books will show up here": "The deleted books will show up here",
   "Empty recycle bin": "Empty recycle bin",
   "Skip": "Skip",

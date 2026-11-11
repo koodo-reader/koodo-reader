@@ -145,6 +145,11 @@ const ActionDialog = (props: Pick<ActionDialogProps, "left" | "top">) => {
     toast.success(t("Restore successful"));
     handleFetchBooks();
   };
+  const handleDeleteBookFromTrash = () => {
+    handleReadingBook(currentBook);
+    handleDeleteDialog(true, false);
+    handleActionDialog(false);
+  };
   const handleLoveBook = () => {
     ConfigService.setListConfig(currentBook.key, "favoriteBooks");
     toast.success(t("Addition successful"));
@@ -248,6 +253,17 @@ const ActionDialog = (props: Pick<ActionDialogProps, "left" | "top">) => {
             <span className="icon-clockwise view-icon"></span>
             <span className="action-name">
               <Trans>Restore</Trans>
+            </span>
+          </div>
+          <div
+            className="action-dialog-delete"
+            onClick={() => {
+              handleDeleteBookFromTrash();
+            }}
+          >
+            <span className="icon-trash-line view-icon"></span>
+            <span className="action-name">
+              <Trans>Delete</Trans>
             </span>
           </div>
         </div>
