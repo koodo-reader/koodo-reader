@@ -1249,7 +1249,8 @@ const TextToSpeech = () => {
               ConfigService.setReaderConfig("voiceEngine", newEngine);
               if (
                 voice.plugin === "official-ai-voice-plugin" &&
-                event.target.value.indexOf("Neural") > -1
+                event.target.value.indexOf("Neural") > -1 &&
+                !KookitConfig.SelfHostedVoiceList.includes(voiceName)
               ) {
                 toast(
                   t(
