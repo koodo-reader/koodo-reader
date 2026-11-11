@@ -70,7 +70,7 @@ const exclusiveModeNames = [
 
 type ExclusiveModeName = (typeof exclusiveModeNames)[number];
 
-type AssistModeName = ExclusiveModeName | "isBionic";
+type AssistModeName = ExclusiveModeName | "isBionic" | "isTextColor";
 
 const AssistReadDialog = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
@@ -88,6 +88,7 @@ const AssistReadDialog = () => {
     isReadingRuler: ConfigService.getReaderConfig("isReadingRuler") === "yes",
     isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
     isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
+    isTextColor: ConfigService.getReaderConfig("isTextColor") === "yes",
     isAutoReading: ConfigService.getReaderConfig("isAutoReading") === "yes",
   });
 
@@ -204,6 +205,16 @@ const AssistReadDialog = () => {
     }, 500);
   };
 
+  const handleTextColorToggle = () => {
+    const next = !state.isTextColor;
+    setState((prev) => ({ ...prev, isTextColor: next }));
+    ConfigService.setReaderConfig("isTextColor", next ? "yes" : "no");
+    toast(t("Change successful"));
+    setTimeout(() => {
+      renderBookFunc();
+    }, 500);
+  };
+
   const handleAutoReadingToggle = () => {
     const next = !state.isAutoReading;
     if (next) {
@@ -296,6 +307,14 @@ const AssistReadDialog = () => {
           isEnabled={state.isBionic}
           onClick={handleBionicToggle}
         />
+
+        {!isPaginatedBook(currentBook) && (
+          <SwitchRow
+            title={<Trans>Enable content coloring</Trans>}
+            isEnabled={state.isTextColor}
+            onClick={handleTextColorToggle}
+          />
+        )}
       </ul>
     </div>
   );
