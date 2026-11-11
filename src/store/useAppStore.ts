@@ -69,6 +69,7 @@ const initialBook = {
   isOpenEditDialog: false,
   isDetailDialog: false,
   isOpenDeleteDialog: false,
+  isDeleteAllBooksInTrash: true,
   isOpenDissolveDialog: false,
   isOpenAddDialog: false,
   isOpenActionDialog: false,
@@ -876,8 +877,10 @@ export const useAppStore = create<AppState>()((set, get) => {
 
     // book
     handleEditDialog: (mode: boolean) => setBook({ isOpenEditDialog: mode }),
-    handleDeleteDialog: (mode: boolean) =>
-      setBook({ isOpenDeleteDialog: mode }),
+    handleDeleteDialog: (
+      mode: boolean,
+      isDeleteAllBooksInTrash: boolean = true
+    ) => setBook({ isOpenDeleteDialog: mode, isDeleteAllBooksInTrash }),
     handleDissolveDialog: (mode: boolean) =>
       setBook({ isOpenDissolveDialog: mode }),
     handleAddDialog: (mode: boolean) => setBook({ isOpenAddDialog: mode }),
