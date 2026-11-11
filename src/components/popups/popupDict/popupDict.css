@@ -32,6 +32,24 @@
   margin-top: 10px;
   margin-left: 5px;
 }
+.dict-aggregate-section {
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid rgba(128, 128, 128, 0.25);
+}
+.dict-aggregate-section:first-child {
+  padding-top: 0;
+  margin-top: 0;
+  border-top: none;
+}
+.dict-aggregate-title {
+  color: #2084e8;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 24px;
+  margin-bottom: 6px;
+  user-select: none;
+}
 .dict-word-type,
 .dict-learn-more {
   color: #2084e8;

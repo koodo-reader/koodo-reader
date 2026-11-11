@@ -175,7 +175,11 @@ class DictUtil {
   }
 
   /** Look up a word in a local dictionary. */
-  static async lookupWord(id: string, word: string): Promise<string> {
+  static async lookupWord(
+    id: string,
+    word: string,
+    options?: { silent?: boolean }
+  ): Promise<string> {
     if (!isElectron) return "";
     try {
       const result = await this.invoke<{
@@ -185,13 +189,17 @@ class DictUtil {
         message?: string;
       }>("dict-lookup", { dictId: id, word });
       if (!result || !result.ok) {
-        if (result?.reason === "not-found") {
-          toast.error(i18n.t("Word not found in dictionary"));
-        } else if (result?.reason === "unsupported") {
-          toast.error(i18n.t("This dictionary format is not supported"));
-        } else if (result?.reason === "error") {
+        if (result?.reason === "error") {
           console.error("Dict lookup error:", result.message);
-          toast.error(i18n.t("Dictionary lookup failed"));
+        }
+        if (!options?.silent) {
+          if (result?.reason === "not-found") {
+            toast.error(i18n.t("Word not found in dictionary"));
+          } else if (result?.reason === "unsupported") {
+            toast.error(i18n.t("This dictionary format is not supported"));
+          } else if (result?.reason === "error") {
+            toast.error(i18n.t("Dictionary lookup failed"));
+          }
         }
         return "";
       }
