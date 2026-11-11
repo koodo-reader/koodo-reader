@@ -733,6 +733,7 @@
   "Dictionary already downloaded": "词典已下载",
   "Source": "来源",
   "Local dictionary": "本地词典",
+  "Local aggregate dictionary": "本地聚合词典",
   "e.g. Vocabulary": "例如 词汇表",
   "Auto sync new words to MaiMemo": "自动同步新添加的生词到墨墨背单词",
   "When you look up a word, it will be automatically synced to your MaiMemo notepad": "查词之后，将自动同步到你的墨墨背单词云词本中",

@@ -54,6 +54,19 @@ export interface PopupDictState {
   isAiStreaming: boolean;
 }
 
+const LOCAL_DICT_AGGREGATE = "local-dict-aggregate";
+
+const isLocalDict = (plugin: { type: string; key: string }) =>
+  plugin.type === "dictionary" && plugin.key.startsWith("dict-");
+
+const escapeHtml = (text: string) =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
 const PopupDict = (props: PopupDictProps) => {
   const originalText = useAppStore((s) => s.reader.originalText);
   const originalSentence = useAppStore((s) => s.reader.originalSentence);
@@ -220,6 +233,37 @@ const PopupDict = (props: PopupDictProps) => {
         });
         return "";
       } else if (
+        ConfigService.getReaderConfig("dictService") === LOCAL_DICT_AGGREGATE
+      ) {
+        updateState({ isAddNew: false });
+        const results = await Promise.all(
+          plugins.filter(isLocalDict).map(async (plugin) => {
+            const config: any = plugin.config || {};
+            const dictId: string = config.dictId || "";
+            if (!dictId) return null;
+            const content = await DictUtil.lookupWord(dictId, text, {
+              silent: true,
+            });
+            return content
+              ? { name: t(plugin.displayName), content }
+              : null;
+          })
+        );
+        const sections = results.filter(
+          (item): item is { name: string; content: string } => Boolean(item)
+        );
+        if (!sections.length) {
+          toast.error(t("Word not found in dictionary"));
+        }
+        dictText = sections
+          .map(
+            (item) =>
+              `<div class="dict-aggregate-section"><div class="dict-aggregate-title">${escapeHtml(
+                item.name
+              )}</div><div class="dict-aggregate-content">${item.content}</div></div>`
+          )
+          .join("");
+      } else if (
         ConfigService.getReaderConfig("dictService") &&
         ConfigService.getReaderConfig("dictService")?.startsWith("dict-")
       ) {
@@ -314,6 +358,14 @@ const PopupDict = (props: PopupDictProps) => {
     updateState({ prototype: originalText });
     if (ConfigService.getReaderConfig("isLemmatizeWord") === "yes") {
       originalText = originalText;
+    }
+    if (stateRef.current.dictService === LOCAL_DICT_AGGREGATE) {
+      const localDictPlugins = plugins.filter(isLocalDict);
+      if (localDictPlugins.length < 2) {
+        const fallbackKey = localDictPlugins[0]?.key || "";
+        updateState({ dictService: fallbackKey });
+        ConfigService.setReaderConfig("dictService", fallbackKey);
+      }
     }
     if (!stateRef.current.dictService) {
       let pluginList = plugins.filter(
@@ -411,6 +463,11 @@ const PopupDict = (props: PopupDictProps) => {
   };
 
   const renderDictBox = () => {
+    const localDictPlugins = plugins.filter(isLocalDict);
+    const lastLocalDictKey = localDictPlugins[localDictPlugins.length - 1]?.key;
+    const langList =
+      (plugins.find((item) => item.key === state.dictService)
+        ?.langList as any[]) || [];
     return (
       <div
         className="dict-container"
@@ -453,19 +510,30 @@ const PopupDict = (props: PopupDictProps) => {
               .filter((item) => item.type === "dictionary")
               .map((item) => {
                 return (
-                  <option
-                    value={item.key}
-                    key={item.key}
-                    className="add-dialog-shelf-list-option"
-                  >
-                    {t(item.displayName)}
-                    {item.key === "official-ai-dict-plugin" && (
-                      <span style={{ fontSize: "13px", color: "#f16464" }}>
-                        {" "}
-                        (Pro)
-                      </span>
-                    )}
-                  </option>
+                  <React.Fragment key={item.key}>
+                    <option
+                      value={item.key}
+                      className="add-dialog-shelf-list-option"
+                    >
+                      {t(item.displayName)}
+                      {item.key === "official-ai-dict-plugin" && (
+                        <span style={{ fontSize: "13px", color: "#f16464" }}>
+                          {" "}
+                          (Pro)
+                        </span>
+                      )}
+                    </option>
+                    {item.key === lastLocalDictKey &&
+                      localDictPlugins.length >= 2 && (
+                        <option
+                          value={LOCAL_DICT_AGGREGATE}
+                          key={LOCAL_DICT_AGGREGATE}
+                          className="add-dialog-shelf-list-option"
+                        >
+                          {t("Local aggregate dictionary")}
+                        </option>
+                      )}
+                  </React.Fragment>
                 );
               })}
             <option
@@ -478,34 +546,28 @@ const PopupDict = (props: PopupDictProps) => {
           </select>
         </div>
 
-        <div
-          className="dict-service-container"
-          style={
-            props.isDockedRight
-              ? { top: 65, right: 25, zIndex: 1 }
-              : { right: 130, zIndex: 1 }
-          }
-        >
-          <select
-            className="dict-service-selector"
-            style={{ margin: 0, width: "80px" }}
-            value={state.dictTarget}
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
-              updateState({
-                dictTarget: event.target.value || "en",
-              });
-              ConfigService.setReaderConfig("dictTarget", event.target.value);
-              handleLookUpRef.current(stateRef.current.word);
-            }}
+        {langList.length > 0 && (
+          <div
+            className="dict-service-container"
+            style={
+              props.isDockedRight
+                ? { top: 65, right: 25, zIndex: 1 }
+                : { right: 130, zIndex: 1 }
+            }
           >
-            {plugins.find(
-              (item) => item.key === state.dictService
-            )?.langList &&
-              (
-                plugins.find(
-                  (item) => item.key === state.dictService
-                )?.langList as any[]
-              ).map((item) => {
+            <select
+              className="dict-service-selector"
+              style={{ margin: 0, width: "80px" }}
+              value={state.dictTarget}
+              onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
+                updateState({
+                  dictTarget: event.target.value || "en",
+                });
+                ConfigService.setReaderConfig("dictTarget", event.target.value);
+                handleLookUpRef.current(stateRef.current.word);
+              }}
+            >
+              {langList.map((item) => {
                 return (
                   <option
                     value={item.code}
@@ -517,8 +579,9 @@ const PopupDict = (props: PopupDictProps) => {
                   </option>
                 );
               })}
-          </select>
-        </div>
+            </select>
+          </div>
+        )}
         <div
           className="dict-word"
           style={{
