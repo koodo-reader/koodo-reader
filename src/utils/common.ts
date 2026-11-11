@@ -1981,6 +1981,7 @@ export const HIGHLIGHTER_COLORS = [
 ];
 export const HIGHLIGHTER_WIDTHS = [4, 8, 14, 20];
 export const SHAPE_TYPES = ["rect", "circle", "ellipse", "line", "arrow"];
+export const ANNOTATION_LINE_STYLES = ["solid", "dashed", "dotted"];
 export const TEXT_SIZE_MIN = 12;
 export const TEXT_SIZE_MAX = 72;
 export const TEXT_SIZE_STEP = 1;
