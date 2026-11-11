@@ -928,6 +928,7 @@
   "None": "無",
   "Slide": "滑動",
   "Flip": "翻頁",
+  "Overlay": "覆蓋",
   "Paste voice list JSON": "粘貼語音列表 JSON",
   "Invalid voice list JSON": "請輸入包含有效語音配置的非空 JSON 數組",
   "Failed to load more": "加載更多失敗",

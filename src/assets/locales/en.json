@@ -391,6 +391,7 @@
   "None": "None",
   "Slide": "Slide",
   "Flip": "Flip",
+  "Overlay": "Overlay",
   "Please turn off open books in the main window": "Please close open books in the main window",
   "Reset reader window's position": "Reset reader window's position",
   "Reset successful": "Reset successful",

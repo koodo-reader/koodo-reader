@@ -1349,6 +1349,45 @@ const createMainWin = () => {
     var result = await dialog.showOpenDialog(dialogOptions);
     return multiple ? result.filePaths : result.filePaths[0];
   });
+  // 「覆盖」翻页动画：截取阅读区域当前画面，交给渲染进程做滑出动画
+  ipcMain.handle("capture-reader-page", async (event, rect) => {
+    const values = rect
+      ? [rect.left, rect.top, rect.width, rect.height]
+      : [];
+    if (
+      values.length !== 4 ||
+      !values.every(
+        (value) => typeof value === "number" && Number.isFinite(value)
+      )
+    ) {
+      return "";
+    }
+    const { left, top, width, height } = rect;
+    if (
+      width < 1 ||
+      height < 1 ||
+      width > 10000 ||
+      height > 10000 ||
+      !event.sender
+    ) {
+      return "";
+    }
+    try {
+      const image = await event.sender.capturePage({
+        x: Math.round(left),
+        y: Math.round(top),
+        width: Math.round(width),
+        height: Math.round(height),
+      });
+      if (!image || image.isEmpty()) return "";
+      return (
+        "data:image/jpeg;base64," + image.toJPEG(90).toString("base64")
+      );
+    } catch (error) {
+      log.warn("capture-reader-page failed", error);
+      return "";
+    }
+  });
   ipcMain.handle("encrypt-data", async (event, config) => {
     let fingerprint = await getFingerprint();
     let encrypted = encrypt(config.token, fingerprint);

@@ -17,16 +17,20 @@ import {
   matchShortcut,
   ShortcutAction,
 } from "./shortcutUtil";
+import { OVERLAY_TURN_DURATION } from "./overlayTurn";
 declare var window: any;
 
 // 翻页滑动动画固定时长（毫秒），需与 kookit 的 PAGE_TURN_DURATION 保持一致
 const PAGE_TURN_DURATION = 200;
 
 // 每次翻页时实时读取，避免修改动画设置后锁延迟不生效
-const getThrottleTime = () =>
-  (ConfigService.getReaderConfig("animation") || "none") !== "none"
-    ? PAGE_TURN_DURATION
-    : 100;
+const getThrottleTime = () => {
+  const animation = ConfigService.getReaderConfig("animation") || "none";
+  if (animation === "none") return 100;
+  // 覆盖动画由应用层单独驱动，锁需覆盖整段动画，多留 60ms 保证 busy 先释放
+  if (animation === "overlay") return OVERLAY_TURN_DURATION + 60;
+  return PAGE_TURN_DURATION;
+};
 
 export const getSelection = (book: Book) => {
   let docs = getIframeDoc(book);
