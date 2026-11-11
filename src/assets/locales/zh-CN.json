@@ -994,6 +994,7 @@
   "Provider": "服务商",
   "Enable reading ruler": "启用阅读标尺",
   "Enable speed reading": "启用速读模式",
+  "Enable content coloring": "启用内容着色",
   "Reading speed (WPM)": "阅读速度 (WPM)",
   "Background opacity": "背景透明度",
   "Enter your API Key": "请输入您的 API Key",
