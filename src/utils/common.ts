@@ -2455,6 +2455,20 @@ export const isPaginatedBook = (book: Book) => {
     isFixedLayoutComic(book)
   );
 };
+// 阅读器浮层弹窗（笔记/翻译/词典/问 AI）
+export const POPUP_BOX_MODES = ["note", "trans", "dict", "assistant"];
+
+// 弹窗正在展示且未固定到右侧时，ESC 应优先关闭弹窗而不是退出阅读
+export const isUndockedPopupBoxOpen = (
+  viewArea: { isOpenMenu: boolean; menuMode: string },
+  reader: { isDockedRight: boolean }
+) => {
+  return (
+    !reader.isDockedRight &&
+    viewArea.isOpenMenu &&
+    POPUP_BOX_MODES.includes(viewArea.menuMode)
+  );
+};
 // PPTX/PPT/XPS/OXPS/DjVu/OFD 复用漫画结构渲染，暂不支持笔记和高亮
 export const isFixedLayoutBook = (book: Book) => {
   return (

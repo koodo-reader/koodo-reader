@@ -32,12 +32,11 @@ import {
 import SupportDialog from "../../components/dialogs/supportDialog";
 import ReaderTopToolbar from "../../components/readerTopToolbar";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
-import { isPaginatedBook, throttle } from "../../utils/common";
+import { isPaginatedBook, POPUP_BOX_MODES, throttle } from "../../utils/common";
 import { getOuterDoc } from "../../utils/reader/docUtil";
 import { useAppStore } from "../../store/useAppStore";
 
 const QUICK_BUTTON_EDGE_DISTANCE = 40;
-const POPUP_BOX_MENU_MODES = ["note", "trans", "dict", "assistant"];
 
 export interface ReaderState {
   isOpenRightPanel: boolean;
@@ -672,7 +671,7 @@ const Reader = () => {
     isElectron && window.electronAPI?.runtime?.platform === "darwin";
   const isMergeWord = ConfigService.getReaderConfig("isMergeWord") === "yes";
   const isUndockedPopupBoxOpen =
-    !isDockedRight && isOpenMenu && POPUP_BOX_MENU_MODES.includes(menuMode);
+    !isDockedRight && isOpenMenu && POPUP_BOX_MODES.includes(menuMode);
   const renditionProps = {
     handleLeaveReader: handleLeaveReader,
     handleEnterReader: handleEnterReader,
