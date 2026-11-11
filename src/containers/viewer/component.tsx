@@ -516,6 +516,8 @@ const Viewer = (props: ViewerProps) => {
           ConfigService.getReaderConfig("annotationShapeWidth") ||
             BRUSH_WIDTHS[1] + ""
         ),
+        lineStyle:
+          ConfigService.getReaderConfig("annotationLineStyle") || "solid",
         eraserWidth: parseFloat(
           ConfigService.getReaderConfig("annotationEraserWidth") ||
             ERASER_WIDTH_DEFAULT + ""
