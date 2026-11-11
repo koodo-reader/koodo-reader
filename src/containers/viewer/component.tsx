@@ -7,6 +7,10 @@ import Background from "../../components/background";
 import StyleUtil from "../../utils/reader/styleUtil";
 import "./index.css";
 import { htmlMouseEvent } from "../../utils/reader/mouseEvent";
+import {
+  setupOverlayTurn,
+  teardownOverlayTurn,
+} from "../../utils/reader/overlayTurn";
 import ImageViewer from "../../components/imageViewer";
 import { getIframeDoc } from "../../utils/reader/docUtil";
 import PopupBox from "../../components/popups/popupBox";
@@ -274,6 +278,7 @@ const Viewer = (props: ViewerProps) => {
   };
   const handleRenderBook = async () => {
     if (lock) return;
+    teardownOverlayTurn();
     let { key, path, format, name } = propsRef.current.currentBook;
     if (ConfigService.getAllListConfig("seperateStyleBooks").includes(key)) {
       window.currentBookKey = key;
@@ -608,6 +613,11 @@ const Viewer = (props: ViewerProps) => {
       rendition: rendition,
     });
     updateState({ rendition });
+    setupOverlayTurn(
+      rendition,
+      propsRef.current.currentBook,
+      propsRef.current.readerMode
+    );
     if (isReadingRawPDF(propsRef.current.currentBook)) {
       //ignore
     } else {
@@ -869,6 +879,7 @@ const Viewer = (props: ViewerProps) => {
     resizeHandlerRef.current = resizeHandler;
     window.addEventListener("resize", resizeHandler);
     return () => {
+      teardownOverlayTurn();
       if (resizeHandlerRef.current) {
         window.removeEventListener("resize", resizeHandlerRef.current);
         resizeHandlerRef.current = null;

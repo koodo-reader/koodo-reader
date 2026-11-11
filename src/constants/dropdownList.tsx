@@ -148,6 +148,7 @@ export const dropdownList = [
       { label: "None", value: "none" },
       { label: "Slide", value: "sliding" },
       { label: "Flip", value: "mimical" },
+      { label: "Overlay", value: "overlay" },
     ],
     isPDF: true,
   },

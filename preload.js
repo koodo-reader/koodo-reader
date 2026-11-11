@@ -74,6 +74,7 @@ const INVOKE_CHANNELS = new Set([
   "switch-moyu",
   "set-native-theme-source",
   "system-ocr",
+  "capture-reader-page",
   "file-command",
   "open-external",
   "dict-lookup",
