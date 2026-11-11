@@ -424,6 +424,9 @@ const Viewer = (props: ViewerProps) => {
         convertChinese: ConfigService.getReaderConfig("convertChinese"),
         bookLayout: ConfigService.getReaderConfig("bookLayout") || "",
         textRules: getTextRules(propsRef.current.currentBook.key),
+        contentColor: {
+          enabled: ConfigService.getReaderConfig("isTextColor") === "yes",
+        },
         codeHighlight: ConfigService.getReaderConfig("codeHighlight") || "",
         revertDirection:
           ConfigService.getReaderConfig("revertDirection") || "no",
