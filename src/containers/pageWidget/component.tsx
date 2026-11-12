@@ -8,6 +8,7 @@ import {
   detectLocalLanguage,
   getFullTranslationTarget,
   isFixedLayoutComic,
+  isPaginatedBook,
   isRateLimitedResult,
   isReadingRawPDF,
 } from "../../utils/common";
@@ -24,12 +25,79 @@ export interface PageWidgetState {
   nextPage: number;
   currentTime: string;
   percentage: string;
+  batteryLevel: number | null;
+  isCharging: boolean;
+  chapterWords: number | null;
   ignoreNextPageChange: boolean;
 }
 
 declare var window: any;
 
 type TransCache = Record<string, Record<string, string>>;
+
+interface BatteryLike {
+  level: number;
+  charging: boolean;
+  addEventListener: (type: string, listener: () => void) => void;
+  removeEventListener: (type: string, listener: () => void) => void;
+}
+
+// 本章字数：中日文字符 + 英文单词（不含标点），其他语种退化为去空白字符数
+const countChapterWords = (text: string): number => {
+  if (!text) {
+    return 0;
+  }
+  const cjkCount =
+    text.match(
+      /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uac00-\ud7af]/g
+    )?.length || 0;
+  const wordCount =
+    text.match(/[A-Za-z0-9]+(?:['’\-][A-Za-z0-9]+)*/g)?.length || 0;
+  if (cjkCount + wordCount > 0) {
+    return cjkCount + wordCount;
+  }
+  return Array.from(text.replace(/\s+/g, "")).length;
+};
+
+const BatteryIcon = (props: { level: number; isCharging: boolean }) => {
+  return (
+    <svg className="footer-battery-icon" viewBox="0 0 28 14" aria-hidden="true">
+      <rect
+        x="1"
+        y="1"
+        width="22"
+        height="12"
+        rx="2.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <rect
+        x="23.5"
+        y="4.5"
+        width="2.5"
+        height="5"
+        rx="1"
+        fill="currentColor"
+      />
+      <rect
+        x="2.75"
+        y="2.75"
+        width={(18.5 * props.level) / 100}
+        height="8.5"
+        rx="1.5"
+        fill="currentColor"
+        opacity="0.55"
+      />
+      {props.isCharging && (
+        <path
+          d="M14.5 2 L9.5 8 H13 L11.7 12 L16.7 6 H13.2 Z"
+          fill="currentColor"
+        />
+      )}
+    </svg>
+  );
+};
 
 const PageWidget = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
@@ -65,6 +133,9 @@ const PageWidget = () => {
     nextPage: 0,
     currentTime: getFormattedTime(),
     percentage: "",
+    batteryLevel: null,
+    isCharging: false,
+    chapterWords: null,
     ignoreNextPageChange: false,
   });
 
@@ -264,9 +335,42 @@ const PageWidget = () => {
     }));
   };
 
+  const chapterWordsCache = useRef<Map<string, number>>(new Map());
+
+  const handleChapterWords = async (rendition) => {
+    if (isPaginatedBook(currentBook)) {
+      setState((prev) =>
+        prev.chapterWords === null ? prev : { ...prev, chapterWords: null }
+      );
+      return;
+    }
+    const chapterDocIndex = String(
+      rendition.getPosition()?.chapterDocIndex ?? "0"
+    );
+    let chapterWords = chapterWordsCache.current.get(
+      currentBook.key + "_" + chapterDocIndex
+    );
+    if (chapterWords === undefined) {
+      const text: string = await rendition.chapterText();
+      if (!text) {
+        return;
+      }
+      chapterWords = countChapterWords(text);
+      chapterWordsCache.current.set(
+        currentBook.key + "_" + chapterDocIndex,
+        chapterWords
+      );
+    }
+    const words = chapterWords;
+    setState((prev) =>
+      prev.chapterWords === words ? prev : { ...prev, chapterWords: words }
+    );
+  };
+
   const methodsRef = useRef<any>(null);
   methodsRef.current = {
     handlePageNum,
+    handleChapterWords,
     handleBatchTranslation,
     handleWordDefinition,
   };
@@ -284,6 +388,50 @@ const PageWidget = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // componentDidMount: 监听系统电量变化
+  useEffect(() => {
+    const getBattery = (
+      navigator as Navigator & { getBattery?: () => Promise<BatteryLike> }
+    ).getBattery;
+    if (typeof getBattery !== "function") {
+      return;
+    }
+    let battery: BatteryLike | null = null;
+    let isDisposed = false;
+    const updateBattery = () => {
+      const manager = battery;
+      if (isDisposed || !manager) {
+        return;
+      }
+      const batteryLevel = Math.round(manager.level * 100);
+      const isCharging = manager.charging;
+      setState((prev) =>
+        prev.batteryLevel === batteryLevel && prev.isCharging === isCharging
+          ? prev
+          : { ...prev, batteryLevel, isCharging }
+      );
+    };
+    getBattery
+      .call(navigator)
+      .then((manager) => {
+        if (isDisposed) {
+          return;
+        }
+        battery = manager;
+        updateBattery();
+        manager.addEventListener("levelchange", updateBattery);
+        manager.addEventListener("chargingchange", updateBattery);
+      })
+      .catch(() => {});
+    return () => {
+      isDisposed = true;
+      if (battery) {
+        battery.removeEventListener("levelchange", updateBattery);
+        battery.removeEventListener("chargingchange", updateBattery);
+      }
+    };
+  }, []);
+
   // UNSAFE_componentWillReceiveProps: htmlBook 从无到有，注册 rendition 监听
   const prevHtmlBookRef = useRef(htmlBook);
   useEffect(() => {
@@ -294,6 +442,7 @@ const PageWidget = () => {
       const rendition = nextHtmlBook.rendition;
       (async () => {
         await methodsRef.current.handlePageNum(rendition);
+        await methodsRef.current.handleChapterWords(rendition);
         rendition.on("page-changed", async () => {
           await methodsRef.current.handlePageNum(rendition);
           await methodsRef.current.handleBatchTranslation(rendition);
@@ -353,6 +502,7 @@ const PageWidget = () => {
         });
         rendition.on("rendered", async () => {
           await methodsRef.current.handlePageNum(rendition);
+          await methodsRef.current.handleChapterWords(rendition);
           await methodsRef.current.handleBatchTranslation(rendition);
           await methodsRef.current.handleWordDefinition(rendition);
         });
@@ -452,10 +602,30 @@ const PageWidget = () => {
           {!isHideHeader && (
             <>
               <span className="footer-time">
-                {state.currentTime}
-                {state.percentage
-                  ? "  " + (parseFloat(state.percentage) * 100).toFixed(2) + "%"
-                  : ""}
+                <span>
+                  {state.currentTime}
+                  {state.percentage
+                    ? "  " +
+                      (parseFloat(state.percentage) * 100).toFixed(2) +
+                      "%"
+                    : ""}
+                </span>
+                {state.batteryLevel !== null && (
+                  <span className="footer-battery">
+                    <BatteryIcon
+                      level={state.batteryLevel}
+                      isCharging={state.isCharging}
+                    />
+                    {state.batteryLevel}%
+                  </span>
+                )}
+                {state.chapterWords !== null && (
+                  <span className="footer-chapter-words">
+                    {t("Chapter word count", {
+                      words: state.chapterWords.toLocaleString(),
+                    })}
+                  </span>
+                )}
               </span>
             </>
           )}

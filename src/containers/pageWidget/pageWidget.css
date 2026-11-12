@@ -47,6 +47,25 @@
   left: 20px;
   font-size: 13px;
   opacity: 0.5;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.footer-battery {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.footer-battery-icon {
+  width: 20px;
+  height: 10px;
+  flex: none;
+}
+@media screen and (max-width: 600px) {
+  .footer-chapter-words {
+    display: none;
+  }
 }
 .bookmark {
   height: 40px;

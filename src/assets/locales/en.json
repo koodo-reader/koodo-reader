@@ -256,6 +256,7 @@
   "Developer version": "Developer version",
   "Current reading time": "Reading time: {{count}} min",
   "Remaining reading time": "Remaining time: {{count}} min",
+  "Chapter word count": "{{words}} characters",
   "Book page": "Page {{count}}",
   "Total books": "Total {{count}} books",
   "Pages": "Pages",
