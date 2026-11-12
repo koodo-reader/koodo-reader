@@ -276,7 +276,7 @@ const prepareWorkerScript = async (scriptPath) => {
   await fs.promises.writeFile(scriptPath, content, "utf8");
 };
 
-const ensureWorker = async () => {
+const ensureWorker = async (isExpired) => {
   if (worker && worker.exitCode === null && worker.stdin) {
     return worker;
   }
@@ -285,6 +285,9 @@ const ensureWorker = async () => {
   }
   const scriptPath = getWorkerScriptPath(electronApp.getPath("userData"));
   await prepareWorkerScript(scriptPath);
+  if (isExpired()) {
+    return null;
+  }
   const powerShellPath = getPowerShellPath(
     process.arch,
     process.env.SystemRoot || process.env.windir
@@ -348,15 +351,12 @@ const ensureWorker = async () => {
   return child;
 };
 
-const doRequest = async (payload, timeoutMs) => {
+const doRequest = (payload, timeoutMs) => {
   clearIdleTimer();
-  const child = await ensureWorker();
   return new Promise((resolve, reject) => {
     const id = ++requestId;
     const timer = setTimeout(() => {
-      pending.delete(id);
-      dispose();
-      reject(new Error("SAPI worker timed out"));
+      dispose(new Error("SAPI worker timed out"));
     }, timeoutMs);
     pending.set(id, {
       resolve: (message) => {
@@ -366,14 +366,18 @@ const doRequest = async (payload, timeoutMs) => {
       reject,
       timer,
     });
-    try {
-      child.stdin.write(JSON.stringify({ ...payload, id }) + "\n", "utf8");
-    } catch (error) {
-      pending.delete(id);
-      clearTimeout(timer);
-      dispose();
-      reject(error);
-    }
+    void ensureWorker(() => !pending.has(id))
+      .then((child) => {
+        if (!pending.has(id)) {
+          if (child && worker === child) dispose();
+          return;
+        }
+        child.stdin.write(JSON.stringify({ ...payload, id }) + "\n", "utf8");
+      })
+      .catch((error) => {
+        if (!pending.has(id)) return;
+        dispose(error);
+      });
   });
 };
 

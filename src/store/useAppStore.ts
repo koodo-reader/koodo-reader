@@ -53,7 +53,7 @@ const fetchDynamicVoiceList = async (
       "get-tts-voices",
       request
     );
-    if (!Array.isArray(voices) || voices.length === 0) return null;
+    if (!Array.isArray(voices)) return null;
     return voices.map((voice) => ({
       ...voice,
       plugin: plugin.key,
@@ -881,7 +881,7 @@ export const useAppStore = create<AppState>()((set, get) => {
                 selectedEngine === current.key &&
                 !voiceList.some((voice) => voice.name === selectedVoice)
               ) {
-                ConfigService.setReaderConfig("voiceName", voiceList[0].name);
+                ConfigService.setReaderConfig("voiceName", voiceList[0]?.name || "");
               }
               get().handlePlugins([...currentPlugins]);
             });
