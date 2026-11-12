@@ -6346,8 +6346,8 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
       zhCN: "NaturalVoiceSAPIAdapter",
     },
     feature: {
-      en: "Read aloud with Windows SAPI 5 voices, including the Windows 11 natural voices exposed by NaturalVoiceSAPIAdapter. Works offline.",
-      zhCN: "使用 Windows SAPI 5 音色朗读，包括由 NaturalVoiceSAPIAdapter 暴露的 Windows 11 讲述人自然语音；完全离线。",
+      en: "Read aloud with Windows SAPI 5 voices, including the Windows 11 natural voices exposed by NaturalVoiceSAPIAdapter.",
+      zhCN: "使用 Windows SAPI 5 音色朗读，包括由 NaturalVoiceSAPIAdapter 暴露的 Windows 11 讲述人自然语音。",
     },
     configuration: {
       en: "1) Windows 11: Settings > Accessibility > Narrator > Add natural voices, download the voices you need. 2) Install NaturalVoiceSAPIAdapter (x64 + x86 recommended) and reopen its Installer to apply settings. 3) Install this plugin and pick a voice in the read-aloud panel. Without the adapter only classic SAPI 5 voices are listed. Keep the adapter folder in place, or its voices disappear.",

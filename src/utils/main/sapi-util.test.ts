@@ -1,14 +1,27 @@
 import { describe, expect, it } from "vitest";
+import type { PluginVoice } from "../plugins/types";
 import sapiUtilModule from "./sapi-util";
 
 // 主进程的 SAPI 工具是 CommonJS JavaScript
+interface SapiInternal {
+  toSapiRate: (speed: unknown) => number;
+  mapInstalledVoices: (voices: unknown, pluginKey: string) => PluginVoice[];
+  getPowerShellPath: (
+    arch: string,
+    systemRoot: string,
+    existsSync?: (candidate: string) => boolean
+  ) => string;
+  getWorkerScriptPath: (userDataPath: string) => string;
+  withBom: (content: string) => string;
+}
+
 const {
   toSapiRate,
   mapInstalledVoices,
   getPowerShellPath,
   getWorkerScriptPath,
   withBom,
-}: any = (sapiUtilModule as any)._internal;
+}: SapiInternal = (sapiUtilModule as { _internal: SapiInternal })._internal;
 
 describe("toSapiRate", () => {
   it.each([
@@ -78,7 +91,7 @@ describe("mapInstalledVoices", () => {
   it("filters invalid voices, dedupes by name and puts adapter voices first", () => {
     const voices = mapInstalledVoices(rawVoices, "test-plugin");
 
-    expect(voices.map((voice: any) => voice.name)).toEqual([
+    expect(voices.map((voice) => voice.name)).toEqual([
       "Microsoft Xiaoxiao (Natural)",
       "Microsoft Yunxi (Natural)",
       "Microsoft David Desktop",

@@ -219,11 +219,15 @@ const failAll = (error) => {
   pending.clear();
 };
 
-const dispose = () => {
+const clearIdleTimer = () => {
   if (idleTimer) {
     clearTimeout(idleTimer);
     idleTimer = null;
   }
+};
+
+const dispose = (error) => {
+  clearIdleTimer();
   const child = worker;
   worker = null;
   if (child) {
@@ -238,14 +242,12 @@ const dispose = () => {
       // ignore
     }
   }
-  failAll(new Error("SAPI worker stopped"));
+  failAll(error instanceof Error ? error : new Error("SAPI worker stopped"));
 };
 
 const scheduleIdleShutdown = () => {
-  if (idleTimer) {
-    clearTimeout(idleTimer);
-  }
-  idleTimer = setTimeout(dispose, IDLE_TIMEOUT);
+  clearIdleTimer();
+  idleTimer = setTimeout(() => dispose(), IDLE_TIMEOUT);
 };
 
 const handleMessage = (message) => {
@@ -259,20 +261,22 @@ const handleMessage = (message) => {
   scheduleIdleShutdown();
 };
 
-const writeWorkerScript = (scriptPath) => {
+const prepareWorkerScript = async (scriptPath) => {
   const content = withBom(WORKER_SCRIPT);
+  let existing = null;
   try {
-    if (fs.readFileSync(scriptPath, "utf8") === content) {
-      return;
-    }
+    existing = await fs.promises.readFile(scriptPath, "utf8");
   } catch (error) {
     // 文件不存在或不可读时直接重写
   }
-  fs.mkdirSync(path.dirname(scriptPath), { recursive: true });
-  fs.writeFileSync(scriptPath, content, "utf8");
+  if (existing === content) {
+    return;
+  }
+  await fs.promises.mkdir(path.dirname(scriptPath), { recursive: true });
+  await fs.promises.writeFile(scriptPath, content, "utf8");
 };
 
-const ensureWorker = () => {
+const ensureWorker = async () => {
   if (worker && worker.exitCode === null && worker.stdin) {
     return worker;
   }
@@ -280,7 +284,7 @@ const ensureWorker = () => {
     throw new Error("SAPI util is only available in the Electron main process");
   }
   const scriptPath = getWorkerScriptPath(electronApp.getPath("userData"));
-  writeWorkerScript(scriptPath);
+  await prepareWorkerScript(scriptPath);
   const powerShellPath = getPowerShellPath(
     process.arch,
     process.env.SystemRoot || process.env.windir
@@ -319,30 +323,35 @@ const ensureWorker = () => {
     console.error("SAPI worker error:", String(chunk).trim());
   });
   child.on("error", (error) => {
-    if (worker === child) {
-      worker = null;
+    if (worker !== child) {
+      return;
     }
+    worker = null;
+    clearIdleTimer();
     failAll(error);
   });
   child.on("exit", () => {
-    if (worker === child) {
-      worker = null;
+    if (worker !== child) {
+      return;
     }
+    worker = null;
+    clearIdleTimer();
     failAll(new Error("SAPI worker exited"));
+  });
+  child.stdin.on("error", (error) => {
+    if (worker !== child) {
+      return;
+    }
+    dispose(error);
   });
   worker = child;
   return child;
 };
 
-const doRequest = (payload, timeoutMs) =>
-  new Promise((resolve, reject) => {
-    let child;
-    try {
-      child = ensureWorker();
-    } catch (error) {
-      reject(error);
-      return;
-    }
+const doRequest = async (payload, timeoutMs) => {
+  clearIdleTimer();
+  const child = await ensureWorker();
+  return new Promise((resolve, reject) => {
     const id = ++requestId;
     const timer = setTimeout(() => {
       pending.delete(id);
@@ -366,6 +375,7 @@ const doRequest = (payload, timeoutMs) =>
       reject(error);
     }
   });
+};
 
 // SpeechSynthesizer 不是并发安全的，所有请求串行执行
 const request = (payload, timeoutMs) => {
@@ -433,6 +443,8 @@ const synthesizeToWaveFile = async ({ text, voiceName, speed, outPath }) => {
   const rate = toSapiRate(speed);
   let response = await speak(text, voiceName, rate, outPath);
   if (!response.ok && response.error === "VOICE_NOT_FOUND") {
+    // 只刷新本次运行的音色缓存后重试同名音色，用于处理应用运行期间新注册的音色。
+    // 若音色确实被移除，不做静默换音色，以免渲染层选中状态和缓存身份不一致。
     rawVoices = null;
     await loadRawVoices();
     response = await speak(text, voiceName, rate, outPath);
