@@ -14,6 +14,7 @@ import ConfigUtil from "../../../utils/file/configUtil";
 import Book from "../../../models/Book";
 import Bookmark from "../../../models/Bookmark";
 import Note from "../../../models/Note";
+import NoteContent from "../../../components/noteContent";
 import { useAppStore } from "../../../store/useAppStore";
 
 import BookmarkModel from "../../../models/Bookmark";
@@ -440,7 +441,9 @@ const NavList = (props: NavListProps) => {
                   : item.text}
             </p>
             <div style={{ marginTop: "10px", fontWeight: "bold" }}>
-              {props.currentTab === "notes" ? item.notes : null}
+              {props.currentTab === "notes" ? (
+                <NoteContent content={item.notes} type={item.type} />
+              ) : null}
             </div>
           </div>
 

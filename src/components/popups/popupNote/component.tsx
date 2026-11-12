@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import "./popupNote.css";
 import { isReadingRawPDF } from "../../../utils/common";
-import Note from "../../../models/Note";
+import Note, { normalizeNoteType } from "../../../models/Note";
+import type { NoteType } from "../../../models/Note";
 import NoteTag from "../../noteTag";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -16,15 +17,11 @@ import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
 import { useAppStore } from "../../../store/useAppStore";
-import { marked } from "marked";
-import DOMPurify from "dompurify";
-import Parser from "html-react-parser";
-import SwitchRow from "../../readerSettings/switchRow";
+import NoteContent from "../../noteContent";
 
 export interface PopupNoteProps {
   isDockedRight: boolean;
-  markdownEnabled?: boolean;
-  onToggleMarkdown?: (enabled: boolean) => void;
+  onTypeChange?: (type: NoteType) => void;
 
   chapterDocIndex: number;
   chapter: string;
@@ -48,8 +45,10 @@ const PopupNote = (props: PopupNoteProps) => {
   const [text, setText] = useState("");
   const [note, setNote] = useState<Note | null>(null);
   const [editorText, setEditorText] = useState("");
+  const [noteType, setNoteType] = useState<NoteType>("text");
 
   useEffect(() => {
+    let cancelled = false;
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
     (async () => {
@@ -58,10 +57,14 @@ const PopupNote = (props: PopupNoteProps) => {
           noteKey,
           "notes"
         );
+        if (cancelled || !loadedNote) return;
         setText(loadedNote.text);
         setTag(loadedNote.tag);
         setNote(loadedNote);
         setEditorText(loadedNote.notes || "");
+        const loadedType = normalizeNoteType(loadedNote.type);
+        setNoteType(loadedType);
+        props.onTypeChange?.(loadedType);
         let { styleType, color } = highlightUtil.getHighlightValue(
           loadedNote.color || "background-#FEF3CD"
         );
@@ -70,6 +73,8 @@ const PopupNote = (props: PopupNoteProps) => {
           color,
         });
       } else {
+        setNoteType("text");
+        props.onTypeChange?.("text");
         let docs = getIframeDoc(currentBook);
         let selectedText = "";
         for (let i = 0; i < docs.length; i++) {
@@ -90,7 +95,11 @@ const PopupNote = (props: PopupNoteProps) => {
         setText(selectedText);
       }
     })();
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noteKey]);
 
   const handleTag = (nextTag: string[]) => {
     setTag(nextTag);
@@ -109,6 +118,7 @@ const PopupNote = (props: PopupNoteProps) => {
       let newNote = await DatabaseService.getRecord(noteKey, "notes");
       newNote.notes = notes;
       newNote.tag = tag;
+      newNote.type = noteType;
       newNote.color =
         highlightUtil.formatHighlightValue(highlight) || newNote.color;
       DatabaseService.updateRecord(newNote, "notes").then(() => {
@@ -172,7 +182,8 @@ const PopupNote = (props: PopupNoteProps) => {
         notes,
         percentage,
         color,
-        tag
+        tag,
+        noteType
       );
       DatabaseService.saveRecord(newNote, "notes").then(async () => {
         handleOpenMenu(false);
@@ -219,14 +230,17 @@ const PopupNote = (props: PopupNoteProps) => {
     }
   };
 
-  const handleToggleMarkdown = () => {
-    props.onToggleMarkdown?.(!props.markdownEnabled);
+  const handleTypeChange = (nextType: NoteType) => {
+    setNoteType(nextType);
+    props.onTypeChange?.(nextType);
   };
 
-  const previewHtml = useMemo(() => {
-    if (!props.markdownEnabled || !editorText.trim()) return "";
-    return DOMPurify.sanitize(marked.parse(editorText) as string);
-  }, [editorText, props.markdownEnabled]);
+  const placeholder =
+    noteType === "markdown"
+      ? t("Write in Markdown")
+      : noteType === "html"
+        ? t("Write in HTML")
+        : t("Write your note here");
 
   const colorOptionProps = {
     handleDigest: handleUpdateHighlight,
@@ -239,11 +253,12 @@ const PopupNote = (props: PopupNoteProps) => {
       <div className="note-original-text">{text}</div>
       <div
         className={`editor-box-parent${
-          props.markdownEnabled ? " note-markdown-enabled" : ""
-        }${props.isDockedRight ? " note-markdown-docked" : ""}`}
+          noteType !== "text" ? " note-preview-enabled" : ""
+        }${props.isDockedRight ? " note-preview-docked" : ""}`}
       >
         <textarea
           className="editor-box"
+          placeholder={placeholder}
           value={editorText}
           onChange={(event) => {
             setEditorText(event.target.value);
@@ -259,39 +274,29 @@ const PopupNote = (props: PopupNoteProps) => {
             }
           }}
         />
-        {props.markdownEnabled && (
-          <div className="note-markdown-preview">
-            {previewHtml ? Parser(previewHtml) : null}
-          </div>
+        {noteType !== "text" && (
+          <NoteContent
+            content={editorText}
+            type={noteType}
+            className="note-preview-pane"
+          />
         )}
       </div>
       <div className="note-option-row">
         <ColorOption {...(colorOptionProps as any)} />
-        <div
-          className={`note-markdown-toggle${
-            props.isDockedRight ? " note-markdown-toggle-docked" : ""
-          }`}
-          title={props.isDockedRight ? t("Markdown") : undefined}
+        <select
+          className="note-type-select"
+          value={noteType}
+          title={t("Note type")}
+          aria-label={t("Note type")}
+          onChange={(event) =>
+            handleTypeChange(event.target.value as NoteType)
+          }
         >
-          <SwitchRow
-            variant="dialog"
-            title={t("Markdown")}
-            isEnabled={!!props.markdownEnabled}
-            onClick={handleToggleMarkdown}
-            style={{
-              margin: 0,
-              padding: 0,
-              gap: 8,
-              width: "auto",
-              flexShrink: 0,
-            }}
-            titleStyle={{
-              fontSize: 13,
-              lineHeight: "20px",
-              whiteSpace: "nowrap",
-            }}
-          />
-        </div>
+          <option value="text">{t("Plain text")}</option>
+          <option value="markdown">{t("Markdown")}</option>
+          <option value="html">{t("HTML")}</option>
+        </select>
       </div>
       <div
         className="note-tags"
