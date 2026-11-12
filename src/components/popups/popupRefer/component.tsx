@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import "./popupRefer.css";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import {
+  confirmOpenExternalUrl,
   isReadingRawPDF,
-  openExternalUrl,
-  vexComfirmAsync,
 } from "../../../utils/common";
 import Parser from "html-react-parser";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -18,14 +17,6 @@ export interface PopupReferProps {
   rendition: any;
   chapterDocIndex: number;
 }
-
-const escapeHtml = (text: string) =>
-  text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 
 const PopupRefer = (props: PopupReferProps) => {
   const currentBook = useAppStore((s) => s.book.currentBook);
@@ -113,15 +104,7 @@ const PopupRefer = (props: PopupReferProps) => {
       return false;
     }
     if (result.external) {
-      const confirm = await vexComfirmAsync(
-        t("Do you want to open this link in browser") +
-          "<br><span style='word-break:break-all'>" +
-          escapeHtml(targetHref) +
-          "</span>"
-      );
-      if (confirm) {
-        openExternalUrl(targetHref);
-      }
+      await confirmOpenExternalUrl(targetHref);
       return true;
     }
     if (result.redirectChapter) {
