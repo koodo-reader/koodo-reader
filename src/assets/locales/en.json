@@ -930,6 +930,8 @@
   "Force path style": "Force path style",
   "Enter 1 to enable, leave empty to disable. Required for some S3 storage services that are not compatible with virtual host style URL": "Enter 1 to enable, leave empty to disable. Required for some S3 storage services that are not compatible with virtual host style URL",
   "Show number of books in each shelf": "Show number of books in each shelf",
+  "Enable simulated book spine": "Enable simulated book spine",
+  "Show a simulated spine and shadow on book covers to make them look like physical books": "Show a simulated spine and shadow on book covers to make them look like physical books",
   "Custom AI Translation": "Custom AI Translation",
   "Custom AI Dictionary": "Custom AI Dictionary",
   "Custom AI Assistance": "Custom AI Assistance",

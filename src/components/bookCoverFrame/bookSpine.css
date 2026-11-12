@@ -1,0 +1,22 @@
+/* Simulated book spine shading shared by image covers and empty covers */
+.book-cover-frame-spine::after,
+.empty-cover-spine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 7%;
+  pointer-events: none;
+  border-radius: 2px 0 0 2px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.18) 0%,
+    rgba(0, 0, 0, 0.07) 12%,
+    rgba(255, 255, 255, 0.22) 38%,
+    rgba(0, 0, 0, 0.07) 62%,
+    rgba(0, 0, 0, 0.11) 82%,
+    rgba(0, 0, 0, 0.24) 94%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+}

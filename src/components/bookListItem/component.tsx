@@ -2,6 +2,7 @@ import React from "react";
 import "./bookListItem.css";
 import { Trans } from "react-i18next";
 import EmptyCover from "../emptyCover";
+import BookCoverFrame from "../bookCoverFrame";
 import ActionDialog from "../dialogs/actionDialog";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useBookItem } from "../bookItem/useBookItem";
@@ -130,7 +131,7 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
             onClick={() => {
               handleJump();
             }}
-            style={{ height: "65px" }}
+            style={{ width: "45px", height: "59px" }}
             onMouseEnter={() => {
               setIsHover(true);
             }}
@@ -138,7 +139,10 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
               setIsHover(false);
             }}
           >
-            <div className="book-item-image" style={{ height: "65px" }}>
+            <div
+              className="book-item-image"
+              style={{ width: "45px", height: "59px" }}
+            >
               <EmptyCover
                 {...{
                   format: props.book.format,
@@ -167,23 +171,25 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
               setIsHover(false);
             }}
           >
-            <img
-              src={cover}
-              alt=""
-              draggable={false}
-              className="book-item-image"
-              style={{ width: "100%" }}
-              onLoad={(res: any) => {
-                if (
-                  res.target.naturalHeight / res.target.naturalWidth >
-                  74 / 47
-                ) {
-                  setDirection("horizontal");
-                } else {
-                  setDirection("vertical");
-                }
-              }}
-            />
+            <BookCoverFrame style={{ width: "100%" }}>
+              <img
+                src={cover}
+                alt=""
+                draggable={false}
+                className="book-item-image"
+                style={{ width: "100%" }}
+                onLoad={(res: any) => {
+                  if (
+                    res.target.naturalHeight / res.target.naturalWidth >
+                    74 / 47
+                  ) {
+                    setDirection("horizontal");
+                  } else {
+                    setDirection("vertical");
+                  }
+                }}
+              />
+            </BookCoverFrame>
           </div>
         )}
         {isSelectBook || isHover ? (

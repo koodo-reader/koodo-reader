@@ -118,6 +118,12 @@ export const appearanceSettingList = [
     title: "Show number of books in each shelf",
     propName: "isShowShelfBookCount",
   },
+  {
+    isElectron: false,
+    title: "Enable simulated book spine",
+    desc: "Show a simulated spine and shadow on book covers to make them look like physical books",
+    propName: "isEnableBookSpine",
+  },
 ];
 export const dataSettingList = [
   {

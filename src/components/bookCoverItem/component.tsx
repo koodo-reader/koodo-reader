@@ -2,6 +2,7 @@ import React from "react";
 import "./bookCoverItem.css";
 import ActionDialog from "../dialogs/actionDialog";
 import EmptyCover from "../emptyCover";
+import BookCoverFrame from "../bookCoverFrame";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useBookItem } from "../bookItem/useBookItem";
@@ -119,6 +120,10 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     onDragLeave: handleBookDropDragLeave,
     onDrop: handleBookBookDrop,
   };
+  const isEmptyCover =
+    !isCoverExist ||
+    (props.book.format === "PDF" &&
+      ConfigService.getReaderConfig("isDisablePDFCover") === "yes");
 
   return (
     <>
@@ -181,24 +186,22 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
           style={
             ConfigService.getReaderConfig("isDisableCrop") === "yes"
               ? {
-                  height: "195px",
+                  height: isEmptyCover ? "156px" : "195px",
                   alignItems: "flex-start",
                   background: "rgba(255, 255,255, 0)",
                   boxShadow: "0px 0px 5px rgba(0, 0, 0, 0)",
                 }
               : {
-                  height: "170px",
+                  height: isEmptyCover ? "156px" : "170px",
                   alignItems: "center",
                   overflow: "hidden",
                 }
           }
         >
-          {!isCoverExist ||
-          (props.book.format === "PDF" &&
-            ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
+          {isEmptyCover ? (
             <div
               className="book-item-image"
-              style={{ width: "120px", height: "170px" }}
+              style={{ width: "120px", height: "156px" }}
             >
               <EmptyCover
                 {...{
@@ -215,28 +218,37 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
               />
             </div>
           ) : (
-            <img
-              src={cover}
-              alt=""
-              draggable={false}
+            <BookCoverFrame
               style={
                 direction === "horizontal" ||
                 ConfigService.getReaderConfig("isDisableCrop") === "yes"
                   ? { width: "100%" }
-                  : { height: "100%" }
+                  : { alignSelf: "stretch" }
               }
-              className="book-item-image"
-              onLoad={(res: any) => {
-                if (
-                  res.target.naturalHeight / res.target.naturalWidth >
-                  170 / 120
-                ) {
-                  setDirection("horizontal");
-                } else {
-                  setDirection("vertical");
+            >
+              <img
+                src={cover}
+                alt=""
+                draggable={false}
+                style={
+                  direction === "horizontal" ||
+                  ConfigService.getReaderConfig("isDisableCrop") === "yes"
+                    ? { width: "100%" }
+                    : { height: "100%" }
                 }
-              }}
-            />
+                className="book-item-image"
+                onLoad={(res: any) => {
+                  if (
+                    res.target.naturalHeight / res.target.naturalWidth >
+                    170 / 120
+                  ) {
+                    setDirection("horizontal");
+                  } else {
+                    setDirection("vertical");
+                  }
+                }}
+              />
+            </BookCoverFrame>
           )}
           {isSelectBook || isHover ? (
             <span
