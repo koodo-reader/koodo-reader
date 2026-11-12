@@ -32,6 +32,13 @@ var (
 	credentials    struct{ username, password string }
 )
 
+// defaultAllowedOrigins are the official Koodo Reader web app origins. They are
+// always trusted; ALLOWED_ORIGINS only adds to this list.
+var defaultAllowedOrigins = []string{
+	"https://web.koodoreader.com",
+	"https://web.koodoreader.cn",
+}
+
 func getDockerSecret(name string) string {
 	p := "/run/secrets/" + name
 	data, err := os.ReadFile(p)
@@ -79,18 +86,12 @@ func init() {
 		log.Println("Warning: Using default username. Set SERVER_USERNAME environment variable for production.")
 	}
 
-	// Allowed origins
-	raw := os.Getenv("ALLOWED_ORIGINS")
-	for _, o := range strings.Split(raw, ",") {
-		o = strings.TrimSpace(o)
-		if o != "" {
-			allowedOrigins = append(allowedOrigins, o)
-		}
-	}
-	if len(allowedOrigins) == 0 {
-		log.Println("Warning: No ALLOWED_ORIGINS configured. All cross-origin requests will be allowed. " +
-			"Set ALLOWED_ORIGINS to a comma-separated list of trusted origins to restrict access.")
-	}
+	// Allowed origins: the official web app origins are always trusted and
+	// ALLOWED_ORIGINS adds to them. There is deliberately no "allow all" mode:
+	// the API carries Basic auth credentials and the origin check is the only
+	// CSRF defence on /upload and /delete.
+	allowedOrigins = buildAllowedOrigins(os.Getenv("ALLOWED_ORIGINS"))
+	log.Printf("Allowed origins: %s", strings.Join(allowedOrigins, ", "))
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -102,31 +103,75 @@ func getEnv(key, def string) string {
 	return def
 }
 
-// applyCorsHeaders mirrors the JS implementation. Returns true when CORS is allowed.
+// normalizeOrigin lowercases scheme/host and drops trailing slashes so values
+// from ALLOWED_ORIGINS match what browsers send in the Origin header.
+func normalizeOrigin(origin string) string {
+	return strings.ToLower(strings.TrimRight(strings.TrimSpace(origin), "/"))
+}
+
+// parseAllowedOrigins splits the comma-separated ALLOWED_ORIGINS value.
+// Wildcards are not supported: browsers reject "*" together with credentials.
+func parseAllowedOrigins(raw string) []string {
+	var origins []string
+	for _, o := range strings.Split(raw, ",") {
+		o = normalizeOrigin(o)
+		if o == "" {
+			continue
+		}
+		if o == "*" {
+			log.Println(`Warning: "*" is not a valid ALLOWED_ORIGINS entry; ignoring it.`)
+			continue
+		}
+		origins = append(origins, o)
+	}
+	return origins
+}
+
+// buildAllowedOrigins returns the always-allowed official origins plus the
+// operator-provided ones, de-duplicated.
+func buildAllowedOrigins(raw string) []string {
+	origins := make([]string, 0, len(defaultAllowedOrigins)+1)
+	seen := make(map[string]bool, len(defaultAllowedOrigins)+1)
+	for _, list := range [][]string{defaultAllowedOrigins, parseAllowedOrigins(raw)} {
+		for _, o := range list {
+			if seen[o] {
+				continue
+			}
+			seen[o] = true
+			origins = append(origins, o)
+		}
+	}
+	return origins
+}
+
+// originAllowed reports whether a browser Origin is in the allowlist.
+func originAllowed(origin string) bool {
+	origin = normalizeOrigin(origin)
+	if origin == "" {
+		return false
+	}
+	for _, allowed := range allowedOrigins {
+		if allowed == origin {
+			return true
+		}
+	}
+	return false
+}
+
+// applyCorsHeaders sets the CORS headers. Returns true when the request Origin
+// is trusted; unknown origins are never reflected.
 func applyCorsHeaders(w http.ResponseWriter, r *http.Request) bool {
 	origin := r.Header.Get("Origin")
 	w.Header().Set("Vary", "Origin")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-	if origin == "" {
+	if !originAllowed(origin) {
 		return false
 	}
-	allowed := len(allowedOrigins) == 0 // empty list ⟹ allow all origins
-	if !allowed {
-		for _, o := range allowedOrigins {
-			if o == origin {
-				allowed = true
-				break
-			}
-		}
-	}
-	if allowed {
-		w.Header().Set("Access-Control-Allow-Origin", origin)
-		w.Header().Set("Access-Control-Allow-Credentials", "true")
-		return true
-	}
-	return false
+	w.Header().Set("Access-Control-Allow-Origin", origin)
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	return true
 }
 
 func getServerOrigin(r *http.Request) string {
