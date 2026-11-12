@@ -11,6 +11,7 @@ import BookModel from "../../../models/Book";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../../utils/storage/databaseService";
 import Note from "../../../models/Note";
+import NoteContent from "../../../components/noteContent";
 import { useAppStore } from "../../../store/useAppStore";
 
 export interface CardListProps {
@@ -209,7 +210,11 @@ const CardList = (props: CardListProps) => {
             </div>
             <div className="card-list-item-text-parent">
               <div className="card-list-item-note">
-                {props.mode === "note" ? item.notes : item.text}
+                {props.mode === "note" ? (
+                  <NoteContent content={item.notes} type={item.type} />
+                ) : (
+                  item.text
+                )}
               </div>
             </div>
             {props.mode === "note" ? (
