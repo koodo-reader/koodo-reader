@@ -225,6 +225,18 @@
   outline: none;
 }
 
+.stats-chart-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stats-book-select {
+  max-width: 200px;
+  text-overflow: ellipsis;
+}
+
 .stats-range-custom {
   display: flex;
   align-items: center;

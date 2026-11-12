@@ -8,6 +8,7 @@ import {
   ReadingTimeUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
+import BookUtil from "../../utils/file/bookUtil";
 import {
   Line,
   AreaChart,
@@ -83,6 +84,9 @@ export interface StatsState {
   avgDailySeconds: number;
   chartDays: { date: string; seconds: number }[];
   earliestDate: string;
+  bookKeys: string[];
+  bookNamesMap: Record<string, string>;
+  bookKey: string;
   heatmapData: { date: string; seconds: number }[];
   range: { preset: RangePreset; start: string; end: string };
   chartTab: "line" | "bar";
@@ -109,6 +113,9 @@ const Stats = () => {
     avgDailySeconds: 0,
     chartDays: [],
     earliestDate: "",
+    bookKeys: [],
+    bookNamesMap: {},
+    bookKey: "",
     heatmapData: [],
     range: { preset: "30d", ...readingTimeUtil.getDateRange("30d") },
     chartTab: "bar",
@@ -165,7 +172,11 @@ const Stats = () => {
     }
     const earliestDate = Object.keys(dateSecondsMap).sort()[0] || "";
 
-    // ── 3. Longest streak (consecutive reading days up to today) ──────────
+    // ── 3. Book filter options (books with recorded reading time) ─────
+    const bookKeys = readingTimeUtil.getAllBookKeys();
+    const bookNamesMap = await BookUtil.getBookNamesMapByKeys(bookKeys);
+
+    // ── 4. Longest streak (consecutive reading days up to today) ──────────
     const datesWithReading = new Set(
       Object.keys(dateSecondsMap).filter((d) => dateSecondsMap[d] > 0)
     );
@@ -184,14 +195,14 @@ const Stats = () => {
       }
     }
 
-    // ── 4. Daily average ──────────────────────────────────────────────────
+    // ── 5. Daily average ──────────────────────────────────────────────────
     const activeDays = Object.values(dateSecondsMap).filter(
       (s) => s > 0
     ).length;
     const avgDailySeconds =
       activeDays > 0 ? Math.round(totalSeconds / activeDays) : 0;
 
-    // ── 5. Heatmap: last 52 weeks ─────────────────────────────────────────
+    // ── 6. Heatmap: last 52 weeks ─────────────────────────────────────────
     const heatmapData: { date: string; seconds: number }[] = [];
     const heatmapStart = new Date(today);
     heatmapStart.setDate(today.getDate() - 51 * 7);
@@ -213,9 +224,12 @@ const Stats = () => {
       avgDailySeconds,
       chartDays: readingTimeUtil.getRangeStats(
         prev.range.start,
-        prev.range.end
+        prev.range.end,
+        prev.bookKey
       ),
       earliestDate,
+      bookKeys,
+      bookNamesMap,
       heatmapData,
       isLoading: false,
     }));
@@ -235,7 +249,11 @@ const Stats = () => {
       return {
         ...prev,
         range,
-        chartDays: readingTimeUtil.getRangeStats(range.start, range.end),
+        chartDays: readingTimeUtil.getRangeStats(
+          range.start,
+          range.end,
+          prev.bookKey
+        ),
       };
     });
   };
@@ -250,9 +268,25 @@ const Stats = () => {
       return {
         ...prev,
         range,
-        chartDays: readingTimeUtil.getRangeStats(range.start, range.end),
+        chartDays: readingTimeUtil.getRangeStats(
+          range.start,
+          range.end,
+          prev.bookKey
+        ),
       };
     });
+  };
+
+  const handleBookChange = (bookKey: string) => {
+    setState((prev) => ({
+      ...prev,
+      bookKey,
+      chartDays: readingTimeUtil.getRangeStats(
+        prev.range.start,
+        prev.range.end,
+        bookKey
+      ),
+    }));
   };
 
   const renderHeatmap = () => {
@@ -369,6 +403,9 @@ const Stats = () => {
     avgDailySeconds,
     chartDays,
     earliestDate,
+    bookKeys,
+    bookNamesMap,
+    bookKey,
     range,
     chartTab,
     isLoading,
@@ -428,6 +465,9 @@ const Stats = () => {
 
   const todayKey = dateToKey(new Date());
   const earliestKey = earliestDate || range.start;
+  const bookOptions = bookKeys
+    .map((key) => ({ key, name: bookNamesMap[key] || key }))
+    .sort((a, b) => a.name.localeCompare(b.name));
   const chartData = toChartPoints(chartDays).map((point) => ({
     ...point,
     minutes: Math.round(point.seconds / 60),
@@ -493,25 +533,44 @@ const Stats = () => {
           >
             <div className="stats-chart-header">
               <div className="stats-section-title">{rangeTitle}</div>
-              <select
-                className="stats-range-select"
-                value={range.preset}
-                onChange={(e) =>
-                  handleRangePresetChange(e.target.value as RangePreset)
-                }
-                style={{
-                  backgroundColor: tabInactiveBg,
-                  color: textColor,
-                  colorScheme: darkMode ? "dark" : "light",
-                }}
-              >
-                {(["7d", "30d", "3m", "6m", "1y"] as const).map((preset) => (
-                  <option key={preset} value={preset}>
-                    {t(PRESET_LABELS[preset])}
-                  </option>
-                ))}
-                <option value="custom">{t("Custom range")}</option>
-              </select>
+              <div className="stats-chart-filters">
+                <select
+                  className="stats-range-select stats-book-select"
+                  value={bookKey}
+                  onChange={(e) => handleBookChange(e.target.value)}
+                  style={{
+                    backgroundColor: tabInactiveBg,
+                    color: textColor,
+                    colorScheme: darkMode ? "dark" : "light",
+                  }}
+                >
+                  <option value="">{t("All books")}</option>
+                  {bookOptions.map((book) => (
+                    <option key={book.key} value={book.key}>
+                      {book.name}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className="stats-range-select"
+                  value={range.preset}
+                  onChange={(e) =>
+                    handleRangePresetChange(e.target.value as RangePreset)
+                  }
+                  style={{
+                    backgroundColor: tabInactiveBg,
+                    color: textColor,
+                    colorScheme: darkMode ? "dark" : "light",
+                  }}
+                >
+                  {(["7d", "30d", "3m", "6m", "1y"] as const).map((preset) => (
+                    <option key={preset} value={preset}>
+                      {t(PRESET_LABELS[preset])}
+                    </option>
+                  ))}
+                  <option value="custom">{t("Custom range")}</option>
+                </select>
+              </div>
             </div>
             {range.preset === "custom" && (
               <div className="stats-range-custom">
