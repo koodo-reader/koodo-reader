@@ -32,7 +32,7 @@ import {
   exportHighlights,
   exportNotes,
 } from "../../../utils/file/export";
-import { importNotesData } from "../../../utils/file/importData";
+import { importNotesData } from "../../../utils/file/import";
 import DatabaseService from "../../../utils/storage/databaseService";
 import {
   dataSettingList,

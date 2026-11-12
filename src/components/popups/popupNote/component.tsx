@@ -285,7 +285,7 @@ const PopupNote = (props: PopupNoteProps) => {
       <div className="note-option-row">
         <ColorOption {...(colorOptionProps as any)} />
         <select
-          className="note-type-select"
+          className="lang-setting-dropdown note-type-select"
           value={noteType}
           title={t("Note type")}
           aria-label={t("Note type")}
@@ -293,9 +293,15 @@ const PopupNote = (props: PopupNoteProps) => {
             handleTypeChange(event.target.value as NoteType)
           }
         >
-          <option value="text">{t("Plain text")}</option>
-          <option value="markdown">{t("Markdown")}</option>
-          <option value="html">{t("HTML")}</option>
+          <option value="text" className="lang-setting-option">
+            {t("Plain text")}
+          </option>
+          <option value="markdown" className="lang-setting-option">
+            {t("Markdown")}
+          </option>
+          <option value="html" className="lang-setting-option">
+            {t("HTML")}
+          </option>
         </select>
       </div>
       <div

@@ -49,12 +49,6 @@
 }
 .note-type-select {
   flex-shrink: 0;
-  height: 30px;
-  min-width: 90px;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 5px;
-  cursor: pointer;
 }
 .editor-box-parent.note-preview-enabled {
   display: flex;
