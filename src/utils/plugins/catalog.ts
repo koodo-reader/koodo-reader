@@ -1,5 +1,8 @@
 import type { BuiltinPluginDefinition, BuiltinPluginMarketItem } from "./types";
 
+export const NATURAL_VOICE_SAPI_ADAPTER_PLUGIN_KEY =
+  "natural-voice-sapi-adapter-voice-plugin";
+
 const builtinPluginCatalog: BuiltinPluginDefinition[] = [
   {
     key: "pot-translate-plugin",
@@ -6328,6 +6331,32 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     websiteUrl: "https://github.com/coqui-ai/TTS",
   },
   {
+    key: NATURAL_VOICE_SAPI_ADAPTER_PLUGIN_KEY,
+    type: "voice",
+    displayName: "NaturalVoiceSAPIAdapter",
+    icon: "speaker",
+    version: "1.0.0",
+    autoValue: "",
+    defaultConfig: {},
+    langList: {},
+    voiceList: [],
+    platforms: ["win32"],
+    name: {
+      en: "NaturalVoiceSAPIAdapter",
+      zhCN: "NaturalVoiceSAPIAdapter",
+    },
+    feature: {
+      en: "Read aloud with Windows SAPI 5 voices, including the Windows 11 natural voices exposed by NaturalVoiceSAPIAdapter.",
+      zhCN: "使用 Windows SAPI 5 音色朗读，包括由 NaturalVoiceSAPIAdapter 暴露的 Windows 11 讲述人自然语音。",
+    },
+    configuration: {
+      en: "1) Windows 11: Settings > Accessibility > Narrator > Add natural voices, download the voices you need. 2) Install NaturalVoiceSAPIAdapter (x64 + x86 recommended) and reopen its Installer to apply settings. 3) Install this plugin and pick a voice in the read-aloud panel. Without the adapter only classic SAPI 5 voices are listed. Keep the adapter folder in place, or its voices disappear.",
+      zhCN: "1）Windows 11：设置 → 辅助功能 → 讲述人 → 添加自然语音，先下载所需语音；2）安装 NaturalVoiceSAPIAdapter（建议同时安装 x64 和 x86 组件），更换语音后重新打开其安装器应用设置；3）安装本插件，在听书面板选择音色。未安装适配器时只会列出经典 SAPI 5 音色。请不要移动或删除适配器目录，否则音色会消失。",
+    },
+    websiteName: "NaturalVoiceSAPIAdapter - GitHub",
+    websiteUrl: "https://github.com/gexgd0419/NaturalVoiceSAPIAdapter",
+  },
+  {
     key: "openai-compatible-ocr-plugin",
     type: "ocr",
     displayName: "OpenAI Compatible OCR (SiliconFlow)",
@@ -6881,12 +6910,19 @@ export const getBuiltinPluginLocalizedName = (
 export const isBuiltinPluginKey = (key: string) => definitionsByKey.has(key);
 
 export const getBuiltinPluginMarket = (
-  language: string
+  language: string,
+  platform?: string
 ): BuiltinPluginMarketItem[] => {
   const useChinese = language.startsWith("zh");
   return builtinPluginCatalog
     .filter(
       (definition) => useChinese || !chineseOnlyPluginKeys.has(definition.key)
+    )
+    .filter(
+      (definition) =>
+        !platform ||
+        !definition.platforms ||
+        definition.platforms.includes(platform)
     )
     .map((definition) => ({
       name: useChinese ? definition.name.zhCN : definition.name.en,

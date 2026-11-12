@@ -134,7 +134,8 @@ const SettingDialog = () => {
   const handleGetPluginList = () => {
     const installedPluginKeys = plugins.map((item) => item.key);
     const pluginList = getBuiltinPluginMarket(
-      ConfigService.getReaderConfig("lang") || navigator.language
+      ConfigService.getReaderConfig("lang") || navigator.language,
+      window.electronAPI?.runtime?.platform
     ).filter((item) => {
       if (!installedPluginKeys.includes(item.plugin.identifier)) {
         if (!isElectron && item.plugin.type === "voice") {
