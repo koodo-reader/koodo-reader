@@ -109,6 +109,7 @@
   "Less": "更少",
   "Current reading time": "使用時間：{{count}} 分鐘",
   "Remaining reading time": "剩餘時間：{{count}} 分鐘",
+  "Chapter word count": "{{words}} 字",
   "Book page": "當前頁面 {{count}}",
   "Total books": "總共 {{count}} 本書",
   "Pages": "頁面",

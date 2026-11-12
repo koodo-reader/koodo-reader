@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import i18n from "../../i18n";
 import { isElectron } from "react-device-detect";
 import DatabaseService from "../storage/databaseService";
+import { normalizeNoteType } from "../../models/Note";
 import { vexComfirmAsync } from "../common";
 declare var window: any;
 
@@ -257,6 +258,7 @@ const buildNoteRecord = (record: any, bookKey: string) => ({
   percentage: record.percentage ? String(record.percentage) : "0",
   color: parseColor(record),
   tag: parseTag(record.tag),
+  type: normalizeNoteType(record.type),
 });
 
 const buildWordRecord = (record: any, bookKey: string) => ({

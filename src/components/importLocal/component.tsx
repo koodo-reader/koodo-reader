@@ -34,7 +34,7 @@ import { convertCajToPdf, isCajFormat } from "../../utils/file/cajUtil";
 import {
   buildImportRecords,
   importNoteRecords,
-} from "../../utils/file/importData";
+} from "../../utils/file/import";
 import { useAppStore } from "../../store/useAppStore";
 
 export interface ImportLocalProps {

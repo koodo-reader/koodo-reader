@@ -378,6 +378,7 @@
   "Less": "收起",
   "Current reading time": "本次阅读时间：{{count}}分钟",
   "Remaining reading time": "读完本章需要：{{count}}分钟",
+  "Chapter word count": "{{words}} 字",
   "Book page": "第{{count}}页",
   "Total books": "一共{{count}}本书",
   "Disable auto scroll to next or previous chapter": "禁用自动滚动到下一章或上一章",

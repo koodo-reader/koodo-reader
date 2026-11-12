@@ -256,6 +256,7 @@
   "Developer version": "Developer version",
   "Current reading time": "Reading time: {{count}} min",
   "Remaining reading time": "Remaining time: {{count}} min",
+  "Chapter word count": "{{words}} characters",
   "Book page": "Page {{count}}",
   "Total books": "Total {{count}} books",
   "Pages": "Pages",
@@ -1200,5 +1201,10 @@
   "Show total page number (Experimental)": "Show total page number (Experimental)",
   "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.": "This version of Koodo Reader is too old. Please go to Settings - About - Check for Updates to update Koodo Reader to the latest version and try again.",
   "Background opacity": "Background opacity",
-  "Text to speech": "Text to speech"
+  "Text to speech": "Text to speech",
+  "Note type": "Note type",
+  "HTML": "HTML",
+  "Write your note here": "Write your note here",
+  "Write in Markdown": "Write in Markdown",
+  "Write in HTML": "Write in HTML"
 }

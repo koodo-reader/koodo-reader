@@ -111,6 +111,7 @@
   "Less": "收起",
   "Current reading time": "本次閱讀時間：{{count}}分鐘",
   "Remaining reading time": "讀完本章需要：{{count}}分鐘",
+  "Chapter word count": "{{words}} 字",
   "Book page": "第{{count}}頁",
   "Total books": "一共{{count}}本書",
   "Pages": "頁數",
