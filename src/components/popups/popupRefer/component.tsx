@@ -9,6 +9,7 @@ import {
   vexComfirmAsync,
 } from "../../../utils/common";
 import Parser from "html-react-parser";
+import DOMPurify from "dompurify";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { useAppStore } from "../../../store/useAppStore";
@@ -26,6 +27,26 @@ const escapeHtml = (text: string) =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+
+// Footnote HTML comes from the book. A <iframe srcdoc> (or object/embed/form)
+// would run in the app origin and could reach the electronAPI bridge, so only
+// allow inert markup here.
+const sanitizeFootnoteHtml = (html: string) =>
+  DOMPurify.sanitize(html, {
+    FORBID_TAGS: [
+      "iframe",
+      "frame",
+      "frameset",
+      "object",
+      "embed",
+      "script",
+      "link",
+      "meta",
+      "base",
+      "form",
+    ],
+    FORBID_ATTR: ["srcdoc"],
+  });
 
 const PopupRefer = (props: PopupReferProps) => {
   const currentBook = useAppStore((s) => s.book.currentBook);
@@ -101,7 +122,11 @@ const PopupRefer = (props: PopupReferProps) => {
     let result = await props.rendition.getFootnoteContent(node);
     if (!result.handled) return;
     setRect(menuRect);
-    setFootnote(result.content);
+    setFootnote(
+      sanitizeFootnoteHtml(
+        typeof result.content === "string" ? result.content : ""
+      )
+    );
     setIsOpenMenu(true);
     setTimeout(() => showMenu(menuRect), 0);
   };
@@ -194,6 +219,13 @@ const PopupRefer = (props: PopupReferProps) => {
             handleLinkJump(event);
             event.stopPropagation();
             event.preventDefault();
+          }}
+          onAuxClick={(event) => {
+            // Middle click would otherwise open the footnote link in a new
+            // window outside the app's link confirmation flow.
+            if (event.button !== 1) return;
+            event.preventDefault();
+            event.stopPropagation();
           }}
         >
           {Parser(footnote)}
