@@ -26,6 +26,7 @@ import ConfigUtil from "../utils/file/configUtil";
 import DictUtil from "../utils/file/dictUtil";
 import TokenService from "../utils/storage/tokenService";
 import { resolveStoredPlugin } from "../utils/plugins/records";
+import { NATURAL_VOICE_SAPI_ADAPTER_PLUGIN_KEY } from "../utils/plugins/catalog";
 import { handleExitApp } from "../utils/request/common";
 import { HighlightValue, langToName } from "../utils/common";
 import toast from "react-hot-toast";
@@ -33,6 +34,40 @@ import i18n from "../i18n";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 const highlightUtil = new HighlightUtil(ConfigService);
+
+// NaturalVoiceSAPIAdapter 的音色列表是动态的：每次加载插件时向主进程取一次。
+// 主进程按应用生命周期缓存 PowerShell 枚举结果，重启应用后自动重新枚举。
+const loadDynamicVoiceList = async (pluginList: PluginModel[]) => {
+  if (window.electronAPI?.runtime?.platform !== "win32") {
+    return;
+  }
+  const plugin = pluginList.find(
+    (item) => item.key === NATURAL_VOICE_SAPI_ADAPTER_PLUGIN_KEY
+  );
+  if (!plugin) return;
+  try {
+    const voices = await window.electronAPI.invoke<any[]>("get-tts-voices", {
+      pluginKey: plugin.key,
+      config: plugin.config || {},
+    });
+    if (!Array.isArray(voices) || voices.length === 0) return;
+    const voiceList = voices.map((voice) => ({
+      ...voice,
+      plugin: plugin.key,
+    }));
+    plugin.voiceList = voiceList;
+    const selectedEngine = ConfigService.getReaderConfig("voiceEngine");
+    const selectedVoice = ConfigService.getReaderConfig("voiceName");
+    if (
+      selectedEngine === plugin.key &&
+      !voiceList.some((voice) => voice.name === selectedVoice)
+    ) {
+      ConfigService.setReaderConfig("voiceName", voiceList[0].name);
+    }
+  } catch (error) {
+    console.error("Failed to load SAPI voice list:", error);
+  }
+};
 
 const initialManager = {
   books: null as unknown as BookModel[],
@@ -828,6 +863,9 @@ export const useAppStore = create<AppState>()((set, get) => {
             );
             pluginList.push(voicePlugin);
           }
+          void loadDynamicVoiceList(pluginList).then(() => {
+            get().handlePlugins([...pluginList]);
+          });
           TokenService.getToken("is_authed").then((value) => {
             let isAuthed = value === "yes";
             if (isAuthed && !ConfigService.getItem("serverRegion")) {
