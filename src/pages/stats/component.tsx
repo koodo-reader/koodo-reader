@@ -511,6 +511,16 @@ const Stats = () => {
   const tabInactiveColor = darkMode
     ? "rgba(255,255,255,0.6)"
     : "rgba(0,0,0,0.5)";
+  const selectBg = darkMode ? "#333333" : "#f0f0f0";
+  const selectStyle = {
+    backgroundColor: selectBg,
+    color: textColor,
+    colorScheme: darkMode ? "dark" : "light",
+  };
+  const optionStyle = {
+    backgroundColor: selectBg,
+    color: textColor,
+  };
 
   const cards = [
     {
@@ -615,15 +625,13 @@ const Stats = () => {
                   className="stats-range-select stats-book-select"
                   value={bookKey}
                   onChange={(e) => handleBookChange(e.target.value)}
-                  style={{
-                    backgroundColor: tabInactiveBg,
-                    color: textColor,
-                    colorScheme: darkMode ? "dark" : "light",
-                  }}
+                  style={selectStyle}
                 >
-                  <option value="">{t("All books")}</option>
+                  <option value="" style={optionStyle}>
+                    {t("All books")}
+                  </option>
                   {bookOptions.map((book) => (
-                    <option key={book.key} value={book.key}>
+                    <option key={book.key} value={book.key} style={optionStyle}>
                       {book.name}
                     </option>
                   ))}
@@ -634,18 +642,16 @@ const Stats = () => {
                   onChange={(e) =>
                     handleRangePresetChange(e.target.value as RangePreset)
                   }
-                  style={{
-                    backgroundColor: tabInactiveBg,
-                    color: textColor,
-                    colorScheme: darkMode ? "dark" : "light",
-                  }}
+                  style={selectStyle}
                 >
                   {(["7d", "30d", "3m", "6m", "1y"] as const).map((preset) => (
-                    <option key={preset} value={preset}>
+                    <option key={preset} value={preset} style={optionStyle}>
                       {t(PRESET_LABELS[preset])}
                     </option>
                   ))}
-                  <option value="custom">{t("Custom range")}</option>
+                  <option value="custom" style={optionStyle}>
+                    {t("Custom range")}
+                  </option>
                 </select>
               </div>
             </div>
