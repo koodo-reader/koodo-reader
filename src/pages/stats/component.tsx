@@ -518,7 +518,7 @@ const Stats = () => {
     colorScheme: darkMode ? "dark" : "light",
   };
   const optionStyle = {
-    backgroundColor: selectBg,
+    backgroundColor: darkMode ? selectBg : cardBg,
     color: textColor,
   };
 
