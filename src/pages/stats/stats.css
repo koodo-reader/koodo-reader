@@ -202,6 +202,52 @@
   margin-bottom: 40px;
 }
 
+.stats-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.stats-chart-header .stats-section-title {
+  margin-bottom: 0;
+}
+
+.stats-range-select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+}
+
+.stats-range-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.stats-range-date {
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.stats-range-sep {
+  opacity: 0.5;
+}
+
 .stats-chart-tabs {
   display: flex;
   gap: 8px;

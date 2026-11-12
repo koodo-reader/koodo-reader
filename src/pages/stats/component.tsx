@@ -21,6 +21,57 @@ import {
   CartesianGrid,
 } from "recharts";
 
+type RangePreset = "7d" | "30d" | "3m" | "6m" | "1y" | "custom";
+
+interface ChartPoint {
+  /** short x-axis label, e.g. "3/4" */
+  label: string;
+  seconds: number;
+  /** tooltip label, e.g. "2025-03-04" or "2025-03-04 – 2025-03-10" */
+  title: string;
+}
+
+const PRESET_LABELS: Record<Exclude<RangePreset, "custom">, string> = {
+  "7d": "Last 7 Days",
+  "30d": "Last 30 Days",
+  "3m": "Last 3 Months",
+  "6m": "Last 6 Months",
+  "1y": "Last Year",
+};
+
+const WEEK_DAYS = 7;
+const CHART_DAILY_LIMIT_DAYS = 92;
+
+const dateToKey = (d: Date): string => {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+/**
+ * Daily stats → chart points. Ranges longer than ~3 months are aggregated
+ * by week so the bars stay readable.
+ */
+const toChartPoints = (
+  daily: { date: string; seconds: number }[]
+): ChartPoint[] => {
+  const step = daily.length > CHART_DAILY_LIMIT_DAYS ? WEEK_DAYS : 1;
+  const points: ChartPoint[] = [];
+  for (let i = 0; i < daily.length; i += step) {
+    const chunk = daily.slice(i, i + step);
+    const startKey = chunk[0].date;
+    const endKey = chunk[chunk.length - 1].date;
+    const [, month, day] = startKey.split("-").map(Number);
+    points.push({
+      label: `${month}/${day}`,
+      seconds: chunk.reduce((sum, item) => sum + item.seconds, 0),
+      title: startKey === endKey ? startKey : `${startKey} – ${endKey}`,
+    });
+  }
+  return points;
+};
+
 export interface StatsProps {
   t: (title: string) => string;
 }
@@ -30,8 +81,10 @@ export interface StatsState {
   totalSeconds: number;
   longestStreak: number;
   avgDailySeconds: number;
-  last30Days: { date: string; seconds: number }[];
+  chartDays: { date: string; seconds: number }[];
+  earliestDate: string;
   heatmapData: { date: string; seconds: number }[];
+  range: { preset: RangePreset; start: string; end: string };
   chartTab: "line" | "bar";
   isLoading: boolean;
 }
@@ -47,24 +100,20 @@ const Stats = () => {
       registerUnloadHandler: () => () => {},
     });
   }
+  const readingTimeUtil = readingTimeUtilRef.current;
 
-  const [state, setState] = useState<StatsState>({
+  const [state, setState] = useState<StatsState>(() => ({
     totalBooks: 0,
     totalSeconds: 0,
     longestStreak: 0,
     avgDailySeconds: 0,
-    last30Days: [],
+    chartDays: [],
+    earliestDate: "",
     heatmapData: [],
+    range: { preset: "30d", ...readingTimeUtil.getDateRange("30d") },
     chartTab: "bar",
     isLoading: true,
-  });
-
-  const dateToKey = (d: Date): string => {
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-  };
+  }));
 
   const formatTime = (seconds: number): string => {
     if (seconds < 60) return `${seconds}s`;
@@ -90,9 +139,6 @@ const Stats = () => {
   };
 
   const loadStats = async () => {
-    const readingTimeUtil = readingTimeUtilRef.current;
-    if (!readingTimeUtil) return;
-
     // ── 1. Books read (has a recordLocation) ──────────────────────────────
     let allBookKeys: string[] = [];
     try {
@@ -109,19 +155,19 @@ const Stats = () => {
     }
 
     // ── 2. Total reading time from readingStats ────────────────────────────
-    const allDates = readingTimeUtil.getAllDates();
+    const dateSecondsMap = readingTimeUtil.getDailyTotals() as Record<
+      string,
+      number
+    >;
     let totalSeconds = 0;
-    const dateSecondsMap: Record<string, number> = {};
-    for (const dateKey of allDates) {
-      const dayStats = readingTimeUtil.getDayStats(dateKey);
-      const dayTotal = dayStats.reduce((sum, s) => sum + s.seconds, 0);
-      totalSeconds += dayTotal;
-      dateSecondsMap[dateKey] = dayTotal;
+    for (const seconds of Object.values(dateSecondsMap)) {
+      totalSeconds += seconds;
     }
+    const earliestDate = Object.keys(dateSecondsMap).sort()[0] || "";
 
     // ── 3. Longest streak (consecutive reading days up to today) ──────────
     const datesWithReading = new Set(
-      allDates.filter((d) => (dateSecondsMap[d] || 0) > 0)
+      Object.keys(dateSecondsMap).filter((d) => dateSecondsMap[d] > 0)
     );
     const today = new Date();
     let longestStreak = 0;
@@ -145,19 +191,7 @@ const Stats = () => {
     const avgDailySeconds =
       activeDays > 0 ? Math.round(totalSeconds / activeDays) : 0;
 
-    // ── 5. Last 30 days data ──────────────────────────────────────────────
-    const last30Days: { date: string; seconds: number }[] = [];
-    for (let i = 29; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
-      const key = dateToKey(d);
-      last30Days.push({
-        date: `${d.getMonth() + 1}/${d.getDate()}`,
-        seconds: dateSecondsMap[key] || 0,
-      });
-    }
-
-    // ── 6. Heatmap: last 52 weeks ─────────────────────────────────────────
+    // ── 5. Heatmap: last 52 weeks ─────────────────────────────────────────
     const heatmapData: { date: string; seconds: number }[] = [];
     const heatmapStart = new Date(today);
     heatmapStart.setDate(today.getDate() - 51 * 7);
@@ -177,7 +211,11 @@ const Stats = () => {
       totalSeconds,
       longestStreak,
       avgDailySeconds,
-      last30Days,
+      chartDays: readingTimeUtil.getRangeStats(
+        prev.range.start,
+        prev.range.end
+      ),
+      earliestDate,
       heatmapData,
       isLoading: false,
     }));
@@ -187,6 +225,35 @@ const Stats = () => {
     loadStats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleRangePresetChange = (preset: RangePreset) => {
+    setState((prev) => {
+      const range: StatsState["range"] =
+        preset === "custom"
+          ? { ...prev.range, preset }
+          : { preset, ...readingTimeUtil.getDateRange(preset) };
+      return {
+        ...prev,
+        range,
+        chartDays: readingTimeUtil.getRangeStats(range.start, range.end),
+      };
+    });
+  };
+
+  const handleCustomDateChange = (field: "start" | "end", value: string) => {
+    if (!value) return;
+    setState((prev) => {
+      const range = { ...prev.range };
+      range[field] = value;
+      if (field === "start" && value > range.end) range.end = value;
+      if (field === "end" && value < range.start) range.start = value;
+      return {
+        ...prev,
+        range,
+        chartDays: readingTimeUtil.getRangeStats(range.start, range.end),
+      };
+    });
+  };
 
   const renderHeatmap = () => {
     const { heatmapData } = state;
@@ -300,7 +367,9 @@ const Stats = () => {
     totalSeconds,
     longestStreak,
     avgDailySeconds,
-    last30Days,
+    chartDays,
+    earliestDate,
+    range,
     chartTab,
     isLoading,
   } = state;
@@ -357,10 +426,17 @@ const Stats = () => {
     },
   ];
 
-  const chartData = last30Days.map((d) => ({
-    ...d,
-    minutes: Math.round(d.seconds / 60),
+  const todayKey = dateToKey(new Date());
+  const earliestKey = earliestDate || range.start;
+  const chartData = toChartPoints(chartDays).map((point) => ({
+    ...point,
+    minutes: Math.round(point.seconds / 60),
   }));
+  const rangeTitle =
+    range.preset === "custom"
+      ? `${range.start} – ${range.end}`
+      : t(PRESET_LABELS[range.preset]);
+  const tickInterval = Math.max(0, Math.ceil(chartData.length / 8) - 1);
 
   return (
     <div
@@ -415,9 +491,63 @@ const Stats = () => {
             className="stats-chart-wrapper"
             style={{ backgroundColor: cardBg }}
           >
-            <div className="stats-section-title">
-              <Trans>Last 30 Days</Trans>
+            <div className="stats-chart-header">
+              <div className="stats-section-title">{rangeTitle}</div>
+              <select
+                className="stats-range-select"
+                value={range.preset}
+                onChange={(e) =>
+                  handleRangePresetChange(e.target.value as RangePreset)
+                }
+                style={{
+                  backgroundColor: tabInactiveBg,
+                  color: textColor,
+                  colorScheme: darkMode ? "dark" : "light",
+                }}
+              >
+                {(["7d", "30d", "3m", "6m", "1y"] as const).map((preset) => (
+                  <option key={preset} value={preset}>
+                    {t(PRESET_LABELS[preset])}
+                  </option>
+                ))}
+                <option value="custom">{t("Custom range")}</option>
+              </select>
             </div>
+            {range.preset === "custom" && (
+              <div className="stats-range-custom">
+                <input
+                  type="date"
+                  className="stats-range-date"
+                  value={range.start}
+                  min={earliestKey}
+                  max={todayKey}
+                  aria-label={t("Start date")}
+                  onChange={(e) =>
+                    handleCustomDateChange("start", e.target.value)
+                  }
+                  style={{
+                    color: textColor,
+                    colorScheme: darkMode ? "dark" : "light",
+                  }}
+                />
+                <span className="stats-range-sep">–</span>
+                <input
+                  type="date"
+                  className="stats-range-date"
+                  value={range.end}
+                  min={earliestKey}
+                  max={todayKey}
+                  aria-label={t("End date")}
+                  onChange={(e) =>
+                    handleCustomDateChange("end", e.target.value)
+                  }
+                  style={{
+                    color: textColor,
+                    colorScheme: darkMode ? "dark" : "light",
+                  }}
+                />
+              </div>
+            )}
             <div className="stats-chart-tabs">
               <button
                 className="stats-chart-tab"
@@ -461,11 +591,11 @@ const Stats = () => {
                     vertical={false}
                   />
                   <XAxis
-                    dataKey="date"
+                    dataKey="label"
                     tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
                     tickLine={false}
                     axisLine={false}
-                    interval={4}
+                    interval={tickInterval}
                   />
                   <YAxis
                     tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
@@ -475,6 +605,9 @@ const Stats = () => {
                   />
                   <Tooltip
                     formatter={(value: any) => [`${value} min`]}
+                    labelFormatter={(label, payload) =>
+                      payload?.[0]?.payload?.title || label
+                    }
                     contentStyle={{
                       backgroundColor: cardBg,
                       border: "none",
@@ -530,11 +663,11 @@ const Stats = () => {
                     vertical={false}
                   />
                   <XAxis
-                    dataKey="date"
+                    dataKey="label"
                     tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
                     tickLine={false}
                     axisLine={false}
-                    interval={4}
+                    interval={tickInterval}
                   />
                   <YAxis
                     tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
@@ -544,6 +677,9 @@ const Stats = () => {
                   />
                   <Tooltip
                     formatter={(value: any) => [`${value} min`]}
+                    labelFormatter={(label, payload) =>
+                      payload?.[0]?.payload?.title || label
+                    }
                     contentStyle={{
                       backgroundColor: cardBg,
                       border: "none",
