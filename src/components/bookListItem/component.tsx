@@ -131,7 +131,7 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
             onClick={() => {
               handleJump();
             }}
-            style={{ height: "65px" }}
+            style={{ width: "45px", height: "59px" }}
             onMouseEnter={() => {
               setIsHover(true);
             }}
@@ -139,7 +139,10 @@ const BookListItem: React.FC<BookItemProps> = (props) => {
               setIsHover(false);
             }}
           >
-            <div className="book-item-image" style={{ height: "65px" }}>
+            <div
+              className="book-item-image"
+              style={{ width: "45px", height: "59px" }}
+            >
               <EmptyCover
                 {...{
                   format: props.book.format,

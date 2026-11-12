@@ -120,6 +120,10 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
     onDragLeave: handleBookDropDragLeave,
     onDrop: handleBookBookDrop,
   };
+  const isEmptyCover =
+    !isCoverExist ||
+    (props.book.format === "PDF" &&
+      ConfigService.getReaderConfig("isDisablePDFCover") === "yes");
 
   return (
     <>
@@ -182,24 +186,22 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
           style={
             ConfigService.getReaderConfig("isDisableCrop") === "yes"
               ? {
-                  height: "195px",
+                  height: isEmptyCover ? "156px" : "195px",
                   alignItems: "flex-start",
                   background: "rgba(255, 255,255, 0)",
                   boxShadow: "0px 0px 5px rgba(0, 0, 0, 0)",
                 }
               : {
-                  height: "170px",
+                  height: isEmptyCover ? "156px" : "170px",
                   alignItems: "center",
                   overflow: "hidden",
                 }
           }
         >
-          {!isCoverExist ||
-          (props.book.format === "PDF" &&
-            ConfigService.getReaderConfig("isDisablePDFCover") === "yes") ? (
+          {isEmptyCover ? (
             <div
               className="book-item-image"
-              style={{ width: "120px", height: "170px" }}
+              style={{ width: "120px", height: "156px" }}
             >
               <EmptyCover
                 {...{
