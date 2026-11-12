@@ -602,14 +602,18 @@ const PageWidget = () => {
           {!isHideHeader && (
             <>
               <span className="footer-time">
-                <span>
-                  {state.currentTime}
-                  {state.percentage
-                    ? "  " +
-                      (parseFloat(state.percentage) * 100).toFixed(2) +
-                      "%"
-                    : ""}
-                </span>
+                {state.currentTime}
+                {state.percentage
+                  ? "  " + (parseFloat(state.percentage) * 100).toFixed(2) + "%"
+                  : ""}
+              </span>
+            </>
+          )}
+        </div>
+        <div className="footer-container">
+          {!isHideFooter &&
+            (state.batteryLevel !== null || state.chapterWords !== null) && (
+              <span className="footer-status">
                 {state.batteryLevel !== null && (
                   <span className="footer-battery">
                     <BatteryIcon
@@ -627,10 +631,7 @@ const PageWidget = () => {
                   </span>
                 )}
               </span>
-            </>
-          )}
-        </div>
-        <div className="footer-container">
+            )}
           {!isHideFooter && leftPage > 0 && (
             <p
               className="background-page-left"
