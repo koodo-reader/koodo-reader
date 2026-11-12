@@ -2,6 +2,7 @@ import React from "react";
 import "./bookCardItem.css";
 import ActionDialog from "../dialogs/actionDialog";
 import EmptyCover from "../emptyCover";
+import BookCoverFrame from "../bookCoverFrame";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useBookItem } from "../bookItem/useBookItem";
 import { getFileNameWithoutExtension } from "../../utils/common";
@@ -196,28 +197,37 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
               />
             </div>
           ) : (
-            <img
-              src={cover}
-              alt=""
-              draggable={false}
-              className="book-item-image"
+            <BookCoverFrame
               style={
                 direction === "horizontal" ||
                 ConfigService.getReaderConfig("isDisableCrop") === "yes"
                   ? { width: "100%" }
-                  : { height: "100%" }
+                  : { alignSelf: "stretch" }
               }
-              onLoad={(res: any) => {
-                if (
-                  res.target.naturalHeight / res.target.naturalWidth >
-                  137 / 105
-                ) {
-                  setDirection("horizontal");
-                } else {
-                  setDirection("vertical");
+            >
+              <img
+                src={cover}
+                alt=""
+                draggable={false}
+                className="book-item-image"
+                style={
+                  direction === "horizontal" ||
+                  ConfigService.getReaderConfig("isDisableCrop") === "yes"
+                    ? { width: "100%" }
+                    : { height: "100%" }
                 }
-              }}
-            ></img>
+                onLoad={(res: any) => {
+                  if (
+                    res.target.naturalHeight / res.target.naturalWidth >
+                    137 / 105
+                  ) {
+                    setDirection("horizontal");
+                  } else {
+                    setDirection("vertical");
+                  }
+                }}
+              ></img>
+            </BookCoverFrame>
           )}
         </div>
         {isSelectBook || isHover ? (

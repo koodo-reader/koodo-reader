@@ -2,6 +2,7 @@ import React from "react";
 import "./bookCoverItem.css";
 import ActionDialog from "../dialogs/actionDialog";
 import EmptyCover from "../emptyCover";
+import BookCoverFrame from "../bookCoverFrame";
 import { Trans } from "react-i18next";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
 import { useBookItem } from "../bookItem/useBookItem";
@@ -215,28 +216,37 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
               />
             </div>
           ) : (
-            <img
-              src={cover}
-              alt=""
-              draggable={false}
+            <BookCoverFrame
               style={
                 direction === "horizontal" ||
                 ConfigService.getReaderConfig("isDisableCrop") === "yes"
                   ? { width: "100%" }
-                  : { height: "100%" }
+                  : { alignSelf: "stretch" }
               }
-              className="book-item-image"
-              onLoad={(res: any) => {
-                if (
-                  res.target.naturalHeight / res.target.naturalWidth >
-                  170 / 120
-                ) {
-                  setDirection("horizontal");
-                } else {
-                  setDirection("vertical");
+            >
+              <img
+                src={cover}
+                alt=""
+                draggable={false}
+                style={
+                  direction === "horizontal" ||
+                  ConfigService.getReaderConfig("isDisableCrop") === "yes"
+                    ? { width: "100%" }
+                    : { height: "100%" }
                 }
-              }}
-            />
+                className="book-item-image"
+                onLoad={(res: any) => {
+                  if (
+                    res.target.naturalHeight / res.target.naturalWidth >
+                    170 / 120
+                  ) {
+                    setDirection("horizontal");
+                  } else {
+                    setDirection("vertical");
+                  }
+                }}
+              />
+            </BookCoverFrame>
           )}
           {isSelectBook || isHover ? (
             <span

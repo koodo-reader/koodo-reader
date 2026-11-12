@@ -1,7 +1,17 @@
+@import "../bookCoverFrame/bookSpine.css";
+
 .empty-cover {
   width: 105px;
   height: 137px;
   transform-origin: 0% 0%;
+  position: relative;
+}
+.empty-cover-spine {
+  padding-left: 8px;
+  box-sizing: border-box;
+}
+.empty-cover-spine .cover-footer {
+  left: 0;
 }
 .cover-banner {
   float: left;
