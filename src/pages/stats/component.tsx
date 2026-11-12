@@ -8,6 +8,10 @@ import {
   ReadingTimeUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
+import BookUtil from "../../utils/file/bookUtil";
+import CoverUtil from "../../utils/file/coverUtil";
+import EmptyCover from "../../components/emptyCover";
+import Book from "../../models/Book";
 import {
   Line,
   AreaChart,
@@ -21,6 +25,90 @@ import {
   CartesianGrid,
 } from "recharts";
 
+type RangePreset = "7d" | "30d" | "3m" | "6m" | "1y" | "custom";
+
+interface ChartPoint {
+  /** short x-axis label, e.g. "3/4" */
+  label: string;
+  seconds: number;
+  /** tooltip label, e.g. "2025-03-04" or "2025-03-04 – 2025-03-10" */
+  title: string;
+}
+
+interface LeaderboardBook {
+  key: string;
+  name: string;
+  author: string;
+  format: string;
+  cover: string;
+  isCoverExist: boolean;
+  seconds: number;
+}
+
+const LeaderboardCover = ({ item }: { item: LeaderboardBook }) => {
+  const [fitByWidth, setFitByWidth] = useState(true);
+  return (
+    <div className="stats-leaderboard-cover">
+      {item.isCoverExist ? (
+        <img
+          src={item.cover}
+          alt=""
+          draggable={false}
+          className="stats-leaderboard-image"
+          style={fitByWidth ? { width: "100%" } : { height: "100%" }}
+          onLoad={(event) => {
+            const img = event.currentTarget;
+            setFitByWidth(img.naturalHeight / img.naturalWidth > 137 / 105);
+          }}
+        />
+      ) : (
+        <EmptyCover format={item.format} title={item.name} scale={1} />
+      )}
+    </div>
+  );
+};
+
+const PRESET_LABELS: Record<Exclude<RangePreset, "custom">, string> = {
+  "7d": "Last 7 Days",
+  "30d": "Last 30 Days",
+  "3m": "Last 3 Months",
+  "6m": "Last 6 Months",
+  "1y": "Last Year",
+};
+
+const WEEK_DAYS = 7;
+const CHART_DAILY_LIMIT_DAYS = 92;
+
+const dateToKey = (d: Date): string => {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+/**
+ * Daily stats → chart points. Ranges longer than ~3 months are aggregated
+ * by week so the bars stay readable.
+ */
+const toChartPoints = (
+  daily: { date: string; seconds: number }[]
+): ChartPoint[] => {
+  const step = daily.length > CHART_DAILY_LIMIT_DAYS ? WEEK_DAYS : 1;
+  const points: ChartPoint[] = [];
+  for (let i = 0; i < daily.length; i += step) {
+    const chunk = daily.slice(i, i + step);
+    const startKey = chunk[0].date;
+    const endKey = chunk[chunk.length - 1].date;
+    const [, month, day] = startKey.split("-").map(Number);
+    points.push({
+      label: `${month}/${day}`,
+      seconds: chunk.reduce((sum, item) => sum + item.seconds, 0),
+      title: startKey === endKey ? startKey : `${startKey} – ${endKey}`,
+    });
+  }
+  return points;
+};
+
 export interface StatsProps {
   t: (title: string) => string;
 }
@@ -30,8 +118,14 @@ export interface StatsState {
   totalSeconds: number;
   longestStreak: number;
   avgDailySeconds: number;
-  last30Days: { date: string; seconds: number }[];
+  chartDays: { date: string; seconds: number }[];
+  earliestDate: string;
+  bookKeys: string[];
+  bookNamesMap: Record<string, string>;
+  bookKey: string;
+  leaderboard: LeaderboardBook[];
   heatmapData: { date: string; seconds: number }[];
+  range: { preset: RangePreset; start: string; end: string };
   chartTab: "line" | "bar";
   isLoading: boolean;
 }
@@ -47,24 +141,24 @@ const Stats = () => {
       registerUnloadHandler: () => () => {},
     });
   }
+  const readingTimeUtil = readingTimeUtilRef.current;
 
-  const [state, setState] = useState<StatsState>({
+  const [state, setState] = useState<StatsState>(() => ({
     totalBooks: 0,
     totalSeconds: 0,
     longestStreak: 0,
     avgDailySeconds: 0,
-    last30Days: [],
+    chartDays: [],
+    earliestDate: "",
+    bookKeys: [],
+    bookNamesMap: {},
+    bookKey: "",
+    leaderboard: [],
     heatmapData: [],
+    range: { preset: "30d", ...readingTimeUtil.getDateRange("30d") },
     chartTab: "bar",
     isLoading: true,
-  });
-
-  const dateToKey = (d: Date): string => {
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-  };
+  }));
 
   const formatTime = (seconds: number): string => {
     if (seconds < 60) return `${seconds}s`;
@@ -90,9 +184,6 @@ const Stats = () => {
   };
 
   const loadStats = async () => {
-    const readingTimeUtil = readingTimeUtilRef.current;
-    if (!readingTimeUtil) return;
-
     // ── 1. Books read (has a recordLocation) ──────────────────────────────
     let allBookKeys: string[] = [];
     try {
@@ -109,19 +200,65 @@ const Stats = () => {
     }
 
     // ── 2. Total reading time from readingStats ────────────────────────────
-    const allDates = readingTimeUtil.getAllDates();
+    const dateSecondsMap = readingTimeUtil.getDailyTotals() as Record<
+      string,
+      number
+    >;
     let totalSeconds = 0;
-    const dateSecondsMap: Record<string, number> = {};
-    for (const dateKey of allDates) {
-      const dayStats = readingTimeUtil.getDayStats(dateKey);
-      const dayTotal = dayStats.reduce((sum, s) => sum + s.seconds, 0);
-      totalSeconds += dayTotal;
-      dateSecondsMap[dateKey] = dayTotal;
+    for (const seconds of Object.values(dateSecondsMap)) {
+      totalSeconds += seconds;
+    }
+    const earliestDate = Object.keys(dateSecondsMap).sort()[0] || "";
+
+    // ── 3. Book filter options (books with recorded reading time) ─────
+    const bookKeys = readingTimeUtil.getAllBookKeys();
+    const bookNamesMap = await BookUtil.getBookNamesMapByKeys(bookKeys);
+
+    // ── 4. Reading time leaderboard (top 10 books) ──────────────────────
+    const bookTotals = readingTimeUtil.getBookTotals() as Record<
+      string,
+      number
+    >;
+    const topBooks = Object.entries(bookTotals)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 10);
+    const bookRecords = topBooks.length
+      ? await DatabaseService.getRecordsByKeys(
+          topBooks.map(([key]) => key),
+          "books"
+        )
+      : [];
+    const bookRecordMap: Record<string, Book> = {};
+    for (const record of bookRecords) {
+      bookRecordMap[record.key] = record;
+    }
+    const leaderboard: LeaderboardBook[] = [];
+    for (const [key, seconds] of topBooks) {
+      const book = bookRecordMap[key];
+      if (!book) continue;
+      let cover = await CoverUtil.getCover(book);
+      if (
+        cover &&
+        !cover.startsWith("data:") &&
+        !cover.startsWith("blob:") &&
+        !cover.startsWith("http")
+      ) {
+        cover = cover + "?t=" + Date.now();
+      }
+      leaderboard.push({
+        key,
+        name: book.name,
+        author: book.author,
+        format: book.format,
+        cover,
+        isCoverExist: await CoverUtil.isCoverExist(book),
+        seconds,
+      });
     }
 
-    // ── 3. Longest streak (consecutive reading days up to today) ──────────
+    // ── 5. Longest streak (consecutive reading days up to today) ──────────
     const datesWithReading = new Set(
-      allDates.filter((d) => (dateSecondsMap[d] || 0) > 0)
+      Object.keys(dateSecondsMap).filter((d) => dateSecondsMap[d] > 0)
     );
     const today = new Date();
     let longestStreak = 0;
@@ -138,26 +275,14 @@ const Stats = () => {
       }
     }
 
-    // ── 4. Daily average ──────────────────────────────────────────────────
+    // ── 6. Daily average ──────────────────────────────────────────────────
     const activeDays = Object.values(dateSecondsMap).filter(
       (s) => s > 0
     ).length;
     const avgDailySeconds =
       activeDays > 0 ? Math.round(totalSeconds / activeDays) : 0;
 
-    // ── 5. Last 30 days data ──────────────────────────────────────────────
-    const last30Days: { date: string; seconds: number }[] = [];
-    for (let i = 29; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
-      const key = dateToKey(d);
-      last30Days.push({
-        date: `${d.getMonth() + 1}/${d.getDate()}`,
-        seconds: dateSecondsMap[key] || 0,
-      });
-    }
-
-    // ── 6. Heatmap: last 52 weeks ─────────────────────────────────────────
+    // ── 7. Heatmap: last 52 weeks ─────────────────────────────────────────
     const heatmapData: { date: string; seconds: number }[] = [];
     const heatmapStart = new Date(today);
     heatmapStart.setDate(today.getDate() - 51 * 7);
@@ -177,7 +302,15 @@ const Stats = () => {
       totalSeconds,
       longestStreak,
       avgDailySeconds,
-      last30Days,
+      chartDays: readingTimeUtil.getRangeStats(
+        prev.range.start,
+        prev.range.end,
+        prev.bookKey
+      ),
+      earliestDate,
+      bookKeys,
+      bookNamesMap,
+      leaderboard,
       heatmapData,
       isLoading: false,
     }));
@@ -187,6 +320,55 @@ const Stats = () => {
     loadStats();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleRangePresetChange = (preset: RangePreset) => {
+    setState((prev) => {
+      const range: StatsState["range"] =
+        preset === "custom"
+          ? { ...prev.range, preset }
+          : { preset, ...readingTimeUtil.getDateRange(preset) };
+      return {
+        ...prev,
+        range,
+        chartDays: readingTimeUtil.getRangeStats(
+          range.start,
+          range.end,
+          prev.bookKey
+        ),
+      };
+    });
+  };
+
+  const handleCustomDateChange = (field: "start" | "end", value: string) => {
+    if (!value) return;
+    setState((prev) => {
+      const range = { ...prev.range };
+      range[field] = value;
+      if (field === "start" && value > range.end) range.end = value;
+      if (field === "end" && value < range.start) range.start = value;
+      return {
+        ...prev,
+        range,
+        chartDays: readingTimeUtil.getRangeStats(
+          range.start,
+          range.end,
+          prev.bookKey
+        ),
+      };
+    });
+  };
+
+  const handleBookChange = (bookKey: string) => {
+    setState((prev) => ({
+      ...prev,
+      bookKey,
+      chartDays: readingTimeUtil.getRangeStats(
+        prev.range.start,
+        prev.range.end,
+        bookKey
+      ),
+    }));
+  };
 
   const renderHeatmap = () => {
     const { heatmapData } = state;
@@ -300,7 +482,13 @@ const Stats = () => {
     totalSeconds,
     longestStreak,
     avgDailySeconds,
-    last30Days,
+    chartDays,
+    earliestDate,
+    bookKeys,
+    bookNamesMap,
+    bookKey,
+    leaderboard,
+    range,
     chartTab,
     isLoading,
   } = state;
@@ -314,9 +502,7 @@ const Stats = () => {
   const lineChartGradientId = `stats-line-gradient-${
     darkMode ? "dark" : "light"
   }`;
-  const gridColor = darkMode
-    ? "rgba(255,255,255,0.08)"
-    : "rgba(0,0,0,0.08)";
+  const gridColor = darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
   const tabActiveBg = darkMode ? "#3a3a3a" : "#333";
   const tabActiveColor = darkMode ? "#fff" : "#fff";
   const tabInactiveBg = darkMode
@@ -325,6 +511,16 @@ const Stats = () => {
   const tabInactiveColor = darkMode
     ? "rgba(255,255,255,0.6)"
     : "rgba(0,0,0,0.5)";
+  const selectBg = darkMode ? "#333333" : "#f0f0f0";
+  const selectStyle = {
+    backgroundColor: selectBg,
+    color: textColor,
+    colorScheme: darkMode ? "dark" : "light",
+  };
+  const optionStyle = {
+    backgroundColor: darkMode ? selectBg : cardBg,
+    color: textColor,
+  };
 
   const cards = [
     {
@@ -357,10 +553,20 @@ const Stats = () => {
     },
   ];
 
-  const chartData = last30Days.map((d) => ({
-    ...d,
-    minutes: Math.round(d.seconds / 60),
+  const todayKey = dateToKey(new Date());
+  const earliestKey = earliestDate || range.start;
+  const bookOptions = bookKeys
+    .map((key) => ({ key, name: bookNamesMap[key] || key }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const chartData = toChartPoints(chartDays).map((point) => ({
+    ...point,
+    minutes: Math.round(point.seconds / 60),
   }));
+  const rangeTitle =
+    range.preset === "custom"
+      ? `${range.start} – ${range.end}`
+      : t(PRESET_LABELS[range.preset]);
+  const tickInterval = Math.max(0, Math.ceil(chartData.length / 8) - 1);
 
   return (
     <div
@@ -399,10 +605,7 @@ const Stats = () => {
                 >
                   <span className={card.icon}></span>
                 </div>
-                <div
-                  className="stats-card-value"
-                  style={{ color: textColor }}
-                >
+                <div className="stats-card-value" style={{ color: textColor }}>
                   {card.value}
                 </div>
                 <div className="stats-card-label">{card.label}</div>
@@ -415,17 +618,85 @@ const Stats = () => {
             className="stats-chart-wrapper"
             style={{ backgroundColor: cardBg }}
           >
-            <div className="stats-section-title">
-              <Trans>Last 30 Days</Trans>
+            <div className="stats-chart-header">
+              <div className="stats-section-title">{rangeTitle}</div>
+              <div className="stats-chart-filters">
+                <select
+                  className="stats-range-select stats-book-select"
+                  value={bookKey}
+                  onChange={(e) => handleBookChange(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" style={optionStyle}>
+                    {t("All books")}
+                  </option>
+                  {bookOptions.map((book) => (
+                    <option key={book.key} value={book.key} style={optionStyle}>
+                      {book.name}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className="stats-range-select"
+                  value={range.preset}
+                  onChange={(e) =>
+                    handleRangePresetChange(e.target.value as RangePreset)
+                  }
+                  style={selectStyle}
+                >
+                  {(["7d", "30d", "3m", "6m", "1y"] as const).map((preset) => (
+                    <option key={preset} value={preset} style={optionStyle}>
+                      {t(PRESET_LABELS[preset])}
+                    </option>
+                  ))}
+                  <option value="custom" style={optionStyle}>
+                    {t("Custom range")}
+                  </option>
+                </select>
+              </div>
             </div>
+            {range.preset === "custom" && (
+              <div className="stats-range-custom">
+                <input
+                  type="date"
+                  className="stats-range-date"
+                  value={range.start}
+                  min={earliestKey}
+                  max={todayKey}
+                  aria-label={t("Start date")}
+                  onChange={(e) =>
+                    handleCustomDateChange("start", e.target.value)
+                  }
+                  style={{
+                    color: textColor,
+                    colorScheme: darkMode ? "dark" : "light",
+                  }}
+                />
+                <span className="stats-range-sep">–</span>
+                <input
+                  type="date"
+                  className="stats-range-date"
+                  value={range.end}
+                  min={earliestKey}
+                  max={todayKey}
+                  aria-label={t("End date")}
+                  onChange={(e) =>
+                    handleCustomDateChange("end", e.target.value)
+                  }
+                  style={{
+                    color: textColor,
+                    colorScheme: darkMode ? "dark" : "light",
+                  }}
+                />
+              </div>
+            )}
             <div className="stats-chart-tabs">
               <button
                 className="stats-chart-tab"
                 style={{
                   backgroundColor:
                     chartTab === "bar" ? tabActiveBg : tabInactiveBg,
-                  color:
-                    chartTab === "bar" ? tabActiveColor : tabInactiveColor,
+                  color: chartTab === "bar" ? tabActiveColor : tabInactiveColor,
                 }}
                 onClick={() =>
                   setState((prev) => ({ ...prev, chartTab: "bar" }))
@@ -461,11 +732,11 @@ const Stats = () => {
                     vertical={false}
                   />
                   <XAxis
-                    dataKey="date"
+                    dataKey="label"
                     tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
                     tickLine={false}
                     axisLine={false}
-                    interval={4}
+                    interval={tickInterval}
                   />
                   <YAxis
                     tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
@@ -475,6 +746,9 @@ const Stats = () => {
                   />
                   <Tooltip
                     formatter={(value: any) => [`${value} min`]}
+                    labelFormatter={(label, payload) =>
+                      payload?.[0]?.payload?.title || label
+                    }
                     contentStyle={{
                       backgroundColor: cardBg,
                       border: "none",
@@ -530,11 +804,11 @@ const Stats = () => {
                     vertical={false}
                   />
                   <XAxis
-                    dataKey="date"
+                    dataKey="label"
                     tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
                     tickLine={false}
                     axisLine={false}
-                    interval={4}
+                    interval={tickInterval}
                   />
                   <YAxis
                     tick={{ fontSize: 11, fill: textColor, opacity: 0.5 }}
@@ -544,6 +818,9 @@ const Stats = () => {
                   />
                   <Tooltip
                     formatter={(value: any) => [`${value} min`]}
+                    labelFormatter={(label, payload) =>
+                      payload?.[0]?.payload?.title || label
+                    }
                     contentStyle={{
                       backgroundColor: cardBg,
                       border: "none",
@@ -577,6 +854,45 @@ const Stats = () => {
               )}
             </ResponsiveContainer>
           </div>
+
+          {/* Reading time leaderboard */}
+          {leaderboard.length > 0 && (
+            <div
+              className="stats-leaderboard-wrapper"
+              style={{ backgroundColor: cardBg }}
+            >
+              <div className="stats-section-title">
+                <Trans>Reading Time Leaderboard</Trans>
+              </div>
+              <div className="stats-leaderboard">
+                {leaderboard.map((item, index) => (
+                  <div className="stats-leaderboard-card" key={item.key}>
+                    <LeaderboardCover item={item} />
+                    <div className="stats-leaderboard-info">
+                      <div className="stats-leaderboard-rank">{index + 1}</div>
+                      <div className="stats-leaderboard-text">
+                        <div
+                          className="stats-leaderboard-name"
+                          title={item.name}
+                        >
+                          {item.name}
+                        </div>
+                        <div
+                          className="stats-leaderboard-author"
+                          title={item.author}
+                        >
+                          {item.author || t("Unknown Author")}
+                        </div>
+                        <div className="stats-leaderboard-time">
+                          {formatTime(item.seconds)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Heatmap */}
           <div
