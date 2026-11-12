@@ -16,7 +16,7 @@ const {
   session,
 } = require("electron");
 const path = require("path");
-const { pathToFileURL } = require("url");
+const { pathToFileURL, fileURLToPath } = require("url");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const log = require("electron-log/main");
@@ -243,6 +243,52 @@ const loadUrlInAuxWindow = async (win, url) => {
     await wc.loadURL("about:blank");
   }
   await wc.loadURL(url);
+};
+
+const isAppNavigationUrl = (url) => {
+  try {
+    const targetUrl = new URL(url);
+    if (isDev) {
+      return (
+        targetUrl.protocol === "http:" &&
+        targetUrl.hostname === "127.0.0.1" &&
+        targetUrl.port === "3000"
+      );
+    }
+    if (targetUrl.protocol !== "file:") {
+      return false;
+    }
+    const relativePath = path.relative(
+      path.resolve(__dirname, "build"),
+      fileURLToPath(targetUrl)
+    );
+    return (
+      !!relativePath &&
+      !relativePath.startsWith("..") &&
+      !path.isAbsolute(relativePath)
+    );
+  } catch (error) {
+    return false;
+  }
+};
+
+// App windows carrying preload.js expose electronAPI, so they must never
+// navigate to an untrusted origin: the preload would re-run and re-expose the
+// fs bridge on the attacker page.
+const hardenAppContents = (contents) => {
+  contents.setWindowOpenHandler(({ url }) => {
+    log.warn(`Blocked window.open to untrusted URL: ${url}`);
+    return { action: "deny" };
+  });
+  const blockExternalNavigation = (event, url) => {
+    if (isAppNavigationUrl(url)) {
+      return;
+    }
+    event.preventDefault();
+    log.warn(`Blocked navigation to untrusted URL: ${url}`);
+  };
+  contents.on("will-navigate", blockExternalNavigation);
+  contents.on("will-redirect", blockExternalNavigation);
 };
 
 const singleInstance = app.requestSingleInstanceLock();
@@ -561,6 +607,7 @@ const createMainWin = () => {
     delete options.y;
   }
   mainWin = new BrowserWindow({ ...options, show: false });
+  hardenAppContents(mainWin.webContents);
   mainWin.once("ready-to-show", () => {
     if (mainWin && !mainWin.isDestroyed()) {
       if (store.get("isAutoMaximizeWin") === "yes") {
@@ -1055,6 +1102,7 @@ const createMainWin = () => {
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
     }
+    hardenAppContents(readerWindow.webContents);
     bindReaderWindowState(readerWindow);
     if (store.get("isAlwaysOnTop") === "yes") {
       readerWindow.setAlwaysOnTop(true);
@@ -2104,6 +2152,7 @@ const createMainWin = () => {
   ipcMain.handle("new-tab", (event, config) => {
     if (mainWin) {
       mainView = new WebContentsView(options);
+      hardenAppContents(mainView.webContents);
       mainWin.contentView.addChildView(mainView);
       let { width, height } = mainWin.getContentBounds();
       mainView.setBounds({ x: 0, y: 0, width: width, height: height });
@@ -2236,6 +2285,7 @@ const createMainWin = () => {
         readerWindowList.push(readerWindow);
       }
       readerWindow = new BrowserWindow(options);
+      hardenAppContents(readerWindow.webContents);
       bindReaderWindowState(readerWindow);
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);

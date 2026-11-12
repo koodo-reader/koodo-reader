@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import "./popupRefer.css";
 import { getIframeDoc } from "../../../utils/reader/docUtil";
 import {
+  confirmOpenExternalUrl,
   isReadingRawPDF,
-  openExternalUrl,
-  vexComfirmAsync,
 } from "../../../utils/common";
 import Parser from "html-react-parser";
 import DOMPurify from "dompurify";
@@ -19,14 +18,6 @@ export interface PopupReferProps {
   rendition: any;
   chapterDocIndex: number;
 }
-
-const escapeHtml = (text: string) =>
-  text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 
 // Footnote HTML comes from the book. A <iframe srcdoc> (or object/embed/form)
 // would run in the app origin and could reach the electronAPI bridge, so only
@@ -138,15 +129,7 @@ const PopupRefer = (props: PopupReferProps) => {
       return false;
     }
     if (result.external) {
-      const confirm = await vexComfirmAsync(
-        t("Do you want to open this link in browser") +
-          "<br><span style='word-break:break-all'>" +
-          escapeHtml(targetHref) +
-          "</span>"
-      );
-      if (confirm) {
-        openExternalUrl(targetHref);
-      }
+      await confirmOpenExternalUrl(targetHref);
       return true;
     }
     if (result.redirectChapter) {

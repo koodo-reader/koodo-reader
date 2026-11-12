@@ -614,6 +614,62 @@ export const openExternalUrl = (
 export const openInBrowser = (url: string) => {
   isElectron ? window.electronAPI.shell.openExternal(url) : window.open(url);
 };
+const escapeExternalLinkText = (text: string) =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+let isConfirmingExternalUrl = false;
+export const confirmOpenExternalUrl = async (url: string) => {
+  if (isConfirmingExternalUrl) {
+    return;
+  }
+  isConfirmingExternalUrl = true;
+  try {
+    const confirmed = await vexComfirmAsync(
+      i18n.t("Do you want to open this link in browser") +
+        "<br><span style='word-break:break-all'>" +
+        escapeExternalLinkText(url) +
+        "</span>"
+    );
+    if (confirmed) {
+      openExternalUrl(url);
+    }
+  } finally {
+    isConfirmingExternalUrl = false;
+  }
+};
+export const initExternalLinkGuard = () => {
+  const handleExternalLinkClick = (event: MouseEvent) => {
+    if (event.type === "auxclick" && event.button !== 1) {
+      return;
+    }
+    const anchor = (event.target as Element | null)?.closest?.("a[href]");
+    if (!anchor) {
+      return;
+    }
+    const href = anchor.getAttribute("href")?.trim();
+    if (!href || href.startsWith("#")) {
+      return;
+    }
+    let targetUrl: URL;
+    try {
+      targetUrl = new URL(href, window.location.href);
+    } catch (_) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    if (!/^(https?|mailto):$/i.test(targetUrl.protocol)) {
+      return;
+    }
+    void confirmOpenExternalUrl(targetUrl.href);
+  };
+  document.addEventListener("click", handleExternalLinkClick, true);
+  document.addEventListener("auxclick", handleExternalLinkClick, true);
+};
 export const getPageWidth = (
   readerMode: string,
   scale: string,
