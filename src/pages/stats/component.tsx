@@ -27,14 +27,6 @@ import {
 
 type RangePreset = "7d" | "30d" | "3m" | "6m" | "1y" | "custom";
 
-interface ChartPoint {
-  /** short x-axis label, e.g. "3/4" */
-  label: string;
-  seconds: number;
-  /** tooltip label, e.g. "2025-03-04" or "2025-03-04 – 2025-03-10" */
-  title: string;
-}
-
 interface LeaderboardBook {
   key: string;
   name: string;
@@ -76,39 +68,6 @@ const PRESET_LABELS: Record<Exclude<RangePreset, "custom">, string> = {
   "1y": "Last Year",
 };
 
-const WEEK_DAYS = 7;
-const CHART_DAILY_LIMIT_DAYS = 92;
-
-const dateToKey = (d: Date): string => {
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
-};
-
-/**
- * Daily stats → chart points. Ranges longer than ~3 months are aggregated
- * by week so the bars stay readable.
- */
-const toChartPoints = (
-  daily: { date: string; seconds: number }[]
-): ChartPoint[] => {
-  const step = daily.length > CHART_DAILY_LIMIT_DAYS ? WEEK_DAYS : 1;
-  const points: ChartPoint[] = [];
-  for (let i = 0; i < daily.length; i += step) {
-    const chunk = daily.slice(i, i + step);
-    const startKey = chunk[0].date;
-    const endKey = chunk[chunk.length - 1].date;
-    const [, month, day] = startKey.split("-").map(Number);
-    points.push({
-      label: `${month}/${day}`,
-      seconds: chunk.reduce((sum, item) => sum + item.seconds, 0),
-      title: startKey === endKey ? startKey : `${startKey} – ${endKey}`,
-    });
-  }
-  return points;
-};
-
 export interface StatsProps {
   t: (title: string) => string;
 }
@@ -131,7 +90,7 @@ export interface StatsState {
 }
 
 const Stats = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const readingTimeUtilRef = useRef<InstanceType<
     typeof ReadingTimeUtil
@@ -159,14 +118,6 @@ const Stats = () => {
     chartTab: "bar",
     isLoading: true,
   }));
-
-  const formatTime = (seconds: number): string => {
-    if (seconds < 60) return `${seconds}s`;
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    if (h > 0) return `${h}h ${m}m`;
-    return `${m}m`;
-  };
 
   const getHeatmapColor = (seconds: number, isDarkMode: boolean): string => {
     if (seconds === 0)
@@ -257,23 +208,8 @@ const Stats = () => {
     }
 
     // ── 5. Longest streak (consecutive reading days up to today) ──────────
-    const datesWithReading = new Set(
-      Object.keys(dateSecondsMap).filter((d) => dateSecondsMap[d] > 0)
-    );
     const today = new Date();
-    let longestStreak = 0;
-    let currentStreak = 0;
-    for (let i = 0; i < 365; i++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
-      const key = dateToKey(d);
-      if (datesWithReading.has(key)) {
-        currentStreak++;
-        longestStreak = Math.max(longestStreak, currentStreak);
-      } else {
-        currentStreak = 0;
-      }
-    }
+    const longestStreak = readingTimeUtil.getLongestStreak(dateSecondsMap);
 
     // ── 6. Daily average ──────────────────────────────────────────────────
     const activeDays = Object.values(dateSecondsMap).filter(
@@ -292,7 +228,7 @@ const Stats = () => {
       d <= today;
       d.setDate(d.getDate() + 1)
     ) {
-      const key = dateToKey(d);
+      const key = ReadingTimeUtil.dateToKey(d);
       heatmapData.push({ date: key, seconds: dateSecondsMap[key] || 0 });
     }
 
@@ -399,13 +335,19 @@ const Stats = () => {
       if (monthStartCell) {
         const d = new Date(monthStartCell.date);
         monthLabels.push({
-          label: d.toLocaleString("default", { month: "short" }),
+          label: ReadingTimeUtil.formatMonthLabel(d.getMonth(), i18n.language),
           colIndex: wi,
         });
       }
     });
 
-    const weekDays = ["", "Mon", "", "Wed", "", "Fri", ""];
+    const weekdayLabels = ReadingTimeUtil.getWeekdayLabels(
+      i18n.language,
+      "short"
+    );
+    const weekDays = weekdayLabels.map((label, index) =>
+      index % 2 === 1 ? label : ""
+    );
     const legendLevels = [0, 200, 600, 1200, 2400];
 
     return (
@@ -446,7 +388,7 @@ const Stats = () => {
                       <div
                         key={di}
                         className="heatmap-cell"
-                        title={`${cell.date}: ${formatTime(cell.seconds)}`}
+                        title={`${cell.date}: ${ReadingTimeUtil.formatDuration(cell.seconds)}`}
                         style={{
                           backgroundColor: getHeatmapColor(
                             cell.seconds,
@@ -532,7 +474,7 @@ const Stats = () => {
     },
     {
       icon: "icon-grid",
-      value: formatTime(totalSeconds),
+      value: ReadingTimeUtil.formatDuration(totalSeconds),
       label: t("Total reading time"),
       color: textColor,
       iconSize: 22,
@@ -546,19 +488,25 @@ const Stats = () => {
     },
     {
       icon: "icon-chart",
-      value: formatTime(avgDailySeconds),
+      value: ReadingTimeUtil.formatDuration(avgDailySeconds),
       label: t("Daily average"),
       color: textColor,
       iconSize: 22,
     },
   ];
 
-  const todayKey = dateToKey(new Date());
+  const todayKey = ReadingTimeUtil.dateToKey(new Date());
   const earliestKey = earliestDate || range.start;
   const bookOptions = bookKeys
     .map((key) => ({ key, name: bookNamesMap[key] || key }))
     .sort((a, b) => a.name.localeCompare(b.name));
-  const chartData = toChartPoints(chartDays).map((point) => ({
+  // Desktop keeps its previous bucketing rule: daily up to ~3 months,
+  // weekly beyond (the mobile chart switches to monthly/yearly sooner).
+  const chartData = ReadingTimeUtil.bucketStats(chartDays, {
+    lang: i18n.language,
+    dailyLimit: 92,
+    weeklyLimit: Number.POSITIVE_INFINITY,
+  }).map((point) => ({
     ...point,
     minutes: Math.round(point.seconds / 60),
   }));
@@ -884,7 +832,7 @@ const Stats = () => {
                           {item.author || t("Unknown Author")}
                         </div>
                         <div className="stats-leaderboard-time">
-                          {formatTime(item.seconds)}
+                          {ReadingTimeUtil.formatDuration(item.seconds)}
                         </div>
                       </div>
                     </div>
