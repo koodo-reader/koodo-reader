@@ -165,14 +165,14 @@ const Stats = () => {
     const bookKeys = readingTimeUtil.getAllBookKeys();
     const bookNamesMap = await BookUtil.getBookNamesMapByKeys(bookKeys);
 
-    // ── 4. Reading time leaderboard (top 10 books) ──────────────────────
+    // ── 4. Reading time leaderboard (top 9 books) ──────────────────────
     const bookTotals = readingTimeUtil.getBookTotals() as Record<
       string,
       number
     >;
     const topBooks = Object.entries(bookTotals)
       .sort(([, a], [, b]) => b - a)
-      .slice(0, 10);
+      .slice(0, 9);
     const bookRecords = topBooks.length
       ? await DatabaseService.getRecordsByKeys(
           topBooks.map(([key]) => key),
