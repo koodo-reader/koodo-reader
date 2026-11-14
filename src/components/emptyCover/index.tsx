@@ -21,7 +21,7 @@ const emptyCover = (props) => {
       >
         {props.format || "BOOK"}
       </div>
-      <div className="cover-title">{props.title}</div>
+      <div className="cover-title" style={{marginLeft:"8px"}}>{props.title}</div>
       <div className="cover-footer">Koodo Reader</div>
     </div>
   );

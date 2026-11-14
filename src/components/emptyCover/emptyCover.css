@@ -7,7 +7,7 @@
   position: relative;
 }
 .empty-cover-spine {
-  padding-left: 8px;
+  padding-left: 0px;
   box-sizing: border-box;
 }
 .empty-cover-spine .cover-footer {

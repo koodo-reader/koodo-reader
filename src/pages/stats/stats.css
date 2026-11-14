@@ -287,7 +287,7 @@
 
 .stats-leaderboard {
   display: flex;
-  gap: 16px;
+  gap: 5px;
   overflow-x: auto;
   padding-bottom: 8px;
 }
