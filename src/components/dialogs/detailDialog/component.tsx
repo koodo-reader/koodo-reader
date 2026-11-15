@@ -151,9 +151,9 @@ const DetailDialog = () => {
               <p className="detail-sub-title">
                 <Trans>{item.label}</Trans>
               </p>
-              <p className="detail-sub-content-container">
+              <div className="detail-sub-content-container">
                 <p className="detail-sub-content">{item.value}</p>
-              </p>
+              </div>
             </div>
           ))}
         </div>
