@@ -26,7 +26,7 @@ const fs = require("fs");
 const fsExtra = require("fs-extra");
 const nodeCrypto = require("crypto");
 const yauzl = require("yauzl");
-const tarStream = require("tar-stream");
+const tarStream = require("tar-stream"); 
 const {
   normalizeArchiveEntryName,
   ensureEntryInside,
