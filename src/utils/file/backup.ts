@@ -63,6 +63,10 @@ export const backup = async (service: string): Promise<BackupResult> => {
     if (service === "local") {
       return "success";
     } else {
+      // 打包完成后还需要上传云端，切换提示避免一直停在 “Backup... (100%)”
+      toast.loading(i18n.t("Uploading, please wait"), {
+        id: "backup",
+      });
       let tokenConfig = await getCloudConfig(service);
 
       return (await ipcRenderer.invoke("cloud-upload", {
