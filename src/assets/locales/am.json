@@ -537,7 +537,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "ይህ የውሂብ ምንጭ ቀድሞውኑ ቤተ መጻሕፍት ይዟል። የአካባቢ እና የደመና ውሂብ ማዋሃድ ከፈለጉ እባክዎ Koodo Sync ያጥፉ እና እንደገና ያመሳስሉ።",
   "Download completed": "ማውረድ ተጠናቋል",
   "Overwrite the default text style in the book": "በመጽሐፉ ውስጥ ያለውን ነባሪ የጽሑፍ ስልት ይተኩ",
-  "AI voice character quota": "የAI ድምጽ ፊደል ኮታ",
+  "AI voice character quota": "የእለት AI ድምጽ ፊደል ኮታ",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "የእለት ነፃ ኮታ ካለቀ በኋላ ሲስተሙ ከገዙት ኮታ መቀነስ ይጀምራል። የፊደል ቆጠራ እንደሚከተለው ይሰላል፣ እያንዳንዱ ፊደል እና ስርዐተ ነጥብ እንደ አንድ ፊደል ይቆጠራል።",
   "You can also use the desktop app to avoid this issue.": "ይህን ችግር ለማስቀረት የዴስክቶፕ መተግበሪያውን መጠቀም ይችላሉ።",
   "Please select the books in the Google Drive Picker": "እባክዎ በGoogle Drive መራጭ ውስጥ መጻሕፍትን ይምረጡ",

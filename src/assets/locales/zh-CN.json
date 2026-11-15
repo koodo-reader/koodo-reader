@@ -450,7 +450,7 @@
   "Please click the allow on every visit button to avoid this popup once and for all": "请点击每次访问时都允许按钮，避免每次都弹出此窗口",
   "Overwrite the default text style in the book": "覆盖图书中的默认文字样式",
   "Setup successful": "设置成功",
-  "AI voice character quota": "AI 语音字符额度",
+  "AI voice character quota": "每日 AI 语音字符额度",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "每日免费额度用完之后，将使用增量包的额度。字符数的计算方式：每个汉字，字母，标点符号算作一个字符",
   "You can also use the desktop app to avoid this issue.": "您也可以使用桌面版应用以解决此问题",
   "Please select the books in the Google Drive Picker": "请在 Google Drive 选择器中选择图书",

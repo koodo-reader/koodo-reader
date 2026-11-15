@@ -537,7 +537,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Ez az adatforrás már tartalmaz egy könyvtárat. Ha egyesíteni szeretné a helyi és felhőadatokat, kapcsolja ki a Koodo Syncet, majd szinkronizálja újra.",
   "Download completed": "Letöltés befejeződött",
   "Overwrite the default text style in the book": "Az alapértelmezett szövegstílus felülírása a könyvben",
-  "AI voice character quota": "AI hangkarakter keret",
+  "AI voice character quota": "Napi AI hangkarakter keret",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "A napi ingyenes keret kimerülése után a rendszer a megvásárolt keretből kezd levonni. A karakterszámítás a következő: minden betű és írásjel egy karakternek számít.",
   "You can also use the desktop app to avoid this issue.": "Az asztali alkalmazás használatával elkerülheti ezt a problémát.",
   "Please select the books in the Google Drive Picker": "Kérjük, válassza ki a könyveket a Google Drive választóban",

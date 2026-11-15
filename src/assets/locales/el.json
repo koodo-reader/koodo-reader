@@ -537,7 +537,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Αυτή η πηγή δεδομένων περιέχει ήδη μια βιβλιοθήκη. Εάν χρειάζεται να συγχωνεύσετε τοπικά δεδομένα και δεδομένα cloud, απενεργοποιήστε το Koodo Sync και συγχρονίστε ξανά.",
   "Download completed": "Η λήψη ολοκληρώθηκε",
   "Overwrite the default text style in the book": "Αντικατάσταση προεπιλεγμένου στυλ κειμένου στο βιβλίο",
-  "AI voice character quota": "Όριο χαρακτήρων AI φωνής",
+  "AI voice character quota": "Ημερήσιο όριο χαρακτήρων AI φωνής",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Μόλις εξαντληθεί το δωρεάν ημερήσιο όριο, το σύστημα θα αρχίσει να χρεώνει από το αγορασμένο όριο. Η μέτρηση χαρακτήρων υπολογίζεται ως εξής: κάθε γράμμα και σημείο στίξης μετράει ως ένας χαρακτήρας.",
   "You can also use the desktop app to avoid this issue.": "Μπορείτε επίσης να χρησιμοποιήσετε την εφαρμογή επιτραπέζιου υπολογιστή για να αποφύγετε αυτό το πρόβλημα.",
   "Please select the books in the Google Drive Picker": "Επιλέξτε τα βιβλία στο Google Drive Picker",

@@ -537,7 +537,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Nguồn dữ liệu này đã chứa thư viện. Nếu bạn cần hợp nhất dữ liệu cục bộ và đám mây, vui lòng tắt Koodo Sync và đồng bộ lại.",
   "Download completed": "Tải xuống hoàn tất",
   "Overwrite the default text style in the book": "Ghi đè kiểu văn bản mặc định trong sách",
-  "AI voice character quota": "Hạn mức ký tự giọng nói AI",
+  "AI voice character quota": "Hạn mức ký tự giọng nói AI hàng ngày",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Khi hạn mức miễn phí hàng ngày đã hết, hệ thống sẽ bắt đầu trừ từ hạn mức đã mua của bạn. Số ký tự được tính như sau: mỗi chữ cái và dấu câu được tính là một ký tự.",
   "You can also use the desktop app to avoid this issue.": "Bạn cũng có thể sử dụng ứng dụng máy tính để tránh vấn đề này.",
   "Please select the books in the Google Drive Picker": "Vui lòng chọn sách trong Google Drive Picker",

@@ -537,7 +537,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "གཞི་གྲངས་ཁུངས་འདིར་མཛོད་ཁང་ཞིག་སྔར་ནས་ཡོད། གལ་ཏེ་རང་ཁུལ་དང་སྤྲིན་གྱི་གཞི་གྲངས་བསྡེབས་དགོས་ན་Koodo Sync ཁ་རྒྱོབ་སྟེ་ཡང་བསྐྱར་མཉམ་སྒྲིག་བྱེད།",
   "Download completed": "ཕབ་ལེན་གྲུབ་ཟིན།",
   "Overwrite the default text style in the book": "དཔེ་དེབ་ནང་སྔོན་སྒྲིག་ཡིག་ཐོག་རྣམ་པར་བརྗེ་བ།",
-  "AI voice character quota": "AI སྐད་ཡིག་འབོར་ཚད།",
+  "AI voice character quota": "ཉིན་རེའི AI སྐད་ཡིག་འབོར་ཚད།",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "ཉིན་རེའི་ཐོན་པ་ཐེབས་མེད་ཚད་བཀག་རྫོགས་པའི་རྗེས་སུ་མ་ལག་གིས་ཁྱེད་ཀྱི་ཉོས་པའི་ཚད་བཀག་ནས་བསྡུ་འགོ་ཚུགས། ཡིག་ཚད་གྲངས་ཀ་ནི་གཤམ་གསལ་ལྟར་བརྩི་བ་ཡིན། ཡི་གེ་དང་བརྗོད་རྟགས་རེ་རེ་ནི་ཡིག་ཚད་གཅིག་ལ་བརྩི་བ་ཡིན།",
   "You can also use the desktop app to avoid this issue.": "ཁྱེད་ཀྱིས་གནད་དོན་འདི་སྤོང་བར་གློག་ཀླད་ཐོན་པ་ཡང་བེད་སྤྱོད་བྱེད་ཐུབ།",
   "Please select the books in the Google Drive Picker": "Google Drive Picker ནང་དཔེ་དེབ་གདམ་རོགས།",

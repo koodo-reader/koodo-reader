@@ -537,7 +537,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Этот источник данных уже содержит библиотеку. Если вам нужно объединить локальные и облачные данные, отключите синхронизацию Koodo и выполните повторную синхронизацию.",
   "Download completed": "Загрузка завершена",
   "Overwrite the default text style in the book": "Перезаписывать стиль текста по умолчанию в книге",
-  "AI voice character quota": "Квота символов голоса AI",
+  "AI voice character quota": "Дневная квота символов голоса AI",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Как только дневная бесплатная квота будет исчерпана, система начнет списывать с вашей купленной квоты. Подсчет символов осуществляется следующим образом: каждая буква и знак препинания считаются за один символ.",
   "You can also use the desktop app to avoid this issue.": "Вы также можете использовать десктопное приложение, чтобы избежать этой проблемы.",
   "Please select the books in the Google Drive Picker": "Пожалуйста, выберите книги в окне выбора Google Drive",

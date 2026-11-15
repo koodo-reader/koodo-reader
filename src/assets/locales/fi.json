@@ -537,7 +537,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Tämä tietolähde sisältää jo kirjaston. Jos haluat yhdistää paikalliset ja pilvitiedot, poista Koodo Sync käytöstä ja synkronoi uudelleen.",
   "Download completed": "Lataus valmis",
   "Overwrite the default text style in the book": "Korvaa oletustekstityyli kirjassa",
-  "AI voice character quota": "Tekoälyäänimerkkikiintiö",
+  "AI voice character quota": "Päivittäinen tekoälyäänimerkkikiintiö",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Kun päivittäinen ilmainen kiintiö on käytetty loppuun, järjestelmä alkaa vähentää ostetusta kiintiöstäsi. Merkkimäärä lasketaan seuraavasti: jokainen kirjain ja välimerkki lasketaan yhdeksi merkiksi.",
   "You can also use the desktop app to avoid this issue.": "Voit myös käyttää työpöytäsovellusta välttääksesi tämän ongelman.",
   "Please select the books in the Google Drive Picker": "Valitse kirjat Google Drive -valitsimesta",

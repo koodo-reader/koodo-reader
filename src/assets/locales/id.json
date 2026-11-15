@@ -537,7 +537,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Sumber data ini sudah berisi perpustakaan. Jika Anda perlu menggabungkan data lokal dan cloud, matikan Koodo Sync dan sinkronkan ulang.",
   "Download completed": "Unduhan selesai",
   "Overwrite the default text style in the book": "Timpa gaya teks default di dalam buku",
-  "AI voice character quota": "Kuota karakter suara AI",
+  "AI voice character quota": "Kuota karakter suara AI harian",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Setelah kuota gratis harian habis, sistem akan mulai memotong dari kuota yang Anda beli. Jumlah karakter dihitung sebagai berikut, setiap huruf dan tanda baca dihitung sebagai satu karakter.",
   "You can also use the desktop app to avoid this issue.": "Anda juga dapat menggunakan aplikasi desktop untuk menghindari masalah ini.",
   "Please select the books in the Google Drive Picker": "Silakan pilih buku di Pemilih Google Drive",

@@ -537,7 +537,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "இந்த தரவு மூலத்தில் ஏற்கனவே ஒரு நூலகம் உள்ளது. உள்ளூர் மற்றும் கிளவுட் தரவை இணைக்க வேண்டுமானால், Koodo Sync ஐ அணைத்துவிட்டு மீண்டும் ஒத்திசைக்கவும்.",
   "Download completed": "பதிவிறக்கம் முடிந்தது",
   "Overwrite the default text style in the book": "புத்தகத்தில் உள்ள இயல்புநிலை உரை பாணியை மேலெழுதுக",
-  "AI voice character quota": "AI குரல் எழுத்து ஒதுக்கீடு",
+  "AI voice character quota": "தினசரி AI குரல் எழுத்து ஒதுக்கீடு",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "தினசரி இலவச ஒதுக்கீடு முடிந்ததும், கணினி உங்கள் வாங்கிய ஒதுக்கீட்டில் இருந்து கழிக்கத் தொடங்கும். எழுத்து எண்ணிக்கை பின்வருமாறு கணக்கிடப்படுகிறது, ஒவ்வொரு எழுத்தும் மற்றும் நிறுத்தற்குறியும் ஒரு எழுத்தாக கணக்கிடப்படும்.",
   "You can also use the desktop app to avoid this issue.": "இந்த சிக்கலை தவிர்க்க டெஸ்க்டாப் பயன்பாட்டையும் பயன்படுத்தலாம்.",
   "Please select the books in the Google Drive Picker": "Google Drive தேர்வியில் புத்தகங்களைத் தேர்ந்தெடுக்கவும்",

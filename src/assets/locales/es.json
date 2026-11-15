@@ -537,7 +537,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Esta fuente de datos ya contiene una biblioteca. Si necesita combinar datos locales y en la nube, desactive Koodo Sync y vuelva a sincronizar.",
   "Download completed": "Descarga completada",
   "Overwrite the default text style in the book": "Sobrescribir el estilo de texto predeterminado en el libro",
-  "AI voice character quota": "Caracteres disponibles para voz de IA",
+  "AI voice character quota": "Caracteres diarios disponibles para voz de IA",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Una vez agotados los créditos gratuitos diarios, el sistema comenzará a descontar de tus créditos de pago. El recuento de caracteres se calcula así: cada letra y signo de puntuación equivale a un carácter.",
   "You can also use the desktop app to avoid this issue.": "También puede usar la aplicación de escritorio para evitar este problema.",
   "Please select the books in the Google Drive Picker": "Porfavor seleccione los libros en el selector de Google Drive",
