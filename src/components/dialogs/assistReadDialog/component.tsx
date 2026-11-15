@@ -49,11 +49,11 @@ const speedReadingSliderConfigs = [
 
 const autoReadingSliderConfigs = [
   {
-    maxValue: 1,
+    maxValue: 3,
     minValue: 0,
     mode: "autoScrollRate",
     minLabel: "0",
-    maxLabel: "1",
+    maxLabel: "3",
     step: 0.05,
     title: "Auto scrolling speed",
     isPDF: false,
