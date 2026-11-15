@@ -371,3 +371,8 @@
   cursor: pointer;
   width: 80px;
 }
+/* OPDS descriptions can carry inline HTML from the feed */
+.opds-book-description img {
+  max-width: 100%;
+  height: auto;
+}
