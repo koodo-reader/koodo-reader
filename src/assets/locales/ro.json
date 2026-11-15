@@ -538,7 +538,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Această sursă de date conține deja o bibliotecă. Dacă trebuie să îmbinați datele locale și cele din cloud, dezactivați Sincronizarea Koodo și resincronizați.",
   "Download completed": "Descărcare finalizată",
   "Overwrite the default text style in the book": "Suprascrieți stilul de text implicit din carte",
-  "AI voice character quota": "Cotă de caractere voce AI",
+  "AI voice character quota": "Cotă zilnică de caractere voce AI",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Odată ce cota zilnică gratuită este epuizată, sistemul va începe să deducă din cota achiziționată. Numărul de caractere se calculează astfel: fiecare literă și semn de punctuație contează ca un caracter.",
   "You can also use the desktop app to avoid this issue.": "Puteți utiliza și aplicația desktop pentru a evita această problemă.",
   "Please select the books in the Google Drive Picker": "Selectați cărțile din Selectorul Google Drive",

@@ -547,7 +547,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "此數據源已存在一個圖書庫。如果需要合併本地和雲端數據，請關閉 Koodo Sync 後重新同步。",
   "Download completed": "下載完成",
   "Overwrite the default text style in the book": "覆蓋圖書中的默認文字樣式",
-  "AI voice character quota": "AI 語音字符配額",
+  "AI voice character quota": "每日 AI 語音字符配額",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "每日免費配額用盡後，系統將開始扣除您購買的配額。字符數計算方式如下：每個字母和標點符號算作一個字符。",
   "You can also use the desktop app to avoid this issue.": "您也可以使用桌面版應用程式來避免此問題。",
   "Please select the books in the Google Drive Picker": "請在 Google Drive 選擇器中選擇圖書",

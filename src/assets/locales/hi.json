@@ -538,7 +538,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "इस डेटा स्रोत में पहले से एक लाइब्रेरी मौजूद है। यदि आपको स्थानीय और क्लाउड डेटा मर्ज करना है, तो कृपया Koodo Sync बंद करें और पुनः सिंक करें।",
   "Download completed": "डाउनलोड पूरा हुआ",
   "Overwrite the default text style in the book": "किताब में डिफ़ॉल्ट टेक्स्ट शैली को ओवरराइट करें",
-  "AI voice character quota": "AI आवाज़ अक्षर कोटा",
+  "AI voice character quota": "दैनिक AI आवाज़ अक्षर कोटा",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "दैनिक मुफ्त कोटा समाप्त होने के बाद, सिस्टम आपके खरीदे गए कोटा से कटौती करना शुरू कर देगा। अक्षर गणना इस प्रकार की जाती है, प्रत्येक अक्षर और विराम चिह्न एक अक्षर के रूप में गिना जाता है।",
   "You can also use the desktop app to avoid this issue.": "इस समस्या से बचने के लिए आप डेस्कटॉप ऐप का भी उपयोग कर सकते हैं।",
   "Please select the books in the Google Drive Picker": "कृपया Google Drive Picker में किताबें चुनें",

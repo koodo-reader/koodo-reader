@@ -538,7 +538,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "يحتوي مصدر البيانات هذا بالفعل على مكتبة. إذا كنت بحاجة إلى دمج البيانات المحلية والسحابية، يرجى إيقاف Koodo Sync وإعادة المزامنة.",
   "Download completed": "اكتمل التنزيل",
   "Overwrite the default text style in the book": "تجاوز نمط النص الافتراضي في الكتاب",
-  "AI voice character quota": "حصة أحرف الصوت بالذكاء الاصطناعي",
+  "AI voice character quota": "الحصة اليومية لأحرف الصوت بالذكاء الاصطناعي",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "بمجرد استنفاد الحصة المجانية اليومية، سيبدأ النظام في الخصم من حصتك المشتراة. يتم حساب عدد الأحرف على النحو التالي: كل حرف وعلامة ترقيم تُحتسب كحرف واحد.",
   "You can also use the desktop app to avoid this issue.": "يمكنك أيضًا استخدام تطبيق سطح المكتب لتجنب هذه المشكلة.",
   "Please select the books in the Google Drive Picker": "يرجى تحديد الكتب في منتقي Google Drive",

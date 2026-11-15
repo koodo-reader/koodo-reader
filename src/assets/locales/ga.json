@@ -538,7 +538,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Tá leabharlann san fhoinse sonraí seo cheana féin. Más gá duit sonraí áitiúla agus scamall a chumasc, múch Koodo Sync agus déan sioncrónú arís.",
   "Download completed": "Íoslódáil críochnaithe",
   "Overwrite the default text style in the book": "Scríobh thar an stíl téacs réamhshocraithe sa leabhar",
-  "AI voice character quota": "Cuóta carachtar gutha AI",
+  "AI voice character quota": "Cuóta laethúil carachtar gutha AI",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Nuair a bheidh an cuóta saor in aisce laethúil ídithe, tosóidh an córas ag asbhaint ó do chuóta ceannaithe. Ríomhtar an comhaireamh carachtar mar seo a leanas, gach litir agus marc poncaíochta mar charachtar amháin.",
   "You can also use the desktop app to avoid this issue.": "Is féidir leat an aip deisce a úsáid freisin chun an fhadhb seo a sheachaint.",
   "Please select the books in the Google Drive Picker": "Roghnaigh na leabhair sa Roghnóir Google Drive",

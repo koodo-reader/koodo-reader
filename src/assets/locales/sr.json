@@ -538,7 +538,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Ovaj izvor podataka već sadrži biblioteku. Ako treba da spojite lokalne i cloud podatke, isključite Koodo Sync i ponovo sinhronizujte.",
   "Download completed": "Preuzimanje završeno",
   "Overwrite the default text style in the book": "Prepiši podrazumevani stil teksta u knjizi",
-  "AI voice character quota": "Kvota karaktera za AI glas",
+  "AI voice character quota": "Dnevna kvota karaktera za AI glas",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Kada se dnevna besplatna kvota iscrpi, sistem će početi da odbija od vaše kupljene kvote. Brojanje karaktera se izračunava na sledeći način: svako slovo i znak interpunkcije računaju se kao jedan karakter.",
   "You can also use the desktop app to avoid this issue.": "Takođe možete koristiti desktop aplikaciju da biste izbegli ovaj problem.",
   "Please select the books in the Google Drive Picker": "Molimo izaberite knjige u Google Drive biraču",

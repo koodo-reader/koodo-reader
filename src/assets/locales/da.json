@@ -538,7 +538,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Denne datakilde indeholder allerede et bibliotek. Hvis du har brug for at flette lokale og clouddata, skal du deaktivere Koodo Sync og synkronisere igen.",
   "Download completed": "Download fuldført",
   "Overwrite the default text style in the book": "Overskriv standardtekststilen i bogen",
-  "AI voice character quota": "AI-stemme-tegnkvota",
+  "AI voice character quota": "Daglig AI-stemme-tegnkvota",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Når den daglige gratis kvota er opbrugt, begynder systemet at trække fra din købte kvota. Tegntællingen beregnes som følger: hvert bogstav og hvert tegnsætningstegn tæller som et tegn.",
   "You can also use the desktop app to avoid this issue.": "Du kan også bruge desktop-appen for at undgå dette problem.",
   "Please select the books in the Google Drive Picker": "Vælg venligst bøgerne i Google Drive Picker",

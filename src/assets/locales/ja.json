@@ -538,7 +538,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "このデータソースには既にライブラリが存在します。ローカルとクラウドのデータをマージする必要がある場合は、Koodo Syncをオフにして再同期してください。",
   "Download completed": "ダウンロード完了",
   "Overwrite the default text style in the book": "本のデフォルトのテキストスタイルを上書き",
-  "AI voice character quota": "AI音声文字クォータ",
+  "AI voice character quota": "1日あたりのAI音声文字クォータ",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "1日あたりの無料クォータを使い切ると、購入したクォータから差し引かれます。文字数の計算方法：各漢字、アルファベット、句読点は1文字としてカウントされます。",
   "You can also use the desktop app to avoid this issue.": "デスクトップアプリを使用してこの問題を回避することもできます。",
   "Please select the books in the Google Drive Picker": "Google Driveピッカーで書籍を選択してください",

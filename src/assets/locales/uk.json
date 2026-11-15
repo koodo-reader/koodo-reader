@@ -538,7 +538,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Це джерело даних уже містить бібліотеку. Щоб об'єднати локальні та хмарні дані, вимкніть Koodo Sync і виконайте повторну синхронізацію.",
   "Download completed": "Завантаження завершено",
   "Overwrite the default text style in the book": "Перезаписувати стандартний стиль тексту в книзі",
-  "AI voice character quota": "Квота символів голосу AI",
+  "AI voice character quota": "Денна квота символів голосу AI",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Після вичерпання денної безкоштовної квоти система почне списувати з придбаної квоти. Кількість символів обчислюється так: кожна літера та розділовий знак вважаються одним символом.",
   "You can also use the desktop app to avoid this issue.": "Ви також можете використовувати десктопну версію, щоб уникнути цієї проблеми.",
   "Please select the books in the Google Drive Picker": "Виберіть книги у вікні вибору Google Drive",

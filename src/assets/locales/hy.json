@@ -538,7 +538,7 @@
   "This data source already contains a library. If you need to merge local and cloud data, please turn off Koodo Sync and resync.": "Տվյալների այս աղբյուրն արդեն պարունակում է գրադարան: Եթե անհրաժեշտ է միաձուլել տեղական և ամպային տվյալները, խնդրում ենք անջատել Koodo Sync-ը և նորից սինխրոնիզացնել:",
   "Download completed": "Ներբեռնումն ավարտված է",
   "Overwrite the default text style in the book": "Վերագրել գրքի լռելյայն տեքստի ոճը",
-  "AI voice character quota": "AI ձայնային նիշերի քվոտա",
+  "AI voice character quota": "Օրական AI ձայնային նիշերի քվոտա",
   "Once the daily free quota is exhausted, the system will begin deducting from your purchased quota. The character count is calculated as follows, each letter, and punctuation mark counts as one character.": "Օրական անվճար քվոտան սպառվելուց հետո համակարգը կսկսի նվազեցնել ձեր գնված քվոտայից: Նիշերի քանակը հաշվարկվում է հետևյալ կերպ՝ յուրաքանչյուր տառ և կետադրական նշան հաշվվում է որպես մեկ նիշ:",
   "You can also use the desktop app to avoid this issue.": "Դուք կարող եք նաև օգտագործել աշխատասեղանի հավելվածը՝ այս խնդիրը խուսափելու համար:",
   "Please select the books in the Google Drive Picker": "Խնդրում ենք ընտրել գրքերը Google Drive ընտրիչում",
