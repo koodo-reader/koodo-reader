@@ -459,6 +459,17 @@ const Reader = () => {
         let readerMode = isPaginatedBook(book)
           ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
           : ConfigService.getReaderConfig("readerMode") || "double";
+        // 自动阅读改为按书开关，重新打开已开启该模式的书籍时仍强制滚动模式
+        if (
+          ConfigService.getAllListConfig("autoReadingBooks").includes(book.key)
+        ) {
+          if (isPaginatedBook(book)) {
+            ConfigService.setReaderConfig("pdfReaderMode", "scroll");
+          } else {
+            ConfigService.setReaderConfig("readerMode", "scroll");
+          }
+          readerMode = "scroll";
+        }
         propsRef.current.handleReaderMode(readerMode);
         propsRef.current.handleReadingBook(book);
         // Start event-driven reading-time tracking

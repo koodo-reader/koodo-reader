@@ -2395,9 +2395,9 @@ export const isReadingAidMode = (format: string, bookKey: string) => {
     format === "PDF" &&
     !ConfigService.getAllListConfig("convertPDFBooks").includes(bookKey);
   return (
-    (ConfigService.getReaderConfig("isParagraphMode") === "yes" ||
-      ConfigService.getReaderConfig("isSpeedReading") === "yes" ||
-      ConfigService.getReaderConfig("isReadingRuler") === "yes") &&
+    (ConfigService.getAllListConfig("paragraphModeBooks").includes(bookKey) ||
+      ConfigService.getAllListConfig("speedReadingBooks").includes(bookKey) ||
+      ConfigService.getAllListConfig("readingRulerBooks").includes(bookKey)) &&
     !isReadingRawPDF
   );
 };

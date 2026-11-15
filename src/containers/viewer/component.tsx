@@ -115,6 +115,10 @@ const Viewer = (props: ViewerProps) => {
   const isParagraphMode = useAppStore((s) => s.reader.isParagraphMode);
   const isReadingRuler = useAppStore((s) => s.reader.isReadingRuler);
   const isSpeedReading = useAppStore((s) => s.reader.isSpeedReading);
+  const handleParagraphMode = useAppStore((s) => s.handleParagraphMode);
+  const handleReadingRuler = useAppStore((s) => s.handleReadingRuler);
+  const handleSpeedReading = useAppStore((s) => s.handleSpeedReading);
+  const handleAutoReading = useAppStore((s) => s.handleAutoReading);
   const isMergeWord = useAppStore((s) => s.reader.isMergeWord);
   const isShowPageBorder = useAppStore((s) => s.reader.isShowPageBorder);
   const textOrientation = useAppStore((s) => s.reader.textOrientation);
@@ -454,9 +458,21 @@ const Viewer = (props: ViewerProps) => {
         isShowTotalPage: ConfigService.getReaderConfig("isShowTotalPage"),
         isAllowScript: ConfigService.getReaderConfig("isAllowScript"),
         isBionic: ConfigService.getReaderConfig("isBionic"),
-        isParagraphMode: ConfigService.getReaderConfig("isParagraphMode"),
-        isReadingRuler: ConfigService.getReaderConfig("isReadingRuler"),
-        isSpeedReading: ConfigService.getReaderConfig("isSpeedReading"),
+        isParagraphMode: ConfigService.getAllListConfig(
+          "paragraphModeBooks"
+        ).includes(propsRef.current.currentBook.key)
+          ? "yes"
+          : "no",
+        isReadingRuler: ConfigService.getAllListConfig(
+          "readingRulerBooks"
+        ).includes(propsRef.current.currentBook.key)
+          ? "yes"
+          : "no",
+        isSpeedReading: ConfigService.getAllListConfig(
+          "speedReadingBooks"
+        ).includes(propsRef.current.currentBook.key)
+          ? "yes"
+          : "no",
         speedReadingSpeed: parseFloat(
           ConfigService.getReaderConfig("speedReadingSpeed") || "300"
         ),
@@ -577,7 +593,9 @@ const Viewer = (props: ViewerProps) => {
 
     await handleRest(rendition);
     if (
-      ConfigService.getReaderConfig("isAutoReading") === "yes" &&
+      ConfigService.getAllListConfig("autoReadingBooks").includes(
+        propsRef.current.currentBook.key
+      ) &&
       propsRef.current.readerMode === "scroll"
     ) {
       // 自动阅读开启：每次重渲染后以保存的速率重新启动自动滚动
@@ -837,6 +855,24 @@ const Viewer = (props: ViewerProps) => {
       });
     }
   };
+
+  useEffect(() => {
+    // 阅读辅助模式按书保存，切换书籍时把当前书籍的开关同步到 store
+    const bookKey = currentBook.key;
+    handleParagraphMode(
+      ConfigService.getAllListConfig("paragraphModeBooks").includes(bookKey)
+    );
+    handleReadingRuler(
+      ConfigService.getAllListConfig("readingRulerBooks").includes(bookKey)
+    );
+    handleSpeedReading(
+      ConfigService.getAllListConfig("speedReadingBooks").includes(bookKey)
+    );
+    handleAutoReading(
+      ConfigService.getAllListConfig("autoReadingBooks").includes(bookKey)
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentBook.key]);
 
   useEffect(() => {
     propsRef.current.handleFetchBookmarks();
