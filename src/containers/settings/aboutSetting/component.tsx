@@ -6,6 +6,7 @@ import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import packageJson from "../../../../package.json";
 
 import {
+  getWebAppUrl,
   getWebsiteLang,
   getWebsiteUrl,
   openExternalUrl,
@@ -166,6 +167,18 @@ const AboutSetting = () => {
             openExternalUrl(
               getWebsiteUrl() + getWebsiteLang() + "/use-shortcut"
             );
+          }}
+        >
+          <Trans>Visit</Trans>
+        </span>
+      </div>
+      <div className="setting-dialog-new-title">
+        <Trans>Web version</Trans>
+
+        <span
+          className="change-location-button"
+          onClick={() => {
+            openExternalUrl(getWebAppUrl());
           }}
         >
           <Trans>Visit</Trans>

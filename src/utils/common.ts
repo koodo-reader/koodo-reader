@@ -1007,6 +1007,8 @@ export const getDefaultTransTarget = (langList) => {
 };
 export const WEBSITE_URL = "https://koodoreader.com/";
 export const CN_WEBSITE_URL = "https://koodoreader.cn/";
+export const WEB_APP_URL = "https://web.koodoreader.com/";
+export const CN_WEB_APP_URL = "https://web.koodoreader.cn/";
 export const WEBSITE_LANGS = [
   "zh",
   "en",
@@ -1035,6 +1037,9 @@ export const getServerRegion = () => {
 };
 export const getWebsiteUrl = () => {
   return getServerRegion() === "china" ? CN_WEBSITE_URL : WEBSITE_URL;
+};
+export const getWebAppUrl = () => {
+  return getServerRegion() === "china" ? CN_WEB_APP_URL : WEB_APP_URL;
 };
 export const getWebsiteLang = () => {
   const lang = ConfigService.getReaderConfig("lang") || "en";
