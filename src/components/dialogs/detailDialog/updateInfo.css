@@ -127,7 +127,7 @@
 .detail-dialog-book-author {
   margin-bottom: 5px;
   text-align: center;
-  opacity: 1;
+  opacity: 0.8;
   line-height: 16px;
 }
 .detail-sub-content-container {
