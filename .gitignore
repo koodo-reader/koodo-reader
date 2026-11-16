@@ -21,6 +21,7 @@ dist/
 /.superpowers
 /.playwright-mcp
 /.commandcode
+/scripts/missing
 
 # misc
 .DS_Store
