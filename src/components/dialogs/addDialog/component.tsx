@@ -132,7 +132,7 @@ const AddDialog = () => {
   };
 
   return (
-    <div className="add-dialog-container">
+    <div className="add-dialog-container add-dialog-form">
       <div className="add-dialog-title">
         <Trans>Add to shelf</Trans>
       </div>
@@ -177,7 +177,7 @@ const AddDialog = () => {
           <input className="add-dialog-new-shelf-box" disabled={!isNew} />
         </div>
       </div>
-      <div className="add-dialog-button-container">
+      <div className="add-dialog-actions">
         <div
           className="add-dialog-cancel"
           onClick={() => {
