@@ -10,9 +10,18 @@
 .scrolling-html-viewer-page {
   overflow-y: auto;
   overflow-x: auto;
-  /* 设置滚动条样式 */
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
+}
+
+/* Firefox 不支持 ::-webkit-scrollbar，用标准属性实现悬停时显示 */
+@supports (-moz-appearance: none) {
+  .scrolling-html-viewer-page {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .scrolling-html-viewer-page:hover {
+    scrollbar-color: #ccc transparent;
+  }
 }
 
 /* WebKit 浏览器滚动条样式 */
@@ -26,22 +35,16 @@
 }
 
 .scrolling-html-viewer-page::-webkit-scrollbar-thumb {
-  background: transparent;
+  display: none;
+  background: #ccc;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
 }
 
-/* 鼠标悬停时显示滚动条 */
-.scrolling-html-viewer-page:hover {
-  scrollbar-color: #ccc transparent;
-}
-
+/* 鼠标悬停时显示滚动条
+   Chromium 在 hover 时只改变滚动条背景色不会重绘（Electron 下表现为悬停后滚动条仍不显示），
+   因此用 display 切换来触发重绘 */
 .scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb {
-  background: #ccc;
-}
-
-.scrolling-html-viewer-page:hover::-webkit-scrollbar-thumb:hover {
-  background: #ccc;
+  display: block;
 }
 
 .popup-menu-container {
