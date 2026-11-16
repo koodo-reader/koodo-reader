@@ -32,7 +32,12 @@ import {
 import SupportDialog from "../../components/dialogs/supportDialog";
 import ReaderTopToolbar from "../../components/readerTopToolbar";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
-import { isPaginatedBook, POPUP_BOX_MODES, throttle } from "../../utils/common";
+import {
+  getAutoReaderMode,
+  isPaginatedBook,
+  POPUP_BOX_MODES,
+  throttle,
+} from "../../utils/common";
 import { getOuterDoc } from "../../utils/reader/docUtil";
 import { useAppStore } from "../../store/useAppStore";
 
@@ -469,6 +474,11 @@ const Reader = () => {
             ConfigService.setReaderConfig("readerMode", "scroll");
           }
           readerMode = "scroll";
+        }
+        // 未手动设置过阅读模式时，按窗口宽度自动选择单页/双页
+        const autoReaderMode = getAutoReaderMode(book);
+        if (autoReaderMode) {
+          readerMode = autoReaderMode;
         }
         propsRef.current.handleReaderMode(readerMode);
         propsRef.current.handleReadingBook(book);

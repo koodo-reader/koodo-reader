@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import _ from "underscore";
 import { ConfigService } from "../../assets/lib/kookit-extra-browser.min";
-import { isPaginatedBook, scrollContents } from "../../utils/common";
+import { scrollContents } from "../../utils/common";
 import { useAppStore } from "../../store/useAppStore";
 import "./readerBottomToolbar.css";
 
@@ -18,6 +18,7 @@ const throttleTime = 200;
 const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
   const currentBook = useAppStore((s) => s.book.currentBook);
   const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
   const isNavLocked = useAppStore((s) => s.reader.isNavLocked);
   const isSettingLocked = useAppStore((s) => s.reader.isSettingLocked);
   const isDockedRight = useAppStore((s) => s.reader.isDockedRight);
@@ -173,10 +174,6 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
   };
 
   if (!htmlBook) return null;
-
-  const readerMode = isPaginatedBook(currentBook)
-    ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
-    : ConfigService.getReaderConfig("readerMode") || "double";
 
   return (
     <div
