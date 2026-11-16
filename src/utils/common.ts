@@ -2517,6 +2517,19 @@ export const isPaginatedBook = (book: Book) => {
     isFixedLayoutComic(book)
   );
 };
+// 双页模式所需的最小窗口宽度，低于该值时未手动设置模式的书籍自动使用单页
+export const AUTO_SINGLE_PAGE_MAX_WIDTH = 900;
+// 返回 null 表示不接管阅读模式：分页格式（PDF/漫画等）、用户手动设置过、自动阅读开启
+// 自动结果只用于运行时，不写回 readerMode 配置，窗口变宽后可以切回双页
+export const getAutoReaderMode = (book: Book): "single" | "double" | null => {
+  if (isPaginatedBook(book)) return null;
+  if (ConfigService.getReaderConfig("readerMode")) return null;
+  if (ConfigService.getAllListConfig("autoReadingBooks").includes(book.key))
+    return null;
+  return document.body.clientWidth < AUTO_SINGLE_PAGE_MAX_WIDTH
+    ? "single"
+    : "double";
+};
 // 阅读器浮层弹窗（笔记/翻译/词典/问 AI）
 export const POPUP_BOX_MODES = ["note", "trans", "dict", "assistant"];
 
