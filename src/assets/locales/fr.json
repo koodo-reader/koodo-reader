@@ -475,7 +475,6 @@
   "Title size threshold": "Seuil de taille du titre",
   "OCR engine": "Moteur OCR",
   "System OCR": "OCR du système",
-  "Render PDF from even page": "Rendre le PDF à partir de la page paire",
   "Filter by book": "Filtrer par livre",
   "Server path (Please first create this folder manually)": "Chemin du serveur (veuillez d'abord créer ce dossier manuellement)",
   "Clear": "Effacer",

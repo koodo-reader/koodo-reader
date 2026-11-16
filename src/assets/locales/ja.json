@@ -475,7 +475,6 @@
   "Title size threshold": "タイトルサイズのしきい値",
   "OCR engine": "OCRエンジン",
   "System OCR": "システムOCR",
-  "Render PDF from even page": "偶数ページからPDFをレンダリング",
   "Filter by book": "本でフィルター",
   "Server path (Please first create this folder manually)": "サーバーパス（最初にこのフォルダを手動で作成してください）",
   "Clear": "クリア",

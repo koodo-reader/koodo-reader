@@ -475,7 +475,6 @@
   "Title size threshold": "제목 크기 임계값",
   "OCR engine": "OCR 엔진",
   "System OCR": "시스템 OCR",
-  "Render PDF from even page": "짝수 페이지부터 PDF 렌더링",
   "Filter by book": "책으로 필터",
   "Server path (Please first create this folder manually)": "서버 경로(먼저 이 폴더를 수동으로 생성하세요)",
   "Clear": "지우기",

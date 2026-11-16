@@ -475,7 +475,6 @@
   "Title size threshold": "Otsikkokoon kynnys",
   "OCR engine": "OCR-moottori",
   "System OCR": "Järjestelmän OCR",
-  "Render PDF from even page": "Rendaa PDF parilliselta sivulta",
   "Filter by book": "Suodata kirjan mukaan",
   "Server path (Please first create this folder manually)": "Palvelinpolku (luo kansio ensin manuaalisesti)",
   "Clear": "Tyhjennä",

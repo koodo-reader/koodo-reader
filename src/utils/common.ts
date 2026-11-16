@@ -2502,6 +2502,19 @@ export const isFixedLayoutComic = (book: Book) => {
     book.layout === "pre-paginated"
   );
 };
+// “从偶数页开始渲染”目前只支持原始 PDF、漫画（CB 系列）和固定版式 EPUB/MOBI，
+// 其余分页格式（PPTX/XPS/DjVu/OFD）的页数据不在 chapterDocList 里，无法前置空白页
+// 当前书籍尚未加载时（currentBook 为 {}）没有 format，直接视为不支持
+export const isStartFromEvenSupported = (book: Book) => {
+  if (!book || !book.format) {
+    return false;
+  }
+  return (
+    isReadingRawPDF(book) ||
+    book.format.startsWith("CB") ||
+    isFixedLayoutComic(book)
+  );
+};
 // PDF（原始版式）、漫画（CB 系列）、PPTX/PPT、XPS、OXPS、DjVu、OFD 共用多 iframe 分页结构
 export const isPaginatedBook = (book: Book) => {
   return (

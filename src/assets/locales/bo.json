@@ -475,7 +475,6 @@
   "Title size threshold": "གཏོད་མཚན་ཆེ་ཆུང་མཚམས།",
   "OCR engine": "OCR མ་ལག",
   "System OCR": "རྒྱབ་སྐྱོར OCR",
-  "Render PDF from even page": "ཟུར་གྱི་ཤོག་ངོས་ནས PDF བཟོ།",
   "Filter by book": "དཔེ་དེབ་ལྟར་གདམ་པ།",
   "Server path (Please first create this folder manually)": "སར་ཝར་ལམ་གྱི་གནས (སྔོན་དུ་ལག་བསྟར་གྱིས་དཀར་ཆག་གསར་བཟོ་རོགས)",
   "Clear": "བསུབ།",
