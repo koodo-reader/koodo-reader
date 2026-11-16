@@ -30,6 +30,18 @@
   height: 100%;
   overflow-y: scroll;
 }
+/* Cover mode lays items out in wrapping rows instead of floats: cover items
+   have different heights (empty covers, crop disabled, collections), which
+   makes float placement leave blank holes in the grid. */
+.book-list-cover-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+.book-list-cover-box > .book-list-cover-item {
+  flex: 0 0 auto;
+}
 .view-mode-down {
   position: absolute;
   top: 15px;

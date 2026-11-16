@@ -141,7 +141,14 @@ const BookList = () => {
           }
         >
           <div className="book-list-container">
-            <ul className="book-list-item-box">{renderBookList()}</ul>
+            <ul
+              className={
+                "book-list-item-box" +
+                (viewMode === "cover" ? " book-list-cover-box" : "")
+              }
+            >
+              {renderBookList()}
+            </ul>
           </div>
         </div>
       ) : (

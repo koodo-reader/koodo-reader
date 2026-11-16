@@ -632,7 +632,10 @@ const BookList = () => {
       >
         <div className="book-list-container">
           <ul
-            className="book-list-item-box"
+            className={
+              "book-list-item-box" +
+              (viewMode === "cover" ? " book-list-cover-box" : "")
+            }
             ref={scrollContainer}
             style={{ "--card-scale": state.cardScale } as React.CSSProperties}
           >
