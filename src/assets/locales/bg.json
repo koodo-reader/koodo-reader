@@ -475,7 +475,6 @@
   "Title size threshold": "Праг за размер на заглавие",
   "OCR engine": "OCR двигател",
   "System OCR": "Системен OCR",
-  "Render PDF from even page": "Рендериране на PDF от четна страница",
   "Filter by book": "Филтриране по книга",
   "Server path (Please first create this folder manually)": "Път до сървъра (първо създайте папката ръчно)",
   "Clear": "Изчистване",

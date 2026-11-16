@@ -490,7 +490,7 @@
   "Title size threshold": "標題大小閾值",
   "OCR engine": "OCR 引擎",
   "System OCR": "系統 OCR",
-  "Render PDF from even page": "從偶數頁開始渲染 PDF",
+  "Render from even page": "從偶數頁開始渲染",
   "Filter by book": "按書籍篩選",
   "Server path (Please first create this folder manually)": "伺服器路徑（請先手動建立此資料夾）",
   "Clear": "清除",

@@ -525,7 +525,7 @@ export const readerSettingList = [
     isPDF: true,
   },
   {
-    title: "Render PDF from even page",
+    title: "Render from even page",
     propName: "isStartFromEven",
     group: "layout",
     isPDF: true,

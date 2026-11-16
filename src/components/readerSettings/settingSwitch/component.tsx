@@ -4,7 +4,10 @@ import { Trans } from "react-i18next";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { readerSettingList } from "../../../constants/settingList";
 import toast from "react-hot-toast";
-import { isReadingRawPDF } from "../../../utils/common";
+import {
+  isReadingRawPDF,
+  isStartFromEvenSupported,
+} from "../../../utils/common";
 import BookUtil from "../../../utils/file/bookUtil";
 import SwitchRow from "../switchRow";
 import { useAppStore } from "../../../store/useAppStore";
@@ -173,6 +176,10 @@ const SettingSwitch = (props: SettingSwitchProps) => {
         .filter((item) => {
           if (props.group && item.group !== props.group) {
             return false;
+          }
+          // 只有具备该渲染能力的格式才展示（原始 PDF、漫画、固定版式 EPUB/MOBI）
+          if (item.propName === "isStartFromEven") {
+            return isStartFromEvenSupported(currentBook);
           }
           if (isReadingRawPDF(currentBook)) {
             return item.isPDF;

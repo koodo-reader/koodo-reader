@@ -475,7 +475,6 @@
   "Title size threshold": "শিরোনাম আকারের থ্রেশহোল্ড",
   "OCR engine": "OCR ইঞ্জিন",
   "System OCR": "সিস্টেম OCR",
-  "Render PDF from even page": "জোড় পৃষ্ঠা থেকে PDF রেন্ডার করুন",
   "Filter by book": "বই অনুযায়ী ফিল্টার করুন",
   "Server path (Please first create this folder manually)": "সার্ভার পাথ (অনুগ্রহ করে আগে এই ফোল্ডারটি ম্যানুয়ালি তৈরি করুন)",
   "Clear": "পরিষ্কার",
