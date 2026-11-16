@@ -203,6 +203,32 @@
   );
 }
 
+.background-loading-spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border-radius: 50%;
+  border: 2px solid rgba(128, 128, 128, 0.25);
+  border-top-color: var(--accent-bg, #0179ca);
+  animation: background-loading-spin 0.8s linear infinite;
+  pointer-events: none;
+}
+
+.background-preview-spinner {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+}
+
+@keyframes background-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .change-location-button.is-downloading {
   opacity: 0.7;
   pointer-events: none;

@@ -68,6 +68,8 @@ const BORDER_SELECTORS = [
   ".sort-dialog-seperator",
 ];
 
+const BORDER_TOP_SELECTORS = [".background-loading-spinner"];
+
 const STYLE_ELEMENT_ID = "dynamic-theme-color";
 
 /**
@@ -116,6 +118,7 @@ export function generateThemeCSS(color: string): string {
     `${BG_010_SELECTORS.join(",\n")} {\n  background-color: rgba(${r}, ${g}, ${b}, 0.1) !important;\n}`,
     `${BG_HOVER_SELECTORS.join(",\n")} {\n  background-color: rgba(${r}, ${g}, ${b}, 0.035) !important;\n}`,
     `${BORDER_SELECTORS.join(",\n")} {\n  border-bottom: 1px solid rgba(${r}, ${g}, ${b}, 0.1) !important;\n}`,
+    `${BORDER_TOP_SELECTORS.join(",\n")} {\n  border-top-color: rgba(${r}, ${g}, ${b}, 1) !important;\n}`,
   ].join("\n\n");
 }
 
