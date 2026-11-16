@@ -151,7 +151,7 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
                   boxShadow: "0px 0px 5px rgba(0, 0, 0, 0)",
                 }
               : {
-                  height: `${137 * (props.cardScale ?? parseFloat(ConfigService.getReaderConfig("cardScale") || "1"))}px`,
+                  height: `${150 * (props.cardScale ?? parseFloat(ConfigService.getReaderConfig("cardScale") || "1"))}px`,
                   alignItems: "center",
                   overflow: "hidden",
                 }
@@ -169,7 +169,7 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
                       ConfigService.getReaderConfig("cardScale") || "1"
                     )),
                 height:
-                  137 *
+                  150 *
                   (props.cardScale ??
                     parseFloat(
                       ConfigService.getReaderConfig("cardScale") || "1"
@@ -186,7 +186,7 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
                           props.book.name
                         )
                       : props.book.name,
-                  viewMode: "card",
+                  author: props.book.author,
                   scale:
                     1 *
                     (props.cardScale ??
@@ -219,7 +219,7 @@ const BookCardItem: React.FC<BookCardProps> = (props) => {
                 onLoad={(res: any) => {
                   if (
                     res.target.naturalHeight / res.target.naturalWidth >
-                    137 / 105
+                    150 / 105
                   ) {
                     setDirection("horizontal");
                   } else {

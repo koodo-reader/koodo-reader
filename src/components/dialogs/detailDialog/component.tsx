@@ -126,12 +126,13 @@ const DetailDialog = () => {
             ) : (
               <div
                 className="detail-cover"
-                style={{ width: "125px", height: "170px" }}
+                style={{ width: "125px", height: "180px" }}
               >
                 <EmptyCover
                   {...{
                     format: currentBook.format,
                     title: currentBook.name,
+                    author: currentBook.author,
                     scale: 1.2,
                   }}
                 />

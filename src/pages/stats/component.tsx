@@ -50,11 +50,16 @@ const LeaderboardCover = ({ item }: { item: LeaderboardBook }) => {
           style={fitByWidth ? { width: "100%" } : { height: "100%" }}
           onLoad={(event) => {
             const img = event.currentTarget;
-            setFitByWidth(img.naturalHeight / img.naturalWidth > 137 / 105);
+            setFitByWidth(img.naturalHeight / img.naturalWidth > 150 / 105);
           }}
         />
       ) : (
-        <EmptyCover format={item.format} title={item.name} scale={1} />
+        <EmptyCover
+          format={item.format}
+          title={item.name}
+          author={item.author}
+          scale={1}
+        />
       )}
     </div>
   );
