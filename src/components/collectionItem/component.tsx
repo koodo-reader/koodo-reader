@@ -355,12 +355,12 @@ const CollectionItem: React.FC<CollectionItemProps> = (props) => {
             setIsHover(false);
           }}
           style={{
-            height: `${137 * scale}px`,
+            height: `${150 * scale}px`,
             alignItems: "center",
             overflow: "hidden",
           }}
         >
-          {renderCover(105 * scale, 137 * scale)}
+          {renderCover(105 * scale, 150 * scale)}
         </div>
         {isSelectBook || isHover ? (
           <span

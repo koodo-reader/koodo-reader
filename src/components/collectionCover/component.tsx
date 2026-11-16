@@ -14,6 +14,7 @@ export interface CollectionCoverProps {
 export interface CollectionCoverItem {
   cover: string;
   title: string;
+  author: string;
   format: string;
 }
 
@@ -36,14 +37,15 @@ const CollectionCover: React.FC<CollectionCoverProps> = (props) => {
         try {
           let book = await DatabaseService.getRecord(key, "books");
           if (!book) {
-            result[key] = { cover: "", title: "", format: "" };
+            result[key] = { cover: "", title: "", author: "", format: "" };
             continue;
           }
           let title = book.name || "";
+          let author = book.author || "";
           let format = book.format || "";
           let isCoverExist = await CoverUtil.isCoverExist(book);
           if (!isCoverExist) {
-            result[key] = { cover: "", title, format };
+            result[key] = { cover: "", title, author, format };
             continue;
           }
           let cover = await CoverUtil.getCover(book);
@@ -55,9 +57,9 @@ const CollectionCover: React.FC<CollectionCoverProps> = (props) => {
           ) {
             cover = cover + "?t=" + Date.now();
           }
-          result[key] = { cover: cover || "", title, format };
+          result[key] = { cover: cover || "", title, author, format };
         } catch {
-          result[key] = { cover: "", title: "", format: "" };
+          result[key] = { cover: "", title: "", author: "", format: "" };
         }
       }
       if (!cancelled) {
@@ -73,7 +75,7 @@ const CollectionCover: React.FC<CollectionCoverProps> = (props) => {
   const count = latestKeys.length;
   const cellWidth = (width - 1) / 2;
   const cellHeight = (height - 1) / 2;
-  const emptyCoverScale = Math.max(cellWidth / 105, cellHeight / 137);
+  const emptyCoverScale = Math.max(cellWidth / 105, cellHeight / 150);
   const renderCell = (key: string) => {
     const item = items[key];
     return (
@@ -87,13 +89,14 @@ const CollectionCover: React.FC<CollectionCoverProps> = (props) => {
                 className="collection-cover-cell-empty-inner"
                 style={{
                   width: `${105 * emptyCoverScale}px`,
-                  height: `${137 * emptyCoverScale}px`,
+                  height: `${150 * emptyCoverScale}px`,
                 }}
               >
                 <EmptyCover
                   {...{
                     format: item.format,
                     title: item.title,
+                    author: item.author,
                     scale: emptyCoverScale,
                   }}
                 />

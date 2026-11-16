@@ -407,11 +407,12 @@ const NavigationPanel = (props: NavigationPanelProps) => {
             {state.isCoverExist ? (
               <img className="book-cover" src={state.cover} alt="" />
             ) : (
-              <div className="book-cover">
+              <div className="book-cover" style={{ height: "129px" }}>
                 <EmptyCover
                   {...{
                     format: currentBook.format,
                     title: currentBook.name,
+                    author: currentBook.author,
                     scale: 0.86,
                   }}
                 />

@@ -186,13 +186,13 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
           style={
             ConfigService.getReaderConfig("isDisableCrop") === "yes"
               ? {
-                  height: isEmptyCover ? "156px" : "195px",
+                  height: isEmptyCover ? "171px" : "195px",
                   alignItems: "flex-start",
                   background: "rgba(255, 255,255, 0)",
                   boxShadow: "0px 0px 5px rgba(0, 0, 0, 0)",
                 }
               : {
-                  height: isEmptyCover ? "156px" : "170px",
+                  height: isEmptyCover ? "171px" : "170px",
                   alignItems: "center",
                   overflow: "hidden",
                 }
@@ -201,7 +201,7 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
           {isEmptyCover ? (
             <div
               className="book-item-image"
-              style={{ width: "120px", height: "156px" }}
+              style={{ width: "120px", height: "171px" }}
             >
               <EmptyCover
                 {...{
@@ -213,6 +213,7 @@ const BookCoverItem: React.FC<BookCoverProps> = (props) => {
                           props.book.name
                         )
                       : props.book.name,
+                  author: props.book.author,
                   scale: 1.14,
                 }}
               />
