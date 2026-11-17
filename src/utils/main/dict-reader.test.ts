@@ -425,6 +425,26 @@ describe("MDict lookup", () => {
       reason: "not-found",
     });
   });
+
+  it("falls back to eager parsing when block last keys are out of order", async () => {
+    const source = await makeTempDir();
+    const file = path.join(source, "unordered.mdx");
+    await writeFile(
+      file,
+      buildMdx([
+        [{ key: "Z", definition: "Z definition" }],
+        [{ key: "a", definition: "a definition" }],
+        [{ key: "b", definition: "b definition" }],
+        [{ key: "c", definition: "c definition" }],
+        [{ key: "d", definition: "d definition" }],
+      ])
+    );
+
+    const mdx = new _internal.LazyMdx(file);
+    // The block index cannot find Z in this file order, so keys are parsed eagerly.
+    expect(mdx.keywordList.length).toBeGreaterThan(0);
+    expect(mdx.lookup("Z").definition).toBe("Z definition");
+  });
 });
 
 describe("legacy dictionary migration", () => {

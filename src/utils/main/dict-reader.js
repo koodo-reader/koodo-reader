@@ -863,12 +863,34 @@ class LazyMdx extends MDX {
       // js-mdict internals changed: fall back to the eager parse.
       return super._readKeyBlocks();
     }
+    if (!this.hasMonotonicBlockLastKeys()) {
+      // The block index assumes normalized last keys are sorted; some files
+      // store blocks in a different order, so parse eagerly for correctness.
+      return super._readKeyBlocks();
+    }
     // Skipped on purpose; see the class comment above.
     this._keyBlockStartOffset = this._keyBlockInfoEndOffset;
   }
 
   normalizeKey(key) {
     return this.strip(String(key || "").replace(/\u0000+$/, ""));
+  }
+
+  getBlockLastKeys() {
+    if (!this._blockLastKeys) {
+      this._blockLastKeys = this.keyInfoList.map((info) =>
+        this.normalizeKey(info.lastKey)
+      );
+    }
+    return this._blockLastKeys;
+  }
+
+  hasMonotonicBlockLastKeys() {
+    const lastKeys = this.getBlockLastKeys();
+    for (let i = 1; i < lastKeys.length; i++) {
+      if (compareCodeUnits(lastKeys[i - 1], lastKeys[i]) > 0) return false;
+    }
+    return true;
   }
 
   getBlockEntries(index) {
@@ -886,12 +908,7 @@ class LazyMdx extends MDX {
   }
 
   findBlockIndex(target) {
-    if (!this._blockLastKeys) {
-      this._blockLastKeys = this.keyInfoList.map((info) =>
-        this.normalizeKey(info.lastKey)
-      );
-    }
-    const lastKeys = this._blockLastKeys;
+    const lastKeys = this.getBlockLastKeys();
     // Smallest block whose last key is not before the target.
     let left = 0;
     let right = lastKeys.length;
