@@ -846,10 +846,127 @@ const setMddResource = (key, value) => {
   }
 };
 
+const MAX_MDX_BLOCK_CACHE = 8;
+
+const compareCodeUnits = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+
+/**
+ * js-mdict parses every key block eagerly when it loads a file, which for a
+ * large dictionary (ECDICT: 3.4M entries) blocks the main process for ~15s and
+ * keeps ~900MB of keys in memory. The key block index already stores the first
+ * and last key of every block, and the file orders keys by `strip()`-normalized
+ * text, so we skip that eager parse and decode only the block we look up in.
+ */
+class LazyMdx extends MDX {
+  _readKeyBlocks() {
+    if (typeof this._keyBlockInfoEndOffset !== "number") {
+      // js-mdict internals changed: fall back to the eager parse.
+      return super._readKeyBlocks();
+    }
+    if (!this.hasMonotonicBlockLastKeys()) {
+      // The block index assumes normalized last keys are sorted; some files
+      // store blocks in a different order, so parse eagerly for correctness.
+      return super._readKeyBlocks();
+    }
+    // Skipped on purpose; see the class comment above.
+    this._keyBlockStartOffset = this._keyBlockInfoEndOffset;
+  }
+
+  normalizeKey(key) {
+    return this.strip(String(key || "").replace(/\u0000+$/, ""));
+  }
+
+  getBlockLastKeys() {
+    if (!this._blockLastKeys) {
+      this._blockLastKeys = this.keyInfoList.map((info) =>
+        this.normalizeKey(info.lastKey)
+      );
+    }
+    return this._blockLastKeys;
+  }
+
+  hasMonotonicBlockLastKeys() {
+    const lastKeys = this.getBlockLastKeys();
+    for (let i = 1; i < lastKeys.length; i++) {
+      if (compareCodeUnits(lastKeys[i - 1], lastKeys[i]) > 0) return false;
+    }
+    return true;
+  }
+
+  getBlockEntries(index) {
+    if (index < 0 || index >= this.keyInfoList.length) return null;
+    this._blockCache = this._blockCache || new Map();
+    const cached = this._blockCache.get(index);
+    if (cached) return cached;
+    const entries = this.lookupPartialKeyBlockListByKeyInfoId(index);
+    this._blockCache.set(index, entries);
+    if (this._blockCache.size > MAX_MDX_BLOCK_CACHE) {
+      const oldest = this._blockCache.keys().next().value;
+      if (oldest !== undefined) this._blockCache.delete(oldest);
+    }
+    return entries;
+  }
+
+  findBlockIndex(target) {
+    const lastKeys = this.getBlockLastKeys();
+    // Smallest block whose last key is not before the target.
+    let left = 0;
+    let right = lastKeys.length;
+    while (left < right) {
+      const mid = (left + right) >> 1;
+      if (compareCodeUnits(lastKeys[mid], target) < 0) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    return left;
+  }
+
+  findKeyEntry(index, word) {
+    const entries = this.getBlockEntries(index);
+    if (!entries) return null;
+    // A block is ~1500 keys, so a scan is faster than trusting the sort order.
+    for (let i = 0; i < entries.length; i++) {
+      if (entries[i].keyText === word) return entries[i];
+    }
+    return null;
+  }
+
+  lookup(word) {
+    if (this.keywordList.length) return super.lookup(word);
+    const target = this.normalizeKey(word);
+    if (!target) return { keyText: word, definition: null };
+
+    const index = this.findBlockIndex(target);
+    let entry =
+      this.findKeyEntry(index, word) ||
+      this.findKeyEntry(index - 1, word) ||
+      this.findKeyEntry(index + 1, word);
+    if (!entry) return { keyText: word, definition: null };
+
+    if (entry.recordEndOffset === -1 || entry.recordEndOffset == null) {
+      const nextEntries = this.getBlockEntries(entry.keyBlockIdx + 1);
+      if (nextEntries && nextEntries.length) {
+        entry.recordEndOffset = nextEntries[0].recordStartOffset;
+      } else {
+        const lastRecord = this.recordInfoList[this.recordInfoList.length - 1];
+        entry.recordEndOffset =
+          lastRecord.unpackAccumulatorOffset + lastRecord.unpackSize;
+      }
+    }
+    const buffer = this.lookupRecordByKeyBlock(entry);
+    return {
+      keyText: entry.keyText,
+      definition: buffer ? this.meta.decoder.decode(buffer) : null,
+    };
+  }
+}
+
 function getMdx(filePath) {
   let instance = mdxCache.get(filePath);
   if (!instance) {
-    instance = new MDX(filePath);
+    instance = new LazyMdx(filePath);
     mdxCache.set(filePath, instance);
   }
   return instance;
@@ -2510,5 +2627,6 @@ module.exports = {
     buildLookupCandidates,
     describeBundle,
     unlzma2,
+    LazyMdx,
   },
 };
