@@ -1,6 +1,6 @@
 import { useLatest } from "../../../utils/hooks/useLatest";
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./popupAssist.css";
 import {
   ConfigService,
@@ -80,6 +80,7 @@ const PopupAssist = (props: PopupAssistProps) => {
   const stateRef = useLatest(state);
   const chatBoxRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const shouldScrollToLatest = useRef(false);
   const answerTextAccumulator = useRef("");
   const updateInterval = useRef<ReturnType<typeof setInterval> | null>(null);
   const isHydrating = useRef(false);
@@ -168,6 +169,7 @@ const PopupAssist = (props: PopupAssistProps) => {
       return;
     }
     isHydrating.current = true;
+    shouldScrollToLatest.current = true;
     setState((prev) => ({
       ...prev,
       askHistory: loadHistory(bookKey, "ask"),
@@ -175,9 +177,6 @@ const PopupAssist = (props: PopupAssistProps) => {
     }));
     runAfterUpdate(() => {
       isHydrating.current = false;
-      if (ConfigService.getReaderConfig("isManualScroll") !== "yes") {
-        scrollToBottom();
-      }
     });
   };
   const saveChatHistory = () => {
@@ -313,6 +312,15 @@ const PopupAssist = (props: PopupAssistProps) => {
       scrollToBottom();
     }
   };
+  // 打开面板、切换会话标签或切换书籍后，始终定位到最新消息；不受“禁用自动滚动”设置影响
+  const messages = state.mode === "ask" ? state.askHistory : state.chatHistory;
+  useLayoutEffect(() => {
+    if (!shouldScrollToLatest.current) {
+      return;
+    }
+    shouldScrollToLatest.current = false;
+    scrollToBottom();
+  }, [messages, state.mode]);
   const handleAnswer = async () => {
     let answerText =
       stateRef.current.mode === "ask"
@@ -740,6 +748,7 @@ const PopupAssist = (props: PopupAssistProps) => {
               }
               onClick={() => {
                 mergeState({ isAddNew: false, mode: "ask" });
+                shouldScrollToLatest.current = true;
               }}
               style={{ width: props.isDockedRight ? "50%" : undefined }}
             >
@@ -754,6 +763,7 @@ const PopupAssist = (props: PopupAssistProps) => {
               }
               onClick={() => {
                 mergeState({ isAddNew: false, mode: "chat" });
+                shouldScrollToLatest.current = true;
               }}
               style={{
                 width: props.isDockedRight ? "50%" : undefined,
