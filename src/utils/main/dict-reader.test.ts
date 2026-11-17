@@ -58,6 +58,102 @@ const buildStarDict = (word: string, definition: string) => {
   return { ifo, idx, dict: body };
 };
 
+const u16 = (value: number) => {
+  const buffer = Buffer.alloc(2);
+  buffer.writeUInt16BE(value, 0);
+  return buffer;
+};
+
+const u64 = (value: number) => {
+  const buffer = Buffer.alloc(8);
+  buffer.writeUInt32BE(Math.floor(value / 2 ** 32), 0);
+  buffer.writeUInt32BE(value >>> 0, 4);
+  return buffer;
+};
+
+/** Builds a minimal MDict 2.0 file (UTF-8, stored) with one key block per group. */
+const buildMdx = (groups: { key: string; definition: string }[][]) => {
+  const blocks: { key: string; start: number }[][] = [];
+  const recordParts: Buffer[] = [];
+  let recordOffset = 0;
+
+  for (const group of groups) {
+    const keys: { key: string; start: number }[] = [];
+    for (const entry of group) {
+      const data = Buffer.from(entry.definition, "utf8");
+      keys.push({ key: entry.key, start: recordOffset });
+      recordOffset += data.length;
+      recordParts.push(data);
+    }
+    blocks.push(keys);
+  }
+  const recordData = Buffer.concat(recordParts);
+
+  // Each key block holds [compression type][adler32][offset + key + NUL]...
+  const keyBlockBuffers = blocks.map((keys) => {
+    const parts: Buffer[] = [];
+    for (const item of keys) {
+      parts.push(u64(item.start), Buffer.from(item.key, "utf8"), Buffer.from([0]));
+    }
+    return Buffer.concat([u32(0), u32(0), Buffer.concat(parts)]);
+  });
+  const keyBlocks = Buffer.concat(keyBlockBuffers);
+
+  const infoParts: Buffer[] = [];
+  blocks.forEach((keys, index) => {
+    const first = Buffer.from(keys[0].key, "utf8");
+    const last = Buffer.from(keys[keys.length - 1].key, "utf8");
+    infoParts.push(
+      u64(keys.length),
+      u16(first.length),
+      Buffer.concat([first, Buffer.from([0])]),
+      u16(last.length),
+      Buffer.concat([last, Buffer.from([0])]),
+      u64(keyBlockBuffers[index].length),
+      u64(keyBlockBuffers[index].length - 8)
+    );
+  });
+  const keyInfo = Buffer.concat(infoParts);
+
+  const xml = Buffer.from(
+    '<Dictionary Title="Test MDX" GeneratedByEngineVersion="2.0" RequiredEngineVersion="2.0" Encrypted="No" Encoding="UTF-8" Format="Html"/>',
+    "utf16le"
+  );
+  const header = Buffer.concat([u32(xml.length), xml, u32(0)]);
+
+  const entriesCount = blocks.reduce((sum, keys) => sum + keys.length, 0);
+  const keyHeader = Buffer.concat([
+    u64(blocks.length),
+    u64(entriesCount),
+    u64(keyInfo.length),
+    u64(keyInfo.length),
+    u64(keyBlocks.length),
+    u32(0),
+  ]);
+
+  const recordBlock = Buffer.concat([u32(0), u32(0), recordData]);
+  const recordInfo = Buffer.concat([
+    u64(recordBlock.length),
+    u64(recordData.length),
+  ]);
+  const recordHeader = Buffer.concat([
+    u64(1),
+    u64(entriesCount),
+    u64(recordInfo.length),
+    u64(recordBlock.length),
+  ]);
+
+  return Buffer.concat([
+    header,
+    keyHeader,
+    keyInfo,
+    keyBlocks,
+    recordHeader,
+    recordInfo,
+    recordBlock,
+  ]);
+};
+
 afterAll(async () => {
   clearDictCache();
   for (const dir of tempDirs) {
@@ -260,6 +356,74 @@ describe("buffer import", () => {
 
     const remove = await removeDictionary(storage, "buffer-123");
     expect(remove.ok).toBe(true);
+  });
+});
+
+describe("MDict lookup", () => {
+  const importDemo = async () => {
+    const storage = await makeTempDir();
+    const source = await makeTempDir();
+    await writeFile(
+      path.join(source, "demo.mdx"),
+      buildMdx([
+        [
+          { key: "run", definition: "run definition" },
+          { key: "run-", definition: "run dash definition" },
+          { key: "runa", definition: "runa definition" },
+        ],
+        [
+          { key: "zebra", definition: "zebra definition" },
+          { key: "zebrafish", definition: "zebrafish definition" },
+        ],
+      ])
+    );
+    const result = await importDictionaryBundles(storage, [
+      path.join(source, "demo.mdx"),
+    ]);
+    expect(result.ok).toBe(true);
+    expect(result.imported).toHaveLength(1);
+    const dict = result.imported[0];
+    expect(dict.kind).toBe("mdict");
+    const file = path.join(storage, "dict", dict.id, dict.files.mdx);
+    const lookup = (word: string) =>
+      lookupDictionary({ storagePath: storage, dictId: dict.id, word });
+    return { file, lookup };
+  };
+
+  it("skips the eager key block parse", async () => {
+    const { file } = await importDemo();
+    const mdx = new _internal.LazyMdx(file);
+    // Large dictionaries take seconds and hundreds of MB to parse eagerly.
+    expect(mdx.keywordList).toHaveLength(0);
+    expect(mdx.lookup("run").definition).toBe("run definition");
+  });
+
+  it("looks up entries across key blocks", async () => {
+    const { lookup } = await importDemo();
+    expect(await lookup("run")).toMatchObject({ ok: true, content: "run definition" });
+    // Keys that normalize to the same block entry must still resolve exactly.
+    expect(await lookup("run-")).toMatchObject({
+      ok: true,
+      content: "run dash definition",
+    });
+    // Last entry of a block needs the next block's start offset.
+    expect(await lookup("runa")).toMatchObject({
+      ok: true,
+      content: "runa definition",
+    });
+    expect(await lookup("zebra")).toMatchObject({
+      ok: true,
+      content: "zebra definition",
+    });
+    // Last entry of the file ends at the last record block's end offset.
+    expect(await lookup("zebrafish")).toMatchObject({
+      ok: true,
+      content: "zebrafish definition",
+    });
+    expect(await lookup("runner")).toMatchObject({
+      ok: false,
+      reason: "not-found",
+    });
   });
 });
 
