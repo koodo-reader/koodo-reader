@@ -487,15 +487,6 @@ export const bindHtmlEvent = (
     { passive: false }
   );
 
-  window.addEventListener(
-    "keydown",
-    async (event) => {
-      await arrowKeys(rendition, event, readerMode, book);
-      handleLocation(key, rendition);
-    },
-    { passive: false }
-  );
-
   if (ConfigService.getReaderConfig("isTouch") === "yes") {
     const mc = new Hammer(doc);
     mc.on("panleft panright panup pandown", async (event: any) => {
@@ -520,6 +511,11 @@ export const bindHtmlEvent = (
     { passive: false }
   );
 };
+// PDF/漫画等分页格式每个子 iframe 都会走到 bindHtmlEvent，若在逐个 doc 的
+// 路径里注册 window keydown，一次按键会被多个监听器重复处理。这里改为每次
+// 渲染时替换旧监听，保证每个阅读器只有一个监听器，且绑定最新的
+// rendition/book/readerMode
+let windowKeydownHandler: ((event: any) => Promise<void>) | null = null;
 export const htmlMouseEvent = (
   rendition: any,
   book: Book,
@@ -527,6 +523,16 @@ export const htmlMouseEvent = (
   handleScale: (scale: string) => void,
   renderBookFunc: () => void
 ) => {
+  if (windowKeydownHandler) {
+    window.removeEventListener("keydown", windowKeydownHandler);
+  }
+  const key = book.key;
+  windowKeydownHandler = async (event) => {
+    await arrowKeys(rendition, event, readerMode, book);
+    handleLocation(key, rendition);
+  };
+  window.addEventListener("keydown", windowKeydownHandler, { passive: false });
+
   rendition.on("rendered", () => {
     let iframe = getIframeWin();
     if (!iframe) return;
