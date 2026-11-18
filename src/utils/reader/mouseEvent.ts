@@ -19,20 +19,7 @@ import {
   matchShortcut,
   ShortcutAction,
 } from "./shortcutUtil";
-import { OVERLAY_TURN_DURATION } from "./overlayTurn";
 declare var window: any;
-
-// 翻页滑动动画固定时长（毫秒），需与 kookit 的 PAGE_TURN_DURATION 保持一致
-const PAGE_TURN_DURATION = 200;
-
-// 每次翻页时实时读取，避免修改动画设置后锁延迟不生效
-const getThrottleTime = () => {
-  const animation = ConfigService.getReaderConfig("animation") || "none";
-  if (animation === "none") return 100;
-  // 覆盖动画由应用层单独驱动，锁需覆盖整段动画，多留 60ms 保证 busy 先释放
-  if (animation === "overlay") return OVERLAY_TURN_DURATION + 60;
-  return PAGE_TURN_DURATION;
-};
 
 export const getSelection = (book: Book) => {
   let docs = getIframeDoc(book);
@@ -194,14 +181,6 @@ const NAV_TAB_SHORTCUTS: Array<{
   { shortcut: "openHighlightList", tab: "highlights" },
   { shortcut: "openToc", tab: "contents" },
 ];
-let lock = false; //prevent from clicking too fasts
-
-// 仿真翻页动画收敛后（kookit 派发 flipend 事件）立即解除锁，
-// 不再等待满 PAGE_TURN_DURATION 的 throttleTime，滚轮/键盘可继续快速翻页
-window.addEventListener("page-flipend", () => {
-  lock = false;
-});
-
 const isRevertDirectionReading = (rendition: any) => {
   return (
     rendition?.revertDirection === "yes" &&
@@ -437,11 +416,8 @@ export const bindHtmlEvent = (
   doc.addEventListener(
     "keydown",
     async (event) => {
-      if (lock) return;
-      lock = true;
       await arrowKeys(rendition, event, readerMode, book);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -466,10 +442,8 @@ export const bindHtmlEvent = (
         renderBookFunc();
         return;
       }
-      // 阅读尺等辅助模式下滚轮完全接管为逐段导航，preventDefault 必须在
-      // lock 检查之前执行：锁定期内到达的连续滚轮事件若不拦截默认行为，
-      // 会触发原生滚动与遮罩过渡动画叠加，造成动画掉帧（键盘事件无默认
-      // 滚动行为，所以键盘快捷键不存在此问题）
+      // 阅读尺等辅助模式下滚轮完全接管为逐段导航，先拦截原生滚动，
+      // 避免与遮罩过渡动画叠加造成动画掉帧
       if (
         readerMode === "scroll" &&
         Math.abs(event.deltaX) === 0 &&
@@ -477,8 +451,6 @@ export const bindHtmlEvent = (
       ) {
         event.preventDefault();
       }
-      if (lock) return;
-      lock = true;
       if (readerMode === "scroll") {
         if (Math.abs(event.deltaX) === 0 && isReadingAidMode(format, key)) {
           // 段落/阅读尺/速读模式内部实际按单页渲染，同样遵循 RTL
@@ -511,7 +483,6 @@ export const bindHtmlEvent = (
         }
       }
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -519,11 +490,8 @@ export const bindHtmlEvent = (
   window.addEventListener(
     "keydown",
     async (event) => {
-      if (lock) return;
-      lock = true;
       await arrowKeys(rendition, event, readerMode, book);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -534,25 +502,20 @@ export const bindHtmlEvent = (
       if (readerMode === "scroll") {
         return;
       }
-      if (lock || event.pointerType === "mouse") return;
-      lock = true;
+      if (event.pointerType === "mouse") return;
       await gesture(rendition, event.type);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), getThrottleTime());
     });
   }
 
   doc.addEventListener(
     "touchend",
     async () => {
-      if (lock) return;
-      lock = true;
       if (readerMode === "scroll") {
         await sleep(200);
         await rendition.record();
       }
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -581,6 +544,5 @@ export const htmlMouseEvent = (
         renderBookFunc
       );
     }
-    lock = false;
   });
 };
