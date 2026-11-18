@@ -423,9 +423,6 @@ const BookList = () => {
         isLoadingMore: false,
       }));
       handleLoadMore(false);
-      if (scrollContainer.current) {
-        scrollContainer.current.scrollTop = 0;
-      }
       loadFullBooksData(nextDisplayedBooksCount);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -532,10 +529,7 @@ const BookList = () => {
   if (!books) {
     return null;
   }
-  if (
-    (state.favoriteBooks === 0 && mode === "favorite") ||
-    !books[0]
-  ) {
+  if ((state.favoriteBooks === 0 && mode === "favorite") || !books[0]) {
     return <Navigate to="/manager/empty" replace />;
   }
   const { books: displayedBookList, bookMode } = handleBooks();
