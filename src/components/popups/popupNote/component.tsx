@@ -337,7 +337,15 @@ const PopupNote = (props: PopupNoteProps) => {
             handleClose();
           }}
         >
-          {noteKey ? <Trans>Delete</Trans> : <Trans>Cancel</Trans>}
+          {noteKey ? (
+            note && note.notes !== "" ? (
+              <Trans>Delete note</Trans>
+            ) : (
+              <Trans>Delete highlight</Trans>
+            )
+          ) : (
+            <Trans>Cancel</Trans>
+          )}
         </span>
         <span
           className="book-manage-title"
