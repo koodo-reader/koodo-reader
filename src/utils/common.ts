@@ -528,12 +528,18 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
     }
   });
   if (targetContent.length > 0) {
+    const target = targetContent[0] as HTMLElement;
+    const targetTop =
+      target.getBoundingClientRect().top -
+      contentBody.getBoundingClientRect().top +
+      contentBody.scrollTop;
+    // 让目标章节落在可视区域 35% 处，即居中偏上
     contentBody.scrollTo({
       left: 0,
-      top: (targetContent[0] as any).offsetTop,
+      top: Math.max(0, targetTop - contentBody.clientHeight * 0.35),
       behavior: "smooth",
     });
-    targetContent[0].setAttribute("style", "color:red; font-weight: bold");
+    target.setAttribute("style", "color:red; font-weight: bold");
   }
 };
 export const handleFullScreen = () => {
