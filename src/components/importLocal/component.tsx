@@ -143,7 +143,7 @@ const ImportLocal = (props: ImportLocalProps) => {
   >(null);
 
   useEffect(() => {
-    let focusHandler: (() => void) | null = null;
+    let openFileHandler: (() => void) | null = null;
     if (isElectron) {
       const ipcRenderer = window.electronAPI;
       if (!ConfigService.getItem("storageLocation")) {
@@ -153,17 +153,20 @@ const ImportLocal = (props: ImportLocalProps) => {
         );
       }
 
-      const filePath = ipcRenderer.sendSync("get-file-data");
-      if (filePath && filePath !== ".") {
-        handleFilePathRef.current?.(filePath);
-      }
-      focusHandler = () => {
-        const _filePath = ipcRenderer.sendSync("get-file-data");
-        if (_filePath && _filePath !== ".") {
-          handleFilePathRef.current?.(_filePath);
+      const drainOpenFiles = async () => {
+        const filePaths: string[] = await ipcRenderer.invoke(
+          "consume-pending-open-files"
+        );
+        for (const path of filePaths) {
+          await handleFilePathRef.current?.(path);
         }
       };
-      window.addEventListener("focus", focusHandler, false);
+      // 排他消费：主进程持队列，这里先拉一次兜住“事件早于监听器注册”
+      drainOpenFiles();
+      openFileHandler = () => {
+        drainOpenFiles();
+      };
+      ipcRenderer.on("open-file-request", openFileHandler);
 
       importUrlHandlerRef.current = async (config: any) => {
         const rawUrl = config?.url;
@@ -196,9 +199,9 @@ const ImportLocal = (props: ImportLocalProps) => {
     );
 
     return () => {
-      if (focusHandler) {
-        window.removeEventListener("focus", focusHandler);
-        focusHandler = null;
+      if (openFileHandler) {
+        window.electronAPI.removeListener("open-file-request", openFileHandler);
+        openFileHandler = null;
       }
       if (importUrlHandlerRef.current) {
         window.electronAPI.removeListener(
