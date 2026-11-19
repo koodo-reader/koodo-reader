@@ -128,10 +128,7 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
   const handlePrevPage = async () => {
     if (lock) return;
     lock = true;
-    if (
-      ConfigService.getReaderConfig("revertDirection") === "yes" &&
-      ConfigService.getReaderConfig("textOrientation") !== "vertical"
-    ) {
+    if (ConfigService.getReaderConfig("revertDirection") === "yes") {
       await htmlBook.rendition.next();
     } else {
       await htmlBook.rendition.prev();
@@ -143,10 +140,7 @@ const ReaderBottomToolbar = (props: ReaderBottomToolbarProps) => {
   const handleNextPage = async () => {
     if (lock) return;
     lock = true;
-    if (
-      ConfigService.getReaderConfig("revertDirection") === "yes" &&
-      ConfigService.getReaderConfig("textOrientation") !== "vertical"
-    ) {
+    if (ConfigService.getReaderConfig("revertDirection") === "yes") {
       await htmlBook.rendition.prev();
     } else {
       await htmlBook.rendition.next();

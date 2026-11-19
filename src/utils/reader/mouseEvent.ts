@@ -182,10 +182,8 @@ const NAV_TAB_SHORTCUTS: Array<{
   { shortcut: "openToc", tab: "contents" },
 ];
 const isRevertDirectionReading = (rendition: any) => {
-  return (
-    rendition?.revertDirection === "yes" &&
-    !(rendition?.isVertical && rendition.isVertical())
-  );
+  // 竖排同样遵循「从右往左翻页」：按键/滚轮/手势方向一起镜像
+  return rendition?.revertDirection === "yes";
 };
 
 // 弹窗未固定到右侧时，ESC 只关闭弹窗；返回 true 表示按键已处理，
