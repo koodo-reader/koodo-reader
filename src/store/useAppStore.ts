@@ -754,7 +754,7 @@ export const useAppStore = create<AppState>()((set, get) => {
             let dictPlugin = new PluginModel(
               "official-ai-dict-plugin",
               "dictionary",
-              "Official AI Dictionary",
+              "Official Dictionary",
               "dict",
               "1.0.0",
               "",
@@ -768,7 +768,7 @@ export const useAppStore = create<AppState>()((set, get) => {
             let transPlugin = new PluginModel(
               "official-ai-trans-plugin",
               "translation",
-              "Official AI Translation",
+              "Official Translation",
               "translation",
               "1.0.0",
               "",
@@ -782,7 +782,7 @@ export const useAppStore = create<AppState>()((set, get) => {
             let sumPlugin = new PluginModel(
               "official-ai-assistant-plugin",
               "assistant",
-              "Official AI Assistant",
+              "Official Assistant",
               "assistant",
               "1.0.0",
               "",
@@ -842,7 +842,7 @@ export const useAppStore = create<AppState>()((set, get) => {
             let voicePlugin = new PluginModel(
               "official-ai-voice-plugin",
               "voice",
-              "Official AI Voice",
+              "Official Voice",
               "speaker",
               "1.0.0",
               "",
