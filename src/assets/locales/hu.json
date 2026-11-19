@@ -1177,6 +1177,7 @@
   "Custom range": "Egyéni időszak",
   "Start date": "Kezdő dátum",
   "End date": "Záró dátum",
+  "Search {{count}} books": "Keresés {{count}} könyvben",
   "Select the first day, then the last day": "Először válassza ki az első napot, majd az utolsó napot",
   "Previous month": "Előző hónap",
   "Next month": "Következő hónap",

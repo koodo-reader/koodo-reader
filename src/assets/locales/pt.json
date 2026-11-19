@@ -1177,6 +1177,7 @@
   "Custom range": "Intervalo personalizado",
   "Start date": "Data de início",
   "End date": "Data de fim",
+  "Search {{count}} books": "Pesquisar em {{count}} livros",
   "Select the first day, then the last day": "Selecione o primeiro dia e depois o último dia",
   "Previous month": "Mês anterior",
   "Next month": "Mês seguinte",

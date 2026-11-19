@@ -1177,6 +1177,7 @@
   "Custom range": "نطاق مخصص",
   "Start date": "تاريخ البدء",
   "End date": "تاريخ الانتهاء",
+  "Search {{count}} books": "ابحث في {{count}} كتب",
   "Select the first day, then the last day": "اختر اليوم الأول ثم اليوم الأخير",
   "Previous month": "الشهر السابق",
   "Next month": "الشهر التالي",

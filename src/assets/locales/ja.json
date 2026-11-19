@@ -1177,6 +1177,7 @@
   "Custom range": "カスタム範囲",
   "Start date": "開始日",
   "End date": "終了日",
+  "Search {{count}} books": "{{count}} 冊の書籍を検索",
   "Select the first day, then the last day": "最初の日を選び、次に最後の日を選んでください",
   "Previous month": "前の月",
   "Next month": "次の月",

@@ -1177,6 +1177,7 @@
   "Custom range": "사용자 지정 범위",
   "Start date": "시작 날짜",
   "End date": "종료 날짜",
+  "Search {{count}} books": "도서 {{count}}권 검색",
   "Select the first day, then the last day": "첫 번째 날을 선택한 다음 마지막 날을 선택하세요",
   "Previous month": "이전 달",
   "Next month": "다음 달",

@@ -1177,6 +1177,7 @@
   "Custom range": "Mukautettu aikaväli",
   "Start date": "Aloituspäivä",
   "End date": "Päättymispäivä",
+  "Search {{count}} books": "Hae {{count}} kirjasta",
   "Select the first day, then the last day": "Valitse ensin ensimmäinen päivä ja sitten viimeinen päivä",
   "Previous month": "Edellinen kuukausi",
   "Next month": "Seuraava kuukausi",

@@ -669,6 +669,7 @@
   "Custom range": "自定义范围",
   "Start date": "开始日期",
   "End date": "结束日期",
+  "Search {{count}} books": "搜索 {{count}} 本图书",
   "Select the first day, then the last day": "先选第一天，再选最后一天",
   "Previous month": "上一月",
   "Next month": "下一月",

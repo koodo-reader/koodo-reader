@@ -1177,6 +1177,7 @@
   "Custom range": "Brugerdefineret interval",
   "Start date": "Startdato",
   "End date": "Slutdato",
+  "Search {{count}} books": "Søg i {{count}} bøger",
   "Select the first day, then the last day": "Vælg først den første dag og derefter den sidste dag",
   "Previous month": "Forrige måned",
   "Next month": "Næste måned",

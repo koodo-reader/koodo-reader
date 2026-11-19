@@ -1177,6 +1177,7 @@
   "Custom range": "སྒེར་གཤིས་ཀྱི་ཁོངས།",
   "Start date": "འགོ་འཛུགས་ཚེས་པ།",
   "End date": "མཇུག་སྒྲིལ་ཚེས་པ།",
+  "Search {{count}} books": "དཔེ་ཆ་ {{count}} འཚོལ།",
   "Select the first day, then the last day": "ཚེས་པ་དང་པོ་དང་མཐའ་མ་འདེམས་རོགས།",
   "Previous month": "ཟླ་བ་སྔོན་མ།",
   "Next month": "ཟླ་བ་རྗེས་མ།",

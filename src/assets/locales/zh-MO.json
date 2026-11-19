@@ -1185,6 +1185,7 @@
   "Custom range": "自訂範圍",
   "Start date": "開始日期",
   "End date": "結束日期",
+  "Search {{count}} books": "搜尋 {{count}} 本圖書",
   "Select the first day, then the last day": "先選第一天，再選最後一天",
   "Previous month": "上一個月",
   "Next month": "下一個月",

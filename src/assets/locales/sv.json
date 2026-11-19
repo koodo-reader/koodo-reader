@@ -1177,6 +1177,7 @@
   "Custom range": "Anpassat intervall",
   "Start date": "Startdatum",
   "End date": "Slutdatum",
+  "Search {{count}} books": "Sök bland {{count}} böcker",
   "Select the first day, then the last day": "Välj först den första dagen och sedan den sista dagen",
   "Previous month": "Föregående månad",
   "Next month": "Nästa månad",

@@ -1177,6 +1177,7 @@
   "Custom range": "Benutzerdefinierter Zeitraum",
   "Start date": "Startdatum",
   "End date": "Enddatum",
+  "Search {{count}} books": "{{count}} Bücher durchsuchen",
   "Select the first day, then the last day": "Wählen Sie zuerst den ersten Tag und dann den letzten Tag",
   "Previous month": "Vorheriger Monat",
   "Next month": "Nächster Monat",

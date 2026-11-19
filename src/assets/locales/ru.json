@@ -1177,6 +1177,7 @@
   "Custom range": "Свой диапазон",
   "Start date": "Дата начала",
   "End date": "Дата окончания",
+  "Search {{count}} books": "Поиск по {{count}} книгам",
   "Select the first day, then the last day": "Сначала выберите первый день, затем последний",
   "Previous month": "Предыдущий месяц",
   "Next month": "Следующий месяц",

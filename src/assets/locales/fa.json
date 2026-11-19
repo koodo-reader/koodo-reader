@@ -1177,6 +1177,7 @@
   "Custom range": "بازهٔ سفارشی",
   "Start date": "تاریخ شروع",
   "End date": "تاریخ پایان",
+  "Search {{count}} books": "جستجو در {{count}} کتاب",
   "Select the first day, then the last day": "ابتدا روز اول و سپس روز آخر را انتخاب کنید",
   "Previous month": "ماه قبل",
   "Next month": "ماه بعد",
