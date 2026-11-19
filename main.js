@@ -317,10 +317,16 @@ const enqueueOpenFiles = (args) => {
 };
 
 // 提示渲染进程消费队列；渲染进程挂载时也会主动拉一次，事件丢失不影响
+// 页面加载中 send 会丢，先记下待发送，等加载结束后补发
+let openFilesNotifyPending = false;
 const notifyOpenFiles = () => {
-  if (mainWin && !mainWin.isDestroyed() && !mainWin.webContents.isLoading()) {
-    mainWin.webContents.send("open-file-request");
+  if (!mainWin || mainWin.isDestroyed()) return;
+  if (mainWin.webContents.isLoading()) {
+    openFilesNotifyPending = true;
+    return;
   }
+  openFilesNotifyPending = false;
+  mainWin.webContents.send("open-file-request");
 };
 
 if (process.platform != "darwin") {
@@ -655,6 +661,10 @@ const createMainWin = () => {
     ? "http://127.0.0.1:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
+  // 加载期间被抑制的 open-file-request 通知，在资源加载结束后补发
+  mainWin.webContents.on("did-stop-loading", () => {
+    if (openFilesNotifyPending) notifyOpenFiles();
+  });
   // Handle deep link on cold start: wait for renderer to mount its IPC listeners
   mainWin.webContents.once("did-finish-load", () => {
     if (pendingDeepLink) {
