@@ -432,25 +432,7 @@
 }
 
 .stats-book-trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   max-width: 180px;
-  padding: 6px 10px 6px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--stats-border);
-  background: var(--stats-card-bg);
-  color: var(--stats-text);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 18px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.stats-book-trigger:hover {
-  background: var(--stats-hover-bg);
 }
 
 .stats-book-trigger-label {
@@ -462,6 +444,7 @@
 .stats-book-trigger-icon {
   flex-shrink: 0;
   font-size: 10px;
+  opacity: 0.6;
   transition: transform 0.15s;
 }
 
@@ -579,7 +562,6 @@
   text-align: center;
 }
 
-.stats-book-trigger:focus-visible,
 .stats-book-option:focus-visible {
   outline: 2px solid var(--stats-text);
   outline-offset: 1px;

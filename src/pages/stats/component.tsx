@@ -8,7 +8,6 @@ import {
   ReadingTimeUtil,
 } from "../../assets/lib/kookit-extra-browser.min";
 import DatabaseService from "../../utils/storage/databaseService";
-import BookUtil from "../../utils/file/bookUtil";
 import CoverUtil from "../../utils/file/coverUtil";
 import EmptyCover from "../../components/emptyCover";
 import Book from "../../models/Book";
@@ -270,7 +269,7 @@ const RangePicker = ({ range, minKey, maxKey, onApply }: RangePickerProps) => {
 interface BookOption {
   key: string;
   name: string;
-  seconds: number;
+  author: string;
 }
 
 interface BookPickerProps {
@@ -336,7 +335,7 @@ const BookPicker = ({ options, value, onSelect }: BookPickerProps) => {
                 {option.name}
               </span>
               <span className="stats-book-option-meta">
-                {ReadingTimeUtil.formatDuration(option.seconds)}
+                {option.author || t("Unknown Author")}
               </span>
             </span>
           </button>
@@ -386,7 +385,7 @@ export interface StatsState {
   earliestDate: string;
   bookKeys: string[];
   bookNamesMap: Record<string, string>;
-  bookTotals: Record<string, number>;
+  bookAuthorsMap: Record<string, string>;
   bookKey: string;
   leaderboard: LeaderboardBook[];
   heatmapData: { date: string; seconds: number }[];
@@ -421,7 +420,7 @@ const Stats = () => {
     earliestDate: "",
     bookKeys: [],
     bookNamesMap: {},
-    bookTotals: {},
+    bookAuthorsMap: {},
     bookKey: "",
     leaderboard: [],
     heatmapData: [],
@@ -474,7 +473,17 @@ const Stats = () => {
 
     // ── 3. Book filter options (books with recorded reading time) ─────
     const bookKeys = readingTimeUtil.getAllBookKeys();
-    const bookNamesMap = await BookUtil.getBookNamesMapByKeys(bookKeys);
+    const bookRecords = bookKeys.length
+      ? await DatabaseService.getRecordsByKeys(bookKeys, "books")
+      : [];
+    const bookRecordMap: Record<string, Book> = {};
+    const bookNamesMap: Record<string, string> = {};
+    const bookAuthorsMap: Record<string, string> = {};
+    for (const record of bookRecords) {
+      bookRecordMap[record.key] = record;
+      bookNamesMap[record.key] = record.name;
+      bookAuthorsMap[record.key] = record.author;
+    }
 
     // ── 4. Reading time leaderboard (top 9 books) ──────────────────────
     const bookTotals = readingTimeUtil.getBookTotals() as Record<
@@ -484,16 +493,6 @@ const Stats = () => {
     const topBooks = Object.entries(bookTotals)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 9);
-    const bookRecords = topBooks.length
-      ? await DatabaseService.getRecordsByKeys(
-          topBooks.map(([key]) => key),
-          "books"
-        )
-      : [];
-    const bookRecordMap: Record<string, Book> = {};
-    for (const record of bookRecords) {
-      bookRecordMap[record.key] = record;
-    }
     const leaderboard: LeaderboardBook[] = [];
     for (const [key, seconds] of topBooks) {
       const book = bookRecordMap[key];
@@ -557,7 +556,7 @@ const Stats = () => {
       earliestDate,
       bookKeys,
       bookNamesMap,
-      bookTotals,
+      bookAuthorsMap,
       leaderboard,
       heatmapData,
       isLoading: false,
@@ -766,7 +765,7 @@ const Stats = () => {
     earliestDate,
     bookKeys,
     bookNamesMap,
-    bookTotals,
+    bookAuthorsMap,
     bookKey,
     leaderboard,
     range,
@@ -844,7 +843,7 @@ const Stats = () => {
     .map((key) => ({
       key,
       name: bookNamesMap[key] || key,
-      seconds: bookTotals[key] || 0,
+      author: bookAuthorsMap[key] || "",
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
   const selectedBookName = bookKey
@@ -972,7 +971,7 @@ const Stats = () => {
               <div className="stats-book-picker" ref={bookPickerRef}>
                 <button
                   type="button"
-                  className="stats-book-trigger"
+                  className="stats-range-pill is-active stats-book-trigger"
                   aria-expanded={isBookPickerOpen}
                   aria-haspopup="dialog"
                   onClick={() => setIsBookPickerOpen((open) => !open)}
