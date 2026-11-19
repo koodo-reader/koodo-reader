@@ -186,6 +186,11 @@ const isRevertDirectionReading = (rendition: any) => {
   return rendition?.revertDirection === "yes";
 };
 
+// 翻页方向键分组：LTR 下 ↓ → PageDown 是「下一页」，RTL 下整体反过来
+const LTR_NEXT_DIRECTION_KEYS = [40, 39, 34]; // ↓ → PageDown
+const PAGE_DIRECTION_KEYS = [37, 38, 33, 40, 39, 34]; // ← ↑ PageUp ↓ → PageDown
+const isHorizontalArrow = (keyCode: number) => keyCode === 37 || keyCode === 39;
+
 // 弹窗未固定到右侧时，ESC 只关闭弹窗；返回 true 表示按键已处理，
 // 调用方必须直接 return，避免继续走到 exitReader 而退出阅读
 const handlePopupBoxEscape = (event: any, book: Book) => {
@@ -219,20 +224,26 @@ const arrowKeys = async (
   const revertDirection =
     isRevertDirectionReading(rendition) &&
     (readerMode !== "scroll" || isReadingAid);
-  if (revertDirection && (event.keyCode === 37 || event.keyCode === 39)) {
-    // RTL 下左右方向键整体镜像：← 下一页，→ 上一页
+  const shortcutConfig = getShortcutConfig();
+  // RTL 下翻页方向整体镜像：← ↑ PageUp 下一页，→ ↓ PageDown 上一页。
+  // matchShortcut 为修饰键精确匹配，因此 Ctrl+Alt+←/→ 这类章节快捷键不会被误拦截
+  if (
+    revertDirection &&
+    PAGE_DIRECTION_KEYS.includes(event.keyCode) &&
+    (matchShortcut(event, shortcutConfig.nextPage) ||
+      matchShortcut(event, shortcutConfig.prevPage))
+  ) {
     event.preventDefault();
-    if (event.keyCode === 37) {
-      await rendition.next();
-    } else {
+    if (LTR_NEXT_DIRECTION_KEYS.includes(event.keyCode)) {
       await rendition.prev();
+    } else {
+      await rendition.next();
     }
     handleShortcut(event, book, rendition);
     return;
   }
   if (readerMode === "scroll" && isReadingAid) {
     // 段落模式下拦截滚动模式的原生滚动按键，改为逐段导航
-    const shortcutConfig = getShortcutConfig();
     if (matchShortcut(event, shortcutConfig.prevPage)) {
       event.preventDefault();
       await rendition.prev();
@@ -339,13 +350,23 @@ const handleShortcut = (event: any, book: Book, rendition?: any) => {
     const bookmarkBtn = document.querySelector(".reader-toolbar-bookmark");
     bookmarkBtn?.dispatchEvent(clickEvent());
   }
+  const revertChapter = isRevertDirectionReading(rendition);
+  // RTL 下 ← → 的空间含义整体反转，章节快捷键同步反转
   if (rendition && matchShortcut(event, shortcuts.prevChapter)) {
     event.preventDefault();
-    rendition.prevChapter();
+    if (isHorizontalArrow(event.keyCode) && revertChapter) {
+      rendition.nextChapter();
+    } else {
+      rendition.prevChapter();
+    }
   }
   if (rendition && matchShortcut(event, shortcuts.nextChapter)) {
     event.preventDefault();
-    rendition.nextChapter();
+    if (isHorizontalArrow(event.keyCode) && revertChapter) {
+      rendition.prevChapter();
+    } else {
+      rendition.nextChapter();
+    }
   }
   for (const { shortcut, optionName } of SELECTION_SHORTCUT_OPTIONS) {
     if (matchShortcut(event, shortcuts[shortcut])) {
