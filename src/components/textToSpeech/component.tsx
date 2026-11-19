@@ -1411,7 +1411,7 @@ const TextToSpeech = () => {
                   value="official-ai-voice-plugin"
                   className="lang-setting-option"
                 >
-                  {t("Official AI Voice")}
+                  {t("Official Voice")}
                 </option>
                 <option value="custom" className="lang-setting-option">
                   {t("Custom voice")}
