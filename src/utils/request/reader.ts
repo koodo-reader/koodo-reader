@@ -141,8 +141,7 @@ export const getDictText = async (word: string, from: string, to: string) => {
             (item) =>
               `<p class="dict-learn-more">${item.word_to_compare}: </p>${item.analysis}`
           )
-        : "") +
-      `<p class="dict-learn-more">${i18n.t("Generated with AI")}</p>`;
+        : "");
     return dictText;
   } else {
     return "";
