@@ -783,14 +783,6 @@ const Stats = () => {
     darkMode ? "dark" : "light"
   }`;
   const gridColor = darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
-  const tabActiveBg = darkMode ? "#3a3a3a" : "#333";
-  const tabActiveColor = darkMode ? "#fff" : "#fff";
-  const tabInactiveBg = darkMode
-    ? "rgba(255,255,255,0.06)"
-    : "rgba(0,0,0,0.06)";
-  const tabInactiveColor = darkMode
-    ? "rgba(255,255,255,0.6)"
-    : "rgba(0,0,0,0.5)";
   const pageStyle = {
     backgroundColor: bgColor,
     color: textColor,
@@ -968,59 +960,82 @@ const Stats = () => {
                   </div>
                 </div>
               </div>
-              <div className="stats-book-picker" ref={bookPickerRef}>
-                <button
-                  type="button"
-                  className="stats-range-pill is-active stats-book-trigger"
-                  aria-expanded={isBookPickerOpen}
-                  aria-haspopup="dialog"
-                  onClick={() => setIsBookPickerOpen((open) => !open)}
-                >
-                  <span className="stats-book-trigger-label">
-                    {selectedBookName}
-                  </span>
-                  <span className="icon-dropdown stats-book-trigger-icon" />
-                </button>
-                {isBookPickerOpen && (
-                  <BookPicker
-                    options={bookOptions}
-                    value={bookKey}
-                    onSelect={(key) => {
-                      handleBookChange(key);
-                      setIsBookPickerOpen(false);
-                    }}
-                  />
-                )}
+              <div className="stats-chart-actions">
+                <div className="stats-chart-tabs">
+                  <button
+                    type="button"
+                    className={`stats-chart-tab${
+                      chartTab === "bar" ? " is-active" : ""
+                    }`}
+                    aria-label={t("Bar Chart")}
+                    aria-pressed={chartTab === "bar"}
+                    title={t("Bar Chart")}
+                    onClick={() =>
+                      setState((prev) => ({ ...prev, chartTab: "bar" }))
+                    }
+                  >
+                    <svg
+                      className="stats-chart-tab-icon"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <rect x="4.5" y="11" width="2.5" height="9" rx="1.7" />
+                      <rect x="10.3" y="4" width="2.5" height="16" rx="1.7" />
+                      <rect x="16.1" y="7.5" width="2.5" height="12.5" rx="1.7" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className={`stats-chart-tab${
+                      chartTab === "line" ? " is-active" : ""
+                    }`}
+                    aria-label={t("Line Chart")}
+                    aria-pressed={chartTab === "line"}
+                    title={t("Line Chart")}
+                    onClick={() =>
+                      setState((prev) => ({ ...prev, chartTab: "line" }))
+                    }
+                  >
+                    <svg
+                      className="stats-chart-tab-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 17L9 10L13.5 13.5L20 7" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="stats-book-picker" ref={bookPickerRef}>
+                  <button
+                    type="button"
+                    className="stats-range-pill is-active stats-book-trigger"
+                    aria-expanded={isBookPickerOpen}
+                    aria-haspopup="dialog"
+                    onClick={() => setIsBookPickerOpen((open) => !open)}
+                  >
+                    <span className="stats-book-trigger-label">
+                      {selectedBookName}
+                    </span>
+                    <span className="icon-dropdown stats-book-trigger-icon" />
+                  </button>
+                  {isBookPickerOpen && (
+                    <BookPicker
+                      options={bookOptions}
+                      value={bookKey}
+                      onSelect={(key) => {
+                        handleBookChange(key);
+                        setIsBookPickerOpen(false);
+                      }}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="stats-chart-tabs">
-              <button
-                className="stats-chart-tab"
-                style={{
-                  backgroundColor:
-                    chartTab === "bar" ? tabActiveBg : tabInactiveBg,
-                  color: chartTab === "bar" ? tabActiveColor : tabInactiveColor,
-                }}
-                onClick={() =>
-                  setState((prev) => ({ ...prev, chartTab: "bar" }))
-                }
-              >
-                <Trans>Bar Chart</Trans>
-              </button>
-              <button
-                className="stats-chart-tab"
-                style={{
-                  backgroundColor:
-                    chartTab === "line" ? tabActiveBg : tabInactiveBg,
-                  color:
-                    chartTab === "line" ? tabActiveColor : tabInactiveColor,
-                }}
-                onClick={() =>
-                  setState((prev) => ({ ...prev, chartTab: "line" }))
-                }
-              >
-                <Trans>Line Chart</Trans>
-              </button>
             </div>
 
             <ResponsiveContainer width="100%" height={220}>

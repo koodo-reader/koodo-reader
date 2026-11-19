@@ -567,22 +567,56 @@
   outline-offset: 1px;
 }
 
-.stats-chart-tabs {
+.stats-chart-actions {
   display: flex;
+  align-items: center;
   gap: 8px;
-  margin-bottom: 20px;
+}
+
+.stats-chart-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 10px;
+  background: var(--stats-range-bg);
 }
 
 .stats-chart-tab {
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--stats-muted);
   cursor: pointer;
-  border: none;
   transition:
     background 0.2s,
     color 0.2s;
+}
+
+.stats-chart-tab:hover {
+  color: var(--stats-text);
+}
+
+.stats-chart-tab.is-active {
+  background: var(--stats-card-bg);
+  border-color: var(--stats-border);
+  color: var(--stats-text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.stats-chart-tab:focus-visible {
+  outline: 2px solid var(--stats-text);
+  outline-offset: 1px;
+}
+
+.stats-chart-tab-icon {
+  width: 18px;
+  height: 18px;
 }
 
 /* ── Leaderboard ── */
