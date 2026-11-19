@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./stats.css";
 import { Trans } from "react-i18next";
 import {
@@ -65,6 +65,208 @@ const LeaderboardCover = ({ item }: { item: LeaderboardBook }) => {
   );
 };
 
+interface RangePickerProps {
+  range: { start: string; end: string };
+  minKey: string;
+  maxKey: string;
+  onApply: (start: string, end: string) => void;
+}
+
+interface CalendarCell {
+  /** YYYY-MM-DD */
+  key: string;
+  day: number;
+}
+
+/** `YYYY-MM-DD` → `YYYY-MM` */
+const getMonthKey = (dateKey: string): string => dateKey.slice(0, 7);
+
+/** Shift a `YYYY-MM` key by `delta` months. */
+const shiftMonthKey = (monthKey: string, delta: number): string => {
+  const [year, month] = monthKey.split("-").map(Number);
+  return ReadingTimeUtil.dateToKey(
+    new Date(year, month - 1 + delta, 1)
+  ).slice(0, 7);
+};
+
+/** Seven-column month grid padded with nulls, week starts on Sunday. */
+const buildMonthGrid = (monthKey: string): (CalendarCell | null)[] => {
+  const [year, month] = monthKey.split("-").map(Number);
+  const firstWeekday = new Date(year, month - 1, 1).getDay();
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const cells: (CalendarCell | null)[] = new Array(firstWeekday).fill(null);
+  for (let day = 1; day <= daysInMonth; day++) {
+    cells.push({
+      key: ReadingTimeUtil.dateToKey(new Date(year, month - 1, day)),
+      day,
+    });
+  }
+  while (cells.length % 7 !== 0) {
+    cells.push(null);
+  }
+  return cells;
+};
+
+/** Localized label for a `YYYY-MM-DD` key, e.g. `May 1, 2025`. */
+const formatDayLabel = (dateKey: string, lang: string): string => {
+  try {
+    return new Intl.DateTimeFormat(ReadingTimeUtil.getDateLocale(lang), {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }).format(ReadingTimeUtil.parseDateKey(dateKey));
+  } catch (error) {
+    return dateKey;
+  }
+};
+
+const RangePicker = ({ range, minKey, maxKey, onApply }: RangePickerProps) => {
+  const { t, i18n } = useTranslation();
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const [visibleMonth, setVisibleMonth] = useState(() =>
+    getMonthKey(range.end)
+  );
+  const [draftStart, setDraftStart] = useState(range.start);
+  const [draftEnd, setDraftEnd] = useState<string | null>(range.end);
+  const [hoverKey, setHoverKey] = useState<string | null>(null);
+
+  const previewEnd = draftEnd || hoverKey;
+  const from =
+    draftStart && previewEnd
+      ? draftStart <= previewEnd
+        ? draftStart
+        : previewEnd
+      : null;
+  const to =
+    draftStart && previewEnd
+      ? draftStart <= previewEnd
+        ? previewEnd
+        : draftStart
+      : null;
+
+  const cells = buildMonthGrid(visibleMonth);
+  const weekdays = ReadingTimeUtil.getWeekdayLabels(i18n.language, "narrow");
+  const minMonth = getMonthKey(minKey);
+  const maxMonth = getMonthKey(maxKey);
+
+  const handleDayClick = (key: string) => {
+    if (!draftStart || draftEnd) {
+      setDraftStart(key);
+      setDraftEnd(null);
+      setHoverKey(null);
+      return;
+    }
+    onApply(
+      key < draftStart ? key : draftStart,
+      key < draftStart ? draftStart : key
+    );
+  };
+
+  // Keep the popover inside the window when the trigger sits near the edge.
+  useLayoutEffect(() => {
+    const popover = popoverRef.current;
+    if (!popover) return;
+    const margin = 12;
+    const rect = popover.getBoundingClientRect();
+    let shift = 0;
+    if (rect.right > window.innerWidth - margin) {
+      shift = window.innerWidth - margin - rect.right;
+    }
+    if (rect.left + shift < margin) {
+      shift = margin - rect.left;
+    }
+    if (shift !== 0) {
+      popover.style.left = `${shift}px`;
+    }
+  }, []);
+
+  return (
+    <div className="stats-range-popover" role="dialog" ref={popoverRef}>
+      <div className="stats-range-popover-title">
+        {t("Select the first day, then the last day")}
+      </div>
+      <div className="stats-calendar-header">
+        <button
+          type="button"
+          className="stats-calendar-nav"
+          aria-label={t("Previous month")}
+          disabled={visibleMonth <= minMonth}
+          onClick={() => setVisibleMonth(shiftMonthKey(visibleMonth, -1))}
+        >
+          <span className="icon-dropdown stats-calendar-nav-icon is-previous" />
+        </button>
+        <div className="stats-calendar-month">
+          {ReadingTimeUtil.formatMonthYearLabel(
+            ReadingTimeUtil.parseDateKey(`${visibleMonth}-01`),
+            i18n.language
+          )}
+        </div>
+        <button
+          type="button"
+          className="stats-calendar-nav"
+          aria-label={t("Next month")}
+          disabled={visibleMonth >= maxMonth}
+          onClick={() => setVisibleMonth(shiftMonthKey(visibleMonth, 1))}
+        >
+          <span className="icon-dropdown stats-calendar-nav-icon is-next" />
+        </button>
+      </div>
+      <div className="stats-calendar-weekdays">
+        {weekdays.map((label, index) => (
+          <div key={index} className="stats-calendar-weekday">
+            {label}
+          </div>
+        ))}
+      </div>
+      <div className="stats-calendar-days">
+        {cells.map((cell, index) => {
+          if (!cell) {
+            return <span key={`empty-${index}`} />;
+          }
+          const classNames = ["stats-calendar-day"];
+          if (from && to && cell.key > from && cell.key < to) {
+            classNames.push("is-in-range");
+          }
+          if (cell.key === from) {
+            classNames.push("is-start");
+          }
+          if (cell.key === to) {
+            classNames.push("is-end");
+          }
+          return (
+            <button
+              key={cell.key}
+              type="button"
+              className={classNames.join(" ")}
+              disabled={cell.key < minKey || cell.key > maxKey}
+              onClick={() => handleDayClick(cell.key)}
+              onMouseEnter={() => {
+                if (draftStart && !draftEnd) {
+                  setHoverKey(cell.key);
+                }
+              }}
+              onMouseLeave={() => {
+                if (!draftEnd) {
+                  setHoverKey(null);
+                }
+              }}
+            >
+              {cell.day}
+            </button>
+          );
+        })}
+      </div>
+      <div className="stats-calendar-footer">
+        <span className="icon-clock stats-calendar-footer-icon" />
+        <span>
+          {formatDayLabel(from || range.start, i18n.language)} –{" "}
+          {formatDayLabel(to || range.end, i18n.language)}
+        </span>
+      </div>
+    </div>
+  );
+};
+
 const PRESET_LABELS: Record<Exclude<RangePreset, "custom">, string> = {
   "7d": "Last 7 Days",
   "30d": "Last 30 Days",
@@ -72,6 +274,22 @@ const PRESET_LABELS: Record<Exclude<RangePreset, "custom">, string> = {
   "6m": "Last 6 Months",
   "1y": "Last Year",
 };
+
+const PRESET_SHORT_LABELS: Record<Exclude<RangePreset, "custom">, string> = {
+  "7d": "7 Days",
+  "30d": "30 Days",
+  "3m": "3 Months",
+  "6m": "6 Months",
+  "1y": "1 Year",
+};
+
+const PRESETS: Exclude<RangePreset, "custom">[] = [
+  "7d",
+  "30d",
+  "3m",
+  "6m",
+  "1y",
+];
 
 export interface StatsProps {
   t: (title: string) => string;
@@ -106,6 +324,8 @@ const Stats = () => {
     });
   }
   const readingTimeUtil = readingTimeUtilRef.current;
+  const pickerRef = useRef<HTMLDivElement>(null);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const [state, setState] = useState<StatsState>(() => ({
     totalBooks: 0,
@@ -262,6 +482,24 @@ const Stats = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (!isPickerOpen) return;
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!pickerRef.current?.contains(event.target as Node)) {
+        setIsPickerOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsPickerOpen(false);
+    };
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isPickerOpen]);
+
   const handleRangePresetChange = (preset: RangePreset) => {
     setState((prev) => {
       const range: StatsState["range"] =
@@ -280,23 +518,13 @@ const Stats = () => {
     });
   };
 
-  const handleCustomDateChange = (field: "start" | "end", value: string) => {
-    if (!value) return;
-    setState((prev) => {
-      const range = { ...prev.range };
-      range[field] = value;
-      if (field === "start" && value > range.end) range.end = value;
-      if (field === "end" && value < range.start) range.start = value;
-      return {
-        ...prev,
-        range,
-        chartDays: readingTimeUtil.getRangeStats(
-          range.start,
-          range.end,
-          prev.bookKey
-        ),
-      };
-    });
+  const handleApplyCustomRange = (start: string, end: string) => {
+    setState((prev) => ({
+      ...prev,
+      range: { preset: "custom", start, end },
+      chartDays: readingTimeUtil.getRangeStats(start, end, prev.bookKey),
+    }));
+    setIsPickerOpen(false);
   };
 
   const handleBookChange = (bookKey: string) => {
@@ -468,6 +696,20 @@ const Stats = () => {
     backgroundColor: darkMode ? selectBg : cardBg,
     color: textColor,
   };
+  const pageStyle = {
+    backgroundColor: bgColor,
+    color: textColor,
+    "--stats-text": textColor,
+    "--stats-card-bg": cardBg,
+    "--stats-border": darkMode ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.1)",
+    "--stats-hover-bg": darkMode
+      ? "rgba(255,255,255,0.08)"
+      : "rgba(0,0,0,0.05)",
+    "--stats-range-bg": darkMode
+      ? "rgba(255,255,255,0.12)"
+      : "rgba(0,0,0,0.07)",
+    "--stats-muted": darkMode ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.5)",
+  };
 
   const cards = [
     {
@@ -517,15 +759,15 @@ const Stats = () => {
   }));
   const rangeTitle =
     range.preset === "custom"
-      ? `${range.start} – ${range.end}`
+      ? `${formatDayLabel(range.start, i18n.language)} – ${formatDayLabel(
+          range.end,
+          i18n.language
+        )}`
       : t(PRESET_LABELS[range.preset]);
   const tickInterval = Math.max(0, Math.ceil(chartData.length / 8) - 1);
 
   return (
-    <div
-      className="stats-page"
-      style={{ backgroundColor: bgColor, color: textColor }}
-    >
+    <div className="stats-page" style={pageStyle}>
       {/* Close button */}
       <div
         className="stats-close-btn"
@@ -572,77 +814,74 @@ const Stats = () => {
             style={{ backgroundColor: cardBg }}
           >
             <div className="stats-chart-header">
-              <div className="stats-section-title">{rangeTitle}</div>
-              <div className="stats-chart-filters">
-                <select
-                  className="stats-range-select stats-book-select"
-                  value={bookKey}
-                  onChange={(e) => handleBookChange(e.target.value)}
-                  style={selectStyle}
-                >
-                  <option value="" style={optionStyle}>
-                    {t("All books")}
-                  </option>
-                  {bookOptions.map((book) => (
-                    <option key={book.key} value={book.key} style={optionStyle}>
-                      {book.name}
-                    </option>
+              <div className="stats-chart-heading">
+                <div className="stats-section-title">{rangeTitle}</div>
+                <div className="stats-range-tabs">
+                  {PRESETS.map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      className={`stats-range-pill${
+                        range.preset === preset ? " is-active" : ""
+                      }`}
+                      onClick={() => handleRangePresetChange(preset)}
+                    >
+                      {t(PRESET_SHORT_LABELS[preset])}
+                    </button>
                   ))}
-                </select>
-                <select
-                  className="stats-range-select"
-                  value={range.preset}
-                  onChange={(e) =>
-                    handleRangePresetChange(e.target.value as RangePreset)
-                  }
-                  style={selectStyle}
-                >
-                  {(["7d", "30d", "3m", "6m", "1y"] as const).map((preset) => (
-                    <option key={preset} value={preset} style={optionStyle}>
-                      {t(PRESET_LABELS[preset])}
-                    </option>
-                  ))}
-                  <option value="custom" style={optionStyle}>
-                    {t("Custom range")}
-                  </option>
-                </select>
+                  <div className="stats-range-picker" ref={pickerRef}>
+                    <button
+                      type="button"
+                      className={`stats-range-pill${
+                        range.preset === "custom" ? " is-active" : ""
+                      }`}
+                      aria-expanded={isPickerOpen}
+                      aria-haspopup="dialog"
+                      onClick={() => setIsPickerOpen((open) => !open)}
+                    >
+                      <svg
+                        className="stats-range-pill-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        aria-hidden="true"
+                      >
+                        <rect x="3" y="5" width="18" height="16" rx="2" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                        <line x1="8" y1="3" x2="8" y2="7" />
+                        <line x1="16" y1="3" x2="16" y2="7" />
+                      </svg>
+                      {t("Custom")}
+                    </button>
+                    {isPickerOpen && (
+                      <RangePicker
+                        range={range}
+                        minKey={earliestKey}
+                        maxKey={todayKey}
+                        onApply={handleApplyCustomRange}
+                      />
+                    )}
+                  </div>
+                </div>
               </div>
+              <select
+                className="stats-book-select"
+                value={bookKey}
+                onChange={(e) => handleBookChange(e.target.value)}
+                style={selectStyle}
+              >
+                <option value="" style={optionStyle}>
+                  {t("All books")}
+                </option>
+                {bookOptions.map((book) => (
+                  <option key={book.key} value={book.key} style={optionStyle}>
+                    {book.name}
+                  </option>
+                ))}
+              </select>
             </div>
-            {range.preset === "custom" && (
-              <div className="stats-range-custom">
-                <input
-                  type="date"
-                  className="stats-range-date"
-                  value={range.start}
-                  min={earliestKey}
-                  max={todayKey}
-                  aria-label={t("Start date")}
-                  onChange={(e) =>
-                    handleCustomDateChange("start", e.target.value)
-                  }
-                  style={{
-                    color: textColor,
-                    colorScheme: darkMode ? "dark" : "light",
-                  }}
-                />
-                <span className="stats-range-sep">–</span>
-                <input
-                  type="date"
-                  className="stats-range-date"
-                  value={range.end}
-                  min={earliestKey}
-                  max={todayKey}
-                  aria-label={t("End date")}
-                  onChange={(e) =>
-                    handleCustomDateChange("end", e.target.value)
-                  }
-                  style={{
-                    color: textColor,
-                    colorScheme: darkMode ? "dark" : "light",
-                  }}
-                />
-              </div>
-            )}
             <div className="stats-chart-tabs">
               <button
                 className="stats-chart-tab"
