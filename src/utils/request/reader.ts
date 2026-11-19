@@ -209,7 +209,7 @@ export const getTTSAudio = async (
       if (response.data.user_type === "pro") {
         let result = await vexComfirmAsync(
           i18n.t(
-            "You have exhausted your daily free AI voice character quota. Please purchase more quota to continue using this feature or wait until the quota resets. You can also use other TTS voices instead."
+            "You have exhausted your daily free voice character quota. Please purchase more quota to continue using this feature or wait until the quota resets. You can also use other TTS voices instead."
           ) +
             " " +
             (response.data && response.data.ttl
@@ -342,7 +342,7 @@ export const getSplitSentence = async (
     toast.error(
       i18n.t("You have reached the daily limit for this feature.") +
         " " +
-        i18n.t("AI multi-role speech is paused for now.") +
+        i18n.t("Multi-role speech is paused for now.") +
         " " +
         i18n.t("Your quota will be reset in", {
           ttl:

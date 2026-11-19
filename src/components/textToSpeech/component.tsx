@@ -1335,7 +1335,7 @@ const TextToSpeech = () => {
           variant="setting"
           title={
             <>
-              <Trans>AI multi-role speech</Trans>
+              <Trans>Multi-role speech</Trans>
               <span style={{ fontSize: "13px", color: "#f16464" }}> (Pro)</span>
             </>
           }
@@ -1357,7 +1357,7 @@ const TextToSpeech = () => {
         >
           <Trans>
             {
-              "Use AI to analyze books, with different characters reading aloud in different voices"
+              "Analyze books, with different characters reading aloud in different voices"
             }
           </Trans>
         </p>
