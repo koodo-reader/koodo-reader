@@ -118,6 +118,9 @@ export const applyAppBackgroundImage = async () => {
   const imageId = ConfigService.getReaderConfig("appBackgroundImage") || "";
   const root = document.getElementById("root");
   if (!root) return;
+  // Keep the root opaque so a cleared background image cannot leave the
+  // previous frame visible while the browser repaints the page.
+  root.style.backgroundColor = "var(--app-bg)";
   if (imageId) {
     const meta = BackgroundUtil.getImageMeta(imageId);
     const imageUrl = await BackgroundUtil.loadImage(imageId, meta?.extension);
