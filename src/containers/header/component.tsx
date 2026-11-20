@@ -185,16 +185,17 @@ const Header = (props: HeaderProps) => {
   };
 
   const handleOpenLastReadBook = async () => {
-    let filePath = "";
+    let hasExternalFile = false;
     //open book when app start
     if (isElectron) {
-      const ipcRenderer = window.electronAPI;
-      filePath = ipcRenderer.sendSync("check-file-data");
+      hasExternalFile = await window.electronAPI.invoke(
+        "has-external-open-request"
+      );
     }
     if (
       ConfigService.getReaderConfig("isOpenBook") === "yes" &&
       !currentBook.key &&
-      !filePath
+      !hasExternalFile
     ) {
       let lastReadBookKey = ConfigService.getAllListConfig("recentBooks")[0];
       if (lastReadBookKey) {

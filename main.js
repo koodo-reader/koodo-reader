@@ -292,16 +292,51 @@ const hardenAppContents = (contents) => {
 };
 
 const singleInstance = app.requestSingleInstanceLock();
-var filePath = null;
+// 外部打开请求（命令行/文件关联/第二实例）在主进程内存中排队，由渲染进程排他消费
+const pendingOpenFiles = [];
+// 本次进程是否收到过外部打开请求，只置 true 不复位（用于跳过“自动打开上次阅读的书”）
+let hasExternalOpenRequest = false;
 var pendingDeepLink = null;
-if (process.platform != "darwin" && process.argv.length >= 2) {
-  filePath = process.argv[1];
-  // Check argv for a deep link URL (cold start)
-  for (const arg of process.argv) {
-    if (arg.startsWith("koodo-reader://")) {
-      pendingDeepLink = arg;
-      break;
+
+// 只接受真实存在的文件，过滤开关参数、协议 URL、目录与重复项
+const enqueueOpenFiles = (args) => {
+  let added = false;
+  for (const arg of args) {
+    if (typeof arg !== "string" || !arg || arg.startsWith("-")) continue;
+    try {
+      if (!fs.existsSync(arg) || !fs.statSync(arg).isFile()) continue;
+    } catch (error) {
+      continue;
     }
+    if (!pendingOpenFiles.includes(arg)) {
+      pendingOpenFiles.push(arg);
+      added = true;
+    }
+  }
+  if (added) hasExternalOpenRequest = true;
+};
+
+// 提示渲染进程消费队列；渲染进程挂载时也会主动拉一次，事件丢失不影响
+// 页面加载中 send 会丢，先记下待发送，等加载结束后补发
+let openFilesNotifyPending = false;
+const notifyOpenFiles = () => {
+  if (!mainWin || mainWin.isDestroyed()) return;
+  if (mainWin.webContents.isLoading()) {
+    openFilesNotifyPending = true;
+    return;
+  }
+  openFilesNotifyPending = false;
+  mainWin.webContents.send("open-file-request");
+};
+
+if (process.platform != "darwin") {
+  enqueueOpenFiles(process.argv.slice(1));
+}
+// Check argv for a deep link URL (cold start)
+for (const arg of process.argv) {
+  if (arg.startsWith("koodo-reader://")) {
+    pendingDeepLink = arg;
+    break;
   }
 }
 log.transports.file.fileName = "debug.log";
@@ -389,6 +424,9 @@ if (!singleInstance) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();
     }
+    // 运行中再次双击书籍文件：第二个实例只负责把路径交给已运行的实例
+    enqueueOpenFiles(argv.slice(1));
+    notifyOpenFiles();
     // Handle deep link passed via second-instance argv
     const deepLink = argv.find((arg) => arg.startsWith("koodo-reader://"));
     if (deepLink) {
@@ -399,16 +437,11 @@ if (!singleInstance) {
     }
   });
 }
-if (filePath && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-  // Make sure the directory exists
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-  fs.writeFileSync(
-    path.join(dirPath, "log.json"),
-    JSON.stringify({ filePath }),
-    "utf-8"
-  );
+// 旧版本用 uploads/log.json 在主/子进程间传递文件路径，现改为内存队列，清理残留文件
+try {
+  fs.rmSync(path.join(dirPath, "log.json"), { force: true });
+} catch (error) {
+  console.error("Error removing legacy log.json:", error);
 }
 const getDBConnection = (dbName, storagePath, sqlStatement) => {
   if (!dbConnection[dbName]) {
@@ -628,6 +661,10 @@ const createMainWin = () => {
     ? "http://127.0.0.1:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
+  // 加载期间被抑制的 open-file-request 通知，在资源加载结束后补发
+  mainWin.webContents.on("did-stop-loading", () => {
+    if (openFilesNotifyPending) notifyOpenFiles();
+  });
   // Handle deep link on cold start: wait for renderer to mount its IPC listeners
   mainWin.webContents.once("did-finish-load", () => {
     if (pendingDeepLink) {
@@ -2377,43 +2414,10 @@ const createMainWin = () => {
   ipcMain.handle("set-native-theme-source", (event, appSkin) => {
     return applyNativeThemeSource(appSkin);
   });
-  ipcMain.on("get-file-data", function (event) {
-    if (fs.existsSync(path.join(dirPath, "log.json"))) {
-      try {
-        const _data = JSON.parse(
-          fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
-        );
-        if (_data && _data.filePath) {
-          filePath = _data.filePath;
-          setTimeout(() => {
-            fs.writeFileSync(path.join(dirPath, "log.json"), "{}", "utf-8");
-          }, 1000);
-        }
-      } catch (error) {
-        console.error("Error reading log.json:", error);
-      }
-    }
-
-    event.returnValue = filePath;
-    filePath = null;
-  });
-  ipcMain.on("check-file-data", function (event) {
-    if (fs.existsSync(path.join(dirPath, "log.json"))) {
-      try {
-        const _data = JSON.parse(
-          fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
-        );
-        if (_data && _data.filePath) {
-          filePath = _data.filePath;
-        }
-      } catch (error) {
-        console.error("Error reading log.json:", error);
-      }
-    }
-
-    event.returnValue = filePath;
-    filePath = null;
-  });
+  // 排他消费：外部打开请求只会交给第一个来取的渲染进程
+  ipcMain.handle("consume-pending-open-files", () => pendingOpenFiles.splice(0));
+  // 只读：本次进程是否收到过外部打开请求（决定要不要自动打开上次阅读的书）
+  ipcMain.handle("has-external-open-request", () => hasExternalOpenRequest);
   ipcMain.handle("system-ocr", async (event, config) => {
     const { base64, lang } = config || {};
     let tempPath = null;
@@ -2493,7 +2497,8 @@ app.on("window-all-closed", () => {
   app.quit();
 });
 app.on("open-file", (e, pathToFile) => {
-  filePath = pathToFile;
+  enqueueOpenFiles([pathToFile]);
+  notifyOpenFiles();
 });
 // Register protocol handler
 app.setAsDefaultProtocolClient("koodo-reader");
