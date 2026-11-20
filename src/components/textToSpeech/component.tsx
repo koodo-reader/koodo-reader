@@ -1345,6 +1345,7 @@ const TextToSpeech = () => {
             width: "88%",
             marginTop: "20px",
             fontWeight: 500,
+            alignItems: "center",
           }}
           isEnabled={stateRef.current.multiRoleEnabled}
           onClick={() => {
