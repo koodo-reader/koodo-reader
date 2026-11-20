@@ -91,12 +91,6 @@ flatpak install flathub io.github.troyeguo.koodo-reader
 sudo snap install koodo-reader
 ```
 
-- Instalar com o Homebrew:
-
-```shell
-brew install --cask koodo-reader
-```
-
 - Instalar com o Docker:
 
 [Installation Guide](https://koodoreader.com/en/deploy-docker)
