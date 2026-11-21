@@ -178,9 +178,7 @@ const TextToSpeech = () => {
         ];
       } else {
         customVoicesRef.current = getAllVoices(
-          plugins.filter(
-            (item) => item.key === "official-ai-voice-plugin"
-          )
+          plugins.filter((item) => item.key === "official-ai-voice-plugin")
         );
         voicesRef.current = [
           ...nativeVoicesRef.current,
@@ -309,15 +307,9 @@ const TextToSpeech = () => {
         handleSettingMode("account");
         return;
       }
-      ConfigService.setListConfig(
-        currentBook.key,
-        "multiRoleVoiceBooks"
-      );
+      ConfigService.setListConfig(currentBook.key, "multiRoleVoiceBooks");
     } else {
-      ConfigService.deleteListConfig(
-        currentBook.key,
-        "multiRoleVoiceBooks"
-      );
+      ConfigService.deleteListConfig(currentBook.key, "multiRoleVoiceBooks");
     }
     setState({ multiRoleEnabled: enabled });
   };
@@ -461,10 +453,7 @@ const TextToSpeech = () => {
     return voiceList;
   };
   const handleStartAudio = async () => {
-    if (
-      isAuthed &&
-      ConfigService.getReaderConfig("voiceEngine") !== "system"
-    ) {
+    if (isAuthed && ConfigService.getReaderConfig("voiceEngine") !== "system") {
       toast.loading(t("Loading audio, please wait..."), {
         id: "tts-load",
       });
@@ -876,7 +865,7 @@ const TextToSpeech = () => {
       nodeListRef.current = [];
       await handleAudio();
     }
-  }
+  };
   const handleSystemRead = async (index) => {
     if (stateRef.current.isPaused || !stateRef.current.isAudioOn) return;
     if (index >= nodeListRef.current.length) {
@@ -960,7 +949,7 @@ const TextToSpeech = () => {
     } else if (res === "end") {
       return;
     }
-  }
+  };
   const handleSpeech = async (index: number) => {
     return new Promise<string>(async (resolve) => {
       let res = await TTSUtil.readAloud(index);
@@ -1234,13 +1223,8 @@ const TextToSpeech = () => {
                 return;
               }
               const newEngine = voice.plugin || "system";
-              if (
-                newEngine === "official-ai-voice-plugin" &&
-                !isAuthed
-              ) {
-                toast(
-                  t("Please upgrade to Pro to use this feature")
-                );
+              if (newEngine === "official-ai-voice-plugin" && !isAuthed) {
+                toast(t("Please upgrade to Pro to use this feature"));
                 handleSetting(true);
                 handleSettingMode("account");
                 return;
@@ -1269,19 +1253,20 @@ const TextToSpeech = () => {
               forceUpdate();
             }}
           >
-            {(stateRef.current.voiceList[stateRef.current.voiceLocale] || voicesRef.current).map(
-              (item) => {
-                return (
-                  <option
-                    value={[item.name, item.plugin].join("#")}
-                    key={[item.name, item.plugin].join("#")}
-                    className="lang-setting-option"
-                  >
-                    {t(item.displayName || item.name)}
-                  </option>
-                );
-              }
-            )}
+            {(
+              stateRef.current.voiceList[stateRef.current.voiceLocale] ||
+              voicesRef.current
+            ).map((item) => {
+              return (
+                <option
+                  value={[item.name, item.plugin].join("#")}
+                  key={[item.name, item.plugin].join("#")}
+                  className="lang-setting-option"
+                >
+                  {t(item.displayName || item.name)}
+                </option>
+              );
+            })}
           </select>
         </div>
 
@@ -1354,7 +1339,11 @@ const TextToSpeech = () => {
         />
         <p
           className="setting-option-subtitle"
-          style={{ marginLeft: "20px", marginRight: "20px" }}
+          style={{
+            marginLeft: "20px",
+            marginRight: "20px",
+            marginBottom: "10px",
+          }}
         >
           <Trans>
             {
@@ -1376,7 +1365,9 @@ const TextToSpeech = () => {
                 id="multi-role-voice-type"
                 value={stateRef.current.multiRoleVoiceType}
                 onChange={(event) => {
-                  if (event.target.value === stateRef.current.multiRoleVoiceType)
+                  if (
+                    event.target.value === stateRef.current.multiRoleVoiceType
+                  )
                     return;
                   setState({ multiRoleVoiceType: event.target.value });
                   ConfigService.setReaderConfig(
