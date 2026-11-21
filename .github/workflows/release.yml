@@ -32,7 +32,19 @@ jobs:
       - name: Install Snapcraft
         uses: samuelmeuli/action-snapcraft@v3
         # Only install Snapcraft on Ubuntu
-        if: startsWith(matrix.os, 'ubuntu-22.04')
+        if: startsWith(matrix.os, 'ubuntu')
+        with:
+          # arm64 core22 snap builds use the legacy `snapcraft snap` command,
+          # which Snapcraft 9 removed
+          channel: 8.x/stable
+      - name: Setup LXD for Snapcraft
+        if: startsWith(matrix.os, 'ubuntu-24.04-arm')
+        run: |
+          sudo snap install lxd
+          sudo /snap/bin/lxd init --auto
+          sudo iptables -P FORWARD ACCEPT
+          # Allow the unprivileged runner user to talk to the LXD socket
+          sudo chmod 666 /var/snap/lxd/common/lxd/unix.socket
       - name: Install Gcc
         if: startsWith(matrix.os, 'ubuntu-22.04')
         run: |
@@ -76,6 +88,10 @@ jobs:
             },
             {
               "target": "AppImage", 
+              "arch": ["arm64"]
+            },
+            {
+              "target": "snap",
               "arch": ["arm64"]
             }
           ]' package.json > package.json.tmp && mv package.json.tmp package.json
