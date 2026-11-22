@@ -6,10 +6,12 @@ import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import CryptoJS from "crypto-js";
 import Parser from "html-react-parser";
-import DOMPurify from "dompurify";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
-import { supportedFormats } from "../../../utils/common";
+import {
+  sanitizeUnsafeHtml,
+  supportedFormats,
+} from "../../../utils/common";
 
 export interface OPDSCatalog {
   id: string;
@@ -1278,12 +1280,7 @@ const OPDSDialog = () => {
               <Trans>Description</Trans>:
             </p>
             <div className="detail-dialog-book-detail opds-book-description">
-              {Parser(
-                DOMPurify.sanitize(selectedBook.summary, {
-                  FORBID_TAGS: ["style"],
-                  FORBID_ATTR: ["style"],
-                })
-              )}
+              {Parser(sanitizeUnsafeHtml(selectedBook.summary))}
             </div>
           </>
         )}

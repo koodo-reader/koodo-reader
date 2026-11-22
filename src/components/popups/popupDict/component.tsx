@@ -8,7 +8,6 @@ import {
   WordSyncManager,
 } from "../../../assets/lib/kookit-extra-browser.min";
 import Parser from "html-react-parser";
-import DOMPurify from "dompurify";
 import axios from "axios";
 import DictHistory from "../../../models/DictHistory";
 import { Trans } from "react-i18next";
@@ -17,6 +16,7 @@ import {
   getOfficialDictLang,
   getWebsiteUrl,
   openExternalUrl,
+  sanitizeUnsafeHtml,
 } from "../../../utils/common";
 import toast from "react-hot-toast";
 import DatabaseService from "../../../utils/storage/databaseService";
@@ -628,7 +628,8 @@ const PopupDict = (props: PopupDictProps) => {
         {!state.isAddNew && (
           <div className="dict-text-box">
             {Parser(
-              DOMPurify.sanitize(state.dictText + "<address></address>") || " ",
+              sanitizeUnsafeHtml(state.dictText + "<address></address>") ||
+                " ",
               {
                 replace: (_domNode) => {},
               }
@@ -647,7 +648,7 @@ const PopupDict = (props: PopupDictProps) => {
                 ) : (
                   <div className="dict-ai-answer-content">
                     {Parser(
-                      DOMPurify.sanitize(
+                      sanitizeUnsafeHtml(
                         (marked.parse(state.aiAnswer) as string) +
                           "<address></address>"
                       ) || " ",

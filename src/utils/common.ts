@@ -36,6 +36,7 @@ import {
 } from "../constants/dropdownList";
 import TokenService from "./storage/tokenService";
 import { getBuiltinPluginDefinition } from "./plugins/catalog";
+import DOMPurify, { type Config } from "dompurify";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -676,6 +677,24 @@ export const initExternalLinkGuard = () => {
   document.addEventListener("click", handleExternalLinkClick, true);
   document.addEventListener("auxclick", handleExternalLinkClick, true);
 };
+
+/**
+ * Sanitize untrusted rich text that is rendered inside the application document.
+ *
+ * DOMPurify does not sanitize CSS: <style> elements and style attributes
+ * survive by default and would apply to the whole app (hide or overlay the
+ * UI, trigger url() requests). Strip both, keep semantic formatting.
+ *
+ * Do not use this for HTML written into an isolated book file or iframe,
+ * where book styles must be preserved.
+ */
+export const sanitizeUnsafeHtml = (html: string, config?: Config): string =>
+  DOMPurify.sanitize(html, {
+    ...config,
+    FORBID_TAGS: ["style", ...(config?.FORBID_TAGS ?? [])],
+    FORBID_ATTR: ["style", ...(config?.FORBID_ATTR ?? [])],
+  });
+
 export const getPageWidth = (
   readerMode: string,
   scale: string,

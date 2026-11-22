@@ -6,9 +6,9 @@ import { getIframeDoc } from "../../../utils/reader/docUtil";
 import {
   confirmOpenExternalUrl,
   isReadingRawPDF,
+  sanitizeUnsafeHtml,
 } from "../../../utils/common";
 import Parser from "html-react-parser";
-import DOMPurify from "dompurify";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import toast from "react-hot-toast";
 import { useAppStore } from "../../../store/useAppStore";
@@ -23,7 +23,7 @@ export interface PopupReferProps {
 // would run in the app origin and could reach the electronAPI bridge, so only
 // allow inert markup here.
 const sanitizeFootnoteHtml = (html: string) =>
-  DOMPurify.sanitize(html, {
+  sanitizeUnsafeHtml(html, {
     FORBID_TAGS: [
       "iframe",
       "frame",

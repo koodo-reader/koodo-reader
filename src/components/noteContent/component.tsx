@@ -15,6 +15,8 @@ export const renderNoteHtml = (content: string, type?: string | null) => {
   if (!content || noteType === "text") return "";
   const html =
     noteType === "markdown" ? (marked.parse(content) as string) : content;
+  // Notes are authored by the user, so inline styles are kept for formatting;
+  // only <style> blocks are dropped so a note cannot restyle the whole app.
   return DOMPurify.sanitize(html, { FORBID_TAGS: ["style"] });
 };
 
