@@ -1278,7 +1278,12 @@ const OPDSDialog = () => {
               <Trans>Description</Trans>:
             </p>
             <div className="detail-dialog-book-detail opds-book-description">
-              {Parser(DOMPurify.sanitize(selectedBook.summary))}
+              {Parser(
+                DOMPurify.sanitize(selectedBook.summary, {
+                  FORBID_TAGS: ["style"],
+                  FORBID_ATTR: ["style"],
+                })
+              )}
             </div>
           </>
         )}

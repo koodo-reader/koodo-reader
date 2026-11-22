@@ -9,12 +9,22 @@
 }
 .book-item-list-cover {
   width: 43px;
-  /* height: 74px; */
+  height: 65px;
   opacity: 1;
   cursor: pointer;
-  /* overflow: hidden; */
   border-radius: 1px;
-  display: inline-block;
+  /* Block, not inline-block: the empty cover is a 105x150 box that only
+     looks small because of its transform, so as an inline-block its baseline
+     comes from that overflowing content and the list row grows to ~150px. */
+  display: block;
+}
+/* Fit the cover inside the frame so rows keep the same height. */
+.book-item-list-cover .book-cover-frame {
+  height: 100%;
+}
+.book-item-list-cover .book-item-image {
+  height: 100%;
+  object-fit: contain;
 }
 
 .book-item-list-title {
