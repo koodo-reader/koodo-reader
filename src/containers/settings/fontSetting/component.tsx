@@ -107,6 +107,10 @@ const FontSetting = () => {
 
     try {
       const arrayBuffer = await file.arrayBuffer();
+      if (!(await FontUtil.isValidFont(arrayBuffer))) {
+        toast.error(t("Invalid or corrupted font file"));
+        return;
+      }
       await FontUtil.saveFont(fontKey, arrayBuffer, ext);
       const label = file.name.replace(/\.[^.]+$/, "");
       FontUtil.saveFontMeta(fontKey, { label, value: fontKey, type: ext });

@@ -57,6 +57,18 @@ class FontUtil {
     return ["ttf", "otf", "woff"].includes(ext.toLowerCase());
   }
 
+  // Chromium rejects fonts that fail the OpenType sanitizer, and such a font
+  // can never be rendered, so never install one in the first place.
+  static async isValidFont(buffer: ArrayBuffer): Promise<boolean> {
+    try {
+      const font = new FontFace("font-validation", buffer);
+      await font.load();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   static isCustomFont(value: string): boolean {
     if (!value || value === "Built-in font") return false;
     if (value.startsWith('"')) return false;
@@ -262,6 +274,7 @@ class FontUtil {
     const reader = response.body?.getReader();
     if (!reader) {
       const buffer = await response.arrayBuffer();
+      if (!(await this.isValidFont(buffer))) return false;
       await this.saveFont(font.id, buffer, "ttf");
       const label =
         i18n.t(font.fontName) +
@@ -297,6 +310,7 @@ class FontUtil {
       offset += chunk.length;
     }
 
+    if (!(await this.isValidFont(buffer.buffer))) return false;
     await this.saveFont(font.id, buffer.buffer, "ttf");
     const label =
       i18n.t(font.fontName) +

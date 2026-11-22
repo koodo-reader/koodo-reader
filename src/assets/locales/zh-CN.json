@@ -35,6 +35,7 @@
   "No fonts added yet": "尚未添加字体",
   "Font already downloaded": "字体已下载",
   "Font already exists": "字体已存在",
+  "Invalid or corrupted font file": "字体文件已损坏或不受支持",
   "Default font family": "默认字体",
   "Cover": "封面",
   "Delete original file when permanently deleting books": "永久删除图书时删除图书原始文件",
