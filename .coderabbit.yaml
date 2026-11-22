@@ -1,4 +1,3 @@
 reviews:
-  auto_review:
-    path_filters:
-      - "!src/assets/**" # Exclude all files in the 'test_files' directory
+  path_filters:
+    - "!src/assets/**" # Exclude the minified reader engine and bundled assets
