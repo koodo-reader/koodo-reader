@@ -910,6 +910,7 @@
   "No fonts added yet": "尚未添加字體",
   "Font already downloaded": "字體已下載",
   "Font already exists": "字體已存在",
+  "Invalid or corrupted font file": "字體文件已損壞或不受支持",
   "Regular": "常規",
   "Light": "細體",
   "Thin": "超細體",
