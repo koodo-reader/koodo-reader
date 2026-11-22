@@ -1122,6 +1122,8 @@
   "Custom AI Dictionary": "自定义AI词典",
   "Custom AI Assistance": "自定义AI辅助",
   "Show number of books in each shelf": "显示每个书架中的图书数量",
+  "Enable simulated book spine": "启用仿真书脊",
+  "Show a simulated spine and shadow on book covers to make them look like physical books": "在书籍封面上显示仿真书脊和阴影，让书籍看起来像实体书",
   "Enter password to unlock the app": "输入密码以解锁应用",
   "Authentication required to access the app": "需要身份验证才能访问应用",
   "More settings": "更多设置",
