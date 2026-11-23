@@ -534,7 +534,11 @@ const PopupTrans = (props: PopupTransProps) => {
                   {state.isAiWaiting && !state.translatedText ? (
                     <div className="dict-ai-answer-waiting">
                       <span className="icon-loading popup-assistant-loading"></span>
-                      <span>{t("Thinking, please wait...")}</span>
+                      <span>
+                        {state.transService === "official-ai-trans-plugin"
+                          ? t("Please wait")
+                          : t("Thinking, please wait...")}
+                      </span>
                     </div>
                   ) : (
                     state.translatedText
