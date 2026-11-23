@@ -1308,7 +1308,9 @@ async function lookupMdict(mdxPath, word, options = {}) {
 // "avocado" instead of after every ASCII word as code-unit order claims.
 // Search with a matching collator; the ±8 fallback window absorbs the
 // tie-break levels JS does not expose plus ICU version drift.
-const SLOB_COLLATOR = new Intl.Collator("und", {
+// "en" has no CLDR collation tailoring, so it equals root collation; "und"
+// would silently resolve to the host default locale (e.g. sv) instead.
+const SLOB_COLLATOR = new Intl.Collator("en", {
   sensitivity: "variant",
   ignorePunctuation: true,
 });
