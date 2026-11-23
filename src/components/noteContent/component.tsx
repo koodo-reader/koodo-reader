@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { marked } from "marked";
 import { normalizeNoteType } from "../../models/Note";
-import { sanitizeUnsafeHtml } from "../../utils/common";
+import DOMPurify, { type Config } from "dompurify";
 import "./noteContent.css";
 
 export interface NoteContentProps {
@@ -15,7 +15,7 @@ export const renderNoteHtml = (content: string, type?: string | null) => {
   if (!content || noteType === "text") return "";
   const html =
     noteType === "markdown" ? (marked.parse(content) as string) : content;
-  return sanitizeUnsafeHtml(html);
+  return DOMPurify.sanitize(html);
 };
 
 const NoteContent = (props: NoteContentProps) => {
