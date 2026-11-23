@@ -6458,8 +6458,8 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
       zhCN: "百度通用文字识别（标准版）",
     },
     feature: {
-      en: "Baidu AI general OCR API",
-      zhCN: "百度 AI 通用文字识别接口",
+      en: "Baidu general OCR API",
+      zhCN: "百度通用文字识别接口",
     },
     configuration: {
       en: "Fill in the API Key and Secret Key of your Baidu OCR application",
@@ -6497,8 +6497,8 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
       zhCN: "百度通用文字识别（高精度版）",
     },
     feature: {
-      en: "Baidu AI high precision OCR API",
-      zhCN: "百度 AI 高精度文字识别接口",
+      en: "Baidu high precision OCR API",
+      zhCN: "百度高精度文字识别接口",
     },
     configuration: {
       en: "Fill in the API Key and Secret Key of your Baidu OCR application",
@@ -6809,17 +6809,17 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
     voiceList: [],
     name: {
       en: "Azure Document Intelligence",
-      zhCN: "Azure AI 文档智能",
+      zhCN: "Azure 文档智能",
     },
     feature: {
       en: "Azure Document Intelligence prebuilt-read model",
-      zhCN: "Azure AI 文档智能 prebuilt-read 模型",
+      zhCN: "Azure 文档智能 prebuilt-read 模型",
     },
     configuration: {
       en: "Fill in endpoint and API key; modelId defaults to prebuilt-read",
       zhCN: "填写 endpoint 和 API key，modelId 默认 prebuilt-read",
     },
-    websiteName: "Azure AI Document Intelligence - Read model",
+    websiteName: "Azure Document Intelligence - Read model",
     websiteUrl:
       "https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/prebuilt/read?view=doc-intel-4.0.0&tabs=sample-code",
   },
@@ -6843,14 +6843,14 @@ const builtinPluginCatalog: BuiltinPluginDefinition[] = [
       zhCN: "Azure 图像 OCR",
     },
     feature: {
-      en: "Azure AI Vision OCR for images",
-      zhCN: "Azure AI Vision 图像 OCR 接口",
+      en: "Azure Vision OCR for images",
+      zhCN: "Azure Vision 图像 OCR 接口",
     },
     configuration: {
       en: "Fill in endpoint and API key",
       zhCN: "填写 endpoint 和 API key",
     },
-    websiteName: "Azure AI Vision - OCR",
+    websiteName: "Azure Vision - OCR",
     websiteUrl:
       "https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/concept-ocr",
   },
