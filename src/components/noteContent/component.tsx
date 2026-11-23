@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { marked } from "marked";
-import DOMPurify from "dompurify";
 import { normalizeNoteType } from "../../models/Note";
+import { sanitizeUnsafeHtml } from "../../utils/common";
 import "./noteContent.css";
 
 export interface NoteContentProps {
@@ -15,9 +15,7 @@ export const renderNoteHtml = (content: string, type?: string | null) => {
   if (!content || noteType === "text") return "";
   const html =
     noteType === "markdown" ? (marked.parse(content) as string) : content;
-  // Notes are authored by the user, so inline styles are kept for formatting;
-  // only <style> blocks are dropped so a note cannot restyle the whole app.
-  return DOMPurify.sanitize(html, { FORBID_TAGS: ["style"] });
+  return sanitizeUnsafeHtml(html);
 };
 
 const NoteContent = (props: NoteContentProps) => {

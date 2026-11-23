@@ -1,3 +1,8 @@
 reviews:
+  auto_review:
+    # This repo stacks PRs onto feature branches, not just the default branch (dev).
+    # Without this, auto review is skipped for every non-default base branch.
+    base_branches:
+      - ".*"
   path_filters:
     - "!src/assets/**" # Exclude the minified reader engine and bundled assets
