@@ -4,11 +4,14 @@ import "./updateInfo.css";
 import { useAppStore } from "../../../store/useAppStore";
 import { Trans } from "react-i18next";
 import Parser from "html-react-parser";
-import DOMPurify from "dompurify";
 import EmptyCover from "../../emptyCover";
 import CoverUtil from "../../../utils/file/coverUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { formatDateToDay, formatTimestamp } from "../../../utils/common";
+import {
+  formatDateToDay,
+  formatTimestamp,
+  sanitizeUnsafeHtml,
+} from "../../../utils/common";
 import copy from "copy-text-to-clipboard";
 import toast from "react-hot-toast";
 import i18n from "../../../i18n";
@@ -207,7 +210,7 @@ const DetailDialog = () => {
           </p>
           <div className="detail-dialog-book-detail">
             {currentBook.description ? (
-              Parser(DOMPurify.sanitize(currentBook.description))
+              Parser(sanitizeUnsafeHtml(currentBook.description))
             ) : (
               <Trans>Empty</Trans>
             )}

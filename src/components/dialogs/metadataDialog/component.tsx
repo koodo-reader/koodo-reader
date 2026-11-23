@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import "./metadataDialog.css";
 import { Trans } from "react-i18next";
 import Parser from "html-react-parser";
-import DOMPurify from "dompurify";
 import {
   MetadataDialogProps,
   MetadataResult,
@@ -13,7 +12,7 @@ import { useAppStore } from "../../../store/useAppStore";
 import toast from "react-hot-toast";
 import copy from "copy-text-to-clipboard";
 import { getBookMetadata } from "../../../utils/request/reader";
-import { formatDateToDay } from "../../../utils/common";
+import { formatDateToDay, sanitizeUnsafeHtml } from "../../../utils/common";
 
 const MetadataDialog = (
   props: Pick<
@@ -309,7 +308,7 @@ const MetadataDialog = (
                             <Trans>Description</Trans>:
                           </span>
                           <span className="metadata-book-detail-value">
-                            {Parser(DOMPurify.sanitize(description))}
+                            {Parser(sanitizeUnsafeHtml(description))}
                           </span>
                         </div>
                       )}
