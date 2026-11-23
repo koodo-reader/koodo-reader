@@ -572,7 +572,8 @@ class StarDictReader {
       throw new Error(`StarDict idxoffsetbits=${offsetBits} is not supported`);
     }
 
-    this.idxBuffer = await fsp.readFile(paths.idx);
+    const idxBytes = await fsp.readFile(paths.idx);
+    this.idxBuffer = isGzip(idxBytes) ? gunzipTolerant(idxBytes) : idxBytes;
     this.idxOffsets = scanEntryOffsets(this.idxBuffer, 8);
     this.body = await loadDictBody(paths.dict);
     if (paths.syn) {
@@ -1950,15 +1951,18 @@ function classifyFile(filePath) {
   const extension = lastDot >= 0 ? lower.slice(lastDot + 1) : "";
   const beforeLast = lastDot >= 0 ? lower.slice(0, lastDot) : lower;
   const isDictZip = extension === "dz" && beforeLast.endsWith(".dict");
+  const isIdxGzip = extension === "gz" && beforeLast.endsWith(".idx");
   let stem;
   if (isDictZip) {
     stem = beforeLast.slice(0, -".dict".length);
+  } else if (isIdxGzip) {
+    stem = beforeLast.slice(0, -".idx".length);
   } else if (lastDot >= 0) {
     stem = beforeLast;
   } else {
     stem = lower;
   }
-  return { absPath: filePath, name, stem, extension, isDictZip };
+  return { absPath: filePath, name, stem, extension, isDictZip, isIdxGzip };
 }
 
 function isCompanionMddStem(bundleStem, mddStem) {
@@ -1984,7 +1988,10 @@ function groupBundlesByStem(filePaths) {
 
   for (const [stem, group] of byStem) {
     const ifo = group.find((file) => file.extension === "ifo");
-    const idx = group.find((file) => file.extension === "idx");
+    // StarDict allows the index to be gzipped (.idx.gz) instead of plain .idx.
+    const idx =
+      group.find((file) => file.extension === "idx") ||
+      group.find((file) => file.isIdxGzip);
     const indexFile = group.find((file) => file.extension === "index");
     const dict = group.find(
       (file) => file.extension === "dict" || file.isDictZip

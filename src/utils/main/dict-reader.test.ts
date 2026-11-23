@@ -2,6 +2,7 @@ import { afterAll, describe, expect, it } from "vitest";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { gzipSync } from "fflate";
 import dictReaderModule from "./dict-reader";
 
 // The main-process dictionary module is plain CommonJS JavaScript.
@@ -227,6 +228,26 @@ describe("dictionary helper functions", () => {
     expect(bundles[0].kind).toBe("stardict");
     expect(bundles[0].dict.isDictZip).toBe(true);
   });
+
+  it("recognizes a gzipped StarDict index", () => {
+    const file = _internal.classifyFile("C:\\dicts\\demo.idx.gz");
+    expect(file.isIdxGzip).toBe(true);
+    expect(file.stem).toBe("demo");
+    expect(file.extension).toBe("gz");
+  });
+
+  it("groups a StarDict bundle whose index is gzipped", () => {
+    const { bundles, orphans } = _internal.groupBundlesByStem([
+      "C:\\dicts\\demo.ifo",
+      "C:\\dicts\\demo.idx.gz",
+      "C:\\dicts\\demo.dict.dz",
+    ]);
+    expect(orphans).toHaveLength(0);
+    expect(bundles).toHaveLength(1);
+    expect(bundles[0].kind).toBe("stardict");
+    expect(bundles[0].idx.name).toBe("demo.idx.gz");
+    expect(bundles[0].dict.isDictZip).toBe(true);
+  });
 });
 
 describe("MDict encryption handling", () => {
@@ -331,6 +352,40 @@ describe("StarDict import and lookup", () => {
 
     const remove = await removeDictionary(storage, dict.id);
     expect(remove.ok).toBe(true);
+  });
+
+  it("imports and looks up a bundle with a gzipped index", async () => {
+    const storage = await makeTempDir();
+    const source = await makeTempDir();
+    const files = buildStarDict("hello", "a greeting");
+
+    await writeFile(path.join(source, "demo.ifo"), files.ifo);
+    await writeFile(path.join(source, "demo.idx.gz"), gzipSync(files.idx));
+    await writeFile(path.join(source, "demo.dict"), files.dict);
+
+    const result = await importDictionaryBundles(storage, [
+      path.join(source, "demo.ifo"),
+      path.join(source, "demo.idx.gz"),
+      path.join(source, "demo.dict"),
+    ]);
+
+    expect(result.ok).toBe(true);
+    expect(result.imported).toHaveLength(1);
+    const dict = result.imported[0];
+    expect(dict.kind).toBe("stardict");
+    expect(dict.files).toMatchObject({
+      ifo: "demo.ifo",
+      idx: "demo.idx.gz",
+      dict: "demo.dict",
+    });
+
+    const lookup = await lookupDictionary({
+      storagePath: storage,
+      dictId: dict.id,
+      word: "hello",
+    });
+    expect(lookup.ok).toBe(true);
+    expect(lookup.content).toBe("a greeting");
   });
 });
 

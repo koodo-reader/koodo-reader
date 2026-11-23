@@ -117,6 +117,7 @@ class DictUtil {
             "idx",
             "dict",
             "dz",
+            "gz",
             "syn",
             "index",
             "slob",
