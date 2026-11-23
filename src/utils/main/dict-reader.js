@@ -433,6 +433,38 @@ async function loadDictBody(filePath, options = {}) {
 /* StarDict                                                                    */
 /* -------------------------------------------------------------------------- */
 
+// StarDict tools sort .idx/.syn with stardict_strcmp(): g_ascii_strcasecmp()
+// with a strcmp() tie-breaker. g_ascii_strcasecmp folds only ASCII letters
+// and compares raw UTF-8 bytes, so "Öl" (0xC3 0x96) sorts before "ä"
+// (0xC3 0xA4). A toLowerCase()-based search mis-orders those dictionaries
+// and discards the half that contains the target.
+const foldAsciiByte = (byte) =>
+  byte >= 0x41 && byte <= 0x5a ? byte + 0x20 : byte;
+
+function stardictCompare(aBytes, bBytes) {
+  const len = Math.min(aBytes.length, bBytes.length);
+  for (let i = 0; i < len; i++) {
+    const x = foldAsciiByte(aBytes[i]);
+    const y = foldAsciiByte(bBytes[i]);
+    if (x !== y) return x < y ? -1 : 1;
+  }
+  if (aBytes.length !== bBytes.length) {
+    return aBytes.length < bBytes.length ? -1 : 1;
+  }
+  for (let i = 0; i < len; i++) {
+    if (aBytes[i] !== bBytes[i]) return aBytes[i] < bBytes[i] ? -1 : 1;
+  }
+  return 0;
+}
+
+function stardictFoldEqual(aBytes, bBytes) {
+  if (aBytes.length !== bBytes.length) return false;
+  for (let i = 0; i < aBytes.length; i++) {
+    if (foldAsciiByte(aBytes[i]) !== foldAsciiByte(bBytes[i])) return false;
+  }
+  return true;
+}
+
 function parseIfo(text) {
   const out = {};
   for (const raw of String(text || "").split(/\r?\n/)) {
@@ -572,7 +604,8 @@ class StarDictReader {
       throw new Error(`StarDict idxoffsetbits=${offsetBits} is not supported`);
     }
 
-    this.idxBuffer = await fsp.readFile(paths.idx);
+    const idxBytes = await fsp.readFile(paths.idx);
+    this.idxBuffer = isGzip(idxBytes) ? gunzipTolerant(idxBytes) : idxBytes;
     this.idxOffsets = scanEntryOffsets(this.idxBuffer, 8);
     this.body = await loadDictBody(paths.dict);
     if (paths.syn) {
@@ -596,22 +629,27 @@ class StarDictReader {
     const buffer = this.idxBuffer.subarray(start, end);
     let nullPos = 0;
     while (nullPos < buffer.length && buffer[nullPos] !== 0) nullPos++;
-    const word = TEXT_DECODER.decode(buffer.subarray(0, nullPos));
+    const wordBytes = buffer.subarray(0, nullPos);
+    const word = TEXT_DECODER.decode(wordBytes);
     const offset = buffer.readUInt32BE(nullPos + 1);
     const size = buffer.readUInt32BE(nullPos + 5);
-    const entry = { word, offset, size };
+    const entry = { word, wordBytes, offset, size };
     this.idxCache.set(index, entry);
     return entry;
   }
 
   lookup(word) {
+    const queryBytes = Buffer.from(String(word), "utf8");
     let lo = 0;
     let hi = this.idxOffsets.length - 1;
     while (lo <= hi) {
       const mid = (lo + hi) >>> 1;
       const entry = this.decodeIdxEntry(mid);
-      const compared = cmpAscii(word, entry.word);
-      if (compared === 0) return entry;
+      const compared = stardictCompare(queryBytes, entry.wordBytes);
+      // Fold-equal counts as a hit so "apple" still finds "Apple".
+      if (compared === 0 || stardictFoldEqual(queryBytes, entry.wordBytes)) {
+        return entry;
+      }
       if (compared > 0) lo = mid + 1;
       else hi = mid - 1;
     }
@@ -640,9 +678,10 @@ class StarDictReader {
     const buffer = this.synBuffer.subarray(start, end);
     let nullPos = 0;
     while (nullPos < buffer.length && buffer[nullPos] !== 0) nullPos++;
-    const synonym = TEXT_DECODER.decode(buffer.subarray(0, nullPos));
+    const synonymBytes = buffer.subarray(0, nullPos);
+    const synonym = TEXT_DECODER.decode(synonymBytes);
     const idxIndex = buffer.readUInt32BE(nullPos + 1);
-    const entry = { synonym, idxIndex };
+    const entry = { synonym, synonymBytes, idxIndex };
     this.synCache.set(index, entry);
     return entry;
   }
@@ -651,14 +690,20 @@ class StarDictReader {
     this.ensureSynOffsets();
     if (!this.synOffsets || !this.synOffsets.length) return undefined;
 
+    const queryBytes = Buffer.from(String(word), "utf8");
     let lo = 0;
     let hi = this.synOffsets.length - 1;
     while (lo <= hi) {
       const mid = (lo + hi) >>> 1;
       const entry = this.decodeSynEntry(mid);
       if (!entry) return undefined;
-      const compared = cmpAscii(word, entry.synonym);
-      if (compared === 0) return this.decodeIdxEntry(entry.idxIndex);
+      const compared = stardictCompare(queryBytes, entry.synonymBytes);
+      if (
+        compared === 0 ||
+        stardictFoldEqual(queryBytes, entry.synonymBytes)
+      ) {
+        return this.decodeIdxEntry(entry.idxIndex);
+      }
       if (compared > 0) lo = mid + 1;
       else hi = mid - 1;
     }
@@ -1258,6 +1303,18 @@ async function lookupMdict(mdxPath, word, options = {}) {
 /* Slob                                                                        */
 /* -------------------------------------------------------------------------- */
 
+// Slob writers sort references with ICU collation (root locale, IDENTICAL
+// strength, ALTERNATE_HANDLING=SHIFTED), so "älg" sits between "apple" and
+// "avocado" instead of after every ASCII word as code-unit order claims.
+// Search with a matching collator; the ±8 fallback window absorbs the
+// tie-break levels JS does not expose plus ICU version drift.
+const SLOB_COLLATOR = new Intl.Collator("und", {
+  sensitivity: "variant",
+  ignorePunctuation: true,
+});
+
+const slobCompare = (a, b) => SLOB_COLLATOR.compare(String(a), String(b));
+
 const SLOB_MAGIC = Buffer.from([0x21, 0x2d, 0x31, 0x53, 0x4c, 0x4f, 0x42, 0x1f]);
 
 function readU32BE(bytes, offset) {
@@ -1526,7 +1583,7 @@ class SlobReader {
     while (lo <= hi) {
       const mid = (lo + hi) >>> 1;
       const ref = await this.decodeRef(mid);
-      const compared = cmpAscii(word, ref.key);
+      const compared = slobCompare(word, ref.key);
       if (compared === 0) return ref;
       if (compared > 0) lo = mid + 1;
       else hi = mid - 1;
@@ -1536,7 +1593,7 @@ class SlobReader {
     const high = Math.min(this.refCount - 1, lo + near);
     for (let i = low; i <= high; i++) {
       const ref = await this.decodeRef(i);
-      if (cmpAscii(word, ref.key) === 0) return ref;
+      if (slobCompare(word, ref.key) === 0) return ref;
     }
     return undefined;
   }
@@ -1950,15 +2007,18 @@ function classifyFile(filePath) {
   const extension = lastDot >= 0 ? lower.slice(lastDot + 1) : "";
   const beforeLast = lastDot >= 0 ? lower.slice(0, lastDot) : lower;
   const isDictZip = extension === "dz" && beforeLast.endsWith(".dict");
+  const isIdxGzip = extension === "gz" && beforeLast.endsWith(".idx");
   let stem;
   if (isDictZip) {
     stem = beforeLast.slice(0, -".dict".length);
+  } else if (isIdxGzip) {
+    stem = beforeLast.slice(0, -".idx".length);
   } else if (lastDot >= 0) {
     stem = beforeLast;
   } else {
     stem = lower;
   }
-  return { absPath: filePath, name, stem, extension, isDictZip };
+  return { absPath: filePath, name, stem, extension, isDictZip, isIdxGzip };
 }
 
 function isCompanionMddStem(bundleStem, mddStem) {
@@ -1984,7 +2044,10 @@ function groupBundlesByStem(filePaths) {
 
   for (const [stem, group] of byStem) {
     const ifo = group.find((file) => file.extension === "ifo");
-    const idx = group.find((file) => file.extension === "idx");
+    // StarDict allows the index to be gzipped (.idx.gz) instead of plain .idx.
+    const idx =
+      group.find((file) => file.extension === "idx") ||
+      group.find((file) => file.isIdxGzip);
     const indexFile = group.find((file) => file.extension === "index");
     const dict = group.find(
       (file) => file.extension === "dict" || file.isDictZip
@@ -2628,5 +2691,9 @@ module.exports = {
     describeBundle,
     unlzma2,
     LazyMdx,
+    stardictCompare,
+    stardictFoldEqual,
+    slobCompare,
+    SlobReader,
   },
 };

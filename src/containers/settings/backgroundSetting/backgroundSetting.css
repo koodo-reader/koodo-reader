@@ -157,12 +157,6 @@
   opacity: 0.9;
 }
 
-.background-featured-section-note {
-  font-size: 12px;
-  font-weight: normal;
-  opacity: 0.55;
-}
-
 .background-featured-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

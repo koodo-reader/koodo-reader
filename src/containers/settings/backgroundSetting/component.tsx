@@ -514,9 +514,6 @@ const BackgroundSetting = () => {
       <div className="background-featured-section">
         <div className="background-featured-section-title">
           <Trans>Download featured backgrounds</Trans>
-          <span className="background-featured-section-note">
-            <Trans>Generated with AI</Trans>
-          </span>
         </div>
         <div className="background-featured-grid">
           {indices.map((index) => {

@@ -220,24 +220,36 @@ const PopupTrans = (props: PopupTransProps) => {
         targetLang = "繁体中文";
       }
       textAccumulator.current = "";
-      startUpdateInterval();
-      await getTransStream(
-        text,
-        ConfigService.getReaderConfig("transSource") || "Automatic",
-        ConfigService.getReaderConfig("transTarget") ||
-          getDefaultTransTarget(plugin.langList),
-        (result) => {
-          if (result && result.done) {
-            return;
+      setState((prev) => ({
+        ...prev,
+        translatedText: "",
+        isAiWaiting: true,
+      }));
+      try {
+        await getTransStream(
+          text,
+          ConfigService.getReaderConfig("transSource") || "Automatic",
+          ConfigService.getReaderConfig("transTarget") ||
+            getDefaultTransTarget(plugin.langList),
+          (result) => {
+            if (result && result.done) {
+              return;
+            }
+            if (result && result.text) {
+              textAccumulator.current += result.text;
+            }
           }
-          if (result && result.text) {
-            textAccumulator.current += result.text;
-          }
-        }
-      );
-      stopUpdateInterval();
-      textAccumulator.current = "";
-      setState((prev) => ({ ...prev, isFinishOutput: true }));
+        );
+      } finally {
+        const finalText = textAccumulator.current;
+        textAccumulator.current = "";
+        setState((prev) => ({
+          ...prev,
+          translatedText: finalText,
+          isAiWaiting: false,
+          isFinishOutput: true,
+        }));
+      }
     }
   };
 
@@ -522,12 +534,16 @@ const PopupTrans = (props: PopupTransProps) => {
                   {state.isAiWaiting && !state.translatedText ? (
                     <div className="dict-ai-answer-waiting">
                       <span className="icon-loading popup-assistant-loading"></span>
-                      <span>{t("Thinking, please wait...")}</span>
+                      <span>
+                        {state.transService === "official-ai-trans-plugin"
+                          ? t("Please wait")
+                          : t("Thinking, please wait...")}
+                      </span>
                     </div>
                   ) : (
                     state.translatedText
                   )}
-                  {state.transService.includes("ai-trans") &&
+                  {state.transService === "custom-ai-trans-plugin" &&
                     state.isFinishOutput && (
                       <p
                         className="dict-learn-more"
