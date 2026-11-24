@@ -332,6 +332,7 @@
   "Page width": "页面宽度",
   "Preset width": "预设宽度",
   "Fit to page": "适应页面",
+  "If the page is not enlarged, please switch the reading mode to scroll mode and try again": "如果页面没有放大，请切换阅读模式为滚动模式后重试",
   "Change": "更改",
   "We have two server regions(Global and China). To change the server region, you need to log out first. Do you want to log out now?": "我们有两个服务器地区：全球和中国。要更改服务器地区，您需要先退出登录。是否现在退出？",
   "Get debug logs": "获取调试日志",
