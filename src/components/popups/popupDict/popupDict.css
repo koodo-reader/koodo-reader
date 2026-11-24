@@ -78,7 +78,10 @@
   height: auto;
 }
 
-.dict-text-box audio {
+/* 只约束本地词典的无 class audio（默认 300px，防止撑破布局）；
+   官方词典的 .audio-player 是 100px，被压到容器 50px 后 Chromium 会隐藏
+   播放按钮、只显示"⋮"溢出菜单 */
+.dict-text-box audio:not(.audio-player) {
   max-width: 100%;
 }
 

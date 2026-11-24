@@ -6,6 +6,7 @@ import { useAppStore } from "../../../store/useAppStore";
 
 export interface SliderListProps {
   item: any;
+  onApply?: () => void;
 }
 
 const SliderList = (props: SliderListProps) => {
@@ -97,6 +98,7 @@ const SliderList = (props: SliderListProps) => {
   };
 
   const handleRest = async (_mode: string) => {
+    props.onApply?.();
     renderBookFunc();
   };
   const onValueChange = (
