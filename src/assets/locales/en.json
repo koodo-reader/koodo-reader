@@ -452,6 +452,7 @@
   "Set default sync option": "Set default sync option",
   "Get device identifier": "Get device identifier",
   "Sync failed": "Sync failed",
+  "Failed to restore books from their original path, sync will continue": "Failed to restore books from their original path, sync will continue",
   "Previous page": "Previous page",
   "Next page": "Next page",
   "Free user": "Free user",

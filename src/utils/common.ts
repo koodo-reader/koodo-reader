@@ -1088,6 +1088,7 @@ export const checkMissingBook = async () => {
   var fs = window.electronAPI.fs;
   var path = window.electronAPI.path;
   let bookList = (await BookUtil.getBookList()) as Book[];
+  let failedBooks: string[] = [];
   for (let index = 0; index < bookList.length; index++) {
     const book = bookList[index];
     let fileName = book.key + "." + book.format.toLowerCase();
@@ -1102,8 +1103,29 @@ export const checkMissingBook = async () => {
       });
     }
     if (book.path && fs.existsSync(book.path)) {
-      fs.copyFileSync(book.path, expectedPath);
+      try {
+        fs.copyFileSync(book.path, expectedPath);
+      } catch (error) {
+        // a single book copy failure should not interrupt the whole sync
+        console.error(
+          "Failed to restore book from original path:",
+          book.name,
+          error
+        );
+        failedBooks.push(book.name);
+      }
     }
+  }
+  if (failedBooks.length > 0) {
+    toast.error(
+      i18n.t(
+        "Failed to restore books from their original path, sync will continue"
+      ) +
+        ": " +
+        failedBooks.slice(0, 3).join(", ") +
+        (failedBooks.length > 3 ? "..." : ""),
+      { duration: 6000 }
+    );
   }
 };
 export const checkBrokenDatabase = async () => {
