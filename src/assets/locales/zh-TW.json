@@ -1210,7 +1210,7 @@
   "Minimize": "最小化",
   "Open Console": "開啟主控台",
   "Maximize": "最大化",
-  "Enable simulated book spine": "啟用模擬書脊",
+  "Enable simulated book cover": "啟用模擬封面",
   "Show a simulated spine and shadow on book covers to make them look like physical books": "在書籍封面上顯示模擬書脊和陰影，讓書籍看起來像實體書",
   "Local aggregate dictionary": "本機聚合字典",
   "Markdown": "Markdown",
