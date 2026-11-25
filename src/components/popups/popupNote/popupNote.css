@@ -97,26 +97,17 @@
 
 .editor-box::placeholder {
   font-size: 15px;
-  line-height: 15px;
   opacity: 0.6;
-  position: relative;
-  top: 6px;
   font-weight: 500;
 }
 .editor-box::-ms-input-placeholder {
   font-size: 15px;
-  line-height: 15px;
   opacity: 0.6;
-  position: relative;
-  top: 6px;
   font-weight: 500;
 }
 .editor-box::-moz-placeholder {
   font-size: 15px;
-  line-height: 15px;
   opacity: 0.6;
-  position: relative;
-  top: 6px;
   font-weight: 500;
 }
 .note-button-container {
