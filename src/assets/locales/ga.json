@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Seo uimhir an ordaithe, ní an cód fuascailte é. Seiceáil do ríomhphost arís, tá an cód fuascailte faoin uimhir ordaithe",
   "More accurate": "Níos cruinne",
   "Chinese": "Sínis",
-  "Official AI OCR": "OCR Oifigiúil AI",
+  "Official OCR": "OCR Oifigiúil",
   "Your quota will be reset in": "Athshocrófar do chuóta i gceann {{ttl}} uair",
   "Auto switch to shelf on startup": "Athraigh go dtí an tseilf go huathoibríoch ar thosú",
   "Disabled": "Díchumasaithe",

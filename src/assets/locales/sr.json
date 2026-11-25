@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Ovo je broj porudžbine, a ne kod za aktivaciju. Molimo ponovo proverite svoj email; kod za aktivaciju se nalazi ispod broja porudžbine.",
   "More accurate": "Preciznije",
   "Chinese": "Kineski",
-  "Official AI OCR": "Zvanični AI OCR",
+  "Official OCR": "Zvanični OCR",
   "Your quota will be reset in": "Vaša kvota će biti resetovana za {{ttl}} sati",
   "Auto switch to shelf on startup": "Automatski pređi na policu pri pokretanju",
   "Disabled": "Onemogućeno",

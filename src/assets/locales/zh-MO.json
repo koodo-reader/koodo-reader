@@ -574,7 +574,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "這是訂單號而非兌換碼。請再次檢查您的電郵，兌換碼在訂單號下方。",
   "More accurate": "更準確",
   "Chinese": "中文",
-  "Official AI OCR": "官方 AI 文字識別",
+  "Official OCR": "官方 OCR",
   "Your quota will be reset in": "您的配額將於 {{ttl}} 小時後重置",
   "Auto switch to shelf on startup": "啟動時自動切換到書架",
   "Disabled": "已停用",

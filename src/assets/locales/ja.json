@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "これは注文番号であり、引き換えコードではありません。メールをもう一度確認してください。引き換えコードは注文番号の下にあります",
   "More accurate": "より正確",
   "Chinese": "中国語",
-  "Official AI OCR": "公式AI文字認識（OCR）",
+  "Official OCR": "公式文字認識（OCR）",
   "Your quota will be reset in": "割り当ては{{ttl}}時間後にリセットされます",
   "Auto switch to shelf on startup": "起動時に自動的に本棚に切り替え",
   "Disabled": "無効",

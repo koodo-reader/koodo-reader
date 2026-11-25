@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Đây là mã đơn hàng chứ không phải mã đổi, vui lòng kiểm tra lại email của bạn, mã đổi nằm bên dưới mã đơn hàng",
   "More accurate": "Chính xác hơn",
   "Chinese": "Tiếng Trung",
-  "Official AI OCR": "OCR AI chính thức",
+  "Official OCR": "OCR chính thức",
   "Your quota will be reset in": "Hạn mức của bạn sẽ được đặt lại sau {{ttl}} giờ",
   "Auto switch to shelf on startup": "Tự động chuyển sang kệ sách khi khởi động",
   "Disabled": "Đã tắt",

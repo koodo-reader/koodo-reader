@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "यह ऑर्डर नंबर है, रिडेम्प्शन कोड नहीं, कृपया अपना ईमेल फिर से जांचें, रिडेम्प्शन कोड ऑर्डर नंबर के नीचे है",
   "More accurate": "अधिक सटीक",
   "Chinese": "चीनी",
-  "Official AI OCR": "आधिकारिक AI OCR",
+  "Official OCR": "आधिकारिक OCR",
   "Your quota will be reset in": "आपका कोटा {{ttl}} घंटों में रीसेट हो जाएगा",
   "Auto switch to shelf on startup": "स्टार्टअप पर स्वचालित रूप से शेल्फ पर स्विच करें",
   "Disabled": "अक्षम",

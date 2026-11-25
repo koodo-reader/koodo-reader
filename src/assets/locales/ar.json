@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "هذا هو رقم الطلب وليس رمز الاسترداد، يرجى التحقق من بريدك الإلكتروني مرة أخرى، رمز الاسترداد موجود أسفل رقم الطلب",
   "More accurate": "أكثر دقة",
   "Chinese": "الصينية",
-  "Official AI OCR": "التعرف البصري الرسمي بالذكاء الاصطناعي",
+  "Official OCR": "التعرف البصري الرسمي",
   "Your quota will be reset in": "سيتم إعادة تعيين حصتك خلال {{ttl}} ساعة",
   "Auto switch to shelf on startup": "التبديل التلقائي إلى الرف عند بدء التشغيل",
   "Disabled": "معطل",

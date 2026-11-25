@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Αυτός είναι ο αριθμός παραγγελίας, όχι ο κωδικός εξαργύρωσης. Ελέγξτε ξανά το email σας, ο κωδικός εξαργύρωσης βρίσκεται κάτω από τον αριθμό παραγγελίας",
   "More accurate": "Πιο ακριβές",
   "Chinese": "Κινέζικα",
-  "Official AI OCR": "Επίσημο AI OCR",
+  "Official OCR": "Επίσημο OCR",
   "Your quota will be reset in": "Το όριό σας θα γίνει επαναφορά σε {{ttl}} ώρες",
   "Auto switch to shelf on startup": "Αυτόματη εναλλαγή στο ράφι κατά την εκκίνηση",
   "Disabled": "Απενεργοποιημένο",

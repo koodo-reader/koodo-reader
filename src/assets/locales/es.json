@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Este es el número de pedido, no el código de canje. Por favor, revisa tu correo electrónico de nuevo; el código de canje se encuentra debajo del número de pedido.",
   "More accurate": "Más preciso",
   "Chinese": "Chino",
-  "Official AI OCR": "IA OFICIAL OCR",
+  "Official OCR": "OCR OFICIAL",
   "Your quota will be reset in": "Los creditos se restauraran en: {{ttl}} horas",
   "Auto switch to shelf on startup": "Cambiar automáticamente a la estantería al iniciar",
   "Disabled": "Deshabilitado",

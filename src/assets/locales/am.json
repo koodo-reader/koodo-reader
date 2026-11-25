@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "ይህ የትዕዛዝ ቁጥር እንጂ የመቤዠት ኮድ አይደለም፣ እባክዎ ኢሜይልዎን እንደገና ያረጋግጡ፣ የመቤዠት ኮዱ ከትዕዛዝ ቁጥሩ በታች ነው",
   "More accurate": "የበለጠ ትክክለኛ",
   "Chinese": "ቻይንኛ",
-  "Official AI OCR": "የይፋዊ AI ኦሲአር",
+  "Official OCR": "የይፋዊ ኦሲአር",
   "Your quota will be reset in": "ኮታዎ በ{{ttl}} ሰዓታት ውስጥ ይታደሳል",
   "Auto switch to shelf on startup": "በሚነሳበት ጊዜ ወደ መደርደሪያ በራስ-ሰር ይቀይር",
   "Disabled": "ተሰናክሏል",
