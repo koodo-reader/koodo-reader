@@ -29,7 +29,7 @@ export interface PopupNoteProps {
 
 const NOTE_TYPE_OPTIONS: { value: NoteType; label: string }[] = [
   { value: "text", label: "Plain text" },
-  { value: "markdown", label: "Markdown" },
+  { value: "markdown", label: "MD" },
   { value: "html", label: "HTML" },
 ];
 
@@ -134,20 +134,13 @@ const PopupNote = (props: PopupNoteProps) => {
         handleNoteKey("");
         handleShowPopupNote(false);
         if (htmlBook && htmlBook.rendition) {
-          htmlBook.rendition.removeOneNote(
-            noteKey,
-            props.chapterDocIndex
-          );
+          htmlBook.rendition.removeOneNote(noteKey, props.chapterDocIndex);
           htmlBook.rendition.createOneNote(newNote, handleNoteClick);
         }
       });
     } else {
       let cfi = JSON.stringify(
-        ConfigService.getObjectConfig(
-          currentBook.key,
-          "recordLocation",
-          {}
-        )
+        ConfigService.getObjectConfig(currentBook.key, "recordLocation", {})
       );
       if (isReadingRawPDF(currentBook)) {
         let bookLocation = htmlBook.rendition.getPositionByChapter(
@@ -157,9 +150,7 @@ const PopupNote = (props: PopupNoteProps) => {
       }
       let bookKey = currentBook.key;
       let range = JSON.stringify(
-        await htmlBook.rendition.getHighlightCoords(
-          props.chapterDocIndex
-        )
+        await htmlBook.rendition.getHighlightCoords(props.chapterDocIndex)
       );
 
       let percentage = ConfigService.getObjectConfig(
@@ -167,16 +158,12 @@ const PopupNote = (props: PopupNoteProps) => {
         "recordLocation",
         {}
       ).percentage
-        ? ConfigService.getObjectConfig(
-            currentBook.key,
-            "recordLocation",
-            {}
-          ).percentage
+        ? ConfigService.getObjectConfig(currentBook.key, "recordLocation", {})
+            .percentage
         : "0";
 
       let color =
-        highlightUtil.formatHighlightValue(highlight) ||
-        "background-#FEF3CD";
+        highlightUtil.formatHighlightValue(highlight) || "background-#FEF3CD";
 
       let newNote = new Note(
         bookKey,
@@ -195,10 +182,7 @@ const PopupNote = (props: PopupNoteProps) => {
         handleOpenMenu(false);
         handleFetchNotes();
         handleMenuMode("");
-        await htmlBook.rendition.createOneNote(
-          newNote,
-          handleNoteClick
-        );
+        await htmlBook.rendition.createOneNote(newNote, handleNoteClick);
         let noteSyncManager = new NoteSyncManager(
           DatabaseService,
           ConfigService,
@@ -220,10 +204,7 @@ const PopupNote = (props: PopupNoteProps) => {
         handleFetchNotes();
         handleNoteKey("");
         if (htmlBook && htmlBook.rendition) {
-          htmlBook.rendition.removeOneNote(
-            noteKey,
-            props.chapterDocIndex
-          );
+          htmlBook.rendition.removeOneNote(noteKey, props.chapterDocIndex);
         }
 
         handleOpenMenu(false);
@@ -259,7 +240,8 @@ const PopupNote = (props: PopupNoteProps) => {
   // skin exactly like the reading-stats range filter.
   const skin = ConfigService.getReaderConfig("appSkin");
   const isOSNight = ConfigService.getReaderConfig("isOSNight");
-  const darkMode = skin === "night" || (skin === "system" && isOSNight === "yes");
+  const darkMode =
+    skin === "night" || (skin === "system" && isOSNight === "yes");
   const pillThemeStyle = {
     "--pill-text": darkMode ? "#e0e0e0" : "#333333",
     "--pill-card-bg": darkMode ? "#2a2a2a" : "#ffffff",
