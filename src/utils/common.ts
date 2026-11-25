@@ -755,10 +755,23 @@ export const getPageWidth = (
   let pageOffset = "";
   let pageWidth = 0;
   if (readerMode === "scroll" || readerMode === "single") {
-    //页面宽度以 scale=1 的默认宽度（视口宽度 * 0.6）为基准等比例缩放，
+    //页面宽度以 scale=1 的默认宽度为基准等比例缩放，
     //使预设百分比与实际显示宽度成正比，避免低百分比时出现过窄页面
+    //窄窗口下的单页（含双页自动切换场景）以与双页一致的可用全宽为基准，减小两侧空白
+    let baseWidth = document.body.clientWidth * 0.6;
+    if (
+      readerMode === "single" &&
+      document.body.clientWidth < AUTO_SINGLE_PAGE_MAX_WIDTH
+    ) {
+      baseWidth =
+        document.body.clientWidth -
+        2 * margin -
+        80 -
+        (isNavLocked ? 300 : 0) -
+        (isSettingLocked ? 300 : 0);
+    }
     let preWidth =
-      document.body.clientWidth * 0.6 * Math.abs(parseFloat(scale)) -
+      baseWidth * Math.abs(parseFloat(scale)) -
       (isNavLocked ? 300 : 0) -
       (isSettingLocked ? 300 : 0);
     let width = findValidMultiple(preWidth);
