@@ -452,6 +452,20 @@ const TextToSpeech = () => {
     }
     return voiceList;
   };
+  const renderVoiceLabel = (item: any) => {
+    if (item.plugin === "official-ai-voice-plugin") {
+      return [
+        item.provider,
+        item.isLimitedFree ? t("Limited free") : "",
+        item.displayName || item.name,
+        item.provider === "Azure" ? langToName(item.locale) : item.language,
+        item.gender === "female" ? t("Female voice") : t("Male voice"),
+      ]
+        .filter(Boolean)
+        .join(" - ");
+    }
+    return t(item.displayName || item.name);
+  };
   const handleStartAudio = async () => {
     if (isAuthed && ConfigService.getReaderConfig("voiceEngine") !== "system") {
       toast.loading(t("Loading audio, please wait..."), {
@@ -1263,7 +1277,7 @@ const TextToSpeech = () => {
                   key={[item.name, item.plugin].join("#")}
                   className="lang-setting-option"
                 >
-                  {t(item.displayName || item.name)}
+                  {renderVoiceLabel(item)}
                 </option>
               );
             })}
@@ -1460,7 +1474,7 @@ const TextToSpeech = () => {
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
                     >
-                      {t(item.displayName || item.name)}
+                      {renderVoiceLabel(item)}
                     </option>
                   )
                 )}
@@ -1517,7 +1531,7 @@ const TextToSpeech = () => {
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
                     >
-                      {t(item.displayName || item.name)}
+                      {renderVoiceLabel(item)}
                     </option>
                   ))}
               </select>
@@ -1573,7 +1587,7 @@ const TextToSpeech = () => {
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
                     >
-                      {t(item.displayName || item.name)}
+                      {renderVoiceLabel(item)}
                     </option>
                   ))}
               </select>
@@ -1628,7 +1642,7 @@ const TextToSpeech = () => {
                       key={[item.name, item.plugin].join("#")}
                       className="lang-setting-option"
                     >
-                      {t(item.displayName || item.name)}
+                      {renderVoiceLabel(item)}
                     </option>
                   )
                 )}
