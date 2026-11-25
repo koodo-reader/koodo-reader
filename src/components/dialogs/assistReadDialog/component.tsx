@@ -362,7 +362,7 @@ const AssistReadDialog = () => {
 
         {!isPaginatedBook(currentBook) && (
           <SwitchRow
-            title={<Trans>Enable content coloring</Trans>}
+            title={<Trans>Enable text coloring</Trans>}
             isEnabled={state.isTextColor}
             onClick={handleTextColorToggle}
           />
