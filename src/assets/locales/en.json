@@ -990,6 +990,7 @@
   "Api key": "Api key",
   "Deck Name": "Deck Name",
   "Import dictionary": "Import dictionary",
+  "Different dictionary formats need different files, please select the files that match your format:\nMDict: select the .mdx file, optionally together with its .mdd and .css files\nStarDict: select the .ifo, .idx and .dict files (compressed .dict.dz or .idx.gz variants also work), optionally with .syn\nDICT: select the .index and .dict files (or .dict.dz)\nSlob: select the single .slob file\nBGL: select the single .bgl file": "Different dictionary formats need different files, please select the files that match your format:\nMDict: select the .mdx file, optionally together with its .mdd and .css files\nStarDict: select the .ifo, .idx and .dict files (compressed .dict.dz or .idx.gz variants also work), optionally with .syn\nDICT: select the .index and .dict files (or .dict.dz)\nSlob: select the single .slob file\nBGL: select the single .bgl file",
   "Download open dictionaries": "Download open dictionaries",
   "Dictionary already downloaded": "Dictionary already downloaded",
   "Source": "Source",
