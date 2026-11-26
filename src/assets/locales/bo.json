@@ -1201,7 +1201,6 @@
   "Minimize": "ཆུང་དུ་གཏོང་།",
   "Open Console": "ཀོན་སོལ་ཕྱེ།",
   "Maximize": "ཆེ་རུ་གཏོང་།",
-  "Enable simulated book spine": "དཔེ་ཆའི་རྒྱབ་ཤིང་བཟོས་མ་ཕྱེ།",
   "Show a simulated spine and shadow on book covers to make them look like physical books": "དཔེ་ཆ་རྣམས་ཤོག་ལྷེབ་ལྟར་སྣང་བའི་ཆེད་དུ་ཕྱི་ཤོག་སྟེང་དུ་བཟོས་མའི་རྒྱབ་ཤིང་དང་གྲིབ་མ་བསྟན།",
   "Local aggregate dictionary": "གནས་ཀྱི་ཚིག་མཛོད་བསྡུས་མ།",
   "Unsupported": "རྒྱབ་སྐྱོར་མི་བྱེད།",

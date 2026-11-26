@@ -9,6 +9,8 @@ import DictUtil, {
 } from "../../../utils/file/dictUtil";
 import { KookitConfig } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
+import { isElectron } from "react-device-detect";
+import { vexComfirmAsync } from "../../../utils/common";
 
 const DICT_KIND_LABEL: Record<string, string> = {
   mdict: "MDict",
@@ -55,6 +57,17 @@ const DictSetting = () => {
   }, []);
 
   const handleImportClick = async () => {
+    if (isElectron) {
+      const confirmed = await vexComfirmAsync(
+        t(
+          "Different dictionary formats need different files, please select the files that match your format:\nMDict: select the .mdx file, optionally together with its .mdd and .css files\nStarDict: select the .ifo, .idx and .dict files (compressed .dict.dz or .idx.gz variants also work), optionally with .syn\nDICT: select the .index and .dict files (or .dict.dz)\nSlob: select the single .slob file\nBGL: select the single .bgl file"
+        ).replace(/\n/g, "<br>"),
+        "Continue",
+        "Cancel"
+      );
+      if (!confirmed) return;
+    }
+
     const filePaths = await DictUtil.pickFiles();
     if (!filePaths.length) return;
 

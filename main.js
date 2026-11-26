@@ -390,7 +390,11 @@ let options = {
   },
 };
 const Database = require("better-sqlite3");
-const getReaderWindowChromeOptions = () => {
+const getReaderWindowChromeOptions = (isMergeWord) => {
+  // Windows 上 transparent 仅对无边框窗口生效，摸鱼模式必须去掉系统边框
+  if (isMergeWord === "yes") {
+    return { frame: false };
+  }
   if (isDev) {
     return { frame: true };
   }
@@ -1092,7 +1096,7 @@ const createMainWin = () => {
     if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
       readerWindow = new BrowserWindow({
         ...options,
-        ...getReaderWindowChromeOptions(),
+        ...getReaderWindowChromeOptions(isMergeWord),
         backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
       });
       readerWindow.webContents.on(
@@ -1123,7 +1127,7 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: isWindowVisible ? parseInt(store.get("windowX")) : undefined,
         y: isWindowVisible ? parseInt(store.get("windowY")) : undefined,
-        ...getReaderWindowChromeOptions(),
+        ...getReaderWindowChromeOptions(isMergeWord),
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
         backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
@@ -2310,7 +2314,7 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
-        ...getReaderWindowChromeOptions(),
+        ...getReaderWindowChromeOptions(nextIsMergeWord),
         hasShadow: nextIsMergeWord === "yes" ? false : true,
         transparent: nextIsMergeWord === "yes" ? true : false,
         backgroundColor:
