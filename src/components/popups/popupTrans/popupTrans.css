@@ -82,15 +82,16 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
   color: #f16464;
   background-color: rgba(241, 100, 100, 0.05);
-  height: 34px;
+  height: 32px;
+  font-size: 14px;
   display: inline-block; /* 修改：从 float: left 改为 inline-block */
   vertical-align: top; /* 添加：对齐方式 */
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 9px;
+  padding-right: 9px;
   border-radius: 8px;
   margin-right: 10px;
   text-align: center;
-  line-height: 34px;
+  line-height: 32px;
   cursor: pointer;
   opacity: 1;
 }
@@ -109,13 +110,14 @@
   color: #f16464;
   display: inline-block; /* 修改：从 float: left 改为 inline-block */
   vertical-align: top; /* 添加：对齐方式 */
-  height: 34px;
-  padding-left: 10px;
-  padding-right: 10px;
+  height: 32px;
+  font-size: 14px;
+  padding-left: 9px;
+  padding-right: 9px;
   border-radius: 8px;
   margin-right: 10px;
   text-align: center;
-  line-height: 34px;
+  line-height: 32px;
   cursor: pointer;
 }
 .trans-service-selector-container {
@@ -125,7 +127,14 @@
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap; /* 添加：防止换行 */
-  height: 42px; /* 添加：给容器一个固定高度 */
+  height: 40px; /* 添加：给容器一个固定高度 */
+}
+
+/* 插件列表胶囊内的图标随按钮一起缩小，不影响 popupAssist 中的同名图标 */
+.trans-service-selector .trans-icon,
+.trans-service-selector-inactive .trans-icon {
+  font-size: 13px;
+  margin-right: 4px;
 }
 /* 滚动条样式 - 仅在悬停时显示 */
 .trans-service-selector-container::-webkit-scrollbar {
@@ -171,7 +180,7 @@
 }
 .trans-add-icon {
   font-size: 13px;
-  margin: 5px;
+  margin: 4px;
 }
 .trans-add-content-box {
   width: 100%;
