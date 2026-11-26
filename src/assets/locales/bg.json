@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Това е номер на поръчка, а не код за осребряване, моля, проверете отново имейла си, кодът за осребряване е под номера на поръчката",
   "More accurate": "По-точно",
   "Chinese": "Китайски",
-  "Official AI OCR": "Официално AI OCR",
+  "Official OCR": "Официално OCR",
   "Your quota will be reset in": "Квотата ви ще бъде нулирана след {{ttl}} часа",
   "Auto switch to shelf on startup": "Автоматично превключване на рафт при стартиране",
   "Disabled": "Деактивирано",

@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "นี่คือหมายเลขคำสั่งซื้อ ไม่ใช่รหัส redeem โปรดตรวจสอบอีเมลของคุณอีกครั้ง รหัส redeem อยู่ด้านล่างหมายเลขคำสั่งซื้อ",
   "More accurate": "แม่นยำยิ่งขึ้น",
   "Chinese": "ภาษาจีน",
-  "Official AI OCR": "OCR AI อย่างเป็นทางการ",
+  "Official OCR": "OCR อย่างเป็นทางการ",
   "Your quota will be reset in": "โควต้าของคุณจะถูกรีเซ็ตใน {{ttl}} ชั่วโมง",
   "Auto switch to shelf on startup": "สลับไปยังชั้นหนังสือโดยอัตโนมัติเมื่อเริ่มต้น",
   "Disabled": "ปิดใช้งาน",

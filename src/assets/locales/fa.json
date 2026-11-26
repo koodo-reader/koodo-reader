@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "این شماره سفارش است نه کد بازخرید، لطفاً دوباره ایمیل خود را بررسی کنید، کد بازخرید در زیر شماره سفارش است",
   "More accurate": "دقیق‌تر",
   "Chinese": "چینی",
-  "Official AI OCR": "تشخیص OCR رسمی هوش مصنوعی",
+  "Official OCR": "تشخیص OCR رسمی",
   "Your quota will be reset in": "سهمیه شما در {{ttl}} ساعت دیگر بازنشانی می‌شود",
   "Auto switch to shelf on startup": "تغییر خودکار به قفسه در هنگام راه‌اندازی",
   "Disabled": "غیرفعال",

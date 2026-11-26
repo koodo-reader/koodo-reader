@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Dette er ordrenummeret, ikke indløsningskoden. Tjek din e-mail igen; indløsningskoden står under ordrenummeret",
   "More accurate": "Mere præcis",
   "Chinese": "Kinesisk",
-  "Official AI OCR": "Officiel AI-OCR",
+  "Official OCR": "Officiel OCR",
   "Your quota will be reset in": "Din kvota nulstilles om {{ttl}} timer",
   "Auto switch to shelf on startup": "Skift automatisk til hylde ved start",
   "Disabled": "Deaktiveret",

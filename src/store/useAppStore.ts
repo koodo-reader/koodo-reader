@@ -29,9 +29,8 @@ import { resolveStoredPlugin } from "../utils/plugins/records";
 import { NATURAL_VOICE_SAPI_ADAPTER_PLUGIN_KEY } from "../utils/plugins/catalog";
 import type { PluginConfig, PluginVoice } from "../utils/plugins/types";
 import { handleExitApp } from "../utils/request/common";
-import { HighlightValue, langToName } from "../utils/common";
+import { HighlightValue } from "../utils/common";
 import toast from "react-hot-toast";
-import i18n from "../i18n";
 
 const collectionUtil = new CollectionUtil(ConfigService);
 const highlightUtil = new HighlightUtil(ConfigService);
@@ -803,39 +802,19 @@ export const useAppStore = create<AppState>()((set, get) => {
               ...KookitConfig.OfficialVoiceList.map((item) => {
                 return {
                   ...item,
-                  label:
-                    i18n.t("Kokoro") +
-                    " - " +
-                    (KookitConfig.SelfHostedVoiceList.includes(item.name) &&
-                    isAuthed
-                      ? i18n.t("Limited free") + " - "
-                      : "") +
-                    item.displayName +
-                    " - " +
-                    item.language +
-                    " - " +
-                    (item.gender === "female"
-                      ? i18n.t("Female voice")
-                      : i18n.t("Male voice")),
+                  provider: "Kokoro",
+                  isLimitedFree:
+                    KookitConfig.SelfHostedVoiceList.includes(item.name) &&
+                    isAuthed,
                 };
               }),
               ...KookitConfig.AzureTTSVoiceList.map((item) => {
                 return {
                   ...item,
-                  label:
-                    "Azure" +
-                    " - " +
-                    (KookitConfig.SelfHostedVoiceList.includes(item.name) &&
-                    isAuthed
-                      ? i18n.t("Limited free") + " - "
-                      : "") +
-                    item.displayName +
-                    " - " +
-                    langToName(item.locale) +
-                    " - " +
-                    (item.gender === "female"
-                      ? i18n.t("Female voice")
-                      : i18n.t("Male voice")),
+                  provider: "Azure",
+                  isLimitedFree:
+                    KookitConfig.SelfHostedVoiceList.includes(item.name) &&
+                    isAuthed,
                 };
               }),
             ];
@@ -853,7 +832,6 @@ export const useAppStore = create<AppState>()((set, get) => {
                   ...item,
                   plugin: "official-ai-voice-plugin",
                   config: {},
-                  displayName: item.label,
                 };
               }),
               "",

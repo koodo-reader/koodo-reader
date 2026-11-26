@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "འདི་ནི་སྒྲིག་བྱང་ཨང་ཡིན་པ་ལས་བསྒྲིགས་བེད་ཨང་མིན། ཁྱེད་ཀྱི་གློག་འཕྲིན་ཡང་བསྐྱར་ལྟ་རོགས། བསྒྲིགས་བེད་ཨང་སྒྲིག་བྱང་ཨང་གི་འོག་ཏུ་ཡོད།",
   "More accurate": "དེ་ལས་ཏག་ཏག",
   "Chinese": "རྒྱ་ཡིག",
-  "Official AI OCR": "གཞུང་འབྲེལ་ AI OCR",
+  "Official OCR": "གཞུང་འབྲེལ་ OCR",
   "Your quota will be reset in": "ཁྱེད་ཀྱི་ཚད་བཀག་ {{ttl}} ཆུ་ཚོད་ནང་སླར་སྒྲིག་བྱེད།",
   "Auto switch to shelf on startup": "འགོ་བཙུགས་སྐབས་རང་འགུལ་དཔེ་སྒྲོམ་ལ་བསྒྱུར།",
   "Disabled": "ནུས་མེད།",

@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Это номер заказа, а не код активации. Пожалуйста, проверьте свою электронную почту еще раз; код активации находится под номером заказа.",
   "More accurate": "Более точный",
   "Chinese": "Китайский",
-  "Official AI OCR": "Официальный AI OCR",
+  "Official OCR": "Официальный OCR",
   "Your quota will be reset in": "Ваша квота будет сброшена через {{ttl}} час(ов)",
   "Auto switch to shelf on startup": "Автоматически переключаться на полку при запуске",
   "Disabled": "Отключено",

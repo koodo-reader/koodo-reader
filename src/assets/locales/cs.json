@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Toto je číslo objednávky, nikoli uplatňovací kód. Zkontrolujte e-mail, uplatňovací kód je uveden pod číslem objednávky.",
   "More accurate": "Přesnější",
   "Chinese": "Čínština",
-  "Official AI OCR": "Oficiální AI OCR",
+  "Official OCR": "Oficiální OCR",
   "Your quota will be reset in": "Vaše kvóta bude obnovena za {{ttl}} hodin",
   "Auto switch to shelf on startup": "Automaticky přepnout na polici při spuštění",
   "Disabled": "Zakázáno",

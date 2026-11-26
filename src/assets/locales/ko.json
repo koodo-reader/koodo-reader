@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "주문 번호이며 교환 코드가 아닙니다. 이메일을 다시 확인하세요. 교환 코드는 주문 번호 아래에 있습니다",
   "More accurate": "더 정확함",
   "Chinese": "중국어",
-  "Official AI OCR": "공식 AI 문자 인식(OCR)",
+  "Official OCR": "공식 문자 인식(OCR)",
   "Your quota will be reset in": "할당량이 {{ttl}}시간 후에 재설정됩니다",
   "Auto switch to shelf on startup": "시작 시 자동으로 책장으로 전환",
   "Disabled": "비활성화",

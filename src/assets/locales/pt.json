@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Este é o número da encomenda, não o código de resgate. Por favor, verifique o seu email novamente; o código de resgate está abaixo do número da encomenda.",
   "More accurate": "Mais preciso",
   "Chinese": "Chinês",
-  "Official AI OCR": "OCR AI Oficial",
+  "Official OCR": "OCR Oficial",
   "Your quota will be reset in": "A sua cota será reposta em {{ttl}} horas",
   "Auto switch to shelf on startup": "Alternar automaticamente para a estante ao iniciar",
   "Disabled": "Desativado",

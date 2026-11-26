@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Tämä on tilausnumero, ei lunastuskoodi. Tarkista sähköpostisi uudelleen, lunastuskoodi on tilausnumeron alapuolella",
   "More accurate": "Tarkempi",
   "Chinese": "Kiina",
-  "Official AI OCR": "Virallinen tekoäly OCR",
+  "Official OCR": "Virallinen OCR",
   "Your quota will be reset in": "Kiintiösi nollautuu {{ttl}} tunnin kuluttua",
   "Auto switch to shelf on startup": "Automaattinen siirtyminen hyllyyn käynnistyksessä",
   "Disabled": "Poistettu käytöstä",

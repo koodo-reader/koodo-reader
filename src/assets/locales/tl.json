@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Ito ang numero ng order hindi ang redemption code, mangyaring suriin muli ang iyong email, ang redemption code ay nasa ibaba ng numero ng order",
   "More accurate": "Mas tumpak",
   "Chinese": "Tsino",
-  "Official AI OCR": "Opisyal na OCR AI",
+  "Official OCR": "Opisyal na OCR",
   "Your quota will be reset in": "Ang iyong quota ay mare-reset sa loob ng {{ttl}} oras",
   "Auto switch to shelf on startup": "Awtomatikong lumipat sa shelf sa pagsisimula",
   "Disabled": "Hindi pinagana",

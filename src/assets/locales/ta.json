@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "இது ஆர்டர் எண், மீட்புக் குறியீடு அல்ல, உங்கள் மின்னஞ்சலை மீண்டும் சரிபார்க்கவும், மீட்புக் குறியீடு ஆர்டர் எண்ணுக்கு கீழே உள்ளது",
   "More accurate": "மேலும் துல்லியமானது",
   "Chinese": "சீனம்",
-  "Official AI OCR": "அதிகாரப்பூர்வ AI OCR",
+  "Official OCR": "அதிகாரப்பூர்வ OCR",
   "Your quota will be reset in": "உங்கள் ஒதுக்கீடு {{ttl}} மணிநேரத்தில் மீட்டமைக்கப்படும்",
   "Auto switch to shelf on startup": "தொடக்கத்தில் தானாக அலமாரிக்கு மாற்று",
   "Disabled": "முடக்கப்பட்டது",

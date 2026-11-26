@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "এটি অর্ডার নম্বর, রিডেম্পশন কোড নয়। অনুগ্রহ করে আপনার ইমেল আবার চেক করুন, রিডেম্পশন কোড অর্ডার নম্বরের নিচে রয়েছে",
   "More accurate": "আরও নির্ভুল",
   "Chinese": "চীনা",
-  "Official AI OCR": "সরকারি AI OCR",
+  "Official OCR": "সরকারি OCR",
   "Your quota will be reset in": "আপনার কোটা {{ttl}} ঘন্টার মধ্যে রিসেট হবে",
   "Auto switch to shelf on startup": "স্টার্টআপে শেল্ফে স্বয়ংক্রিয় সুইচ",
   "Disabled": "নিষ্ক্রিয়",

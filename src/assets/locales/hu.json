@@ -564,7 +564,7 @@
   "This is the order number not the redemption code, please check your email again, the redemption code is below the order number": "Ez a rendelésszám, nem a beváltási kód. Kérjük, ellenőrizze újra az e-mailjét, a beváltási kód a rendelésszám alatt található",
   "More accurate": "Pontosabb",
   "Chinese": "Kínai",
-  "Official AI OCR": "Hivatalos AI OCR",
+  "Official OCR": "Hivatalos OCR",
   "Your quota will be reset in": "A kerete {{ttl}} óra múlva alaphelyzetbe áll",
   "Auto switch to shelf on startup": "Automatikus váltás a polcra indításkor",
   "Disabled": "Letiltva",
