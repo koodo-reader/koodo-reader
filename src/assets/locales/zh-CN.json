@@ -1220,5 +1220,10 @@
   "ISBN": "ISBN",
   "Enable auto reading": "自动阅读",
   "Auto scrolling speed": "自动阅读速度",
-  "Text to speech": "朗读"
+  "Text to speech": "朗读",
+  "Note type": "笔记类型",
+  "HTML": "HTML",
+  "Write your note here": "在此撰写笔记",
+  "Write in Markdown": "以 Markdown 撰写",
+  "Write in HTML": "以 HTML 撰写"
 }
