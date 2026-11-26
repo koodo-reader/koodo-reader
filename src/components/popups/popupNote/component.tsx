@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import "./popupNote.css";
 import { isReadingRawPDF } from "../../../utils/common";
 import Note, { normalizeNoteType } from "../../../models/Note";
@@ -26,6 +26,12 @@ export interface PopupNoteProps {
   chapterDocIndex: number;
   chapter: string;
 }
+
+const NOTE_TYPE_OPTIONS: { value: NoteType; label: string }[] = [
+  { value: "text", label: "Plain text" },
+  { value: "markdown", label: "MD" },
+  { value: "html", label: "HTML" },
+];
 
 const highlightUtil: any = new HighlightUtil(ConfigService);
 
@@ -128,20 +134,13 @@ const PopupNote = (props: PopupNoteProps) => {
         handleNoteKey("");
         handleShowPopupNote(false);
         if (htmlBook && htmlBook.rendition) {
-          htmlBook.rendition.removeOneNote(
-            noteKey,
-            props.chapterDocIndex
-          );
+          htmlBook.rendition.removeOneNote(noteKey, props.chapterDocIndex);
           htmlBook.rendition.createOneNote(newNote, handleNoteClick);
         }
       });
     } else {
       let cfi = JSON.stringify(
-        ConfigService.getObjectConfig(
-          currentBook.key,
-          "recordLocation",
-          {}
-        )
+        ConfigService.getObjectConfig(currentBook.key, "recordLocation", {})
       );
       if (isReadingRawPDF(currentBook)) {
         let bookLocation = htmlBook.rendition.getPositionByChapter(
@@ -151,9 +150,7 @@ const PopupNote = (props: PopupNoteProps) => {
       }
       let bookKey = currentBook.key;
       let range = JSON.stringify(
-        await htmlBook.rendition.getHighlightCoords(
-          props.chapterDocIndex
-        )
+        await htmlBook.rendition.getHighlightCoords(props.chapterDocIndex)
       );
 
       let percentage = ConfigService.getObjectConfig(
@@ -161,16 +158,12 @@ const PopupNote = (props: PopupNoteProps) => {
         "recordLocation",
         {}
       ).percentage
-        ? ConfigService.getObjectConfig(
-            currentBook.key,
-            "recordLocation",
-            {}
-          ).percentage
+        ? ConfigService.getObjectConfig(currentBook.key, "recordLocation", {})
+            .percentage
         : "0";
 
       let color =
-        highlightUtil.formatHighlightValue(highlight) ||
-        "background-#FEF3CD";
+        highlightUtil.formatHighlightValue(highlight) || "background-#FEF3CD";
 
       let newNote = new Note(
         bookKey,
@@ -189,10 +182,7 @@ const PopupNote = (props: PopupNoteProps) => {
         handleOpenMenu(false);
         handleFetchNotes();
         handleMenuMode("");
-        await htmlBook.rendition.createOneNote(
-          newNote,
-          handleNoteClick
-        );
+        await htmlBook.rendition.createOneNote(newNote, handleNoteClick);
         let noteSyncManager = new NoteSyncManager(
           DatabaseService,
           ConfigService,
@@ -214,10 +204,7 @@ const PopupNote = (props: PopupNoteProps) => {
         handleFetchNotes();
         handleNoteKey("");
         if (htmlBook && htmlBook.rendition) {
-          htmlBook.rendition.removeOneNote(
-            noteKey,
-            props.chapterDocIndex
-          );
+          htmlBook.rendition.removeOneNote(noteKey, props.chapterDocIndex);
         }
 
         handleOpenMenu(false);
@@ -247,6 +234,21 @@ const PopupNote = (props: PopupNoteProps) => {
     isEdit: true,
     noteItem: note,
   };
+
+  // Pill theme tokens, mirroring the stats page theme
+  // (src/pages/stats/component.tsx) so the pills adapt to the current
+  // skin exactly like the reading-stats range filter.
+  const skin = ConfigService.getReaderConfig("appSkin");
+  const isOSNight = ConfigService.getReaderConfig("isOSNight");
+  const darkMode =
+    skin === "night" || (skin === "system" && isOSNight === "yes");
+  const pillThemeStyle = {
+    "--pill-text": darkMode ? "#e0e0e0" : "#333333",
+    "--pill-card-bg": darkMode ? "#2a2a2a" : "#ffffff",
+    "--pill-border": darkMode ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.1)",
+    "--pill-hover-bg": darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
+    "--pill-muted": darkMode ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.5)",
+  } as CSSProperties;
 
   return (
     <div className="note-editor">
@@ -284,25 +286,27 @@ const PopupNote = (props: PopupNoteProps) => {
       </div>
       <div className="note-option-row">
         <ColorOption {...(colorOptionProps as any)} />
-        <select
-          className="lang-setting-dropdown note-type-select"
-          value={noteType}
-          title={t("Note type")}
+        <div
+          className="note-type-tabs"
+          role="group"
           aria-label={t("Note type")}
-          onChange={(event) =>
-            handleTypeChange(event.target.value as NoteType)
-          }
+          style={pillThemeStyle}
         >
-          <option value="text" className="lang-setting-option">
-            {t("Plain text")}
-          </option>
-          <option value="markdown" className="lang-setting-option">
-            {t("Markdown")}
-          </option>
-          <option value="html" className="lang-setting-option">
-            {t("HTML")}
-          </option>
-        </select>
+          {NOTE_TYPE_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className={`note-type-pill${
+                noteType === option.value ? " is-active" : ""
+              }`}
+              title={t("Note type")}
+              aria-pressed={noteType === option.value}
+              onClick={() => handleTypeChange(option.value)}
+            >
+              {t(option.label)}
+            </button>
+          ))}
+        </div>
       </div>
       <div
         className="note-tags"
