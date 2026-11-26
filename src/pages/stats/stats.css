@@ -208,6 +208,31 @@
   gap: 5px;
   overflow-x: auto;
   padding-bottom: 8px;
+  /* Firefox：始终预留滚动条空间，仅悬停时着色，避免出现时高度跳动 */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+/* WebKit：滚动条始终占位但透明，悬停时着色 */
+.stats-leaderboard::-webkit-scrollbar {
+  height: 8px;
+}
+
+.stats-leaderboard::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+}
+
+.stats-leaderboard:hover::-webkit-scrollbar-thumb {
+  background: var(--stats-muted);
+}
+
+.stats-leaderboard:hover::-webkit-scrollbar-thumb:hover {
+  background: var(--stats-text);
+}
+
+.stats-leaderboard:hover {
+  scrollbar-color: var(--stats-muted) transparent;
 }
 
 .stats-leaderboard-card {
