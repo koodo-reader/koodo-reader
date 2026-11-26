@@ -370,7 +370,7 @@ const PopupTrans = (props: PopupTransProps) => {
                   <span className={`icon-${item.icon} trans-icon`}></span>
                   {t(item.displayName)}
                   {item.key === "official-ai-trans-plugin" && (
-                    <span style={{ fontSize: "13px", color: "#f16464" }}>
+                    <span style={{ fontSize: "12px", color: "#f16464" }}>
                       {" "}
                       (Pro)
                     </span>
