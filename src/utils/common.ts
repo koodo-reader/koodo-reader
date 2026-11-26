@@ -758,22 +758,18 @@ export const getPageWidth = (
     //页面宽度以 scale=1 的默认宽度为基准等比例缩放，
     //使预设百分比与实际显示宽度成正比，避免低百分比时出现过窄页面
     //窄窗口下的单页（含双页自动切换场景）以与双页一致的可用全宽为基准，减小两侧空白
-    let baseWidth = document.body.clientWidth * 0.6;
-    if (
+    const isNarrowSinglePage =
       readerMode === "single" &&
-      document.body.clientWidth < AUTO_SINGLE_PAGE_MAX_WIDTH
-    ) {
-      baseWidth =
-        document.body.clientWidth -
-        2 * margin -
-        80 -
-        (isNavLocked ? 300 : 0) -
-        (isSettingLocked ? 300 : 0);
-    }
+      document.body.clientWidth < AUTO_SINGLE_PAGE_MAX_WIDTH;
+    const lockedPanelWidth =
+      (isNavLocked ? 300 : 0) + (isSettingLocked ? 300 : 0);
+    let baseWidth = isNarrowSinglePage
+      ? document.body.clientWidth - 2 * margin - 80 - lockedPanelWidth
+      : document.body.clientWidth * 0.6;
+    //窄窗口的基准宽度已扣除固定侧边栏，缩放后不再重复扣减
     let preWidth =
       baseWidth * Math.abs(parseFloat(scale)) -
-      (isNavLocked ? 300 : 0) -
-      (isSettingLocked ? 300 : 0);
+      (isNarrowSinglePage ? 0 : lockedPanelWidth);
     let width = findValidMultiple(preWidth);
     pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${
       isSettingLocked ? 150 : 0
