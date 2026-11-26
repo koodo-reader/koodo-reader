@@ -120,7 +120,7 @@ export const appearanceSettingList = [
   },
   {
     isElectron: false,
-    title: "Enable simulated book spine",
+    title: "Enable simulated book cover",
     desc: "Show a simulated spine and shadow on book covers to make them look like physical books",
     propName: "isEnableBookSpine",
   },
