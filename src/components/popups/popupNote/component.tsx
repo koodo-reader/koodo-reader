@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import "./popupNote.css";
 import { isReadingRawPDF } from "../../../utils/common";
 import Note, { normalizeNoteType } from "../../../models/Note";
@@ -52,6 +52,9 @@ const PopupNote = (props: PopupNoteProps) => {
   const [note, setNote] = useState<Note | null>(null);
   const [editorText, setEditorText] = useState("");
   const [noteType, setNoteType] = useState<NoteType>("text");
+  // 保存是异步的，写库完成前弹窗仍可点击：连续点确认（或长按 CTRL+ENTER
+  // 自动重复）会给同一段选区各写入一条完全相同的笔记
+  const isSavingNoteRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -118,16 +121,19 @@ const PopupNote = (props: PopupNoteProps) => {
   };
 
   const createNote = async () => {
+    if (isSavingNoteRef.current) return;
+    isSavingNoteRef.current = true;
     let notes = editorText;
 
-    if (noteKey) {
-      let newNote = await DatabaseService.getRecord(noteKey, "notes");
-      newNote.notes = notes;
-      newNote.tag = tag;
-      newNote.type = noteType;
-      newNote.color =
-        highlightUtil.formatHighlightValue(highlight) || newNote.color;
-      DatabaseService.updateRecord(newNote, "notes").then(() => {
+    try {
+      if (noteKey) {
+        let newNote = await DatabaseService.getRecord(noteKey, "notes");
+        newNote.notes = notes;
+        newNote.tag = tag;
+        newNote.type = noteType;
+        newNote.color =
+          highlightUtil.formatHighlightValue(highlight) || newNote.color;
+        await DatabaseService.updateRecord(newNote, "notes");
         handleOpenMenu(false);
         handleFetchNotes();
         handleMenuMode("");
@@ -137,8 +143,8 @@ const PopupNote = (props: PopupNoteProps) => {
           htmlBook.rendition.removeOneNote(noteKey, props.chapterDocIndex);
           htmlBook.rendition.createOneNote(newNote, handleNoteClick);
         }
-      });
-    } else {
+        return;
+      }
       let cfi = JSON.stringify(
         ConfigService.getObjectConfig(currentBook.key, "recordLocation", {})
       );
@@ -178,19 +184,20 @@ const PopupNote = (props: PopupNoteProps) => {
         tag,
         noteType
       );
-      DatabaseService.saveRecord(newNote, "notes").then(async () => {
-        handleOpenMenu(false);
-        handleFetchNotes();
-        handleMenuMode("");
-        await htmlBook.rendition.createOneNote(newNote, handleNoteClick);
-        let noteSyncManager = new NoteSyncManager(
-          DatabaseService,
-          ConfigService,
-          window.electronAPI?.fs,
-          window.electronAPI?.path
-        );
-        noteSyncManager.syncNote(newNote, bookKey);
-      });
+      await DatabaseService.saveRecord(newNote, "notes");
+      handleOpenMenu(false);
+      handleFetchNotes();
+      handleMenuMode("");
+      await htmlBook.rendition.createOneNote(newNote, handleNoteClick);
+      let noteSyncManager = new NoteSyncManager(
+        DatabaseService,
+        ConfigService,
+        window.electronAPI?.fs,
+        window.electronAPI?.path
+      );
+      noteSyncManager.syncNote(newNote, bookKey);
+    } finally {
+      isSavingNoteRef.current = false;
     }
   };
 
@@ -268,6 +275,7 @@ const PopupNote = (props: PopupNoteProps) => {
           onKeyDown={(event) => {
             if (
               event.key === "Enter" &&
+              !event.repeat &&
               (event.ctrlKey || event.metaKey) &&
               !(event.nativeEvent as any).isComposing
             ) {
