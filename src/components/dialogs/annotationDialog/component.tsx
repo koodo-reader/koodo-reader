@@ -6,6 +6,7 @@ import "./annotationDialog.css";
 import "../../readerSettings/dropdownList/dropdownList.css";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import {
+  ANNOTATION_LINE_STYLES,
   BRUSH_COLORS,
   BRUSH_WIDTHS,
   ERASER_WIDTH_DEFAULT,
@@ -32,6 +33,7 @@ export interface AnnotationDialogState {
   annotationShapeType: string;
   annotationShapeColor: string;
   annotationShapeWidth: number;
+  annotationLineStyle: string;
   annotationEraserWidth: number;
   annotationQuickErase: string;
   annotationTextSize: number;
@@ -71,6 +73,8 @@ const AnnotationDialog = () => {
       ConfigService.getReaderConfig("annotationShapeWidth") ||
         BRUSH_WIDTHS[1] + ""
     ),
+    annotationLineStyle:
+      ConfigService.getReaderConfig("annotationLineStyle") || "solid",
     annotationEraserWidth: parseFloat(
       ConfigService.getReaderConfig("annotationEraserWidth") ||
         ERASER_WIDTH_DEFAULT + ""
@@ -178,6 +182,13 @@ const AnnotationDialog = () => {
     });
     ConfigService.setReaderConfig("annotationShapeWidth", width + "");
   };
+  const handleSelectLineStyle = (lineStyle: string) => {
+    updateState({ annotationLineStyle: lineStyle });
+    htmlBook.rendition.applyAnnotationConfig({
+      lineStyle,
+    });
+    ConfigService.setReaderConfig("annotationLineStyle", lineStyle);
+  };
   const handleSelectEraserWidth = (width: number) => {
     updateState({ annotationEraserWidth: width });
     htmlBook.rendition.applyAnnotationConfig({
@@ -274,6 +285,29 @@ const AnnotationDialog = () => {
         return null;
     }
   };
+  const renderLineStyleIcon = (style: string) => {
+    const strokeDasharray =
+      style === "dashed" ? "4 3" : style === "dotted" ? "0.1 3" : undefined;
+    return (
+      <svg
+        width={22}
+        height={22}
+        viewBox="0 0 18 18"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+      >
+        <line
+          x1="2"
+          y1="9"
+          x2="16"
+          y2="9"
+          strokeDasharray={strokeDasharray}
+        />
+      </svg>
+    );
+  };
   const handleClose = () => {
     handleAnnotationDialog(false);
   };
@@ -288,6 +322,7 @@ const AnnotationDialog = () => {
     annotationShapeType,
     annotationShapeColor,
     annotationShapeWidth,
+    annotationLineStyle,
     annotationEraserWidth,
     annotationQuickErase,
     annotationTextSize,
@@ -415,6 +450,22 @@ const AnnotationDialog = () => {
                 </li>
               ))}
             </ul>
+            <ul className="annotation-shape-list" title={t("Line style")}>
+              {ANNOTATION_LINE_STYLES.map((style) => (
+                <li
+                  key={style}
+                  className={
+                    annotationLineStyle === style
+                      ? "annotation-shape-item active-annotation-shape-item"
+                      : "annotation-shape-item"
+                  }
+                  onClick={() => handleSelectLineStyle(style)}
+                  title={t(style.charAt(0).toUpperCase() + style.slice(1))}
+                >
+                  {renderLineStyleIcon(style)}
+                </li>
+              ))}
+            </ul>
           </>
         ) : annotationStyle === "highlighter" ? (
           <>
@@ -496,6 +547,22 @@ const AnnotationDialog = () => {
                   title={t(type.charAt(0).toUpperCase() + type.slice(1))}
                 >
                   {renderShapeIcon(type)}
+                </li>
+              ))}
+            </ul>
+            <ul className="annotation-shape-list" title={t("Line style")}>
+              {ANNOTATION_LINE_STYLES.map((style) => (
+                <li
+                  key={style}
+                  className={
+                    annotationLineStyle === style
+                      ? "annotation-shape-item active-annotation-shape-item"
+                      : "annotation-shape-item"
+                  }
+                  onClick={() => handleSelectLineStyle(style)}
+                  title={t(style.charAt(0).toUpperCase() + style.slice(1))}
+                >
+                  {renderLineStyleIcon(style)}
                 </li>
               ))}
             </ul>

@@ -5,9 +5,13 @@ import "./opdsDialog.css";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import CryptoJS from "crypto-js";
+import Parser from "html-react-parser";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
 import { useAppStore } from "../../../store/useAppStore";
-import { supportedFormats } from "../../../utils/common";
+import {
+  sanitizeUnsafeHtml,
+  supportedFormats,
+} from "../../../utils/common";
 
 export interface OPDSCatalog {
   id: string;
@@ -374,14 +378,21 @@ function parseOPDSFeed(xmlText: string, feedUrl: string): OPDSFeed {
         .map((c) => c.getAttribute("label") || c.getAttribute("term") || "")
         .filter(Boolean);
 
+      const summaryEl =
+        entry.querySelector("summary") || entry.querySelector("content");
+      // Atom text construct: type="html" holds escaped markup that
+      // textContent already decodes, type="xhtml" holds real child elements.
+      const summary = summaryEl
+        ? summaryEl.getAttribute("type")?.includes("xhtml")
+          ? summaryEl.innerHTML
+          : summaryEl.textContent || ""
+        : "";
+
       return {
         id: entry.querySelector("id")?.textContent || "",
         title: entry.querySelector("title")?.textContent || "",
         authors,
-        summary:
-          entry.querySelector("summary")?.textContent ||
-          entry.querySelector("content")?.textContent ||
-          "",
+        summary,
         coverUrl: coverLink?.href || "",
         thumbnailUrl: thumbnailLink?.href || "",
         links: entryLinks,
@@ -1242,14 +1253,14 @@ const OPDSDialog = () => {
             {metaCells.map(([label, value], i) => (
               <React.Fragment key={label}>
                 {i > 0 && <p className="detail-dialog-book-divider"></p>}
-                <p className="detail-dialog-book-publisher">
+                <div className="detail-dialog-book-publisher">
                   <p className="detail-sub-title">
                     <Trans>{label}</Trans>
                   </p>
-                  <p className="detail-sub-content-container">
+                  <div className="detail-sub-content-container">
                     <p className="detail-sub-content">{value}</p>
-                  </p>
-                </p>
+                  </div>
+                </div>
               </React.Fragment>
             ))}
           </div>
@@ -1268,8 +1279,8 @@ const OPDSDialog = () => {
             <p className="detail-dialog-book-desc">
               <Trans>Description</Trans>:
             </p>
-            <div className="detail-dialog-book-detail">
-              {selectedBook.summary}
+            <div className="detail-dialog-book-detail opds-book-description">
+              {Parser(sanitizeUnsafeHtml(selectedBook.summary))}
             </div>
           </>
         )}

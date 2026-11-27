@@ -118,6 +118,12 @@ export const applyAppBackgroundImage = async () => {
   const imageId = ConfigService.getReaderConfig("appBackgroundImage") || "";
   const root = document.getElementById("root");
   if (!root) return;
+  // 摸鱼模式窗口透明，root 必须保持透明才能透出桌面；
+  // 普通模式下保持不透明，避免清除背景图后重绘期间露出上一帧画面
+  root.style.backgroundColor =
+    ConfigService.getReaderConfig("isMergeWord") === "yes"
+      ? "transparent"
+      : "var(--app-bg)";
   if (imageId) {
     const meta = BackgroundUtil.getImageMeta(imageId);
     const imageUrl = await BackgroundUtil.loadImage(imageId, meta?.extension);

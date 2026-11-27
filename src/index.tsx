@@ -12,10 +12,11 @@ import {
   applyCustomSystemCSS,
   applyAppBackgroundImage,
 } from "./utils/reader/launchUtil";
-import { migrateConfig } from "./utils/common";
+import { initExternalLinkGuard, migrateConfig } from "./utils/common";
 initTheme();
 initSystemFont();
 migrateConfig();
+initExternalLinkGuard();
 applyCustomSystemCSS();
 applyAppBackgroundImage();
 const container = document.getElementById("root")!;

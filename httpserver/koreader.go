@@ -111,16 +111,19 @@ func startKoreaderServer() {
 	}
 }
 
-// koreaderRouter applies CORS and routes to the inner mux.
+// koreaderRouter applies CORS and routes to the inner mux. Native clients send
+// no Origin header; browser clients must come from an allowlisted origin.
 func koreaderRouter(mux *http.ServeMux, w http.ResponseWriter, r *http.Request) {
-	// CORS
+	w.Header().Set("Vary", "Origin")
 	origin := r.Header.Get("Origin")
-	if origin != "" {
+	if origin != "" && origin != getServerOrigin(r) {
+		if !originAllowed(origin) {
+			writePlain(w, http.StatusForbidden, "Origin not allowed")
+			return
+		}
 		w.Header().Set("Access-Control-Allow-Origin", origin)
-		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, x-auth-user, x-auth-key")
-		w.Header().Set("Vary", "Origin")
 	}
 	if r.Method == http.MethodOptions {
 		w.WriteHeader(http.StatusNoContent)

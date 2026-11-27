@@ -33,6 +33,7 @@ export interface SettingInfoState {
   isDisablePDFCover: boolean;
   isDisableCrop: boolean;
   isShowShelfBookCount: boolean;
+  isEnableBookSpine: boolean;
   isCustomSystemCSS: boolean;
   customSystemCSS: string;
   ttsHighlightStyleType: string;
@@ -69,6 +70,8 @@ const AppearanceSetting = () => {
       isDisableCrop: ConfigService.getReaderConfig("isDisableCrop") === "yes",
       isShowShelfBookCount:
         ConfigService.getReaderConfig("isShowShelfBookCount") === "yes",
+      isEnableBookSpine:
+        ConfigService.getReaderConfig("isEnableBookSpine") === "yes",
       isCustomSystemCSS:
         ConfigService.getReaderConfig("isCustomSystemCSS") === "yes",
       customSystemCSS: ConfigService.getReaderConfig("customSystemCSS") || "",

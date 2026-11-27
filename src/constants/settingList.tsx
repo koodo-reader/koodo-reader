@@ -118,6 +118,12 @@ export const appearanceSettingList = [
     title: "Show number of books in each shelf",
     propName: "isShowShelfBookCount",
   },
+  {
+    isElectron: false,
+    title: "Enable simulated book cover",
+    desc: "Show a simulated spine and shadow on book covers to make them look like physical books",
+    propName: "isEnableBookSpine",
+  },
 ];
 export const dataSettingList = [
   {
@@ -519,7 +525,7 @@ export const readerSettingList = [
     isPDF: true,
   },
   {
-    title: "Render PDF from even page",
+    title: "Render from even page",
     propName: "isStartFromEven",
     group: "layout",
     isPDF: true,

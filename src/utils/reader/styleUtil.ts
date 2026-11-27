@@ -52,14 +52,17 @@ class styleUtil {
     const fontName = ConfigService.getReaderConfig("fontFamily");
     const subFontName = ConfigService.getReaderConfig("subFontFamily");
 
-    if (fontName && FontUtil.isCustomFont(fontName)) {
-      const url = await FontUtil.getFontUrl(fontName);
-      if (url) await rendition.displayFontUrl(fontName, url);
-    }
-
-    if (subFontName && FontUtil.isCustomFont(subFontName)) {
-      const url = await FontUtil.getFontUrl(subFontName);
-      if (url) await rendition.displayFontUrl(subFontName, url);
+    // A font the renderer refuses to load (corrupted/invalid file) must not
+    // abort the rendering pipeline, otherwise the book stays blank. Fall back
+    // to the next font in the list instead.
+    for (const name of [fontName, subFontName]) {
+      if (!name || !FontUtil.isCustomFont(name)) continue;
+      try {
+        const url = await FontUtil.getFontUrl(name);
+        if (url) await rendition.displayFontUrl(name, url);
+      } catch (error) {
+        console.error(`Failed to apply font ${name}`, error);
+      }
     }
   }
 

@@ -989,7 +989,7 @@ const AccountSetting = () => {
       )}
       {isAuthed && userInfo && (
         <div className="setting-dialog-new-title">
-          <Trans>AI voice character quota</Trans>
+          <Trans>Daily voice character quota</Trans>
           <div style={{ display: "flex", alignItems: "center" }}>
             <span>
               {userInfo.type === "trial"

@@ -8,21 +8,39 @@ import {
 } from "../../../constants/dropdownList";
 import SliderList from "../../readerSettings/sliderList";
 import SwitchRow from "../../readerSettings/switchRow";
+import { isPaginatedBook } from "../../../utils/common";
 import { useAppStore } from "../../../store/useAppStore";
 import "./scalePageDialog.css";
 
 const ScalePageDialog = () => {
   const scale = useAppStore((s) => s.reader.scale);
   const isFitPage = useAppStore((s) => s.reader.isFitPage);
+  const readerMode = useAppStore((s) => s.reader.readerMode);
+  const currentBook = useAppStore((s) => s.book.currentBook);
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const handleScale = useAppStore((s) => s.handleScale);
   const handleFitPage = useAppStore((s) => s.handleFitPage);
   const handleScalePageDialog = useAppStore((s) => s.handleScalePageDialog);
   const { t } = useTranslation();
+  // 分页格式书籍在单页模式下缩放页面宽度可能不生效，提示用户切换滚动模式
+  const showZoomHint = () => {
+    if (
+      currentBook?.format &&
+      isPaginatedBook(currentBook) &&
+      readerMode === "single"
+    ) {
+      toast(
+        t(
+          "If the page is not enlarged, please switch the reading mode to scroll mode and try again"
+        )
+      );
+    }
+  };
   const handlePresetChange = (scale: string) => {
     ConfigService.setReaderConfig("scale", scale);
     handleScale(scale);
     renderBookFunc();
+    showZoomHint();
   };
 
   return (
@@ -40,7 +58,9 @@ const ScalePageDialog = () => {
       }}
     >
       <ul className="sort-by-category">
-        <SliderList {...({ item: pageWidthConfig } as any)} />
+        <SliderList
+          {...({ item: pageWidthConfig, onApply: showZoomHint } as any)}
+        />
 
         <div className="setting-dialog-new-title scale-page-preset-row">
           <Trans>Preset width</Trans>
@@ -79,6 +99,9 @@ const ScalePageDialog = () => {
             ConfigService.setReaderConfig("isFitPage", next ? "yes" : "no");
             handleFitPage(next);
             toast(t("Change successful"));
+            if (next) {
+              showZoomHint();
+            }
             setTimeout(() => {
               renderBookFunc();
             }, 300);

@@ -18,7 +18,22 @@ export interface DigestParams {
   onSuccess?: () => void;
 }
 
+// 创建高亮的入口有多处（弹出菜单的高亮选项、颜色面板、选区自动动作），
+// 写库完成前弹窗还没关闭，重复点击会给同一段文字写入多条完全相同的高亮。
+// 用单飞锁把并发请求合并成一条。
+let isCreatingHighlight = false;
+
 export async function createHighlight(params: DigestParams): Promise<void> {
+  if (isCreatingHighlight) return;
+  isCreatingHighlight = true;
+  try {
+    await createHighlightRecord(params);
+  } finally {
+    isCreatingHighlight = false;
+  }
+}
+
+async function createHighlightRecord(params: DigestParams): Promise<void> {
   const {
     currentBook,
     htmlBook,

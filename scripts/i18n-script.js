@@ -15,6 +15,8 @@ for (let index = 0; index < files.length; index++) {
   targets.push(`../scripts/missing/${file}`);
 }
 console.info(targets);
+const missingDir = path.join(__dirname, "missing");
+fs.mkdirSync(missingDir, { recursive: true });
 
 // find the missing terms in the english
 const zhdataRaw = fs.readFileSync(
@@ -81,6 +83,6 @@ for (let index = 0; index < resources.length; index++) {
       JSON.stringify(missingTerms, null, 2)
     );
   } catch (error) {
-    console.error("Error reading JSON file:", error);
+    console.error("Error processing", resources[index], error);
   }
 }

@@ -16,7 +16,7 @@ const {
   session,
 } = require("electron");
 const path = require("path");
-const { pathToFileURL } = require("url");
+const { pathToFileURL, fileURLToPath } = require("url");
 const isDev = require("electron-is-dev");
 const Store = require("electron-store");
 const log = require("electron-log/main");
@@ -26,7 +26,7 @@ const fs = require("fs");
 const fsExtra = require("fs-extra");
 const nodeCrypto = require("crypto");
 const yauzl = require("yauzl");
-const tarStream = require("tar-stream");
+const tarStream = require("tar-stream"); 
 const {
   normalizeArchiveEntryName,
   ensureEntryInside,
@@ -61,6 +61,13 @@ const {
 } = require("./src/utils/main/biometric-util");
 const { getVoicePlugin } = require("./src/utils/plugins/main/registry");
 const ttsCacheUtil = require("./src/utils/plugins/main/voice/ttsCache");
+let dictReaderModule = null;
+const getDictReader = () => {
+  if (!dictReaderModule) {
+    dictReaderModule = require("./src/utils/main/dict-reader");
+  }
+  return dictReaderModule;
+};
 const configDir = app.getPath("userData");
 const dirPath = path.join(configDir, "uploads");
 // 数据目录（即渲染进程的 getStorageLocation，见 "storage-location"）
@@ -238,17 +245,98 @@ const loadUrlInAuxWindow = async (win, url) => {
   await wc.loadURL(url);
 };
 
-const singleInstance = app.requestSingleInstanceLock();
-var filePath = null;
-var pendingDeepLink = null;
-if (process.platform != "darwin" && process.argv.length >= 2) {
-  filePath = process.argv[1];
-  // Check argv for a deep link URL (cold start)
-  for (const arg of process.argv) {
-    if (arg.startsWith("koodo-reader://")) {
-      pendingDeepLink = arg;
-      break;
+const isAppNavigationUrl = (url) => {
+  try {
+    const targetUrl = new URL(url);
+    if (isDev) {
+      return (
+        targetUrl.protocol === "http:" &&
+        targetUrl.hostname === "127.0.0.1" &&
+        targetUrl.port === "3000"
+      );
     }
+    if (targetUrl.protocol !== "file:") {
+      return false;
+    }
+    const relativePath = path.relative(
+      path.resolve(__dirname, "build"),
+      fileURLToPath(targetUrl)
+    );
+    return (
+      !!relativePath &&
+      !relativePath.startsWith("..") &&
+      !path.isAbsolute(relativePath)
+    );
+  } catch (error) {
+    return false;
+  }
+};
+
+// App windows carrying preload.js expose electronAPI, so they must never
+// navigate to an untrusted origin: the preload would re-run and re-expose the
+// fs bridge on the attacker page.
+const hardenAppContents = (contents) => {
+  contents.setWindowOpenHandler(({ url }) => {
+    log.warn(`Blocked window.open to untrusted URL: ${url}`);
+    return { action: "deny" };
+  });
+  const blockExternalNavigation = (event, url) => {
+    if (isAppNavigationUrl(url)) {
+      return;
+    }
+    event.preventDefault();
+    log.warn(`Blocked navigation to untrusted URL: ${url}`);
+  };
+  contents.on("will-navigate", blockExternalNavigation);
+  contents.on("will-redirect", blockExternalNavigation);
+};
+
+const singleInstance = app.requestSingleInstanceLock();
+// 外部打开请求（命令行/文件关联/第二实例）在主进程内存中排队，由渲染进程排他消费
+const pendingOpenFiles = [];
+// 本次进程是否收到过外部打开请求，只置 true 不复位（用于跳过“自动打开上次阅读的书”）
+let hasExternalOpenRequest = false;
+var pendingDeepLink = null;
+
+// 只接受真实存在的文件，过滤开关参数、协议 URL、目录与重复项
+const enqueueOpenFiles = (args) => {
+  let added = false;
+  for (const arg of args) {
+    if (typeof arg !== "string" || !arg || arg.startsWith("-")) continue;
+    try {
+      if (!fs.existsSync(arg) || !fs.statSync(arg).isFile()) continue;
+    } catch (error) {
+      continue;
+    }
+    if (!pendingOpenFiles.includes(arg)) {
+      pendingOpenFiles.push(arg);
+      added = true;
+    }
+  }
+  if (added) hasExternalOpenRequest = true;
+};
+
+// 提示渲染进程消费队列；渲染进程挂载时也会主动拉一次，事件丢失不影响
+// 页面加载中 send 会丢，先记下待发送，等加载结束后补发
+let openFilesNotifyPending = false;
+const notifyOpenFiles = () => {
+  if (!mainWin || mainWin.isDestroyed()) return;
+  if (mainWin.webContents.isLoading()) {
+    openFilesNotifyPending = true;
+    return;
+  }
+  openFilesNotifyPending = false;
+  mainWin.webContents.send("open-file-request");
+};
+
+if (process.platform != "darwin") {
+  enqueueOpenFiles(process.argv.slice(1));
+}
+// Check argv for a deep link URL (cold start)
+for (const arg of process.argv) {
+  if (arg.startsWith("koodo-reader://")) {
+    pendingDeepLink = arg;
+    break;
   }
 }
 log.transports.file.fileName = "debug.log";
@@ -302,7 +390,11 @@ let options = {
   },
 };
 const Database = require("better-sqlite3");
-const getReaderWindowChromeOptions = () => {
+const getReaderWindowChromeOptions = (isMergeWord) => {
+  // Windows 上 transparent 仅对无边框窗口生效，摸鱼模式必须去掉系统边框
+  if (isMergeWord === "yes") {
+    return { frame: false };
+  }
   if (isDev) {
     return { frame: true };
   }
@@ -336,6 +428,9 @@ if (!singleInstance) {
       if (!mainWin.isVisible()) mainWin.show();
       mainWin.focus();
     }
+    // 运行中再次双击书籍文件：第二个实例只负责把路径交给已运行的实例
+    enqueueOpenFiles(argv.slice(1));
+    notifyOpenFiles();
     // Handle deep link passed via second-instance argv
     const deepLink = argv.find((arg) => arg.startsWith("koodo-reader://"));
     if (deepLink) {
@@ -346,16 +441,11 @@ if (!singleInstance) {
     }
   });
 }
-if (filePath && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-  // Make sure the directory exists
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-  fs.writeFileSync(
-    path.join(dirPath, "log.json"),
-    JSON.stringify({ filePath }),
-    "utf-8"
-  );
+// 旧版本用 uploads/log.json 在主/子进程间传递文件路径，现改为内存队列，清理残留文件
+try {
+  fs.rmSync(path.join(dirPath, "log.json"), { force: true });
+} catch (error) {
+  console.error("Error removing legacy log.json:", error);
 }
 const getDBConnection = (dbName, storagePath, sqlStatement) => {
   if (!dbConnection[dbName]) {
@@ -554,6 +644,7 @@ const createMainWin = () => {
     delete options.y;
   }
   mainWin = new BrowserWindow({ ...options, show: false });
+  hardenAppContents(mainWin.webContents);
   mainWin.once("ready-to-show", () => {
     if (mainWin && !mainWin.isDestroyed()) {
       if (store.get("isAutoMaximizeWin") === "yes") {
@@ -574,6 +665,10 @@ const createMainWin = () => {
     ? "http://127.0.0.1:3000"
     : `file://${path.join(__dirname, "./build/index.html")}`;
   mainWin.loadURL(urlLocation);
+  // 加载期间被抑制的 open-file-request 通知，在资源加载结束后补发
+  mainWin.webContents.on("did-stop-loading", () => {
+    if (openFilesNotifyPending) notifyOpenFiles();
+  });
   // Handle deep link on cold start: wait for renderer to mount its IPC listeners
   mainWin.webContents.once("did-finish-load", () => {
     if (pendingDeepLink) {
@@ -796,17 +891,76 @@ const createMainWin = () => {
   ipcMain.on("clipboard-read-text-sync", (event) => {
     event.returnValue = clipboard.readText();
   });
-  ipcMain.handle("dict-lookup", (event, args) => {
-    const filePath = args && args.filePath;
-    if (typeof (args && args.word) !== "string")
+  ipcMain.handle("dict-lookup", async (event, args) => {
+    const storagePath = args && args.storagePath;
+    const dictId = args && args.dictId;
+    const word = args && args.word;
+    if (typeof storagePath !== "string" || !storagePath.trim()) {
+      return { ok: false, reason: "invalid-storage" };
+    }
+    if (typeof dictId !== "string" || !dictId.trim()) {
+      return { ok: false, reason: "invalid-id" };
+    }
+    if (typeof word !== "string") {
       throw new TypeError("Invalid dictionary word");
-    const { MDX } = require("js-mdict");
-    const result = new MDX(filePath).lookup(args.word);
-    return result &&
-      result.definition !== undefined &&
-      result.definition !== null
-      ? String(result.definition)
-      : "";
+    }
+    return await getDictReader().lookupDictionary({
+      storagePath,
+      dictId,
+      word,
+    });
+  });
+  ipcMain.handle("dict-migrate", async (event, args) => {
+    const storagePath = args && args.storagePath;
+    if (typeof storagePath !== "string" || !storagePath.trim()) {
+      return { migrated: [], removedIds: [] };
+    }
+    const dicts = Array.isArray(args.dicts)
+      ? args.dicts
+          .filter((item) => item && typeof item.id === "string")
+          .slice(0, 500)
+          .map((item) => ({
+            id: item.id,
+            name: typeof item.name === "string" ? item.name : "",
+          }))
+      : [];
+    return await getDictReader().migrateDictionaries(storagePath, dicts);
+  });
+  ipcMain.handle("dict-import", async (event, args) => {
+    const storagePath = args && args.storagePath;
+    if (typeof storagePath !== "string" || !storagePath.trim()) {
+      return { ok: false, message: "Invalid storage path" };
+    }
+    const filePaths = Array.isArray(args.filePaths)
+      ? args.filePaths
+          .filter((item) => typeof item === "string" && item.trim())
+          .slice(0, 64)
+      : [];
+    if (!filePaths.length) {
+      return { ok: false, message: "No files selected" };
+    }
+    return await getDictReader().importDictionaryBundles(
+      storagePath,
+      filePaths
+    );
+  });
+  ipcMain.handle("dict-import-buffer", async (event, args) => {
+    const storagePath = args && args.storagePath;
+    if (typeof storagePath !== "string" || !storagePath.trim()) {
+      return { ok: false, message: "Invalid storage path" };
+    }
+    return await getDictReader().importDictionaryBuffer(storagePath, args);
+  });
+  ipcMain.handle("dict-remove", async (event, args) => {
+    const storagePath = args && args.storagePath;
+    const dictId = args && args.dictId;
+    if (typeof storagePath !== "string" || !storagePath.trim()) {
+      return { ok: false, message: "Invalid storage path" };
+    }
+    if (typeof dictId !== "string" || !dictId.trim()) {
+      return { ok: false, message: "Invalid dictionary id" };
+    }
+    return await getDictReader().removeDictionary(storagePath, dictId);
   });
   ipcMain.handle("partial-md5", (event, filePath) => {
     const validatedPath = filePath;
@@ -942,7 +1096,7 @@ const createMainWin = () => {
     if (isAutoFullscreen === "yes" || isAutoMaximize === "yes") {
       readerWindow = new BrowserWindow({
         ...options,
-        ...getReaderWindowChromeOptions(),
+        ...getReaderWindowChromeOptions(isMergeWord),
         backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
       });
       readerWindow.webContents.on(
@@ -973,7 +1127,7 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: isWindowVisible ? parseInt(store.get("windowX")) : undefined,
         y: isWindowVisible ? parseInt(store.get("windowY")) : undefined,
-        ...getReaderWindowChromeOptions(),
+        ...getReaderWindowChromeOptions(isMergeWord),
         hasShadow: isMergeWord === "yes" ? false : true,
         transparent: isMergeWord === "yes" ? true : false,
         backgroundColor: isMergeWord ? undefined : getAppBackgroundColor(),
@@ -989,6 +1143,7 @@ const createMainWin = () => {
       readerWindow.loadURL(url);
       // readerWindow.webContents.openDevTools();
     }
+    hardenAppContents(readerWindow.webContents);
     bindReaderWindowState(readerWindow);
     if (store.get("isAlwaysOnTop") === "yes") {
       readerWindow.setAlwaysOnTop(true);
@@ -1273,12 +1428,54 @@ const createMainWin = () => {
     return path.filePaths[0];
   });
   ipcMain.handle("select-file", async (event, config) => {
-    const dialogOptions = { properties: ["openFile"] };
+    const multiple = !!(config && config.multiple);
+    const dialogOptions = {
+      properties: multiple ? ["openFile", "multiSelections"] : ["openFile"],
+    };
     if (config && config.filters) {
       dialogOptions.filters = config.filters;
     }
     var result = await dialog.showOpenDialog(dialogOptions);
-    return result.filePaths[0];
+    return multiple ? result.filePaths : result.filePaths[0];
+  });
+  // 「覆盖」翻页动画：截取阅读区域当前画面，交给渲染进程做滑出动画
+  ipcMain.handle("capture-reader-page", async (event, rect) => {
+    const values = rect
+      ? [rect.left, rect.top, rect.width, rect.height]
+      : [];
+    if (
+      values.length !== 4 ||
+      !values.every(
+        (value) => typeof value === "number" && Number.isFinite(value)
+      )
+    ) {
+      return "";
+    }
+    const { left, top, width, height } = rect;
+    if (
+      width < 1 ||
+      height < 1 ||
+      width > 10000 ||
+      height > 10000 ||
+      !event.sender
+    ) {
+      return "";
+    }
+    try {
+      const image = await event.sender.capturePage({
+        x: Math.round(left),
+        y: Math.round(top),
+        width: Math.round(width),
+        height: Math.round(height),
+      });
+      if (!image || image.isEmpty()) return "";
+      return (
+        "data:image/jpeg;base64," + image.toJPEG(90).toString("base64")
+      );
+    } catch (error) {
+      log.warn("capture-reader-page failed", error);
+      return "";
+    }
   });
   ipcMain.handle("encrypt-data", async (event, config) => {
     let fingerprint = await getFingerprint();
@@ -1996,6 +2193,7 @@ const createMainWin = () => {
   ipcMain.handle("new-tab", (event, config) => {
     if (mainWin) {
       mainView = new WebContentsView(options);
+      hardenAppContents(mainView.webContents);
       mainWin.contentView.addChildView(mainView);
       let { width, height } = mainWin.getContentBounds();
       mainView.setBounds({ x: 0, y: 0, width: width, height: height });
@@ -2116,7 +2314,7 @@ const createMainWin = () => {
         height: parseInt(store.get("windowHeight") || 660) / scaleRatio,
         x: parseInt(store.get("windowX")),
         y: parseInt(store.get("windowY")),
-        ...getReaderWindowChromeOptions(),
+        ...getReaderWindowChromeOptions(nextIsMergeWord),
         hasShadow: nextIsMergeWord === "yes" ? false : true,
         transparent: nextIsMergeWord === "yes" ? true : false,
         backgroundColor:
@@ -2128,6 +2326,7 @@ const createMainWin = () => {
         readerWindowList.push(readerWindow);
       }
       readerWindow = new BrowserWindow(options);
+      hardenAppContents(readerWindow.webContents);
       bindReaderWindowState(readerWindow);
       if (store.get("isAlwaysOnTop") === "yes") {
         readerWindow.setAlwaysOnTop(true);
@@ -2219,43 +2418,10 @@ const createMainWin = () => {
   ipcMain.handle("set-native-theme-source", (event, appSkin) => {
     return applyNativeThemeSource(appSkin);
   });
-  ipcMain.on("get-file-data", function (event) {
-    if (fs.existsSync(path.join(dirPath, "log.json"))) {
-      try {
-        const _data = JSON.parse(
-          fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
-        );
-        if (_data && _data.filePath) {
-          filePath = _data.filePath;
-          setTimeout(() => {
-            fs.writeFileSync(path.join(dirPath, "log.json"), "{}", "utf-8");
-          }, 1000);
-        }
-      } catch (error) {
-        console.error("Error reading log.json:", error);
-      }
-    }
-
-    event.returnValue = filePath;
-    filePath = null;
-  });
-  ipcMain.on("check-file-data", function (event) {
-    if (fs.existsSync(path.join(dirPath, "log.json"))) {
-      try {
-        const _data = JSON.parse(
-          fs.readFileSync(path.join(dirPath, "log.json"), "utf-8") || "{}"
-        );
-        if (_data && _data.filePath) {
-          filePath = _data.filePath;
-        }
-      } catch (error) {
-        console.error("Error reading log.json:", error);
-      }
-    }
-
-    event.returnValue = filePath;
-    filePath = null;
-  });
+  // 排他消费：外部打开请求只会交给第一个来取的渲染进程
+  ipcMain.handle("consume-pending-open-files", () => pendingOpenFiles.splice(0));
+  // 只读：本次进程是否收到过外部打开请求（决定要不要自动打开上次阅读的书）
+  ipcMain.handle("has-external-open-request", () => hasExternalOpenRequest);
   ipcMain.handle("system-ocr", async (event, config) => {
     const { base64, lang } = config || {};
     let tempPath = null;
@@ -2335,7 +2501,8 @@ app.on("window-all-closed", () => {
   app.quit();
 });
 app.on("open-file", (e, pathToFile) => {
-  filePath = pathToFile;
+  enqueueOpenFiles([pathToFile]);
+  notifyOpenFiles();
 });
 // Register protocol handler
 app.setAsDefaultProtocolClient("koodo-reader");

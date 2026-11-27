@@ -31,6 +31,18 @@ Koodo Reader 是一个跨平台电子书阅读器（Electron + Vite + React 19 +
 - `cloud-upload` / `cloud-download` — 云同步
 - `before-reader-close` → `reader-close-ready` — 阅读器两阶段关闭
 
+### 新增 IPC 通道
+
+`window.electronAPI.invoke` **不是透传**。`preload.js` 顶部有 `INVOKE_CHANNELS` / `SEND_CHANNELS` / `SEND_SYNC_CHANNELS` / `EVENT_CHANNELS` 白名单，未登记的通道会被 `assertChannel` 拦截并抛出 `IPC channel is not allowed`。
+
+新增通道必须同时改：
+
+- `main.js` 中对应的 `ipcMain.handle` / `ipcMain.on`
+- `preload.js` 中对应的白名单
+- `src/react-app-env.d.ts` 中的类型（如需要）
+
+不要因为“`preload.js` 已暴露通用 `invoke`”就认为无需修改，也不要只凭历史总结判断现有实现；动手前必须读取 `preload.js` 顶部的白名单确认。
+
 ### Zustand Store
 
 唯一状态源是 `src/store/useAppStore.ts`，保留 8 个命名空间：

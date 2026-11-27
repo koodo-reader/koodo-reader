@@ -32,6 +32,24 @@
   margin-top: 10px;
   margin-left: 5px;
 }
+.dict-aggregate-section {
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid rgba(128, 128, 128, 0.25);
+}
+.dict-aggregate-section:first-child {
+  padding-top: 0;
+  margin-top: 0;
+  border-top: none;
+}
+.dict-aggregate-title {
+  color: #2084e8;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 24px;
+  margin-bottom: 6px;
+  user-select: none;
+}
 .dict-word-type,
 .dict-learn-more {
   color: #2084e8;
@@ -52,6 +70,19 @@
   box-sizing: border-box;
   font-size: 15px;
   line-height: 20px;
+}
+
+.dict-text-box img,
+.dict-text-box svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 只约束本地词典的无 class audio（默认 300px，防止撑破布局）；
+   官方词典的 .audio-player 是 100px，被压到容器 50px 后 Chromium 会隐藏
+   播放按钮、只显示"⋮"溢出菜单 */
+.dict-text-box audio:not(.audio-player) {
+  max-width: 100%;
 }
 
 .dict-button-container {

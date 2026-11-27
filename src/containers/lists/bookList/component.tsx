@@ -69,13 +69,10 @@ const BookList = () => {
     displayedBooksCount: 24,
     isLoadingMore: false,
     fullBooksData: [],
-    // Migrated comment
     cardScale: parseFloat(ConfigService.getReaderConfig("cardScale") || "1"),
     readingStatusFilter: "",
   }));
 
-  // Migrated comment
-  // Migrated comment
   const stateRef = useLatest(state);
 
   const handleKeyFilter = (items: any[], arr: string[]) => {
@@ -170,6 +167,17 @@ const BookList = () => {
     return result;
   };
 
+  //合集不是书：统计总数时把合集展开为其成员书数量
+  const getBookTotalCount = (items: any[]): number => {
+    return items.reduce((total: number, item: any) => {
+      if (collectionUtil.isCollection(item.key)) {
+        const collection = collectionUtil.getCollection(item.key);
+        return total + (collection ? collection.books.length : 0);
+      }
+      return total + 1;
+    }, 0);
+  };
+
   const filterBooksByReadingStatus = (
     books: Book[],
     status: string
@@ -245,7 +253,6 @@ const BookList = () => {
     };
   };
 
-  // Migrated comment
   const loadFullBooksData = async (
     displayedBooksCount = stateRef.current.displayedBooksCount
   ) => {
@@ -286,19 +293,16 @@ const BookList = () => {
 
     if (displayedBooksCount >= books.length) {
       return;
-      // Migrated comment
     }
 
     setState((prevState) => ({ ...prevState, isLoadingMore: true }));
     handleLoadMore(true);
-    // Migrated comment
     setTimeout(async () => {
       const newDisplayedBooksCount = Math.min(
         displayedBooksCount + getBookCountPerPage(),
         books.length
       );
 
-      // Migrated comment
       const newBooks = books.slice(displayedBooksCount, newDisplayedBooksCount);
       const newFullBooksData: Book[] = [];
       for (let i = 0; i < newBooks.length; i++) {
@@ -332,23 +336,19 @@ const BookList = () => {
     if (!scrollContainerCurrent || stateRef.current.isLoadingMore) return;
 
     const { scrollTop, scrollHeight, clientHeight } = scrollContainerCurrent;
-    // Migrated comment
     if (scrollTop + clientHeight >= scrollHeight - 300) {
       loadMoreBooks();
     }
   };
 
-  // Migrated comment
   const handleFinishReadingRef = useLatest(handleFinishReading);
   const handleScrollRef = useLatest(handleScroll);
 
-  // Migrated comment
   useEffect(() => {
     handleFetchBooks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Migrated comment
   useEffect(() => {
     const displayedBooksCount = getBookCountPerPage();
     setState((prevState) => ({
@@ -356,14 +356,12 @@ const BookList = () => {
       displayedBooksCount,
     }));
 
-    // Migrated comment
     const resizeHandler = throttle(() => {
       //recount the book count per page when the window is resized
       handleFetchBooks();
     });
     window.addEventListener("resize", resizeHandler);
 
-    // Migrated comment
     const scrollContainerCurrent = scrollContainer.current;
     const scrollHandler = () => {
       handleScrollRef.current();
@@ -372,7 +370,6 @@ const BookList = () => {
       scrollContainerCurrent.addEventListener("scroll", scrollHandler);
     }
 
-    // Migrated comment
     const visibilityChangeHandler = async () => {
       if (document.visibilityState === "visible" && !isElectron) {
         await handleFinishReadingRef.current();
@@ -389,22 +386,17 @@ const BookList = () => {
       ipcRenderer.on("reading-finished", readingFinishedHandler);
     }
 
-    // Migrated comment
     loadFullBooksData(displayedBooksCount);
 
     return () => {
-      // Migrated comment
       if (scrollContainerCurrent) {
         scrollContainerCurrent.removeEventListener("scroll", scrollHandler);
       }
 
-      // Migrated comment
       window.removeEventListener("resize", resizeHandler);
 
-      // Migrated comment
       document.removeEventListener("visibilitychange", visibilityChangeHandler);
 
-      // Migrated comment
       if (isElectron && readingFinishedHandler) {
         ipcRenderer.removeListener("reading-finished", readingFinishedHandler);
       }
@@ -412,7 +404,6 @@ const BookList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Migrated comment
   const prevPropsRef = useRef({
     books,
     searchResults,
@@ -443,17 +434,11 @@ const BookList = () => {
         isLoadingMore: false,
       }));
       handleLoadMore(false);
-      // Migrated comment
-      if (scrollContainer.current) {
-        scrollContainer.current.scrollTop = 0;
-      }
-      // Migrated comment
       loadFullBooksData(nextDisplayedBooksCount);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [books, searchResults, isSearch, mode, shelfTitle]);
 
-  // Migrated comment
   const prevReadingStatusFilterRef = useRef(state.readingStatusFilter);
   useEffect(() => {
     const prevReadingStatusFilter = prevReadingStatusFilterRef.current;
@@ -478,8 +463,6 @@ const BookList = () => {
       currentBookMode = bookMode;
     }
 
-    // Migrated comment
-    // Migrated comment
     const filteredKeys = new Set(books.map((b) => b.key));
     const displayedBooks = isSearch
       ? books
@@ -557,13 +540,11 @@ const BookList = () => {
   if (!books) {
     return null;
   }
-  if (
-    (state.favoriteBooks === 0 && mode === "favorite") ||
-    !books[0]
-  ) {
+  if ((state.favoriteBooks === 0 && mode === "favorite") || !books[0]) {
     return <Navigate to="/manager/empty" replace />;
   }
   const { books: displayedBookList, bookMode } = handleBooks();
+  const totalBookCount = getBookTotalCount(displayedBookList);
   return (
     <>
       <div
@@ -589,8 +570,8 @@ const BookList = () => {
             />
           )}
           <div className="book-list-total-page">
-            <Trans i18nKey="Total books" count={displayedBookList.length}>
-              {"Total " + displayedBookList.length + " books"}
+            <Trans i18nKey="Total books" count={totalBookCount}>
+              {"Total " + totalBookCount + " books"}
             </Trans>
           </div>
           <select
@@ -632,7 +613,10 @@ const BookList = () => {
       >
         <div className="book-list-container">
           <ul
-            className="book-list-item-box"
+            className={
+              "book-list-item-box" +
+              (viewMode === "cover" ? " book-list-cover-box" : "")
+            }
             ref={scrollContainer}
             style={{ "--card-scale": state.cardScale } as React.CSSProperties}
           >

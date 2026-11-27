@@ -106,6 +106,7 @@ export interface BuiltinPluginDefinition {
   configuration: { en: string; zhCN: string };
   websiteName: string;
   websiteUrl: string;
+  platforms?: string[];
 }
 
 export interface BuiltinPluginMarketItem {

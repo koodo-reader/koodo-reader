@@ -33,9 +33,9 @@ const ColorOption = (props: ColorProps) => {
     handleHighlight(value);
     highlightUtil.saveNoteHighlightValue(value);
     if (!props.isEdit) {
-      setTimeout(() => {
-        props.handleDigest();
-      }, 100);
+      // 上面的 handleHighlight 是同步写入 store，不需要延迟；原来的 100ms
+      // 延迟会让用户觉得没反应而继续点其它颜色，每点一次就多建一条高亮
+      props.handleDigest();
     }
   };
 

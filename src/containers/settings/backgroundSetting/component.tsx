@@ -23,11 +23,15 @@ export interface SettingInfoState {
   previewImage: BackgroundImage | null;
   /** featured background index currently in preview */
   previewFeatured: number | null;
+  /** whether the featured preview image has finished loading */
+  previewFeaturedLoaded: boolean;
   appBackgroundId: string;
   readerBackgroundId: string;
   isLoading: boolean;
   /** featured indexes whose thumbnail has entered the viewport */
   visibleFeatured: Set<number>;
+  /** featured indexes whose thumbnail has finished loading */
+  loadedFeatured: Set<number>;
   /** id of the featured background being downloaded */
   downloadingId: string;
   downloadProgress: number;
@@ -50,12 +54,14 @@ const BackgroundSetting = () => {
     loadedUrls: {},
     previewImage: null,
     previewFeatured: null,
+    previewFeaturedLoaded: false,
     appBackgroundId:
       ConfigService.getReaderConfig("appBackgroundImage") || "",
     readerBackgroundId:
       ConfigService.getReaderConfig("readerBackgroundImage") || "",
     isLoading: true,
     visibleFeatured: new Set<number>(),
+    loadedFeatured: new Set<number>(),
     downloadingId: "",
     downloadProgress: 0,
   });
@@ -245,12 +251,37 @@ const BackgroundSetting = () => {
     if (existing) {
       handlePreview(existing);
     } else {
-      setState((prev) => ({ ...prev, previewFeatured: index }));
+      setState((prev) => ({
+        ...prev,
+        previewFeatured: index,
+        previewFeaturedLoaded: false,
+      }));
     }
   };
 
   const handleCloseFeaturedPreview = () => {
-    setState((prev) => ({ ...prev, previewFeatured: null }));
+    setState((prev) => ({
+      ...prev,
+      previewFeatured: null,
+      previewFeaturedLoaded: false,
+    }));
+  };
+
+  const handleFeaturedThumbnailLoaded = (index: number) => {
+    setState((prev) => {
+      if (prev.loadedFeatured.has(index)) return prev;
+      const loadedFeatured = new Set(prev.loadedFeatured);
+      loadedFeatured.add(index);
+      return { ...prev, loadedFeatured };
+    });
+  };
+
+  const handleFeaturedPreviewLoaded = () => {
+    setState((prev) =>
+      prev.previewFeaturedLoaded
+        ? prev
+        : { ...prev, previewFeaturedLoaded: true }
+    );
   };
 
   const handleFeaturedSetBackground = async (
@@ -472,15 +503,17 @@ const BackgroundSetting = () => {
   };
 
   const renderFeaturedSection = () => {
-    const { visibleFeatured, appBackgroundId, readerBackgroundId } = state;
+    const {
+      visibleFeatured,
+      loadedFeatured,
+      appBackgroundId,
+      readerBackgroundId,
+    } = state;
     const indices = Array.from({ length: FEATURED_COUNT }, (_, i) => i + 1);
     return (
       <div className="background-featured-section">
         <div className="background-featured-section-title">
           <Trans>Download featured backgrounds</Trans>
-          <span className="background-featured-section-note">
-            <Trans>Generated with AI</Trans>
-          </span>
         </div>
         <div className="background-featured-grid">
           {indices.map((index) => {
@@ -497,6 +530,9 @@ const BackgroundSetting = () => {
                 ref={registerFeaturedItem(index)}
                 onClick={() => handleFeaturedPreview(index)}
               >
+                {visibleFeatured.has(index) && !loadedFeatured.has(index) && (
+                  <div className="background-loading-spinner" />
+                )}
                 {visibleFeatured.has(index) ? (
                   <img
                     className="background-featured-img"
@@ -506,6 +542,8 @@ const BackgroundSetting = () => {
                     )}
                     alt={id}
                     loading="lazy"
+                    onLoad={() => handleFeaturedThumbnailLoaded(index)}
+                    onError={() => handleFeaturedThumbnailLoaded(index)}
                   />
                 ) : (
                   <div className="background-featured-img background-featured-placeholder" />
@@ -518,8 +556,14 @@ const BackgroundSetting = () => {
     );
   };
 
-  const { images, previewImage, previewFeatured, loadedUrls, isLoading } =
-    state;
+  const {
+    images,
+    previewImage,
+    previewFeatured,
+    previewFeaturedLoaded,
+    loadedUrls,
+    isLoading,
+  } = state;
 
   return (
     <>
@@ -613,6 +657,9 @@ const BackgroundSetting = () => {
             className="background-preview-close icon-close"
             onClick={handleCloseFeaturedPreview}
           />
+          {!previewFeaturedLoaded && (
+            <div className="background-loading-spinner background-preview-spinner" />
+          )}
           <img
             className="background-preview-image"
             src={BackgroundUtil.getFeaturedOriginalUrl(
@@ -620,6 +667,8 @@ const BackgroundSetting = () => {
               isAuthed
             )}
             alt={BackgroundUtil.getFeaturedBackgroundId(previewFeatured)}
+            onLoad={handleFeaturedPreviewLoaded}
+            onError={handleFeaturedPreviewLoaded}
             onClick={(e) => e.stopPropagation()}
           />
           {renderFeaturedPreviewActions(previewFeatured)}

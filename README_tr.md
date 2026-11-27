@@ -113,55 +113,56 @@ flatpak install flathub io.github.troyeguo.koodo-reader
 sudo snap install koodo-reader
 ```
 
-### Homebrew ile kurulum:
-
-```shell
-brew install --cask koodo-reader
-```
-
 ### Docker ile kurulum:
 
 [Kurulum Kılavuzu](https://koodoreader.com/en/deploy-docker)
 
 ## Ekran Görüntüleri
 
-<div align="center">
-  <b>Kitap listesi</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Kitap görünümü</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Liste modu</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Kapak modu</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Okuyucu menüsü</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="800px"></kbd>
-  <br/>
-  <br/>
-  <b>Karanlık mod</b>
-  <br/>
-  <br/>
-  <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="800px"></kbd>
-  <br/>
-</div>
+<table align="center" width="100%">
+  <tr>
+    <td align="center" width="50%">
+      <b>Kitap listesi</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/1.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>Kitap görünümü</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/5.png" width="100%"></kbd>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>Liste modu</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/2.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>Kapak modu</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/3.png" width="100%"></kbd>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>Okuyucu menüsü</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/6.png" width="100%"></kbd>
+    </td>
+    <td align="center" width="50%">
+      <b>Karanlık mod</b>
+      <br/>
+      <br/>
+      <kbd><img src="https://dl.koodoreader.com/screenshots/4.png" width="100%"></kbd>
+    </td>
+  </tr>
+</table>
 
 ## Geliştirme
 

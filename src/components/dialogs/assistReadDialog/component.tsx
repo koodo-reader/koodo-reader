@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
@@ -49,11 +49,11 @@ const speedReadingSliderConfigs = [
 
 const autoReadingSliderConfigs = [
   {
-    maxValue: 1,
+    maxValue: 3,
     minValue: 0,
     mode: "autoScrollRate",
     minLabel: "0",
-    maxLabel: "1",
+    maxLabel: "3",
     step: 0.05,
     title: "Auto scrolling speed",
     isPDF: false,
@@ -70,7 +70,7 @@ const exclusiveModeNames = [
 
 type ExclusiveModeName = (typeof exclusiveModeNames)[number];
 
-type AssistModeName = ExclusiveModeName | "isBionic";
+type AssistModeName = ExclusiveModeName | "isBionic" | "isTextColor";
 
 const AssistReadDialog = () => {
   const currentBook = useAppStore((s) => s.book.currentBook);
@@ -84,12 +84,41 @@ const AssistReadDialog = () => {
   const handleReaderMode = useAppStore((s) => s.handleReaderMode);
   const { t } = useTranslation();
   const [state, setState] = useState<Record<AssistModeName, boolean>>({
-    isParagraphMode: ConfigService.getReaderConfig("isParagraphMode") === "yes",
-    isReadingRuler: ConfigService.getReaderConfig("isReadingRuler") === "yes",
-    isSpeedReading: ConfigService.getReaderConfig("isSpeedReading") === "yes",
+    isParagraphMode: ConfigService.getAllListConfig(
+      "paragraphModeBooks"
+    ).includes(currentBook.key),
+    isReadingRuler: ConfigService.getAllListConfig(
+      "readingRulerBooks"
+    ).includes(currentBook.key),
+    isSpeedReading: ConfigService.getAllListConfig(
+      "speedReadingBooks"
+    ).includes(currentBook.key),
     isBionic: ConfigService.getReaderConfig("isBionic") === "yes",
-    isAutoReading: ConfigService.getReaderConfig("isAutoReading") === "yes",
+    isTextColor: ConfigService.getReaderConfig("isTextColor") === "yes",
+    isAutoReading: ConfigService.getAllListConfig(
+      "autoReadingBooks"
+    ).includes(currentBook.key),
   });
+
+  useEffect(() => {
+    // 阅读辅助模式按书保存，切换书籍后重新读取当前书籍的开关状态
+    setState((prev) => ({
+      ...prev,
+      isParagraphMode: ConfigService.getAllListConfig(
+        "paragraphModeBooks"
+      ).includes(currentBook.key),
+      isReadingRuler: ConfigService.getAllListConfig(
+        "readingRulerBooks"
+      ).includes(currentBook.key),
+      isSpeedReading: ConfigService.getAllListConfig(
+        "speedReadingBooks"
+      ).includes(currentBook.key),
+      isAutoReading: ConfigService.getAllListConfig(
+        "autoReadingBooks"
+      ).includes(currentBook.key),
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentBook.key]);
 
   const stopAutoScroll = () => {
     if (!htmlBook) return;
@@ -115,7 +144,15 @@ const AssistReadDialog = () => {
     );
     if (offNames.length === 0) return;
     offNames.forEach((name) => {
-      ConfigService.setReaderConfig(name, "no");
+      if (name === "isParagraphMode") {
+        ConfigService.deleteListConfig(currentBook.key, "paragraphModeBooks");
+      } else if (name === "isReadingRuler") {
+        ConfigService.deleteListConfig(currentBook.key, "readingRulerBooks");
+      } else if (name === "isSpeedReading") {
+        ConfigService.deleteListConfig(currentBook.key, "speedReadingBooks");
+      } else {
+        ConfigService.deleteListConfig(currentBook.key, "autoReadingBooks");
+      }
       exclusiveHandlers[name](false);
     });
     if (offNames.includes("isAutoReading")) {
@@ -136,7 +173,11 @@ const AssistReadDialog = () => {
       handleExclusiveOff("isParagraphMode");
     }
     setState((prev) => ({ ...prev, isParagraphMode: next }));
-    ConfigService.setReaderConfig("isParagraphMode", next ? "yes" : "no");
+    if (next) {
+      ConfigService.setListConfig(currentBook.key, "paragraphModeBooks");
+    } else {
+      ConfigService.deleteListConfig(currentBook.key, "paragraphModeBooks");
+    }
     handleParagraphMode(next);
     toast(t("Change successful"));
     setTimeout(() => {
@@ -156,7 +197,11 @@ const AssistReadDialog = () => {
       }
     }
     setState((prev) => ({ ...prev, isReadingRuler: next }));
-    ConfigService.setReaderConfig("isReadingRuler", next ? "yes" : "no");
+    if (next) {
+      ConfigService.setListConfig(currentBook.key, "readingRulerBooks");
+    } else {
+      ConfigService.deleteListConfig(currentBook.key, "readingRulerBooks");
+    }
     handleReadingRuler(next);
     toast(t("Change successful"));
     setTimeout(() => {
@@ -173,7 +218,11 @@ const AssistReadDialog = () => {
       }
     }
     setState((prev) => ({ ...prev, isSpeedReading: next }));
-    ConfigService.setReaderConfig("isSpeedReading", next ? "yes" : "no");
+    if (next) {
+      ConfigService.setListConfig(currentBook.key, "speedReadingBooks");
+    } else {
+      ConfigService.deleteListConfig(currentBook.key, "speedReadingBooks");
+    }
     handleSpeedReading(next);
     toast(t("Change successful"));
     setTimeout(() => {
@@ -204,13 +253,27 @@ const AssistReadDialog = () => {
     }, 500);
   };
 
+  const handleTextColorToggle = () => {
+    const next = !state.isTextColor;
+    setState((prev) => ({ ...prev, isTextColor: next }));
+    ConfigService.setReaderConfig("isTextColor", next ? "yes" : "no");
+    toast(t("Change successful"));
+    setTimeout(() => {
+      renderBookFunc();
+    }, 500);
+  };
+
   const handleAutoReadingToggle = () => {
     const next = !state.isAutoReading;
     if (next) {
       handleExclusiveOff("isAutoReading");
     }
     setState((prev) => ({ ...prev, isAutoReading: next }));
-    ConfigService.setReaderConfig("isAutoReading", next ? "yes" : "no");
+    if (next) {
+      ConfigService.setListConfig(currentBook.key, "autoReadingBooks");
+    } else {
+      ConfigService.deleteListConfig(currentBook.key, "autoReadingBooks");
+    }
     handleAutoReading(next);
     if (next) {
       if (!ConfigService.getReaderConfig("autoScrollRate")) {
@@ -296,6 +359,14 @@ const AssistReadDialog = () => {
           isEnabled={state.isBionic}
           onClick={handleBionicToggle}
         />
+
+        {!isPaginatedBook(currentBook) && (
+          <SwitchRow
+            title={<Trans>Enable text coloring</Trans>}
+            isEnabled={state.isTextColor}
+            onClick={handleTextColorToggle}
+          />
+        )}
       </ul>
     </div>
   );

@@ -21,6 +21,108 @@
   width: 100%;
   height: calc(100% - 15px);
 }
+.note-option-row {
+  position: absolute;
+  top: calc(100% - 110px);
+  width: calc(100% - 40px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.note-option-row .color-option-container-edit {
+  position: static;
+  top: auto;
+  width: auto;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.note-option-row .color-option-container-edit::-webkit-scrollbar {
+  display: none;
+}
+.note-option-row .color-option-container-edit > ul {
+  flex-shrink: 0;
+}
+.note-option-row .note-highlight-color-item {
+  flex-shrink: 0;
+}
+/* ── Note type pills (same look as the stats page range pills;
+   token values mirror the stats page theme in
+   src/pages/stats/component.tsx and are set inline on .note-type-tabs) ── */
+.note-type-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.note-type-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--pill-muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.note-type-pill:hover {
+  background: var(--pill-hover-bg);
+  color: var(--pill-text);
+}
+
+.note-type-pill.is-active {
+  background: var(--pill-card-bg);
+  border-color: var(--pill-border);
+  color: var(--pill-text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.note-type-pill:focus-visible {
+  outline: 2px solid var(--pill-text);
+  outline-offset: 1px;
+}
+.editor-box-parent.note-preview-enabled {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  box-sizing: border-box;
+  /* Reserve the same bottom space the normal textarea leaves for the
+     color options and tag row: height calc(100% - 90px) plus its 20px
+     padding, so the panes end at the same place and never overlap them. */
+  padding-bottom: 70px;
+}
+.editor-box-parent.note-preview-enabled.note-preview-docked {
+  flex-direction: column;
+}
+.editor-box-parent.note-preview-enabled > .editor-box,
+.editor-box-parent.note-preview-enabled > .note-preview-pane {
+  flex: 1 1 0;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+}
+.note-preview-pane {
+  overflow-y: auto;
+  background-color: rgba(16, 152, 112, 0.05);
+  border-radius: 7px;
+  padding: 10px;
+  font-size: 15px;
+  line-height: 1.6;
+}
 .editor-box {
   border: none;
   outline: none;
@@ -28,6 +130,7 @@
   font-size: 15px;
   width: calc(100% - 20px);
   min-height: 120px;
+  height: calc(100% - 90px);
   line-height: 18px;
   overflow-y: scroll;
   background-color: rgba(16, 152, 112, 0.05);
@@ -37,26 +140,17 @@
 
 .editor-box::placeholder {
   font-size: 15px;
-  line-height: 15px;
   opacity: 0.6;
-  position: relative;
-  top: 6px;
   font-weight: 500;
 }
 .editor-box::-ms-input-placeholder {
   font-size: 15px;
-  line-height: 15px;
   opacity: 0.6;
-  position: relative;
-  top: 6px;
   font-weight: 500;
 }
 .editor-box::-moz-placeholder {
   font-size: 15px;
-  line-height: 15px;
   opacity: 0.6;
-  position: relative;
-  top: 6px;
   font-weight: 500;
 }
 .note-button-container {

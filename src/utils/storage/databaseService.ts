@@ -322,8 +322,12 @@ class DatabaseService {
     keys: string[],
     dbName: string
   ): Promise<any[]> {
+    // 契约与移动端一致：返回顺序 = 传入 keys 顺序（去重，DB 中缺失的 key
+    // 丢弃）。语句层（getByKeysStatement）只按 key 批量取行、不保证顺序，
+    // 顺序统一在 service 层恢复，三端行为保持一致。
+    let records: any[];
     if (isElectron) {
-      let records = await window
+      records = await window
         .electronAPI
         .invoke("database-command", {
           statement: "getByKeysStatement",
@@ -333,11 +337,17 @@ class DatabaseService {
           data: keys,
           storagePath: getStorageLocation(),
         });
-      return records;
     } else {
-      let records = await this.getAllRecords(dbName);
-      return records.filter((record) => keys.includes(record.key));
+      records = await this.getAllRecords(dbName);
+      records = records.filter((record) => keys.includes(record.key));
     }
+    const recordMap = new Map(
+      records.map((record) => [record.key, record])
+    );
+    return keys
+      .filter((key, index) => keys.indexOf(key) === index)
+      .map((key) => recordMap.get(key))
+      .filter(Boolean);
   }
   static async updateAllRecords(
     records: any[],

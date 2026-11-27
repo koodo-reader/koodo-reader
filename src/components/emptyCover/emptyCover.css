@@ -1,42 +1,71 @@
+@import "../bookCoverFrame/bookSpine.css";
+
 .empty-cover {
   width: 105px;
-  height: 137px;
+  height: 150px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
   transform-origin: 0% 0%;
 }
-.cover-banner {
-  float: left;
-  width: 90px;
-  height: 30px;
-  margin-top: 10px;
-  line-height: 30px;
-  font-weight: 500;
-  text-indent: 10px;
-  font-size: 15px;
+.empty-cover-spine {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.14),
+    1px 3px 7px rgba(0, 0, 0, 0.12);
 }
-.cover-title {
-  float: left;
-  font-size: 15px;
-  font-weight: 500;
-  opacity: 0.9;
-  width: 90%;
-  height: 54px;
-  text-align: left;
-  line-height: 18px;
+.empty-cover-art {
+  position: absolute;
+  right: 15px;
+  bottom: 10px;
+  width: 76px;
+  height: 70px;
+  overflow: hidden;
+  background-color: currentColor;
+}
+.empty-cover-art img {
+  display: block;
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  object-position: left center;
+}
+.empty-cover-title {
   position: relative;
-  top: 10px;
-  margin-left: 5px;
-  word-wrap: break-word;
-  text-overflow: ellipsis;
+  height: 32px;
+  margin: 10px 6px 0 14px;
+  display: flex;
+  align-items: flex-end;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 600;
+}
+.empty-cover-title span {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   overflow: hidden;
+  word-break: break-word;
 }
-.cover-footer {
-  width: 100%;
-  text-align: center;
-  font-size: 13px;
-  opacity: 0.3;
-  position: absolute;
-  bottom: 6px;
+.empty-cover-divider {
+  width: 76px;
+  height: 1px;
+  margin: 2px 0 0 14px;
+  background-color: currentColor;
+  opacity: 0.35;
+}
+.empty-cover-author {
+  margin: 2px 6px 0 14px;
+  font-size: 12px;
+  line-height: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Without a simulated spine the text does not need to clear it. */
+.empty-cover:not(.empty-cover-spine) .empty-cover-title,
+.empty-cover:not(.empty-cover-spine) .empty-cover-divider,
+.empty-cover:not(.empty-cover-spine) .empty-cover-author {
+  margin-left: 8px;
 }

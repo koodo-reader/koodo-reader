@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import "./navigationPanel.css";
-import { isReadingRawPDF } from "../../../utils/common";
+import { isReadingRawPDF, sanitizeUnsafeHtml } from "../../../utils/common";
 import ContentList from "../../lists/contentList";
 import BookNavList from "../../lists/navList";
 import { Trans } from "react-i18next";
 import SearchBox from "../../../components/searchBox";
 import Parser from "html-react-parser";
-import DOMPurify from "dompurify";
 import EmptyCover from "../../../components/emptyCover";
 import {
   ConfigService,
@@ -320,7 +319,7 @@ const NavigationPanel = (props: NavigationPanelProps) => {
                         }}
                       >
                         <div>
-                          {Parser(DOMPurify.sanitize(entry.item.excerpt))}
+                          {Parser(sanitizeUnsafeHtml(entry.item.excerpt))}
                         </div>
                       </li>
                     );
@@ -407,11 +406,12 @@ const NavigationPanel = (props: NavigationPanelProps) => {
             {state.isCoverExist ? (
               <img className="book-cover" src={state.cover} alt="" />
             ) : (
-              <div className="book-cover">
+              <div className="book-cover" style={{ height: "129px" }}>
                 <EmptyCover
                   {...{
                     format: currentBook.format,
                     title: currentBook.name,
+                    author: currentBook.author,
                     scale: 0.86,
                   }}
                 />

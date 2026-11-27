@@ -140,6 +140,14 @@ const StudyLangDialog = () => {
         ConfigService.setReaderConfig("fullTranslationMode", "no");
         return;
       }
+      // 仅译文模式与生词释义互斥，开启仅译文时自动关闭生词释义
+      if (value === "target" && stateRef.current.isWordDefinition) {
+        ConfigService.deleteListConfig(
+          currentBook.key,
+          "wordDefinitionBooks"
+        );
+        mergeState({ isWordDefinition: false, wordDefinitionLang: "" });
+      }
       ConfigService.setListConfig(
         currentBook.key,
         "fullTranslationBooks"
@@ -175,6 +183,15 @@ const StudyLangDialog = () => {
           )
         );
         return;
+      }
+      // 仅译文模式与生词释义互斥，开启生词释义时自动关闭仅译文
+      if (stateRef.current.fullTranslationModeValue === "target") {
+        ConfigService.deleteListConfig(
+          currentBook.key,
+          "fullTranslationBooks"
+        );
+        ConfigService.setReaderConfig("fullTranslationMode", "no");
+        mergeState({ fullTranslationModeValue: "no" });
       }
       ConfigService.setListConfig(
         currentBook.key,

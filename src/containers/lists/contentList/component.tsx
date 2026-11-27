@@ -16,6 +16,7 @@ export interface ContentListState {
   searchKeyword: string;
   isComposing: boolean;
   chapterPages: number[];
+  chapterPageMap: Record<string, number>;
 }
 
 interface FlatChapterItem {
@@ -42,11 +43,13 @@ const ContentList = () => {
     searchKeyword: "",
     isComposing: false,
     chapterPages: [],
+    chapterPageMap: {},
   }));
 
   const searchInputRef = useRef<HTMLInputElement>(null);
   const prevPropsRef = useRef({ htmlBook, currentChapterIndex });
   const pendingScrollRef = useRef<{ title: string; href: string } | null>(null);
+  const chapterPageMapBookRef = useRef<any>(null);
 
   // 递归检查是否包含当前章节
   const checkIfContainsCurrentChapter = (
@@ -184,12 +187,31 @@ const ContentList = () => {
     await handleJump(item);
   };
 
+  async function handleFetchChapterPageMap(htmlBook: any) {
+    const rendition = htmlBook && htmlBook.rendition;
+    if (!rendition || typeof rendition.getChapterPageMap !== "function") return;
+    if (chapterPageMapBookRef.current !== htmlBook) {
+      chapterPageMapBookRef.current = htmlBook;
+      setState((prev) => ({ ...prev, chapterPageMap: {} }));
+    }
+    const chapterPageMap = await rendition.getChapterPageMap();
+    if (
+      !chapterPageMap ||
+      Object.keys(chapterPageMap).length === 0 ||
+      chapterPageMapBookRef.current !== htmlBook
+    ) {
+      return;
+    }
+    setState((prev) => ({ ...prev, chapterPageMap }));
+  }
+
   async function handleScrollToChapter(htmlBook: any) {
     setState((prev) => ({
       ...prev,
       chapters: htmlBook.chapters,
       chapterPages: htmlBook.rendition.getPages(),
     }));
+    handleFetchChapterPageMap(htmlBook);
     let bookLocation: {
       text: string;
       chapterTitle: string;
@@ -346,9 +368,9 @@ const ContentList = () => {
             <span
               style={{ marginRight: "20px", opacity: 0.6, fontSize: "12px" }}
             >
-              {state.chapterPages[item.index]
-                ? state.chapterPages[item.index]
-                : ""}
+              {state.chapterPageMap[item.href] ||
+                state.chapterPages[item.index] ||
+                ""}
             </span>
           </div>
           {item.subitems &&

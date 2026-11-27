@@ -6,12 +6,14 @@ import { useAppStore } from "../../../store/useAppStore";
 
 export interface SliderListProps {
   item: any;
+  onApply?: () => void;
 }
 
 const SliderList = (props: SliderListProps) => {
   const renderBookFunc = useAppStore((s) => s.book.renderBookFunc);
   const scale = useAppStore((s) => s.reader.scale);
   const htmlBook = useAppStore((s) => s.reader.htmlBook);
+  const currentBook = useAppStore((s) => s.book.currentBook);
   const handleMargin = useAppStore((s) => s.handleMargin);
   const handleScale = useAppStore((s) => s.handleScale);
   const [state, setState] = useState<Record<string, any>>({
@@ -86,7 +88,9 @@ const SliderList = (props: SliderListProps) => {
     if (
       mode === "autoScrollRate" &&
       htmlBook &&
-      ConfigService.getReaderConfig("isAutoReading") === "yes"
+      ConfigService.getAllListConfig("autoReadingBooks").includes(
+        currentBook.key
+      )
     ) {
       htmlBook.rendition.autoScroll?.(parseFloat(nextValue), "yes");
       htmlBook.rendition.autoScrollPDF?.("yes");
@@ -94,6 +98,7 @@ const SliderList = (props: SliderListProps) => {
   };
 
   const handleRest = async (_mode: string) => {
+    props.onApply?.();
     renderBookFunc();
   };
   const onValueChange = (
@@ -200,7 +205,13 @@ const SliderList = (props: SliderListProps) => {
           {getDisplayValue(state[props.item.mode])}
         </span>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-around" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          gap: "10px",
+        }}
+      >
         <span className="ultra-small-size">{props.item.minLabel}</span>
         <div className="font-size-selector">
           <input
@@ -222,7 +233,7 @@ const SliderList = (props: SliderListProps) => {
             style={{
               position: "absolute",
               bottom: "11px",
-              width: props.item.title === "Page width" ? "100%" : "200px",
+              width: "100%",
             }}
           />
         </div>

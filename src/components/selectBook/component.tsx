@@ -68,6 +68,16 @@ const SelectBook = () => {
     } else {
       if (ConfigService.getReaderConfig("isHideShelfBook") === "yes") {
         return items.filter((item) => {
+          if (collectionUtil.isCollection(item.key)) {
+            let collection = collectionUtil.getCollection(item.key);
+            if (!collection) return false;
+            return !collectionUtil.isCollectionInShelf(collection);
+          }
+          // 成员书会以所属合集的形态出现在列表里，合集被隐藏时成员书也不计入
+          let collection = collectionUtil.getActiveCollectionByBook(item.key);
+          if (collection && collectionUtil.isCollectionInShelf(collection)) {
+            return false;
+          }
           return (
             ConfigService.getFromAllMapConfig(item.key, "shelfList").length ===
             0

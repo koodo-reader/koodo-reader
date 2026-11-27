@@ -1,6 +1,6 @@
 import Book from "../../models/Book";
 import DictHistory from "../../models/DictHistory";
-import Note from "../../models/Note";
+import Note, { normalizeNoteType } from "../../models/Note";
 import BookUtil from "./bookUtil";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
@@ -374,6 +374,7 @@ const mapNotesToExportData = (notes: Note[], books: Book[]): any[] =>
       bookName: bookName,
       bookAuthor: bookAuthor,
       bookMd5: book ? book.md5 : "",
+      type: normalizeNoteType(item.type),
       exportType: "note",
     };
   });

@@ -32,12 +32,16 @@ import {
 import SupportDialog from "../../components/dialogs/supportDialog";
 import ReaderTopToolbar from "../../components/readerTopToolbar";
 import { READING_PANEL_TOGGLE_EVENT } from "../../utils/reader/mouseEvent";
-import { isPaginatedBook, throttle } from "../../utils/common";
+import {
+  getAutoReaderMode,
+  isPaginatedBook,
+  POPUP_BOX_MODES,
+  throttle,
+} from "../../utils/common";
 import { getOuterDoc } from "../../utils/reader/docUtil";
 import { useAppStore } from "../../store/useAppStore";
 
 const QUICK_BUTTON_EDGE_DISTANCE = 40;
-const POPUP_BOX_MENU_MODES = ["note", "trans", "dict", "assistant"];
 
 export interface ReaderState {
   isOpenRightPanel: boolean;
@@ -460,6 +464,22 @@ const Reader = () => {
         let readerMode = isPaginatedBook(book)
           ? ConfigService.getReaderConfig("pdfReaderMode") || "scroll"
           : ConfigService.getReaderConfig("readerMode") || "double";
+        // 自动阅读改为按书开关，重新打开已开启该模式的书籍时仍强制滚动模式
+        if (
+          ConfigService.getAllListConfig("autoReadingBooks").includes(book.key)
+        ) {
+          if (isPaginatedBook(book)) {
+            ConfigService.setReaderConfig("pdfReaderMode", "scroll");
+          } else {
+            ConfigService.setReaderConfig("readerMode", "scroll");
+          }
+          readerMode = "scroll";
+        }
+        // 未手动设置过阅读模式时，按窗口宽度自动选择单页/双页
+        const autoReaderMode = getAutoReaderMode(book);
+        if (autoReaderMode) {
+          readerMode = autoReaderMode;
+        }
         propsRef.current.handleReaderMode(readerMode);
         propsRef.current.handleReadingBook(book);
         // Start event-driven reading-time tracking
@@ -672,7 +692,7 @@ const Reader = () => {
     isElectron && window.electronAPI?.runtime?.platform === "darwin";
   const isMergeWord = ConfigService.getReaderConfig("isMergeWord") === "yes";
   const isUndockedPopupBoxOpen =
-    !isDockedRight && isOpenMenu && POPUP_BOX_MENU_MODES.includes(menuMode);
+    !isDockedRight && isOpenMenu && POPUP_BOX_MODES.includes(menuMode);
   const renditionProps = {
     handleLeaveReader: handleLeaveReader,
     handleEnterReader: handleEnterReader,

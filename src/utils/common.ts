@@ -36,6 +36,7 @@ import {
 } from "../constants/dropdownList";
 import TokenService from "./storage/tokenService";
 import { getBuiltinPluginDefinition } from "./plugins/catalog";
+import DOMPurify, { type Config } from "dompurify";
 declare var window: any;
 export const supportedFormats = [
   ".epub",
@@ -528,12 +529,18 @@ export const scrollContents = (chapterTitle: string, chapterHref: string) => {
     }
   });
   if (targetContent.length > 0) {
+    const target = targetContent[0] as HTMLElement;
+    const targetTop =
+      target.getBoundingClientRect().top -
+      contentBody.getBoundingClientRect().top +
+      contentBody.scrollTop;
+    // 让目标章节落在可视区域 35% 处，即居中偏上
     contentBody.scrollTo({
       left: 0,
-      top: (targetContent[0] as any).offsetTop,
+      top: Math.max(0, targetTop - contentBody.clientHeight * 0.35),
       behavior: "smooth",
     });
-    targetContent[0].setAttribute("style", "color:red; font-weight: bold");
+    target.setAttribute("style", "color:red; font-weight: bold");
   }
 };
 export const handleFullScreen = () => {
@@ -614,6 +621,80 @@ export const openExternalUrl = (
 export const openInBrowser = (url: string) => {
   isElectron ? window.electronAPI.shell.openExternal(url) : window.open(url);
 };
+const escapeExternalLinkText = (text: string) =>
+  text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+let isConfirmingExternalUrl = false;
+export const confirmOpenExternalUrl = async (url: string) => {
+  if (isConfirmingExternalUrl) {
+    return;
+  }
+  isConfirmingExternalUrl = true;
+  try {
+    const confirmed = await vexComfirmAsync(
+      i18n.t("Do you want to open this link in browser") +
+        "<br><span style='word-break:break-all'>" +
+        escapeExternalLinkText(url) +
+        "</span>"
+    );
+    if (confirmed) {
+      openExternalUrl(url);
+    }
+  } finally {
+    isConfirmingExternalUrl = false;
+  }
+};
+export const initExternalLinkGuard = () => {
+  const handleExternalLinkClick = (event: MouseEvent) => {
+    if (event.type === "auxclick" && event.button !== 1) {
+      return;
+    }
+    const anchor = (event.target as Element | null)?.closest?.("a[href]");
+    if (!anchor) {
+      return;
+    }
+    const href = anchor.getAttribute("href")?.trim();
+    if (!href || href.startsWith("#")) {
+      return;
+    }
+    let targetUrl: URL;
+    try {
+      targetUrl = new URL(href, window.location.href);
+    } catch (_) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    if (!/^(https?|mailto):$/i.test(targetUrl.protocol)) {
+      return;
+    }
+    void confirmOpenExternalUrl(targetUrl.href);
+  };
+  document.addEventListener("click", handleExternalLinkClick, true);
+  document.addEventListener("auxclick", handleExternalLinkClick, true);
+};
+
+/**
+ * Sanitize untrusted rich text that is rendered inside the application document.
+ *
+ * DOMPurify does not sanitize CSS: <style> elements and style attributes
+ * survive by default and would apply to the whole app (hide or overlay the
+ * UI, trigger url() requests). Strip both, keep semantic formatting.
+ *
+ * Do not use this for HTML written into an isolated book file or iframe,
+ * where book styles must be preserved.
+ */
+export const sanitizeUnsafeHtml = (html: string, config?: Config): string =>
+  DOMPurify.sanitize(html, {
+    ...config,
+    FORBID_TAGS: ["style", ...(config?.FORBID_TAGS ?? [])],
+    FORBID_ATTR: ["style", ...(config?.FORBID_ATTR ?? [])],
+  });
+
 export const getPageWidth = (
   readerMode: string,
   scale: string,
@@ -674,12 +755,21 @@ export const getPageWidth = (
   let pageOffset = "";
   let pageWidth = 0;
   if (readerMode === "scroll" || readerMode === "single") {
-    //页面宽度以 scale=1 的默认宽度（视口宽度 * 0.6）为基准等比例缩放，
+    //页面宽度以 scale=1 的默认宽度为基准等比例缩放，
     //使预设百分比与实际显示宽度成正比，避免低百分比时出现过窄页面
+    //窄窗口下的单页（含双页自动切换场景）以与双页一致的可用全宽为基准，减小两侧空白
+    const isNarrowSinglePage =
+      readerMode === "single" &&
+      document.body.clientWidth < AUTO_SINGLE_PAGE_MAX_WIDTH;
+    const lockedPanelWidth =
+      (isNavLocked ? 300 : 0) + (isSettingLocked ? 300 : 0);
+    let baseWidth = isNarrowSinglePage
+      ? document.body.clientWidth - 2 * margin - 80 - lockedPanelWidth
+      : document.body.clientWidth * 0.6;
+    //窄窗口的基准宽度已扣除固定侧边栏，缩放后不再重复扣减
     let preWidth =
-      document.body.clientWidth * 0.6 * Math.abs(parseFloat(scale)) -
-      (isNavLocked ? 300 : 0) -
-      (isSettingLocked ? 300 : 0);
+      baseWidth * Math.abs(parseFloat(scale)) -
+      (isNarrowSinglePage ? 0 : lockedPanelWidth);
     let width = findValidMultiple(preWidth);
     pageOffset = `calc(50vw + ${isNavLocked ? 150 : 0}px - ${
       isSettingLocked ? 150 : 0
@@ -951,6 +1041,8 @@ export const getDefaultTransTarget = (langList) => {
 };
 export const WEBSITE_URL = "https://koodoreader.com/";
 export const CN_WEBSITE_URL = "https://koodoreader.cn/";
+export const WEB_APP_URL = "https://web.koodoreader.com/";
+export const CN_WEB_APP_URL = "https://web.koodoreader.cn/";
 export const WEBSITE_LANGS = [
   "zh",
   "en",
@@ -980,6 +1072,9 @@ export const getServerRegion = () => {
 export const getWebsiteUrl = () => {
   return getServerRegion() === "china" ? CN_WEBSITE_URL : WEBSITE_URL;
 };
+export const getWebAppUrl = () => {
+  return getServerRegion() === "china" ? CN_WEB_APP_URL : WEB_APP_URL;
+};
 export const getWebsiteLang = () => {
   const lang = ConfigService.getReaderConfig("lang") || "en";
   return WEBSITE_LANGS.find((code) => lang.startsWith(code)) || "en";
@@ -1002,6 +1097,7 @@ export const checkMissingBook = async () => {
   var fs = window.electronAPI.fs;
   var path = window.electronAPI.path;
   let bookList = (await BookUtil.getBookList()) as Book[];
+  let failedBooks: string[] = [];
   for (let index = 0; index < bookList.length; index++) {
     const book = bookList[index];
     let fileName = book.key + "." + book.format.toLowerCase();
@@ -1016,8 +1112,29 @@ export const checkMissingBook = async () => {
       });
     }
     if (book.path && fs.existsSync(book.path)) {
-      fs.copyFileSync(book.path, expectedPath);
+      try {
+        fs.copyFileSync(book.path, expectedPath);
+      } catch (error) {
+        // a single book copy failure should not interrupt the whole sync
+        console.error(
+          "Failed to restore book from original path:",
+          book.name,
+          error
+        );
+        failedBooks.push(book.name);
+      }
     }
+  }
+  if (failedBooks.length > 0) {
+    toast.error(
+      i18n.t(
+        "Failed to restore books from their original path, sync will continue"
+      ) +
+        ": " +
+        failedBooks.slice(0, 3).join(", ") +
+        (failedBooks.length > 3 ? "..." : ""),
+      { duration: 6000 }
+    );
   }
 };
 export const checkBrokenDatabase = async () => {
@@ -1981,6 +2098,7 @@ export const HIGHLIGHTER_COLORS = [
 ];
 export const HIGHLIGHTER_WIDTHS = [4, 8, 14, 20];
 export const SHAPE_TYPES = ["rect", "circle", "ellipse", "line", "arrow"];
+export const ANNOTATION_LINE_STYLES = ["solid", "dashed", "dotted"];
 export const TEXT_SIZE_MIN = 12;
 export const TEXT_SIZE_MAX = 72;
 export const TEXT_SIZE_STEP = 1;
@@ -2338,9 +2456,9 @@ export const isReadingAidMode = (format: string, bookKey: string) => {
     format === "PDF" &&
     !ConfigService.getAllListConfig("convertPDFBooks").includes(bookKey);
   return (
-    (ConfigService.getReaderConfig("isParagraphMode") === "yes" ||
-      ConfigService.getReaderConfig("isSpeedReading") === "yes" ||
-      ConfigService.getReaderConfig("isReadingRuler") === "yes") &&
+    (ConfigService.getAllListConfig("paragraphModeBooks").includes(bookKey) ||
+      ConfigService.getAllListConfig("speedReadingBooks").includes(bookKey) ||
+      ConfigService.getAllListConfig("readingRulerBooks").includes(bookKey)) &&
     !isReadingRawPDF
   );
 };
@@ -2440,6 +2558,19 @@ export const isFixedLayoutComic = (book: Book) => {
     book.layout === "pre-paginated"
   );
 };
+// “从偶数页开始渲染”目前只支持原始 PDF、漫画（CB 系列）和固定版式 EPUB/MOBI，
+// 其余分页格式（PPTX/XPS/DjVu/OFD）的页数据不在 chapterDocList 里，无法前置空白页
+// 当前书籍尚未加载时（currentBook 为 {}）没有 format，直接视为不支持
+export const isStartFromEvenSupported = (book: Book) => {
+  if (!book || !book.format) {
+    return false;
+  }
+  return (
+    isReadingRawPDF(book) ||
+    book.format.startsWith("CB") ||
+    isFixedLayoutComic(book)
+  );
+};
 // PDF（原始版式）、漫画（CB 系列）、PPTX/PPT、XPS、OXPS、DjVu、OFD 共用多 iframe 分页结构
 export const isPaginatedBook = (book: Book) => {
   return (
@@ -2453,6 +2584,33 @@ export const isPaginatedBook = (book: Book) => {
     book.format === "DJV" ||
     book.format === "OFD" ||
     isFixedLayoutComic(book)
+  );
+};
+// 双页模式所需的最小窗口宽度，低于该值时未手动设置模式的书籍自动使用单页
+export const AUTO_SINGLE_PAGE_MAX_WIDTH = 900;
+// 返回 null 表示不接管阅读模式：分页格式（PDF/漫画等）、用户手动设置过、自动阅读开启
+// 自动结果只用于运行时，不写回 readerMode 配置，窗口变宽后可以切回双页
+export const getAutoReaderMode = (book: Book): "single" | "double" | null => {
+  if (isPaginatedBook(book)) return null;
+  if (ConfigService.getReaderConfig("readerMode")) return null;
+  if (ConfigService.getAllListConfig("autoReadingBooks").includes(book.key))
+    return null;
+  return document.body.clientWidth < AUTO_SINGLE_PAGE_MAX_WIDTH
+    ? "single"
+    : "double";
+};
+// 阅读器浮层弹窗（笔记/翻译/词典/问 AI）
+export const POPUP_BOX_MODES = ["note", "trans", "dict", "assistant"];
+
+// 弹窗正在展示且未固定到右侧时，ESC 应优先关闭弹窗而不是退出阅读
+export const isUndockedPopupBoxOpen = (
+  viewArea: { isOpenMenu: boolean; menuMode: string },
+  reader: { isDockedRight: boolean }
+) => {
+  return (
+    !reader.isDockedRight &&
+    viewArea.isOpenMenu &&
+    POPUP_BOX_MODES.includes(viewArea.menuMode)
   );
 };
 // PPTX/PPT/XPS/OXPS/DjVu/OFD 复用漫画结构渲染，暂不支持笔记和高亮
@@ -2538,49 +2696,4 @@ export const removeCollectionToTrash = (collectionKey: string) => {
     });
   }
   collectionUtil.dissolveCollection(collectionKey);
-};
-
-export const getCoverTheme = (format: string) => {
-  switch (format) {
-    case "PDF":
-      return "rgba(55, 170, 81, 0.7)";
-    case "TXT":
-      return "rgba(251, 191, 16,1)";
-    case "EPUB":
-      return "rgba(33, 165, 241,1)";
-    case "MOBI":
-      return "rgba(255, 108, 110,1)";
-    case "AZW3":
-    case "AZW":
-      return " #ff9900";
-    case "MD":
-      return "#5e7fff";
-    case "FB2":
-      return "#0063b1";
-    case "CHM":
-      return "#8e6fce";
-    case "DOCX":
-    case "DOC":
-      return " #118CD9";
-    case "RTF":
-      return "#0F766E";
-    case "CBT":
-    case "CBZ":
-    case "CB7":
-    case "CBR":
-      return "#00b6c2";
-    case "PPTX":
-    case "PPT":
-      return "#C43E1C";
-    case "XPS":
-    case "OXPS":
-      return "#744DA9";
-    case "DJVU":
-    case "DJV":
-      return "#003366";
-    case "OFD":
-      return "#C2185B";
-    default:
-      return "#118CD9";
-  }
 };

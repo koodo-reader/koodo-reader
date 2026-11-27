@@ -14,6 +14,12 @@ const chatTTSUIVoice = require("./voice/chatTTSUIVoice");
 const chatTTSVoice = require("./voice/chatTTSVoice");
 const coquiTTSVoice = require("./voice/coquiTTSVoice");
 
+// Windows 专属：通过 SAPI 5 读取 NaturalVoiceSAPIAdapter 暴露的音色
+let naturalVoiceSapiAdapterVoice;
+if (process.platform === "win32") {
+  naturalVoiceSapiAdapterVoice = require("./voice/naturalVoiceSapiAdapterVoice");
+}
+
 const voicePlugins = {
   "azure-tts-voice-plugin": azureTTSVoice,
   "amazon-polly-voice-plugin": amazonPollyVoice,
@@ -31,6 +37,11 @@ const voicePlugins = {
   "chattts-voice-plugin": chatTTSVoice,
   "coquitts-voice-plugin": coquiTTSVoice,
 };
+
+if (naturalVoiceSapiAdapterVoice) {
+  voicePlugins[naturalVoiceSapiAdapterVoice.PLUGIN_KEY] =
+    naturalVoiceSapiAdapterVoice;
+}
 
 const getVoicePlugin = (key) =>
   Object.prototype.hasOwnProperty.call(voicePlugins, key)

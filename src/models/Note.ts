@@ -1,3 +1,8 @@
+export type NoteType = "text" | "markdown" | "html";
+
+export const normalizeNoteType = (type?: string | null): NoteType =>
+  type === "markdown" || type === "html" ? type : "text";
+
 class Note {
   key: string;
   bookKey: string;
@@ -11,6 +16,7 @@ class Note {
   percentage: string;
   color: string;
   tag: string[];
+  type: NoteType;
   constructor(
     bookKey: string,
     chapter: string,
@@ -21,7 +27,8 @@ class Note {
     notes: string,
     percentage: string,
     color: string,
-    tag: string[]
+    tag: string[],
+    type: NoteType = "text"
   ) {
     this.key = new Date().getTime() + "";
     this.bookKey = bookKey;
@@ -39,6 +46,7 @@ class Note {
     this.percentage = percentage;
     this.color = color;
     this.tag = tag;
+    this.type = normalizeNoteType(type);
   }
 }
 

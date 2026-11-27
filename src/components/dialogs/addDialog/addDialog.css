@@ -12,6 +12,16 @@
   flex-direction: column;
   box-sizing: border-box;
 }
+/* Add-to-shelf dialog needs to grow with its three fields instead of the
+   fixed 250px height, and center itself without relying on transform
+   (the popup animation animates transform). */
+.add-dialog-container.add-dialog-form {
+  height: auto;
+  max-height: 85vh;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+}
 .add-dialog-title {
   width: 100%;
   height: 20px;
@@ -19,6 +29,21 @@
   font-weight: 500;
   text-align: center;
   margin-top: 15px;
+  flex-shrink: 0;
+}
+.add-dialog-form .add-dialog-title {
+  height: auto;
+  margin-top: 0;
+  padding: 22px 20px 14px;
+}
+.add-dialog-form .add-dialog-body {
+  flex: 1 1 auto;
+}
+.add-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 20px 16px;
   flex-shrink: 0;
 }
 .add-dialog-body {

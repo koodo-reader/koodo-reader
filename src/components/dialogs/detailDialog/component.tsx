@@ -4,11 +4,14 @@ import "./updateInfo.css";
 import { useAppStore } from "../../../store/useAppStore";
 import { Trans } from "react-i18next";
 import Parser from "html-react-parser";
-import DOMPurify from "dompurify";
 import EmptyCover from "../../emptyCover";
 import CoverUtil from "../../../utils/file/coverUtil";
 import { ConfigService } from "../../../assets/lib/kookit-extra-browser.min";
-import { formatDateToDay, formatTimestamp } from "../../../utils/common";
+import {
+  formatDateToDay,
+  formatTimestamp,
+  sanitizeUnsafeHtml,
+} from "../../../utils/common";
 import copy from "copy-text-to-clipboard";
 import toast from "react-hot-toast";
 import i18n from "../../../i18n";
@@ -126,12 +129,13 @@ const DetailDialog = () => {
             ) : (
               <div
                 className="detail-cover"
-                style={{ width: "125px", height: "170px" }}
+                style={{ width: "125px", height: "180px" }}
               >
                 <EmptyCover
                   {...{
                     format: currentBook.format,
                     title: currentBook.name,
+                    author: currentBook.author,
                     scale: 1.2,
                   }}
                 />
@@ -151,9 +155,9 @@ const DetailDialog = () => {
               <p className="detail-sub-title">
                 <Trans>{item.label}</Trans>
               </p>
-              <p className="detail-sub-content-container">
+              <div className="detail-sub-content-container">
                 <p className="detail-sub-content">{item.value}</p>
-              </p>
+              </div>
             </div>
           ))}
         </div>
@@ -206,7 +210,7 @@ const DetailDialog = () => {
           </p>
           <div className="detail-dialog-book-detail">
             {currentBook.description ? (
-              Parser(DOMPurify.sanitize(currentBook.description))
+              Parser(sanitizeUnsafeHtml(currentBook.description))
             ) : (
               <Trans>Empty</Trans>
             )}

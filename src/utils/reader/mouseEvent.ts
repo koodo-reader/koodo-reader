@@ -6,8 +6,10 @@ import {
   handleExitFullScreen,
   handleFullScreen,
   isReadingAidMode,
+  isUndockedPopupBoxOpen,
   sleep,
 } from "../common";
+import { useAppStore } from "../../store/useAppStore";
 import Hammer from "hammerjs";
 import TTSUtil from "./ttsUtil";
 import {
@@ -17,16 +19,102 @@ import {
   matchShortcut,
   ShortcutAction,
 } from "./shortcutUtil";
+import { OVERLAY_TURN_DURATION } from "./overlayTurn";
 declare var window: any;
 
 // 翻页滑动动画固定时长（毫秒），需与 kookit 的 PAGE_TURN_DURATION 保持一致
 const PAGE_TURN_DURATION = 200;
 
 // 每次翻页时实时读取，避免修改动画设置后锁延迟不生效
-const getThrottleTime = () =>
-  (ConfigService.getReaderConfig("animation") || "none") !== "none"
-    ? PAGE_TURN_DURATION
-    : 100;
+const getThrottleTime = () => {
+  const animation = ConfigService.getReaderConfig("animation") || "none";
+  if (animation === "none") return 100;
+  // 覆盖动画由应用层单独驱动，锁需覆盖整段动画，多留 60ms 保证 busy 先释放
+  if (animation === "overlay") return OVERLAY_TURN_DURATION + 60;
+  return PAGE_TURN_DURATION;
+};
+
+let lock = false; // 防止手势在短期内连续触发多次翻页（触摸 pan 用）
+
+// 仿真翻页动画收敛后（kookit 派发 flipend 事件）立即解除锁，
+// 不再等待满 throttleTime，手势可继续快速翻页
+window.addEventListener("page-flipend", () => {
+  lock = false;
+});
+
+// —— 滚轮/触控板手势流跟踪 ——
+// 触控板一次双指滑动（含系统惯性）会以 ~16ms 间隔持续派发一串 delta 逐帧
+// 衰减的 wheel 事件，长惯性可持续 1 秒以上，固定时长的锁挡不住：锁一释放，
+// 惯性尾段就会再次翻页。也不能只看静默：翻页渲染章节时主线程卡顿，
+// 期间事件会暂停派发并在队列中合并，卡顿结束瞬间会出现「假静默 +
+// 大幅度」的合并事件，容易被当成新手势。因此按手势流跟踪，
+// 翻页后挂起，重新放行必须满足其一：
+// 1. 事件流静默 WHEEL_QUIET_MS 且翻页已结束 —— 静默从翻页完成时重新
+//    起算，卡顿期被合并的事件到达后继续顺延，惯性真正结束才重新武装；
+// 2. 新一轮滑动的起步冲击 —— 幅度远大于衰减中的尾段、按正常节奏到达
+//    （卡顿合并出的大间隔事件不会误判）、且距上次翻页足够久（一次
+//    滑动自身的 delta 爬升阶段不会误触发）。
+// 保证一次滑动（含惯性）只翻一页，同时快速连续滑动不被拖慢
+const WHEEL_QUIET_MS = 120;
+const WHEEL_SPIKE_GAP_MS = 50;
+const WHEEL_SPIKE_MIN_DELAY = 250;
+let wheelArmed = true;
+let wheelQuietTimer: ReturnType<typeof setTimeout> | null = null;
+let wheelRefDelta = 0; // 上一次翻页后惯性流的参考幅度（随惯性逐帧衰减）
+let wheelLastEventTime = 0; // 上一个滚轮事件到达时刻
+let wheelConsumeTime = 0; // 上一次消费（翻页）时刻
+let wheelTurnInFlightCount = 0; // 消费出的翻页正在 await 中的数量
+
+const deferWheelArm = () => {
+  if (wheelQuietTimer) clearTimeout(wheelQuietTimer);
+  wheelQuietTimer = setTimeout(() => {
+    wheelQuietTimer = null;
+    // 翻页进行中的静默不可信（渲染卡顿会暂停事件派发），
+    // 由 endWheelTurn 在翻页结束后重新起算
+    if (wheelTurnInFlightCount === 0) wheelArmed = true;
+  }, WHEEL_QUIET_MS);
+};
+
+// 真正翻页前调用：消费掉本次翻页机会并挂起。调用方必须在翻页 await
+// 结束时（含抛错路径）调用 endWheelTurn
+const beginWheelTurn = (delta: number, now: number) => {
+  wheelArmed = false;
+  wheelRefDelta = Math.abs(delta);
+  wheelConsumeTime = now;
+  wheelTurnInFlightCount++;
+  deferWheelArm();
+};
+
+// 翻页 await 结束时调用：静默从现在重新起算，卡顿期被合并的大 delta
+// 事件将按惯性吸收
+const endWheelTurn = () => {
+  wheelTurnInFlightCount = Math.max(0, wheelTurnInFlightCount - 1);
+  deferWheelArm();
+};
+
+// 判定本次滚轮事件是否允许翻页；允许则同时消费并挂起。
+// 必须在翻页瞬间调用（而不是事件入口）：普通滚动事件不消费手势，
+// 否则滚动模式中一次长滚动会在章节边缘被错误抑制
+const acquireWheelArm = (delta: number, gap: number) => {
+  const now = performance.now();
+  if (wheelArmed) {
+    beginWheelTurn(delta, now);
+    return true;
+  }
+  const magnitude = Math.abs(delta);
+  if (
+    gap < WHEEL_SPIKE_GAP_MS &&
+    now - wheelConsumeTime >= WHEEL_SPIKE_MIN_DELAY &&
+    magnitude > wheelRefDelta * 2
+  ) {
+    // 新一轮滑动的起步冲击
+    beginWheelTurn(delta, now);
+    return true;
+  }
+  // 惯性仍在继续：衰减参考幅度（静默计时由事件入口统一顺延）
+  wheelRefDelta = Math.max(magnitude, wheelRefDelta * 0.7);
+  return false;
+};
 
 export const getSelection = (book: Book) => {
   let docs = getIframeDoc(book);
@@ -188,19 +276,28 @@ const NAV_TAB_SHORTCUTS: Array<{
   { shortcut: "openHighlightList", tab: "highlights" },
   { shortcut: "openToc", tab: "contents" },
 ];
-let lock = false; //prevent from clicking too fasts
-
-// 仿真翻页动画收敛后（kookit 派发 flipend 事件）立即解除锁，
-// 不再等待满 PAGE_TURN_DURATION 的 throttleTime，滚轮/键盘可继续快速翻页
-window.addEventListener("page-flipend", () => {
-  lock = false;
-});
-
 const isRevertDirectionReading = (rendition: any) => {
-  return (
-    rendition?.revertDirection === "yes" &&
-    !(rendition?.isVertical && rendition.isVertical())
-  );
+  // 竖排同样遵循「从右往左翻页」：按键/滚轮/手势方向一起镜像
+  return rendition?.revertDirection === "yes";
+};
+
+// 翻页方向键分组：LTR 下 ↓ → PageDown 是「下一页」，RTL 下整体反过来
+const LTR_NEXT_DIRECTION_KEYS = [40, 39, 34]; // ↓ → PageDown
+const PAGE_DIRECTION_KEYS = [37, 38, 33, 40, 39, 34]; // ← ↑ PageUp ↓ → PageDown
+const isHorizontalArrow = (keyCode: number) => keyCode === 37 || keyCode === 39;
+
+// 弹窗未固定到右侧时，ESC 只关闭弹窗；返回 true 表示按键已处理，
+// 调用方必须直接 return，避免继续走到 exitReader 而退出阅读
+const handlePopupBoxEscape = (event: any, book: Book) => {
+  if (event.keyCode !== 27) return false;
+  const state = useAppStore.getState();
+  if (!isUndockedPopupBoxOpen(state.viewArea, state.reader)) return false;
+  event.preventDefault();
+  state.handleOpenMenu(false);
+  state.handleNoteKey("");
+  state.handleMenuMode("");
+  getIframeDoc(book).forEach((doc) => doc?.getSelection()?.empty());
+  return true;
 };
 
 const arrowKeys = async (
@@ -209,6 +306,9 @@ const arrowKeys = async (
   readerMode: string,
   book: Book
 ) => {
+  // 必须放在 textarea/input 提前返回之前：焦点在笔记或 AI 输入框内时，
+  // ESC 同样需要关闭弹窗，且不能继续触发 exitReader 退出阅读
+  if (handlePopupBoxEscape(event, book)) return;
   if (
     event.target.tagName.toLowerCase() === "textarea" ||
     event.target.tagName.toLowerCase() === "input"
@@ -219,20 +319,26 @@ const arrowKeys = async (
   const revertDirection =
     isRevertDirectionReading(rendition) &&
     (readerMode !== "scroll" || isReadingAid);
-  if (revertDirection && (event.keyCode === 37 || event.keyCode === 39)) {
-    // RTL 下左右方向键整体镜像：← 下一页，→ 上一页
+  const shortcutConfig = getShortcutConfig();
+  // RTL 下翻页方向整体镜像：← ↑ PageUp 下一页，→ ↓ PageDown 上一页。
+  // matchShortcut 为修饰键精确匹配，因此 Ctrl+Alt+←/→ 这类章节快捷键不会被误拦截
+  if (
+    revertDirection &&
+    PAGE_DIRECTION_KEYS.includes(event.keyCode) &&
+    (matchShortcut(event, shortcutConfig.nextPage) ||
+      matchShortcut(event, shortcutConfig.prevPage))
+  ) {
     event.preventDefault();
-    if (event.keyCode === 37) {
-      await rendition.next();
-    } else {
+    if (LTR_NEXT_DIRECTION_KEYS.includes(event.keyCode)) {
       await rendition.prev();
+    } else {
+      await rendition.next();
     }
     handleShortcut(event, book, rendition);
     return;
   }
   if (readerMode === "scroll" && isReadingAid) {
     // 段落模式下拦截滚动模式的原生滚动按键，改为逐段导航
-    const shortcutConfig = getShortcutConfig();
     if (matchShortcut(event, shortcutConfig.prevPage)) {
       event.preventDefault();
       await rendition.prev();
@@ -339,13 +445,23 @@ const handleShortcut = (event: any, book: Book, rendition?: any) => {
     const bookmarkBtn = document.querySelector(".reader-toolbar-bookmark");
     bookmarkBtn?.dispatchEvent(clickEvent());
   }
+  const revertChapter = isRevertDirectionReading(rendition);
+  // RTL 下 ← → 的空间含义整体反转，章节快捷键同步反转
   if (rendition && matchShortcut(event, shortcuts.prevChapter)) {
     event.preventDefault();
-    rendition.prevChapter();
+    if (isHorizontalArrow(event.keyCode) && revertChapter) {
+      rendition.nextChapter();
+    } else {
+      rendition.prevChapter();
+    }
   }
   if (rendition && matchShortcut(event, shortcuts.nextChapter)) {
     event.preventDefault();
-    rendition.nextChapter();
+    if (isHorizontalArrow(event.keyCode) && revertChapter) {
+      rendition.prevChapter();
+    } else {
+      rendition.nextChapter();
+    }
   }
   for (const { shortcut, optionName } of SELECTION_SHORTCUT_OPTIONS) {
     if (matchShortcut(event, shortcuts[shortcut])) {
@@ -379,11 +495,20 @@ const handleLocation = (key: string, rendition: any) => {
 export const scrollChapter = async (
   element: any,
   rendition: any,
-  deltaY: number
+  deltaY: number,
+  // 事件到达时与上一个事件的间隔，用于识别新一轮滑动的起步冲击；
+  // 外部调用不传则禁用该判定，静默规则仍然生效
+  gap: number = Infinity
 ) => {
   if (deltaY < 0) {
     if (element.scrollTop === 0) {
-      await rendition.prev();
+      // 到达章节边缘才判定并消费手势，惯性尾段不会连翻多章
+      if (!acquireWheelArm(deltaY, gap)) return;
+      try {
+        await rendition.prev();
+      } finally {
+        endWheelTurn();
+      }
     }
   }
   if (deltaY > 0) {
@@ -391,7 +516,12 @@ export const scrollChapter = async (
     var scrollTop = element.scrollTop;
     var clientHeight = element.clientHeight;
     if (Math.abs(scrollTop + clientHeight - scrollHeight) < 10) {
-      await rendition.next();
+      if (!acquireWheelArm(deltaY, gap)) return;
+      try {
+        await rendition.next();
+      } finally {
+        endWheelTurn();
+      }
     }
   }
 };
@@ -414,11 +544,8 @@ export const bindHtmlEvent = (
   doc.addEventListener(
     "keydown",
     async (event) => {
-      if (lock) return;
-      lock = true;
       await arrowKeys(rendition, event, readerMode, book);
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -443,10 +570,8 @@ export const bindHtmlEvent = (
         renderBookFunc();
         return;
       }
-      // 阅读尺等辅助模式下滚轮完全接管为逐段导航，preventDefault 必须在
-      // lock 检查之前执行：锁定期内到达的连续滚轮事件若不拦截默认行为，
-      // 会触发原生滚动与遮罩过渡动画叠加，造成动画掉帧（键盘事件无默认
-      // 滚动行为，所以键盘快捷键不存在此问题）
+      // 阅读尺等辅助模式下滚轮完全接管为逐段导航，先拦截原生滚动，
+      // 避免与遮罩过渡动画叠加造成动画掉帧
       if (
         readerMode === "scroll" &&
         Math.abs(event.deltaX) === 0 &&
@@ -454,16 +579,32 @@ export const bindHtmlEvent = (
       ) {
         event.preventDefault();
       }
-      if (lock) return;
-      lock = true;
+      // 触控板一次滑动（含惯性）会派发一整串 wheel 事件：挂起期内任何
+      // 滚轮事件（含噪声级）都代表惯性流仍在继续，统一顺延静默计时；
+      // 噪声级滚动不翻页。preventDefault 必须在这之前执行（见上），
+      // 挂起期内到达的滚轮事件仍要拦截原生滚动
+      const dominantDelta =
+        Math.abs(event.deltaX) > Math.abs(event.deltaY)
+          ? event.deltaX
+          : event.deltaY;
+      const now = performance.now();
+      const gap = now - wheelLastEventTime;
+      wheelLastEventTime = now;
+      if (!wheelArmed) deferWheelArm();
+      if (Math.abs(dominantDelta) < 1) return;
       if (readerMode === "scroll") {
         if (Math.abs(event.deltaX) === 0 && isReadingAidMode(format, key)) {
           // 段落/阅读尺/速读模式内部实际按单页渲染，同样遵循 RTL
-          await mouseChrome(
-            rendition,
-            event.deltaY,
-            isRevertDirectionReading(rendition)
-          );
+          if (!acquireWheelArm(event.deltaY, gap)) return;
+          try {
+            await mouseChrome(
+              rendition,
+              event.deltaY,
+              isRevertDirectionReading(rendition)
+            );
+          } finally {
+            endWheelTurn();
+          }
         } else {
           await sleep(200);
           await rendition.record();
@@ -472,35 +613,26 @@ export const bindHtmlEvent = (
             ConfigService.getReaderConfig("isDisableAutoScroll") !== "yes"
           ) {
             let srollElement = document.getElementById("page-area");
-            await scrollChapter(srollElement, rendition, event.deltaY);
+            await scrollChapter(srollElement, rendition, event.deltaY, gap);
           }
         }
       } else {
-        const revertDirection = isRevertDirectionReading(rendition);
-        if (Math.abs(event.deltaX) === 0) {
-          await mouseChrome(rendition, event.deltaY, revertDirection);
-        } else if (
-          revertDirection &&
-          Math.abs(event.deltaY) < Math.abs(event.deltaX)
-        ) {
-          // RTL 下触控板水平滚动：向左滚动（deltaX<0）为下一页
-          await mouseChrome(rendition, event.deltaX, true);
+        if (!acquireWheelArm(dominantDelta, gap)) return;
+        try {
+          const revertDirection = isRevertDirectionReading(rendition);
+          // 触控板双指滑动按主导方向翻页：垂直滑动（含轻微水平噪声）按
+          // deltaY 翻页，水平分量占优时按 deltaX 翻页，RTL 下整体镜像
+          if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+            // 向左滚动（deltaX<0）在 RTL 下为下一页，LTR 下为上一页
+            await mouseChrome(rendition, event.deltaX, revertDirection);
+          } else {
+            await mouseChrome(rendition, event.deltaY, revertDirection);
+          }
+        } finally {
+          endWheelTurn();
         }
       }
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), getThrottleTime());
-    },
-    { passive: false }
-  );
-
-  window.addEventListener(
-    "keydown",
-    async (event) => {
-      if (lock) return;
-      lock = true;
-      await arrowKeys(rendition, event, readerMode, book);
-      handleLocation(key, rendition);
-      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
@@ -511,6 +643,7 @@ export const bindHtmlEvent = (
       if (readerMode === "scroll") {
         return;
       }
+      // 一次滑动过程中 Hammer 会连续派发多个 pan 事件，加锁保证一次手势只翻一页
       if (lock || event.pointerType === "mouse") return;
       lock = true;
       await gesture(rendition, event.type);
@@ -522,18 +655,20 @@ export const bindHtmlEvent = (
   doc.addEventListener(
     "touchend",
     async () => {
-      if (lock) return;
-      lock = true;
       if (readerMode === "scroll") {
         await sleep(200);
         await rendition.record();
       }
       handleLocation(key, rendition);
-      setTimeout(() => (lock = false), getThrottleTime());
     },
     { passive: false }
   );
 };
+// PDF/漫画等分页格式每个子 iframe 都会走到 bindHtmlEvent，若在逐个 doc 的
+// 路径里注册 window keydown，一次按键会被多个监听器重复处理。这里改为每次
+// 渲染时替换旧监听，保证每个阅读器只有一个监听器，且绑定最新的
+// rendition/book/readerMode
+let windowKeydownHandler: ((event: any) => Promise<void>) | null = null;
 export const htmlMouseEvent = (
   rendition: any,
   book: Book,
@@ -541,6 +676,16 @@ export const htmlMouseEvent = (
   handleScale: (scale: string) => void,
   renderBookFunc: () => void
 ) => {
+  if (windowKeydownHandler) {
+    window.removeEventListener("keydown", windowKeydownHandler);
+  }
+  const key = book.key;
+  windowKeydownHandler = async (event) => {
+    await arrowKeys(rendition, event, readerMode, book);
+    handleLocation(key, rendition);
+  };
+  window.addEventListener("keydown", windowKeydownHandler, { passive: false });
+
   rendition.on("rendered", () => {
     let iframe = getIframeWin();
     if (!iframe) return;
@@ -558,6 +703,7 @@ export const htmlMouseEvent = (
         renderBookFunc
       );
     }
+    // 新章节渲染完成即代表上一次翻页已结束，清除残留的翻页锁
     lock = false;
   });
 };

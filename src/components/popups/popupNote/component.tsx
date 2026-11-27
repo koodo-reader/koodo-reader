@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import "./popupNote.css";
 import { isReadingRawPDF } from "../../../utils/common";
-import Note from "../../../models/Note";
+import Note, { normalizeNoteType } from "../../../models/Note";
+import type { NoteType } from "../../../models/Note";
 import NoteTag from "../../noteTag";
 import { Trans } from "react-i18next";
 import toast from "react-hot-toast";
@@ -16,13 +17,21 @@ import DatabaseService from "../../../utils/storage/databaseService";
 import ColorOption from "../../colorOption";
 import copy from "copy-text-to-clipboard";
 import { useAppStore } from "../../../store/useAppStore";
+import NoteContent from "../../noteContent";
 
 export interface PopupNoteProps {
   isDockedRight: boolean;
+  onTypeChange?: (type: NoteType) => void;
 
   chapterDocIndex: number;
   chapter: string;
 }
+
+const NOTE_TYPE_OPTIONS: { value: NoteType; label: string }[] = [
+  { value: "text", label: "Plain text" },
+  { value: "markdown", label: "MD" },
+  { value: "html", label: "HTML" },
+];
 
 const highlightUtil: any = new HighlightUtil(ConfigService);
 
@@ -41,8 +50,14 @@ const PopupNote = (props: PopupNoteProps) => {
   const [tag, setTag] = useState<string[]>([]);
   const [text, setText] = useState("");
   const [note, setNote] = useState<Note | null>(null);
+  const [editorText, setEditorText] = useState("");
+  const [noteType, setNoteType] = useState<NoteType>("text");
+  // 保存是异步的，写库完成前弹窗仍可点击：连续点确认（或长按 CTRL+ENTER
+  // 自动重复）会给同一段选区各写入一条完全相同的笔记
+  const isSavingNoteRef = useRef(false);
 
   useEffect(() => {
+    let cancelled = false;
     let textArea: any = document.querySelector(".editor-box");
     textArea && textArea.focus();
     (async () => {
@@ -51,12 +66,14 @@ const PopupNote = (props: PopupNoteProps) => {
           noteKey,
           "notes"
         );
+        if (cancelled || !loadedNote) return;
         setText(loadedNote.text);
         setTag(loadedNote.tag);
         setNote(loadedNote);
-        if (textArea) {
-          textArea.value = loadedNote.notes;
-        }
+        setEditorText(loadedNote.notes || "");
+        const loadedType = normalizeNoteType(loadedNote.type);
+        setNoteType(loadedType);
+        props.onTypeChange?.(loadedType);
         let { styleType, color } = highlightUtil.getHighlightValue(
           loadedNote.color || "background-#FEF3CD"
         );
@@ -65,6 +82,8 @@ const PopupNote = (props: PopupNoteProps) => {
           color,
         });
       } else {
+        setNoteType("text");
+        props.onTypeChange?.("text");
         let docs = getIframeDoc(currentBook);
         let selectedText = "";
         for (let i = 0; i < docs.length; i++) {
@@ -85,7 +104,11 @@ const PopupNote = (props: PopupNoteProps) => {
         setText(selectedText);
       }
     })();
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noteKey]);
 
   const handleTag = (nextTag: string[]) => {
     setTag(nextTag);
@@ -98,36 +121,32 @@ const PopupNote = (props: PopupNoteProps) => {
   };
 
   const createNote = async () => {
-    let notes = (document.querySelector(".editor-box") as HTMLInputElement)
-      .value;
+    if (isSavingNoteRef.current) return;
+    isSavingNoteRef.current = true;
+    let notes = editorText;
 
-    if (noteKey) {
-      let newNote = await DatabaseService.getRecord(noteKey, "notes");
-      newNote.notes = notes;
-      newNote.tag = tag;
-      newNote.color =
-        highlightUtil.formatHighlightValue(highlight) || newNote.color;
-      DatabaseService.updateRecord(newNote, "notes").then(() => {
+    try {
+      if (noteKey) {
+        let newNote = await DatabaseService.getRecord(noteKey, "notes");
+        newNote.notes = notes;
+        newNote.tag = tag;
+        newNote.type = noteType;
+        newNote.color =
+          highlightUtil.formatHighlightValue(highlight) || newNote.color;
+        await DatabaseService.updateRecord(newNote, "notes");
         handleOpenMenu(false);
         handleFetchNotes();
         handleMenuMode("");
         handleNoteKey("");
         handleShowPopupNote(false);
         if (htmlBook && htmlBook.rendition) {
-          htmlBook.rendition.removeOneNote(
-            noteKey,
-            props.chapterDocIndex
-          );
+          htmlBook.rendition.removeOneNote(noteKey, props.chapterDocIndex);
           htmlBook.rendition.createOneNote(newNote, handleNoteClick);
         }
-      });
-    } else {
+        return;
+      }
       let cfi = JSON.stringify(
-        ConfigService.getObjectConfig(
-          currentBook.key,
-          "recordLocation",
-          {}
-        )
+        ConfigService.getObjectConfig(currentBook.key, "recordLocation", {})
       );
       if (isReadingRawPDF(currentBook)) {
         let bookLocation = htmlBook.rendition.getPositionByChapter(
@@ -137,9 +156,7 @@ const PopupNote = (props: PopupNoteProps) => {
       }
       let bookKey = currentBook.key;
       let range = JSON.stringify(
-        await htmlBook.rendition.getHighlightCoords(
-          props.chapterDocIndex
-        )
+        await htmlBook.rendition.getHighlightCoords(props.chapterDocIndex)
       );
 
       let percentage = ConfigService.getObjectConfig(
@@ -147,16 +164,12 @@ const PopupNote = (props: PopupNoteProps) => {
         "recordLocation",
         {}
       ).percentage
-        ? ConfigService.getObjectConfig(
-            currentBook.key,
-            "recordLocation",
-            {}
-          ).percentage
+        ? ConfigService.getObjectConfig(currentBook.key, "recordLocation", {})
+            .percentage
         : "0";
 
       let color =
-        highlightUtil.formatHighlightValue(highlight) ||
-        "background-#FEF3CD";
+        highlightUtil.formatHighlightValue(highlight) || "background-#FEF3CD";
 
       let newNote = new Note(
         bookKey,
@@ -168,24 +181,23 @@ const PopupNote = (props: PopupNoteProps) => {
         notes,
         percentage,
         color,
-        tag
+        tag,
+        noteType
       );
-      DatabaseService.saveRecord(newNote, "notes").then(async () => {
-        handleOpenMenu(false);
-        handleFetchNotes();
-        handleMenuMode("");
-        await htmlBook.rendition.createOneNote(
-          newNote,
-          handleNoteClick
-        );
-        let noteSyncManager = new NoteSyncManager(
-          DatabaseService,
-          ConfigService,
-          window.electronAPI?.fs,
-          window.electronAPI?.path
-        );
-        noteSyncManager.syncNote(newNote, bookKey);
-      });
+      await DatabaseService.saveRecord(newNote, "notes");
+      handleOpenMenu(false);
+      handleFetchNotes();
+      handleMenuMode("");
+      await htmlBook.rendition.createOneNote(newNote, handleNoteClick);
+      let noteSyncManager = new NoteSyncManager(
+        DatabaseService,
+        ConfigService,
+        window.electronAPI?.fs,
+        window.electronAPI?.path
+      );
+      noteSyncManager.syncNote(newNote, bookKey);
+    } finally {
+      isSavingNoteRef.current = false;
     }
   };
 
@@ -199,10 +211,7 @@ const PopupNote = (props: PopupNoteProps) => {
         handleFetchNotes();
         handleNoteKey("");
         if (htmlBook && htmlBook.rendition) {
-          htmlBook.rendition.removeOneNote(
-            noteKey,
-            props.chapterDocIndex
-          );
+          htmlBook.rendition.removeOneNote(noteKey, props.chapterDocIndex);
         }
 
         handleOpenMenu(false);
@@ -215,22 +224,58 @@ const PopupNote = (props: PopupNoteProps) => {
     }
   };
 
+  const handleTypeChange = (nextType: NoteType) => {
+    setNoteType(nextType);
+    props.onTypeChange?.(nextType);
+  };
+
+  const placeholder =
+    noteType === "markdown"
+      ? t("Write in Markdown")
+      : noteType === "html"
+        ? t("Write in HTML")
+        : t("Write your note here");
+
   const colorOptionProps = {
     handleDigest: handleUpdateHighlight,
     isEdit: true,
     noteItem: note,
   };
 
+  // Pill theme tokens, mirroring the stats page theme
+  // (src/pages/stats/component.tsx) so the pills adapt to the current
+  // skin exactly like the reading-stats range filter.
+  const skin = ConfigService.getReaderConfig("appSkin");
+  const isOSNight = ConfigService.getReaderConfig("isOSNight");
+  const darkMode =
+    skin === "night" || (skin === "system" && isOSNight === "yes");
+  const pillThemeStyle = {
+    "--pill-text": darkMode ? "#e0e0e0" : "#333333",
+    "--pill-card-bg": darkMode ? "#2a2a2a" : "#ffffff",
+    "--pill-border": darkMode ? "rgba(255,255,255,0.14)" : "rgba(0,0,0,0.1)",
+    "--pill-hover-bg": darkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
+    "--pill-muted": darkMode ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.5)",
+  } as CSSProperties;
+
   return (
     <div className="note-editor">
       <div className="note-original-text">{text}</div>
-      <div className="editor-box-parent">
+      <div
+        className={`editor-box-parent${
+          noteType !== "text" ? " note-preview-enabled" : ""
+        }${props.isDockedRight ? " note-preview-docked" : ""}`}
+      >
         <textarea
           className="editor-box"
-          style={{ height: "calc(100% - 90px)" }}
+          placeholder={placeholder}
+          value={editorText}
+          onChange={(event) => {
+            setEditorText(event.target.value);
+          }}
           onKeyDown={(event) => {
             if (
               event.key === "Enter" &&
+              !event.repeat &&
               (event.ctrlKey || event.metaKey) &&
               !(event.nativeEvent as any).isComposing
             ) {
@@ -239,8 +284,38 @@ const PopupNote = (props: PopupNoteProps) => {
             }
           }}
         />
+        {noteType !== "text" && (
+          <NoteContent
+            content={editorText}
+            type={noteType}
+            className="note-preview-pane"
+          />
+        )}
       </div>
-      <ColorOption {...(colorOptionProps as any)} />
+      <div className="note-option-row">
+        <ColorOption {...(colorOptionProps as any)} />
+        <div
+          className="note-type-tabs"
+          role="group"
+          aria-label={t("Note type")}
+          style={pillThemeStyle}
+        >
+          {NOTE_TYPE_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className={`note-type-pill${
+                noteType === option.value ? " is-active" : ""
+              }`}
+              title={t("Note type")}
+              aria-pressed={noteType === option.value}
+              onClick={() => handleTypeChange(option.value)}
+            >
+              {t(option.label)}
+            </button>
+          ))}
+        </div>
+      </div>
       <div
         className="note-tags"
         style={{
@@ -274,7 +349,15 @@ const PopupNote = (props: PopupNoteProps) => {
             handleClose();
           }}
         >
-          {noteKey ? <Trans>Delete</Trans> : <Trans>Cancel</Trans>}
+          {noteKey ? (
+            note && note.notes !== "" ? (
+              <Trans>Delete note</Trans>
+            ) : (
+              <Trans>Delete highlight</Trans>
+            )
+          ) : (
+            <Trans>Cancel</Trans>
+          )}
         </span>
         <span
           className="book-manage-title"
