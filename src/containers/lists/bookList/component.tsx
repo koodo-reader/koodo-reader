@@ -167,6 +167,17 @@ const BookList = () => {
     return result;
   };
 
+  //合集不是书：统计总数时把合集展开为其成员书数量
+  const getBookTotalCount = (items: any[]): number => {
+    return items.reduce((total: number, item: any) => {
+      if (collectionUtil.isCollection(item.key)) {
+        const collection = collectionUtil.getCollection(item.key);
+        return total + (collection ? collection.books.length : 0);
+      }
+      return total + 1;
+    }, 0);
+  };
+
   const filterBooksByReadingStatus = (
     books: Book[],
     status: string
@@ -533,6 +544,7 @@ const BookList = () => {
     return <Navigate to="/manager/empty" replace />;
   }
   const { books: displayedBookList, bookMode } = handleBooks();
+  const totalBookCount = getBookTotalCount(displayedBookList);
   return (
     <>
       <div
@@ -558,8 +570,8 @@ const BookList = () => {
             />
           )}
           <div className="book-list-total-page">
-            <Trans i18nKey="Total books" count={displayedBookList.length}>
-              {"Total " + displayedBookList.length + " books"}
+            <Trans i18nKey="Total books" count={totalBookCount}>
+              {"Total " + totalBookCount + " books"}
             </Trans>
           </div>
           <select
